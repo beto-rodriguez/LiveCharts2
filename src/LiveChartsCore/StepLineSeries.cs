@@ -232,10 +232,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         v.Geometry.Width = 0;
                         v.Geometry.Height = 0;
 
-                        v.StepSegment.X0 = secondaryScale.ToPixels(point.SecondaryValue - ds);
-                        v.StepSegment.X1 = secondaryScale.ToPixels(point.SecondaryValue);
-                        v.StepSegment.Y0 = p;
-                        v.StepSegment.Y1 = p;
+                        v.StepSegment.Xi = secondaryScale.ToPixels(point.SecondaryValue - ds);
+                        v.StepSegment.Xj = secondaryScale.ToPixels(point.SecondaryValue);
+                        v.StepSegment.Yi = p;
+                        v.StepSegment.Yj = p;
                     }
                     else
                     {
@@ -247,10 +247,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         v.Geometry.Width = gs;
                         v.Geometry.Height = gs;
 
-                        v.StepSegment.X0 = actualSecondaryScale.ToPixels(point.SecondaryValue - ds);
-                        v.StepSegment.X1 = actualSecondaryScale.ToPixels(point.SecondaryValue);
-                        v.StepSegment.Y0 = actualPrimaryScale.ToPixels(point.PrimaryValue + s - dp);
-                        v.StepSegment.Y1 = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
+                        v.StepSegment.Xi = actualSecondaryScale.ToPixels(point.SecondaryValue - ds);
+                        v.StepSegment.Xj = actualSecondaryScale.ToPixels(point.SecondaryValue);
+                        v.StepSegment.Yi = actualPrimaryScale.ToPixels(point.PrimaryValue + s - dp);
+                        v.StepSegment.Yj = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
                     }
 
                     point.Context.Visual = v;
@@ -262,10 +262,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                visual.StepSegment.X0 = secondaryScale.ToPixels(point.SecondaryValue - ds);
-                visual.StepSegment.X1 = secondaryScale.ToPixels(point.SecondaryValue);
-                visual.StepSegment.Y0 = primaryScale.ToPixels(point.PrimaryValue + s - dp);
-                visual.StepSegment.Y1 = primaryScale.ToPixels(point.PrimaryValue + s);
+                visual.StepSegment.Xi = secondaryScale.ToPixels(point.SecondaryValue - ds);
+                visual.StepSegment.Xj = secondaryScale.ToPixels(point.SecondaryValue);
+                visual.StepSegment.Yi = primaryScale.ToPixels(point.PrimaryValue + s - dp);
+                visual.StepSegment.Yj = primaryScale.ToPixels(point.PrimaryValue + s);
 
                 if (Fill is not null) _ = fillPath.AddLast(visual.StepSegment);
                 if (Stroke is not null) _ = strokePath.AddLast(visual.StepSegment);
@@ -521,10 +521,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         _ = visual.StepSegment
             .TransitionateProperties(
-                nameof(visual.StepSegment.X0),
-                nameof(visual.StepSegment.Y0),
-                nameof(visual.StepSegment.X1),
-                nameof(visual.StepSegment.Y1))
+                nameof(visual.StepSegment.Xi),
+                nameof(visual.StepSegment.Yi),
+                nameof(visual.StepSegment.Xj),
+                nameof(visual.StepSegment.Yj))
             .WithAnimation(animation =>
                 animation
                     .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)

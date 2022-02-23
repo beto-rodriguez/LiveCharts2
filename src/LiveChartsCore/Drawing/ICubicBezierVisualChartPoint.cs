@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-public interface ILineBezierVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
+public interface ICubicBezierVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>

@@ -105,6 +105,9 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     /// </summary>
     public string? FontFamily { get; set; }
 
+    /// <inheritdoc cref="IAnimatable.MotionProperties"/>
+    public Dictionary<string, IMotionProperty> MotionProperties => throw new NotImplementedException();
+
     /// <summary>
     /// Adds the geometry to paint task.
     /// </summary>
@@ -137,16 +140,6 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     }
 
     /// <summary>
-    /// Gets the transition property.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    public IMotionProperty GetTransitionProperty(string propertyName)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
     /// Initializes the task.
     /// </summary>
     /// <param name="context">The context.</param>
@@ -172,13 +165,13 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     /// <param name="geometries">The geometries.</param>
     public void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries) { }
 
-    /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[]?)"/>
+    /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[])"/>
     public void SetTransition(Animation? animation, params string[]? propertyName) { }
 
-    /// <inheritdoc cref="IAnimatable.RemoveTransition(string[]?)"/>
+    /// <inheritdoc cref="IAnimatable.RemoveTransition(string[])"/>
     public void RemoveTransition(params string[]? propertyName) { }
 
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[]?)"/>
+    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])"/>
     public void CompleteTransition(params string[]? propertyName) { }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
@@ -198,4 +191,8 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})" />
     public void ReleaseCanvas(MotionCanvas<TDrawingContext> canvas) { }
+
+    /// <inheritdoc cref="IAnimatable.CopyAnimatableFrom(IAnimatable)"/>
+    public void CopyAnimatableFrom(IAnimatable source)
+    { }
 }

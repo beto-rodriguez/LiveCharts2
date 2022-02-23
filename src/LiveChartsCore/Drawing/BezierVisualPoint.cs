@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class BezierVisualPoint<TDrawingContext, TVisual> : ILineBezierVisualChartPoint<TDrawingContext>
+public class BezierVisualPoint<TDrawingContext, TVisual> : ICubicBezierVisualChartPoint<TDrawingContext>
     where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
@@ -67,5 +67,5 @@ public class BezierVisualPoint<TDrawingContext, TVisual> : ILineBezierVisualChar
 
     IGeometry<TDrawingContext>? IVisualChartPoint<TDrawingContext>.HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
+    ISizedGeometry<TDrawingContext> ICubicBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
 }

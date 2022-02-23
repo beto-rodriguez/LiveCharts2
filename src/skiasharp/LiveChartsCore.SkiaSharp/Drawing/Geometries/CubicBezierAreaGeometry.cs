@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Diagnostics;
 using LiveChartsCore.Drawing.Segments;
 using SkiaSharp;
 
@@ -34,8 +33,7 @@ public class CubicBezierAreaGeometry : AreaGeometry<CubicBezierSegment>
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
     {
-        Trace.WriteLine(segment.X0);
-        path.CubicTo(segment.X0, segment.Y0, segment.X1, segment.Y1, segment.X2, segment.Y2);
+        path.CubicTo(segment.Xi, segment.Yi, segment.Xm, segment.Ym, segment.Xj, segment.Yj);
     }
 
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
@@ -43,12 +41,12 @@ public class CubicBezierAreaGeometry : AreaGeometry<CubicBezierSegment>
     {
         if (!IsClosed)
         {
-            path.MoveTo(segment.X0, segment.Y0);
+            path.MoveTo(segment.Xi, segment.Yi);
             return;
         }
 
-        path.MoveTo(segment.X0, Pivot);
-        path.LineTo(segment.X0, segment.Y0);
+        path.MoveTo(segment.Xi, Pivot);
+        path.LineTo(segment.Xi, segment.Yi);
     }
 
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
@@ -56,7 +54,7 @@ public class CubicBezierAreaGeometry : AreaGeometry<CubicBezierSegment>
     {
         if (!IsClosed) return;
 
-        path.LineTo(segment.X2, Pivot);
+        path.LineTo(segment.Xj, Pivot);
         path.Close();
     }
 }

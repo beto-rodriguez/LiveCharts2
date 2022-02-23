@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -37,10 +36,25 @@ namespace LiveChartsCore.Kernel.Providers;
 public class DataFactory<TModel, TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly Dictionary<object, Dictionary<int, ChartPoint>> _byChartbyValueVisualMap = new();
-    private readonly Dictionary<object, Dictionary<TModel, ChartPoint>> _byChartByReferenceVisualMap = new();
-    private readonly bool _isValueType = false;
-    private DimensionalBounds _previousKnownBounds;
+    /// <summary>
+    /// Gets the by value map.
+    /// </summary>
+    protected Dictionary<object, Dictionary<int, ChartPoint>> ByChartbyValueVisualMap { get; } = new();
+
+    /// <summary>
+    /// Gets the by reference map.
+    /// </summary>
+    protected Dictionary<object, Dictionary<TModel, ChartPoint>> ByChartByReferenceVisualMap { get; } = new();
+
+    /// <summary>
+    /// Indicates whether the factory uses value or reference types.
+    /// </summary>
+    protected bool IsValueType { get; private set; } = false;
+
+    /// <summary>
+    /// Gets or sets the previous known bounds.
+    /// </summary>
+    public DimensionalBounds PreviousKnownBounds { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DataFactory{TModel, TDrawingContext}"/> class.
@@ -48,10 +62,10 @@ public class DataFactory<TModel, TDrawingContext>
     public DataFactory()
     {
         var t = typeof(TModel);
-        _isValueType = t.IsValueType;
+        IsValueType = t.IsValueType;
 
         var bounds = new DimensionalBounds(true);
-        _previousKnownBounds = bounds;
+        PreviousKnownBounds = bounds;
     }
 
     /// <summary>
@@ -69,13 +83,13 @@ public class DataFactory<TModel, TDrawingContext>
         var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
         var index = 0;
 
-        if (_isValueType)
+        if (IsValueType)
         {
-            _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
+            _ = ByChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
             if (d is null)
             {
                 d = new Dictionary<int, ChartPoint>();
-                _byChartbyValueVisualMap[canvas.Sync] = d;
+                ByChartbyValueVisualMap[canvas.Sync] = d;
             }
             var byValueVisualMap = d;
 
@@ -94,11 +108,11 @@ public class DataFactory<TModel, TDrawingContext>
         }
         else
         {
-            _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
+            _ = ByChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
             if (d is null)
             {
                 d = new Dictionary<TModel, ChartPoint>();
-                _byChartByReferenceVisualMap[canvas.Sync] = d;
+                ByChartByReferenceVisualMap[canvas.Sync] = d;
             }
             var byReferenceVisualMap = d;
 
@@ -123,10 +137,10 @@ public class DataFactory<TModel, TDrawingContext>
     /// <returns></returns>
     public virtual void DisposePoint(ChartPoint point)
     {
-        if (_isValueType)
+        if (IsValueType)
         {
             var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
-            _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
+            _ = ByChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
             var byValueVisualMap = d;
             if (byValueVisualMap is null) return;
             _ = byValueVisualMap.Remove(point.Context.Index);
@@ -135,7 +149,7 @@ public class DataFactory<TModel, TDrawingContext>
         {
             if (point.Context.DataSource is null) return;
             var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
-            _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
+            _ = ByChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
             var byReferenceVisualMap = d;
             if (byReferenceVisualMap is null) return;
             _ = byReferenceVisualMap.Remove((TModel)point.Context.DataSource);
@@ -148,15 +162,15 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="chart"></param>
     public virtual void Dispose(IChart chart)
     {
-        if (_isValueType)
+        if (IsValueType)
         {
             var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-            _ = _byChartbyValueVisualMap.Remove(canvas.Sync);
+            _ = ByChartbyValueVisualMap.Remove(canvas.Sync);
         }
         else
         {
             var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-            _ = _byChartByReferenceVisualMap.Remove(canvas.Sync);
+            _ = ByChartByReferenceVisualMap.Remove(canvas.Sync);
         }
     }
 
@@ -219,8 +233,8 @@ public class DataFactory<TModel, TDrawingContext>
         }
 
         return !hasData
-            ? new SeriesBounds(_previousKnownBounds, true)
-            : new SeriesBounds(_previousKnownBounds = bounds, false);
+            ? new SeriesBounds(PreviousKnownBounds, true)
+            : new SeriesBounds(PreviousKnownBounds = bounds, false);
     }
 
     /// <summary>
@@ -279,8 +293,8 @@ public class DataFactory<TModel, TDrawingContext>
         }
 
         return !hasData
-            ? new SeriesBounds(_previousKnownBounds, true)
-            : new SeriesBounds(_previousKnownBounds = bounds, false);
+            ? new SeriesBounds(PreviousKnownBounds, true)
+            : new SeriesBounds(PreviousKnownBounds = bounds, false);
     }
 
     /// <summary>
@@ -324,7 +338,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <returns></returns>
     public virtual void RestartVisuals()
     {
-        foreach (var byReferenceVisualMap in _byChartByReferenceVisualMap)
+        foreach (var byReferenceVisualMap in ByChartByReferenceVisualMap)
         {
             foreach (var item in byReferenceVisualMap.Value)
             {
@@ -334,7 +348,7 @@ public class DataFactory<TModel, TDrawingContext>
             byReferenceVisualMap.Value.Clear();
         }
 
-        foreach (var byValueVisualMap in _byChartbyValueVisualMap)
+        foreach (var byValueVisualMap in ByChartbyValueVisualMap)
         {
             foreach (var item in byValueVisualMap.Value)
             {

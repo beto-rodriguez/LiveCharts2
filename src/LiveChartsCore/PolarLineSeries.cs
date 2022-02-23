@@ -291,12 +291,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     v.Geometry.Width = gs;
                     v.Geometry.Height = gs;
 
-                    v.Bezier.X0 = (float)x0b;
-                    v.Bezier.Y0 = y0b;
-                    v.Bezier.X1 = (float)x1b;
-                    v.Bezier.Y1 = y1b;
-                    v.Bezier.X2 = (float)x2b;
-                    v.Bezier.Y2 = y2b;
+                    v.Bezier.Xi = (float)x0b;
+                    v.Bezier.Yi = y0b;
+                    v.Bezier.Xm = (float)x1b;
+                    v.Bezier.Ym = y1b;
+                    v.Bezier.Xj = (float)x2b;
+                    v.Bezier.Yj = y2b;
 
                     data.TargetPoint.Context.Visual = v;
                     OnPointCreated(data.TargetPoint);
@@ -307,12 +307,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
                 if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
 
-                visual.Bezier.X0 = (float)data.X0;
-                visual.Bezier.Y0 = (float)data.Y0;
-                visual.Bezier.X1 = (float)data.X1;
-                visual.Bezier.Y1 = (float)data.Y1;
-                visual.Bezier.X2 = (float)data.X2;
-                visual.Bezier.Y2 = (float)data.Y2;
+                visual.Bezier.Xi = (float)data.X0;
+                visual.Bezier.Yi = (float)data.Y0;
+                visual.Bezier.Xm = (float)data.X1;
+                visual.Bezier.Ym = (float)data.Y1;
+                visual.Bezier.Xj = (float)data.X2;
+                visual.Bezier.Yj = (float)data.Y2;
 
                 if (Fill is not null) _ = fillPath.AddLast(visual.Bezier);
                 if (Stroke is not null) _ = strokePath.AddLast(visual.Bezier);
@@ -663,8 +663,6 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
             yield return new BezierData(points[i])
             {
-                IsFirst = i == 0,
-                IsLast = i == points.Length - 1,
                 X0 = x0,
                 Y0 = y0,
                 X1 = c2X,
@@ -696,12 +694,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
         _ = visual.Bezier
             .TransitionateProperties(
-                nameof(visual.Bezier.X0),
-                nameof(visual.Bezier.Y0),
-                nameof(visual.Bezier.X1),
-                nameof(visual.Bezier.Y1),
-                nameof(visual.Bezier.X2),
-                nameof(visual.Bezier.Y2))
+                nameof(visual.Bezier.Xi),
+                nameof(visual.Bezier.Yi),
+                nameof(visual.Bezier.Xm),
+                nameof(visual.Bezier.Ym),
+                nameof(visual.Bezier.Xj),
+                nameof(visual.Bezier.Yj))
             .WithAnimation(animation =>
                 animation
                     .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)

@@ -39,8 +39,9 @@ public abstract class MotionProperty<T> : IMotionProperty
     /// To value
     /// </summary>
     protected internal T? toValue = default;
-    internal long _startTime;
-    internal long _endTime;
+
+    private long _startTime;
+    private long _endTime;
     private bool _requiresToInitialize = true;
 
     /// <summary>
@@ -62,23 +63,28 @@ public abstract class MotionProperty<T> : IMotionProperty
     /// </summary>
     public T? ToValue => toValue;
 
-    /// <summary>
-    /// Gets or sets the animation to define the transition.
-    /// </summary>
+    /// <inheritdoc cref="IMotionProperty.Animation"/>
     public Animation? Animation { get; set; }
 
-    /// <summary>
-    /// Gets the property name.
-    /// </summary>
+    /// <inheritdoc cref="IMotionProperty.PropertyName"/>
     public string PropertyName { get; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is completed.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
-    /// </value>
+    /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
     public bool IsCompleted { get; set; } = false;
+
+    /// <inheritdoc cref="IMotionProperty.CopyFrom(IMotionProperty)"/>
+    public void CopyFrom(IMotionProperty source)
+    {
+        var typedSource = (MotionProperty<T>)source;
+
+        fromValue = typedSource.FromValue;
+        toValue = typedSource.ToValue;
+        _startTime = typedSource._startTime;
+        _endTime = typedSource._endTime;
+        _requiresToInitialize = typedSource._requiresToInitialize;
+        Animation = typedSource.Animation;
+        IsCompleted = typedSource.IsCompleted;
+    }
 
     /// <summary>
     /// Moves to he specified value.

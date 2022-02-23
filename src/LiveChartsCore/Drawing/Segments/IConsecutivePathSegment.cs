@@ -20,21 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
-/// Defines a path segment.
+/// Defines a path segment that is part of a sequence.
 /// </summary>
-public interface IPathSegment : IAnimatable
+public interface IConsecutivePathSegment : IAnimatable
 {
     /// <summary>
     /// Gets or sets the segment id, a unique and consecutive integer.
     /// </summary>
-    int Id { get; set; }
+    int Id { get; }
 
     /// <summary>
-    /// Copies the data of segment to the destination segment.
+    /// Gets the start point in the X axis.
     /// </summary>
-    /// <param name="destination"></param>
-    void CopyTo(IPathSegment destination);
+    float Xi { get; }
+
+    /// <summary>
+    /// Gets the end point in the X axis.
+    /// </summary>
+    float Xj { get; }
+
+    /// <summary>
+    /// Gets the start point in the Y axis.
+    /// </summary>
+    float Yi { get; }
+
+    /// <summary>
+    /// Gets the end point in the Y axis.
+    /// </summary>
+    float Yj { get; }
+
+    /// <summary>
+    /// Copies the segment to the end of the given segment.
+    /// </summary>
+    /// <param name="segment">The segment.</param>
+    void Follows(IConsecutivePathSegment segment);
 }

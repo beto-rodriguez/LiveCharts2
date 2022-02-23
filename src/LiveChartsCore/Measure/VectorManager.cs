@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
 
@@ -33,11 +34,10 @@ namespace LiveChartsCore.Measure;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class VectorManager<TSegment, TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TSegment : IPathSegment, IAnimatable
+    where TSegment : IConsecutivePathSegment, IAnimatable
 {
-    private readonly IAreaGeometry<TSegment, TDrawingContext> _areaGeometry;
-    private LinkedListNode<TSegment>? _activeNode;
-    private TSegment? _lastActiveSegment;
+    private LinkedListNode<TSegment>? _nextNode;
+    private LinkedListNode<TSegment>? _currentNode;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VectorManager{TSegment, TDrawingContext}"/> class.
@@ -45,44 +45,88 @@ public class VectorManager<TSegment, TDrawingContext>
     /// <param name="areaGeometry">The area geometry</param>
     public VectorManager(IAreaGeometry<TSegment, TDrawingContext> areaGeometry)
     {
-        _areaGeometry = areaGeometry;
-        _activeNode = areaGeometry.FirstCommand;
+        AreaGeometry = areaGeometry;
+        _nextNode = areaGeometry.FirstCommand;
     }
+
+    /// <summary>
+    /// Gets the area geometry.
+    /// </summary>
+    public IAreaGeometry<TSegment, TDrawingContext> AreaGeometry { get; private set; }
 
     /// <summary>
     /// Adds a segment to the area geometry.
     /// </summary>
     /// <param name="segment">The segment.</param>
-    /// <param name="copyPrevious">Indicates whether the data of the previous segment should be copied to the just added segment.</param>
-    public void AddConsecutiveSegment(TSegment segment, bool copyPrevious = false)
+    /// <param name="followsPrevious">Indicates whether the segment follows the previous segment visual state.</param>
+    public void AddConsecutiveSegment(TSegment segment, bool followsPrevious)
     {
-        if (_activeNode == null)
+        while (
+            _nextNode is not null &&
+            _nextNode.Next is not null &&
+            segment.Id >= _nextNode.Next.Value.Id)
         {
-            _activeNode = _areaGeometry.AddFirst(segment);
+            _nextNode = _nextNode.Next;
+            AreaGeometry.RemoveCommand(_nextNode.Previous);
+        }
+
+        // at this points "_nextNode" is:
+        // the next node after "segment"
+        // or it could also be "segment"
+        // or null in case there are no more segments.
+
+        if (_nextNode is null)
+        {
+            if (_currentNode is not null && followsPrevious) segment.Follows(_currentNode.Value);
+            _currentNode = AreaGeometry.AddLast(segment);
             return;
         }
 
-        while (_activeNode.Next is not null && _activeNode.Next.Value.Id < segment.Id)
+        if (_nextNode.Value.Id == segment.Id)
         {
-            _lastActiveSegment = _activeNode.Next.Value;
-            _areaGeometry.RemoveCommand(_activeNode.Next);
-        }
-
-        if (segment.Id == _activeNode.Value.Id)
-        {
-            _lastActiveSegment = _activeNode.Value;
+            if (!Equals(_nextNode.Value, segment))
+            {
+                if (followsPrevious) segment.Follows(_nextNode.Value);
+                _nextNode.Value = segment; // <- ensure it is the same instance
+            }
+            _currentNode = _nextNode;
+            _nextNode = _currentNode.Next;
             return;
         }
 
-        if (copyPrevious)
+        if (_currentNode is null) _currentNode = _nextNode;
+
+        if (followsPrevious) segment.Follows(_currentNode.Value);
+        _currentNode = AreaGeometry.AddBefore(_nextNode, segment);
+        _nextNode = _currentNode.Next;
+    }
+
+    /// <summary>
+    /// Ends the vector.
+    /// </summary>
+    public void End()
+    {
+        while (_currentNode?.Next is not null)
         {
-            var source = _lastActiveSegment ?? _activeNode.Value;
-            source.CurrentTime = _areaGeometry.CurrentTime;
-            source.CopyTo(segment);
-            segment.CompleteTransition(null);
+            AreaGeometry.RemoveCommand(_currentNode.Next);
+        }
+    }
+
+    /// <summary>
+    /// Logs the path segments ids.
+    /// </summary>
+    public void LogPath()
+    {
+        var a = "";
+        var c = AreaGeometry.FirstCommand;
+
+        while (c != null)
+        {
+            a += $"{c.Value.Id}, ";
+            c = c.Next;
         }
 
-        _activeNode = _areaGeometry.AddAfter(_activeNode, segment);
-        _lastActiveSegment = _activeNode.Value;
+        Trace.WriteLine(a);
     }
 }
+

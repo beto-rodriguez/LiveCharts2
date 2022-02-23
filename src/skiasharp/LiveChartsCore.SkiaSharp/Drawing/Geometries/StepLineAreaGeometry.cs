@@ -41,8 +41,8 @@ public class StepLineAreaGeometry : AreaGeometry<StepLineSegment>
             return;
         }
 
-        path.LineTo(segment.X1, segment.Y0);
-        path.LineTo(segment.X1, segment.Y1);
+        path.LineTo(segment.Xj, segment.Yi);
+        path.LineTo(segment.Xj, segment.Yj);
     }
 
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
@@ -50,12 +50,12 @@ public class StepLineAreaGeometry : AreaGeometry<StepLineSegment>
     {
         if (!IsClosed)
         {
-            path.MoveTo(segment.X1, segment.Y1);
+            path.MoveTo(segment.Xj, segment.Yj);
             return;
         }
 
-        path.MoveTo(segment.X1, Pivot);
-        path.LineTo(segment.X1, segment.Y1);
+        path.MoveTo(segment.Xj, Pivot);
+        path.LineTo(segment.Xj, segment.Yj);
     }
 
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
@@ -65,7 +65,7 @@ public class StepLineAreaGeometry : AreaGeometry<StepLineSegment>
 
         if (!IsClosed) return;
 
-        path.LineTo(segment.X1, Pivot);
+        path.LineTo(segment.Xj, Pivot);
         path.Close();
     }
 }

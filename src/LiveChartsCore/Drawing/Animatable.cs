@@ -30,8 +30,6 @@ namespace LiveChartsCore.Drawing;
 /// <inheritdoc cref="IAnimatable" />
 public abstract class Animatable : IAnimatable
 {
-    private readonly Dictionary<string, IMotionProperty> _transitionProperties = new();
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Animatable"/> class.
     /// </summary>
@@ -46,38 +44,41 @@ public abstract class Animatable : IAnimatable
     /// <inheritdoc cref="IAnimatable.RemoveOnCompleted" />
     public bool RemoveOnCompleted { get; set; }
 
-    /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[]?)" />
+    /// <inheritdoc cref="IAnimatable.MotionProperties" />
+    public Dictionary<string, IMotionProperty> MotionProperties { get; } = new();
+
+    /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[])" />
     public void SetTransition(Animation? animation, params string[]? propertyName)
     {
         var a = animation?.Duration == 0 ? null : animation;
 
-        if (propertyName is null) propertyName = _transitionProperties.Keys.ToArray();
+        if (propertyName is null) propertyName = MotionProperties.Keys.ToArray();
 
         foreach (var name in propertyName)
         {
-            _transitionProperties[name].Animation = a;
+            MotionProperties[name].Animation = a;
         }
     }
 
-    /// <inheritdoc cref="IAnimatable.RemoveTransition(string[]?)" />
+    /// <inheritdoc cref="IAnimatable.RemoveTransition(string[])" />
     public void RemoveTransition(params string[]? propertyName)
     {
-        if (propertyName is null) propertyName = _transitionProperties.Keys.ToArray();
+        if (propertyName is null) propertyName = MotionProperties.Keys.ToArray();
 
         foreach (var name in propertyName)
         {
-            _transitionProperties[name].Animation = null;
+            MotionProperties[name].Animation = null;
         }
     }
 
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[]?)" />
+    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
     public virtual void CompleteTransition(params string[]? propertyName)
     {
-        if (propertyName is null) propertyName = _transitionProperties.Keys.ToArray();
+        if (propertyName is null) propertyName = MotionProperties.Keys.ToArray();
 
         foreach (var property in propertyName)
         {
-            if (!_transitionProperties.TryGetValue(property, out var transitionProperty))
+            if (!MotionProperties.TryGetValue(property, out var transitionProperty))
                 throw new Exception(
                     $"The property {property} is not a transition property of this instance.");
 
@@ -95,7 +96,7 @@ public abstract class Animatable : IAnimatable
     protected T RegisterMotionProperty<T>(T motionProperty)
         where T : IMotionProperty
     {
-        _transitionProperties[motionProperty.PropertyName] = motionProperty;
+        MotionProperties[motionProperty.PropertyName] = motionProperty;
         return motionProperty;
     }
 }

@@ -32,21 +32,11 @@ public class DimensionalBounds
     /// <summary>
     /// Initializes a new instance of the <see cref="DimensionalBounds"/> class.
     /// </summary>
-    public DimensionalBounds()
-    {
-        PrimaryBounds = new Bounds();
-        SecondaryBounds = new Bounds();
-        TertiaryBounds = new Bounds();
-        VisiblePrimaryBounds = new Bounds();
-        VisibleSecondaryBounds = new Bounds();
-        VisibleTertiaryBounds = new Bounds();
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DimensionalBounds"/> class.
-    /// </summary>
-    /// <param name="useInitial"></param>
-    internal DimensionalBounds(bool useInitial)
+    /// <param name="setMinBounds">
+    /// Indicates if the intiial bounds should contain some values,
+    /// just to prevent the chart to be in an invalid range when the control is initializes without any data.
+    /// </param>
+    internal DimensionalBounds(bool setMinBounds)
     {
         PrimaryBounds = new Bounds();
         SecondaryBounds = new Bounds();
@@ -55,7 +45,7 @@ public class DimensionalBounds
         VisibleSecondaryBounds = new Bounds();
         VisibleTertiaryBounds = new Bounds();
 
-        if (!useInitial) return;
+        if (!setMinBounds) return;
 
         VisiblePrimaryBounds.AppendValue(0);
         VisiblePrimaryBounds.AppendValue(10);
@@ -72,6 +62,12 @@ public class DimensionalBounds
 
         IsEmpty = true;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DimensionalBounds"/> class.
+    /// </summary>
+    public DimensionalBounds() : this(false)
+    { }
 
     internal bool IsEmpty { get; }
 

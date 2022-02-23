@@ -27,91 +27,68 @@ namespace LiveChartsCore.Drawing.Segments;
 /// <summary>
 /// Defines a cubic bezier segment.
 /// </summary>
-public class CubicBezierSegment : Animatable, IPathSegment
+public class CubicBezierSegment : Animatable, IConsecutivePathSegment
 {
-    private readonly FloatMotionProperty _x0Property;
-    private readonly FloatMotionProperty _y0Property;
-    private readonly FloatMotionProperty _x1Property;
-    private readonly FloatMotionProperty _y1Property;
-    private readonly FloatMotionProperty _x2Property;
-    private readonly FloatMotionProperty _y2Property;
+    private readonly FloatMotionProperty _xiProperty;
+    private readonly FloatMotionProperty _yiProperty;
+    private readonly FloatMotionProperty _xmProperty;
+    private readonly FloatMotionProperty _ymProperty;
+    private readonly FloatMotionProperty _xjProperty;
+    private readonly FloatMotionProperty _yjProperty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CubicBezierSegment"/> class.
     /// </summary>
     public CubicBezierSegment()
     {
-        _x0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X0), 0f));
-        _y0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y0), 0f));
-        _x1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-        _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-        _x2Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X2), 0f));
-        _y2Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y2), 0f));
+        _xiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xi), 0f));
+        _yiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yi), 0f));
+        _xmProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xm), 0f));
+        _ymProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Ym), 0f));
+        _xjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xj), 0f));
+        _yjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yj), 0f));
     }
 
-    /// <summary>
-    /// Gets or sets the x0.
-    /// </summary>
-    /// <value>
-    /// The x0.
-    /// </value>
-    public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
+    /// <inheritdoc cref="IConsecutivePathSegment.Xi"/>
+    public float Xi { get => _xiProperty.GetMovement(this); set => _xiProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IConsecutivePathSegment.Yi "/>
+    public float Yi { get => _yiProperty.GetMovement(this); set => _yiProperty.SetMovement(value, this); }
 
     /// <summary>
-    /// Gets or sets the y0.
+    /// Gets or sets the middle point in the Y axis.
     /// </summary>
-    /// <value>
-    /// The y0.
-    /// </value>
-    public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
+    public float Xm { get => _xmProperty.GetMovement(this); set => _xmProperty.SetMovement(value, this); }
 
     /// <summary>
-    /// Gets or sets the x1.
+    /// Gets or sets the middle point in the Y axis.
     /// </summary>
-    /// <value>
-    /// The x1.
-    /// </value>
-    public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
+    public float Ym { get => _ymProperty.GetMovement(this); set => _ymProperty.SetMovement(value, this); }
 
-    /// <summary>
-    /// Gets or sets the y1.
-    /// </summary>
-    /// <value>
-    /// The y1.
-    /// </value>
-    public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
+    /// <inheritdoc cref="IConsecutivePathSegment.Xj"/>
+    public float Xj { get => _xjProperty.GetMovement(this); set => _xjProperty.SetMovement(value, this); }
 
-    /// <summary>
-    /// Gets or sets the x2.
-    /// </summary>
-    /// <value>
-    /// The x2.
-    /// </value>
-    public float X2 { get => _x2Property.GetMovement(this); set => _x2Property.SetMovement(value, this); }
+    /// <inheritdoc cref="IConsecutivePathSegment.Yj"/>
+    public float Yj { get => _yjProperty.GetMovement(this); set => _yjProperty.SetMovement(value, this); }
 
-    /// <summary>
-    /// Gets or sets the y2.
-    /// </summary>
-    /// <value>
-    /// The y2.
-    /// </value>
-    public float Y2 { get => _y2Property.GetMovement(this); set => _y2Property.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IPathSegment.Id"/>
+    /// <inheritdoc cref="IConsecutivePathSegment.Id"/>
     public int Id { get; set; }
 
-    /// <inheritdoc cref="IPathSegment.CopyTo(IPathSegment)"/>
-    public void CopyTo(IPathSegment source)
+    /// <inheritdoc cref="IConsecutivePathSegment.Follows(IConsecutivePathSegment)"/>
+    void IConsecutivePathSegment.Follows(IConsecutivePathSegment segment)
     {
-        var cubic = (CubicBezierSegment)source;
+        IsValid = segment.IsValid;
+        CurrentTime = segment.CurrentTime;
+        RemoveOnCompleted = segment.RemoveOnCompleted;
 
-        CurrentTime = cubic.CurrentTime;
+        var xProp = segment.MotionProperties[nameof(IConsecutivePathSegment.Xj)];
+        var yProp = segment.MotionProperties[nameof(IConsecutivePathSegment.Yj)];
 
-        cubic.X0 = X0;
-        cubic.X1 = X1;
-        cubic.X2 = X2;
-        cubic.Y0 = Y0;
-        cubic.Y1 = Y1;
-        cubic.Y2 = Y2;
+        MotionProperties[nameof(Xi)].CopyFrom(xProp);
+        MotionProperties[nameof(Xm)].CopyFrom(xProp);
+        MotionProperties[nameof(Xj)].CopyFrom(xProp);
+        MotionProperties[nameof(Yi)].CopyFrom(yProp);
+        MotionProperties[nameof(Ym)].CopyFrom(yProp);
+        MotionProperties[nameof(Yj)].CopyFrom(yProp);
     }
 }

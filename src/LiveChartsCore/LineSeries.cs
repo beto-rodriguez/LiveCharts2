@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
@@ -167,9 +166,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
-        //foreach (var item in strokePathHelperContainer) item.ClearCommands();
-        //foreach (var item in fillPathHelperContainer) item.ClearCommands();
-
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
         foreach (var segment in segments)
@@ -242,7 +238,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     var v = new TVisualPoint();
                     visual = v;
 
-                    //if (actualPrimaryScale is null || actualSecondaryScale is null)
                     if (chart.IsFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
@@ -250,30 +245,13 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         v.Geometry.Width = 0;
                         v.Geometry.Height = 0;
 
-                        v.Bezier.X0 = secondaryScale.ToPixels(data.X0);
-                        v.Bezier.X1 = secondaryScale.ToPixels(data.X1);
-                        v.Bezier.X2 = secondaryScale.ToPixels(data.X2);
-                        v.Bezier.Y0 = p;
-                        v.Bezier.Y1 = p;
-                        v.Bezier.Y2 = p;
+                        v.Bezier.Xi = secondaryScale.ToPixels(data.X0);
+                        v.Bezier.Xm = secondaryScale.ToPixels(data.X1);
+                        v.Bezier.Xj = secondaryScale.ToPixels(data.X2);
+                        v.Bezier.Yi = p;
+                        v.Bezier.Ym = p;
+                        v.Bezier.Yj = p;
                     }
-                    //else
-                    //{
-                    //    var xng = actualSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
-                    //    var yng = actualPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
-
-                    //    v.Geometry.X = xng - hgs;
-                    //    v.Geometry.Y = yng - hgs;
-                    //    v.Geometry.Width = gs;
-                    //    v.Geometry.Height = gs;
-
-                    //    v.Bezier.X0 = actualSecondaryScale.ToPixels(data.X0);
-                    //    v.Bezier.X1 = actualSecondaryScale.ToPixels(data.X1);
-                    //    v.Bezier.X2 = actualSecondaryScale.ToPixels(data.X2);
-                    //    v.Bezier.Y0 = actualPrimaryScale.ToPixels(data.Y0);
-                    //    v.Bezier.Y1 = actualPrimaryScale.ToPixels(data.Y1);
-                    //    v.Bezier.Y2 = actualPrimaryScale.ToPixels(data.Y2);
-                    //}
 
                     data.TargetPoint.Context.Visual = v;
                     OnPointCreated(data.TargetPoint);
@@ -289,18 +267,20 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 if (Fill is not null) fillVector.AddConsecutiveSegment(visual.Bezier, !chart.IsFirstDraw);
                 if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.Bezier, !chart.IsFirstDraw);
 
-                visual.Bezier.X0 = secondaryScale.ToPixels(data.X0);
-                visual.Bezier.X1 = secondaryScale.ToPixels(data.X1);
-                visual.Bezier.X2 = secondaryScale.ToPixels(data.X2);
-                visual.Bezier.Y0 = primaryScale.ToPixels(data.Y0);
-                visual.Bezier.Y1 = primaryScale.ToPixels(data.Y1);
-                visual.Bezier.Y2 = primaryScale.ToPixels(data.Y2);
+                visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
+                visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
+                visual.Bezier.Xj = secondaryScale.ToPixels(data.X2);
+                visual.Bezier.Yi = primaryScale.ToPixels(data.Y0);
+                visual.Bezier.Ym = primaryScale.ToPixels(data.Y1);
+                visual.Bezier.Yj = primaryScale.ToPixels(data.Y2);
 
                 var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                 var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                visual.Geometry.X = x - hgs;
-                visual.Geometry.Y = y - hgs;
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)].CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Xj)]);
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)].CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Yj)]);
+                visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
+
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
@@ -347,7 +327,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 OnPointMeasured(data.TargetPoint);
             }
 
-            Trace.WriteLine(strokePath.CountCommands);
+            strokeVector.End();
+            fillVector.End();
 
             if (GeometryFill is not null)
             {
@@ -543,10 +524,30 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         for (var i = 0; i < points.Length; i++)
         {
-            previous = points[i - 1 < 0 ? 0 : i - 1];
-            current = points[i];
-            next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
-            next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
+            var i1 = i - 1;
+
+            if (i1 < 0)
+            {
+                var c = points[i];
+                var sc = stacker?.GetStack(c).Start ?? 0;
+
+                yield return new BezierData(points[i])
+                {
+                    X0 = c.SecondaryValue,
+                    Y0 = c.PrimaryValue + sc,
+                    X1 = c.SecondaryValue,
+                    Y1 = c.PrimaryValue + sc,
+                    X2 = c.SecondaryValue,
+                    Y2 = c.PrimaryValue + sc
+                };
+
+                continue;
+            }
+
+            previous = points[i1 - 1 < 0 ? 0 : i1 - 1];
+            current = points[i1];
+            next = points[i1 + 1 > points.Length - 1 ? points.Length - 1 : i1 + 1];
+            next2 = points[i1 + 2 > points.Length - 1 ? points.Length - 1 : i1 + 2];
 
             var pys = 0d;
             var cys = 0d;
@@ -597,25 +598,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             var c2X = xm2 + (xc2 - xm2) * _lineSmoothness + next.SecondaryValue - xm2;
             var c2Y = ym2 + (yc2 - ym2) * _lineSmoothness + next.PrimaryValue + nys - ym2;
 
-            double x0, y0;
-
-            if (i == 0)
-            {
-                x0 = current.SecondaryValue;
-                y0 = current.PrimaryValue + cys;
-            }
-            else
-            {
-                x0 = c1X;
-                y0 = c1Y;
-            }
-
             yield return new BezierData(points[i])
             {
-                IsFirst = i == 0,
-                IsLast = i == points.Length - 1,
-                X0 = x0,
-                Y0 = y0,
+                X0 = c1X,
+                Y0 = c1Y,
                 X1 = c2X,
                 Y1 = c2Y,
                 X2 = next.SecondaryValue,
@@ -646,12 +632,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         _ = visual.Bezier
             .TransitionateProperties(
-                nameof(visual.Bezier.X0),
-                nameof(visual.Bezier.Y0),
-                nameof(visual.Bezier.X1),
-                nameof(visual.Bezier.Y1),
-                nameof(visual.Bezier.X2),
-                nameof(visual.Bezier.Y2))
+                nameof(visual.Bezier.Xi),
+                nameof(visual.Bezier.Yi),
+                nameof(visual.Bezier.Xm),
+                nameof(visual.Bezier.Ym),
+                nameof(visual.Bezier.Xj),
+                nameof(visual.Bezier.Yj))
             .WithAnimation(animation =>
                 animation
                     .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
@@ -665,15 +651,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var visual = (TVisualPoint?)point.Context.Visual;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
-
-        var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
-        if (chartView.Core.IsZoomingOrPanning)
-        {
-            visual.Geometry.CompleteTransition(null);
-            visual.Geometry.RemoveOnCompleted = true;
-            DataFactory.DisposePoint(point);
-            return;
-        }
 
         var x = secondaryScale.ToPixels(point.SecondaryValue);
         var y = primaryScale.ToPixels(point.PrimaryValue);

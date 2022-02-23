@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
@@ -32,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
 public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment, SkiaSharpDrawingContext>
-    where TSegment : class, IAnimatable, IPathSegment
+    where TSegment : class, IAnimatable, IConsecutivePathSegment
 {
     private readonly LinkedList<TSegment> _commands = new();
     private readonly FloatMotionProperty _pivotProperty;
@@ -111,6 +112,7 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.ClearCommands" />
     public void ClearCommands()
     {
+        IsValid = false;
         _commands.Clear();
     }
 

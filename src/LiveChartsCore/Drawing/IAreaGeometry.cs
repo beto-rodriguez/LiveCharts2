@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using LiveChartsCore.Drawing.Segments;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -29,7 +31,7 @@ namespace LiveChartsCore.Drawing;
 /// <typeparam name="TSegment"></typeparam>
 /// <typeparam name="TDrawingContext"></typeparam>
 public interface IAreaGeometry<TSegment, TDrawingContext> : IDrawable<TDrawingContext>
-    where TSegment : IPathSegment
+    where TSegment : IConsecutivePathSegment
     where TDrawingContext : DrawingContext
 {
     /// <summary>

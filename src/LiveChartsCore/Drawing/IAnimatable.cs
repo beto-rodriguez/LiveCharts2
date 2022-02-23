@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+using LiveChartsCore.Motion;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -50,6 +53,11 @@ public interface IAnimatable
     ///   <c>true</c> if remove on completed; otherwise, <c>false</c>.
     /// </value>
     bool RemoveOnCompleted { get; set; }
+
+    /// <summary>
+    /// Gets the motion properties.
+    /// </summary>
+    Dictionary<string, IMotionProperty> MotionProperties { get; }
 
     /// <summary>
     /// Sets a property transition for the specified property or properties.
