@@ -17,7 +17,7 @@ public class ViewModel
 
             new LineSeries<double?>
             {
-                Values = new double?[] { 2, 6, 5, 3, null, 5, 2, 4, 3 }
+                Values = new double?[] { 2, 6, 5, 3, null, 5, 2, 4, null }
             },
 
             // for reference types, set the properties to null instead.
