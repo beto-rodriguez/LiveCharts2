@@ -143,9 +143,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
-        foreach (var item in strokePathHelperContainer) item.ClearCommands();
-        foreach (var item in fillPathHelperContainer) item.ClearCommands();
-
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
         foreach (var segment in segments)
@@ -222,7 +219,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var v = new TVisualPoint();
                     visual = v;
 
-                    if (chart.IsFirstDraw)
+                    if (IsFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(point.SecondaryValue);
                         v.Geometry.Y = p;
@@ -246,8 +243,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 visual.StepSegment.Id = point.Context.Index;
 
-                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !chart.IsFirstDraw);
-                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !chart.IsFirstDraw);
+                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
+                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
 
                 visual.StepSegment.Xi = secondaryScale.ToPixels(point.SecondaryValue - ds);
                 visual.StepSegment.Xj = secondaryScale.ToPixels(point.SecondaryValue);
@@ -353,6 +350,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
             _ = everFetched.Remove(point);
         }
+
+        IsFirstDraw = false;
     }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
@@ -501,7 +500,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 nameof(visual.Geometry.X),
                 nameof(visual.Geometry.Y),
                 nameof(visual.Geometry.Width),
-                nameof(visual.Geometry.Height))
+                nameof(visual.Geometry.Height),
+                nameof(visual.Geometry.TranslateTransform))
             .WithAnimation(animation =>
                 animation
                     .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
