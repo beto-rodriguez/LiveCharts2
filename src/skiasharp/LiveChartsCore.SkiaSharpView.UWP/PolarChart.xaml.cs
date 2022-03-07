@@ -131,7 +131,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (PolarChart)o;
                         var seriesObserver = chart._seriesObserver;
-                        seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
+                        seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
@@ -147,7 +147,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (PolarChart)o;
                         var observer = chart._angleObserver;
-                        observer.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                        Observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
@@ -163,7 +163,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (PolarChart)o;
                         var observer = chart._radiusObserver;
-                        observer.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                        Observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();

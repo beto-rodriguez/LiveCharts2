@@ -106,7 +106,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var seriesObserver = chart._seriesObserver;
-                        seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
+                        seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
@@ -122,7 +122,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._xObserver;
-                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                        Observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
@@ -138,7 +138,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._yObserver;
-                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                        Observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
@@ -154,7 +154,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._sectionsObserver;
-                        observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
+                        Observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
                         observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();

@@ -91,7 +91,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (PieChart)o;
                         var seriesObserver = chart._seriesObserver;
-                        seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
+                        seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
