@@ -124,12 +124,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var sw = Stroke?.StrokeThickness ?? 0;
         var p = primaryScale.ToPixels(pivot);
 
-        var chartAnimation = new Animation(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
-
-        var fetched = Fetch(cartesianChart);
-
-        var segments = _enableNullSplitting // <-- this probably do not have a significant perfamnce impact, ToDo: Check this out!
-            ? SplitEachNull(Fetch(cartesianChart), secondaryScale, primaryScale) // callling this method is probably as expensive as the line bellow
+        // Note #240222
+        // the following cases probably have a similar perfamnce impact
+        // this options were neccesary at some older point when _enableNullSplitting = false could improve perfomance
+        // ToDo: Check this out, maybe this is unessesary now and we should just go for the first approach all the times.
+        var segments = _enableNullSplitting
+            ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale)) // callling this method is probably as expensive as the line bellow
             : new List<IEnumerable<ChartPoint>>() { Fetch(cartesianChart) };
 
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
@@ -140,6 +140,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         if (stacker is not null)
         {
+            // Note# 010621
             // easy workaround to set an automatic and valid z-index for stacked area series
             // the problem of this solution is that the user needs to set z-indexes above 1000
             // if the user needs to add more series to the chart.
@@ -148,7 +149,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             if (Stroke is not null) Stroke.ZIndex = actualZIndex;
         }
 
-        var dls = unchecked((float)DataLabelsSize);
+        var dls = (float)DataLabelsSize;
 
         var segmentI = 0;
         var toDeletePoints = new HashSet<ChartPoint>(everFetched);
@@ -237,7 +238,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     var v = new TVisualPoint();
                     visual = v;
 
-                    if (chart.IsFirstDraw)
+                    if (IsFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                         v.Geometry.Y = p;
@@ -263,8 +264,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 visual.Bezier.Id = data.TargetPoint.Context.Index;
 
-                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.Bezier, !chart.IsFirstDraw);
-                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.Bezier, !chart.IsFirstDraw);
+                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
+                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
 
                 visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
                 visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
@@ -370,6 +371,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
             _ = everFetched.Remove(point);
         }
+
+        IsFirstDraw = false;
     }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
@@ -611,7 +614,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 nameof(visual.Geometry.X),
                 nameof(visual.Geometry.Y),
                 nameof(visual.Geometry.Width),
-                nameof(visual.Geometry.Height))
+                nameof(visual.Geometry.Height),
+                nameof(visual.Geometry.TranslateTransform))
             .WithAnimation(animation =>
                 animation
                     .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
@@ -727,53 +731,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         data.GoNext(data.Next);
         yield return data;
-    }
-
-    private IEnumerable<IEnumerable<ChartPoint>> SplitEachNull(
-        IEnumerable<ChartPoint> points,
-        Scaler xScale,
-        Scaler yScale)
-    {
-        using var builder = new GapsBuilder(points.GetEnumerator());
-        while (!builder.Finished) yield return YieldReturnUntilNextNullChartPoint(builder, xScale, yScale);
-    }
-
-    private IEnumerable<ChartPoint> YieldReturnUntilNextNullChartPoint(GapsBuilder builder, Scaler xScale, Scaler yScale)
-    {
-        while (builder.Enumerator.MoveNext())
-        {
-            if (builder.Enumerator.Current.IsNull)
-            {
-                var wasEmpty = builder.IsEmpty;
-                builder.IsEmpty = true;
-                DeleteNullPoint(builder.Enumerator.Current, xScale, yScale);
-                if (!wasEmpty) yield break; // if there are no points then do not return an empty enumerable...
-            }
-
-            yield return builder.Enumerator.Current;
-            builder.IsEmpty = false;
-        }
-
-        builder.Finished = true;
-    }
-
-    private class GapsBuilder : IDisposable
-    {
-        public GapsBuilder(IEnumerator<ChartPoint> enumerator)
-        {
-            Enumerator = enumerator;
-        }
-
-        public IEnumerator<ChartPoint> Enumerator { get; }
-
-        public bool IsEmpty { get; set; } = true;
-
-        public bool Finished { get; set; } = false;
-
-        public void Dispose()
-        {
-            Enumerator.Dispose();
-        }
     }
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)

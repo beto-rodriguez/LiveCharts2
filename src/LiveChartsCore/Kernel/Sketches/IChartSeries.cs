@@ -75,6 +75,11 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     CanvasSchedule<TDrawingContext> CanvasSchedule { get; }
 
     /// <summary>
+    /// Gets  a value indicating if this is the first time the series is drawn.
+    /// </summary>
+    bool IsFirstDraw { get; }
+
+    /// <summary>
     /// Gets the stack group, normally used internally to handled the stacked series.
     /// </summary>
     /// <returns></returns>

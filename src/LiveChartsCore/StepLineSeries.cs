@@ -107,14 +107,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var sw = Stroke?.StrokeThickness ?? 0;
         var p = primaryScale.ToPixels(pivot);
 
-        var chartAnimation = new Animation(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
-
-        var fetched = Fetch(cartesianChart);
-        if (fetched is not ChartPoint[] points) points = fetched.ToArray();
-
+        // see note #240222
         var segments = _enableNullSplitting
-            ? SplitEachNull(points, secondaryScale, primaryScale)
-            : new ChartPoint[][] { points };
+            ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale))
+            : new List<IEnumerable<ChartPoint>>() { Fetch(cartesianChart) };
 
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
             ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -124,15 +120,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         if (stacker is not null)
         {
-            // easy workaround to set an automatic and valid z-index for stacked area series
-            // the problem of this solution is that the user needs to set z-indexes above 1000
-            // if the user needs to add more series to the chart.
+            // see note #010621
             actualZIndex = 1000 - stacker.Position;
             if (Fill is not null) Fill.ZIndex = actualZIndex;
             if (Stroke is not null) Stroke.ZIndex = actualZIndex;
         }
 
-        var dls = unchecked((float)DataLabelsSize);
+        var dls = (float)DataLabelsSize;
 
         var segmentI = 0;
         var toDeletePoints = new HashSet<ChartPoint>(everFetched);
@@ -173,6 +167,9 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 fillPath = fillPathHelperContainer[segmentI];
                 strokePath = strokePathHelperContainer[segmentI];
             }
+
+            var strokeVector = new VectorManager<StepLineSegment, TDrawingContext>(strokePath);
+            var fillVector = new VectorManager<StepLineSegment, TDrawingContext>(fillPath);
 
             if (Fill is not null)
             {
@@ -225,7 +222,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var v = new TVisualPoint();
                     visual = v;
 
-                    if (actualSecondaryScale is null || actualPrimaryScale is null)
+                    if (chart.IsFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(point.SecondaryValue);
                         v.Geometry.Y = p;
@@ -237,21 +234,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         v.StepSegment.Yi = p;
                         v.StepSegment.Yj = p;
                     }
-                    else
-                    {
-                        var xng = actualSecondaryScale.ToPixels(point.SecondaryValue);
-                        var yng = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
-
-                        v.Geometry.X = xng - hgs;
-                        v.Geometry.Y = yng - hgs;
-                        v.Geometry.Width = gs;
-                        v.Geometry.Height = gs;
-
-                        v.StepSegment.Xi = actualSecondaryScale.ToPixels(point.SecondaryValue - ds);
-                        v.StepSegment.Xj = actualSecondaryScale.ToPixels(point.SecondaryValue);
-                        v.StepSegment.Yi = actualPrimaryScale.ToPixels(point.PrimaryValue + s - dp);
-                        v.StepSegment.Yj = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
-                    }
 
                     point.Context.Visual = v;
                     OnPointCreated(point);
@@ -262,19 +244,23 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
+                visual.StepSegment.Id = point.Context.Index;
+
+                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !chart.IsFirstDraw);
+                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !chart.IsFirstDraw);
+
                 visual.StepSegment.Xi = secondaryScale.ToPixels(point.SecondaryValue - ds);
                 visual.StepSegment.Xj = secondaryScale.ToPixels(point.SecondaryValue);
                 visual.StepSegment.Yi = primaryScale.ToPixels(point.PrimaryValue + s - dp);
                 visual.StepSegment.Yj = primaryScale.ToPixels(point.PrimaryValue + s);
 
-                if (Fill is not null) _ = fillPath.AddLast(visual.StepSegment);
-                if (Stroke is not null) _ = strokePath.AddLast(visual.StepSegment);
-
                 var x = secondaryScale.ToPixels(point.SecondaryValue);
                 var y = primaryScale.ToPixels(point.PrimaryValue + s);
 
-                visual.Geometry.X = x - hgs;
-                visual.Geometry.Y = y - hgs;
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)].CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Xj)]);
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)].CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Yj)]);
+                visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
+
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
@@ -322,6 +308,9 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 previousPrimary = point.PrimaryValue + s;
                 previousSecondary = point.SecondaryValue;
             }
+
+            strokeVector.End();
+            fillVector.End();
 
             if (GeometryFill is not null)
             {
@@ -590,6 +579,15 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
     }
 
+    /// <inheritdoc/>
+    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    {
+        base.RemoveFromUI(chart);
+
+        _ = _fillPathHelperDictionary.Remove(chart.Canvas.Sync);
+        _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
+    }
+
     /// <summary>
     /// Gets the paint tasks.
     /// </summary>
@@ -599,50 +597,20 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
     }
 
-    private IEnumerable<ChartPoint[]> SplitEachNull(
-       ChartPoint[] points,
-       Scaler xScale,
-       Scaler yScale)
+    private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        var l = new List<ChartPoint>(points.Length);
+        if (point.Context.Visual is not TVisualPoint visual) return;
 
-        foreach (var point in points)
-        {
-            if (point.IsNull)
-            {
-                if (point.Context.Visual is TVisualPoint visual)
-                {
-                    var x = xScale.ToPixels(point.SecondaryValue);
-                    var y = yScale.ToPixels(point.PrimaryValue);
-                    var gs = _geometrySize;
-                    var hgs = gs / 2f;
-                    var sw = Stroke?.StrokeThickness ?? 0;
-                    var p = yScale.ToPixels(pivot);
-                    visual.Geometry.X = x - hgs;
-                    visual.Geometry.Y = p - hgs;
-                    visual.Geometry.Width = gs;
-                    visual.Geometry.Height = gs;
-                    visual.Geometry.RemoveOnCompleted = true;
-                    point.Context.Visual = null;
-                }
+        var x = xScale.ToPixels(point.SecondaryValue);
+        var y = yScale.ToPixels(point.PrimaryValue);
+        var gs = _geometrySize;
+        var hgs = gs / 2f;
 
-                if (l.Count > 0) yield return l.ToArray();
-                l = new List<ChartPoint>(points.Length);
-                continue;
-            }
-
-            l.Add(point);
-        }
-
-        if (l.Count > 0) yield return l.ToArray();
-    }
-
-    /// <inheritdoc/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
-    {
-        base.RemoveFromUI(chart);
-
-        _ = _fillPathHelperDictionary.Remove(chart.Canvas.Sync);
-        _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
+        visual.Geometry.X = x - hgs;
+        visual.Geometry.Y = y - hgs;
+        visual.Geometry.Width = gs;
+        visual.Geometry.Height = gs;
+        visual.Geometry.RemoveOnCompleted = true;
+        point.Context.Visual = null;
     }
 }
