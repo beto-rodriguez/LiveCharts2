@@ -53,7 +53,7 @@ jobs:
     # The maui Workloads
     - name: Install workloads
       run: |
-        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.13.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
+        dotnet workload install maui
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
