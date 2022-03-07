@@ -124,7 +124,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
               {
                   var chart = (PieChart)o;
                   var seriesObserver = chart._seriesObserver;
-                  seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
+                  seriesObserver?.Dispose((IEnumerable<ISeries>)oldValue);
                   seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
                   if (chart.core is null) return;
                   chart.core.Update();

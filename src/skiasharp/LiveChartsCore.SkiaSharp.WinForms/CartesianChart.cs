@@ -94,7 +94,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         get => _series;
         set
         {
-            _seriesObserver.Dispose(_series);
+            _seriesObserver?.Dispose(_series);
             _seriesObserver.Initialize(value);
             _series = value;
             OnPropertyChanged();
@@ -108,7 +108,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         get => _xAxes;
         set
         {
-            _xObserver.Dispose(_xAxes);
+            _xObserver?.Dispose(_xAxes);
             _xObserver.Initialize(value);
             _xAxes = value;
             OnPropertyChanged();
@@ -122,7 +122,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         get => _yAxes;
         set
         {
-            _yObserver.Dispose(_yAxes);
+            _yObserver?.Dispose(_yAxes);
             _yObserver.Initialize(value);
             _yAxes = value;
             OnPropertyChanged();
@@ -136,7 +136,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         get => _sections;
         set
         {
-            _sectionsObserver.Dispose(_sections);
+            _sectionsObserver?.Dispose(_sections);
             _sectionsObserver.Initialize(value);
             _sections = value;
             OnPropertyChanged();

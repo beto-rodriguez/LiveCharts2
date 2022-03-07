@@ -160,7 +160,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
            {
                var chart = (GeoMap)o;
                var seriesObserver = chart._shapesObserver;
-               seriesObserver.Dispose((IEnumerable<IMapElement>)oldValue);
+               seriesObserver?.Dispose((IEnumerable<IMapElement>)oldValue);
                seriesObserver.Initialize((IEnumerable<IMapElement>)newValue);
                chart._core.Update();
            });
@@ -176,7 +176,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
            {
                var chart = (GeoMap)o;
                var seriesObserver = chart._seriesObserver;
-               seriesObserver.Dispose((IEnumerable<IGeoSeries>)oldValue);
+               seriesObserver?.Dispose((IEnumerable<IGeoSeries>)oldValue);
                seriesObserver.Initialize((IEnumerable<IGeoSeries>)newValue);
                chart._core.Update();
            });

@@ -132,7 +132,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         get => _values;
         set
         {
-            _observer.Dispose(_values);
+            _Observer?.Dispose(_values);
             _observer.Initialize(value);
             _values = value;
             OnPropertyChanged();

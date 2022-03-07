@@ -773,26 +773,26 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-            _seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
+            _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(XAxes))
         {
-            _xObserver.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
-            _xObserver.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
+            _xObserver?.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
+            _xObserver?.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(YAxes))
         {
-            _yObserver.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
-            _yObserver.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
+            _yObserver?.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
+            _yObserver?.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(Sections))
         {
-            _sectionsObserver.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)change.OldValue.Value);
-            _sectionsObserver.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)change.NewValue.Value);
+            _sectionsObserver?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)change.OldValue.Value);
+            _sectionsObserver?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(Background))

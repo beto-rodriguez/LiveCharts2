@@ -87,7 +87,7 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
         get => _lands;
         set
         {
-            _observer.Dispose(_lands);
+            _Observer?.Dispose(_lands);
             _observer.Initialize(value);
             _lands = value;
             OnPropertyChanged();

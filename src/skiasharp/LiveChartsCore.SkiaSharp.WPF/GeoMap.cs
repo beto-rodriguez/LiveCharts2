@@ -147,7 +147,7 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
             {
                 var chart = (GeoMap)o;
                 var seriesObserver = chart._shapesObserver;
-                seriesObserver.Dispose((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.OldValue);
+                seriesObserver?.Dispose((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.OldValue);
                 seriesObserver.Initialize((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.NewValue);
                 chart._core?.Update();
             }));
@@ -161,7 +161,7 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
             {
                 var chart = (GeoMap)o;
                 var seriesObserver = chart._seriesObserver;
-                seriesObserver.Dispose((IEnumerable<IGeoSeries>)args.OldValue);
+                seriesObserver?.Dispose((IEnumerable<IGeoSeries>)args.OldValue);
                 seriesObserver.Initialize((IEnumerable<IGeoSeries>)args.NewValue);
                 chart._core?.Update();
             }));

@@ -139,7 +139,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         get => _series;
         set
         {
-            _seriesObserver.Dispose(_series);
+            _seriesObserver?.Dispose(_series);
             _seriesObserver.Initialize(value);
             _series = value;
             OnPropertyChanged();
@@ -153,7 +153,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         get => _angleAxes;
         set
         {
-            _angleObserver.Dispose(_angleAxes);
+            _angleObserver?.Dispose(_angleAxes);
             _angleObserver.Initialize(value);
             _angleAxes = value;
             OnPropertyChanged();
@@ -167,7 +167,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         get => _radiusAxes;
         set
         {
-            _radiusObserver.Dispose(_radiusAxes);
+            _radiusObserver?.Dispose(_radiusAxes);
             _radiusObserver.Initialize(value);
             _radiusAxes = value;
             OnPropertyChanged();
