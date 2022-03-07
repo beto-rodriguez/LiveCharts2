@@ -91,7 +91,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                     var chart = (CartesianChart)o;
                     var seriesObserver = chart._seriesObserver;
                     seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
@@ -110,8 +110,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._xObserver;
-                    Observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                    observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
+                    observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
@@ -135,8 +135,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._yObserver;
-                    Observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                    observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
+                    observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
@@ -160,8 +160,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._sectionsObserver;
-                    Observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
-                    observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
+                    observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },

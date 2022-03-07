@@ -155,7 +155,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty TooltipBackgroundProperty =
        DependencyProperty.Register(
            nameof(TooltipBackground), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(250, 250, 250)), OnDependencyPropertyChanged));
+           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(250, 250, 250)), OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip font family property
@@ -171,7 +171,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty TooltipTextBrushProperty =
        DependencyProperty.Register(
            nameof(TooltipTextBrush), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
+           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip font size property
@@ -225,7 +225,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty LegendTextBrushProperty =
        DependencyProperty.Register(
            nameof(LegendTextBrush), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
+           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend background property
@@ -233,7 +233,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty LegendBackgroundProperty =
        DependencyProperty.Register(
            nameof(LegendBackground), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255)), OnDependencyPropertyChanged));
+           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(255, 255, 255)), OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend font size property

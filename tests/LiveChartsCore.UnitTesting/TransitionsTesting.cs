@@ -38,7 +38,7 @@ public class TransitionsTesting
         var duration = TimeSpan.FromSeconds(1);
         var easing = EasingFunctions.Lineal;
 
-        r.SetPropertiesTransitions(
+        r.SetTransition(
             new Animation(easing, duration, int.MaxValue),
             nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
@@ -63,7 +63,7 @@ public class TransitionsTesting
         r.X = 50;
         r.Width = 50;
         r.Height = 50;
-        r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+        r.CompleteTransition(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
         r.Y = 100;
         r.X = 100;
@@ -106,7 +106,7 @@ public class TransitionsTesting
         var duration = TimeSpan.FromSeconds(1);
         var easing = EasingFunctions.Lineal;
 
-        r.SetPropertiesTransitions(
+        r.SetTransition(
             new Animation(easing, duration),
             nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
@@ -130,14 +130,14 @@ public class TransitionsTesting
         r.X = 0;
         r.Width = 0;
         r.Height = 0;
-        r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+        r.CompleteTransition(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
         DrawFrame(time);
 
         Assert.IsTrue(a.IsValid);
 
         r.Y = 100;
         DrawFrame(time);
-        var p = r.GetTransitionProperty(nameof(r.Y));
+        var p = r.MotionProperties[nameof(r.Y)];
 
         time += 500;
         DrawFrame(time);
@@ -195,7 +195,7 @@ public class TransitionsTesting
         var duration = TimeSpan.FromMilliseconds(100);
         var easing = EasingFunctions.Lineal;
 
-        r.SetPropertiesTransitions(
+        r.SetTransition(
             new Animation(easing, duration, int.MaxValue), nameof(r.X));
 
         void DrawFrame(long time)
@@ -208,7 +208,7 @@ public class TransitionsTesting
         DrawFrame(time);
 
         r.X = 0;
-        r.CompleteTransitions(nameof(r.X));
+        r.CompleteTransition(nameof(r.X));
 
         r.X = 100;
 

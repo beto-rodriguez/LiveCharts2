@@ -154,7 +154,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
                 var chart = (PolarChart)o;
                 var seriesObserver = chart._seriesObserver;
                 seriesObserver?.Dispose((IEnumerable<ISeries>)oldValue);
-                seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
+                seriesObserver?.Initialize((IEnumerable<ISeries>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -169,8 +169,8 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
             {
                 var chart = (PolarChart)o;
                 var observer = chart._angleObserver;
-                Observer?.Dispose((IEnumerable<IPolarAxis>)oldValue);
-                observer.Initialize((IEnumerable<IPolarAxis>)newValue);
+                observer?.Dispose((IEnumerable<IPolarAxis>)oldValue);
+                observer?.Initialize((IEnumerable<IPolarAxis>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -185,8 +185,8 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
             {
                 var chart = (PolarChart)o;
                 var observer = chart._radiusObserver;
-                Observer?.Dispose((IEnumerable<IPolarAxis>)oldValue);
-                observer.Initialize((IEnumerable<IPolarAxis>)newValue);
+                observer?.Dispose((IEnumerable<IPolarAxis>)oldValue);
+                observer?.Initialize((IEnumerable<IPolarAxis>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });

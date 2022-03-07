@@ -82,7 +82,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         set
         {
             _seriesObserver?.Dispose(_series);
-            _seriesObserver.Initialize(value);
+            _seriesObserver?.Initialize(value);
             _series = value;
             OnPropertyChanged();
         }

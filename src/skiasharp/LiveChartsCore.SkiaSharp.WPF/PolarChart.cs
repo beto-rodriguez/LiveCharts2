@@ -114,7 +114,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                     var chart = (PolarChart)o;
                     var seriesObserver = chart._seriesObserver;
                     seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
@@ -133,8 +133,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                 {
                     var chart = (PolarChart)o;
                     var observer = chart._angleObserver;
-                    Observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
-                    observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
+                    observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                    observer?.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
@@ -158,8 +158,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                 {
                     var chart = (PolarChart)o;
                     var observer = chart._radiusObserver;
-                    Observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
-                    observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
+                    observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                    observer?.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },

@@ -21,36 +21,16 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
-/// <inheritdoc cref="ILinePathSegment{TPath}" />
-public class LineSegment : PathCommand, ILinePathSegment<SKPath>
+/// <inheritdoc cref="IPathCommand{TPathContext}" />
+public abstract class PathCommand : Animatable, IPathCommand<SKPath>
 {
-    private readonly FloatMotionProperty _xProperty;
-    private readonly FloatMotionProperty _yProperty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LineSegment"/> class.
-    /// </summary>
-    public LineSegment()
-    {
-        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
-        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
-    }
-
-    /// <inheritdoc cref="ILinePathSegment{TPath}.X" />
-    public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ILinePathSegment{TPath}.Y" />
-    public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
+    /// <inheritdoc cref="IPathCommand{TPathContext}.Id" />
+    public int Id { get; set; }
 
     /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
-    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
-    {
-        CurrentTime = currentTime;
-        path.LineTo(X, Y);
-    }
+    public abstract void Execute(SKPath path, long currentTime, Animatable pathGeometry);
 }

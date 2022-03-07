@@ -131,7 +131,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
                 var chart = (CartesianChart)o;
                 var seriesObserver = chart._seriesObserver;
                 seriesObserver?.Dispose((IEnumerable<ISeries>)oldValue);
-                seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
+                seriesObserver?.Initialize((IEnumerable<ISeries>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -146,8 +146,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             {
                 var chart = (CartesianChart)o;
                 var observer = chart._xObserver;
-                Observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
-                observer.Initialize((IEnumerable<ICartesianAxis>)newValue);
+                observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
+                observer?.Initialize((IEnumerable<ICartesianAxis>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -162,8 +162,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             {
                 var chart = (CartesianChart)o;
                 var observer = chart._yObserver;
-                Observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
-                observer.Initialize((IEnumerable<ICartesianAxis>)newValue);
+                observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
+                observer?.Initialize((IEnumerable<ICartesianAxis>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -178,8 +178,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             {
                 var chart = (CartesianChart)o;
                 var observer = chart._sectionsObserver;
-                Observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
-                observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
+                observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
+                observer?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });

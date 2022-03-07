@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Geo;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+using LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 

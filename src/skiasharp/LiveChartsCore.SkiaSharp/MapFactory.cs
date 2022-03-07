@@ -22,14 +22,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+using LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
 namespace LiveChartsCore.SkiaSharpView;
 

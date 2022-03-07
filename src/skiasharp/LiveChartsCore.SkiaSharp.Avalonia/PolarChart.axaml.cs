@@ -751,19 +751,19 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         if (change.Property.Name == nameof(Series))
         {
             _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-            _seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(AngleAxes))
         {
             _angleObserver?.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
-            _angleObserver.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
+            _angleObserver?.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(RadiusAxes))
         {
             _radiusObserver?.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
-            _radiusObserver.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
+            _radiusObserver?.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(Background))

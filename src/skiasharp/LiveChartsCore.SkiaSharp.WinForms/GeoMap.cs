@@ -170,7 +170,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         set
         {
             _shapesObserver?.Dispose(_shapes);
-            _shapesObserver.Initialize(value);
+            _shapesObserver?.Initialize(value);
             _shapes = value;
             OnPropertyChanged();
         }
@@ -184,7 +184,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         set
         {
             _seriesObserver?.Dispose(_series);
-            _seriesObserver.Initialize(value);
+            _seriesObserver?.Initialize(value);
             _series = value;
             OnPropertyChanged();
         }
