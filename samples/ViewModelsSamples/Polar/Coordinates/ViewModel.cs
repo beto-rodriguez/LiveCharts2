@@ -22,7 +22,7 @@ public class ViewModel
                     new ObservablePolarPoint(315, 45),
                     new ObservablePolarPoint(360, 50),
                 },
-                IsClosed = true,
+                IsClosed = false,
                 Fill = null
             }
         };
