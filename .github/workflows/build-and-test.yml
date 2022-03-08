@@ -27,20 +27,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Install workloads
-      run: |
-        dotnet workload install maui
-
-    # not necesessary... the samples also need to compile these projects.
-    #- name: Build assemblies
-    #  run: |
-    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia
-    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor
-    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui
-    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
-    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
-    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
-    #    msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj /t:Restore
-    #    msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj /t:Restore
+      run: dotnet workload install maui
 
     - name: Build
       run: |
@@ -50,6 +37,7 @@ jobs:
         dotnet build ./samples/WinFormsSample
         dotnet build ./samples/WPFSample
         dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
+        dotnet build ./samples/EtoFormsSample
         msbuild ./samples/UWPSample/UWPSample.csproj /t:Restore
         msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
 
