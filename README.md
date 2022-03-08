@@ -17,18 +17,18 @@ here is a preview (1.4MB gif, wait for it to load if you see a blank space bello
 
 In Visual Studio go to the `Solution Explorer` then right click on `Dependencies` then `Manage NuGet Packages`, enable the "Include prerelease" checkbox and in the browse tab search for the view of your target platform:
 
-LiveChartsCore.SkiaSharpView.WPF<br/>
-LiveChartsCore.SkiaSharpView.WinForms<br/>
-LiveChartsCore.SkiaSharpView.Avalonia<br/>
-LiveChartsCore.SkiaSharpView.XamarinForms<br/>
-LiveChartsCore.SkiaSharpView.UWP<br/>
-LiveChartsCore.SkiaSharpView.WinUI<br/>
-LiveChartsCore.SkiaSharpView.Blazor<br/>
-LiveChartsCore.SkiaSharpView.Maui<br/>
+`LiveChartsCore.SkiaSharpView.WPF`<br/>
+`LiveChartsCore.SkiaSharpView.WinForms`<br/>
+`LiveChartsCore.SkiaSharpView.Avalonia`<br/>
+`LiveChartsCore.SkiaSharpView.XamarinForms`<br/>
+`LiveChartsCore.SkiaSharpView.UWP`<br/>
+`LiveChartsCore.SkiaSharpView.WinUI`<br/>
+`LiveChartsCore.SkiaSharpView.Blazor`<br/>
+`LiveChartsCore.SkiaSharpView.Maui`<br/>
 
-You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, and using the `ISkiaSharpChart` objects (see [this sample](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/WPFSample/General/ChartToImage/View.xaml.cs#L28)).
+You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, and using the `ISkiaSharpChart` objects (see [this sample](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ConsoleSample/ConsoleSample/Program.cs)).
 
-LiveChartsCore.SkiaSharpView
+`LiveChartsCore.SkiaSharpView`
 
 ### Samples
 
