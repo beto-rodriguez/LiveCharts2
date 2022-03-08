@@ -232,10 +232,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
     {
         Series = Array.Empty<IGeoSeries>();
-        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
         _seriesObserver = null!;
-        _shapesObserver = null!;
-
         Canvas.Dispose();
     }
 

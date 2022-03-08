@@ -30,13 +30,13 @@ public class View : Panel
         // Adding a map chart to the UI...
         _map = new GeoMap
         {
-            Shapes = viewModel.MapShapes,
+            Series = viewModel.GeoSeries,
         };
+
         Content = new DynamicLayout(
-            new DynamicRow(new DynamicControl() { Control = _cartesian, YScale = true } ),
+            new DynamicRow(new DynamicControl() { Control = _cartesian, YScale = true }),
             new DynamicRow(new DynamicControl() { Control = _pie, YScale = true }),
-            new DynamicRow(new DynamicControl() { Control = _map, YScale = true })
-            );
+            new DynamicRow(new DynamicControl() { Control = _map, YScale = true }));
 
         // now lets create the images // mark
         CreateImageFromCartesianControl(); // mark

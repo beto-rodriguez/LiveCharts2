@@ -43,7 +43,7 @@ public partial class View : UserControl
         // Adding a map chart to the UI...
         _map = new GeoMap
         {
-            Shapes = viewModel.MapShapes,
+            Series = viewModel.GeoSeries,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 400),

@@ -19,21 +19,28 @@ public class ViewModel
             new PieSeries<int> { Values = new int[] { 4 } }
     };
 
-    public IEnumerable<IMapElement> MapShapes { get; set; }
-        = new HeatLand[]
+    public IGeoSeries[] GeoSeries { get; set; }
+        = new HeatLandSeries[]
         {
-                new() { Name = "mex", Value = 10 },
-                new() { Name = "usa", Value = 15 },
-                new() { Name = "can", Value = 8 },
-                new() { Name = "ind", Value = 12 },
-                new() { Name = "deu", Value = 13 },
-                new() { Name = "chn", Value = 14 },
-                new() { Name = "rus", Value = 11 },
-                new() { Name = "fra", Value = 8 },
-                new() { Name = "esp", Value = 7 },
-                new() { Name = "kor", Value = 10 },
-                new() { Name = "zaf", Value = 12 },
-                new() { Name = "bra", Value = 13 },
-                new() { Name = "are", Value = 13 }
+            new()
+            {
+                Lands = new HeatLand[]
+                {
+                    new() { Name = "bra", Value = 13 },
+                    new() { Name = "mex", Value = 10 },
+                    new() { Name = "usa", Value = 15 },
+                    new() { Name = "can", Value = 8 },
+                    new() { Name = "ind", Value = 12 },
+                    new() { Name = "deu", Value = 13 },
+                    new() { Name= "jpn", Value = 15 },
+                    new() { Name = "chn", Value = 14 },
+                    new() { Name = "rus", Value = 11 },
+                    new() { Name = "fra", Value = 8 },
+                    new() { Name = "esp", Value = 7 },
+                    new() { Name = "kor", Value = 10 },
+                    new() { Name = "zaf", Value = 12 },
+                    new() { Name = "are", Value = 13 }
+                }
+            }
         };
 }

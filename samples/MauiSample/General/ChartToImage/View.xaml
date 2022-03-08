@@ -30,7 +30,7 @@
         <lvc:GeoMap
                 Grid.Row="2"
                 x:Name="geoChart"
-                Shapes="{Binding MapValues}">
+                Series="{Binding GeoSeries}">
         </lvc:GeoMap>
     </Grid>
 </ContentPage>

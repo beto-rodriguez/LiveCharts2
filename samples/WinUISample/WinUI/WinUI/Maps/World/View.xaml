@@ -9,5 +9,5 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:GeoMap Shapes="{Binding Shapes}"  MapProjection="Mercator" />
+    <lvc:GeoMap Series="{Binding Series}"  MapProjection="Mercator" />
 </UserControl>
