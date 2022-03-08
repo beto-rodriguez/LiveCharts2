@@ -38,7 +38,7 @@ public static class CircleEasingFunction
     {
         unchecked
         {
-            return (float)(1 - Math.Sqrt(1 - (t * t)));
+            return (float)(1 - Math.Sqrt(1 - t * t));
         }
     }
 
@@ -62,6 +62,6 @@ public static class CircleEasingFunction
     /// <returns></returns>
     public static float InOut(float t)
     {
-        return (float)((t *= 2) <= 1 ? 1 - Math.Sqrt(1 - (t * t)) : Math.Sqrt(1 - ((t -= 2) * t)) + 1) / 2f;
+        return (float)((t *= 2) <= 1 ? 1 - Math.Sqrt(1 - t * t) : Math.Sqrt(1 - (t -= 2) * t) + 1) / 2f;
     }
 }

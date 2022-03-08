@@ -34,7 +34,7 @@ public class ViewModel
             //circle.SetPropertiesTransitions(
             //    new Animation(EasingFunctions.ElasticOut, TimeSpan.FromSeconds(1)),
             //    nameof(circle.X), nameof(circle.Y));
-            //circle.CompleteAllTransitions();
+            //circle.CompleteTransition(null);
 
             p.AddGeometryToPaintTask(canvas, circle);
 

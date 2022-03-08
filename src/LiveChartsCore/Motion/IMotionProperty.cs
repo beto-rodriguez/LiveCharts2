@@ -52,4 +52,10 @@ public interface IMotionProperty
     /// The animation.
     /// </value>
     Animation? Animation { get; set; }
+
+    /// <summary>
+    /// Copies into this instance the source property.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    void CopyFrom(IMotionProperty source);
 }

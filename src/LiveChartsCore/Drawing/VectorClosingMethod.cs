@@ -23,12 +23,22 @@
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a path segment.
+/// Defines methods to close a vector.
 /// </summary>
-public interface IPathSegment
+public enum VectorClosingMethod
 {
     /// <summary>
-    /// Gets or sets the segment id, a unique and consecutive integer.
+    /// Indicates that the vector is not closed.
     /// </summary>
-    int Id { get; set; }
+    NotClosed,
+
+    /// <summary>
+    /// Indicates that the vector is closed to the pivot value.
+    /// </summary>
+    CloseToPivot,
+
+    /// <summary>
+    /// Indicates that the vector is closed to the start point.
+    /// </summary>
+    CloseToStart,
 }

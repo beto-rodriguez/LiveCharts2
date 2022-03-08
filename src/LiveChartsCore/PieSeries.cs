@@ -355,7 +355,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
                                 .WithDuration(AnimationsSpeed ?? pieChart.AnimationsSpeed)
                                 .WithEasingFunction(EasingFunction ?? pieChart.EasingFunction));
 
-                    l.CompleteAllTransitions();
+                    l.CompleteTransition(null);
                     label = l;
                     point.Context.Label = l;
                 }

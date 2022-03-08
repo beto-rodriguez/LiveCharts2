@@ -24,7 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
 /// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}" />
 public class CubicBezierSegment : PathCommand, ICubicBezierPathCommand<SKPath>
@@ -70,7 +70,7 @@ public class CubicBezierSegment : PathCommand, ICubicBezierPathCommand<SKPath>
     /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
     public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
     {
-        SetCurrentTime(currentTime);
+        CurrentTime = currentTime;
         path.CubicTo(X0, Y0, X1, Y1, X2, Y2);
     }
 }

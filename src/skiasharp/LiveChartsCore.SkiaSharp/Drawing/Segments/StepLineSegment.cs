@@ -24,7 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
 /// <inheritdoc cref="IStepLineSegment{TPathContext}" />
 public class StepLineSegment : PathCommand, IStepLineSegment<SKPath>
@@ -60,7 +60,7 @@ public class StepLineSegment : PathCommand, IStepLineSegment<SKPath>
     /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
     public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
     {
-        SetCurrentTime(currentTime);
+        CurrentTime = currentTime;
         path.LineTo(X0, Y0);
         path.LineTo(X1, Y1);
     }

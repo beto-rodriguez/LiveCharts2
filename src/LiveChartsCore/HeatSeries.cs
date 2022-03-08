@@ -86,12 +86,10 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousPrimaryScale =
-            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-        var previousSecondaryScale =
-            !secondaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+        var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
+        var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
 
         var uws = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwp = primaryScale.MeasureInPixels(primaryAxis.UnitWidth);
@@ -205,7 +203,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                                 .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                 .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                    l.CompleteAllTransitions();
+                    l.CompleteTransition(null);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -326,7 +324,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
-            visual.CompleteAllTransitions();
+            visual.CompleteTransition(null);
             visual.RemoveOnCompleted = true;
             DataFactory.DisposePoint(point);
             return;

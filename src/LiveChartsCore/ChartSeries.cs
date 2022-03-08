@@ -89,6 +89,9 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
         protected set { _canvasSchedule = value; OnPropertyChanged(); }
     }
 
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.IsFirstDraw"/>
+    public bool IsFirstDraw { get; protected set; } = true;
+
     /// <summary>
     /// Gets or sets the size of the legend shape.
     /// </summary>

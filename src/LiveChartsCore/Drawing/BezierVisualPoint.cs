@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class BezierVisualPoint<TDrawingContext, TVisual> : ILineBezierVisualChartPoint<TDrawingContext>
+public class BezierVisualPoint<TDrawingContext, TVisual> : ICubicBezierVisualChartPoint<TDrawingContext>
     where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
@@ -55,7 +55,7 @@ public class BezierVisualPoint<TDrawingContext, TVisual> : ILineBezierVisualChar
     /// <value>
     /// The path.
     /// </value>
-    public IAreaGeometry<CubicBezierSegment, TDrawingContext>? FillPath { get; set; }
+    public IVectorGeometry<CubicBezierSegment, TDrawingContext>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -63,9 +63,9 @@ public class BezierVisualPoint<TDrawingContext, TVisual> : ILineBezierVisualChar
     /// <value>
     /// The stroke path.
     /// </value>
-    public IAreaGeometry<CubicBezierSegment, TDrawingContext>? StrokePath { get; set; }
+    public IVectorGeometry<CubicBezierSegment, TDrawingContext>? StrokePath { get; set; }
 
     IGeometry<TDrawingContext>? IVisualChartPoint<TDrawingContext>.HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
+    ISizedGeometry<TDrawingContext> ICubicBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
 }

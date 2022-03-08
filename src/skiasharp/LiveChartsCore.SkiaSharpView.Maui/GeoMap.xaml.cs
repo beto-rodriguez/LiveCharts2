@@ -32,6 +32,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Essentials;
@@ -159,7 +160,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
            {
                var chart = (GeoMap)o;
                var seriesObserver = chart._shapesObserver;
-               seriesObserver.Dispose((IEnumerable<IMapElement>)oldValue);
+               seriesObserver?.Dispose((IEnumerable<IMapElement>)oldValue);
                seriesObserver.Initialize((IEnumerable<IMapElement>)newValue);
                chart._core.Update();
            });
@@ -175,7 +176,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
            {
                var chart = (GeoMap)o;
                var seriesObserver = chart._seriesObserver;
-               seriesObserver.Dispose((IEnumerable<IGeoSeries>)oldValue);
+               seriesObserver?.Dispose((IEnumerable<IGeoSeries>)oldValue);
                seriesObserver.Initialize((IEnumerable<IGeoSeries>)newValue);
                chart._core.Update();
            });

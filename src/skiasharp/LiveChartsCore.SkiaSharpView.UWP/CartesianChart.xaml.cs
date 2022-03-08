@@ -106,8 +106,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var seriesObserver = chart._seriesObserver;
-                        seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
-                        seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                        seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
+                        seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
@@ -122,8 +122,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._xObserver;
-                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                        observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
+                        observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                        observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
@@ -138,8 +138,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._yObserver;
-                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                        observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
+                        observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                        observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
@@ -154,8 +154,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._sectionsObserver;
-                        observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
-                        observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
+                        observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
+                        observer?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
@@ -454,7 +454,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         LvcSize IChartView.ControlSize => _canvas == null
             ? throw new Exception("Canvas not found")
-            : (new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
+            : new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight };
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;

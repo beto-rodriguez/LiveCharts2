@@ -188,25 +188,11 @@ public static class Extensions
     /// Creates a transition builder for the specified properties.
     /// </summary>
     /// <param name="animatable">The animatable.</param>
-    /// <param name="properties">The properties.</param>
-    /// <returns></returns>
-    /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
-    public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
+    /// <param name="properties">The properties, use null to apply the transition to all the properties.</param>
+    /// <returns>The builder</returns>
+    public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[]? properties)
     {
-        return properties is null || properties.Length == 0
-            ? throw new Exception($"At least one property is required when calling {nameof(TransitionateProperties)}")
-            : new TransitionBuilder(animatable, properties);
-    }
-
-    /// <summary>
-    /// Creates a transition builder for the all the properties.
-    /// </summary>
-    /// <param name="animatable">The animatable.</param>
-    /// <returns></returns>
-    /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
-    public static TransitionBuilder TransitionateAllProperties(this IAnimatable animatable)
-    {
-        return TransitionateProperties(animatable, animatable.GetAllAnimatableProperties());
+        return new TransitionBuilder(animatable, properties);
     }
 
     /// <summary>
@@ -336,20 +322,21 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Gets a scaler for the given axis.
+    /// Gets a scaler for the given axis with the measured bounds (the target, the final dimension of the chart).
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>
     /// <param name="axis"></param>
     /// <param name="chart"></param>
     /// <returns></returns>
-    public static Scaler GetScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
+    public static Scaler GetNextScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
         where TDrawingContext : DrawingContext
     {
         return new Scaler(chart.DrawMarginLocation, chart.DrawMarginSize, axis);
     }
 
     /// <summary>
-    /// Gets a scaler that is aware of its current state or scale for the given axis.
+    /// Gets a scaler that is built based on the dimensions of the chart at a given time, the scaler is built based on the
+    /// animations that are happening in the chart at the moment this method is called.
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>
     /// <param name="axis"></param>
@@ -360,7 +347,15 @@ public static class Extensions
     {
         return !axis.ActualBounds.HasPreviousState
             ? null
-            : new Scaler(chart.DrawMarginLocation, chart.DrawMarginSize, axis, true);
+            : new Scaler(
+                chart.ActualBounds.Location,
+                chart.ActualBounds.Size,
+                axis,
+                new Bounds
+                {
+                    Max = axis.ActualBounds.MaxVisibleBound,
+                    Min = axis.ActualBounds.MinVisibleBound
+                });
     }
 
     private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)

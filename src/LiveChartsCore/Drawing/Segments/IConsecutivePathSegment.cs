@@ -20,31 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Segments;
-
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
-/// Defines a line bezier segment chart point.
+/// Defines a path segment that is part of a sequence.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-public interface ILineBezierVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IConsecutivePathSegment : IAnimatable
 {
     /// <summary>
-    /// Gets the geometry.
+    /// Gets or sets the segment id, a unique and consecutive integer.
     /// </summary>
-    /// <value>
-    /// The geometry.
-    /// </value>
-    ISizedGeometry<TDrawingContext> Geometry { get; }
+    int Id { get; }
 
     /// <summary>
-    /// Gets the bezier.
+    /// Gets the start point in the X axis.
     /// </summary>
-    /// <value>
-    /// The bezier.
-    /// </value>
-    CubicBezierSegment Bezier { get; }
+    float Xi { get; }
+
+    /// <summary>
+    /// Gets the end point in the X axis.
+    /// </summary>
+    float Xj { get; }
+
+    /// <summary>
+    /// Gets the start point in the Y axis.
+    /// </summary>
+    float Yi { get; }
+
+    /// <summary>
+    /// Gets the end point in the Y axis.
+    /// </summary>
+    float Yj { get; }
+
+    /// <summary>
+    /// Copies the segment to the end of the given segment.
+    /// </summary>
+    /// <param name="segment">The segment.</param>
+    void Follows(IConsecutivePathSegment segment);
 }

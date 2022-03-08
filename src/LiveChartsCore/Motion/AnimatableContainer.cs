@@ -21,36 +21,47 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+namespace LiveChartsCore.Motion;
 
-/// <inheritdoc cref="ILinePathSegment{TPath}" />
-public class LineSegment : PathCommand, ILinePathSegment<SKPath>
+/// <summary>
+/// Defines the animatable container class.
+/// </summary>
+public class AnimatableContainer : Animatable
 {
-    private readonly FloatMotionProperty _xProperty;
-    private readonly FloatMotionProperty _yProperty;
+    private readonly PointMotionProperty _locationProperty;
+    private readonly SizeMotionProperty _sizeMotionProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LineSegment"/> class.
+    /// Initializes a new instance of the <see cref="AnimatableContainer"/> class.
     /// </summary>
-    public LineSegment()
+    public AnimatableContainer()
     {
-        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
-        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
+        _locationProperty = RegisterMotionProperty(new PointMotionProperty(nameof(Location), new LvcPoint()));
+        _sizeMotionProperty = RegisterMotionProperty(new SizeMotionProperty(nameof(Size), new LvcSize()));
     }
 
-    /// <inheritdoc cref="ILinePathSegment{TPath}.X" />
-    public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ILinePathSegment{TPath}.Y" />
-    public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
-    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
+    /// <summary>
+    /// Gets or sets the location.
+    /// </summary>
+    public LvcPoint Location
     {
-        SetCurrentTime(currentTime);
-        path.LineTo(X, Y);
+        get => _locationProperty.GetMovement(this);
+        set => _locationProperty.SetMovement(value, this);
     }
+
+
+    /// <summary>
+    /// Gets or sets the size.
+    /// </summary>
+    public LvcSize Size
+    {
+        get => _sizeMotionProperty.GetMovement(this);
+        set => _sizeMotionProperty.SetMovement(value, this);
+    }
+
+    /// <summary>
+    /// Gets a valuea indicating whewhter the container have a previous state.
+    /// </summary>
+    public bool HasPreviousState { get; internal set; }
 }

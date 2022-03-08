@@ -136,10 +136,11 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                         new() { Height = GridLength.Auto },
                         new() { Height = GridLength.Star }
                     };
-                GridLayout.SetRow(mobileChart.Legend, 0);
-                GridLayout.SetRow(mobileChart.Canvas, 1);
-                GridLayout.SetColumn(mobileChart.Legend, 0);
-                GridLayout.SetColumn(mobileChart.Canvas, 0);
+
+                Grid.SetRow(mobileChart.Legend, 0);
+                Grid.SetRow(mobileChart.Canvas, 1);
+                Grid.SetColumn(mobileChart.Legend, 0);
+                Grid.SetColumn(mobileChart.Canvas, 0);
                 break;
             case LegendPosition.Left:
                 IsVisible = true;
@@ -153,10 +154,10 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                         new() { Width = GridLength.Auto },
                         new() { Width = GridLength.Star }
                     };
-                GridLayout.SetColumn(mobileChart.Legend, 0);
-                GridLayout.SetColumn(mobileChart.Canvas, 1);
-                GridLayout.SetRow(mobileChart.Legend, 0);
-                GridLayout.SetRow(mobileChart.Canvas, 0);
+                Grid.SetColumn(mobileChart.Legend, 0);
+                Grid.SetColumn(mobileChart.Canvas, 1);
+                Grid.SetRow(mobileChart.Legend, 0);
+                Grid.SetRow(mobileChart.Canvas, 0);
                 break;
             case LegendPosition.Right:
                 IsVisible = true;
@@ -170,10 +171,10 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                         new() { Width = GridLength.Star },
                         new() { Width = GridLength.Auto }
                     };
-                GridLayout.SetColumn(mobileChart.Canvas, 0);
-                GridLayout.SetColumn(mobileChart.Legend, 1);
-                GridLayout.SetRow(mobileChart.Legend, 0);
-                GridLayout.SetRow(mobileChart.Canvas, 0);
+                Grid.SetColumn(mobileChart.Canvas, 0);
+                Grid.SetColumn(mobileChart.Legend, 1);
+                Grid.SetRow(mobileChart.Legend, 0);
+                Grid.SetRow(mobileChart.Canvas, 0);
                 break;
             case LegendPosition.Bottom:
                 IsVisible = true;
@@ -187,10 +188,10 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                         new() { Height = GridLength.Star },
                         new() { Height = GridLength.Auto }
                     };
-                GridLayout.SetRow(mobileChart.Canvas, 0);
-                GridLayout.SetRow(mobileChart.Legend, 1);
-                GridLayout.SetColumn(mobileChart.Legend, 0);
-                GridLayout.SetColumn(mobileChart.Canvas, 0);
+                Grid.SetRow(mobileChart.Canvas, 0);
+                Grid.SetRow(mobileChart.Legend, 1);
+                Grid.SetColumn(mobileChart.Legend, 0);
+                Grid.SetColumn(mobileChart.Canvas, 0);
                 break;
             default:
                 break;

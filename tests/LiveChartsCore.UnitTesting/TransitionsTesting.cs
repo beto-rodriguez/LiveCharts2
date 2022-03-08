@@ -31,14 +31,14 @@ namespace LiveChartsCore.UnitTesting;
 public class TransitionsTesting
 {
     [TestMethod]
-    public void TestMethod1()
+    public void InfiniteAnimation()
     {
         var r = new RectangleGeometry();
         var a = (IAnimatable)r;
         var duration = TimeSpan.FromSeconds(1);
         var easing = EasingFunctions.Lineal;
 
-        r.SetPropertiesTransitions(
+        r.SetTransition(
             new Animation(easing, duration, int.MaxValue),
             nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
@@ -63,7 +63,7 @@ public class TransitionsTesting
         r.X = 50;
         r.Width = 50;
         r.Height = 50;
-        r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+        r.CompleteTransition(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
         r.Y = 100;
         r.X = 100;
@@ -99,14 +99,14 @@ public class TransitionsTesting
     }
 
     [TestMethod]
-    public void TestMethod2()
+    public void AnimationComplete()
     {
         var r = new RectangleGeometry();
         var a = (IAnimatable)r;
         var duration = TimeSpan.FromSeconds(1);
         var easing = EasingFunctions.Lineal;
 
-        r.SetPropertiesTransitions(
+        r.SetTransition(
             new Animation(easing, duration),
             nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
@@ -130,14 +130,14 @@ public class TransitionsTesting
         r.X = 0;
         r.Width = 0;
         r.Height = 0;
-        r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+        r.CompleteTransition(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
         DrawFrame(time);
 
         Assert.IsTrue(a.IsValid);
 
         r.Y = 100;
         DrawFrame(time);
-        var p = r.GetTransitionProperty(nameof(r.Y));
+        var p = r.MotionProperties[nameof(r.Y)];
 
         time += 500;
         DrawFrame(time);
@@ -154,9 +154,9 @@ public class TransitionsTesting
         var f = EasingFunctions.BuildFunctionUsingKeyFrames(
             new[]
             {
-                    new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
-                    new KeyFrame { Time = 0.5f, Value = 1, EasingFunction = EasingFunctions.Lineal },
-                    new KeyFrame { Time = 1, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                new KeyFrame { Time = 0.5f, Value = 1, EasingFunction = EasingFunctions.Lineal },
+                new KeyFrame { Time = 1, Value = 0, EasingFunction = EasingFunctions.Lineal },
             });
 
         var r = new[] { 0, 0.2f, 0.4f, 0.6f, 0.8f, 1, 0.8f, 0.6f, 0.4f, 0.2f, 0 };
@@ -171,10 +171,10 @@ public class TransitionsTesting
         f = EasingFunctions.BuildFunctionUsingKeyFrames(
             new[]
             {
-                    new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
-                    new KeyFrame { Time = 0.30f, Value = 0, EasingFunction = EasingFunctions.Lineal },
-                    new KeyFrame { Time = 0.80f, Value = 1, EasingFunction = EasingFunctions.Lineal },
-                    new KeyFrame { Time = 1, Value = 1, EasingFunction = EasingFunctions.Lineal },
+                new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                new KeyFrame { Time = 0.30f, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                new KeyFrame { Time = 0.80f, Value = 1, EasingFunction = EasingFunctions.Lineal },
+                new KeyFrame { Time = 1, Value = 1, EasingFunction = EasingFunctions.Lineal },
             });
 
         r = new[] { 0, 0, 0, 0, 0.2f, 0.4f, 0.6f, 0.8f, 1, 1 };
@@ -184,6 +184,63 @@ public class TransitionsTesting
         {
             var p = f(t);
             Assert.IsTrue(Math.Abs(p - r[i++]) < 0.000001);
+        }
+    }
+
+    [TestMethod]
+    public void NotFinishedAnimation()
+    {
+        var r = new RectangleGeometry();
+        var a = (IAnimatable)r;
+        var duration = TimeSpan.FromMilliseconds(100);
+        var easing = EasingFunctions.Lineal;
+
+        r.SetTransition(
+            new Animation(easing, duration, int.MaxValue), nameof(r.X));
+
+        void DrawFrame(long time)
+        {
+            a.CurrentTime = time;
+            a.IsValid = true;
+        }
+
+        var time = 0;
+        DrawFrame(time);
+
+        r.X = 0;
+        r.CompleteTransition(nameof(r.X));
+
+        r.X = 100;
+
+        a.CurrentTime = time;
+        time = 0;
+
+        var start = 0d;
+        var end = 100d;
+
+        var sv = r.X;
+        var dv = 100 - sv;
+
+        while (time <= duration.TotalMilliseconds)
+        {
+            DrawFrame(time);
+
+            if (time == 80)
+            {
+                sv = r.X;
+                dv = 200 - sv;
+
+                r.X = 200;
+                start = time;
+                end = time + 100;
+            }
+
+            var x = r.X;
+
+            var p = (time - start) / (end - start);
+            Assert.IsTrue(Math.Abs(x - (sv + p * dv)) < 0.001);
+
+            time += 10;
         }
     }
 }

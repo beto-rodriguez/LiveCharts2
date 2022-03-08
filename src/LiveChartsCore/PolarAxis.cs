@@ -345,7 +345,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                     textGeometry.X = l.X;
                     textGeometry.Y = l.Y;
                     textGeometry.Opacity = 0;
-                    textGeometry.CompleteAllTransitions();
+                    textGeometry.CompleteTransition(null);
                 }
 
                 if (SeparatorsPaint is not null && ShowSeparatorLines)
@@ -367,7 +367,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                                     .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
                         lineGeometry.Opacity = 0;
-                        lineGeometry.CompleteAllTransitions();
+                        lineGeometry.CompleteTransition(null);
                     }
 
                     if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
@@ -393,7 +393,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                         polarSeparator.Circle.Width = radius * 2;
                         polarSeparator.Circle.Height = radius * 2;
                         circleGeometry.Opacity = 0;
-                        circleGeometry.CompleteAllTransitions();
+                        circleGeometry.CompleteTransition(null);
                     }
                 }
 
@@ -432,7 +432,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                 visualSeparator.Label.X = location.X;
                 visualSeparator.Label.Y = location.Y;
 
-                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteTransition(null);
             }
 
             if (visualSeparator.Geometry is not null)
@@ -446,7 +446,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                     lineSepartator.Line.Y = innerPos.Y;
                     lineSepartator.Line.Y1 = location.Y;
 
-                    if (!_animatableBounds.HasPreviousState) lineSepartator.Line.CompleteAllTransitions();
+                    if (!_animatableBounds.HasPreviousState) lineSepartator.Line.CompleteTransition(null);
                 }
 
                 if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
@@ -458,7 +458,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                     polarSeparator.Circle.Width = radius * 2;
                     polarSeparator.Circle.Height = radius * 2;
 
-                    if (!_animatableBounds.HasPreviousState) polarSeparator.Circle.CompleteAllTransitions();
+                    if (!_animatableBounds.HasPreviousState) polarSeparator.Circle.CompleteTransition(null);
                 }
 
                 visualSeparator.Geometry.Opacity = 1;

@@ -21,39 +21,36 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
+using SkiaSharp;
 
-namespace LiveChartsCore.Motion;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
-/// <summary>
-/// Defines the <see cref="LvcPoint"/> motion property class.
-/// </summary>
-public class PointMotionProperty : MotionProperty<LvcPoint>
+/// <inheritdoc cref="ILinePathSegment{TPath}" />
+public class LineSegment : PathCommand, ILinePathSegment<SKPath>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public PointMotionProperty(string propertyName)
-        : base(propertyName)
-    { }
+    private readonly FloatMotionProperty _xProperty;
+    private readonly FloatMotionProperty _yProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
+    /// Initializes a new instance of the <see cref="LineSegment"/> class.
     /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <param name="value">The value.</param>
-    public PointMotionProperty(string propertyName, LvcPoint value)
-        : base(propertyName)
+    public LineSegment()
     {
-        fromValue = value;
-        toValue = value;
+        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
+        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
     }
 
-    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override LvcPoint OnGetMovement(float progress)
+    /// <inheritdoc cref="ILinePathSegment{TPath}.X" />
+    public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="ILinePathSegment{TPath}.Y" />
+    public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
+    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
     {
-        return new LvcPoint(
-            fromValue.X + progress * (toValue.X - fromValue.X),
-            fromValue.Y + progress * (toValue.Y - fromValue.Y));
+        CurrentTime = currentTime;
+        path.LineTo(X, Y);
     }
 }

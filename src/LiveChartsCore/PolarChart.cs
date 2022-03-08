@@ -244,6 +244,8 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
             secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds);
             primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
+            secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.SecondaryBounds);
+            primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.PrimaryBounds);
 
             series.IsNotifyingChanges = true;
         }

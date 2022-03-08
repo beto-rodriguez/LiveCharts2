@@ -281,7 +281,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     /// <summary>
     /// The chart point pointer down command property
     /// </summary>
-    public static readonly AvaloniaProperty<ICommand?>ChartPointPointerDownCommandProperty =
+    public static readonly AvaloniaProperty<ICommand?> ChartPointPointerDownCommandProperty =
         AvaloniaProperty.Register<PieChart, ICommand?>(nameof(ChartPointPointerDownCommand), null, inherits: true);
 
     #endregion
@@ -696,8 +696,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-            _seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
+            _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
             return;
         }
 

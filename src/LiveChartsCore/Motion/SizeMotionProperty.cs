@@ -21,36 +21,39 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+namespace LiveChartsCore.Motion;
 
-/// <inheritdoc cref="IMoveToPathCommand{TPath}" />
-public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
+/// <summary>
+/// Defines the <see cref="LvcSize"/> motion property class.
+/// </summary>
+public class SizeMotionProperty : MotionProperty<LvcSize>
 {
-    private readonly FloatMotionProperty _xProperty;
-    private readonly FloatMotionProperty _yProperty;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    public SizeMotionProperty(string propertyName)
+        : base(propertyName)
+    { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MoveToPathCommand"/> class.
+    /// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
     /// </summary>
-    public MoveToPathCommand()
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="value">The value.</param>
+    public SizeMotionProperty(string propertyName, LvcSize value)
+        : base(propertyName)
     {
-        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
-        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
+        fromValue = value;
+        toValue = value;
     }
 
-    /// <inheritdoc cref="IMoveToPathCommand{TPath}.X" />
-    public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IMoveToPathCommand{TPath}.Y" />
-    public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
-    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override LvcSize OnGetMovement(float progress)
     {
-        SetCurrentTime(currentTime);
-        path.MoveTo(X, Y);
+        return new LvcSize(
+            fromValue.Width + progress * (toValue.Width - fromValue.Width),
+            fromValue.Height + progress * (toValue.Height - fromValue.Height));
     }
 }

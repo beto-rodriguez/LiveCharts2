@@ -193,7 +193,7 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
                                 .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                 .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                    l.CompleteAllTransitions();
+                    l.CompleteTransition(null);
                     label = l;
                     point.Context.Label = label;
                 }
@@ -332,7 +332,7 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
         var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
-            visual.CompleteAllTransitions();
+            visual.CompleteTransition(null);
             visual.RemoveOnCompleted = true;
             DataFactory.DisposePoint(point);
             return;

@@ -579,6 +579,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
+        UpdateBounds();
+
         var totalAxes = XAxes.Concat(YAxes).ToArray();
         var toDeleteAxes = new HashSet<IPlane<TDrawingContext>>(_everMeasuredAxes);
 
@@ -680,6 +682,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.ActualBounds.HasPreviousState = true;
             axis.IsNotifyingChanges = true;
         }
+
+        ActualBounds.HasPreviousState = true;
 
         IsZoomingOrPanning = false;
         InvokeOnUpdateStarted();

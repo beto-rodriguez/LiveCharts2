@@ -20,17 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using SkiaSharp;
+using LiveChartsCore.Drawing.Segments;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+namespace LiveChartsCore.Drawing;
 
-/// <inheritdoc cref="IPathCommand{TPathContext}" />
-public abstract class PathCommand : Animatable, IPathCommand<SKPath>
+/// <summary>
+/// Defines a line bezier segment chart point.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IVisualChartPoint{TDrawingContext}" />
+public interface ICubicBezierVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
-    /// <inheritdoc cref="IPathCommand{TPathContext}.Id" />
-    public int Id { get; set; }
+    /// <summary>
+    /// Gets the geometry.
+    /// </summary>
+    /// <value>
+    /// The geometry.
+    /// </value>
+    ISizedGeometry<TDrawingContext> Geometry { get; }
 
-    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
-    public abstract void Execute(SKPath path, long currentTime, Animatable pathGeometry);
+    /// <summary>
+    /// Gets the bezier.
+    /// </summary>
+    /// <value>
+    /// The bezier.
+    /// </value>
+    CubicBezierSegment Bezier { get; }
 }

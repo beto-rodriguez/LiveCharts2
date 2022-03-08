@@ -38,7 +38,7 @@ namespace LiveChartsCore;
 public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
     : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
         where TVisualPoint : StepLineVisualPoint<TDrawingContext, TVisual>, new()
-        where TPathGeometry : IAreaGeometry<StepLineSegment, TDrawingContext>, new()
+        where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext

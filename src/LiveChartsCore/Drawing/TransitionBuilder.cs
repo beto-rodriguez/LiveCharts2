@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 public class TransitionBuilder
 {
-    private readonly string[] _properties;
+    private readonly string[]? _properties;
     private readonly IAnimatable _target;
 
     /// <summary>
@@ -37,7 +37,7 @@ public class TransitionBuilder
     /// </summary>
     /// <param name="target">The target.</param>
     /// <param name="properties">The properties.</param>
-    public TransitionBuilder(IAnimatable target, string[] properties)
+    public TransitionBuilder(IAnimatable target, string[]? properties)
     {
         _target = target;
         _properties = properties;
@@ -50,7 +50,7 @@ public class TransitionBuilder
     /// <returns>The transition</returns>
     public TransitionBuilder WithAnimation(Animation animation)
     {
-        _target.SetPropertiesTransitions(animation, _properties);
+        _target.SetTransition(animation, _properties);
         return this;
     }
 
@@ -72,7 +72,7 @@ public class TransitionBuilder
     /// <returns>The transition</returns>
     public TransitionBuilder CompleteCurrentTransitions()
     {
-        _target.CompleteTransitions(_properties);
+        _target.CompleteTransition(_properties);
         return this;
     }
 }

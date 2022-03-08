@@ -59,7 +59,7 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
         foreach (var segment in _commands)
         {
             segment.IsValid = true;
-            segment.Execute(path, GetCurrentTime(), this);
+            segment.Execute(path, CurrentTime, this);
             isValid = isValid && segment.IsValid;
 
             if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
@@ -76,34 +76,34 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
 
         context.Canvas.DrawPath(path, context.Paint);
 
-        if (!isValid) SetInvalidState();
+        if (!isValid) IsValid = false;
     }
 
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddLast(IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddLast(IPathCommand<SKPath> command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddLast(command);
     }
 
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddFirst(IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddFirst(IPathCommand<SKPath> command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddFirst(command);
     }
 
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddAfter(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddAfter(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddAfter(node, command);
     }
 
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddBefore(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddBefore(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddBefore(node, command);
     }
 
@@ -116,14 +116,14 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(IPathCommand{TPathArgs})" />
     public bool RemoveCommand(IPathCommand<SKPath> command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.Remove(command);
     }
 
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(LinkedListNode{IPathCommand{TPathArgs}})" />
     public void RemoveCommand(LinkedListNode<IPathCommand<SKPath>> node)
     {
-        SetInvalidState();
+        IsValid = false;
         _commands.Remove(node);
     }
 
@@ -133,14 +133,15 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
         _commands.Clear();
     }
 
-    /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
-    public override void CompleteAllTransitions()
+    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[]?)" />
+
+    public override void CompleteTransition(params string[]? propertyName)
     {
         foreach (var segment in _commands)
         {
-            segment.CompleteAllTransitions();
+            segment.CompleteTransition(propertyName);
         }
 
-        base.CompleteAllTransitions();
+        base.CompleteTransition(propertyName);
     }
 }

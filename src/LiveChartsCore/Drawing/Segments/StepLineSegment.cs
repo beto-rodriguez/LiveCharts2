@@ -27,44 +27,52 @@ namespace LiveChartsCore.Drawing.Segments;
 /// <summary>
 /// Defines a step line segment.
 /// </summary>
-public class StepLineSegment : Animatable, IPathSegment
+public class StepLineSegment : Animatable, IConsecutivePathSegment
 {
-    private readonly FloatMotionProperty _x0Property;
-    private readonly FloatMotionProperty _y0Property;
-    private readonly FloatMotionProperty _x1Property;
-    private readonly FloatMotionProperty _y1Property;
+    private readonly FloatMotionProperty _xiProperty;
+    private readonly FloatMotionProperty _yiProperty;
+    private readonly FloatMotionProperty _xjProperty;
+    private readonly FloatMotionProperty _yjProperty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StepLineSegment"/> class.
     /// </summary>
     public StepLineSegment()
     {
-        _x0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X0), 0f));
-        _y0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y0), 0f));
-        _x1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-        _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
+        _xiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xi), 0f));
+        _yiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yi), 0f));
+        _xjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xj), 0f));
+        _yjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yj), 0f));
     }
 
-    /// <inheritdoc cref="IPathSegment.Id"/>
+    /// <inheritdoc cref="IConsecutivePathSegment.Xi"/>
+    public float Xi { get => _xiProperty.GetMovement(this); set => _xiProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IConsecutivePathSegment.Yi"/>
+    public float Yi { get => _yiProperty.GetMovement(this); set => _yiProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IConsecutivePathSegment.Xj"/>
+    public float Xj { get => _xjProperty.GetMovement(this); set => _xjProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IConsecutivePathSegment.Yj"/>
+    public float Yj { get => _yjProperty.GetMovement(this); set => _yjProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IConsecutivePathSegment.Id"/>
     public int Id { get; set; }
 
-    /// <summary>
-    /// Gets or sets the X0.
-    /// </summary>
-    public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
+    /// <inheritdoc cref="IConsecutivePathSegment.Follows(IConsecutivePathSegment)"/>
+    void IConsecutivePathSegment.Follows(IConsecutivePathSegment segment)
+    {
+        IsValid = segment.IsValid;
+        CurrentTime = segment.CurrentTime;
+        RemoveOnCompleted = segment.RemoveOnCompleted;
 
-    /// <summary>
-    /// Gets or sets the Y0.
-    /// </summary>
-    public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
+        var xProp = segment.MotionProperties[nameof(IConsecutivePathSegment.Xj)];
+        var yProp = segment.MotionProperties[nameof(IConsecutivePathSegment.Yj)];
 
-    /// <summary>
-    /// Gets or sets the X1.
-    /// </summary>
-    public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
-
-    /// <summary>
-    /// Gets or sets the Y1.
-    /// </summary>
-    public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
+        MotionProperties[nameof(Xi)].CopyFrom(xProp);
+        MotionProperties[nameof(Xj)].CopyFrom(xProp);
+        MotionProperties[nameof(Yi)].CopyFrom(yProp);
+        MotionProperties[nameof(Yj)].CopyFrom(yProp);
+    }
 }

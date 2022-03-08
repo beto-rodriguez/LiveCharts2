@@ -105,6 +105,9 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     /// </summary>
     public string? FontFamily { get; set; }
 
+    /// <inheritdoc cref="IAnimatable.MotionProperties"/>
+    public Dictionary<string, IMotionProperty> MotionProperties => throw new NotImplementedException();
+
     /// <summary>
     /// Adds the geometry to paint task.
     /// </summary>
@@ -122,12 +125,6 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     }
 
     /// <summary>
-    /// Completes the transitions.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public void CompleteTransitions(params string[] propertyName) { }
-
-    /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public void Dispose() { }
@@ -140,16 +137,6 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     public IEnumerable<IDrawable<TDrawingContext>> GetGeometries(MotionCanvas<TDrawingContext> canvas)
     {
         return Enumerable.Empty<IDrawable<TDrawingContext>>();
-    }
-
-    /// <summary>
-    /// Gets the transition property.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    public IMotionProperty GetTransitionProperty(string propertyName)
-    {
-        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -172,37 +159,20 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     public void ClearGeometriesFromPaintTask(MotionCanvas<TDrawingContext> canvas) { }
 
     /// <summary>
-    /// Removes a property transition.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public void RemovePropertyTransition(string propertyName) { }
-
-    /// <summary>
     /// Sets the geometries.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometries">The geometries.</param>
     public void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries) { }
 
-    /// <summary>
-    /// Sets the properties transitions.
-    /// </summary>
-    /// <param name="animation">The animation.</param>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <exception cref="NotImplementedException"></exception>
-    public void SetPropertiesTransitions(Animation? animation, params string[] propertyName) { }
+    /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[])"/>
+    public void SetTransition(Animation? animation, params string[]? propertyName) { }
 
-    /// <summary>
-    /// Completes all transitions.
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public void CompleteAllTransitions() { }
+    /// <inheritdoc cref="IAnimatable.RemoveTransition(string[])"/>
+    public void RemoveTransition(params string[]? propertyName) { }
 
-    /// <summary>
-    /// Removes all the current transitions.
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public void RemoveTransitions() { }
+    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])"/>
+    public void CompleteTransition(params string[]? propertyName) { }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
     public void ApplyOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry) { }
@@ -222,9 +192,7 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
     /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})" />
     public void ReleaseCanvas(MotionCanvas<TDrawingContext> canvas) { }
 
-    ///  <inheritdoc cref="IAnimatable.GetAllAnimatableProperties"/>
-    public string[] GetAllAnimatableProperties()
-    {
-        return Array.Empty<string>();
-    }
+    /// <inheritdoc cref="IAnimatable.CopyAnimatableFrom(IAnimatable)"/>
+    public void CopyAnimatableFrom(IAnimatable source)
+    { }
 }

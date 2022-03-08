@@ -191,7 +191,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                                 .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                 .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                    l.CompleteAllTransitions();
+                    l.CompleteTransition(null);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -349,7 +349,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
-            visual.CompleteAllTransitions();
+            visual.CompleteTransition(null);
             visual.RemoveOnCompleted = true;
             DataFactory.DisposePoint(point);
             return;

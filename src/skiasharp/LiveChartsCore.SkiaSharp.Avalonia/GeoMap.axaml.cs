@@ -271,14 +271,14 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
         if (change.Property.Name == nameof(Shapes))
         {
-            _shapesObserver.Dispose((IEnumerable<IMapElement>)change.OldValue.Value);
-            _shapesObserver.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
+            _shapesObserver?.Dispose((IEnumerable<IMapElement>)change.OldValue.Value);
+            _shapesObserver?.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver.Dispose((IEnumerable<IGeoSeries>)change.OldValue.Value);
-            _seriesObserver.Initialize((IEnumerable<IGeoSeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<IGeoSeries>)change.OldValue.Value);
+            _seriesObserver?.Initialize((IEnumerable<IGeoSeries>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(ViewCommand))

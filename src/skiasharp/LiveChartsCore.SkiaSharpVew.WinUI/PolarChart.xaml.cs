@@ -130,8 +130,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
                 {
                     var chart = (PolarChart)o;
                     var seriesObserver = chart._seriesObserver;
-                    seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
+                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -146,8 +146,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
                 {
                     var chart = (PolarChart)o;
                     var observer = chart._angleObserver;
-                    observer.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
-                    observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
+                    observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                    observer?.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -162,8 +162,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
                 {
                     var chart = (PolarChart)o;
                     var observer = chart._radiusObserver;
-                    observer.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
-                    observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
+                    observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                    observer?.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -417,7 +417,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     LvcSize IChartView.ControlSize => _canvas == null
         ? throw new Exception("Canvas not found")
-        : (new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
+        : new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;

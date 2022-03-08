@@ -74,8 +74,8 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
                 {
                     var chart = (PieChart)o;
                     var seriesObserver = chart._seriesObserver;
-                    seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
+                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
