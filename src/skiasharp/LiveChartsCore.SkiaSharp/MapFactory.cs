@@ -42,12 +42,6 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
     private readonly HashSet<string> _usedLayers = new();
     private IGeoMapView<SkiaSharpDrawingContext>? _mapView;
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchMapElements(MapContext{TDrawingContext})"/>
-    IEnumerable<IMapElement> IMapFactory<SkiaSharpDrawingContext>.FetchMapElements(MapContext<SkiaSharpDrawingContext> context)
-    {
-        foreach (var shape in context.View.Shapes) yield return shape;
-    }
-
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.GenerateLands(MapContext{TDrawingContext})"/>
     public void GenerateLands(MapContext<SkiaSharpDrawingContext> context)
     {
@@ -162,7 +156,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
-    public void ViewTo(GeoMap<SkiaSharpDrawingContext> sender, object command) { }
+    public void ViewTo(GeoMap<SkiaSharpDrawingContext> sender, object? command) { }
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
     public void Pan(GeoMap<SkiaSharpDrawingContext> sender, LvcPoint delta) { }
@@ -202,8 +196,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                     paint.ClearGeometriesFromPaintTask(_mapView.Canvas);
                 }
 
-                _mapView.Canvas.RemovePaintTask(stroke);
-                _mapView.Canvas.RemovePaintTask(fill);
+                if (stroke is not null) _mapView.Canvas.RemovePaintTask(stroke);
+                if (fill is not null) _mapView.Canvas.RemovePaintTask(fill);
             }
         }
 

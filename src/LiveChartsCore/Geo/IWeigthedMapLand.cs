@@ -20,25 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.ComponentModel;
 
 namespace LiveChartsCore.Geo;
 
 /// <summary>
-/// Defines a shape in a map.
+/// Defines a weighted map shape.
 /// </summary>
-public interface IMapElement : INotifyPropertyChanged
+public interface IWeigthedMapLand : INotifyPropertyChanged
 {
     /// <summary>
-    /// Measures the element with the given context.
+    /// Gets or sets the name of the land.
     /// </summary>
-    [Obsolete]
-    void Measure(object context);
+    string Name { get; set; }
 
     /// <summary>
-    /// Removes the element with the given context.
+    /// Gets or sets the value.
     /// </summary>
-    [Obsolete]
-    void RemoveFromUI(object context);
+    double Value { get; set; }
 }

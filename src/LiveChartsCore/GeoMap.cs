@@ -28,7 +28,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore;
 
@@ -39,7 +38,6 @@ namespace LiveChartsCore;
 public class GeoMap<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly HashSet<IMapElement> _everMeasuredShapes = new();
     private readonly HashSet<IGeoSeries<TDrawingContext>> _everMeasuredSeries = new();
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _panningThrottler;
@@ -126,7 +124,6 @@ public class GeoMap<TDrawingContext>
         if (View.Fill is not null) View.Canvas.RemovePaintTask(View.Fill);
 
         _everMeasuredSeries.Clear();
-        _everMeasuredShapes.Clear();
         _heatPaint = null!;
         _previousStroke = null!;
         _previousFill = null!;
@@ -245,20 +242,7 @@ public class GeoMap<TDrawingContext>
             this, View, View.ActiveMap,
             Maps.BuildProjector(View.MapProjection, new[] { View.Width, View.Height }));
 
-        #region obsolete, will be removed
-        var weightBounds = new Bounds();
-        foreach (var shape in _mapFactory.FetchMapElements(context))
-        {
-            if (shape is not IWeigthedMapShape wShape) continue;
-            weightBounds.AppendValue(wShape.Value);
-        }
-        var hm = View.HeatMap;
-        var heatStops = HeatFunctions.BuildColorStops(hm, View.ColorStops);
-        #endregion
-
         _mapFactory.GenerateLands(context);
-
-        var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
 
         var toDeleteSeries = new HashSet<IGeoSeries<TDrawingContext>>(_everMeasuredSeries);
         foreach (var series in View.Series.Cast<IGeoSeries<TDrawingContext>>())
@@ -266,22 +250,6 @@ public class GeoMap<TDrawingContext>
             series.Measure(context);
             _ = _everMeasuredSeries.Add(series);
             _ = toDeleteSeries.Remove(series);
-        }
-
-        #region OBSOLETE
-        var shapeContext = new MapShapeContext<TDrawingContext>(View, _heatPaint, heatStops, weightBounds);
-        foreach (var shape in _mapFactory.FetchMapElements(context))
-        {
-            _ = _everMeasuredShapes.Add(shape);
-            shape.Measure(shapeContext);
-            _ = toDeleteShapes.Remove(shape);
-        }
-        #endregion
-
-        foreach (var shape in toDeleteShapes)
-        {
-            shape.RemoveFromUI(context);
-            _ = _everMeasuredShapes.Remove(shape);
         }
 
         foreach (var series in toDeleteSeries)

@@ -191,8 +191,4 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})" />
     public void ReleaseCanvas(MotionCanvas<TDrawingContext> canvas) { }
-
-    /// <inheritdoc cref="IAnimatable.CopyAnimatableFrom(IAnimatable)"/>
-    public void CopyAnimatableFrom(IAnimatable source)
-    { }
 }

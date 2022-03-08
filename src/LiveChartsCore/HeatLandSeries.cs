@@ -43,10 +43,10 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
     private bool _isHeatInCanvas = false;
     private LvcColor[] _heatMap = Array.Empty<LvcColor>();
     private double[]? _colorStops;
-    private IEnumerable<IWeigthedMapShape>? _lands;
+    private IEnumerable<IWeigthedMapLand>? _lands;
     private bool _isVisible;
     private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = new();
-    private readonly CollectionDeepObserver<IWeigthedMapShape> _observer;
+    private readonly CollectionDeepObserver<IWeigthedMapLand> _observer;
     private readonly HashSet<LandDefinition> _everUsed = new();
 
     /// <summary>
@@ -54,7 +54,7 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
     /// </summary>
     public HeatLandSeries()
     {
-        _observer = new CollectionDeepObserver<IWeigthedMapShape>(
+        _observer = new CollectionDeepObserver<IWeigthedMapLand>(
             (sender, e) => NotifySubscribers(),
             (sender, e) => NotifySubscribers());
     }
@@ -82,7 +82,7 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
     /// <summary>
     /// Gets or sets the lands.
     /// </summary>
-    public IEnumerable<IWeigthedMapShape>? Lands
+    public IEnumerable<IWeigthedMapLand>? Lands
     {
         get => _lands;
         set
@@ -114,7 +114,7 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
         _heatPaint.ZIndex = i + 1;
 
         var bounds = new Bounds();
-        foreach (var shape in Lands ?? Enumerable.Empty<IWeigthedMapShape>())
+        foreach (var shape in Lands ?? Enumerable.Empty<IWeigthedMapLand>())
         {
             bounds.AppendValue(shape.Value);
         }
@@ -123,7 +123,7 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
         var shapeContext = new MapShapeContext<TDrawingContext>(context.View, _heatPaint, heatStops, bounds);
         var toRemove = new HashSet<LandDefinition>(_everUsed);
 
-        foreach (var land in Lands ?? Enumerable.Empty<IWeigthedMapShape>())
+        foreach (var land in Lands ?? Enumerable.Empty<IWeigthedMapLand>())
         {
             var projector = Maps.BuildProjector(
                 context.View.MapProjection, new[] { context.View.Width, context.View.Height });

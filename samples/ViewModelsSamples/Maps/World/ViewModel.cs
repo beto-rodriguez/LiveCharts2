@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Maps.World;
 public class ViewModel
 {
     private bool _isBrazilInChart = true;
-    private readonly IWeigthedMapShape _brazil;
+    private readonly IWeigthedMapLand _brazil;
     private readonly Random _r = new();
 
     public ViewModel()
@@ -52,7 +52,7 @@ public class ViewModel
 
     #region Obsolete
 
-    public IWeigthedMapShape[] Shapes => new HeatLand[]
+    public IWeigthedMapLand[] Shapes => new HeatLand[]
     {
             new() { Name = "bra", Value = 13 },
             new() { Name = "mex", Value = 10 },

@@ -43,18 +43,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
-    private CollectionDeepObserver<IMapElement> _shapesObserver;
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
     private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private LvcColor[] _heatMap =
-    {
-        LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-        LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-    };
-    private double[]? _colorStops = null;
     private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
     private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
     private object? _viewCommand = null;
@@ -69,10 +61,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
 
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
-        _shapesObserver = new CollectionDeepObserver<IMapElement>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
+
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
@@ -128,14 +117,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
-
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IPaint<SkiaSharpDrawingContext>? Stroke
@@ -158,20 +139,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         {
             if (value is not null) value.IsFill = true;
             _fill = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<IMapElement> Shapes
-    {
-        get => _shapes;
-        set
-        {
-            _shapesObserver?.Dispose(_shapes);
-            _shapesObserver?.Initialize(value);
-            _shapes = value;
             OnPropertyChanged();
         }
     }
@@ -212,9 +179,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core?.Unload();
 
         Series = Array.Empty<IGeoSeries>();
-        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
         _seriesObserver = null!;
-        _shapesObserver = null!;
 
         Canvas.Dispose();
     }

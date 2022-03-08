@@ -45,7 +45,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private CollectionDeepObserver<IMapElement> _shapesObserver;
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
@@ -63,15 +62,11 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
 
         SizeChanged += GeoMap_SizeChanged;
 
-        _shapesObserver = new CollectionDeepObserver<IMapElement>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
-        SetValue(ShapesProperty, Enumerable.Empty<IMapElement>());
+
         SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
         SetValue(SyncContextProperty, new object());
@@ -114,25 +109,6 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
             MapProjection.Default, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
-    /// The heat map property
-    /// </summary>
-    public static readonly BindableProperty HeatMapProperty =
-        BindableProperty.Create(
-            nameof(HeatMap), typeof(LvcColor[]), typeof(GeoMap),
-            new[]
-            {
-                  LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-                  LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-            }, BindingMode.Default, null, OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The color stops property
-    /// </summary>
-    public static readonly BindableProperty ColorStopsProperty =
-        BindableProperty.Create(
-            nameof(ColorStops), typeof(double[]), typeof(GeoMap), null, BindingMode.Default, null);
-
-    /// <summary>
     /// The stroke property
     /// </summary>
     public static readonly BindableProperty StrokeProperty =
@@ -151,21 +127,6 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
             BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
-    /// The values property
-    /// </summary>
-    public static readonly BindableProperty ShapesProperty =
-       BindableProperty.Create(
-           nameof(Shapes), typeof(IEnumerable<IMapElement>), typeof(GeoMap), Enumerable.Empty<IMapElement>(),
-           BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
-           {
-               var chart = (GeoMap)o;
-               var seriesObserver = chart._shapesObserver;
-               seriesObserver?.Dispose((IEnumerable<IMapElement>)oldValue);
-               seriesObserver.Initialize((IEnumerable<IMapElement>)newValue);
-               chart._core.Update();
-           });
-
-    /// <summary>
     /// The series property
     /// </summary>
     public static readonly BindableProperty SeriesProperty =
@@ -177,7 +138,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
                var chart = (GeoMap)o;
                var seriesObserver = chart._seriesObserver;
                seriesObserver?.Dispose((IEnumerable<IGeoSeries>)oldValue);
-               seriesObserver.Initialize((IEnumerable<IGeoSeries>)newValue);
+               seriesObserver?.Initialize((IEnumerable<IGeoSeries>)newValue);
                chart._core.Update();
            });
 
@@ -228,20 +189,6 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         set => SetValue(MapProjectionProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap
-    {
-        get => (LvcColor[])GetValue(HeatMapProperty);
-        set => SetValue(HeatMapProperty, value);
-    }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-    public double[]? ColorStops
-    {
-        get => (double[])GetValue(ColorStopsProperty);
-        set => SetValue(ColorStopsProperty, value);
-    }
-
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     public IPaint<SkiaSharpDrawingContext>? Stroke
     {
@@ -264,14 +211,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    public IEnumerable<IMapElement> Shapes
-    {
-        get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
-        set => SetValue(ShapesProperty, value);
-    }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
         get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);
@@ -290,9 +230,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
             _core.Unload();
 
             Series = Array.Empty<IGeoSeries>();
-            Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
             _seriesObserver = null!;
-            _shapesObserver = null!;
 
             Canvas.Dispose();
 

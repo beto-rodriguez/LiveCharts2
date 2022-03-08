@@ -39,13 +39,6 @@ public interface IMapFactory<TDrawingContext> : IDisposable
     void GenerateLands(MapContext<TDrawingContext> context);
 
     /// <summary>
-    /// Fetches the map elements.
-    /// </summary>
-    /// <param name="context">The map context.</param>
-    [Obsolete]
-    IEnumerable<IMapElement> FetchMapElements(MapContext<TDrawingContext> context);
-
-    /// <summary>
     /// Move the map to the specified view.
     /// </summary>
     /// <param name="sender">The sender.</param>
