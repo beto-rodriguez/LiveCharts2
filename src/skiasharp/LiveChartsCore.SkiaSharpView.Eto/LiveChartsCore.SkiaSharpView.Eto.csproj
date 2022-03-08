@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <AssemblyName>LiveChartsCore.SkiaSharpView.Eto</AssemblyName>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.Eto</RootNamespace>
+    <Version>2.0.0-beta.90</Version>
+    <PackageIcon>icon.png</PackageIcon>
+    <Description>Simple, flexible, interactive and powerful data visualization for Eto.Forms.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>BetoRodriguez</Authors>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="images\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Eto.SkiaDraw" Version="0.2.0" />
+  </ItemGroup>
+
+</Project>
