@@ -15,7 +15,7 @@ public partial class View : UserControl
 
         var chart = new GeoMap
         {
-            Shapes = viewModel.Shapes,
+            Series = viewModel.Series,
             MapProjection = LiveChartsCore.Geo.MapProjection.Mercator,
 
             // out of livecharts properties...

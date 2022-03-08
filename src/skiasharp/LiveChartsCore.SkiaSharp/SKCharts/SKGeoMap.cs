@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -57,11 +56,7 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
         MapProjection = mapView.MapProjection;
         Stroke = mapView.Stroke;
         Fill = mapView.Fill;
-
-        // obsoletes, moved to series property.
-        HeatMap = mapView.HeatMap;
-        ColorStops = mapView.ColorStops;
-        Shapes = mapView.Shapes;
+        Series = mapView.Series;
     }
 
     /// <summary>
@@ -140,10 +135,6 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
             _fill = value;
         }
     }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    [Obsolete("Use the Series property instead.")]
-    public IEnumerable<IMapElement> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
     public IEnumerable<IGeoSeries> Series { get; set; } = Array.Empty<IGeoSeries>();

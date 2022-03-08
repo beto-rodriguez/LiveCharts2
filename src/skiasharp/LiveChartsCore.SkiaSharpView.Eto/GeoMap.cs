@@ -42,11 +42,9 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 /// <seealso cref="Eto.Forms.Panel" />
 public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private MotionCanvas motionCanvas1 = new MotionCanvas();
+    private readonly MotionCanvas _motionCanvas = new();
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
-    private CollectionDeepObserver<IMapElement> _shapesObserver;
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
     private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
@@ -69,16 +67,12 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
 
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
-        _shapesObserver = new CollectionDeepObserver<IMapElement>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
 
-        var c = motionCanvas1;
+        var c = _motionCanvas;
 
         c.MouseDown += OnMouseDown;
         c.MouseMove += OnMouseMove;
@@ -90,11 +84,11 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 
         BackgroundColor = global::Eto.Drawing.Colors.White;
 
-        Content = motionCanvas1;
+        Content = _motionCanvas;
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas => motionCanvas1.CanvasCore;
+    public MotionCanvas<SkiaSharpDrawingContext> Canvas => _motionCanvas.CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -157,19 +151,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    public IEnumerable<IMapElement> Shapes
-    {
-        get => _shapes;
-        set
-        {
-            _shapesObserver.Dispose(_shapes);
-            _shapesObserver.Initialize(value);
-            _shapes = value;
-            OnPropertyChanged();
-        }
-    }
-
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
@@ -204,9 +185,7 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         _core?.Unload();
 
         Series = Array.Empty<IGeoSeries>();
-        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
         _seriesObserver = null!;
-        _shapesObserver = null!;
 
         Canvas.Dispose();
     }

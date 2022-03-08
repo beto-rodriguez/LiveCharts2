@@ -8,5 +8,5 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:GeoMap Shapes="{Binding Values}"  MapProjection="Mercator"/>
+    <lvc:GeoMap Series="{Binding Series}"  MapProjection="Mercator"/>
 </ContentPage>

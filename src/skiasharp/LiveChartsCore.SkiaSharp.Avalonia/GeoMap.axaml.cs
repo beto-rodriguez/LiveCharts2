@@ -45,7 +45,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 /// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
 public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private CollectionDeepObserver<IMapElement> _shapesObserver;
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
@@ -57,10 +56,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         InitializeComponent();
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
-        _shapesObserver = new CollectionDeepObserver<IMapElement>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
@@ -105,30 +100,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<MapProjection> MapProjectionProperty =
        AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(MapProjection), MapProjection.Default, inherits: true);
-
-    /// <summary>
-    /// The heat map property.
-    /// </summary>
-    public static readonly AvaloniaProperty<LvcColor[]> HeatMapProperty =
-      AvaloniaProperty.Register<CartesianChart, LvcColor[]>(nameof(HeatMap),
-          new[]
-          {
-                  LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-                  LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-          }, inherits: true);
-
-    /// <summary>
-    /// The color stops property.
-    /// </summary>
-    public static readonly AvaloniaProperty<double[]?> ColorStopsProperty =
-      AvaloniaProperty.Register<CartesianChart, double[]?>(nameof(ColorStops), null, inherits: true);
-
-    /// <summary>
-    /// The shapes property.
-    /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<IMapElement>> ShapesProperty =
-      AvaloniaProperty.Register<CartesianChart, IEnumerable<IMapElement>>(nameof(Shapes),
-          Enumerable.Empty<IMapElement>(), inherits: true);
 
     /// <summary>
     /// The series property.
@@ -205,20 +176,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         set => SetValue(MapProjectionProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap
-    {
-        get => (LvcColor[])GetValue(HeatMapProperty);
-        set => SetValue(HeatMapProperty, value);
-    }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-    public double[]? ColorStops
-    {
-        get => (double[])GetValue(ColorStopsProperty);
-        set => SetValue(ColorStopsProperty, value);
-    }
-
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     public IPaint<SkiaSharpDrawingContext>? Stroke
     {
@@ -241,13 +198,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    public IEnumerable<IMapElement> Shapes
-    {
-        get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
-        set => SetValue(ShapesProperty, value);
-    }
-
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
@@ -268,12 +218,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         base.OnPropertyChanged(change);
 
         if (change.Property.Name == nameof(IsPointerOver)) return;
-
-        if (change.Property.Name == nameof(Shapes))
-        {
-            _shapesObserver?.Dispose((IEnumerable<IMapElement>)change.OldValue.Value);
-            _shapesObserver?.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
-        }
 
         if (change.Property.Name == nameof(Series))
         {
@@ -332,9 +276,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     private void GeoMap_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         Series = Array.Empty<IGeoSeries>();
-        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
         _seriesObserver = null!;
-        _shapesObserver = null!;
 
         Canvas.Dispose();
 

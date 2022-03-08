@@ -12,7 +12,7 @@ public class View : Panel
 
         var chart = new GeoMap
         {
-            Shapes = viewModel.Shapes,
+            Series = viewModel.Series,
             MapProjection = LiveChartsCore.Geo.MapProjection.Mercator,
         };
 

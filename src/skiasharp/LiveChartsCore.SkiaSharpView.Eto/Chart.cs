@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Eto.Forms;
 using Eto.Drawing;
 using LiveChartsCore.Drawing;
@@ -79,8 +78,10 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         if (tooltip is not null) this.tooltip = tooltip;
         if (legend is not null) this.legend = legend;
 
-        motionCanvas = new MotionCanvas();
-        motionCanvas.FramesPerSecond = 90D;
+        motionCanvas = new MotionCanvas
+        {
+            FramesPerSecond = 90D
+        };
         motionCanvas.SizeChanged += OnResized;
 
         UpdateLegendLayout();
@@ -111,7 +112,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
     private void UpdateLegendLayout()
     {
-        var legend = (Control) this.legend;
+        var legend = (Control)this.legend;
 
         var layout = new DynamicLayout();
 
@@ -267,7 +268,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         }
     }
 
-#endregion
+    #endregion
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
     public void ShowTooltip(IEnumerable<ChartPoint> points)

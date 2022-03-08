@@ -45,7 +45,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
     /// </summary>
     public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
-        private CollectionDeepObserver<IMapElement> _shapesObserver;
         private CollectionDeepObserver<IGeoSeries> _seriesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
@@ -66,15 +65,11 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
             SizeChanged += GeoMap_SizeChanged;
 
-            _shapesObserver = new CollectionDeepObserver<IMapElement>(
-                (object sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-                (object sender, PropertyChangedEventArgs e) => _core.Update(),
-                true);
             _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
                 (object sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object sender, PropertyChangedEventArgs e) => _core.Update(),
                 true);
-            SetValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
+
             SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
             SetValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
             SetValue(SyncContextProperty, new object());
@@ -116,40 +111,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         public static readonly DependencyProperty MapProjectionProperty =
             DependencyProperty.Register(nameof(MapProjection), typeof(MapProjection), typeof(GeoMap),
                 new PropertyMetadata(MapProjection.Default, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The heat map property
-        /// </summary>
-        public static readonly DependencyProperty HeatMapProperty =
-            DependencyProperty.Register(
-                nameof(HeatMap), typeof(LvcColor[]), typeof(GeoMap),
-                new PropertyMetadata(
-                    new[]
-                    {
-                        LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-                        LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-                    }, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The color stops property
-        /// </summary>
-        public static readonly DependencyProperty ColorStopsProperty =
-            DependencyProperty.Register(nameof(ColorStops), typeof(double[]), typeof(GeoMap),
-                new PropertyMetadata(null, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The values property
-        /// </summary>
-        public static readonly DependencyProperty ShapesProperty =
-            DependencyProperty.Register(nameof(Shapes), typeof(IEnumerable<IMapElement>),
-                typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (GeoMap)o;
-                    var seriesObserver = chart._shapesObserver;
-                    seriesObserver?.Dispose((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.OldValue);
-                    seriesObserver?.Initialize((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.NewValue);
-                    chart._core.Update();
-                }));
 
         /// <summary>
         /// The series property
@@ -228,20 +189,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(MapProjectionProperty, value);
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-        public LvcColor[] HeatMap
-        {
-            get => (LvcColor[])GetValue(HeatMapProperty);
-            set => SetValue(HeatMapProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-        public double[] ColorStops
-        {
-            get => (double[])GetValue(ColorStopsProperty);
-            set => SetValue(ColorStopsProperty, value);
-        }
-
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
         public IPaint<SkiaSharpDrawingContext> Stroke
         {
@@ -262,13 +209,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 if (value is not null) value.IsFill = true;
                 SetValue(FillProperty, value);
             }
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-        public IEnumerable<IMapElement> Shapes
-        {
-            get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
-            set => SetValue(ShapesProperty, value);
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
@@ -297,9 +237,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
         {
             Series = Array.Empty<IGeoSeries>();
-            Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
             _seriesObserver = null!;
-            _shapesObserver = null!;
 
             Canvas.Dispose();
         }
