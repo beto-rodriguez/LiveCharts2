@@ -45,6 +45,41 @@ public static class MeasureExtensions
         while (!builder.Finished) yield return YieldReturnUntilNextNullChartPoint(builder, onDeleteNullPoint);
     }
 
+
+    /// <summary>
+    /// Builds a anumerator with the necessary data to build an Spline.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    internal static IEnumerable<SplineData> AsSplineData(this IEnumerable<ChartPoint> source)
+    {
+        using var e = source.GetEnumerator();
+
+        if (!e.MoveNext()) yield break;
+        var data = new SplineData(e.Current);
+
+        if (!e.MoveNext())
+        {
+            yield return data;
+            yield break;
+        }
+
+        data.GoNext(e.Current);
+
+        while (e.MoveNext())
+        {
+            yield return data;
+            data.IsFirst = false;
+            data.GoNext(e.Current);
+        }
+
+        data.IsFirst = false;
+        yield return data;
+
+        data.GoNext(data.Next);
+        yield return data;
+    }
+
     private static IEnumerable<ChartPoint> YieldReturnUntilNextNullChartPoint(
         GapsBuilder builder,
         Action<ChartPoint> onDeleteNullPoint)
@@ -82,6 +117,35 @@ public static class MeasureExtensions
         public void Dispose()
         {
             Enumerator.Dispose();
+        }
+    }
+
+    internal class SplineData
+    {
+        public SplineData(ChartPoint start)
+        {
+            Previous = start;
+            Current = start;
+            Next = start;
+            AfterNext = start;
+        }
+
+        public ChartPoint Previous { get; set; }
+
+        public ChartPoint Current { get; set; }
+
+        public ChartPoint Next { get; set; }
+
+        public ChartPoint AfterNext { get; set; }
+
+        public bool IsFirst { get; set; } = true;
+
+        public void GoNext(ChartPoint point)
+        {
+            Previous = Current;
+            Current = Next;
+            Next = AfterNext;
+            AfterNext = point;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace LiveChartsCore;
 public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
     : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
-        where TPathGeometry : IAreaGeometry<CubicBezierSegment, TDrawingContext>, new()
+        where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext

@@ -43,7 +43,7 @@ public class VectorManager<TSegment, TDrawingContext>
     /// Initializes a new instance of the <see cref="VectorManager{TSegment, TDrawingContext}"/> class.
     /// </summary>
     /// <param name="areaGeometry">The area geometry</param>
-    public VectorManager(IAreaGeometry<TSegment, TDrawingContext> areaGeometry)
+    public VectorManager(IVectorGeometry<TSegment, TDrawingContext> areaGeometry)
     {
         AreaGeometry = areaGeometry;
         _nextNode = areaGeometry.FirstCommand;
@@ -52,7 +52,7 @@ public class VectorManager<TSegment, TDrawingContext>
     /// <summary>
     /// Gets the area geometry.
     /// </summary>
-    public IAreaGeometry<TSegment, TDrawingContext> AreaGeometry { get; private set; }
+    public IVectorGeometry<TSegment, TDrawingContext> AreaGeometry { get; private set; }
 
     /// <summary>
     /// Adds a segment to the area geometry.

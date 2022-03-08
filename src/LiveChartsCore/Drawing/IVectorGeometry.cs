@@ -30,14 +30,14 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TSegment"></typeparam>
 /// <typeparam name="TDrawingContext"></typeparam>
-public interface IAreaGeometry<TSegment, TDrawingContext> : IDrawable<TDrawingContext>
+public interface IVectorGeometry<TSegment, TDrawingContext> : IDrawable<TDrawingContext>
     where TSegment : IConsecutivePathSegment
     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Determines if the area is closed to the <see cref="Pivot"/> value.
+    /// Defines the closing method.
     /// </summary>
-    bool IsClosed { get; set; }
+    VectorClosingMethod ClosingMethod { get; set; }
 
     /// <summary>
     /// Gets or sets the pivot.

@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
     : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
-        where TPathGeometry : IAreaGeometry<CubicBezierSegment, TDrawingContext>, new()
+        where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -177,8 +177,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             if (segmentI >= fillPathHelperContainer.Count)
             {
                 isNew = true;
-                fillPath = new TPathGeometry { IsClosed = true };
-                strokePath = new TPathGeometry { IsClosed = false };
+                fillPath = new TPathGeometry { ClosingMethod = VectorClosingMethod.CloseToPivot };
+                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
                 fillPathHelperContainer.Add(fillPath);
                 strokePathHelperContainer.Add(strokePath);
             }
@@ -520,7 +520,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         IEnumerable<ChartPoint> points,
         StackPosition<TDrawingContext>? stacker)
     {
-        foreach (var item in GetCurrentPreviousNextAndAfterNext(points))
+        foreach (var item in points.AsSplineData())
         {
             if (item.IsFirst)
             {
@@ -702,35 +702,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         _ = _fillPathHelperDictionary.Remove(chart.Canvas.Sync);
         _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
-    }
-
-    private IEnumerable<SplineData> GetCurrentPreviousNextAndAfterNext(IEnumerable<ChartPoint> source)
-    {
-        using var e = source.GetEnumerator();
-
-        if (!e.MoveNext()) yield break;
-        var data = new SplineData(e.Current);
-
-        if (!e.MoveNext())
-        {
-            yield return data;
-            yield break;
-        }
-
-        data.GoNext(e.Current);
-
-        while (e.MoveNext())
-        {
-            yield return data;
-            data.IsFirst = false;
-            data.GoNext(e.Current);
-        }
-
-        data.IsFirst = false;
-        yield return data;
-
-        data.GoNext(data.Next);
-        yield return data;
     }
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)

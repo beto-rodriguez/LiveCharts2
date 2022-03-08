@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
     : ChartSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
-        where TPathGeometry : IAreaGeometry<CubicBezierSegment, TDrawingContext>, new()
+        where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -163,8 +163,6 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         var hgs = gs / 2f;
         var sw = Stroke?.StrokeThickness ?? 0;
 
-        var chartAnimation = new Animation(EasingFunction ?? polarChart.EasingFunction, AnimationsSpeed ?? polarChart.AnimationsSpeed);
-
         var fetched = Fetch(polarChart);
         if (fetched is not ChartPoint[] points) points = fetched.ToArray();
 
@@ -231,8 +229,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
             if (segmentI >= fillPathHelperContainer.Count)
             {
-                fillPath = new TPathGeometry();
-                strokePath = new TPathGeometry();
+                fillPath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
+                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
                 fillPathHelperContainer.Add(fillPath);
                 strokePathHelperContainer.Add(strokePath);
             }
@@ -255,7 +253,6 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 polarChart.Canvas.AddDrawableTask(Stroke);
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-                strokePath.IsClosed = IsClosed;
             }
 
             foreach (var data in GetSpline(segment, scaler, stacker))

@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
     : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
         where TVisualPoint : StepLineVisualPoint<TDrawingContext, TVisual>, new()
-        where TPathGeometry : IAreaGeometry<StepLineSegment, TDrawingContext>, new()
+        where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -154,8 +154,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             if (segmentI >= fillPathHelperContainer.Count)
             {
                 isNew = true;
-                fillPath = new TPathGeometry { IsClosed = true };
-                strokePath = new TPathGeometry { IsClosed = false };
+                fillPath = new TPathGeometry { ClosingMethod = VectorClosingMethod.CloseToPivot };
+                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
                 fillPathHelperContainer.Add(fillPath);
                 strokePathHelperContainer.Add(strokePath);
             }

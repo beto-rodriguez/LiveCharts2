@@ -32,84 +32,84 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment, SkiaSharpDrawingContext>
+public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegment, SkiaSharpDrawingContext>
     where TSegment : class, IAnimatable, IConsecutivePathSegment
 {
     private readonly LinkedList<TSegment> _commands = new();
     private readonly FloatMotionProperty _pivotProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AreaGeometry{TSegment}"/> class.
+    /// Initializes a new instance of the <see cref="VectorGeometry{TSegment}"/> class.
     /// </summary>
-    public AreaGeometry()
+    public VectorGeometry()
     {
         _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.FirstCommand" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.FirstCommand" />
     public LinkedListNode<TSegment>? FirstCommand => _commands.First;
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.LastCommand" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.LastCommand" />
     public LinkedListNode<TSegment>? LastCommand => _commands.Last;
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.CountCommands" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.CountCommands" />
     public int CountCommands => _commands.Count;
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.IsClosed" />
-    public bool IsClosed { get; set; }
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ClosingMethod" />
+    public VectorClosingMethod ClosingMethod { get; set; }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.Pivot" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Pivot" />
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddLast(TSegment)" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddLast(TSegment)" />
     public LinkedListNode<TSegment> AddLast(TSegment command)
     {
         IsValid = false;
         return _commands.AddLast(command);
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddFirst(TSegment)" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddFirst(TSegment)" />
     public LinkedListNode<TSegment> AddFirst(TSegment command)
     {
         IsValid = false;
         return _commands.AddFirst(command);
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddAfter(LinkedListNode{TSegment}, TSegment)" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddAfter(LinkedListNode{TSegment}, TSegment)" />
     public LinkedListNode<TSegment> AddAfter(LinkedListNode<TSegment> node, TSegment command)
     {
         IsValid = false;
         return _commands.AddAfter(node, command);
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddBefore(LinkedListNode{TSegment}, TSegment)" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddBefore(LinkedListNode{TSegment}, TSegment)" />
     public LinkedListNode<TSegment> AddBefore(LinkedListNode<TSegment> node, TSegment command)
     {
         IsValid = false;
         return _commands.AddBefore(node, command);
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.ContainsCommand(TSegment)" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ContainsCommand(TSegment)" />
     public bool ContainsCommand(TSegment segment)
     {
         return _commands.Contains(segment);
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.RemoveCommand(TSegment)" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.RemoveCommand(TSegment)" />
     public bool RemoveCommand(TSegment command)
     {
         IsValid = false;
         return _commands.Remove(command);
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.RemoveCommand(LinkedListNode{TSegment})" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.RemoveCommand(LinkedListNode{TSegment})" />
     public void RemoveCommand(LinkedListNode<TSegment> node)
     {
         IsValid = false;
         _commands.Remove(node);
     }
 
-    /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.ClearCommands" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ClearCommands" />
     public void ClearCommands()
     {
         IsValid = false;

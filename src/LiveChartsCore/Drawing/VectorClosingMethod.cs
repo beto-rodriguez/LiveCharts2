@@ -20,52 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Segments;
-
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a line bezier visual point.
+/// Defines methods to close a vector.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class BezierVisualPoint<TDrawingContext, TVisual> : ICubicBezierVisualChartPoint<TDrawingContext>
-    where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
-    where TDrawingContext : DrawingContext
+public enum VectorClosingMethod
 {
     /// <summary>
-    /// Gets the geometry.
+    /// Indicates that the vector is not closed.
     /// </summary>
-    /// <value>
-    /// The geometry.
-    /// </value>
-    public TVisual Geometry { get; set; } = new();
+    NotClosed,
 
     /// <summary>
-    /// Gets the bezier.
+    /// Indicates that the vector is closed to the pivot value.
     /// </summary>
-    /// <value>
-    /// The bezier.
-    /// </value>
-    public CubicBezierSegment Bezier { get; set; } = new();
+    CloseToPivot,
 
     /// <summary>
-    /// Gets or sets the path.
+    /// Indicates that the vector is closed to the start point.
     /// </summary>
-    /// <value>
-    /// The path.
-    /// </value>
-    public IVectorGeometry<CubicBezierSegment, TDrawingContext>? FillPath { get; set; }
-
-    /// <summary>
-    /// Gets or sets the stroke path.
-    /// </summary>
-    /// <value>
-    /// The stroke path.
-    /// </value>
-    public IVectorGeometry<CubicBezierSegment, TDrawingContext>? StrokePath { get; set; }
-
-    IGeometry<TDrawingContext>? IVisualChartPoint<TDrawingContext>.HighlightableGeometry => Geometry?.HighlightableGeometry;
-
-    ISizedGeometry<TDrawingContext> ICubicBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
+    CloseToStart,
 }
