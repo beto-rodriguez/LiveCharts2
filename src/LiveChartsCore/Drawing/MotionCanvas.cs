@@ -46,7 +46,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     }
 
     /// <summary>
-    /// Gets a value indicating whether the aniamtions are disabled.
+    /// Gets a value indicating whether the animations are disabled.
     /// </summary>
     /// <value>
     ///   <c>true</c> if [disable animations]; otherwise, <c>false</c>.
