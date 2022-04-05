@@ -150,7 +150,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
 
         AbsoluteLayout.SetLayoutBounds(
             this,
-            new Rectangle(
+            new Rect(
                 location.Value.X / chartSize.Width,
                 location.Value.Y / chartSize.Height,
                 AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
@@ -187,7 +187,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
         {
             AbsoluteLayout.SetLayoutBounds(
                 this,
-                new Rectangle(
+                new Rect(
                     -1, -1,
                     AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 
