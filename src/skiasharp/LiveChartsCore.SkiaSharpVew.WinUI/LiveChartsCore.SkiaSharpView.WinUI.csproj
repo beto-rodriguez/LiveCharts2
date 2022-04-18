@@ -41,7 +41,7 @@
 
   <ItemGroup>
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-      <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.0-preview.179" />
+      <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.0-preview.254" />
   </ItemGroup>
 
   <ItemGroup>

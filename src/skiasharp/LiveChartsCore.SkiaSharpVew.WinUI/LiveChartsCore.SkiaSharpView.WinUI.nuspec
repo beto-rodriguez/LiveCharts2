@@ -18,7 +18,7 @@
     <dependencies>
       <group targetFramework="net5.0-windows10.0.18362">
         <dependency id="Newtonsoft.Json" version="[13.0.1]" />
-        <dependency id="SkiaSharp.Views.WinUI" version="2.88.0-preview.179" />
+        <dependency id="SkiaSharp.Views.WinUI" version="2.88.0-preview.254" />
         <dependency id="LiveChartsCore" version="2.0.0-beta.101" />
         <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.101" />
       </group>
