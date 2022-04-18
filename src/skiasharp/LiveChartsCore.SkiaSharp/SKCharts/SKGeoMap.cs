@@ -105,15 +105,6 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
     public MapProjection MapProjection { get; set; }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap { get; set; } = {
-            LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-            LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-        };
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-    public double[]? ColorStops { get; set; }
-
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     public IPaint<SkiaSharpDrawingContext>? Stroke
     {

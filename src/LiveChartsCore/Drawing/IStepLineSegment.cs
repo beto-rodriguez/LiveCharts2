@@ -29,4 +29,23 @@ namespace LiveChartsCore.Drawing;
 /// <seealso cref="IPathCommand{TPathContext}" />
 public interface IStepLineSegment<TPathContext> : IPathCommand<TPathContext>
 {
+    /// <summary>
+    /// Gets or sets the X0 value.
+    /// </summary>
+    float X0 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Y0 value.
+    /// </summary>
+    float Y0 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the X1 value.
+    /// </summary>
+    float X1 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Y1 value.
+    /// </summary>
+    float Y1 { get; set; }
 }
