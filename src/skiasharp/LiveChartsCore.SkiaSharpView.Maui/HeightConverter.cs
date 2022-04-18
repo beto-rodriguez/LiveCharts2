@@ -51,7 +51,7 @@ public class HeightConverter : IValueConverter
     {
         return value is IChartSeries<SkiaSharpDrawingContext> v
             ? v.CanvasSchedule.Height / DeviceDisplay.MainDisplayInfo.Density
-            : null;
+            : 0;
     }
 
     /// <summary>

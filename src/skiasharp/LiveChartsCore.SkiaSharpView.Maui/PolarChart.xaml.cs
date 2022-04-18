@@ -256,7 +256,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty LegendBackgroundProperty =
         BindableProperty.Create(
-            nameof(LegendTextBrush), typeof(Color), typeof(PolarChart),
+            nameof(LegendBackground), typeof(Color), typeof(PolarChart),
             Color.FromRgb(255 / 255d, 255 / 255d, 255 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>

@@ -215,7 +215,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty LegendTextBrushProperty =
         BindableProperty.Create(
             nameof(LegendTextBrush), typeof(c), typeof(CartesianChart),
-            new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+            new Color(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend background property
@@ -223,7 +223,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty LegendBackgroundProperty =
         BindableProperty.Create(
             nameof(LegendBackground), typeof(c), typeof(CartesianChart),
-            new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+            new Color(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend font attributes property
@@ -267,16 +267,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty TooltipTextColorProperty =
         BindableProperty.Create(
-            nameof(TooltipTextBrush), typeof(c), typeof(CartesianChart),
-            new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+            nameof(TooltipTextBrush), typeof(Color), typeof(CartesianChart),
+            new Color(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip background property
     /// </summary>
     public static readonly BindableProperty TooltipBackgroundProperty =
         BindableProperty.Create(
-            nameof(TooltipBackground), typeof(c), typeof(CartesianChart),
-            new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+            nameof(TooltipBackground), typeof(Color), typeof(CartesianChart),
+            new Color(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip font attributes property
@@ -475,9 +475,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <value>
     /// The color of the legend text.
     /// </value>
-    public c LegendTextBrush
+    public Color LegendTextBrush
     {
-        get => (c)GetValue(LegendTextBrushProperty);
+        get => (Color)GetValue(LegendTextBrushProperty);
         set => SetValue(LegendTextBrushProperty, value);
     }
 
@@ -487,9 +487,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <value>
     /// The color of the legend background.
     /// </value>
-    public c LegendBackground
+    public Color LegendBackground
     {
-        get => (c)GetValue(LegendBackgroundProperty);
+        get => (Color)GetValue(LegendBackgroundProperty);
         set => SetValue(LegendBackgroundProperty, value);
     }
 
@@ -557,9 +557,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <value>
     /// The color of the tool tip text.
     /// </value>
-    public c TooltipTextBrush
+    public Color TooltipTextBrush
     {
-        get => (c)GetValue(TooltipTextColorProperty);
+        get => (Color)GetValue(TooltipTextColorProperty);
         set => SetValue(TooltipTextColorProperty, value);
     }
 
@@ -569,9 +569,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <value>
     /// The color of the tool tip background.
     /// </value>
-    public c TooltipBackground
+    public Color TooltipBackground
     {
-        get => (c)GetValue(TooltipBackgroundProperty);
+        get => (Color)GetValue(TooltipBackgroundProperty);
         set => SetValue(TooltipBackgroundProperty, value);
     }
 

@@ -112,10 +112,10 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        var mobileChart = (IMobileChart)chart.View;
-        var series = chart.ChartSeries;
-        var legendOrientation = chart.LegendOrientation;
-        var legendPosition = chart.LegendPosition;
+        IMobileChart? mobileChart = (IMobileChart)chart.View;
+        IEnumerable<IChartSeries<SkiaSharpDrawingContext>>? series = chart.ChartSeries;
+        LegendOrientation legendOrientation = chart.LegendOrientation;
+        LegendPosition legendPosition = chart.LegendPosition;
         Series = series;
 
         switch (legendPosition)
@@ -201,7 +201,7 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                 : StackOrientation.Vertical;
 
         LegendTemplate = mobileChart.LegendTemplate;
-        LegendBackgroundColor = mobileChart.TooltipBackground;
+        LegendBackgroundColor = mobileChart.LegendBackground;
         LegendFontFamily = mobileChart.LegendFontFamily;
         LegendFontSize = mobileChart.LegendFontSize;
         LegendTextColor = mobileChart.LegendTextBrush;
@@ -215,7 +215,7 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
     /// </summary>
     protected void BuildContent()
     {
-        var template = LegendTemplate ?? _defaultTemplate;
+        DataTemplate? template = LegendTemplate ?? _defaultTemplate;
         if (template.CreateContent() is not View view) return;
 
         view.BindingContext = new LegendBindingContext
@@ -226,7 +226,7 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
             TextColor = LegendTextColor,
             FontAttributes = LegendFontAttributes,
             Orientation = LegendOrientation,
-            BackgroundColor = LegendBackgroundColor
+            BackgroundColor = LegendBackgroundColor,
         };
 
         Content = view;
