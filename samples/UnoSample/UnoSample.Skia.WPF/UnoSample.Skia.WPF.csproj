@@ -12,5 +12,9 @@
   <ItemGroup>
     <UpToDateCheckInput Include="..\UnoSample.Shared\**\*.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno\LiveChartsCore.SkiaSharpView.Uno.csproj" />
+    <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
+  </ItemGroup>
   <Import Project="..\UnoSample.Shared\UnoSample.Shared.projitems" Label="Shared" />
 </Project>
