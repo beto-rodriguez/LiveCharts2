@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Bars.Spacing
+namespace UnoSample.Bars.Spacing
 {
     public sealed partial class View : UserControl
     {

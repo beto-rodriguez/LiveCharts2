@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.StepLines.Zoom
+namespace UnoSample.StepLines.Zoom
 {
     public sealed partial class View : UserControl
     {

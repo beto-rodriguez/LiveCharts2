@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Design.StrokeDashArray
+namespace UnoSample.Design.StrokeDashArray
 {
     public sealed partial class View : UserControl
     {

@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.General.MultiThreading
+namespace UnoSample.General.MultiThreading
 {
     public sealed partial class View : UserControl
     {

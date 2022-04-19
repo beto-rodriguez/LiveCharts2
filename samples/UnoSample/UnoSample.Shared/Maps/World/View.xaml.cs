@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Maps.World
+namespace UnoSample.Maps.World
 {
     public sealed partial class View : UserControl
     {

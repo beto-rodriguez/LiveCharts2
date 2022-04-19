@@ -4,7 +4,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using ViewModelsSamples.General.MultiThreading2;
 
-namespace UWPSample.General.MultiThreading2
+namespace UnoSample.General.MultiThreading2
 {
     public sealed partial class View : UserControl
     {

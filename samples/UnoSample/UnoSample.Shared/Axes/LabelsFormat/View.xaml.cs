@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Axes.LabelsFormat
+namespace UnoSample.Axes.LabelsFormat
 {
     public sealed partial class View : UserControl
     {

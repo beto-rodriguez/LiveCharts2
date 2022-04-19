@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Financial.BasicCandlesticks
+namespace UnoSample.Financial.BasicCandlesticks
 {
     public sealed partial class View : UserControl
     {

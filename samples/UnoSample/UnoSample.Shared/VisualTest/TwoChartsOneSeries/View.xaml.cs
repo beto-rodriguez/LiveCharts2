@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.VisualTest.TwoChartsOneSeries
+namespace UnoSample.VisualTest.TwoChartsOneSeries
 {
     public sealed partial class View : UserControl
     {

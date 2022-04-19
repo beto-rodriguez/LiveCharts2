@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace UWPSample.Pies.Processing
+namespace UnoSample.Pies.Processing
 {
     public sealed partial class View : UserControl
     {

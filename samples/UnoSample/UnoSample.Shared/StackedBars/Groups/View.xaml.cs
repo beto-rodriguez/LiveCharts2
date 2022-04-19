@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.StackedBars.Groups
+namespace UnoSample.StackedBars.Groups
 {
     public sealed partial class View : UserControl
     {

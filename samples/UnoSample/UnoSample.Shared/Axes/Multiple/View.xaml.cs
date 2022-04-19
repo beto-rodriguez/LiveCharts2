@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Axes.Multiple
+namespace UnoSample.Axes.Multiple
 {
     public sealed partial class View : UserControl
     {

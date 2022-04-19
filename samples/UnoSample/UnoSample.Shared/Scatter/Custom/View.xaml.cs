@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Scatter.Custom
+namespace UnoSample.Scatter.Custom
 {
     public sealed partial class View : UserControl
     {

@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.General.Visibility
+namespace UnoSample.General.Visibility
 {
     public sealed partial class View : UserControl
     {

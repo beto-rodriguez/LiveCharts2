@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Bars.RowsWithLabels
+namespace UnoSample.Bars.RowsWithLabels
 {
     public sealed partial class View : UserControl
     {

@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Bars.Basic
+namespace UnoSample.Bars.Basic
 {
     public sealed partial class View : UserControl
     {

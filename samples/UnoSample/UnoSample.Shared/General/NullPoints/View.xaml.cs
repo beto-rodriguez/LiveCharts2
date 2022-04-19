@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.General.NullPoints
+namespace UnoSample.General.NullPoints
 {
     public sealed partial class View : UserControl
     {

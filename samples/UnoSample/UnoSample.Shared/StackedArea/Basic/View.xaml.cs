@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.StackedArea.Basic
+namespace UnoSample.StackedArea.Basic
 {
     public sealed partial class View : UserControl
     {

@@ -5,7 +5,7 @@ using LiveChartsCore.Kernel.Sketches;
 using ViewModelsSamples.Events.Cartesian;
 using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Events.Cartesian
+namespace UnoSample.Events.Cartesian
 {
     public sealed partial class View : UserControl
     {

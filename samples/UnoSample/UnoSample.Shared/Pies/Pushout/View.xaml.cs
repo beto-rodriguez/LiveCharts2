@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Pies.Pushout
+namespace UnoSample.Pies.Pushout
 {
     public sealed partial class View : UserControl
     {

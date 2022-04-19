@@ -5,7 +5,7 @@ using LiveChartsCore.Kernel.Sketches;
 using ViewModelsSamples.Events.Polar;
 using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Events.Polar
+namespace UnoSample.Events.Polar
 {
     public sealed partial class View : UserControl
     {

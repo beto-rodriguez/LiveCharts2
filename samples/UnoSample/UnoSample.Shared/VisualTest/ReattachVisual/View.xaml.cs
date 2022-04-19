@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.VisualTest.ReattachVisual
+namespace UnoSample.VisualTest.ReattachVisual
 {
     public sealed partial class View : UserControl
     {

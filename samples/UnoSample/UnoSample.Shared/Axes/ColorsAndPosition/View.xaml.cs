@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Axes.ColorsAndPosition
+namespace UnoSample.Axes.ColorsAndPosition
 {
     public sealed partial class View : UserControl
     {

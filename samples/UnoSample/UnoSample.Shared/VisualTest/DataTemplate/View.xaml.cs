@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.VisualTest.DataTemplate
+namespace UnoSample.VisualTest.DataTemplate
 {
     public sealed partial class View : UserControl
     {

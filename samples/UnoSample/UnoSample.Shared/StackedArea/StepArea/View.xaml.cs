@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.StackedArea.StepArea
+namespace UnoSample.StackedArea.StepArea
 {
     public sealed partial class View : UserControl
     {

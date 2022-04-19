@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Pies.NightingaleRose
+namespace UnoSample.Pies.NightingaleRose
 {
     public sealed partial class View : UserControl
     {

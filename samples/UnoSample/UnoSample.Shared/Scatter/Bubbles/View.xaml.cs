@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Scatter.Bubbles
+namespace UnoSample.Scatter.Bubbles
 {
     public sealed partial class View : UserControl
     {

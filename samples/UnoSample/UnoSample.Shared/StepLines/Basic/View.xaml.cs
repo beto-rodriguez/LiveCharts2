@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.StepLines.Basic
+namespace UnoSample.StepLines.Basic
 {
     public sealed partial class View : UserControl
     {

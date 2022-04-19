@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Lines.Custom
+namespace UnoSample.Lines.Custom
 {
     public sealed partial class View : UserControl
     {

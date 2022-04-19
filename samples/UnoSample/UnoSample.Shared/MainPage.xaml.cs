@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace UWPSample
+namespace UnoSample
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -24,7 +24,7 @@ namespace UWPSample
         {
             var ctx = (string)((FrameworkElement)sender).DataContext;
 
-            var t = Type.GetType($"UWPSample.{ctx.Replace('/', '.')}.View");
+            var t = Type.GetType($"UnoSample.{ctx.Replace('/', '.')}.View");
             content.Content = Activator.CreateInstance(t);
         }
     }

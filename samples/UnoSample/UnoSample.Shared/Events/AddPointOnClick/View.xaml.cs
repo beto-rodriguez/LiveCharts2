@@ -3,7 +3,7 @@ using LiveChartsCore.Drawing;
 using ViewModelsSamples.Events.AddPointOnClick;
 using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Events.AddPointOnClick
+namespace UnoSample.Events.AddPointOnClick
 {
     public sealed partial class View : UserControl
     {

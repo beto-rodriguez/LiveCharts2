@@ -3,7 +3,7 @@ using LiveChartsCore.SkiaSharpView.Uno;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.General.ChartToImage
+namespace UnoSample.General.ChartToImage
 {
     public sealed partial class View : UserControl
     {

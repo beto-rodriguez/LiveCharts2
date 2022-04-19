@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Polar.RadialArea
+namespace UnoSample.Polar.RadialArea
 {
     public sealed partial class View : UserControl
     {

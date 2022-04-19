@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Pies.Gauges
+namespace UnoSample.Pies.Gauges
 {
     public sealed partial class View : UserControl
     {

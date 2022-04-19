@@ -2,7 +2,7 @@
 using ViewModelsSamples.Bars.Race;
 using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Bars.Race
+namespace UnoSample.Bars.Race
 {
     public sealed partial class View : UserControl
     {

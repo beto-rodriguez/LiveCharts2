@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Polar.Coordinates
+namespace UnoSample.Polar.Coordinates
 {
     public sealed partial class View : UserControl
     {

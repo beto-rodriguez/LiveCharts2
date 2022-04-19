@@ -1,12 +1,12 @@
 ﻿<UserControl
-    x:Class="UWPSample.Pies.Processing.View"
+    x:Class="UnoSample.Pies.Processing.View"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Uno"
     xmlns:vms="using:ViewModelsSamples.Pies.Processing"
-    xmlns:local="using:UWPSample.Pies.Processing"
+    xmlns:local="using:UnoSample.Pies.Processing"
     mc:Ignorable="d">
 
     <UserControl.DataContext>

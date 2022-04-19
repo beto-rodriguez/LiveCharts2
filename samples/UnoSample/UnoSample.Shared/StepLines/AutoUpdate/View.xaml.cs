@@ -3,7 +3,7 @@ using ViewModelsSamples.StepLines.AutoUpdate;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace UWPSample.StepLines.AutoUpdate
+namespace UnoSample.StepLines.AutoUpdate
 {
     public sealed partial class View : UserControl
     {

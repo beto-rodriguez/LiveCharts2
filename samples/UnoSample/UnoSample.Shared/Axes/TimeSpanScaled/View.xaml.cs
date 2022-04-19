@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Axes.TimeSpanScaled
+namespace UnoSample.Axes.TimeSpanScaled
 {
     public sealed partial class View : UserControl
     {

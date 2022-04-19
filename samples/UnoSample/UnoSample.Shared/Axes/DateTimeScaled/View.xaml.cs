@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Axes.DateTimeScaled
+namespace UnoSample.Axes.DateTimeScaled
 {
     public sealed partial class View : UserControl
     {

@@ -3,7 +3,7 @@ using ViewModelsSamples.Lines.AutoUpdate;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace UWPSample.Lines.AutoUpdate
+namespace UnoSample.Lines.AutoUpdate
 {
     public sealed partial class View : UserControl
     {

@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.General.Animations
+namespace UnoSample.General.Animations
 {
     public sealed partial class View : UserControl
     {

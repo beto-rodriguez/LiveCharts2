@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Design.RadialGradients
+namespace UnoSample.Design.RadialGradients
 {
     public sealed partial class View : UserControl
     {

@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Axes.LabelsRotation
+namespace UnoSample.Axes.LabelsRotation
 {
     public sealed partial class View : UserControl
     {

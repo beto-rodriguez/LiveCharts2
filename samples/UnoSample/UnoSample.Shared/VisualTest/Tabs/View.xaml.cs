@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.VisualTest.Tabs
+namespace UnoSample.VisualTest.Tabs
 {
     public sealed partial class View : UserControl
     {

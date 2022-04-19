@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.General.TemplatedLegends
+namespace UnoSample.General.TemplatedLegends
 {
     public sealed partial class View : UserControl
     {
