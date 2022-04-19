@@ -21,29 +21,29 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.UWP
+namespace LiveChartsCore.SkiaSharpView.Uno;
+
+/// <summary>
+/// Defines the legend binding context.
+/// </summary>
+public class LegendBindingContext
 {
     /// <summary>
-    /// Defines the legend binding context.
+    /// Gets the series.
     /// </summary>
-    public class LegendBindingContext
-    {
-        /// <summary>
-        /// Gets the series.
-        /// </summary>
-        public IEnumerable<BindingSeries> SeriesCollection { get; set; }
+    public IEnumerable<BindingSeries> SeriesCollection { get; set; } = Enumerable.Empty<BindingSeries>();
 
-        /// <summary>
-        /// Gets the background.
-        /// </summary>
-        public Brush Background { get; set; }
+    /// <summary>
+    /// Gets the background.
+    /// </summary>
+    public Brush Background { get; set; } = null!;
 
-        /// <summary>
-        /// Gets the orientation.
-        /// </summary>
-        public Orientation Orientation { get; set; }
-    }
+    /// <summary>
+    /// Gets the orientation.
+    /// </summary>
+    public Orientation Orientation { get; set; }
 }

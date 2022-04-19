@@ -9,18 +9,18 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <Version>2.0.0-beta.101</Version>
     <PackageIcon>icon.png</PackageIcon>
-    <Description>Simple, flexible, interactive and powerful data visualization for UWP.</Description>
+    <Description>Simple, flexible, interactive and powerful data visualization for Uno platform.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>BetoRodriguez</Authors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LiveChartsCore.SkiaSharpView.UWP</RootNamespace>
-    <AssemblyName>LiveChartsCore.SkiaSharpView.UWP</AssemblyName>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.Uno</RootNamespace>
+    <AssemblyName>LiveChartsCore.SkiaSharpView.Uno</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
     <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>

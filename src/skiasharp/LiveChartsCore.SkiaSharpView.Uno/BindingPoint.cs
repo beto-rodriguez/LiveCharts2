@@ -20,24 +20,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using LiveChartsCore.Kernel;
+using Windows.UI.Text;
 using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.UWP
+namespace LiveChartsCore.SkiaSharpView.Uno;
+
+/// <summary>
+/// The Uwp poing class, just used to bind the tooltips.
+/// </summary>
+public class BindingPoint
 {
     /// <summary>
-    /// Defines the tooltip binding context class.
+    /// Ges the chart point.
     /// </summary>
-    public class TooltipBindingContext
-    {
-        /// <summary>
-        /// Gets the background.
-        /// </summary>
-        public Brush Background { get; set; }
+    public ChartPoint ChartPoint { get; set; } = null!;
 
-        /// <summary>
-        /// Gets the points.
-        /// </summary>
-        public BindingPoint[] Points { get; set; } = Array.Empty<BindingPoint>();
-    }
+    /// <summary>
+    /// Gets the font family.
+    /// </summary>
+    public FontFamily FontFamily { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the foreground.
+    /// </summary>
+    public Brush Foreground { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the font size.
+    /// </summary>
+    public double FontSize { get; set; }
+
+    /// <summary>
+    /// Gets the font weight.
+    /// </summary>
+    public FontWeight FontWeight { get; set; }
+
+    /// <summary>
+    /// Gets the font style.
+    /// </summary>
+    public FontStyle FontStyle { get; set; }
+
+    /// <summary>
+    /// Gets the font stretch.
+    /// </summary>
+    public FontStretch FontStretch { get; set; }
 }

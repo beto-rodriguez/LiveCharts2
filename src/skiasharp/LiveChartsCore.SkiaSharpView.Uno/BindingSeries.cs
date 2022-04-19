@@ -23,46 +23,45 @@
 using Windows.UI.Text;
 using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.UWP
+namespace LiveChartsCore.SkiaSharpView.Uno;
+
+/// <summary>
+/// Defines the binding series class.
+/// </summary>
+public class BindingSeries
 {
     /// <summary>
-    /// Defines the binding series class.
+    /// Gets the series.
     /// </summary>
-    public class BindingSeries
-    {
-        /// <summary>
-        /// Gets the series.
-        /// </summary>
-        public ISeries Series { get; set; }
+    public ISeries Series { get; set; } = null!;
 
-        /// <summary>
-        /// Gets the font family.
-        /// </summary>
-        public FontFamily FontFamily { get; set; }
+    /// <summary>
+    /// Gets the font family.
+    /// </summary>
+    public FontFamily FontFamily { get; set; } = null!;
 
-        /// <summary>
-        /// Gets the foreground.
-        /// </summary>
-        public Brush Foreground { get; set; }
+    /// <summary>
+    /// Gets the foreground.
+    /// </summary>
+    public Brush Foreground { get; set; } = null!;
 
-        /// <summary>
-        /// Gets the font size.
-        /// </summary>
-        public double FontSize { get; set; }
+    /// <summary>
+    /// Gets the font size.
+    /// </summary>
+    public double FontSize { get; set; }
 
-        /// <summary>
-        /// Gets the font weight.
-        /// </summary>
-        public FontWeight FontWeight { get; set; }
+    /// <summary>
+    /// Gets the font weight.
+    /// </summary>
+    public FontWeight FontWeight { get; set; }
 
-        /// <summary>
-        /// Gets the font style.
-        /// </summary>
-        public FontStyle FontStyle { get; set; }
+    /// <summary>
+    /// Gets the font style.
+    /// </summary>
+    public FontStyle FontStyle { get; set; }
 
-        /// <summary>
-        /// Gets the font stretch.
-        /// </summary>
-        public FontStretch FontStretch { get; set; }
-    }
+    /// <summary>
+    /// Gets the font stretch.
+    /// </summary>
+    public FontStretch FontStretch { get; set; }
 }

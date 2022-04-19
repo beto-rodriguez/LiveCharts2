@@ -108,7 +108,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpVew.WinUI\LiveChartsCore.SkiaSharpView.WinUI.csproj" />
+    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI\LiveChartsCore.SkiaSharpView.WinUI.csproj" />
     <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 

@@ -50,7 +50,7 @@
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.UWP\LiveChartsCore.SkiaSharpView.UWP.csproj" />
+    <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno\LiveChartsCore.SkiaSharpView.Uno.csproj" />
     <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
   <Import Project="..\UnoSample.Shared\UnoSample.Shared.projitems" Label="Shared" Condition="Exists('..\UnoSample.Shared\UnoSample.Shared.projitems')" />
