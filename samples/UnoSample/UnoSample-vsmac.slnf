@@ -1,0 +1,21 @@
+{
+  "solution": {
+    "path": "UnoSample.sln",
+    "projects": [
+		"UnoSample.Shared\\UnoSample.Shared.shproj",
+
+		"UnoSample.Droid\\UnoSample.Droid.csproj",
+
+		"UnoSample.iOS\\UnoSample.iOS.csproj",
+
+
+		"UnoSample.Wasm\\UnoSample.Wasm.csproj",
+
+		"UnoSample.macOS\\UnoSample.macOS.csproj",
+
+		"UnoSample.Skia.Gtk\\UnoSample.Skia.Gtk.csproj",
+
+		"UnoSample.Skia.Linux.FrameBuffer\\UnoSample.Skia.Linux.FrameBuffer.csproj",
+    ]
+  }
+}
