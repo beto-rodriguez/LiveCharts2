@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <ItemGroup>
@@ -19,7 +19,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>1AB5FA75-C319-4E85-B023-145499089901</ProjectGuid>
+    <ProjectGuid>{1AB5FA75-C319-4E85-B023-145499089901}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnoSample</RootNamespace>
@@ -128,6 +128,22 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\..\..\src\LiveChartsCore\LiveChartsCore.csproj">
+      <Project>{b4853153-b34f-4909-9b8f-a0ad00a3ee85}</Project>
+      <Name>LiveChartsCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno\LiveChartsCore.SkiaSharpView.Uno.csproj">
+      <Project>{4dc1e40e-485f-4e2c-9a31-4f6b00db55d4}</Project>
+      <Name>LiveChartsCore.SkiaSharpView.Uno</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj">
+      <Project>{3b6f3fa0-d35d-49db-90da-709cc481ceee}</Project>
+      <Name>LiveChartsCore.SkiaSharpView</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj">
+      <Project>{bde9c3d2-5801-4be1-b79e-63686d04ce0f}</Project>
+      <Name>ViewModelsSamples</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
