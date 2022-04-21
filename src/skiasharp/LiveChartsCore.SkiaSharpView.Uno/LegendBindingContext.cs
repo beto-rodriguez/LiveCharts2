@@ -20,50 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel;
-using Windows.UI.Text;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.UWP
+namespace LiveChartsCore.SkiaSharpView.Uno;
+
+/// <summary>
+/// Defines the legend binding context.
+/// </summary>
+public class LegendBindingContext
 {
     /// <summary>
-    /// The Uwp poing class, just used to bind the tooltips.
+    /// Gets the series.
     /// </summary>
-    public class BindingPoint
-    {
-        /// <summary>
-        /// Ges the chart point.
-        /// </summary>
-        public ChartPoint ChartPoint { get; set; }
+    public IEnumerable<BindingSeries> SeriesCollection { get; set; } = Enumerable.Empty<BindingSeries>();
 
-        /// <summary>
-        /// Gets the font family.
-        /// </summary>
-        public FontFamily FontFamily { get; set; }
+    /// <summary>
+    /// Gets the background.
+    /// </summary>
+    public Brush Background { get; set; } = null!;
 
-        /// <summary>
-        /// Gets the foreground.
-        /// </summary>
-        public Brush Foreground { get; set; }
-
-        /// <summary>
-        /// Gets the font size.
-        /// </summary>
-        public double FontSize { get; set; }
-
-        /// <summary>
-        /// Gets the font weight.
-        /// </summary>
-        public FontWeight FontWeight { get; set; }
-
-        /// <summary>
-        /// Gets the font style.
-        /// </summary>
-        public FontStyle FontStyle { get; set; }
-
-        /// <summary>
-        /// Gets the font stretch.
-        /// </summary>
-        public FontStretch FontStretch { get; set; }
-    }
+    /// <summary>
+    /// Gets the orientation.
+    /// </summary>
+    public Orientation Orientation { get; set; }
 }
