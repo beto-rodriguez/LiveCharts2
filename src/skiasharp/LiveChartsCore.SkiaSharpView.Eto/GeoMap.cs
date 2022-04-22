@@ -39,7 +39,6 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 /// <summary>
 /// The geo map control.
 /// </summary>
-/// <seealso cref="Eto.Forms.Panel" />
 public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly MotionCanvas _motionCanvas = new();
@@ -120,12 +119,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-    public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     public IPaint<SkiaSharpDrawingContext>? Stroke

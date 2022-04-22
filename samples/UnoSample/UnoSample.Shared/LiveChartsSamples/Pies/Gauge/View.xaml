@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="UnoSample.Pies.Gauge.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Uno"
+    xmlns:vms="using:ViewModelsSamples.Pies.Gauge"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Initial rotation"></TextBlock>
+            <Slider Width="300" Minimum="-360" Maximum="720" Value="{Binding InitialRotation, Mode=TwoWay}" />
+
+            <TextBlock Text="Max angle"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="360" Value="{Binding MaxAngle, Mode=TwoWay}" />
+
+            <TextBlock Text="Inner radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding InnerRadius, Mode=TwoWay}" />
+
+            <TextBlock Text="Offset radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding OffsetRadius, Mode=TwoWay}" />
+
+            <TextBlock Text="Background inner radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding BackgroundInnerRadius, Mode=TwoWay}" />
+
+            <TextBlock Text="Background offset radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding BackgroundOffsetRadius, Mode=TwoWay}" />
+        </StackPanel>
+        <lvc:PieChart
+            Grid.Column="1"
+            Series="{Binding Series}"
+            Total="{Binding GaugeTotal}"
+            MaxAngle="{Binding MaxAngle}"
+            InitialRotation="{Binding InitialRotation}"/>
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,55 @@
+﻿<UserControl
+    x:Class="UnoSample.VisualTest.ReattachVisual.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Uno"
+    xmlns:vms="using:ViewModelsSamples.VisualTest.ReattachVisual"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" x:Name="parent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <lvc:CartesianChart
+                x:Name="chart"
+                Grid.Column="0"
+                Series="{Binding Series}"
+                Sections="{Binding Sections}"
+                ZoomMode="X">
+            </lvc:CartesianChart>
+
+            <lvc:PieChart
+                x:Name="pieChart"
+                Grid.Column="1"
+                Series="{Binding PieSeries}">
+            </lvc:PieChart>
+
+            <lvc:PolarChart
+                x:Name="polarChart"
+                Grid.Column="2"
+                Series="{Binding PolarSeries}">
+            </lvc:PolarChart>
+        </Grid>
+
+        <Button
+            Grid.Row="1"
+            Content="Toggle attach"
+            Click="Button_Click">
+        </Button>
+    </Grid>
+
+</UserControl>

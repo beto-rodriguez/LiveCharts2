@@ -26,9 +26,9 @@ using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Essentials;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
