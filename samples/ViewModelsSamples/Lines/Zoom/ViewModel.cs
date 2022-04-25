@@ -19,7 +19,7 @@ public class ViewModel
             values[i] = t;
         }
 
-        SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values } };
+        SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values, GeometryFill = null, GeometryStroke = null } };
     }
 
     public IEnumerable<ISeries> SeriesCollection { get; set; }

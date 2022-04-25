@@ -249,6 +249,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
+                Trace.WriteLine($"=={delta.X:0.00}==");
+
                 var xi = XAxes[index];
                 var scale = new Scaler(DrawMarginLocation, DrawMarginSize, xi);
                 var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
