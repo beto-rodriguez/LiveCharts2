@@ -195,8 +195,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                 if (maxt - mint < xi.DataBounds.MinDelta * 5) return;
 
-                if (maxt > xi.DataBounds.Max) maxt = xi.DataBounds.Max;
-                if (mint < xi.DataBounds.Min) mint = xi.DataBounds.Min;
+                var xm = (max - min) * 0.05;
+                if (maxt > xi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = xi.DataBounds.Max + xm;
+                if (mint < xi.DataBounds.Min && direction == ZoomDirection.ZoomOut) mint = xi.DataBounds.Min - xm;
 
                 xi.MaxLimit = maxt;
                 xi.MinLimit = mint;
@@ -224,8 +225,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                 if (maxt - mint < yi.DataBounds.MinDelta * 5) return;
 
-                if (maxt > yi.DataBounds.Max) maxt = yi.DataBounds.Max;
-                if (mint < yi.DataBounds.Min) mint = yi.DataBounds.Min;
+                var ym = (max - min) * 0.05;
+                if (maxt > yi.DataBounds.Max) maxt = yi.DataBounds.Max + ym;
+                if (mint < yi.DataBounds.Min) mint = yi.DataBounds.Min - ym;
 
                 yi.MaxLimit = maxt;
                 yi.MinLimit = mint;
@@ -239,13 +241,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// Pans with the specified delta.
     /// </summary>
     /// <param name="delta">The delta.</param>
+    /// <param name="isPointerDown">Indicates whether the pointer is down.</param>
     /// <returns></returns>
-    public void Pan(LvcPoint delta)
+    public void Pan(LvcPoint delta, bool isPointerDown)
     {
         if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
+                Trace.WriteLine($"=={delta.X:0.00}==");
+
                 var xi = XAxes[index];
                 var scale = new Scaler(DrawMarginLocation, DrawMarginSize, xi);
                 var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
@@ -253,17 +258,20 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
                 var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
-                if (max + dx > xi.DataBounds.Max)
+                var xm = max - min;
+                xm = isPointerDown ? xm * 0.15 : xm * 0.05;
+
+                if (max + dx > xi.DataBounds.Max && delta.X < 0)
                 {
-                    xi.MaxLimit = xi.DataBounds.Max;
-                    xi.MinLimit = xi.DataBounds.Max - (max - min);
+                    xi.MaxLimit = xi.DataBounds.Max + xm;
+                    xi.MinLimit = xi.DataBounds.Max - (max - xm - min);
                     continue;
                 }
 
-                if (min + dx < xi.DataBounds.Min)
+                if (min + dx < xi.DataBounds.Min && delta.X > 0)
                 {
-                    xi.MinLimit = xi.DataBounds.Min;
-                    xi.MaxLimit = xi.DataBounds.Min + max - min;
+                    xi.MinLimit = xi.DataBounds.Min - xm;
+                    xi.MaxLimit = xi.DataBounds.Min + max - min - xm;
                     continue;
                 }
 
@@ -283,17 +291,20 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
                 var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
+                var ym = max - min;
+                ym = isPointerDown ? ym * 0.15 : ym * 0.05;
+
                 if (max + dy > yi.DataBounds.Max)
                 {
-                    yi.MaxLimit = yi.DataBounds.Max;
-                    yi.MinLimit = yi.DataBounds.Max - (max - min);
+                    yi.MaxLimit = yi.DataBounds.Max + ym;
+                    yi.MinLimit = yi.DataBounds.Max - (max - ym - min);
                     continue;
                 }
 
                 if (min + dy < yi.DataBounds.Min)
                 {
-                    yi.MinLimit = yi.DataBounds.Min;
-                    yi.MaxLimit = yi.DataBounds.Min + max - min;
+                    yi.MinLimit = yi.DataBounds.Min - ym;
+                    yi.MaxLimit = yi.DataBounds.Min + max - min - ym;
                     continue;
                 }
 

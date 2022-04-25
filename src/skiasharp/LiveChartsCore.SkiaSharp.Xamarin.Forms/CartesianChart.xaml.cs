@@ -58,6 +58,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
     private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
     private Grid? _grid;
+    private double _lastPanX = 0;
+    private double _lastPanY = 0;
 
     #endregion
 
@@ -755,15 +757,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         MainThread.BeginInvokeOnMainThread(action);
     }
 
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
-    }
-
     /// <summary>
     /// Initializes the core.
     /// </summary>
@@ -833,13 +826,36 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         if (core is null) return;
-        if (e.StatusType != GestureStatus.Running) return;
+        if (e.StatusType is not GestureStatus.Running and not GestureStatus.Completed) return;
 
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-        var delta = new LvcPoint((float)e.TotalX, (float)e.TotalY);
-        var args = new PanGestureEventArgs(delta);
-        c.InvokePanGestrue(args);
-        if (!args.Handled) c.Pan(delta);
+
+        if (e.StatusType == GestureStatus.Running)
+        {
+            var delta = new LvcPoint(
+                (float)((e.TotalX - _lastPanX) * DeviceDisplay.MainDisplayInfo.Density),
+                (float)((e.TotalY - _lastPanY) * DeviceDisplay.MainDisplayInfo.Density));
+
+            var args = new PanGestureEventArgs(delta);
+            c.InvokePanGestrue(args);
+
+            if (args.Handled) return;
+
+            c.Pan(delta, true);
+            _lastPanX = e.TotalX;
+            _lastPanY = e.TotalY;
+
+            return;
+        }
+
+        // lets just let the core know that the drag finished,
+        // so thwe core is able to bounce back the plot in case
+        // it exceeded the allowed limits
+        // this is a dummy request of += 0.01 pixels just in the corresponding direction
+        c.Pan(new LvcPoint(_lastPanX > 0 ? 0.01f : -0.01f, _lastPanY > 0 ? 0.01f : -0.01f), false);
+
+        _lastPanX = 0;
+        _lastPanY = 0;
     }
 
     private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)

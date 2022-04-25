@@ -162,7 +162,8 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             if (_fpsStack.Count > 15) _fpsStack.RemoveAt(0);
             if (frameTime - _previousLogTime > 500)
             {
-                Trace.WriteLine($"[LiveCharts] fps = {_fpsStack.DefaultIfEmpty(0).Average():0.00}");
+                if (LiveCharts.EnableLogging)
+                    Trace.WriteLine($"[LiveCharts] fps = {_fpsStack.DefaultIfEmpty(0).Average():0.00}");
                 _previousLogTime = frameTime;
             }
 #endif
