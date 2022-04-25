@@ -31,7 +31,7 @@ namespace UnoSample.Droid
         private static void ConfigureUniversalImageLoader()
         {
             // Create global configuration and initialize ImageLoader with this config
-            ImageLoaderConfiguration config = new ImageLoaderConfiguration
+            var config = new ImageLoaderConfiguration
                 .Builder(Context)
                 .Build();
 

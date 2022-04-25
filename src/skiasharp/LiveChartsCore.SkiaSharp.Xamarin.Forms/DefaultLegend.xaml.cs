@@ -112,10 +112,10 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        IMobileChart? mobileChart = (IMobileChart)chart.View;
-        IEnumerable<IChartSeries<SkiaSharpDrawingContext>>? series = chart.ChartSeries;
-        LegendOrientation legendOrientation = chart.LegendOrientation;
-        LegendPosition legendPosition = chart.LegendPosition;
+        var mobileChart = (IMobileChart)chart.View;
+        var series = chart.ChartSeries;
+        var legendOrientation = chart.LegendOrientation;
+        var legendPosition = chart.LegendPosition;
         Series = series;
 
         switch (legendPosition)
@@ -215,7 +215,7 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
     /// </summary>
     protected void BuildContent()
     {
-        DataTemplate? template = LegendTemplate ?? _defaultTemplate;
+        var template = LegendTemplate ?? _defaultTemplate;
         if (template.CreateContent() is not View view) return;
 
         view.BindingContext = new LegendBindingContext
