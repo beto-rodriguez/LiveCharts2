@@ -281,7 +281,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty LegendBackgroundProperty =
         BindableProperty.Create(
-            nameof(LegendTextBrush), typeof(Color), typeof(CartesianChart),
+            nameof(LegendBackground), typeof(Color), typeof(CartesianChart),
             Color.FromRgb(255 / 255d, 255 / 255d, 255 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
