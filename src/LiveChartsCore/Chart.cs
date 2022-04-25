@@ -578,7 +578,8 @@ public abstract class Chart<TDrawingContext> : IChart
                     cartesianChart.Pan(
                         new LvcPoint(
                             (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
-                            (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
+                            (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)),
+                        _isPanning);
                     _pointerPreviousPanningPosition = new LvcPoint(
                         _pointerPanningPosition.X, _pointerPanningPosition.Y);
                 }
@@ -615,5 +616,6 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         if (!_isPanning) return;
         _isPanning = false;
+        _panningThrottler.ForceCall();
     }
 }
