@@ -31,7 +31,9 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Uno.Helpers;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Text;
@@ -822,20 +824,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        CoreApplication.MainView.CoreWindow.Dispatcher
-            .RunAsync(CoreDispatcherPriority.Normal, () => action())
-            .AsTask()
-            .GetAwaiter()
-            .GetResult();
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
+        UnoPlatformHelpers.InvokeOnUIThread(action);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

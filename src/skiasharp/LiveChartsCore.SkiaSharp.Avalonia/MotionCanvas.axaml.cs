@@ -29,9 +29,9 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
-using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 using a = Avalonia.Media;
@@ -43,6 +43,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 /// </summary>
 public class MotionCanvas : UserControl
 {
+    private bool _isDeatached = false;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
@@ -65,12 +67,6 @@ public class MotionCanvas : UserControl
         AvaloniaProperty.Register<MotionCanvas, List<PaintSchedule<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
 
     /// <summary>
-    /// The back color property
-    /// </summary>
-    public static readonly AvaloniaProperty<SKColor> BackColorProperty =
-        AvaloniaProperty.Register<MotionCanvas, SKColor>(nameof(BackColor), defaultValue: new SKColor(255, 255, 255, 0), inherits: true);
-
-    /// <summary>
     /// Gets or sets the paint tasks.
     /// </summary>
     /// <value>
@@ -88,19 +84,7 @@ public class MotionCanvas : UserControl
     /// <value>
     /// The frames per second.
     /// </value>
-    public double FramesPerSecond { get; set; }
-
-    /// <summary>
-    /// Gets or sets the color of the back.
-    /// </summary>
-    /// <value>
-    /// The color of the back.
-    /// </value>
-    public SKColor BackColor
-    {
-        get => (SKColor)GetValue(BackColorProperty);
-        set => SetValue(BackColorProperty, value);
-    }
+    public double MaxFps { get; set; }
 
     /// <summary>
     /// Gets the canvas core.
@@ -117,12 +101,9 @@ public class MotionCanvas : UserControl
     public override void Render(a.DrawingContext context)
     {
         if (_isDeatached) return;
-        var drawOperation = new CustomDrawOp(
-            this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), BackColor);
+        var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height));
         context.Custom(drawOperation);
     }
-
-    public bool _isDeatached = false;
 
     /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
     protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
@@ -155,25 +136,18 @@ public class MotionCanvas : UserControl
         CanvasCore.Dispose();
     }
 
-    private void InvalidateOnUIThread()
-    {
-        Dispatcher.UIThread.Post(InvalidateVisual);
-    }
-
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
     private class CustomDrawOp : ICustomDrawOperation
     {
         private readonly MotionCanvas _avaloniaControl;
         private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas;
-        private readonly SKColor _backColor;
 
         public CustomDrawOp(
-            MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds, SKColor backColor)
+            MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds)
         {
             _avaloniaControl = avaloniaControl;
             _motionCanvas = motionCanvas;
-            _backColor = backColor;
             Bounds = bounds;
         }
 
@@ -222,8 +196,7 @@ public class MotionCanvas : UserControl
             //}
 
             if (_motionCanvas.IsValid) return;
-
-            _avaloniaControl.InvalidateOnUIThread();
+            _avaloniaControl.InvalidateVisual();
         }
     }
 }

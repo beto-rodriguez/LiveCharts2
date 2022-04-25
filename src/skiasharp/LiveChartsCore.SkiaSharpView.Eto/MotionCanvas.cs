@@ -22,20 +22,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Eto.SkiaDraw;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <summary>
 /// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
 /// </summary>
-/// <seealso cref="Eto.Forms.Control" />
 public class MotionCanvas : SkiaDrawable
 {
     private bool _isDrawingLoopRunning = false;
@@ -73,7 +72,7 @@ public class MotionCanvas : SkiaDrawable
     /// <value>
     /// The frames per second.
     /// </value>
-    public double FramesPerSecond { get; set; } = 90;
+    public double MaxFps { get; set; } = 65;
 
     /// <summary>
     /// Gets the canvas core.
@@ -107,7 +106,7 @@ public class MotionCanvas : SkiaDrawable
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        var ts = TimeSpan.FromSeconds(1 / MaxFps);
         while (!CanvasCore.IsValid)
         {
             Invalidate();

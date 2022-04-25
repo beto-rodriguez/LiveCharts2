@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -61,7 +62,7 @@ public partial class MotionCanvas : IDisposable
     /// Gets or sets the FPS.
     /// </summary>
     [Parameter]
-    public double FramesPerSecond { get; set; } = 60;
+    public double MaxFps { get; set; } = 65;
 
     /// <summary>
     /// Gets or sets the paint tasks.
@@ -172,7 +173,7 @@ public partial class MotionCanvas : IDisposable
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        var ts = TimeSpan.FromSeconds(1 / MaxFps);
 
         if (UseGLView)
         {

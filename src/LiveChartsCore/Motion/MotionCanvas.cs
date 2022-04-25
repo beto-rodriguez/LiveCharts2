@@ -24,8 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Motion;
 
 /// <summary>
 /// Defines a canvas that is able to animate the shapes inside it.
@@ -36,6 +37,9 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 {
     private readonly Stopwatch _stopwatch = new();
     private HashSet<IPaint<TDrawingContext>> _paintTasks = new();
+    private readonly List<double> _fpsStack = new();
+    private long _previousFrameTime;
+    private long _previousLogTime;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
@@ -93,11 +97,9 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     {
 #if DEBUG
         if (LiveCharts.EnableLogging)
-        {
             Trace.WriteLine(
                 $"[core canvas frame drawn] ".PadRight(60) +
                 $"tread: {Environment.CurrentManagedThreadId}");
-        }
 #endif
 
         lock (Sync)
@@ -153,6 +155,19 @@ public class MotionCanvas<TDrawingContext> : IDisposable
                 isValid = false;
             }
 
+#if DEBUG
+            var dt = frameTime - _previousFrameTime;
+            if (dt == 0) dt = 1;
+            _fpsStack.Add(1000 / dt);
+            if (_fpsStack.Count > 15) _fpsStack.RemoveAt(0);
+            if (frameTime - _previousLogTime > 500)
+            {
+                Trace.WriteLine($"[LiveCharts] fps = {_fpsStack.DefaultIfEmpty(0).Average():0.00}");
+                _previousLogTime = frameTime;
+            }
+#endif
+
+            _previousFrameTime = frameTime;
             IsValid = isValid;
         }
 
@@ -214,9 +229,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     public void Clear()
     {
         foreach (var task in _paintTasks)
-        {
             task.ReleaseCanvas(this);
-        }
         _paintTasks.Clear();
         Invalidate();
     }
@@ -230,12 +243,8 @@ public class MotionCanvas<TDrawingContext> : IDisposable
         var count = 0;
 
         foreach (var task in _paintTasks)
-        {
             foreach (var geometry in task.GetGeometries(this))
-            {
                 count++;
-            }
-        }
 
         return count;
     }
@@ -246,9 +255,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     public void Dispose()
     {
         foreach (var task in _paintTasks)
-        {
             task.ReleaseCanvas(this);
-        }
         _paintTasks.Clear();
         Trackers.Clear();
         IsValid = true;

@@ -29,8 +29,10 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Uno.Helpers;
 using SkiaSharp;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -222,11 +224,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {
-        CoreApplication.MainView.CoreWindow.Dispatcher
-            .RunAsync(CoreDispatcherPriority.Normal, () => action())
-            .AsTask()
-            .GetAwaiter()
-            .GetResult();
+        UnoPlatformHelpers.InvokeOnUIThread(action);
     }
 
     private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)

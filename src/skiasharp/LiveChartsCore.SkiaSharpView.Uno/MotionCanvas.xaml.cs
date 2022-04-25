@@ -22,9 +22,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.UWP;
 using Windows.Graphics.Display;
@@ -79,7 +81,7 @@ public sealed partial class MotionCanvas : UserControl
     /// <value>
     /// The frames per second.
     /// </value>
-    public double FramesPerSecond { get; set; } = 30;
+    public double MaxFps { get; set; } = 35;
 
     /// <summary>
     /// Gets the canvas core.
@@ -106,7 +108,7 @@ public sealed partial class MotionCanvas : UserControl
         if (_isDrawingLoopRunning || _skiaElement == null) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        var ts = TimeSpan.FromSeconds(1 / MaxFps);
         while (!CanvasCore.IsValid)
         {
             _skiaElement.Invalidate();
@@ -127,7 +129,7 @@ public sealed partial class MotionCanvas : UserControl
 
         var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
 
-        foreach (var item in motionCanvas.PaintTasks)
+        foreach (var item in motionCanvas.PaintTasks ?? Enumerable.Empty<PaintSchedule<SkiaSharpDrawingContext>>())
         {
             item.PaintTask.SetGeometries(motionCanvas.CanvasCore, item.Geometries);
             _ = tasks.Add(item.PaintTask);
