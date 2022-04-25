@@ -27,6 +27,7 @@ using System.Windows;
 using System.Windows.Controls;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.WPF;
@@ -42,7 +43,7 @@ public class MotionCanvas : Control
     /// <summary>
     /// The skia element
     /// </summary>
-    private SKElement? skiaElement;
+    private SKElement? _skiaElement;
     private bool _isDrawingLoopRunning = false;
 
     static MotionCanvas()
@@ -85,7 +86,7 @@ public class MotionCanvas : Control
     /// <value>
     /// The frames per second.
     /// </value>
-    public double FramesPerSecond { get; set; } = 90;
+    public double MaxFPS { get; set; } = 65;
 
     /// <summary>
     /// Gets the canvas core.
@@ -102,22 +103,20 @@ public class MotionCanvas : Control
     {
         base.OnApplyTemplate();
 
-        skiaElement = Template.FindName("skiaElement", this) as SKElement;
-        if (skiaElement is null)
+        _skiaElement = Template.FindName("skiaElement", this) as SKElement;
+        if (_skiaElement is null)
             throw new Exception(
                 $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                 $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
 
-        skiaElement.PaintSurface += OnPaintSurface;
+        _skiaElement.PaintSurface += OnPaintSurface;
     }
 
     /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
     protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
         (var dpiX, var dpiY) = GetPixelDensity();
-
         args.Surface.Canvas.Scale(dpiX, dpiY);
-
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
@@ -150,13 +149,13 @@ public class MotionCanvas : Control
 
     private async void RunDrawingLoop()
     {
-        if (_isDrawingLoopRunning || skiaElement is null) return;
+        if (_isDrawingLoopRunning || _skiaElement is null) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        var ts = TimeSpan.FromSeconds(1 / MaxFPS);
         while (!CanvasCore.IsValid)
         {
-            skiaElement.InvalidateVisual();
+            _skiaElement.InvalidateVisual();
             await Task.Delay(ts);
         }
 

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
@@ -34,6 +35,9 @@ using SkiaSharp.Views.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
+/// <summary>
+/// Defines the motion cavnas class for Maui.
+/// </summary>
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class MotionCanvas : ContentView
 {
@@ -76,7 +80,7 @@ public partial class MotionCanvas : ContentView
     /// <value>
     /// The frames per second.
     /// </value>
-    public double FramesPerSecond { get; set; } = 90;
+    public double MaxFps { get; set; } = 65;
 
     /// <summary>
     /// Gets or sets the paint tasks.
@@ -134,7 +138,7 @@ public partial class MotionCanvas : ContentView
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        var ts = TimeSpan.FromSeconds(1 / MaxFps);
         while (!CanvasCore.IsValid)
         {
             skiaElement.InvalidateSurface();

@@ -31,6 +31,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -816,15 +817,6 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         _ = DispatcherQueue.TryEnqueue(
             Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
             () => action());
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

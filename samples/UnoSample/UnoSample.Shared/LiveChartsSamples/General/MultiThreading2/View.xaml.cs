@@ -1,6 +1,4 @@
 ﻿using System;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using ViewModelsSamples.General.MultiThreading2;
 
@@ -23,7 +21,8 @@ public sealed partial class View : UserControl
     // to invoke an action in the UI thred.
     private void InvokeOnUIThread(Action action)
     {
-        CoreApplication.MainView.CoreWindow.Dispatcher
-            .RunAsync(CoreDispatcherPriority.Normal, () => action());
+        // the InvokeOnUIThread method provided by livecharts is a simple helper class
+        // that handles the invoke in the multiple platforms Uno supports.
+        LiveChartsCore.SkiaSharpView.Uno.Helpers.UnoPlatformHelpers.InvokeOnUIThread(action);
     }
 }

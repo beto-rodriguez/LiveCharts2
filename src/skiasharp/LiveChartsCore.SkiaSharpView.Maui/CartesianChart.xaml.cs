@@ -31,6 +31,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
@@ -280,7 +281,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty LegendBackgroundProperty =
         BindableProperty.Create(
-            nameof(LegendTextBrush), typeof(Color), typeof(CartesianChart),
+            nameof(LegendBackground), typeof(Color), typeof(CartesianChart),
             Color.FromRgb(255 / 255d, 255 / 255d, 255 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -753,15 +754,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         // throws on win ui
         // https://github.com/dotnet/maui/issues/2451
         MainThread.BeginInvokeOnMainThread(action);
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
     }
 
     /// <summary>

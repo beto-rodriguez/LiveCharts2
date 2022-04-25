@@ -5,6 +5,13 @@
 	-->
   <PropertyGroup>
     <TargetFrameworks>uap10.0.18362;netstandard2.0;net6.0-ios;net6.0-macos;net6.0-maccatalyst;net6.0-android</TargetFrameworks>
+
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
+	<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+	<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
+	<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.18362.0</SupportedOSPlatformVersion>
+	<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.18362.0</TargetPlatformMinVersion>
+    
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
@@ -22,6 +29,7 @@
     <RootNamespace>LiveChartsCore.SkiaSharpView.Uno</RootNamespace>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Uno</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
     <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

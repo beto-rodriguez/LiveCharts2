@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -82,7 +83,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         motionCanvas = new MotionCanvas();
         SuspendLayout();
         motionCanvas.Dock = DockStyle.Fill;
-        motionCanvas.FramesPerSecond = 90D;
+        motionCanvas.MaxFps = 65;
         motionCanvas.Location = new Point(0, 0);
         motionCanvas.Name = "motionCanvas";
         motionCanvas.Size = new Size(150, 150);
@@ -301,15 +302,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     {
         if (!IsHandleCreated) return;
         _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
     }
 
     /// <summary>

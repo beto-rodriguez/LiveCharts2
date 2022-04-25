@@ -25,13 +25,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Uno.Helpers;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Text;
@@ -861,20 +864,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        CoreApplication.MainView.CoreWindow.Dispatcher
-            .RunAsync(CoreDispatcherPriority.Normal, () => action())
-            .AsTask()
-            .GetAwaiter()
-            .GetResult();
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
+        UnoPlatformHelpers.InvokeOnUIThread(action);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
