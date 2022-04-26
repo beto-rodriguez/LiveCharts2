@@ -54,14 +54,14 @@ public class Bounds
     public bool IsEmpty { get; internal set; } = true;
 
     /// <summary>
-    /// Gets or sets the maximum value in the data set.
+    /// Gets the maximum value in the data set.
     /// </summary>
-    public double Max { get; set; } = float.MinValue;
+    public double Max { get; internal set; } = float.MinValue;
 
     /// <summary>
-    /// Gets or sets the minimum value in the data set.
+    /// Gets the minimum value in the data set.
     /// </summary>
-    public double Min { get; set; } = float.MaxValue;
+    public double Min { get; internal set; } = float.MaxValue;
 
     /// <summary>
     /// Gets the padding, the distance from the edge to the first point in the series.
@@ -87,12 +87,12 @@ public class Bounds
     public double Delta => Max - Min;
 
     /// <summary>
-    /// Gets or sets the minimum delta.
+    /// Gets the minimum delta.
     /// </summary>
     /// <value>
     /// The minimum delta.
     /// </value>
-    public double MinDelta { get; set; } = double.MaxValue;
+    public double MinDelta { get; internal set; } = double.MaxValue;
 
     /// <summary>
     /// Compares the current bounds with a given value,
@@ -100,7 +100,7 @@ public class Bounds
     /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
     /// </summary>
     /// <param name="value">the value to append</param>
-    public void AppendValue(double value)
+    internal void AppendValue(double value)
     {
         if (Max <= value) Max = value;
         if (Min >= value) Min = value;
@@ -113,7 +113,7 @@ public class Bounds
     /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
     /// </summary>
     /// <param name="bounds">the bounds to append</param>
-    public void AppendValue(Bounds bounds)
+    internal void AppendValue(Bounds bounds)
     {
         if (Max <= bounds.Max) Max = bounds.Max;
         if (Min >= bounds.Min) Min = bounds.Min;
@@ -128,7 +128,7 @@ public class Bounds
     /// Determines whether the current instance has the same limit to the given instance.
     /// </summary>
     /// <param name="bounds">The bounds to compate.</param>
-    public bool HasSameLimitTo(Bounds bounds)
+    internal bool HasSameLimitTo(Bounds bounds)
     {
         return Max == bounds.Max && Min == bounds.Min;
     }
