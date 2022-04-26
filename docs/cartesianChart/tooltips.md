@@ -111,7 +111,7 @@ strategy will be selected for the chart, if any series differs then the `Compare
 
 :::info
 Notice that the `Axis.UnitWidth` property might affect the tooltips in `DateTime` scaled charts, ensure your chart axis is using
-the properly [unit width]({{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#unitwidth-property)
+the properly [unit width]({{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#unitwidth-property).
 :::
 
 {{~ if xaml ~}}
