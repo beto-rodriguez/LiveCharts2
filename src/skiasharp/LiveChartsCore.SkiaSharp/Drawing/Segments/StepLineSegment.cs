@@ -45,16 +45,16 @@ public class StepLineSegment : PathCommand, IStepLineSegment<SKPath>
         _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
     }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.X0" />
+    /// <inheritdoc cref="IStepLineSegment{TPathContext}.X0" />
     public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.Y0" />
+    /// <inheritdoc cref="IStepLineSegment{TPathContext}.Y0" />
     public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.X1" />
+    /// <inheritdoc cref="IStepLineSegment{TPathContext}.X1" />
     public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.Y1" />
+    /// <inheritdoc cref="IStepLineSegment{TPathContext}.Y1" />
     public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
 
     /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />

@@ -1,5 +1,5 @@
 ﻿using LiveChartsCore.SkiaSharpView.SKCharts;
-using LiveChartsCore.SkiaSharpView.UWP;
+using LiveChartsCore.SkiaSharpView.Uno;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

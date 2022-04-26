@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;

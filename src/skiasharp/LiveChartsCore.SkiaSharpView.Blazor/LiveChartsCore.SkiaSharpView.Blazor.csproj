@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.3">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

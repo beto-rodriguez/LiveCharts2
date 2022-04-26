@@ -25,7 +25,7 @@ using System.Globalization;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.Devices;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -51,7 +51,7 @@ public class HeightConverter : IValueConverter
     {
         return value is IChartSeries<SkiaSharpDrawingContext> v
             ? v.CanvasSchedule.Height / DeviceDisplay.MainDisplayInfo.Density
-            : null;
+            : 0;
     }
 
     /// <summary>

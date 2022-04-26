@@ -74,11 +74,11 @@ public class MercatorProjector : MapProjector
 
         return new[]
         {
-                // x' =
-                (float)((lon + 180) * (_w / 360d) + _ox),
+            // x' =
+            (float)((lon + 180) * (_w / 360d) + _ox),
 
-                // y' =
-                (float) y + _oy
-            };
+            // y' =
+            (float) y + _oy
+        };
     }
 }

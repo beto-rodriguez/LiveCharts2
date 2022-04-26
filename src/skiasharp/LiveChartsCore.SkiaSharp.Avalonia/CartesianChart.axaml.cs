@@ -40,6 +40,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -363,12 +364,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         get => Background is not ISolidColorBrush b
                 ? new LvcColor()
                 : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-        set
-        {
-            Background = new SolidColorBrush(new Color(value.R, value.G, value.B, value.A));
-            var canvas = this.FindControl<MotionCanvas>("canvas");
-            canvas.BackColor = new SkiaSharp.SKColor(value.R, value.G, value.B, value.A);
-        }
+        set => Background = new SolidColorBrush(new Color(value.R, value.G, value.B, value.A));
     }
 
     LvcSize IChartView.ControlSize => _avaloniaCanvas is null
@@ -729,15 +725,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         Dispatcher.UIThread.Post(action);
     }
 
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
-    }
-
     /// <summary>
     /// Initializes the core.
     /// </summary>
@@ -793,15 +780,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         {
             _sectionsObserver?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)change.OldValue.Value);
             _sectionsObserver?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)change.NewValue.Value);
-        }
-
-        if (change.Property.Name == nameof(Background))
-        {
-            var canvas = this.FindControl<MotionCanvas>("canvas");
-            var color = Background is not ISolidColorBrush b
-                ? new LvcColor()
-                : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-            canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
         }
 
         _core.Update();

@@ -31,6 +31,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -858,17 +859,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     void IChartView.InvokeOnUIThread(Action action)
     {
         _ = DispatcherQueue.TryEnqueue(
-            Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
-            () => action());
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
+            Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () => action());
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

@@ -25,6 +25,7 @@ using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.AspNetCore.Components;

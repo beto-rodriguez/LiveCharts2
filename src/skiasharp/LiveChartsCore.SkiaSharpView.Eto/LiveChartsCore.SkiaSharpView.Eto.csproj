@@ -15,6 +15,10 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup>

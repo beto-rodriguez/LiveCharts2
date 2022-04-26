@@ -90,9 +90,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     LvcRectangle ICartesianAxis.LabelsDesiredSize { get => _labelsDesiredSize; set => _labelsDesiredSize = value; }
     LvcRectangle ICartesianAxis.NameDesiredSize { get => _nameDesiredSize; set => _nameDesiredSize = value; }
 
-    Bounds IPlane.DataBounds => _dataBounds;
+    /// <inheritdoc cref="IPlane.DataBounds"/>
+    public Bounds DataBounds => _dataBounds;
 
-    Bounds IPlane.VisibleDataBounds => _visibleDataBounds;
+    /// <inheritdoc cref="IPlane.VisibleDataBounds"/>
+    public Bounds VisibleDataBounds => _visibleDataBounds;
 
     AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
 

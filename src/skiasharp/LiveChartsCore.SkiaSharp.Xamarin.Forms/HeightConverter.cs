@@ -50,8 +50,8 @@ public class HeightConverter : IValueConverter
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value is IChartSeries<SkiaSharpDrawingContext> v
-            ? v.CanvasSchedule.Height / DeviceDisplay.MainDisplayInfo.Density
-            : null;
+            ? (double)v.CanvasSchedule.Height / (double)DeviceDisplay.MainDisplayInfo.Density
+            : 0;
     }
 
     /// <summary>

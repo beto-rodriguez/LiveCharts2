@@ -51,7 +51,7 @@ public class WidthConverter : IValueConverter
     {
         return value is IChartSeries<SkiaSharpDrawingContext> v
             ? v.CanvasSchedule.Width / DeviceDisplay.MainDisplayInfo.Density
-            : null;
+            : 0;
     }
 
     /// <summary>

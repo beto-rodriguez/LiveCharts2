@@ -133,7 +133,7 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
         _commands.Clear();
     }
 
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[]?)" />
+    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
 
     public override void CompleteTransition(params string[]? propertyName)
     {

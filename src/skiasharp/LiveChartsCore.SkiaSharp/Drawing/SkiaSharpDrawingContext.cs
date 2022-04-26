@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 

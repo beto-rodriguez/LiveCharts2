@@ -787,9 +787,9 @@
       <Project>{b4853153-b34f-4909-9b8f-a0ad00a3ee85}</Project>
       <Name>LiveChartsCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.UWP\LiveChartsCore.SkiaSharpView.UWP.csproj">
-      <Project>{087f8dd4-7c9d-4373-8bc6-9afe054f9953}</Project>
-      <Name>LiveChartsCore.SkiaSharpView.UWP</Name>
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno\LiveChartsCore.SkiaSharpView.Uno.csproj">
+      <Project>{dfcdb92d-2678-464d-a679-3866702fc6bf}</Project>
+      <Name>LiveChartsCore.SkiaSharpView.Uno</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj">
       <Project>{3b6f3fa0-d35d-49db-90da-709cc481ceee}</Project>

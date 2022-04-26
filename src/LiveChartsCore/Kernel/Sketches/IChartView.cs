@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -155,13 +156,6 @@ public interface IChartView
     /// </summary>
     /// <param name="action"></param>
     void InvokeOnUIThread(Action action);
-
-    /// <summary>
-    /// Ensures that the given action is synced as the chart data is
-    /// changing from multiple threads.
-    /// </summary>
-    /// <param name="action">The action.</param>
-    void SyncAction(Action action);
 }
 
 /// <summary>

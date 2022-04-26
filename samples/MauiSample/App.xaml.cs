@@ -1,13 +1,12 @@
-﻿using Application = Microsoft.Maui.Controls.Application;
-
-namespace MauiSample;
-
-public partial class App : Application
+﻿namespace MauiSample
 {
-    public App()
+    public partial class App : Application
     {
-        InitializeComponent();
+        public App()
+        {
+            InitializeComponent();
 
-        MainPage = new AppShell();
+            MainPage = new AppShell();
+        }
     }
 }

@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
 
@@ -73,7 +74,7 @@ public partial class MotionCanvas : UserControl
     /// <value>
     /// The frames per second.
     /// </value>
-    public double FramesPerSecond { get; set; } = 90;
+    public double MaxFps { get; set; } = 65;
 
     /// <summary>
     /// Gets the canvas core.
@@ -114,7 +115,7 @@ public partial class MotionCanvas : UserControl
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        var ts = TimeSpan.FromSeconds(1 / MaxFps);
         while (!CanvasCore.IsValid)
         {
             skControl2.Invalidate();

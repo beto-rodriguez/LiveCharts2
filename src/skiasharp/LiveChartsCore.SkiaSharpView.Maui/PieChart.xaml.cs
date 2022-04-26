@@ -31,10 +31,12 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
 using SkiaSharp.Views.Maui;
 
@@ -647,15 +649,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     void IChartView.InvokeOnUIThread(Action action)
     {
         MainThread.BeginInvokeOnMainThread(action);
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
     }
 
     /// <summary>

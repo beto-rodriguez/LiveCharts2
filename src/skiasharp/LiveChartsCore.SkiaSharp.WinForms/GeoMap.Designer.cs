@@ -57,7 +57,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             // motionCanvas1
             // 
             this.motionCanvas1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.motionCanvas1.FramesPerSecond = 90D;
+            this.motionCanvas1.MaxFps = 65D;
             this.motionCanvas1.Location = new System.Drawing.Point(0, 0);
             this.motionCanvas1.Name = "motionCanvas1";
             this.motionCanvas1.Size = new System.Drawing.Size(150, 150);

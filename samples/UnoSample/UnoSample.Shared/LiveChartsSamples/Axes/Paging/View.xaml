@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="UnoSample.Axes.Paging.View"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Uno"
+        xmlns:vms="using:ViewModelsSamples.Axes.Paging"
+        mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding GoToPage1Command}">Page 1</Button>
+            <Button Command="{Binding GoToPage2Command}">Page 2</Button>
+            <Button Command="{Binding GoToPage3Command}">Page 3</Button>
+            <Button Command="{Binding SeeAllCommand}">Clear</Button>
+        </StackPanel>
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Series="{Binding Series}"
+            XAxes="{Binding XAxes}"
+            ZoomMode="X">
+        </lvc:CartesianChart>
+    </Grid>
+</UserControl>

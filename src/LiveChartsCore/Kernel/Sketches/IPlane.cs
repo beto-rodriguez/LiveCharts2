@@ -65,7 +65,7 @@ public interface IPlane : IStopNPC
     Bounds DataBounds { get; }
 
     /// <summary>
-    /// Gets the data visible bounds, the min and max visible values in the axis.
+    /// Gets the data visible bounds, the min and max visible values in the axis that are currently in the UI.
     /// </summary>
     /// <value>
     /// The data bounds.
