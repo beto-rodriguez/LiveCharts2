@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Basic;
@@ -9,9 +8,9 @@ public class ViewModel
 {
     public ISeries[] Series { get; set; }
         = {
-            new LineSeries<double>
+            new LineSeries<int?>
             {
-                Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
+                Values = new List<int?>() { 1, 5, null , 7, 2 , 5 ,null, 8, 4 },
                 Fill = null
             }
         };
