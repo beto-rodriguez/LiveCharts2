@@ -119,6 +119,9 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwy = yScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
+        uwx = uwx < gs ? gs : uwx;
+        uwy = uwy < gs ? gs : uwy;
+
         foreach (var point in Fetch(cartesianChart))
         {
             var visual = (TVisual?)point.Context.Visual;

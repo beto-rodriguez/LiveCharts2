@@ -167,6 +167,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         }
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
+        uwx = uwx < gs ? gs : uwx;
 
         foreach (var segment in segments)
         {
