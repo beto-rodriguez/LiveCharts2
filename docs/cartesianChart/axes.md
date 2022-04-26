@@ -105,23 +105,64 @@ a button to reset the zoom to the data in the chart (settings `MinLimit` and `Ma
 ## MaxLimit and MinLimit properties
 
 These properties control the **zooming** and **panning** of a chart, both properties are of type of `double?`, you can
-indicate the visible values of a chart setting these properties. for example, imagine you are plotting a 
+indicate the visible range of an axis setting these properties. For example, imagine you are plotting a 
 `LineSeries` that goes from 0 to 100 in the `X` axis, but you only need to show to the user the first 10 points (**paging**),
 in this case you could set the `MinLimit` property to 0 and the `MaxLimit` to 10.
+
+<pre><code>var xAxis = new Axis
+{
+    MaxLimit = 0, // mark
+    MinLimit = 10 // mark
+};
+
+myChart.XAxes = new List&lt;Axis>{ xAxis };</code></pre>
 
 When a user uses the zooming and panning features, both properties will be calculated by the library, this means 
 that you can always know where the user is at a chart when you read both of these properties, notice the `Axis` class
 implements `INotifyPropertyChanged`, if you need so you could subscribe to the `PropertyChanged` event to detect every
 time a user uses these features (zooming and panning).
 
-<pre><code>XAxes = new List&lt;Axis>
+With the code above, we could detect the chart visible range when the user is zooming or panning subscribing a handler in
+the `Axis.PropertyChanged` event:
+
+<pre><code>var xAxis = new Axis
 {
-    new Axis    
+    MaxLimit = 0,
+    MinLimit = 10
+};
+
+xAxis.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) => // mark
+{ // mark
+    if (e.PropertyName is (nameof(xAxis.MaxLimit)) or (nameof(xAxis.MinLimit))) // mark
+    { // mark
+        // at this point the axis limits changed // mark
+        // the user is using the zooming or panning features // mark
+        // or the range was set explicitly in code // mark
+
+        var minXVisible = xAxis.MinLimit; // mark
+        var maxXVisible = xAxis.MaxLimit; // mark
+    } // mark
+}; // mark
+
+myChart.XAxes = new List&lt;Axis>{ xAxis };</code></pre>
+
+Finally notice what when the chart loads, by default both of these properties are `null`, and `null` means that the library will
+calculate the value of both, so when you need to read the initial value of an axis you can access the `Axis.DataBounds` or
+`Axis.VisibleDataBounds` properties, these properties are loaded until the chart is measured, there are multiple options to wait
+for the chart to be measured, in this example we will use the `Chart.UpdateStarted` event that happens when the chart is already measured
+and the draw in the UI is about to start.
+
+<pre><code>// get the control in the UI
+var chartControl = (CartesianChart)FindName("cartesianChart"); // notice this code is WPF specific
+
+chartControl.UpdateStarted +=
+    (LiveChartsCore.Kernel.Sketches.IChartView<LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext> chart) =>
     {
-        MaxLimit = 0,
-        MinLimit = 10
-    }
-};</code></pre>
+        var x = chartControl.XAxes.First();
+
+        var minLimit = x.VisibleDataBounds.Min;
+        var maxLimit = x.VisibleDataBounds.Max;
+    };</code></pre>
 
 ## Clearing the current zooming or panning
 

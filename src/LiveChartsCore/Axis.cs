@@ -93,7 +93,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="IPlane.DataBounds"/>
     public Bounds DataBounds => _dataBounds;
 
-    Bounds IPlane.VisibleDataBounds => _visibleDataBounds;
+    /// <inheritdoc cref="IPlane.VisibleDataBounds"/>
+    public Bounds VisibleDataBounds => _visibleDataBounds;
 
     AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
 
