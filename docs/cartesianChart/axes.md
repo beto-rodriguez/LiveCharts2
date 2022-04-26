@@ -152,16 +152,18 @@ calculate the value of both, so when you need to read the initial value of an ax
 for the chart to be measured, in this example we will use the `Chart.UpdateStarted` event that happens when the chart is already measured
 and the draw in the UI is about to start.
 
-<pre><code>// get the control in the UI
+<pre><code>using System.Linq; // mark
+
+// get the control in the UI
 var chartControl = (CartesianChart)FindName("cartesianChart"); // notice this code is WPF specific
 
 chartControl.UpdateStarted +=
     (LiveChartsCore.Kernel.Sketches.IChartView<LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext> chart) =>
     {
-        var x = chartControl.XAxes.First();
+        var x = chartControl.XAxes.First(); 
 
-        var minLimit = x.VisibleDataBounds.Min;
-        var maxLimit = x.VisibleDataBounds.Max;
+        var minLimit = x.VisibleDataBounds.Min; // mark
+        var maxLimit = x.VisibleDataBounds.Max; // mark
     };</code></pre>
 
 ## Clearing the current zooming or panning
