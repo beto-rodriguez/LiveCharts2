@@ -16,6 +16,8 @@ public class ViewModel
         {
             new ColumnSeries<DateTimePoint>
             {
+                TooltipLabelFormatter =
+                    chartPoint => $"{new DateTime((long) chartPoint.SecondaryValue):MMMM dd}: {chartPoint.PrimaryValue}",
                 Values = new ObservableCollection<DateTimePoint>
                 {
                     new DateTimePoint(new DateTime(2021, 1, 1), 3),
@@ -24,7 +26,7 @@ public class ViewModel
                     // ...
                     new(new DateTime(2021, 1, 3), 6),
                     new(new DateTime(2021, 1, 4), 5),
-                    new( new DateTime(2021, 1, 5), 3),
+                    new(new DateTime(2021, 1, 5), 3),
                     new(new DateTime(2021, 1, 6), 5),
                     new(new DateTime(2021, 1, 7), 8),
                     new(new DateTime(2021, 1, 8), 6)
