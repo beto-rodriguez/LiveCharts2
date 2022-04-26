@@ -10,21 +10,11 @@ public class ViewModel
     {
         Series = new ISeries[]
         {
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }},
-            new PieSeries<double> { Values = new double[] { 2 }}
-            //new PieSeries<double> { Values = new double[] { 2 }, Name = "Slice 1" },
-            //new PieSeries<double> { Values = new double[] { 4 }, Name = "Slice 2" },
-            //new PieSeries<double> { Values = new double[] { 1 }, Name = "Slice 3" },
-            //new PieSeries<double> { Values = new double[] { 4 }, Name = "Slice 4" },
-            //new PieSeries<double> { Values = new double[] { 3 }, Name = "Slice 5" }
+            new PieSeries<double> { Values = new double[] { 2 }, Name = "Slice 1" },
+            new PieSeries<double> { Values = new double[] { 4 }, Name = "Slice 2" },
+            new PieSeries<double> { Values = new double[] { 1 }, Name = "Slice 3" },
+            new PieSeries<double> { Values = new double[] { 4 }, Name = "Slice 4" },
+            new PieSeries<double> { Values = new double[] { 3 }, Name = "Slice 5" }
         };
 
         // the next code is equivalent to the previous one,

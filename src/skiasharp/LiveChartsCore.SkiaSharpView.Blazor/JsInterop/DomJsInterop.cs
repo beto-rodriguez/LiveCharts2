@@ -43,7 +43,7 @@ public class DomJsInterop : IAsyncDisposable
         _moduleTask = new Lazy<Task<IJSObjectReference>>(() =>
             jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import",
-                "./_content/LiveChartsCore.SkiaSharpView.Blazor/DOMInterop.js")
+                "./_content/LiveChartsCore.SkiaSharpView.Blazor/domInterop.js")
             .AsTask());
     }
 
