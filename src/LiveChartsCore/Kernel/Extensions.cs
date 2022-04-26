@@ -292,7 +292,7 @@ public static class Extensions
             areAllX = areAllX && (series.SeriesProperties & SeriesProperties.PrefersXStrategyTooltips) != 0;
             areAllY = areAllY && (series.SeriesProperties & SeriesProperties.PrefersYStrategyTooltips) != 0;
         }
-         
+
         return areAllX
             ? TooltipFindingStrategy.CompareOnlyXTakeClosest
             : (areAllY ? TooltipFindingStrategy.CompareOnlyYTakeClosest : TooltipFindingStrategy.CompareAllTakeClosest);

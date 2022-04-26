@@ -76,29 +76,43 @@ cartesianChart1.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Bottom;
 
 ## TooltipFindingStrategy property
 
-Every point drawn by the library defines a [HoverArea]{{ website_url}}/api/{{ version }}/LiveChartsCore.Kernel.Drawing.HoverArea),
+Every point drawn by the library defines a [HoverArea]({{ website_url }}/api/{{ version }}/LiveChartsCore.Kernel.Drawing.HoverArea),
 it defines an area in the chart that "triggers" the point, it is specially important to fire tooltips, a point will be included in a
 tooltip when the hover area was triggered by the pointer position.
 
-The `TooltipFindingStrategy` property determines the hover area planes (X or Y) that a chart will use to trigger the `HoverArea` instances
-in the chart, the following options are available:
+The `TooltipFindingStrategy` property determines the hover area planes (X or Y) that a chart will use to trigger the `HoverArea` instances.
+In a chart, the following options are available:
 
-**CompareOnlyX**: Selects all the points that share the same X unit range (the space taken in the plot by a unit in the X axis).
+**CompareAll**: Selects all the points whose hover area contain the pointer position.
 
-![tooltips]({{ assets_url }}/docs/_assets/compare-x-strategy.gif)
+![tooltips]({{ assets_url }}/docs/_assets/tsm_cac.gif)
 
-**CompareOnlyY**: Selects all the points that share the same Y unit range (the space taken in the plot by a unit in the Y axis).
+**CompareOnlyX**: Selects all the points whose hover area contain the pointer position, but it ignores the Y plane.
 
-![tooltips]({{ assets_url }}/docs/_assets/compare-y-strategy.gif)
+![tooltips]({{ assets_url }}/docs/_assets/tsm_cxc.gif)
 
-**CompareAll**: Selects all the points that share the X and Y range.
+**CompareOnlyY**: Selects all the points whose hover area contain the pointer position, but it ignores the X plane.
 
-![tooltips]({{ assets_url }}/docs/_assets/compare-all-strategy.gif)
+![tooltips]({{ assets_url }}/docs/_assets/tsm_cyc.gif)
 
-**Automatic** *(default)*: Based on the series in the chart, LiveCharts will determine a finding strategy (`CompareAll`, `CompareOnlyX` or 
-`CompareOnlyY`), all the series have a preferred finding strategy, normally vertical series prefer the `CompareOnlyX` strategy, 
-horizontal series prefer `CompareOnlyY`, and scatter series prefers `CompareAll`, if all the series prefer the same strategy, then that
-strategy will be selected for the chart, if any series differs then the `CompareAll` strategy will be used.
+**CompareAllTakeClosest**: Selects all the points whose hover area contain the pointer position,
+it only takes the closest point to the pointer, one per series.
+
+**CompareOnlyXTakeClosest**: Selects all the points whose hover area contain the pointer position, but it ignores the Y plane,
+it only takes the closest point to the pointer, one per series.
+
+**CompareOnlyYTakeClosest**: Selects all the points whose hover area contain the pointer position, but it ignores the X plane,
+it only takes the closest point to the pointer, one per series.
+
+**Automatic** *(default)*: Based on the series in the chart, LiveCharts will determine a finding strategy (one of the previous mentioned),
+all the series have a preferred finding strategy, normally vertical series prefer the `CompareOnlyXTakeClosest` strategy, 
+horizontal series prefer `CompareOnlyYTakeClosest`, and scatter series prefers `CompareAllTakeClosest`, if all the series prefer the same strategy, then that
+strategy will be selected for the chart, if any series differs then the `CompareAllTakeClosest` strategy will be used.
+
+:::info
+Notice that the `Axis.UnitWidth` property might affect the tooltips in `DateTime` scaled charts, ensure your chart axis is using
+the properly [unit width]({{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#unitwidth-property)
+:::
 
 {{~ if xaml ~}}
 <pre><code>&lt;lvc:CartesianChart
