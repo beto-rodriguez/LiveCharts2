@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -81,15 +82,30 @@ public class Stacker<TDrawingContext>
     public double StackPoint(ChartPoint point, int seriesStackPosition)
     {
         var index = point.SecondaryValue;
+        var start = 0d;
 
-        var start = seriesStackPosition == 0
-            ? 0
-            : _stack[seriesStackPosition - 1].TryGetValue(index, out var activeStack)
-                ? activeStack.End
-                : 0;
+        if (seriesStackPosition > 0)
+        {
+            double? stackEnd = null;
+            var ssp = seriesStackPosition;
+
+            while (ssp >= 0 && stackEnd is null)
+            {
+                var stackCol = _stack[ssp - 1];
+                if (stackCol.TryGetValue(index, out var activeStack))
+                {
+                    stackEnd = activeStack.End;
+                }
+                else
+                {
+                    ssp--;
+                }
+            }
+
+            if (stackEnd is not null) start = stackEnd.Value;
+        }
 
         var value = point.PrimaryValue;
-
         var si = _stack[seriesStackPosition];
 
         if (!si.TryGetValue(point.SecondaryValue, out var currentStack))
