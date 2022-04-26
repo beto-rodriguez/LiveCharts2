@@ -296,11 +296,21 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     IEnumerable<ChartPoint> ISeries.FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
     {
-        return
-            Fetch(chart)
-            .Where(x =>
-                x.Context.HoverArea is not null &&
-                x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
+        var query = Fetch(chart).Where(x =>
+            x.Context.HoverArea is not null &&
+            x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
+
+        var s = (int)strategy;
+        if (s is >= 4 and <= 6)
+        {
+            // if select closest...
+            query = query
+                .Select(x => new { distance = x.DistanceTo(pointerPosition), point = x })
+                .OrderBy(x => x.distance)
+                .SelectFirst(x => x.point);
+        }
+
+        return query;
     }
 
     void ISeries.OnPointerEnter(ChartPoint point)

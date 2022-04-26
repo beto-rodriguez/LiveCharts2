@@ -114,13 +114,13 @@ public class RectangleHoverArea : HoverArea
     public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
     {
         var isInX = pointerLocation.X > X && pointerLocation.X < X + Width;
-        var isInY = pointerLocation.Y > Y && pointerLocation.Y < Y + Height; // <-- first time the new vs2022 intelisense surprises me 🎉🎉, this line was generated automatically
+        var isInY = pointerLocation.Y > Y && pointerLocation.Y < Y + Height;
 
         return strategy switch
         {
-            TooltipFindingStrategy.CompareOnlyX => isInX,
-            TooltipFindingStrategy.CompareOnlyY => isInY, // this line too!
-            TooltipFindingStrategy.CompareAll => isInX && isInY, // but it was not able to complete this one :(
+            TooltipFindingStrategy.CompareOnlyX or TooltipFindingStrategy.CompareOnlyXTakeClosest => isInX,
+            TooltipFindingStrategy.CompareOnlyY or TooltipFindingStrategy.CompareOnlyYTakeClosest => isInY,
+            TooltipFindingStrategy.CompareAll or TooltipFindingStrategy.CompareAllTakeClosest => isInX && isInY,
             TooltipFindingStrategy.Automatic => throw new Exception($"The strategy {strategy} is not supported."),
             _ => throw new NotImplementedException()
         };

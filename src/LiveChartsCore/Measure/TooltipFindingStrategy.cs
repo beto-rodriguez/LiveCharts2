@@ -28,22 +28,37 @@ namespace LiveChartsCore.Measure;
 public enum TooltipFindingStrategy
 {
     /// <summary>
-    /// The automatic mode, it will be calculated based on the series in the chart.
+    /// The automatic mode, it will be calculated automatically based on the series and the chart.
     /// </summary>
     Automatic,
 
     /// <summary>
-    /// Compares X and Y coordinates.
+    /// Looks for all the points that contain the pointer positon.
     /// </summary>
     CompareAll,
 
     /// <summary>
-    /// Compares X coordinates and ignores Y.
+    /// Looks for all the points that contain the pointer positon ignoring the Y axis.
     /// </summary>
     CompareOnlyX,
 
     /// <summary>
-    /// Compares Y coordinates and ignores X.
+    /// Looks for all the points that contain the pointer positon ignoring the X axis.
     /// </summary>
-    CompareOnlyY
+    CompareOnlyY,
+
+    /// <summary>
+    /// Looks for the closest point (to the pointer) per series that contains the pointer positon.
+    /// </summary>
+    CompareAllTakeClosest,
+
+    /// <summary>
+    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the Y axis.
+    /// </summary>
+    CompareOnlyXTakeClosest,
+
+    /// <summary>
+    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the X axis.
+    /// </summary>
+    CompareOnlyYTakeClosest
 }
