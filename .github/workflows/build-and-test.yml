@@ -52,25 +52,25 @@ jobs:
     #   run: msbuild ./samples/UnoSample/UnoSample.Mobile /t:Restore
 
     - name: Build Avalonia
-     run: dotnet build ./samples/AvaloniaSample
+      run: dotnet build ./samples/AvaloniaSample
 
     - name: Build Blazor
-     run: dotnet build ./samples/BlazorSample
+      run: dotnet build ./samples/BlazorSample
 
     - name: Build WinForms
-     run: dotnet build ./samples/WinFormsSample
+      run: dotnet build ./samples/WinFormsSample
 
     - name: Build WPF
-     run: dotnet build ./samples/WPFSample
+      run: dotnet build ./samples/WPFSample
 
     - name: Build Xamarin
-     run: dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
+      run: dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
 
     - name: Build EtoForms
-     run: dotnet build ./samples/EtoFormsSample
+      run: dotnet build ./samples/EtoFormsSample
 
     - name: Build WinUI
-     run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
+      run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
 
     - name: Run unit tests
-     run: dotnet test ./tests/LiveChartsCore.UnitTesting
+      run: dotnet test ./tests/LiveChartsCore.UnitTesting
