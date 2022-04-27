@@ -67,6 +67,7 @@ public class VectorManager<TSegment, TDrawingContext>
             segment.Id >= _nextNode.Next.Value.Id)
         {
             _nextNode = _nextNode.Next;
+            if (_nextNode.Previous is null) continue;
             AreaGeometry.RemoveCommand(_nextNode.Previous);
         }
 

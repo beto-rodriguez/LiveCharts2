@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
