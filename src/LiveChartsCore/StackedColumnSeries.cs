@@ -171,8 +171,20 @@ public class StackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : Sta
             var sizedGeometry = visual;
 
             var sy = stacker.GetStack(point);
-            var primaryI = primaryScale.ToPixels(sy.Start);
-            var primaryJ = primaryScale.ToPixels(sy.End);
+
+            float primaryI, primaryJ;
+
+            if (point.PrimaryValue >= 0)
+            {
+                primaryI = primaryScale.ToPixels(sy.Start);
+                primaryJ = primaryScale.ToPixels(sy.End);
+            }
+            else
+            {
+                primaryI = primaryScale.ToPixels(sy.NegativeStart);
+                primaryJ = primaryScale.ToPixels(sy.NegativeEnd);
+            }
+
             var x = secondary - uwm + cp;
 
             sizedGeometry.X = x;

@@ -20,45 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure;
+namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines the tool tip finding strategy.
+/// Defines a stack total.
 /// </summary>
-public enum TooltipFindingStrategy
+public class StackedTotal
 {
     /// <summary>
-    /// The automatic mode, it will be calculated automatically based on the series and the chart.
+    /// Gets or sets the posive stack.
     /// </summary>
-    Automatic,
+    public double Positive { get; set; }
 
     /// <summary>
-    /// Looks for all the points that contain the pointer positon.
+    /// Gets or sets the negative stack.
     /// </summary>
-    CompareAll,
-
-    /// <summary>
-    /// Looks for all the points that contain the pointer positon ignoring the Y axis.
-    /// </summary>
-    CompareOnlyX,
-
-    /// <summary>
-    /// Looks for all the points that contain the pointer positon ignoring the X axis.
-    /// </summary>
-    CompareOnlyY,
-
-    /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon.
-    /// </summary>
-    CompareAllTakeClosest,
-
-    /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the Y axis.
-    /// </summary>
-    CompareOnlyXTakeClosest,
-
-    /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the X axis.
-    /// </summary>
-    CompareOnlyYTakeClosest
+    public double Negative { get; set; }
 }

@@ -281,8 +281,7 @@ public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingConte
         if (location is null) throw new Exception("location not supported");
 
         var from = PlacementRectangle;
-        // this should not be necessary? + border.DesiredSize.Width why???
-        var to = new Rect(location.Value.X + border.DesiredSize.Width, location.Value.Y, DesiredSize.Width, DesiredSize.Height);
+        var to = new Rect(location.Value.X, location.Value.Y, DesiredSize.Width, DesiredSize.Height);
         if (from == Rect.Empty) from = to;
         var animation = new RectAnimation(from, to, AnimationsSpeed) { EasingFunction = EasingFunction };
         BeginAnimation(PlacementRectangleProperty, animation);
