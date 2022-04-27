@@ -34,29 +34,43 @@ jobs:
     - name: Build Maui
       run: dotnet build ./samples/MauiSample
 
-    #- name: Build Uno mobile
-    #  run: msbuild ./samples/UWPSample/UWPSample.csproj /t:Restore
+    - name: Build Uno.UWP
+      run: msbuild ./samples/UnoSample/UnoSample.UWP /t:Restore
 
-    #- name: Build Avalonia
-    #  run: dotnet build ./samples/AvaloniaSample
+    - name: Build Uno.Wasm
+      run: msbuild ./samples/UnoSample/UnoSample.Wasm /t:Restore
 
-    #- name: Build Blazor
-    #  run: dotnet build ./samples/BlazorSample
+    - name: Build Uno.Wpf.Host
+      run: msbuild ./samples/UnoSample/UnoSample.Wpf.Host /t:Restore
 
-    #- name: Build WinForms
-    #  run: dotnet build ./samples/WinFormsSample
+    - name: Build Uno.Skia.Gtk
+      run: msbuild ./samples/UnoSample/UnoSample.Skia.Gtk /t:Restore
 
-    #- name: Build WPF
-    #  run: dotnet build ./samples/WPFSample
+    # locally I get an error to build uno mobile using msbuild:
+    # error M564086: A numeric comparison was attempted on "g_CurrentTrimmedAndroidSOLVersiony that evaluates to "" instead of a number, in condition $(_CurrentTrimmedA ndroidSDLVersion)' < '$(UnoUIMinAndroidSDKVersion)".
+    # - name: Build Uno.Mobile
+    #   run: msbuild ./samples/UnoSample/UnoSample.Mobile /t:Restore
 
-    #- name: Build Xamarin
-    #  run: dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
+    - name: Build Avalonia
+     run: dotnet build ./samples/AvaloniaSample
 
-    #- name: Build EtoForms
-    #  run: dotnet build ./samples/EtoFormsSample
+    - name: Build Blazor
+     run: dotnet build ./samples/BlazorSample
 
-    #- name: Build WinUI
-    #  run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
+    - name: Build WinForms
+     run: dotnet build ./samples/WinFormsSample
 
-    #- name: Run unit tests
-    #  run: dotnet test ./tests/LiveChartsCore.UnitTesting
+    - name: Build WPF
+     run: dotnet build ./samples/WPFSample
+
+    - name: Build Xamarin
+     run: dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
+
+    - name: Build EtoForms
+     run: dotnet build ./samples/EtoFormsSample
+
+    - name: Build WinUI
+     run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
+
+    - name: Run unit tests
+     run: dotnet test ./tests/LiveChartsCore.UnitTesting
