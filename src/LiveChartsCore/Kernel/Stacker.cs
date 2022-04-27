@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -36,7 +35,7 @@ public class Stacker<TDrawingContext>
 {
     private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = new();
     private readonly List<Dictionary<double, StackedValue>> _stack = new();
-    private readonly Dictionary<double, double> _totals = new();
+    private readonly Dictionary<double, StackedTotal> _totals = new();
     private int _stackCount = 0;
     private int _knownMaxLenght = 0;
 
@@ -82,46 +81,64 @@ public class Stacker<TDrawingContext>
     public double StackPoint(ChartPoint point, int seriesStackPosition)
     {
         var index = point.SecondaryValue;
-        var start = 0d;
+        var value = point.PrimaryValue;
+        var positiveStart = 0d;
+        var negativeStart = 0d;
 
         if (seriesStackPosition > 0)
         {
-            double? stackEnd = null;
             var ssp = seriesStackPosition;
+            var found = false;
 
-            while (ssp >= 0 && stackEnd is null)
+            // keep diging until you find a stack in the same position.
+            while (ssp >= 0 && !found)
             {
                 var stackCol = _stack[ssp - 1];
-                if (stackCol.TryGetValue(index, out var activeStack))
+                if (stackCol.TryGetValue(index, out var previousActiveStack))
                 {
-                    stackEnd = activeStack.End;
+                    positiveStart = previousActiveStack.End;
+                    negativeStart = previousActiveStack.NegativeEnd;
+                    found = true;
                 }
                 else
                 {
                     ssp--;
                 }
             }
-
-            if (stackEnd is not null) start = stackEnd.Value;
         }
 
-        var value = point.PrimaryValue;
         var si = _stack[seriesStackPosition];
 
         if (!si.TryGetValue(point.SecondaryValue, out var currentStack))
         {
-            currentStack = new StackedValue { Start = start, End = start };
+            currentStack = new StackedValue
+            {
+                Start = positiveStart,
+                End = positiveStart,
+                NegativeStart = negativeStart,
+                NegativeEnd = negativeStart
+            };
             si.Add(index, currentStack);
-            if (!_totals.TryGetValue(index, out var _)) _totals.Add(index, 0);
+            if (!_totals.TryGetValue(index, out var _)) _totals.Add(index, new());
             _knownMaxLenght++;
         }
 
-        currentStack.End += value;
+        if (value >= 0)
+        {
+            currentStack.End += value;
+            var positiveTotal = _totals[index].Positive + value;
+            _totals[index].Positive = positiveTotal;
 
-        var total = _totals[index] + value;
-        _totals[index] = total;
+            return positiveTotal;
+        }
+        else
+        {
+            currentStack.NegativeEnd += value;
+            var negativeTotal = _totals[index].Negative + value;
+            _totals[index].Negative = negativeTotal;
 
-        return total;
+            return negativeTotal;
+        }
     }
 
     /// <summary>
@@ -139,7 +156,10 @@ public class Stacker<TDrawingContext>
         {
             Start = p.Start,
             End = p.End,
-            Total = _totals[index]
+            Total = _totals[index].Positive,
+            NegativeStart = p.NegativeStart,
+            NegativeEnd = p.NegativeEnd,
+            NegativeTotal = _totals[index].Negative
         };
     }
 }

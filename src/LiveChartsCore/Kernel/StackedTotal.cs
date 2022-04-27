@@ -23,55 +23,17 @@
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines the a stacked value.
+/// Defines a stack total.
 /// </summary>
-public class StackedValue
+public class StackedTotal
 {
     /// <summary>
-    /// Gets or sets the start.
+    /// Gets or sets the posive stack.
     /// </summary>
-    /// <value>
-    /// The start.
-    /// </value>
-    public double Start { get; set; }
+    public double Positive { get; set; }
 
     /// <summary>
-    /// Gets or sets the end.
+    /// Gets or sets the negative stack.
     /// </summary>
-    /// <value>
-    /// The end.
-    /// </value>
-    public double End { get; set; }
-
-    /// <summary>
-    /// Gets or sets the total stacked.
-    /// </summary>
-    /// <value>
-    /// The total.
-    /// </value>
-    public double Total { get; set; }
-
-    /// <summary>
-    /// Gets or sets the start.
-    /// </summary>
-    /// <value>
-    /// The start.
-    /// </value>
-    public double NegativeStart { get; set; }
-
-    /// <summary>
-    /// Gets or sets the end.
-    /// </summary>
-    /// <value>
-    /// The end.
-    /// </value>
-    public double NegativeEnd { get; set; }
-
-    /// <summary>
-    /// Gets or sets the total stacked.
-    /// </summary>
-    /// <value>
-    /// The total.
-    /// </value>
-    public double NegativeTotal { get; set; }
+    public double Negative { get; set; }
 }

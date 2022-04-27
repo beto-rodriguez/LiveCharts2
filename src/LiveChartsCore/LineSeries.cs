@@ -230,7 +230,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             foreach (var data in GetSpline(segment, stacker))
             {
                 var s = 0d;
-                if (stacker is not null) s = stacker.GetStack(data.TargetPoint).Start;
+                if (stacker is not null)
+                    s = data.TargetPoint.PrimaryValue > 0
+                        ? stacker.GetStack(data.TargetPoint).Start
+                        : stacker.GetStack(data.TargetPoint).NegativeStart;
 
                 var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
 
@@ -278,8 +281,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                 var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)].CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Xj)]);
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)].CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Yj)]);
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
+                    .CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Xj)]);
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)]
+                    .CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Yj)]);
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 
                 visual.Geometry.Width = gs;
@@ -526,7 +531,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             if (item.IsFirst)
             {
                 var c = item.Current;
-                var sc = stacker?.GetStack(c).Start ?? 0;
+
+                var sc = (item.Current.PrimaryValue > 0
+                    ? stacker?.GetStack(c).Start
+                    : stacker?.GetStack(c).NegativeStart) ?? 0;
 
                 yield return new BezierData(item.Next)
                 {
@@ -548,10 +556,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
             if (stacker is not null)
             {
-                pys = stacker.GetStack(item.Previous).Start;
-                cys = stacker.GetStack(item.Current).Start;
-                nys = stacker.GetStack(item.Next).Start;
-                nnys = stacker.GetStack(item.AfterNext).Start;
+                pys = item.Previous.PrimaryValue > 0 ? stacker.GetStack(item.Previous).Start : stacker.GetStack(item.Previous).NegativeStart;
+                cys = item.Current.PrimaryValue > 0 ? stacker.GetStack(item.Current).Start : stacker.GetStack(item.Current).NegativeStart;
+                nys = item.Next.PrimaryValue > 0 ? stacker.GetStack(item.Next).Start : stacker.GetStack(item.Next).NegativeStart;
+                nnys = item.AfterNext.PrimaryValue > 0 ? stacker.GetStack(item.AfterNext).Start : stacker.GetStack(item.AfterNext).NegativeStart;
             }
 
             var xc1 = (item.Previous.SecondaryValue + item.Current.SecondaryValue) / 2.0f;
