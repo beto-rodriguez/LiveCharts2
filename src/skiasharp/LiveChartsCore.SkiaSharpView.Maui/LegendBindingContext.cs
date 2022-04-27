@@ -62,7 +62,7 @@ public class LegendBindingContext
     /// <value>
     /// The color of the text.
     /// </value>
-    public Color TextColor { get; set; }
+    public Color? TextColor { get; set; }
 
     /// <summary>
     /// Gets or sets the color of the background.
@@ -70,7 +70,7 @@ public class LegendBindingContext
     /// <value>
     /// The color of the background.
     /// </value>
-    public Color BackgroundColor { get; set; }
+    public Color? BackgroundColor { get; set; }
 
     /// <summary>
     /// Gets or sets the font attributes.

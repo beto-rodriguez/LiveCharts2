@@ -35,6 +35,7 @@ using Microsoft.Maui.Graphics;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
+/// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
 {
@@ -91,7 +92,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
     /// <value>
     /// The color of the text.
     /// </value>
-    public Color TooltipTextColor { get; set; }
+    public Color? TooltipTextColor { get; set; }
 
     /// <summary>
     /// Gets or sets the font attributes.
@@ -107,7 +108,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
     /// <value>
     /// The color of the tool tip background.
     /// </value>
-    public Color TooltipBackgroundColor { get; set; }
+    public Color? TooltipBackgroundColor { get; set; }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
     {
