@@ -34,17 +34,17 @@ jobs:
     #- name: Build Maui
     #  run: dotnet build ./samples/MauiSample
 
-    - name: Build Uno.UWP
-      run: msbuild ./samples/UnoSample/UnoSample.UWP /t:Restore
+    #- name: Build Uno.UWP
+    #  run: msbuild ./samples/UnoSample/UnoSample.UWP /t:Restore
 
-    - name: Build Uno.Wasm
-      run: msbuild ./samples/UnoSample/UnoSample.Wasm /t:Restore
+    #- name: Build Uno.Wasm
+    #  run: msbuild ./samples/UnoSample/UnoSample.Wasm /t:Restore
 
-    - name: Build Uno.Wpf.Host
-      run: msbuild ./samples/UnoSample/UnoSample.Wpf.Host /t:Restore
+    #- name: Build Uno.Wpf.Host
+    #  run: msbuild ./samples/UnoSample/UnoSample.Wpf.Host /t:Restore
 
-    - name: Build Uno.Skia.Gtk
-      run: msbuild ./samples/UnoSample/UnoSample.Skia.Gtk /t:Restore
+    #- name: Build Uno.Skia.Gtk
+    #  run: msbuild ./samples/UnoSample/UnoSample.Skia.Gtk /t:Restore
 
     # locally I get an error to build uno mobile using msbuild:
     # error M564086: A numeric comparison was attempted on "g_CurrentTrimmedAndroidSOLVersiony that evaluates to "" instead of a number, in condition $(_CurrentTrimmedA ndroidSDLVersion)' < '$(UnoUIMinAndroidSDKVersion)".
