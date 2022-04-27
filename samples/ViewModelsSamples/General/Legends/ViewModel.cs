@@ -13,6 +13,11 @@ public class ViewModel : INotifyPropertyChanged
     private LegendPosition _position;
     private AvailablePosition _selectedPosition;
 
+    public ViewModel()
+    {
+        _selectedPosition = Positions[0];
+    }
+
     public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new ColumnSeries<double>
@@ -54,9 +59,9 @@ public class ViewModel : INotifyPropertyChanged
 
     public LegendPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

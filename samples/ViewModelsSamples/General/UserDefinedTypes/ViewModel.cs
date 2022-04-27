@@ -43,19 +43,19 @@ public class ViewModel
     }
 
     public ISeries[] Series { get; set; } = {
-            new LineSeries<City>
+        new LineSeries<City>
+        {
+            Name = "Population",
+            //TooltipLabelFormatter = point => point.mode
+            Values = new[]
             {
-                Name = "Population",
-                //TooltipLabelFormatter = point => point.mode
-                Values = new[]
-                {
-                    new City { Name = "Tokyo", Population = 4 },
-                    new City { Name = "New York", Population = 6 },
-                    new City { Name = "Seoul", Population = 2 },
-                    new City { Name = "Moscow", Population = 8 },
-                    new City { Name = "Shanghai", Population = 3 },
-                    new City { Name = "Guadalajara", Population = 4 }
-                }
+                new City { Name = "Tokyo", Population = 4 },
+                new City { Name = "New York", Population = 6 },
+                new City { Name = "Seoul", Population = 2 },
+                new City { Name = "Moscow", Population = 8 },
+                new City { Name = "Shanghai", Population = 3 },
+                new City { Name = "Guadalajara", Population = 4 }
             }
+        }
     };
 }

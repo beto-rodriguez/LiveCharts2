@@ -45,6 +45,8 @@ public class ViewModel
     private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
     {
         var visual = point.Visual;
+        if (visual is null) return;
+
         var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point, 30f);
 
         _ = visual

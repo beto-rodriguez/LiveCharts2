@@ -31,32 +31,32 @@ jobs:
         dotnet workload install maui
         dotnet workload install wasm-tools
 
-    - name: Build Avalonia
-      run: dotnet build ./samples/AvaloniaSample
-
-    - name: Build Blazor
-      run: dotnet build ./samples/BlazorSample
-
     - name: Build Maui
       run: dotnet build ./samples/MauiSample
 
-    - name: Build WinForms
-      run: dotnet build ./samples/WinFormsSample
+    #- name: Build Uno mobile
+    #  run: msbuild ./samples/UWPSample/UWPSample.csproj /t:Restore
 
-    - name: Build WPF
-      run: dotnet build ./samples/WPFSample
+    #- name: Build Avalonia
+    #  run: dotnet build ./samples/AvaloniaSample
 
-    - name: Build Xamarin
-      run: dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
+    #- name: Build Blazor
+    #  run: dotnet build ./samples/BlazorSample
 
-    - name: Build EtoForms
-      run: dotnet build ./samples/EtoFormsSample
+    #- name: Build WinForms
+    #  run: dotnet build ./samples/WinFormsSample
 
-    - name: Build UWP
-      run: msbuild ./samples/UWPSample/UWPSample.csproj /t:Restore
+    #- name: Build WPF
+    #  run: dotnet build ./samples/WPFSample
 
-    - name: Build WinUI
-      run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
+    #- name: Build Xamarin
+    #  run: dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
 
-    - name: Run unit tests
-      run: dotnet test ./tests/LiveChartsCore.UnitTesting
+    #- name: Build EtoForms
+    #  run: dotnet build ./samples/EtoFormsSample
+
+    #- name: Build WinUI
+    #  run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
+
+    #- name: Run unit tests
+    #  run: dotnet test ./tests/LiveChartsCore.UnitTesting

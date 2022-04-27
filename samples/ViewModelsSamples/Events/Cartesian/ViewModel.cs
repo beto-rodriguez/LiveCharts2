@@ -28,7 +28,7 @@ public class ViewModel
         {
             Name = "Items sold per day",
             Values = data,
-            TooltipLabelFormatter = point => $"{point.Model.Name}, sold {point.Model.SalesPerDay} items",
+            TooltipLabelFormatter = point => $"{point.Model?.Name}, sold {point.Model?.SalesPerDay} items",
             Mapping = (fruit, point) =>
             {
                 point.PrimaryValue = fruit.SalesPerDay; // use the SalesPerDay property in this series // mark
@@ -40,7 +40,7 @@ public class ViewModel
         {
             Name = "Active stock",
             Values = data,
-            TooltipLabelFormatter = point => $"{point.Model.Stock} items remaining",
+            TooltipLabelFormatter = point => $"{point.Model?.Stock} items remaining",
             Mapping = (fruit, point) =>
             {
                 point.PrimaryValue = fruit.Stock; // use the Stock property in this series // mark
@@ -59,7 +59,7 @@ public class ViewModel
         ChartPoint<Fruit, BezierPoint<CircleGeometry>, LabelGeometry> point)
     {
         Trace.WriteLine(
-            $"[salesPerDay ChartPointPointerDown] clicked on {point.Model.Name}, {point.Model.SalesPerDay} items sold per day");
+            $"[salesPerDay ChartPointPointerDown] clicked on {point.Model?.Name}, {point.Model?.SalesPerDay} items sold per day");
     }
 
 
@@ -68,7 +68,7 @@ public class ViewModel
         ChartPoint<Fruit, StepPoint<CircleGeometry>, LabelGeometry> point)
     {
         Trace.WriteLine(
-            $"[stock ChartPointPointerDown] clicked on {point.Model.Name},  current stock {point.Model.Stock}");
+            $"[stock ChartPointPointerDown] clicked on {point.Model?.Name},  current stock {point.Model?.Stock}");
     }
 
     public IEnumerable<ISeries> Series { get; set; }

@@ -15,13 +15,13 @@ public class ViewModel
     {
         var data = new[]
         {
-                new City { Name = "Tokyo", Population = 4 },
-                new City { Name = "New York", Population = 6 },
-                new City { Name = "Seoul", Population = 2 },
-                new City { Name = "Moscow", Population = 8 },
-                new City { Name = "Shanghai", Population = 3 },
-                new City { Name = "Guadalajara", Population = 4 }
-            };
+            new City { Name = "Tokyo", Population = 4 },
+            new City { Name = "New York", Population = 6 },
+            new City { Name = "Seoul", Population = 2 },
+            new City { Name = "Moscow", Population = 8 },
+            new City { Name = "Shanghai", Population = 3 },
+            new City { Name = "Guadalajara", Population = 4 }
+        };
 
         // the parameter in the AsLiveChartsSeries() function is optional
         // and is usefull to customize each series
@@ -48,7 +48,7 @@ public class ViewModel
         // the event passes a collection of the points that were triggered by the pointer down event.
         foreach (var point in points)
         {
-            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model.Name}");
+            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model?.Name}");
         }
     }
 
