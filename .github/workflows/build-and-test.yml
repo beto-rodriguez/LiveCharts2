@@ -28,11 +28,11 @@ jobs:
 
     - name: Install workloads
       run: |
-        dotnet workload install maui
+        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/6.0.300/rc.1.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-runtime-323bf2dd/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-emsdk-572aeedc/nuget/v3/index.json --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json --source https://api.nuget.org/v3/index.json
         dotnet workload install wasm-tools
 
-    #- name: Build Maui
-    #  run: dotnet build ./samples/MauiSample
+    - name: Build Maui
+      run: dotnet build ./samples/MauiSample
 
     #- name: Build Uno.UWP
     #  run: msbuild ./samples/UnoSample/UnoSample.UWP /t:Restore
