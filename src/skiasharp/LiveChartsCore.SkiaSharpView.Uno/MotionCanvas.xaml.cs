@@ -98,8 +98,8 @@ public sealed partial class MotionCanvas : UserControl
 
     private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
     {
-        var scaleFactor = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
-        args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
+        var scale = DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
+        args.Surface.Canvas.Scale((float)scale, (float)scale);
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
