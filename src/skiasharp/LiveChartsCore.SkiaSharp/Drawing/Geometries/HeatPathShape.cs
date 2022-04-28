@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Motion;
 using SkiaSharp;
@@ -31,8 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a path geometry with a specified color.
 /// </summary>
-/// <seealso cref="PathGeometry" />
-public class HeatPathShape : PathGeometry, IHeatPathShape
+public class HeatPathShape : VectorGeometry<LineSegment>, IHeatPathShape
 {
     private readonly ColorMotionProperty _fillProperty;
 
@@ -56,33 +55,9 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
         set => _fillProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="PathGeometry.Draw(SkiaSharpDrawingContext)"/>
+    /// <inheritdoc cref="VectorGeometry{TSegment}.Draw(SkiaSharpDrawingContext)"/>
     public override void Draw(SkiaSharpDrawingContext context)
     {
-        if (_commands.Count == 0) return;
-
-        var toRemoveSegments = new List<IPathCommand<SKPath>>();
-
-        using var path = new SKPath();
-        var isValid = true;
-
-        foreach (var segment in _commands)
-        {
-            segment.IsValid = true;
-            segment.Execute(path, CurrentTime, this);
-            isValid = isValid && segment.IsValid;
-
-            if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
-        }
-
-        foreach (var segment in toRemoveSegments)
-        {
-            _ = _commands.Remove(segment);
-            isValid = false;
-        }
-
-        if (IsClosed) path.Close();
-
         var originalColor = context.Paint.Color;
         var originalStyle = context.Paint.Style;
 
@@ -94,25 +69,12 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
             context.Paint.Style = SKPaintStyle.Fill;
         }
 
-        context.Canvas.DrawPath(path, context.Paint);
+        base.Draw(context);
 
         if (fill != LvcColor.Empty)
         {
             context.Paint.Color = originalColor;
             context.Paint.Style = originalStyle;
         }
-
-        if (!isValid) IsValid = false;
-    }
-
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
-    public override void CompleteTransition(params string[]? propertyName)
-    {
-        foreach (var item in _commands)
-        {
-            item.CompleteTransition(propertyName);
-        }
-
-        base.CompleteTransition(propertyName);
     }
 }

@@ -19,7 +19,7 @@ public partial class View : ContentPage
         var vm = (ViewModel)BindingContext;
         while (true)
         {
-            Device.BeginInvokeOnMainThread(vm.RandomIncrement);
+            _ = Dispatcher.Dispatch(vm.RandomIncrement);
             await Task.Delay(1500);
         }
     }

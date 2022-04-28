@@ -220,15 +220,6 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         action();
     }
 
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
-    }
-
     /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
     public SKImage GetImage()
     {

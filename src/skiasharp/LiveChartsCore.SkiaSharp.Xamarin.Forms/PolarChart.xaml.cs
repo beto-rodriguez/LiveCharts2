@@ -728,15 +728,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         MainThread.BeginInvokeOnMainThread(action);
     }
 
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
-    }
-
     /// <summary>
     /// Initializes the core.
     /// </summary>

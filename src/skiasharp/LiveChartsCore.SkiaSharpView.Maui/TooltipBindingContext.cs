@@ -63,7 +63,7 @@ public class TooltipBindingContext
     /// <value>
     /// The color of the text.
     /// </value>
-    public Color TextColor { get; set; } = Colors.Black;
+    public Color? TextColor { get; set; } = Colors.Black;
 
     /// <summary>
     /// Gets or sets the font attributes.
@@ -79,5 +79,5 @@ public class TooltipBindingContext
     /// <value>
     /// The color of the background.
     /// </value>
-    public Color TooltipBackgroundColor { get; set; } = Colors.White;
+    public Color? TooltipBackgroundColor { get; set; } = Colors.White;
 }

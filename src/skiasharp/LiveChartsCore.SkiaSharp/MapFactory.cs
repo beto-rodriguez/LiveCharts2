@@ -24,11 +24,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
 namespace LiveChartsCore.SkiaSharpView;
 
@@ -86,7 +86,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
                     if (landData.Shape is null)
                     {
-                        landData.Shape = shape = new HeatPathShape { IsClosed = true };
+                        landData.Shape = shape = new HeatPathShape { ClosingMethod = VectorClosingMethod.CloseToStart };
 
                         _ = shape
                             .TransitionateProperties(nameof(HeatPathShape.FillColor))
@@ -119,12 +119,13 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
                         if (isFirst)
                         {
-                            _ = shape.AddLast(new MoveToPathCommand { X = x, Y = y });
+                            //shape.
+                            //_ = shape.AddLast(new MoveToPathCommand { X = x, Y = y });
                             isFirst = false;
                             continue;
                         }
 
-                        _ = shape.AddLast(new LineSegment { X = x, Y = y });
+                        _ = shape.AddLast(new LineSegment { Xj = x, Yj = y });
                     }
                 }
             }

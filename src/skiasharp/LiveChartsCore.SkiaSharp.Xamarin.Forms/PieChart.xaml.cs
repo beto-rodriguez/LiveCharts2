@@ -654,15 +654,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         MainThread.BeginInvokeOnMainThread(action);
     }
 
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
-    }
-
     /// <summary>
     /// Initializes the core.
     /// </summary>

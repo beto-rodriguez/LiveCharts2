@@ -44,9 +44,9 @@ public class ViewModel : INotifyPropertyChanged
         // the ValueSeries property is a workaround for WPF only.
         ValueSeries = new ValueSeries[]
         {
-                new() { Value = _processing, Series = Series[0] },
-                new() { Value = _failed, Series = Series[1] },
-                new() { Value = _completed, Series = Series[2] }
+            new() { Value = _processing, Series = Series[0] },
+            new() { Value = _failed, Series = Series[1] },
+            new() { Value = _completed, Series = Series[2] }
         };
 
         Value = _processing;
@@ -60,10 +60,12 @@ public class ViewModel : INotifyPropertyChanged
 
     public ValueSeries[] ValueSeries { get; set; }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public async void Read()
     {
+        if (_processing.Value is null) throw new InvalidOperationException();
+
         var r = new Random();
         var processed = 0;
         var ellapsed = 0;

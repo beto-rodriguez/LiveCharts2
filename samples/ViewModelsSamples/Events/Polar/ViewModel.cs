@@ -27,7 +27,7 @@ public class ViewModel
         var polarLineSeries = new PolarLineSeries<City>
         {
             Values = data,
-            TooltipLabelFormatter = point => $"{point.Model.Name} {point.Model.Population} Million",
+            TooltipLabelFormatter = point => $"{point.Model?.Name} {point.Model?.Population} Million",
             Mapping = (city, point) =>
             {
                 point.PrimaryValue = city.Population; // use the population property in this series // mark
@@ -49,7 +49,7 @@ public class ViewModel
         // the event passes a collection of the points that were triggered by the pointer down event.
         foreach (var point in points)
         {
-            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model.Name}");
+            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model?.Name}");
         }
     }
 

@@ -48,12 +48,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private LvcColor[] _heatMap =
-    {
-        LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-        LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-    };
-    private double[]? _colorStops = null;
     private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
     private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
     private object? _viewCommand = null;

@@ -21,7 +21,13 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+
+    #- name: Setup dotnet
+    #  uses: actions/setup-dotnet@v2
+    #  with:
+    #    dotnet-version: '6.0.x'
+    #    include-prerelease: true
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
@@ -31,14 +37,31 @@ jobs:
         dotnet workload install maui
         dotnet workload install wasm-tools
 
+    #- name: Build Maui
+    #  run: dotnet build ./samples/MauiSample
+
+    #- name: Build Uno.UWP
+    #  run: msbuild ./samples/UnoSample/UnoSample.UWP /t:Restore
+
+    #- name: Build Uno.Wasm
+    #  run: msbuild ./samples/UnoSample/UnoSample.Wasm /t:Restore
+
+    #- name: Build Uno.Wpf.Host
+    #  run: msbuild ./samples/UnoSample/UnoSample.Wpf.Host /t:Restore
+
+    #- name: Build Uno.Skia.Gtk
+    #  run: msbuild ./samples/UnoSample/UnoSample.Skia.Gtk /t:Restore
+
+    # locally I get an error to build uno mobile using msbuild:
+    # error M564086: A numeric comparison was attempted on "g_CurrentTrimmedAndroidSOLVersiony that evaluates to "" instead of a number, in condition $(_CurrentTrimmedA ndroidSDLVersion)' < '$(UnoUIMinAndroidSDKVersion)".
+    # - name: Build Uno.Mobile
+    #   run: msbuild ./samples/UnoSample/UnoSample.Mobile /t:Restore
+
     - name: Build Avalonia
       run: dotnet build ./samples/AvaloniaSample
 
     - name: Build Blazor
       run: dotnet build ./samples/BlazorSample
-
-    - name: Build Maui
-      run: dotnet build ./samples/MauiSample
 
     - name: Build WinForms
       run: dotnet build ./samples/WinFormsSample
@@ -51,9 +74,6 @@ jobs:
 
     - name: Build EtoForms
       run: dotnet build ./samples/EtoFormsSample
-
-    - name: Build UWP
-      run: msbuild ./samples/UWPSample/UWPSample.csproj /t:Restore
 
     - name: Build WinUI
       run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
