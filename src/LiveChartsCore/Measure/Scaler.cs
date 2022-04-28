@@ -37,13 +37,13 @@ public class Scaler
     /// <summary>
     /// Initializes a new instance of the <see cref="Scaler"/> class.
     /// </summary>
-    /// <param name="drawMagrinLocation">The draw margin location.</param>
+    /// <param name="drawMarginLocation">The draw margin location.</param>
     /// <param name="drawMarginSize">Size of the draw margin.</param>
     /// <param name="axis">The axis.</param>
     /// <param name="bounds">Indicates the bounds to use.</param>
     /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
     public Scaler(
-        LvcPoint drawMagrinLocation,
+        LvcPoint drawMarginLocation,
         LvcSize drawMarginSize,
         ICartesianAxis axis,
         Bounds? bounds = null)
@@ -73,14 +73,14 @@ public class Scaler
 
             if (axis.Orientation == AxisOrientation.X)
             {
-                _minPx = drawMagrinLocation.X;
-                _maxPx = drawMagrinLocation.X + drawMarginSize.Width;
+                _minPx = drawMarginLocation.X;
+                _maxPx = drawMarginLocation.X + drawMarginSize.Width;
                 _deltaPx = _maxPx - _minPx;
             }
             else
             {
-                _minPx = drawMagrinLocation.Y;
-                _maxPx = drawMagrinLocation.Y + drawMarginSize.Height;
+                _minPx = drawMarginLocation.Y;
+                _maxPx = drawMarginLocation.Y + drawMarginSize.Height;
                 _deltaPx = _maxPx - _minPx;
             }
 
@@ -92,8 +92,8 @@ public class Scaler
 
         if (axis.Orientation == AxisOrientation.X)
         {
-            _minPx = drawMagrinLocation.X;
-            _maxPx = drawMagrinLocation.X + drawMarginSize.Width;
+            _minPx = drawMarginLocation.X;
+            _maxPx = drawMarginLocation.X + drawMarginSize.Width;
             _deltaPx = _maxPx - _minPx;
 
             MaxVal = axis.IsInverted ? actualBounds.Min : actualBounds.Max;
@@ -120,8 +120,8 @@ public class Scaler
         }
         else
         {
-            _minPx = drawMagrinLocation.Y;
-            _maxPx = drawMagrinLocation.Y + drawMarginSize.Height;
+            _minPx = drawMarginLocation.Y;
+            _maxPx = drawMarginLocation.Y + drawMarginSize.Height;
             _deltaPx = _maxPx - _minPx;
 
             MaxVal = axis.IsInverted ? actualBounds.Max : actualBounds.Min;
