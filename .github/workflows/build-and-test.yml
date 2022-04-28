@@ -21,8 +21,11 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
-
+    - uses: actions/checkout@v3
+    - uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '6.0.x'
+        include-prerelease: true
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
