@@ -396,6 +396,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     Grid IUnoChart.LayoutGrid => grid;
     ToolTip IUnoChart.TooltipControl => tooltipControl;
+    FrameworkElement IUnoChart.TooltipElement => tooltip;
     FrameworkElement IUnoChart.Canvas => motionCanvas;
     FrameworkElement IUnoChart.Legend => legend;
 

@@ -20,32 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using System.Linq;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
+using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
+namespace LiveChartsCore.SkiaSharpView.Uno.Helpers;
 
-/// <summary>
-/// Defines the legend binding context.
-/// </summary>
-[Bindable]
-public class LegendBindingContext
+public class LiveChartsPinchEventArgs
 {
-    /// <summary>
-    /// Gets the series.
-    /// </summary>
-    public IEnumerable<BindingSeries> SeriesCollection { get; set; } = Enumerable.Empty<BindingSeries>();
+    public float Scale { get; set; }
 
-    /// <summary>
-    /// Gets the background.
-    /// </summary>
-    public Brush Background { get; set; } = null!;
-
-    /// <summary>
-    /// Gets the orientation.
-    /// </summary>
-    public Orientation Orientation { get; set; }
+    public LvcPoint PinchStart { get; set; }
 }

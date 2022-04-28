@@ -37,7 +37,7 @@ public static class UnoPlatformHelpers
     /// <summary>
     /// Determines whether the assembly is running in web assembly.
     /// </summary>
-    public static bool IsWebAssembly { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BRWSER"));
+    public static bool IsWebAssembly { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
 
     /// <summary>
     /// Invokes a given acction in the UI thread.
@@ -70,3 +70,5 @@ public static class UnoPlatformHelpers
             .RunAsync(CoreDispatcherPriority.Normal, () => action());
     }
 }
+
+public delegate void PinchHandler(object sender, LiveChartsPinchEventArgs eventArgs);
