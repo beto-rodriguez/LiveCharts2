@@ -17,6 +17,8 @@ public sealed partial class MainPage : Page
         this.InitializeComponent();
         Samples = ViewModelsSamples.Index.Samples;
         grid.DataContext = this;
+
+        LoadSample("Design/LinearGradients");
     }
 
     public string[] Samples { get; set; }
@@ -24,8 +26,13 @@ public sealed partial class MainPage : Page
     private void Border_PointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var ctx = (string)((FrameworkElement)sender).DataContext;
+        LoadSample(ctx);
+    }
 
-        var t = Type.GetType($"UnoSample.{ctx.Replace('/', '.')}.View");
+    private void LoadSample(string route)
+    {
+        route = route.Replace('/', '.');
+        var t = Type.GetType($"UnoSample.{route}.View");
         content.Content = Activator.CreateInstance(t);
     }
 }
