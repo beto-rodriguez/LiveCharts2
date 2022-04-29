@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
@@ -86,7 +87,17 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
                 context.Canvas.DrawRect(X - p.Left, Y - m.Height + p.Top, m.Width, m.Height, bgPaint);
             }
         }
-        context.Canvas.DrawText(Text ?? "", new SKPoint(X, Y), paint);
+        if (paint.Typeface != null)
+        {
+            using (var eventTextShaper = new SKShaper(paint.Typeface))
+            {
+                context.Canvas.DrawShapedText(eventTextShaper, Text ?? "", new SKPoint(X, Y), paint);
+            }
+        }
+        else
+        {
+            context.Canvas.DrawText(Text ?? "", new SKPoint(X, Y), paint);
+        }
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
