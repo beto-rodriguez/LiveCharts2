@@ -98,6 +98,6 @@ public class ActionThrottler
     /// <returns></returns>
     public void ForceCall()
     {
-        _action().GetAwaiter().GetResult();
+        _ = _action();
     }
 }

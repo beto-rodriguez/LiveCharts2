@@ -14,7 +14,7 @@ namespace XamarinSample.Droid
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.99.54")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.3.0.26")]
 	public partial class Resource
 	{
 		
@@ -40,6 +40,18 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Animation.abc_slide_out_top = global::XamarinSample.Droid.Resource.Animation.abc_slide_out_top;
 			global::SkiaSharp.Views.Forms.Resource.Animation.abc_tooltip_enter = global::XamarinSample.Droid.Resource.Animation.abc_tooltip_enter;
 			global::SkiaSharp.Views.Forms.Resource.Animation.abc_tooltip_exit = global::XamarinSample.Droid.Resource.Animation.abc_tooltip_exit;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_checkbox_to_checked_box_inner_merged_animation = global::XamarinSample.Droid.Resource.Animation.btn_checkbox_to_checked_box_inner_merged_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_checkbox_to_checked_box_outer_merged_animation = global::XamarinSample.Droid.Resource.Animation.btn_checkbox_to_checked_box_outer_merged_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_checkbox_to_checked_icon_null_animation = global::XamarinSample.Droid.Resource.Animation.btn_checkbox_to_checked_icon_null_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_checkbox_to_unchecked_box_inner_merged_animation = global::XamarinSample.Droid.Resource.Animation.btn_checkbox_to_unchecked_box_inner_merged_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_checkbox_to_unchecked_check_path_merged_animation = global::XamarinSample.Droid.Resource.Animation.btn_checkbox_to_unchecked_check_path_merged_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_checkbox_to_unchecked_icon_null_animation = global::XamarinSample.Droid.Resource.Animation.btn_checkbox_to_unchecked_icon_null_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_radio_to_off_mtrl_dot_group_animation = global::XamarinSample.Droid.Resource.Animation.btn_radio_to_off_mtrl_dot_group_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_radio_to_off_mtrl_ring_outer_animation = global::XamarinSample.Droid.Resource.Animation.btn_radio_to_off_mtrl_ring_outer_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_radio_to_off_mtrl_ring_outer_path_animation = global::XamarinSample.Droid.Resource.Animation.btn_radio_to_off_mtrl_ring_outer_path_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_radio_to_on_mtrl_dot_group_animation = global::XamarinSample.Droid.Resource.Animation.btn_radio_to_on_mtrl_dot_group_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_radio_to_on_mtrl_ring_outer_animation = global::XamarinSample.Droid.Resource.Animation.btn_radio_to_on_mtrl_ring_outer_animation;
+			global::SkiaSharp.Views.Forms.Resource.Animation.btn_radio_to_on_mtrl_ring_outer_path_animation = global::XamarinSample.Droid.Resource.Animation.btn_radio_to_on_mtrl_ring_outer_path_animation;
 			global::SkiaSharp.Views.Forms.Resource.Animation.design_bottom_sheet_slide_in = global::XamarinSample.Droid.Resource.Animation.design_bottom_sheet_slide_in;
 			global::SkiaSharp.Views.Forms.Resource.Animation.design_bottom_sheet_slide_out = global::XamarinSample.Droid.Resource.Animation.design_bottom_sheet_slide_out;
 			global::SkiaSharp.Views.Forms.Resource.Animation.design_snackbar_in = global::XamarinSample.Droid.Resource.Animation.design_snackbar_in;
@@ -139,6 +151,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Attribute.buttonBarNeutralButtonStyle = global::XamarinSample.Droid.Resource.Attribute.buttonBarNeutralButtonStyle;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.buttonBarPositiveButtonStyle = global::XamarinSample.Droid.Resource.Attribute.buttonBarPositiveButtonStyle;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.buttonBarStyle = global::XamarinSample.Droid.Resource.Attribute.buttonBarStyle;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.buttonCompat = global::XamarinSample.Droid.Resource.Attribute.buttonCompat;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.buttonGravity = global::XamarinSample.Droid.Resource.Attribute.buttonGravity;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.buttonIconDimen = global::XamarinSample.Droid.Resource.Attribute.buttonIconDimen;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.buttonPanelSideLayout = global::XamarinSample.Droid.Resource.Attribute.buttonPanelSideLayout;
@@ -233,7 +246,15 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Attribute.dividerHorizontal = global::XamarinSample.Droid.Resource.Attribute.dividerHorizontal;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.dividerPadding = global::XamarinSample.Droid.Resource.Attribute.dividerPadding;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.dividerVertical = global::XamarinSample.Droid.Resource.Attribute.dividerVertical;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableBottomCompat = global::XamarinSample.Droid.Resource.Attribute.drawableBottomCompat;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableEndCompat = global::XamarinSample.Droid.Resource.Attribute.drawableEndCompat;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableLeftCompat = global::XamarinSample.Droid.Resource.Attribute.drawableLeftCompat;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableRightCompat = global::XamarinSample.Droid.Resource.Attribute.drawableRightCompat;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableSize = global::XamarinSample.Droid.Resource.Attribute.drawableSize;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableStartCompat = global::XamarinSample.Droid.Resource.Attribute.drawableStartCompat;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableTint = global::XamarinSample.Droid.Resource.Attribute.drawableTint;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableTintMode = global::XamarinSample.Droid.Resource.Attribute.drawableTintMode;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.drawableTopCompat = global::XamarinSample.Droid.Resource.Attribute.drawableTopCompat;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.drawerArrowStyle = global::XamarinSample.Droid.Resource.Attribute.drawerArrowStyle;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.dropdownListPreferredItemHeight = global::XamarinSample.Droid.Resource.Attribute.dropdownListPreferredItemHeight;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.dropDownListViewStyle = global::XamarinSample.Droid.Resource.Attribute.dropDownListViewStyle;
@@ -341,6 +362,8 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Attribute.lineHeight = global::XamarinSample.Droid.Resource.Attribute.lineHeight;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.lineSpacing = global::XamarinSample.Droid.Resource.Attribute.lineSpacing;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listChoiceBackgroundIndicator = global::XamarinSample.Droid.Resource.Attribute.listChoiceBackgroundIndicator;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.listChoiceIndicatorMultipleAnimated = global::XamarinSample.Droid.Resource.Attribute.listChoiceIndicatorMultipleAnimated;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.listChoiceIndicatorSingleAnimated = global::XamarinSample.Droid.Resource.Attribute.listChoiceIndicatorSingleAnimated;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listDividerAlertDialog = global::XamarinSample.Droid.Resource.Attribute.listDividerAlertDialog;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listItemLayout = global::XamarinSample.Droid.Resource.Attribute.listItemLayout;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listLayout = global::XamarinSample.Droid.Resource.Attribute.listLayout;
@@ -349,8 +372,10 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listPreferredItemHeight = global::XamarinSample.Droid.Resource.Attribute.listPreferredItemHeight;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listPreferredItemHeightLarge = global::XamarinSample.Droid.Resource.Attribute.listPreferredItemHeightLarge;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listPreferredItemHeightSmall = global::XamarinSample.Droid.Resource.Attribute.listPreferredItemHeightSmall;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.listPreferredItemPaddingEnd = global::XamarinSample.Droid.Resource.Attribute.listPreferredItemPaddingEnd;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listPreferredItemPaddingLeft = global::XamarinSample.Droid.Resource.Attribute.listPreferredItemPaddingLeft;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.listPreferredItemPaddingRight = global::XamarinSample.Droid.Resource.Attribute.listPreferredItemPaddingRight;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.listPreferredItemPaddingStart = global::XamarinSample.Droid.Resource.Attribute.listPreferredItemPaddingStart;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.logo = global::XamarinSample.Droid.Resource.Attribute.logo;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.logoDescription = global::XamarinSample.Droid.Resource.Attribute.logoDescription;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.materialButtonStyle = global::XamarinSample.Droid.Resource.Attribute.materialButtonStyle;
@@ -392,6 +417,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Attribute.ratingBarStyle = global::XamarinSample.Droid.Resource.Attribute.ratingBarStyle;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.ratingBarStyleIndicator = global::XamarinSample.Droid.Resource.Attribute.ratingBarStyleIndicator;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.ratingBarStyleSmall = global::XamarinSample.Droid.Resource.Attribute.ratingBarStyleSmall;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.recyclerViewStyle = global::XamarinSample.Droid.Resource.Attribute.recyclerViewStyle;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.reverseLayout = global::XamarinSample.Droid.Resource.Attribute.reverseLayout;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.rippleColor = global::XamarinSample.Droid.Resource.Attribute.rippleColor;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.scrimAnimationDuration = global::XamarinSample.Droid.Resource.Attribute.scrimAnimationDuration;
@@ -493,6 +519,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Attribute.textColorSearchUrl = global::XamarinSample.Droid.Resource.Attribute.textColorSearchUrl;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.textEndPadding = global::XamarinSample.Droid.Resource.Attribute.textEndPadding;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.textInputStyle = global::XamarinSample.Droid.Resource.Attribute.textInputStyle;
+			global::SkiaSharp.Views.Forms.Resource.Attribute.textLocale = global::XamarinSample.Droid.Resource.Attribute.textLocale;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.textStartPadding = global::XamarinSample.Droid.Resource.Attribute.textStartPadding;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.theme = global::XamarinSample.Droid.Resource.Attribute.theme;
 			global::SkiaSharp.Views.Forms.Resource.Attribute.thickness = global::XamarinSample.Droid.Resource.Attribute.thickness;
@@ -719,6 +746,9 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_edit_text_inset_horizontal_material = global::XamarinSample.Droid.Resource.Dimension.abc_edit_text_inset_horizontal_material;
 			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_edit_text_inset_top_material = global::XamarinSample.Droid.Resource.Dimension.abc_edit_text_inset_top_material;
 			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_floating_window_z = global::XamarinSample.Droid.Resource.Dimension.abc_floating_window_z;
+			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_list_item_height_large_material = global::XamarinSample.Droid.Resource.Dimension.abc_list_item_height_large_material;
+			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_list_item_height_material = global::XamarinSample.Droid.Resource.Dimension.abc_list_item_height_material;
+			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_list_item_height_small_material = global::XamarinSample.Droid.Resource.Dimension.abc_list_item_height_small_material;
 			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_list_item_padding_horizontal_material = global::XamarinSample.Droid.Resource.Dimension.abc_list_item_padding_horizontal_material;
 			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_panel_menu_list_width = global::XamarinSample.Droid.Resource.Dimension.abc_panel_menu_list_width;
 			global::SkiaSharp.Views.Forms.Resource.Dimension.abc_progress_bar_height_material = global::XamarinSample.Droid.Resource.Dimension.abc_progress_bar_height_material;
@@ -890,11 +920,13 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_action_bar_item_background_material = global::XamarinSample.Droid.Resource.Drawable.abc_action_bar_item_background_material;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_borderless_material = global::XamarinSample.Droid.Resource.Drawable.abc_btn_borderless_material;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_check_material = global::XamarinSample.Droid.Resource.Drawable.abc_btn_check_material;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_check_material_anim = global::XamarinSample.Droid.Resource.Drawable.abc_btn_check_material_anim;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_check_to_on_mtrl_000 = global::XamarinSample.Droid.Resource.Drawable.abc_btn_check_to_on_mtrl_000;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_check_to_on_mtrl_015 = global::XamarinSample.Droid.Resource.Drawable.abc_btn_check_to_on_mtrl_015;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_colored_material = global::XamarinSample.Droid.Resource.Drawable.abc_btn_colored_material;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_default_mtrl_shape = global::XamarinSample.Droid.Resource.Drawable.abc_btn_default_mtrl_shape;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_radio_material = global::XamarinSample.Droid.Resource.Drawable.abc_btn_radio_material;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_radio_material_anim = global::XamarinSample.Droid.Resource.Drawable.abc_btn_radio_material_anim;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_radio_to_on_mtrl_000 = global::XamarinSample.Droid.Resource.Drawable.abc_btn_radio_to_on_mtrl_000;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_radio_to_on_mtrl_015 = global::XamarinSample.Droid.Resource.Drawable.abc_btn_radio_to_on_mtrl_015;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_btn_switch_to_on_mtrl_00001 = global::XamarinSample.Droid.Resource.Drawable.abc_btn_switch_to_on_mtrl_00001;
@@ -972,6 +1004,14 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Drawable.abc_vector_test = global::XamarinSample.Droid.Resource.Drawable.abc_vector_test;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.avd_hide_password = global::XamarinSample.Droid.Resource.Drawable.avd_hide_password;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.avd_show_password = global::XamarinSample.Droid.Resource.Drawable.avd_show_password;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_checkbox_checked_mtrl = global::XamarinSample.Droid.Resource.Drawable.btn_checkbox_checked_mtrl;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_checkbox_checked_to_unchecked_mtrl_animation = global::XamarinSample.Droid.Resource.Drawable.btn_checkbox_checked_to_unchecked_mtrl_animation;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_checkbox_unchecked_mtrl = global::XamarinSample.Droid.Resource.Drawable.btn_checkbox_unchecked_mtrl;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_checkbox_unchecked_to_checked_mtrl_animation = global::XamarinSample.Droid.Resource.Drawable.btn_checkbox_unchecked_to_checked_mtrl_animation;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_radio_off_mtrl = global::XamarinSample.Droid.Resource.Drawable.btn_radio_off_mtrl;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_radio_off_to_on_mtrl_animation = global::XamarinSample.Droid.Resource.Drawable.btn_radio_off_to_on_mtrl_animation;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_radio_on_mtrl = global::XamarinSample.Droid.Resource.Drawable.btn_radio_on_mtrl;
+			global::SkiaSharp.Views.Forms.Resource.Drawable.btn_radio_on_to_off_mtrl_animation = global::XamarinSample.Droid.Resource.Drawable.btn_radio_on_to_off_mtrl_animation;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.design_bottom_navigation_item_background = global::XamarinSample.Droid.Resource.Drawable.design_bottom_navigation_item_background;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.design_fab_background = global::XamarinSample.Droid.Resource.Drawable.design_fab_background;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.design_ic_visibility = global::XamarinSample.Droid.Resource.Drawable.design_ic_visibility;
@@ -997,6 +1037,39 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Drawable.notify_panel_notification_icon_bg = global::XamarinSample.Droid.Resource.Drawable.notify_panel_notification_icon_bg;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.tooltip_frame_dark = global::XamarinSample.Droid.Resource.Drawable.tooltip_frame_dark;
 			global::SkiaSharp.Views.Forms.Resource.Drawable.tooltip_frame_light = global::XamarinSample.Droid.Resource.Drawable.tooltip_frame_light;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_action_clickable_span = global::XamarinSample.Droid.Resource.Id.accessibility_action_clickable_span;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_0 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_0;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_1 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_1;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_10 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_10;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_11 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_11;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_12 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_12;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_13 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_13;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_14 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_14;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_15 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_15;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_16 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_16;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_17 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_17;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_18 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_18;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_19 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_19;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_2 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_2;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_20 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_20;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_21 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_21;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_22 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_22;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_23 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_23;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_24 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_24;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_25 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_25;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_26 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_26;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_27 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_27;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_28 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_28;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_29 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_29;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_3 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_3;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_30 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_30;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_31 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_31;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_4 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_4;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_5 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_5;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_6 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_6;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_7 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_7;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_8 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_8;
+			global::SkiaSharp.Views.Forms.Resource.Id.accessibility_custom_action_9 = global::XamarinSample.Droid.Resource.Id.accessibility_custom_action_9;
 			global::SkiaSharp.Views.Forms.Resource.Id.action0 = global::XamarinSample.Droid.Resource.Id.action0;
 			global::SkiaSharp.Views.Forms.Resource.Id.actions = global::XamarinSample.Droid.Resource.Id.actions;
 			global::SkiaSharp.Views.Forms.Resource.Id.action_bar = global::XamarinSample.Droid.Resource.Id.action_bar;
@@ -1040,6 +1113,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.center_horizontal = global::XamarinSample.Droid.Resource.Id.center_horizontal;
 			global::SkiaSharp.Views.Forms.Resource.Id.center_vertical = global::XamarinSample.Droid.Resource.Id.center_vertical;
 			global::SkiaSharp.Views.Forms.Resource.Id.checkbox = global::XamarinSample.Droid.Resource.Id.checkbox;
+			global::SkiaSharp.Views.Forms.Resource.Id.@checked = global::XamarinSample.Droid.Resource.Id.@checked;
 			global::SkiaSharp.Views.Forms.Resource.Id.chronometer = global::XamarinSample.Droid.Resource.Id.chronometer;
 			global::SkiaSharp.Views.Forms.Resource.Id.clip_horizontal = global::XamarinSample.Droid.Resource.Id.clip_horizontal;
 			global::SkiaSharp.Views.Forms.Resource.Id.clip_vertical = global::XamarinSample.Droid.Resource.Id.clip_vertical;
@@ -1058,6 +1132,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.design_menu_item_action_area_stub = global::XamarinSample.Droid.Resource.Id.design_menu_item_action_area_stub;
 			global::SkiaSharp.Views.Forms.Resource.Id.design_menu_item_text = global::XamarinSample.Droid.Resource.Id.design_menu_item_text;
 			global::SkiaSharp.Views.Forms.Resource.Id.design_navigation_view = global::XamarinSample.Droid.Resource.Id.design_navigation_view;
+			global::SkiaSharp.Views.Forms.Resource.Id.dialog_button = global::XamarinSample.Droid.Resource.Id.dialog_button;
 			global::SkiaSharp.Views.Forms.Resource.Id.disableHome = global::XamarinSample.Droid.Resource.Id.disableHome;
 			global::SkiaSharp.Views.Forms.Resource.Id.edit_query = global::XamarinSample.Droid.Resource.Id.edit_query;
 			global::SkiaSharp.Views.Forms.Resource.Id.end = global::XamarinSample.Droid.Resource.Id.end;
@@ -1076,6 +1151,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.forever = global::XamarinSample.Droid.Resource.Id.forever;
 			global::SkiaSharp.Views.Forms.Resource.Id.FUNCTION = global::XamarinSample.Droid.Resource.Id.FUNCTION;
 			global::SkiaSharp.Views.Forms.Resource.Id.ghost_view = global::XamarinSample.Droid.Resource.Id.ghost_view;
+			global::SkiaSharp.Views.Forms.Resource.Id.ghost_view_holder = global::XamarinSample.Droid.Resource.Id.ghost_view_holder;
 			global::SkiaSharp.Views.Forms.Resource.Id.group_divider = global::XamarinSample.Droid.Resource.Id.group_divider;
 			global::SkiaSharp.Views.Forms.Resource.Id.home = global::XamarinSample.Droid.Resource.Id.home;
 			global::SkiaSharp.Views.Forms.Resource.Id.homeAsUp = global::XamarinSample.Droid.Resource.Id.homeAsUp;
@@ -1113,6 +1189,8 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.notification_background = global::XamarinSample.Droid.Resource.Id.notification_background;
 			global::SkiaSharp.Views.Forms.Resource.Id.notification_main_column = global::XamarinSample.Droid.Resource.Id.notification_main_column;
 			global::SkiaSharp.Views.Forms.Resource.Id.notification_main_column_container = global::XamarinSample.Droid.Resource.Id.notification_main_column_container;
+			global::SkiaSharp.Views.Forms.Resource.Id.off = global::XamarinSample.Droid.Resource.Id.off;
+			global::SkiaSharp.Views.Forms.Resource.Id.on = global::XamarinSample.Droid.Resource.Id.on;
 			global::SkiaSharp.Views.Forms.Resource.Id.outline = global::XamarinSample.Droid.Resource.Id.outline;
 			global::SkiaSharp.Views.Forms.Resource.Id.parallax = global::XamarinSample.Droid.Resource.Id.parallax;
 			global::SkiaSharp.Views.Forms.Resource.Id.parentPanel = global::XamarinSample.Droid.Resource.Id.parentPanel;
@@ -1125,6 +1203,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.right_icon = global::XamarinSample.Droid.Resource.Id.right_icon;
 			global::SkiaSharp.Views.Forms.Resource.Id.right_side = global::XamarinSample.Droid.Resource.Id.right_side;
 			global::SkiaSharp.Views.Forms.Resource.Id.save_non_transition_alpha = global::XamarinSample.Droid.Resource.Id.save_non_transition_alpha;
+			global::SkiaSharp.Views.Forms.Resource.Id.save_overlay_view = global::XamarinSample.Droid.Resource.Id.save_overlay_view;
 			global::SkiaSharp.Views.Forms.Resource.Id.screen = global::XamarinSample.Droid.Resource.Id.screen;
 			global::SkiaSharp.Views.Forms.Resource.Id.scroll = global::XamarinSample.Droid.Resource.Id.scroll;
 			global::SkiaSharp.Views.Forms.Resource.Id.scrollable = global::XamarinSample.Droid.Resource.Id.scrollable;
@@ -1150,6 +1229,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.showCustom = global::XamarinSample.Droid.Resource.Id.showCustom;
 			global::SkiaSharp.Views.Forms.Resource.Id.showHome = global::XamarinSample.Droid.Resource.Id.showHome;
 			global::SkiaSharp.Views.Forms.Resource.Id.showTitle = global::XamarinSample.Droid.Resource.Id.showTitle;
+			global::SkiaSharp.Views.Forms.Resource.Id.sliding_tabs = global::XamarinSample.Droid.Resource.Id.sliding_tabs;
 			global::SkiaSharp.Views.Forms.Resource.Id.smallLabel = global::XamarinSample.Droid.Resource.Id.smallLabel;
 			global::SkiaSharp.Views.Forms.Resource.Id.snackbar_action = global::XamarinSample.Droid.Resource.Id.snackbar_action;
 			global::SkiaSharp.Views.Forms.Resource.Id.snackbar_text = global::XamarinSample.Droid.Resource.Id.snackbar_text;
@@ -1167,6 +1247,11 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.submit_area = global::XamarinSample.Droid.Resource.Id.submit_area;
 			global::SkiaSharp.Views.Forms.Resource.Id.SYM = global::XamarinSample.Droid.Resource.Id.SYM;
 			global::SkiaSharp.Views.Forms.Resource.Id.tabMode = global::XamarinSample.Droid.Resource.Id.tabMode;
+			global::SkiaSharp.Views.Forms.Resource.Id.tag_accessibility_actions = global::XamarinSample.Droid.Resource.Id.tag_accessibility_actions;
+			global::SkiaSharp.Views.Forms.Resource.Id.tag_accessibility_clickable_spans = global::XamarinSample.Droid.Resource.Id.tag_accessibility_clickable_spans;
+			global::SkiaSharp.Views.Forms.Resource.Id.tag_accessibility_heading = global::XamarinSample.Droid.Resource.Id.tag_accessibility_heading;
+			global::SkiaSharp.Views.Forms.Resource.Id.tag_accessibility_pane_title = global::XamarinSample.Droid.Resource.Id.tag_accessibility_pane_title;
+			global::SkiaSharp.Views.Forms.Resource.Id.tag_screen_reader_focusable = global::XamarinSample.Droid.Resource.Id.tag_screen_reader_focusable;
 			global::SkiaSharp.Views.Forms.Resource.Id.tag_transition_group = global::XamarinSample.Droid.Resource.Id.tag_transition_group;
 			global::SkiaSharp.Views.Forms.Resource.Id.tag_unhandled_key_event_manager = global::XamarinSample.Droid.Resource.Id.tag_unhandled_key_event_manager;
 			global::SkiaSharp.Views.Forms.Resource.Id.tag_unhandled_key_listeners = global::XamarinSample.Droid.Resource.Id.tag_unhandled_key_listeners;
@@ -1182,6 +1267,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.title = global::XamarinSample.Droid.Resource.Id.title;
 			global::SkiaSharp.Views.Forms.Resource.Id.titleDividerNoCustom = global::XamarinSample.Droid.Resource.Id.titleDividerNoCustom;
 			global::SkiaSharp.Views.Forms.Resource.Id.title_template = global::XamarinSample.Droid.Resource.Id.title_template;
+			global::SkiaSharp.Views.Forms.Resource.Id.toolbar = global::XamarinSample.Droid.Resource.Id.toolbar;
 			global::SkiaSharp.Views.Forms.Resource.Id.top = global::XamarinSample.Droid.Resource.Id.top;
 			global::SkiaSharp.Views.Forms.Resource.Id.topPanel = global::XamarinSample.Droid.Resource.Id.topPanel;
 			global::SkiaSharp.Views.Forms.Resource.Id.touch_outside = global::XamarinSample.Droid.Resource.Id.touch_outside;
@@ -1190,6 +1276,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Id.transition_position = global::XamarinSample.Droid.Resource.Id.transition_position;
 			global::SkiaSharp.Views.Forms.Resource.Id.transition_scene_layoutid_cache = global::XamarinSample.Droid.Resource.Id.transition_scene_layoutid_cache;
 			global::SkiaSharp.Views.Forms.Resource.Id.transition_transform = global::XamarinSample.Droid.Resource.Id.transition_transform;
+			global::SkiaSharp.Views.Forms.Resource.Id.@unchecked = global::XamarinSample.Droid.Resource.Id.@unchecked;
 			global::SkiaSharp.Views.Forms.Resource.Id.uniform = global::XamarinSample.Droid.Resource.Id.uniform;
 			global::SkiaSharp.Views.Forms.Resource.Id.unlabeled = global::XamarinSample.Droid.Resource.Id.unlabeled;
 			global::SkiaSharp.Views.Forms.Resource.Id.up = global::XamarinSample.Droid.Resource.Id.up;
@@ -1213,6 +1300,13 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Integer.mtrl_tab_indicator_anim_duration_ms = global::XamarinSample.Droid.Resource.Integer.mtrl_tab_indicator_anim_duration_ms;
 			global::SkiaSharp.Views.Forms.Resource.Integer.show_password_duration = global::XamarinSample.Droid.Resource.Integer.show_password_duration;
 			global::SkiaSharp.Views.Forms.Resource.Integer.status_bar_notification_info_maxnum = global::XamarinSample.Droid.Resource.Integer.status_bar_notification_info_maxnum;
+			global::SkiaSharp.Views.Forms.Resource.Interpolator.btn_checkbox_checked_mtrl_animation_interpolator_0 = global::XamarinSample.Droid.Resource.Interpolator.btn_checkbox_checked_mtrl_animation_interpolator_0;
+			global::SkiaSharp.Views.Forms.Resource.Interpolator.btn_checkbox_checked_mtrl_animation_interpolator_1 = global::XamarinSample.Droid.Resource.Interpolator.btn_checkbox_checked_mtrl_animation_interpolator_1;
+			global::SkiaSharp.Views.Forms.Resource.Interpolator.btn_checkbox_unchecked_mtrl_animation_interpolator_0 = global::XamarinSample.Droid.Resource.Interpolator.btn_checkbox_unchecked_mtrl_animation_interpolator_0;
+			global::SkiaSharp.Views.Forms.Resource.Interpolator.btn_checkbox_unchecked_mtrl_animation_interpolator_1 = global::XamarinSample.Droid.Resource.Interpolator.btn_checkbox_unchecked_mtrl_animation_interpolator_1;
+			global::SkiaSharp.Views.Forms.Resource.Interpolator.btn_radio_to_off_mtrl_animation_interpolator_0 = global::XamarinSample.Droid.Resource.Interpolator.btn_radio_to_off_mtrl_animation_interpolator_0;
+			global::SkiaSharp.Views.Forms.Resource.Interpolator.btn_radio_to_on_mtrl_animation_interpolator_0 = global::XamarinSample.Droid.Resource.Interpolator.btn_radio_to_on_mtrl_animation_interpolator_0;
+			global::SkiaSharp.Views.Forms.Resource.Interpolator.fast_out_slow_in = global::XamarinSample.Droid.Resource.Interpolator.fast_out_slow_in;
 			global::SkiaSharp.Views.Forms.Resource.Interpolator.mtrl_fast_out_linear_in = global::XamarinSample.Droid.Resource.Interpolator.mtrl_fast_out_linear_in;
 			global::SkiaSharp.Views.Forms.Resource.Interpolator.mtrl_fast_out_slow_in = global::XamarinSample.Droid.Resource.Interpolator.mtrl_fast_out_slow_in;
 			global::SkiaSharp.Views.Forms.Resource.Interpolator.mtrl_linear = global::XamarinSample.Droid.Resource.Interpolator.mtrl_linear;
@@ -1248,6 +1342,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Layout.BottomTabLayout = global::XamarinSample.Droid.Resource.Layout.BottomTabLayout;
 			global::SkiaSharp.Views.Forms.Resource.Layout.browser_actions_context_menu_page = global::XamarinSample.Droid.Resource.Layout.browser_actions_context_menu_page;
 			global::SkiaSharp.Views.Forms.Resource.Layout.browser_actions_context_menu_row = global::XamarinSample.Droid.Resource.Layout.browser_actions_context_menu_row;
+			global::SkiaSharp.Views.Forms.Resource.Layout.custom_dialog = global::XamarinSample.Droid.Resource.Layout.custom_dialog;
 			global::SkiaSharp.Views.Forms.Resource.Layout.design_bottom_navigation_item = global::XamarinSample.Droid.Resource.Layout.design_bottom_navigation_item;
 			global::SkiaSharp.Views.Forms.Resource.Layout.design_bottom_sheet_dialog = global::XamarinSample.Droid.Resource.Layout.design_bottom_sheet_dialog;
 			global::SkiaSharp.Views.Forms.Resource.Layout.design_layout_snackbar = global::XamarinSample.Droid.Resource.Layout.design_layout_snackbar;
@@ -1261,6 +1356,8 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Layout.design_navigation_item_subheader = global::XamarinSample.Droid.Resource.Layout.design_navigation_item_subheader;
 			global::SkiaSharp.Views.Forms.Resource.Layout.design_navigation_menu = global::XamarinSample.Droid.Resource.Layout.design_navigation_menu;
 			global::SkiaSharp.Views.Forms.Resource.Layout.design_navigation_menu_item = global::XamarinSample.Droid.Resource.Layout.design_navigation_menu_item;
+			global::SkiaSharp.Views.Forms.Resource.Layout.FallbackTabbarDoNotUse = global::XamarinSample.Droid.Resource.Layout.FallbackTabbarDoNotUse;
+			global::SkiaSharp.Views.Forms.Resource.Layout.FallbackToolbarDoNotUse = global::XamarinSample.Droid.Resource.Layout.FallbackToolbarDoNotUse;
 			global::SkiaSharp.Views.Forms.Resource.Layout.FlyoutContent = global::XamarinSample.Droid.Resource.Layout.FlyoutContent;
 			global::SkiaSharp.Views.Forms.Resource.Layout.mtrl_layout_snackbar = global::XamarinSample.Droid.Resource.Layout.mtrl_layout_snackbar;
 			global::SkiaSharp.Views.Forms.Resource.Layout.mtrl_layout_snackbar_include = global::XamarinSample.Droid.Resource.Layout.mtrl_layout_snackbar_include;
@@ -1285,6 +1382,8 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Layout.select_dialog_singlechoice_material = global::XamarinSample.Droid.Resource.Layout.select_dialog_singlechoice_material;
 			global::SkiaSharp.Views.Forms.Resource.Layout.ShellContent = global::XamarinSample.Droid.Resource.Layout.ShellContent;
 			global::SkiaSharp.Views.Forms.Resource.Layout.support_simple_spinner_dropdown_item = global::XamarinSample.Droid.Resource.Layout.support_simple_spinner_dropdown_item;
+			global::SkiaSharp.Views.Forms.Resource.Layout.Tabbar = global::XamarinSample.Droid.Resource.Layout.Tabbar;
+			global::SkiaSharp.Views.Forms.Resource.Layout.Toolbar = global::XamarinSample.Droid.Resource.Layout.Toolbar;
 			global::SkiaSharp.Views.Forms.Resource.String.abc_action_bar_home_description = global::XamarinSample.Droid.Resource.String.abc_action_bar_home_description;
 			global::SkiaSharp.Views.Forms.Resource.String.abc_action_bar_up_description = global::XamarinSample.Droid.Resource.String.abc_action_bar_up_description;
 			global::SkiaSharp.Views.Forms.Resource.String.abc_action_menu_overflow_description = global::XamarinSample.Droid.Resource.String.abc_action_menu_overflow_description;
@@ -1516,6 +1615,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Style.Base_Widget_AppCompat_SeekBar_Discrete = global::XamarinSample.Droid.Resource.Style.Base_Widget_AppCompat_SeekBar_Discrete;
 			global::SkiaSharp.Views.Forms.Resource.Style.Base_Widget_AppCompat_Spinner = global::XamarinSample.Droid.Resource.Style.Base_Widget_AppCompat_Spinner;
 			global::SkiaSharp.Views.Forms.Resource.Style.Base_Widget_AppCompat_Spinner_Underlined = global::XamarinSample.Droid.Resource.Style.Base_Widget_AppCompat_Spinner_Underlined;
+			global::SkiaSharp.Views.Forms.Resource.Style.Base_Widget_AppCompat_TextView = global::XamarinSample.Droid.Resource.Style.Base_Widget_AppCompat_TextView;
 			global::SkiaSharp.Views.Forms.Resource.Style.Base_Widget_AppCompat_TextView_SpinnerItem = global::XamarinSample.Droid.Resource.Style.Base_Widget_AppCompat_TextView_SpinnerItem;
 			global::SkiaSharp.Views.Forms.Resource.Style.Base_Widget_AppCompat_Toolbar = global::XamarinSample.Droid.Resource.Style.Base_Widget_AppCompat_Toolbar;
 			global::SkiaSharp.Views.Forms.Resource.Style.Base_Widget_AppCompat_Toolbar_Button_Navigation = global::XamarinSample.Droid.Resource.Style.Base_Widget_AppCompat_Toolbar_Button_Navigation;
@@ -1649,6 +1749,8 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_ActionBar = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_ActionBar;
 			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_Dark = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_Dark;
 			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_Dark_ActionBar = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_Dark_ActionBar;
+			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_DayNight = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_DayNight;
+			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_DayNight_ActionBar = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_DayNight_ActionBar;
 			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_Dialog = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_Dialog;
 			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_Dialog_Alert = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_Dialog_Alert;
 			global::SkiaSharp.Views.Forms.Resource.Style.ThemeOverlay_AppCompat_Light = global::XamarinSample.Droid.Resource.Style.ThemeOverlay_AppCompat_Light;
@@ -1781,6 +1883,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Style.Widget_AppCompat_Spinner_DropDown = global::XamarinSample.Droid.Resource.Style.Widget_AppCompat_Spinner_DropDown;
 			global::SkiaSharp.Views.Forms.Resource.Style.Widget_AppCompat_Spinner_DropDown_ActionBar = global::XamarinSample.Droid.Resource.Style.Widget_AppCompat_Spinner_DropDown_ActionBar;
 			global::SkiaSharp.Views.Forms.Resource.Style.Widget_AppCompat_Spinner_Underlined = global::XamarinSample.Droid.Resource.Style.Widget_AppCompat_Spinner_Underlined;
+			global::SkiaSharp.Views.Forms.Resource.Style.Widget_AppCompat_TextView = global::XamarinSample.Droid.Resource.Style.Widget_AppCompat_TextView;
 			global::SkiaSharp.Views.Forms.Resource.Style.Widget_AppCompat_TextView_SpinnerItem = global::XamarinSample.Droid.Resource.Style.Widget_AppCompat_TextView_SpinnerItem;
 			global::SkiaSharp.Views.Forms.Resource.Style.Widget_AppCompat_Toolbar = global::XamarinSample.Droid.Resource.Style.Widget_AppCompat_Toolbar;
 			global::SkiaSharp.Views.Forms.Resource.Style.Widget_AppCompat_Toolbar_Button_Navigation = global::XamarinSample.Droid.Resource.Style.Widget_AppCompat_Toolbar_Button_Navigation;
@@ -1942,11 +2045,21 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_autoSizePresetSizes = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_autoSizePresetSizes;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_autoSizeStepGranularity = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_autoSizeStepGranularity;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_autoSizeTextType = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_autoSizeTextType;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableBottomCompat = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableBottomCompat;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableEndCompat = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableEndCompat;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableLeftCompat = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableLeftCompat;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableRightCompat = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableRightCompat;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableStartCompat = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableStartCompat;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableTint = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableTint;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableTintMode = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableTintMode;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_drawableTopCompat = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_drawableTopCompat;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_firstBaselineToTopHeight = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_firstBaselineToTopHeight;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_fontFamily = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_fontFamily;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_fontVariationSettings = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_fontVariationSettings;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_lastBaselineToBottomHeight = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_lastBaselineToBottomHeight;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_lineHeight = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_lineHeight;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_textAllCaps = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_textAllCaps;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTextView_textLocale = global::XamarinSample.Droid.Resource.Styleable.AppCompatTextView_textLocale;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_actionBarDivider = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_actionBarDivider;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_actionBarItemBackground = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_actionBarItemBackground;
@@ -2020,14 +2133,18 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_homeAsUpIndicator = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_homeAsUpIndicator;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_imageButtonStyle = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_imageButtonStyle;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listChoiceBackgroundIndicator = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listChoiceBackgroundIndicator;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listChoiceIndicatorMultipleAnimated = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listChoiceIndicatorMultipleAnimated;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listChoiceIndicatorSingleAnimated = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listChoiceIndicatorSingleAnimated;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listDividerAlertDialog = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listDividerAlertDialog;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listMenuViewStyle = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listMenuViewStyle;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPopupWindowStyle = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPopupWindowStyle;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPreferredItemHeight = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPreferredItemHeight;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPreferredItemHeightLarge = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPreferredItemHeightLarge;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPreferredItemHeightSmall = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPreferredItemHeightSmall;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingEnd = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingEnd;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingLeft = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingLeft;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingRight = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingRight;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingStart = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingStart;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_panelBackground = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_panelBackground;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_panelMenuListTheme = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_panelMenuListTheme;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.AppCompatTheme_panelMenuListWidth = global::XamarinSample.Droid.Resource.Styleable.AppCompatTheme_panelMenuListWidth;
@@ -2176,6 +2293,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Styleable.ColorStateListItem_android_color = global::XamarinSample.Droid.Resource.Styleable.ColorStateListItem_android_color;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.CompoundButton = global::XamarinSample.Droid.Resource.Styleable.CompoundButton;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.CompoundButton_android_button = global::XamarinSample.Droid.Resource.Styleable.CompoundButton_android_button;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.CompoundButton_buttonCompat = global::XamarinSample.Droid.Resource.Styleable.CompoundButton_buttonCompat;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.CompoundButton_buttonTint = global::XamarinSample.Droid.Resource.Styleable.CompoundButton_buttonTint;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.CompoundButton_buttonTintMode = global::XamarinSample.Droid.Resource.Styleable.CompoundButton_buttonTintMode;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.CoordinatorLayout = global::XamarinSample.Droid.Resource.Styleable.CoordinatorLayout;
@@ -2359,6 +2477,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Styleable.RecycleListView_paddingBottomNoButtons = global::XamarinSample.Droid.Resource.Styleable.RecycleListView_paddingBottomNoButtons;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.RecycleListView_paddingTopNoTitle = global::XamarinSample.Droid.Resource.Styleable.RecycleListView_paddingTopNoTitle;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.RecyclerView = global::XamarinSample.Droid.Resource.Styleable.RecyclerView;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.RecyclerView_android_clipToPadding = global::XamarinSample.Droid.Resource.Styleable.RecyclerView_android_clipToPadding;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.RecyclerView_android_descendantFocusability = global::XamarinSample.Droid.Resource.Styleable.RecyclerView_android_descendantFocusability;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.RecyclerView_android_orientation = global::XamarinSample.Droid.Resource.Styleable.RecyclerView_android_orientation;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.RecyclerView_fastScrollEnabled = global::XamarinSample.Droid.Resource.Styleable.RecyclerView_fastScrollEnabled;
@@ -2472,11 +2591,14 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_android_textColor = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_android_textColor;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_android_textColorHint = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_android_textColorHint;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_android_textColorLink = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_android_textColorLink;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_android_textFontWeight = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_android_textFontWeight;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_android_textSize = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_android_textSize;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_android_textStyle = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_android_textStyle;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_android_typeface = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_android_typeface;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_fontFamily = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_fontFamily;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_fontVariationSettings = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_fontVariationSettings;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_textAllCaps = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_textAllCaps;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.TextAppearance_textLocale = global::XamarinSample.Droid.Resource.Styleable.TextAppearance_textLocale;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextInputLayout = global::XamarinSample.Droid.Resource.Styleable.TextInputLayout;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextInputLayout_android_hint = global::XamarinSample.Droid.Resource.Styleable.TextInputLayout_android_hint;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.TextInputLayout_android_textColorHint = global::XamarinSample.Droid.Resource.Styleable.TextInputLayout_android_textColorHint;
@@ -2525,6 +2647,7 @@ namespace XamarinSample.Droid
 			global::SkiaSharp.Views.Forms.Resource.Styleable.Toolbar_logo = global::XamarinSample.Droid.Resource.Styleable.Toolbar_logo;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.Toolbar_logoDescription = global::XamarinSample.Droid.Resource.Styleable.Toolbar_logoDescription;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.Toolbar_maxButtonHeight = global::XamarinSample.Droid.Resource.Styleable.Toolbar_maxButtonHeight;
+			global::SkiaSharp.Views.Forms.Resource.Styleable.Toolbar_menu = global::XamarinSample.Droid.Resource.Styleable.Toolbar_menu;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.Toolbar_navigationContentDescription = global::XamarinSample.Droid.Resource.Styleable.Toolbar_navigationContentDescription;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.Toolbar_navigationIcon = global::XamarinSample.Droid.Resource.Styleable.Toolbar_navigationIcon;
 			global::SkiaSharp.Views.Forms.Resource.Styleable.Toolbar_popupTheme = global::XamarinSample.Droid.Resource.Styleable.Toolbar_popupTheme;

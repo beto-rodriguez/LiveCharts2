@@ -31,6 +31,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.XamarinForms;
 using SkiaSharp.Views.Forms;
@@ -57,6 +58,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
     private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
     private Grid? _grid;
+    private double _lastPanX = 0;
+    private double _lastPanY = 0;
 
     #endregion
 
@@ -272,16 +275,16 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty LegendTextBrushProperty =
         BindableProperty.Create(
-            nameof(LegendTextBrush), typeof(c), typeof(CartesianChart),
-            new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+            nameof(LegendTextBrush), typeof(Color), typeof(CartesianChart),
+            new Color(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend background property.
     /// </summary>
     public static readonly BindableProperty LegendBackgroundProperty =
         BindableProperty.Create(
-            nameof(LegendTextBrush), typeof(c), typeof(CartesianChart),
-            new c(255 / 255d, 255 / 255d, 255 / 255d), propertyChanged: OnBindablePropertyChanged);
+            nameof(LegendBackground), typeof(Color), typeof(CartesianChart),
+            new Color(255 / 255d, 255 / 255d, 255 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend font attributes property.
@@ -333,16 +336,16 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty TooltipTextBrushProperty =
         BindableProperty.Create(
-            nameof(TooltipTextBrush), typeof(c), typeof(CartesianChart),
-            new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+            nameof(TooltipTextBrush), typeof(Color), typeof(CartesianChart),
+            new Color(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip background property.
     /// </summary>
     public static readonly BindableProperty TooltipBackgroundProperty =
         BindableProperty.Create(
-            nameof(TooltipBackground), typeof(c), typeof(CartesianChart),
-            new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+            nameof(TooltipBackground), typeof(Color), typeof(CartesianChart),
+            new Color(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip font attributes property
@@ -561,9 +564,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <value>
     /// The color of the legend text.
     /// </value>
-    public c LegendTextBrush
+    public Color LegendTextBrush
     {
-        get => (c)GetValue(LegendTextBrushProperty);
+        get => (Color)GetValue(LegendTextBrushProperty);
         set => SetValue(LegendTextBrushProperty, value);
     }
 
@@ -573,9 +576,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <value>
     /// The color of the legend background.
     /// </value>
-    public c LegendBackground
+    public Color LegendBackground
     {
-        get => (c)GetValue(LegendBackgroundProperty);
+        get => (Color)GetValue(LegendBackgroundProperty);
         set => SetValue(LegendBackgroundProperty, value);
     }
 
@@ -650,9 +653,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <value>
     /// The color of the tool tip text.
     /// </value>
-    public c TooltipTextBrush
+    public Color TooltipTextBrush
     {
-        get => (c)GetValue(TooltipTextBrushProperty);
+        get => (Color)GetValue(TooltipTextBrushProperty);
         set => SetValue(TooltipTextBrushProperty, value);
     }
 
@@ -662,9 +665,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <value>
     /// The color of the tool tip background.
     /// </value>
-    public c TooltipBackground
+    public Color TooltipBackground
     {
-        get => (c)GetValue(TooltipBackgroundProperty);
+        get => (Color)GetValue(TooltipBackgroundProperty);
         set => SetValue(TooltipBackgroundProperty, value);
     }
 
@@ -754,15 +757,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         MainThread.BeginInvokeOnMainThread(action);
     }
 
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
-    }
-
     /// <summary>
     /// Initializes the core.
     /// </summary>
@@ -832,13 +826,36 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         if (core is null) return;
-        if (e.StatusType != GestureStatus.Running) return;
+        if (e.StatusType is not GestureStatus.Running and not GestureStatus.Completed) return;
 
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-        var delta = new LvcPoint((float)e.TotalX, (float)e.TotalY);
-        var args = new PanGestureEventArgs(delta);
-        c.InvokePanGestrue(args);
-        if (!args.Handled) c.Pan(delta);
+
+        if (e.StatusType == GestureStatus.Running)
+        {
+            var delta = new LvcPoint(
+                (float)((e.TotalX - _lastPanX) * DeviceDisplay.MainDisplayInfo.Density),
+                (float)((e.TotalY - _lastPanY) * DeviceDisplay.MainDisplayInfo.Density));
+
+            var args = new PanGestureEventArgs(delta);
+            c.InvokePanGestrue(args);
+
+            if (args.Handled) return;
+
+            c.Pan(delta, true);
+            _lastPanX = e.TotalX;
+            _lastPanY = e.TotalY;
+
+            return;
+        }
+
+        // lets just let the core know that the drag finished,
+        // so thwe core is able to bounce back the plot in case
+        // it exceeded the allowed limits
+        // this is a dummy request of += 0.01 pixels just in the corresponding direction
+        c.Pan(new LvcPoint(_lastPanX > 0 ? 0.01f : -0.01f, _lastPanY > 0 ? 0.01f : -0.01f), false);
+
+        _lastPanX = 0;
+        _lastPanY = 0;
     }
 
     private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)

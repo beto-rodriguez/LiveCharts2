@@ -35,7 +35,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegment, SkiaSharpDrawingContext>
     where TSegment : class, IAnimatable, IConsecutivePathSegment
 {
-    private readonly LinkedList<TSegment> _commands = new();
     private readonly FloatMotionProperty _pivotProperty;
 
     /// <summary>
@@ -46,14 +45,19 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
         _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
     }
 
+    /// <summary>
+    /// Gets the commands in the vector.
+    /// </summary>
+    protected LinkedList<TSegment> Commands { get; } = new();
+
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.FirstCommand" />
-    public LinkedListNode<TSegment>? FirstCommand => _commands.First;
+    public LinkedListNode<TSegment>? FirstCommand => Commands.First;
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.LastCommand" />
-    public LinkedListNode<TSegment>? LastCommand => _commands.Last;
+    public LinkedListNode<TSegment>? LastCommand => Commands.Last;
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.CountCommands" />
-    public int CountCommands => _commands.Count;
+    public int CountCommands => Commands.Count;
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ClosingMethod" />
     public VectorClosingMethod ClosingMethod { get; set; }
@@ -65,61 +69,61 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     public LinkedListNode<TSegment> AddLast(TSegment command)
     {
         IsValid = false;
-        return _commands.AddLast(command);
+        return Commands.AddLast(command);
     }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddFirst(TSegment)" />
     public LinkedListNode<TSegment> AddFirst(TSegment command)
     {
         IsValid = false;
-        return _commands.AddFirst(command);
+        return Commands.AddFirst(command);
     }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddAfter(LinkedListNode{TSegment}, TSegment)" />
     public LinkedListNode<TSegment> AddAfter(LinkedListNode<TSegment> node, TSegment command)
     {
         IsValid = false;
-        return _commands.AddAfter(node, command);
+        return Commands.AddAfter(node, command);
     }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddBefore(LinkedListNode{TSegment}, TSegment)" />
     public LinkedListNode<TSegment> AddBefore(LinkedListNode<TSegment> node, TSegment command)
     {
         IsValid = false;
-        return _commands.AddBefore(node, command);
+        return Commands.AddBefore(node, command);
     }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ContainsCommand(TSegment)" />
     public bool ContainsCommand(TSegment segment)
     {
-        return _commands.Contains(segment);
+        return Commands.Contains(segment);
     }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.RemoveCommand(TSegment)" />
     public bool RemoveCommand(TSegment command)
     {
         IsValid = false;
-        return _commands.Remove(command);
+        return Commands.Remove(command);
     }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.RemoveCommand(LinkedListNode{TSegment})" />
     public void RemoveCommand(LinkedListNode<TSegment> node)
     {
         IsValid = false;
-        _commands.Remove(node);
+        Commands.Remove(node);
     }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ClearCommands" />
     public void ClearCommands()
     {
         IsValid = false;
-        _commands.Clear();
+        Commands.Clear();
     }
 
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
     public override void CompleteTransition(params string[]? propertyName)
     {
-        foreach (var segment in _commands)
+        foreach (var segment in Commands)
         {
             segment.CompleteTransition(propertyName);
         }
@@ -130,7 +134,7 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void Draw(SkiaSharpDrawingContext context)
     {
-        if (_commands.Count == 0) return;
+        if (Commands.Count == 0) return;
 
         var toRemoveSegments = new List<TSegment>();
 
@@ -141,7 +145,7 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
         var isFirst = true;
         TSegment? last = null;
 
-        foreach (var segment in _commands)
+        foreach (var segment in Commands)
         {
             segment.IsValid = true;
             segment.CurrentTime = currentTime;
@@ -161,7 +165,7 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
 
         foreach (var segment in toRemoveSegments)
         {
-            _ = _commands.Remove(segment);
+            _ = Commands.Remove(segment);
             isValid = false;
         }
 
@@ -178,7 +182,8 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="segment">The segment.</param>
-    protected abstract void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment);
+    protected virtual void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
 
     /// <summary>
     /// Called to close the area.
@@ -186,7 +191,8 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="segment">The segment.</param>
-    protected abstract void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment);
+    protected virtual void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
 
     /// <summary>
     /// Called to draw the segment.
@@ -194,5 +200,6 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="segment">The segment.</param>
-    protected abstract void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment);
+    protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
 }

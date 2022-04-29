@@ -34,8 +34,8 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
 public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContext>
 {
-    IEnumerable<ChartPoint> tooltipPoints;
-    Chart<SkiaSharpDrawingContext> chart;
+    private IEnumerable<ChartPoint>? _tooltipPoints;
+    private Chart<SkiaSharpDrawingContext>? _chart;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -50,8 +50,8 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        this.chart = chart;
-        this.tooltipPoints = tooltipPoints;
+        _chart = chart;
+        _tooltipPoints = tooltipPoints;
 
         var wfChart = (Chart)chart.View;
 
@@ -61,38 +61,45 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
 
         Show();
     }
+
+    /// <summary>
+    /// Called when the size changes.
+    /// </summary>
+    /// <param name="e"></param>
     protected override void OnSizeChanged(EventArgs e)
     {
         base.OnSizeChanged(e);
 
         SetLocation();
     }
+
     private void SetLocation()
     {
-        if (Height < 1 || Width < 1)
-            return;
+        if (Height < 1 || Width < 1) return;
+        if (_chart is null || _tooltipPoints is null) return;
 
         LvcPoint? location = null;
 
-        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+        if (_chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
-            location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize(Width, Height), chart.ControlSize);
+            location = _tooltipPoints.GetCartesianTooltipLocation(
+                _chart.TooltipPosition, new LvcSize(Width, Height), _chart.ControlSize);
         }
-        if (chart is PieChart<SkiaSharpDrawingContext>)
+        if (_chart is PieChart<SkiaSharpDrawingContext>)
         {
-            location = tooltipPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, new LvcSize(Width, Height));
+            location = _tooltipPoints.GetPieTooltipLocation(
+                _chart.TooltipPosition, new LvcSize(Width, Height));
         }
         if (location is null) throw new Exception("location not supported");
 
-        var wfChart = (Chart)chart.View;
+        var wfChart = (Chart)_chart.View;
         var l = wfChart.PointToScreen(Point.Empty);
         var x = l.X + location.Value.X;
         var y = l.Y + location.Value.Y;
 
         Location = new Point((int)x, (int)y);
     }
+
     private void DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
         var container = new DynamicLayout() { BackgroundColor = chart.TooltipBackColor, Padding = new global::Eto.Drawing.Padding(4) };

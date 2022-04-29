@@ -1,26 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-        <TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MauiSample</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-        <LangVersion>10.0</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
 		<ApplicationTitle>MauiSample</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.MauiSample</ApplicationId>
+		<ApplicationId>com.companyname.mauisample</ApplicationId>
+		<ApplicationId Condition="$(TargetFramework.Contains('-windows'))">ED70B09E-E00E-4934-9F77-E9D45CAE0765</ApplicationId>
 
 		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
-
-		<!-- Required for C# Hot Reload -->
-		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
 
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
@@ -34,19 +32,17 @@
 		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
-	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-		<!-- Required - WinUI does not yet have buildTransitive for everything -->
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -55,25 +51,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="AppShell.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Axes\Style\View.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Axes\LabelsFormat2\View.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Axes\Paging\View.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Axes\ColorsAndPosition\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Axes\DateTimeScaled\View.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Axes\LabelsFormat2\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Axes\LabelsFormat\View.xaml">
@@ -91,7 +75,13 @@
 	  <MauiXaml Update="Axes\NamedLabels\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Axes\Paging\View.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Axes\Shared\View.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Axes\Style\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Axes\TimeSpanScaled\View.xaml">
@@ -137,19 +127,15 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Events\AddPointOnClick\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Events\Cartesian\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Events\Pie\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Events\Polar\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Financial\BasicCandlesticks\View.xaml">
@@ -165,7 +151,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="General\MultiThreading2\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="General\MultiThreading\View.xaml">
@@ -175,7 +160,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="General\Sections2\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="General\Sections\View.xaml">
@@ -205,10 +189,6 @@
 	  <MauiXaml Update="Lines\AutoUpdate\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Lines\XY\View.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Lines\Basic\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -222,6 +202,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Lines\Straight\View.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Lines\XY\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Lines\Zoom\View.xaml">
@@ -242,24 +225,19 @@
 	  <MauiXaml Update="Pies\Doughnut\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pies\Gauge5\View.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pies\Gauge4\View.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pies\Gauge3\View.xaml">
-	    <SubType>Designer</SubType>
+	  <MauiXaml Update="Pies\Gauge1\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pies\Gauge2\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pies\Gauge1\View.xaml">
-	    <SubType>Designer</SubType>
+	  <MauiXaml Update="Pies\Gauge3\View.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pies\Gauge4\View.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pies\Gauge5\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pies\Gauges\View.xaml">
@@ -274,17 +252,14 @@
 	  <MauiXaml Update="Pies\Pushout\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Polar\RadialArea\View.xaml">
-	    <SubType>Designer</SubType>
+	  <MauiXaml Update="Polar\Basic\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Polar\Coordinates\View.xaml">
-	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Polar\Basic\View.xaml">
+	  <MauiXaml Update="Polar\RadialArea\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
-	    <SubType>Designer</SubType>
 	  </MauiXaml>
 	  <MauiXaml Update="Scatter\AutoUpdate\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
@@ -342,67 +317,4 @@
 	  </MauiXaml>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="Axes\Style\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Axes\LabelsFormat2\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Axes\Paging\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Events\AddPointOnClick\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Events\Cartesian\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Events\Pie\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Events\Polar\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="General\MultiThreading2\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="General\Sections2\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Lines\XY\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pies\Gauge5\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pies\Gauge4\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pies\Gauge3\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pies\Gauge2\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pies\Gauge1\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Polar\RadialArea\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Polar\Basic\View.xaml.cs">
-	    <SubType>Code</SubType>
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Polar\Coordinates\View.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
-		<OutputType>WinExe</OutputType>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	</PropertyGroup>
-	
 </Project>

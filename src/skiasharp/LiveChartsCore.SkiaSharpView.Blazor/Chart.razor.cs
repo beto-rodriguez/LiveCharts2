@@ -25,6 +25,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -58,14 +59,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
-
-    // Moved to css, probably remove?
-    //private Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-    //private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
-    //private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-    //private Color _legendBackColor = Color.FromArgb(255, 255, 255, 255);
-    //private Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
-    //private Color _tooltipTextColor;
 
     /// <summary>
     /// Called when the control is initialized.
@@ -272,15 +265,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     void IChartView.InvokeOnUIThread(Action action)
     {
         _ = InvokeAsync(action);
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
     }
 
     /// <summary>

@@ -27,13 +27,15 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
+/// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
 {
@@ -90,7 +92,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
     /// <value>
     /// The color of the text.
     /// </value>
-    public Color TooltipTextColor { get; set; }
+    public Color? TooltipTextColor { get; set; }
 
     /// <summary>
     /// Gets or sets the font attributes.
@@ -106,7 +108,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
     /// <value>
     /// The color of the tool tip background.
     /// </value>
-    public Color TooltipBackgroundColor { get; set; }
+    public Color? TooltipBackgroundColor { get; set; }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
     {
@@ -150,7 +152,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
 
         AbsoluteLayout.SetLayoutBounds(
             this,
-            new Rectangle(
+            new Rect(
                 location.Value.X / chartSize.Width,
                 location.Value.Y / chartSize.Height,
                 AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
@@ -187,7 +189,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
         {
             AbsoluteLayout.SetLayoutBounds(
                 this,
-                new Rectangle(
+                new Rect(
                     -1, -1,
                     AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 

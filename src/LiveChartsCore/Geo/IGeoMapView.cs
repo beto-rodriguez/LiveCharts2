@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Geo;
 

@@ -50,4 +50,28 @@ public class StackedValue
     /// The total.
     /// </value>
     public double Total { get; set; }
+
+    /// <summary>
+    /// Gets or sets the start.
+    /// </summary>
+    /// <value>
+    /// The start.
+    /// </value>
+    public double NegativeStart { get; set; }
+
+    /// <summary>
+    /// Gets or sets the end.
+    /// </summary>
+    /// <value>
+    /// The end.
+    /// </value>
+    public double NegativeEnd { get; set; }
+
+    /// <summary>
+    /// Gets or sets the total stacked.
+    /// </summary>
+    /// <value>
+    /// The total.
+    /// </value>
+    public double NegativeTotal { get; set; }
 }

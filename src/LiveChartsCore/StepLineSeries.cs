@@ -144,6 +144,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         }
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
+        uwx = uwx < gs ? gs : uwx;
 
         foreach (var segment in segments)
         {

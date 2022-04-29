@@ -10,11 +10,11 @@ public class ViewModel
     public ViewModel()
     {
         var data = new ObservableCollection<ObservablePoint>
-            {
-                new(0, 5),
-                new(3, 8),
-                new(7, 9)
-            };
+        {
+            new(0, 5),
+            new(3, 8),
+            new(7, 9)
+        };
 
         Data = data;
 

@@ -36,6 +36,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;

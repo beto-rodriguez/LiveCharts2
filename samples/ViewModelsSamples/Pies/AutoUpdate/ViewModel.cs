@@ -9,7 +9,7 @@ namespace ViewModelsSamples.Pies.AutoUpdate;
 
 public class ViewModel
 {
-    private readonly Random random = new();
+    private readonly Random _random = new();
 
     public ViewModel()
     {
@@ -17,21 +17,21 @@ public class ViewModel
         // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
         // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
         Series = new ObservableCollection<ISeries>
-            {
-                // using object that implements INotifyPropertyChanged
-                // will allow the chart to update everytime a property in a point changes.
+        {
+            // using object that implements INotifyPropertyChanged
+            // will allow the chart to update everytime a property in a point changes.
 
-                // LiveCharts already provides the ObservableValue class
-                // notice you can plot any type, but you must let LiveCharts know how to handle it
-                // for more info please see:
-                // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
-                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(2) } },
-                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(5) } },
-                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } },
-                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(7) } },
-                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(4) } },
-                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } }
-            };
+            // LiveCharts already provides the ObservableValue class
+            // notice you can plot any type, but you must let LiveCharts know how to handle it
+            // for more info please see:
+            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(2) } },
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(5) } },
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } },
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(7) } },
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(4) } },
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } }
+        };
     }
 
     public ObservableCollection<ISeries> Series { get; set; }
@@ -42,17 +42,19 @@ public class ViewModel
         if (Series.Count == 15) return;
 
         Series.Add(
-            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(random.Next(1, 10)) } });
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(_random.Next(1, 10)) } });
     }
 
     public void UpdateAll()
     {
         foreach (var series in Series)
         {
+            if (series.Values is null) continue;
+
             foreach (var value in series.Values)
             {
                 var observableValue = (ObservableValue)value;
-                observableValue.Value = random.Next(1, 10);
+                observableValue.Value = _random.Next(1, 10);
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using LiveChartsCore;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;

@@ -40,6 +40,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -350,12 +351,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         get => Background is not ISolidColorBrush b
                 ? new LvcColor()
                 : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-        set
-        {
-            Background = new SolidColorBrush(new Color(value.R, value.G, value.B, value.A));
-            var canvas = this.FindControl<MotionCanvas>("canvas");
-            canvas.BackColor = new SkiaSharp.SKColor(value.R, value.G, value.B, value.A);
-        }
+        set => Background = new SolidColorBrush(new Color(value.R, value.G, value.B, value.A));
     }
 
     LvcSize IChartView.ControlSize => _avaloniaCanvas is null
@@ -706,15 +702,6 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         Dispatcher.UIThread.Post(action);
     }
 
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
-    }
-
     /// <summary>
     /// Initializes the core.
     /// </summary>
@@ -764,15 +751,6 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         {
             _radiusObserver?.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
             _radiusObserver?.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
-        }
-
-        if (change.Property.Name == nameof(Background))
-        {
-            var canvas = this.FindControl<MotionCanvas>("canvas");
-            var color = Background is not ISolidColorBrush b
-                ? new LvcColor()
-                : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-            canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
         }
 
         _core.Update();

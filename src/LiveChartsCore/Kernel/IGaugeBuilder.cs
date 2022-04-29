@@ -110,7 +110,7 @@ public interface IGaugeBuilder<TDrawingContext>
     /// <value>
     /// The background.
     /// </value>
-    IPaint<TDrawingContext> Background { get; set; }
+    IPaint<TDrawingContext>? Background { get; set; }
 
     /// <summary>
     /// Gets or sets the size of the labels.

@@ -30,6 +30,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -39,7 +40,6 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 /// <summary>
 /// The geo map control.
 /// </summary>
-/// <seealso cref="Eto.Forms.Panel" />
 public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly MotionCanvas _motionCanvas = new();
@@ -48,12 +48,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private LvcColor[] _heatMap =
-    {
-        LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-        LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-    };
-    private double[]? _colorStops = null;
     private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
     private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
     private object? _viewCommand = null;
@@ -120,12 +114,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-    public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     public IPaint<SkiaSharpDrawingContext>? Stroke

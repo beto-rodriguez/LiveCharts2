@@ -89,6 +89,11 @@ public class ChartPoint
     public double QuinaryValue { get; set; }
 
     /// <summary>
+    /// Gets or sets the stacked value, if the point do not belongs to a stacked series then this property is null.
+    /// </summary>
+    public StackedValue? StackedValue { get; set; }
+
+    /// <summary>
     /// Gets the point as tooltip string.
     /// </summary>
     /// <value>

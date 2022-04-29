@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Kernel.Providers;
 
@@ -41,10 +42,20 @@ public class DataFactory<TModel, TDrawingContext>
     /// </summary>
     protected Dictionary<object, Dictionary<int, ChartPoint>> ByChartbyValueVisualMap { get; } = new();
 
+#nullable disable
+
+    // note #270422
+    // We use the ByChartbyValueVisualMap for nullable and value types
+    // for reference types we use the ByChartByReferenceVisualMap it does not allows nulls, it throws in the mapper
+    // when it founds a null type and then it warns you on how to use it.
+    // this is a current limitation and could be supported in future verions.
+
     /// <summary>
     /// Gets the by reference map.
     /// </summary>
     protected Dictionary<object, Dictionary<TModel, ChartPoint>> ByChartByReferenceVisualMap { get; } = new();
+
+#nullable restore
 
     /// <summary>
     /// Indicates whether the factory uses value or reference types.
@@ -111,7 +122,10 @@ public class DataFactory<TModel, TDrawingContext>
             _ = ByChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
             if (d is null)
             {
+#nullable disable
+                // see note #270422
                 d = new Dictionary<TModel, ChartPoint>();
+#nullable restore
                 ByChartByReferenceVisualMap[canvas.Sync] = d;
             }
             var byReferenceVisualMap = d;

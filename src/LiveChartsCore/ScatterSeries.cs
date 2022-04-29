@@ -119,6 +119,9 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwy = yScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
+        uwx = uwx < gs ? gs : uwx;
+        uwy = uwy < gs ? gs : uwy;
+
         foreach (var point in Fetch(cartesianChart))
         {
             var visual = (TVisual?)point.Context.Visual;
@@ -234,6 +237,18 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         var ts = tickSecondary.Value * DataPadding.X;
         var tp = tickPrimary.Value * DataPadding.Y;
+
+        if (baseBounds.VisibleSecondaryBounds.Delta == 0)
+        {
+            var ms = baseBounds.VisibleSecondaryBounds.Min == 0 ? 1 : baseBounds.VisibleSecondaryBounds.Min;
+            ts = 0.1 * ms * DataPadding.X;
+        }
+
+        if (baseBounds.VisiblePrimaryBounds.Delta == 0)
+        {
+            var mp = baseBounds.VisiblePrimaryBounds.Min == 0 ? 1 : baseBounds.VisiblePrimaryBounds.Min;
+            tp = 0.1 * mp * DataPadding.Y;
+        }
 
         return
             new SeriesBounds(

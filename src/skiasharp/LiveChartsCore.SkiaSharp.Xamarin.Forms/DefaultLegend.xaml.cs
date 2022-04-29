@@ -201,7 +201,7 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                 : StackOrientation.Vertical;
 
         LegendTemplate = mobileChart.LegendTemplate;
-        LegendBackgroundColor = mobileChart.TooltipBackground;
+        LegendBackgroundColor = mobileChart.LegendBackground;
         LegendFontFamily = mobileChart.LegendFontFamily;
         LegendFontSize = mobileChart.LegendFontSize;
         LegendTextColor = mobileChart.LegendTextBrush;
@@ -226,7 +226,7 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
             TextColor = LegendTextColor,
             FontAttributes = LegendFontAttributes,
             Orientation = LegendOrientation,
-            BackgroundColor = LegendBackgroundColor
+            BackgroundColor = LegendBackgroundColor,
         };
 
         Content = view;

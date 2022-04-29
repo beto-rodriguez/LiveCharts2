@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -215,15 +216,6 @@ public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharp
     void IChartView.InvokeOnUIThread(Action action)
     {
         action();
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
     }
 
     /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>

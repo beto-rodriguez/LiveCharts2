@@ -294,8 +294,8 @@ public static class Extensions
         }
 
         return areAllX
-            ? TooltipFindingStrategy.CompareOnlyX
-            : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
+            ? TooltipFindingStrategy.CompareOnlyXTakeClosest
+            : (areAllY ? TooltipFindingStrategy.CompareOnlyYTakeClosest : TooltipFindingStrategy.CompareAllTakeClosest);
     }
 
     /// <summary>
@@ -356,6 +356,23 @@ public static class Extensions
                     Max = axis.ActualBounds.MaxVisibleBound,
                     Min = axis.ActualBounds.MinVisibleBound
                 });
+    }
+
+    /// <summary>
+    /// Returns an enumeration with only the fisrt element.
+    /// </summary>
+    /// <typeparam name="T">The source type.</typeparam>
+    /// <typeparam name="T1">The target type.</typeparam>
+    /// <param name="source">The source enumeration.</param>
+    /// <param name="predicate">The mapping predicate.</param>
+    /// <returns></returns>
+    public static IEnumerable<T1> SelectFirst<T, T1>(this IEnumerable<T> source, Func<T, T1> predicate)
+    {
+        foreach (var item in source)
+        {
+            yield return predicate(item);
+            yield break;
+        }
     }
 
     private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)

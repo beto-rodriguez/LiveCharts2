@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.Maui">
     <ContentView.Resources>
         <DataTemplate x:Key="defaultTemplate">
-            <Frame>
+            <Frame BackgroundColor="{Binding BackgroundColor}">
                 <StackLayout 
                     BindableLayout.ItemsSource="{Binding Series, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
                     BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"

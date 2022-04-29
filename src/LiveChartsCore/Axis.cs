@@ -90,9 +90,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     LvcRectangle ICartesianAxis.LabelsDesiredSize { get => _labelsDesiredSize; set => _labelsDesiredSize = value; }
     LvcRectangle ICartesianAxis.NameDesiredSize { get => _nameDesiredSize; set => _nameDesiredSize = value; }
 
-    Bounds IPlane.DataBounds => _dataBounds;
+    /// <inheritdoc cref="IPlane.DataBounds"/>
+    public Bounds DataBounds => _dataBounds;
 
-    Bounds IPlane.VisibleDataBounds => _visibleDataBounds;
+    /// <inheritdoc cref="IPlane.VisibleDataBounds"/>
+    public Bounds VisibleDataBounds => _visibleDataBounds;
 
     AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
 
@@ -554,6 +556,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var axisTick = this.GetTick(chart.DrawMarginSize);
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;

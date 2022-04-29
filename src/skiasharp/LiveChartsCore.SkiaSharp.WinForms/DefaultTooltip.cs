@@ -36,6 +36,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
 {
     private Panel? _tooltipContainer;
 
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
     /// </summary>
@@ -129,6 +130,12 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
     {
+        var isCursorInTooltip =
+            Cursor.Position.X >= Location.X && Cursor.Position.X <= Location.X + Width &&
+            Cursor.Position.Y >= Location.Y && Cursor.Position.Y <= Location.Y + Height;
+
+        if (isCursorInTooltip) return;
+
         Location = new Point(10000, 10000);
     }
 

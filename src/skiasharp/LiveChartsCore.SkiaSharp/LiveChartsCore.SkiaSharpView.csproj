@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
     
-    <TargetFrameworks>net462;netstandard2.0;netcoreapp2.0;net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462;netcoreapp2.0;net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
 
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
@@ -26,13 +26,17 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.179" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.0-preview.179" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.254" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.0-preview.254" />
   </ItemGroup>
 
   <ItemGroup>

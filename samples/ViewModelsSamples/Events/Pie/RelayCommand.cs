@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable 67
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -8,16 +10,17 @@ namespace ViewModelsSamples.Events.Pie;
 
 public class RelayCommand : ICommand
 {
-    public event EventHandler CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged;
 
-    public bool CanExecute(object parameter)
+    public bool CanExecute(object? parameter)
     {
         return true;
     }
 
-    public void Execute(object parameter)
+    public void Execute(object? parameter)
     {
-        var points = (IEnumerable<ChartPoint>)parameter;
+        var points = (IEnumerable<ChartPoint>?)parameter;
+        if (points is null) return;
 
         // notice in the chart command we are not able to use strongly typed points
         // but we can cast the point.Context.DataSource to the actual type.

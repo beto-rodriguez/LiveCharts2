@@ -30,12 +30,14 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Maui;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.Devices;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 

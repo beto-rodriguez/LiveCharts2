@@ -28,7 +28,7 @@ using LiveChartsCore.Measure;
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
-/// Defines an Axis in a Cartesian chart. 
+/// Defines an Axis in a Cartesian chart.
 /// </summary>
 public interface ICartesianAxis : IPlane, INotifyPropertyChanged
 {
@@ -41,10 +41,10 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     AxisOrientation Orientation { get; }
 
     /// <summary>
-    /// Gets or sets the padding.
+    /// Gets or sets the padding around the tick labels along the axis.
     /// </summary>
     /// <value>
-    /// The padding.
+    /// The padding in pixels.
     /// </value>
     Padding Padding { get; set; }
 

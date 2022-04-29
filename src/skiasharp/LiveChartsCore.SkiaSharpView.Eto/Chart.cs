@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -78,10 +79,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         if (tooltip is not null) this.tooltip = tooltip;
         if (legend is not null) this.legend = legend;
 
-        motionCanvas = new MotionCanvas
-        {
-            FramesPerSecond = 90D
-        };
+        motionCanvas = new MotionCanvas { MaxFps = 65 };
         motionCanvas.SizeChanged += OnResized;
 
         UpdateLegendLayout();
@@ -297,15 +295,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     void IChartView.InvokeOnUIThread(Action action)
     {
         Application.Instance.InvokeAsync(action).Wait();
-    }
-
-    /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
-    public void SyncAction(Action action)
-    {
-        lock (CoreCanvas.Sync)
-        {
-            action();
-        }
     }
 
     /// <summary>
