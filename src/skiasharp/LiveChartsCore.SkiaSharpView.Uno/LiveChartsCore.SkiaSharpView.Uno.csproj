@@ -30,8 +30,6 @@
     <AssemblyName>LiveChartsCore.SkiaSharpView.Uno</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
-    <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Uno.UI" Version="4.2.6" />
