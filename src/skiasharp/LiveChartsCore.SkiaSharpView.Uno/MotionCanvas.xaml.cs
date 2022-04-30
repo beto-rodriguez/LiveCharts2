@@ -32,10 +32,9 @@ using SkiaSharp.Views.UWP;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Diagnostics;
 using LiveChartsCore.SkiaSharpView.Uno.Helpers;
 
-#if NET6_0_ANDROID
+#if __ANDROID__
 using Android.Views;
 #endif
 
@@ -60,7 +59,7 @@ public sealed partial class MotionCanvas : UserControl
         _skiaElement = canvas;
         _skiaElement.PaintSurface += OnPaintSurface;
 
-#if NET6_0_ANDROID
+#if __ANDROID__
         _scaleDetector = new ScaleGestureDetector(Context, new AndroidScaleListener(this));
 #endif
     }
@@ -108,14 +107,14 @@ public sealed partial class MotionCanvas : UserControl
     /// <summary>
     /// Called when the canvas detects a pinch gesture.
     /// </summary>
-    public event PinchHandler Pinched;
+    public event PinchHandler? Pinched;
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
     }
 
-    private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
         var scale = DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
         args.Surface.Canvas.Scale((float)scale, (float)scale);
@@ -170,7 +169,7 @@ public sealed partial class MotionCanvas : UserControl
 
     #region ANDROID
 
-#if NET6_0_ANDROID
+#if __ANDROID__
     // based on:
     //https://docs.microsoft.com/en-us/xamarin/android/app-fundamentals/touch/android-touch-walkthrough
 
@@ -208,7 +207,6 @@ public sealed partial class MotionCanvas : UserControl
                         PinchStart = new LvcPoint { X = _canvas._lastTouchX, Y = _canvas._lastTouchY },
                         Scale = detector.ScaleFactor
                     });
-                Trace.WriteLine($"==scaled==");
             }
             return true;
         }
@@ -229,7 +227,6 @@ public sealed partial class MotionCanvas : UserControl
                 _lastTouchX = ev.GetX();
                 _lastTouchY = ev.GetY();
                 _activePointerId = ev.GetPointerId(0);
-                //Trace.WriteLine($"==down at {_lastTouchX}, {_lastTouchY} @ {_activePointerId}==");
                 break;
 
             case MotionEventActions.Move:
@@ -243,7 +240,6 @@ public sealed partial class MotionCanvas : UserControl
                     var deltaY = y - _lastTouchY;
                     _posX += deltaX;
                     _posY += deltaY;
-                    //Trace.WriteLine($"==... {_lastTouchX}, {_lastTouchY} @ {_activePointerId}==");
                 }
 
                 _lastTouchX = x;
@@ -254,7 +250,6 @@ public sealed partial class MotionCanvas : UserControl
             case MotionEventActions.Cancel:
                 // We no longer need to keep track of the active pointer.
                 _activePointerId = -1;
-                //Trace.WriteLine($"==canceled==");
                 break;
 
             case MotionEventActions.PointerUp:
@@ -269,7 +264,6 @@ public sealed partial class MotionCanvas : UserControl
                     _lastTouchX = ev.GetX(newPointerIndex);
                     _lastTouchY = ev.GetY(newPointerIndex);
                     _activePointerId = ev.GetPointerId(newPointerIndex);
-                    //Trace.WriteLine($"==completed @ {pointerIndex}==");
                 }
                 break;
 
