@@ -49,6 +49,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private readonly bool _requiresLegendMeasureAlways = false;
     private ZoomAndPanMode _zoomMode;
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
+    private const double MaxAxisBound = 0.05;
+    private const double MaxAxisActiveBound = 0.15;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
@@ -164,13 +166,20 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// </summary>
     /// <param name="pivot">The pivot.</param>
     /// <param name="direction">The direction.</param>
+    /// <param name="scaleFactor">The scale factor.</param>
+    /// <param name="isActive"></param>
     /// <returns></returns>
-    public void Zoom(LvcPoint pivot, ZoomDirection direction)
+    public void Zoom(LvcPoint pivot, ZoomDirection direction, double? scaleFactor = null, bool isActive = false)
     {
         if (YAxes is null || XAxes is null) return;
 
         var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
         speed = 1 - speed;
+
+        if (scaleFactor is not null && direction != ZoomDirection.DefinedByScaleFactor)
+            throw new InvalidOperationException(
+                $"When the scale factor is defined, the zoom direction must be {nameof(ZoomDirection.DefinedByScaleFactor)}... " +
+                $"it just makes sense.");
 
         var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
 
@@ -184,18 +193,43 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
                 var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
+                double mint, maxt;
                 var l = max - min;
 
-                var rMin = (px - min) / l;
-                var rMax = 1 - rMin;
+                if (scaleFactor is null)
+                {
+                    var rMin = (px - min) / l;
+                    var rMax = 1 - rMin;
 
-                var target = l * m;
-                var mint = px - target * rMin;
-                var maxt = px + target * rMax;
+                    var target = l * m;
+
+                    mint = px - target * rMin;
+                    maxt = px + target * rMax;
+                }
+                else
+                {
+                    var delta = 1 - scaleFactor.Value;
+                    int dir;
+
+                    if (delta < 0)
+                    {
+                        dir = -1;
+                        direction = ZoomDirection.ZoomIn;
+                    }
+                    else
+                    {
+                        dir = 1;
+                        direction = ZoomDirection.ZoomOut;
+                    }
+
+                    var ld = l * Math.Abs(delta);
+                    mint = min - ld * 0.5 * dir;
+                    maxt = max + ld * 0.5 * dir;
+                }
 
                 if (maxt - mint < xi.DataBounds.MinDelta * 5) return;
 
-                var xm = (max - min) * 0.05;
+                var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
                 if (maxt > xi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = xi.DataBounds.Max + xm;
                 if (mint < xi.DataBounds.Min && direction == ZoomDirection.ZoomOut) mint = xi.DataBounds.Min - xm;
 
@@ -214,20 +248,44 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
                 var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
+                double mint, maxt;
                 var l = max - min;
 
-                var rMin = (px - min) / l;
-                var rMax = 1 - rMin;
+                if (scaleFactor is null)
+                {
+                    var rMin = (px - min) / l;
+                    var rMax = 1 - rMin;
 
-                var target = l * m;
-                var mint = px - target * rMin;
-                var maxt = px + target * rMax;
+                    var target = l * m;
+                    mint = px - target * rMin;
+                    maxt = px + target * rMax;
+                }
+                else
+                {
+                    var delta = 1 - scaleFactor.Value;
+                    int dir;
+
+                    if (delta < 0)
+                    {
+                        dir = -1;
+                        direction = ZoomDirection.ZoomIn;
+                    }
+                    else
+                    {
+                        dir = 1;
+                        direction = ZoomDirection.ZoomOut;
+                    }
+
+                    var ld = l * Math.Abs(delta);
+                    mint = min - ld * 0.5 * dir;
+                    maxt = max + ld * 0.5 * dir;
+                }
 
                 if (maxt - mint < yi.DataBounds.MinDelta * 5) return;
 
-                var ym = (max - min) * 0.05;
-                if (maxt > yi.DataBounds.Max) maxt = yi.DataBounds.Max + ym;
-                if (mint < yi.DataBounds.Min) mint = yi.DataBounds.Min - ym;
+                var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
+                if (maxt > yi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = yi.DataBounds.Max + ym;
+                if (mint < yi.DataBounds.Min && direction == ZoomDirection.ZoomOut) mint = yi.DataBounds.Min - ym;
 
                 yi.MaxLimit = maxt;
                 yi.MinLimit = mint;
@@ -241,9 +299,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// Pans with the specified delta.
     /// </summary>
     /// <param name="delta">The delta.</param>
-    /// <param name="isPointerDown">Indicates whether the pointer is down.</param>
+    /// <param name="isActive">Indicates whether the pointer is down.</param>
     /// <returns></returns>
-    public void Pan(LvcPoint delta, bool isPointerDown)
+    public void Pan(LvcPoint delta, bool isActive)
     {
         if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
         {
@@ -257,7 +315,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
                 var xm = max - min;
-                xm = isPointerDown ? xm * 0.15 : xm * 0.05;
+                xm = isActive ? xm * MaxAxisActiveBound : xm * MaxAxisBound;
 
                 if (max + dx > xi.DataBounds.Max && delta.X < 0)
                 {
@@ -290,7 +348,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
                 var ym = max - min;
-                ym = isPointerDown ? ym * 0.15 : ym * 0.05;
+                ym = isActive ? ym * MaxAxisActiveBound : ym * MaxAxisBound;
 
                 if (max + dy > yi.DataBounds.Max)
                 {

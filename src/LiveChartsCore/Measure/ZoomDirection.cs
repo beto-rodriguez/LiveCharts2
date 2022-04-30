@@ -35,5 +35,10 @@ public enum ZoomDirection
     /// <summary>
     /// The zoom out
     /// </summary>
-    ZoomOut
+    ZoomOut,
+
+    /// <summary>
+    /// Indicates that the direction is defined by the distance variable.
+    /// </summary>
+    DefinedByScaleFactor
 }
