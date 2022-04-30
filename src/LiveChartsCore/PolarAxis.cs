@@ -525,6 +525,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
         var axisTick = this.GetTick(polarChart);
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
+		if (_forceStepToMin) s = _minStep;
 
         var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
         var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;

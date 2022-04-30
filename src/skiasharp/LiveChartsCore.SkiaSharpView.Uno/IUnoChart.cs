@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,7 +44,13 @@ public interface IUnoChart
     /// <summary>
     /// Gets the tooltip control.
     /// </summary>
+    [Obsolete]
     ToolTip TooltipControl { get; }
+
+    /// <summary>
+    /// Gets the tooltip element.
+    /// </summary>
+    FrameworkElement TooltipElement { get; }
 
     /// <summary>
     /// Gets the canvas.

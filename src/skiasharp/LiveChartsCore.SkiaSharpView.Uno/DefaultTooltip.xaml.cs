@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.Uno;
 public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
 {
     private readonly DataTemplate _defaultTempalte;
-    private IUnoChart? _uwpChart;
+    private IUnoChart? _unoChart;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -65,29 +65,29 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        var uwpChart = (IUnoChart)chart.View;
-        _uwpChart = uwpChart;
+        var unoChart = (IUnoChart)chart.View;
+        _unoChart = unoChart;
 
-        var template = uwpChart.TooltipTemplate ?? _defaultTempalte;
+        var template = unoChart.TooltipTemplate ?? _defaultTempalte;
         if (ActualTemplate != template) ActualTemplate = template;
 
         LvcPoint? location = null;
-        uwpChart.TooltipControl.IsOpen = true;
+        //uwpChart.TooltipControl.IsOpen = true; // FREEZEES UNO MOBILE.
         Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
         DataContext = new TooltipBindingContext
         {
-            Background = uwpChart.TooltipBackground,
+            Background = unoChart.TooltipBackground,
             Points = tooltipPoints.Select(x =>
                 new BindingPoint
                 {
-                    ChartPoint = x,
-                    FontFamily = uwpChart.TooltipFontFamily,
-                    Foreground = uwpChart.TooltipTextBrush,
-                    FontSize = uwpChart.TooltipFontSize,
-                    FontWeight = uwpChart.TooltipFontWeight,
-                    FontStyle = uwpChart.TooltipFontStyle,
-                    FontStretch = uwpChart.TooltipFontStretch
+                    ChartPoint = new BindableChartPoint(x),
+                    FontFamily = unoChart.TooltipFontFamily,
+                    Foreground = unoChart.TooltipTextBrush,
+                    FontSize = unoChart.TooltipFontSize,
+                    FontWeight = unoChart.TooltipFontWeight,
+                    FontStyle = unoChart.TooltipFontStyle,
+                    FontStretch = unoChart.TooltipFontStretch
                 }).ToArray()
         };
 
@@ -104,14 +104,17 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
 
         if (location is null) throw new Exception("location not supported");
 
-        // strange.... something is strange here...
-        uwpChart.TooltipControl.PlacementRect =
-            new Rect(location.Value.X, location.Value.Y + DesiredSize.Height, DesiredSize.Width, DesiredSize.Height);
+        Canvas.SetLeft(unoChart.TooltipElement, location.Value.X);
+        Canvas.SetTop(unoChart.TooltipElement, location.Value.Y);
+
+        // obsolete.. instead use a canvas as container and move the tooltip manually to support uno mobile
+        //uwpChart.TooltipControl.PlacementRect =
+        //    new Rect(location.Value.X, location.Value.Y + DesiredSize.Height, DesiredSize.Width, DesiredSize.Height);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
     {
-        if (_uwpChart is null) return;
-        _uwpChart.TooltipControl.IsOpen = false;
+        if (_unoChart is null) return;
+        //_unoChart.TooltipControl.IsOpen = false;
     }
 }

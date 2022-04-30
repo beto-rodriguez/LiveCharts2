@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using Windows.UI.Text;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 namespace LiveChartsCore.SkiaSharpView.Uno;
@@ -28,6 +29,7 @@ namespace LiveChartsCore.SkiaSharpView.Uno;
 /// <summary>
 /// Defines the binding series class.
 /// </summary>
+[Bindable]
 public class BindingSeries
 {
     /// <summary>

@@ -344,6 +344,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
     Grid IUnoChart.LayoutGrid => grid;
     ToolTip IUnoChart.TooltipControl => tooltipControl;
+    FrameworkElement IUnoChart.TooltipElement => tooltip;
     FrameworkElement IUnoChart.Canvas => motionCanvas;
     FrameworkElement IUnoChart.Legend => legend;
 

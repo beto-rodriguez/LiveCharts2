@@ -556,6 +556,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var axisTick = this.GetTick(chart.DrawMarginSize);
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
