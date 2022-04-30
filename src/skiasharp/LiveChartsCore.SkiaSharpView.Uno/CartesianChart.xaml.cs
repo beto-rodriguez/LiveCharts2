@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -55,6 +56,10 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private CollectionDeepObserver<ICartesianAxis> _xObserver;
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
     private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private double _lastScale = 0;
+    private DateTime _panLocketUntil;
+    private double _lastPanX = 0;
+    private double _lastPanY = 0;
 
     #endregion
 
@@ -950,6 +955,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
+        if (DateTime.Now < _panLocketUntil) return;
+
         var p = e.GetCurrentPoint(this);
         _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
@@ -984,9 +991,9 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         if (_core == null) throw new Exception("core not found");
         var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
 
-        c.Zoom(
-            eventArgs.PinchStart,
-            eventArgs.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        c.Zoom(eventArgs.PinchStart, ZoomDirection.DefinedByScaleFactor, eventArgs.Scale, true);
+        _panLocketUntil = DateTime.Now.AddMilliseconds(500);
+        _lastScale = eventArgs.Scale;
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
