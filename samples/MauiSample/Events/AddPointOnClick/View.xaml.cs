@@ -1,7 +1,5 @@
 ﻿using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
 using ViewModelsSamples.Events.AddPointOnClick;
 
 namespace MauiSample.Events.AddPointOnClick;

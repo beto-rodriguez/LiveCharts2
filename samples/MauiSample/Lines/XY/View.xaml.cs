@@ -1,7 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-
-namespace MauiSample.Lines.XY;
+﻿namespace MauiSample.Lines.XY;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
 using ViewModelsSamples.Events.Cartesian;
 
 namespace MauiSample.Events.Cartesian;

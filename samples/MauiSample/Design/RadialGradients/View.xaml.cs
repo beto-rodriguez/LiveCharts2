@@ -1,7 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-
-namespace MauiSample.Design.RadialGradients;
+﻿namespace MauiSample.Design.RadialGradients;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

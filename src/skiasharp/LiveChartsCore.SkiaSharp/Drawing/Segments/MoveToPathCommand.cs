@@ -20,34 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
+using SkiaSharp;
 
-namespace LiveChartsCore.Geo;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
-/// <summary>
-/// Defines a map factory.
-/// </summary>
-public interface IMapFactory<TDrawingContext> : IDisposable
-    where TDrawingContext : DrawingContext
+/// <inheritdoc cref="IMoveToPathCommand{TPath}" />
+public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
 {
-    /// <summary>
-    /// Updates the lands.
-    /// </summary>
-    /// <param name="context"></param>
-    void GenerateLands(MapContext<TDrawingContext> context);
+    private readonly FloatMotionProperty _xProperty;
+    private readonly FloatMotionProperty _yProperty;
 
     /// <summary>
-    /// Move the map to the specified view.
+    /// Initializes a new instance of the <see cref="MoveToPathCommand"/> class.
     /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="command">The command.</param>
-    void ViewTo(GeoMap<TDrawingContext> sender, object? command);
+    public MoveToPathCommand()
+    {
+        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
+        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
+    }
 
-    /// <summary>
-    /// Pans the map.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="delta">The delta.</param>
-    void Pan(GeoMap<TDrawingContext> sender, LvcPoint delta);
+    /// <inheritdoc cref="IMoveToPathCommand{TPath}.X" />
+    public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IMoveToPathCommand{TPath}.Y" />
+    public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
+    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
+    {
+        currentTime = currentTime;
+        path.MoveTo(X, Y);
+    }
 }

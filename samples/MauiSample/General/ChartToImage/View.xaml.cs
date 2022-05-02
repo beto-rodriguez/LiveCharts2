@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using LiveChartsCore.SkiaSharpView.Maui;
+﻿using LiveChartsCore.SkiaSharpView.Maui;
 using LiveChartsCore.SkiaSharpView.SKCharts;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
 
 namespace MauiSample.General.ChartToImage;
 

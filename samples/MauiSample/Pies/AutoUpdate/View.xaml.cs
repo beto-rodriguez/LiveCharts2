@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-using ViewModelsSamples.Pies.AutoUpdate;
+﻿using ViewModelsSamples.Pies.AutoUpdate;
 
 namespace MauiSample.Pies.AutoUpdate;
 

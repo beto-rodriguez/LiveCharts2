@@ -1,7 +1,4 @@
-﻿using System;
-using Windows.UI.Xaml;
-
-namespace UnoSample.Wasm;
+﻿namespace UnoSample.Wasm;
 
 public class Program
 {

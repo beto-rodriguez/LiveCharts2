@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;

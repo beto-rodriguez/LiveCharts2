@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Globalization;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
 
 namespace MauiSample.Pies.Processing;
 

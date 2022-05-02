@@ -1,5 +1,4 @@
 ﻿using Eto.Forms;
-using ViewModelsSamples.VisualTest.DataTemplate;
 
 namespace EtoFormsSample.VisualTest.DataTemplate;
 
