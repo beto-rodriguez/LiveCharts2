@@ -7,32 +7,31 @@ LiveCharts2 (v2) is the evolution of [LiveCharts](https://github.com/Live-Charts
 
 ### Extremely flexible data visualization library
 
-The following image is a preview, `v2.0` is beta now, you can install it from NuGet: https://github.com/beto-rodriguez/LiveCharts2/issues/35, it support WPF, WinForms, Avalonia, WinUI, UWP, Xamarin and Blazor Wasm and MAUI.
+The following image is a preview, `v2.0` is beta now.
 
-here is a preview (1.4MB gif, wait for it to load if you see a blank space bellow this text...):
+Here is a preview (1.4MB gif, wait for it to load if you see a blank space bellow this text...):
 
 ![lv2](https://user-images.githubusercontent.com/10853349/124399763-41873900-dce3-11eb-937a-947d66d42597.gif)
 
-### Install and try it from NuGet
+### Get started
 
-In Visual Studio go to the `Solution Explorer` then right click on `Dependencies` then `Manage NuGet Packages`, enable the "Include prerelease" checkbox and in the browse tab search for the view of your target platform:
+Live charts is a cross platforms charting library .Net, to get started go to https://lvcharts.com and take a look at the instalation guide of your target platform,
+the web site contains all the samples provided in this repo, docs and more.
 
-`LiveChartsCore.SkiaSharpView.WPF`<br/>
-`LiveChartsCore.SkiaSharpView.WinForms`<br/>
-`LiveChartsCore.SkiaSharpView.Avalonia`<br/>
-`LiveChartsCore.SkiaSharpView.XamarinForms`<br/>
-`LiveChartsCore.SkiaSharpView.UWP`<br/>
-`LiveChartsCore.SkiaSharpView.WinUI`<br/>
-`LiveChartsCore.SkiaSharpView.Blazor`<br/>
-`LiveChartsCore.SkiaSharpView.Maui`<br/>
+LiveCharts supports:
 
-You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, and using the `ISkiaSharpChart` objects (see [this sample](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ConsoleSample/ConsoleSample/Program.cs)).
+- Maui
+- Uno Platform
+- Wpf
+- WinUI
+- Xamarin.Forms
+- WindowsForms
+- BlazorWasm
+- Avalonia
+- Eto Forms
+- Uwp
 
-`LiveChartsCore.SkiaSharpView`
-
-### Samples
-
-The new web site will be publish soon with a collection of samples using `v2`, at this moment you can browse the [samples folder](https://github.com/beto-rodriguez/LiveCharts2/tree/master/samples) in this repo.
+You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, take a look at [this guide](https://lvcharts.com/docs/Uno/2.0.0-beta.200/samples.general.chartToImage#build-an-image-in-the-server-side-or-console-app).
 
 ### The Errors of v0
 
