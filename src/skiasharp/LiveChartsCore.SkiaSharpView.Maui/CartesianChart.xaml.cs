@@ -58,6 +58,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private CollectionDeepObserver<ICartesianAxis> _xObserver;
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
     private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private double _lastScale = 0;
+    private DateTime _panLocketUntil;
     private double _lastPanX = 0;
     private double _lastPanY = 0;
 
@@ -827,8 +829,12 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
     {
+        // gestures might not be working properly in android in the current version of maui (rc2)
+        // https://github.com/dotnet/maui/issues/6553
+
         if (core is null) return;
         if (e.StatusType is not GestureStatus.Running and not GestureStatus.Completed) return;
+        if (DateTime.Now < _panLocketUntil) return;
 
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
 
@@ -850,9 +856,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             return;
         }
 
-        // lets just let the core know that the drag finished,
-        // so thwe core is able to bounce back the plot in case
-        // it exceeded the allowed limits
+        // lets just let the core know that the pan finished,
+        // so the core is able to bounce back the plot in case it exceeded the allowed limits
         // this is a dummy request of += 0.01 pixels just in the corresponding direction
         c.Pan(new LvcPoint(_lastPanX > 0 ? 0.01f : -0.01f, _lastPanY > 0 ? 0.01f : -0.01f), false);
 
@@ -862,15 +867,30 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
-        if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || core is null) return;
+        // gestures might not be working properly in android in the current version of maui (rc2)
+        // https://github.com/dotnet/maui/issues/6553
+
+        if (core is null) return;
+        if (e.Status is not GestureStatus.Running and not GestureStatus.Completed) return;
 
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
         var p = e.ScaleOrigin;
         var s = c.ControlSize;
 
-        c.Zoom(
-            new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height)),
-            e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
+
+        if (e.Status == GestureStatus.Running)
+        {
+            c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, e.Scale, true);
+            _panLocketUntil = DateTime.Now.AddMilliseconds(500);
+            _lastScale = e.Scale;
+            return;
+        }
+
+        // lets just let the core know that the zoom finished,
+        // so the core is able to bounce back the plot in case it exceeded the allowed limits
+        // this is a dummy request of += .001 percent just in the corresponding direction
+        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, _lastScale < 1 ? 0.99999 : 1.00001, false);
     }
 
     private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)

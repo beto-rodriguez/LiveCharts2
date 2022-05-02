@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -35,8 +34,6 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Uno.Helpers;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -53,11 +50,15 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     #region fields
 
     private Chart<SkiaSharpDrawingContext>? _core;
-    private MotionCanvas? _canvas;
+    private MotionCanvas? _motionCanvas;
     private CollectionDeepObserver<ISeries> _seriesObserver;
     private CollectionDeepObserver<ICartesianAxis> _xObserver;
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
     private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    //private double _lastScale = 0;
+    private DateTime _panLocketUntil;
+    //private double _lastPanX = 0;
+    //private double _lastPanY = 0;
 
     #endregion
 
@@ -172,7 +173,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (CartesianChart)o;
-                    if (chart._canvas != null) chart.CoreCanvas.Sync = args.NewValue;
+                    if (chart._motionCanvas != null) chart.CoreCanvas.Sync = args.NewValue;
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -417,7 +418,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     #region properties
 
     Grid IUnoChart.LayoutGrid => grid;
-    ToolTip IUnoChart.TooltipControl => tooltipControl;
+    ToolTip IUnoChart.TooltipControl => null!;// tooltipControl;
+    FrameworkElement IUnoChart.TooltipElement => tooltip;
     FrameworkElement IUnoChart.Canvas => motionCanvas;
     FrameworkElement IUnoChart.Legend => legend;
 
@@ -455,12 +457,12 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         set => SetValue(DrawMarginProperty, value);
     }
 
-    LvcSize IChartView.ControlSize => _canvas == null
+    LvcSize IChartView.ControlSize => _motionCanvas == null
         ? throw new Exception("Canvas not found")
-        : new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight };
+        : new LvcSize { Width = (float)_motionCanvas.ActualWidth, Height = (float)_motionCanvas.ActualHeight };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
+    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _motionCanvas == null ? throw new Exception("Canvas not found") : _motionCanvas.CanvasCore;
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
         _core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;
@@ -870,7 +872,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         var canvas = (MotionCanvas)FindName("motionCanvas");
-        _canvas = canvas;
+
+        _motionCanvas = canvas;
 
         if (_core is null)
         {
@@ -878,7 +881,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
                 this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
             if (SyncContext != null)
-                _canvas.CanvasCore.Sync = SyncContext;
+                _motionCanvas.CanvasCore.Sync = SyncContext;
 
             if (_core == null) throw new Exception("Core not found!");
             _core.Measuring += OnCoreMeasuring;
@@ -892,27 +895,38 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             PointerExited += OnPointerExited;
 
             SizeChanged += OnSizeChanged;
+
+            _motionCanvas.Pinched += OnCanvasPinched;
+
+            var canvasContainer = (Canvas)FindName("canvasContainer");
+            grid.Width = canvasContainer.ActualWidth;
+            grid.Height = canvasContainer.ActualHeight;
         }
 
         _core.Load();
         _core.Update();
     }
 
-    private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
         _core.Update();
     }
 
-    private void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
         _core.Update();
     }
 
-    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         if (_core == null) throw new Exception("Core not found!");
+
+        var canvasContainer = (Canvas)FindName("canvasContainer");
+        grid.Width = canvasContainer.ActualWidth;
+        grid.Height = canvasContainer.ActualHeight;
+
         _core.Update();
     }
 
@@ -931,33 +945,35 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         Measuring?.Invoke(this);
     }
 
-    private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+    private void OnPointerPressed(object? sender, PointerRoutedEventArgs e)
     {
         _ = CapturePointer(e.Pointer);
         var p = e.GetCurrentPoint(this);
         _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 
-    private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+    private void OnPointerMoved(object? sender, PointerRoutedEventArgs e)
     {
+        if (DateTime.Now < _panLocketUntil) return;
+
         var p = e.GetCurrentPoint(this);
         _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 
-    private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+    private void OnPointerReleased(object? sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(this);
         _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         ReleasePointerCapture(e.Pointer);
     }
 
-    private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+    private void OnPointerExited(object? sender, PointerRoutedEventArgs e)
     {
         HideTooltip();
         _core?.InvokePointerLeft();
     }
 
-    private void OnWheelChanged(object sender, PointerRoutedEventArgs e)
+    private void OnWheelChanged(object? sender, PointerRoutedEventArgs e)
     {
         if (_core == null) throw new Exception("core not found");
         var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
@@ -969,7 +985,17 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
                 p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
+    private void OnCanvasPinched(object? sender, LiveChartsPinchEventArgs eventArgs)
+    {
+        if (_core == null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+
+        c.Zoom(eventArgs.PinchStart, ZoomDirection.DefinedByScaleFactor, eventArgs.Scale, true);
+        _panLocketUntil = DateTime.Now.AddMilliseconds(500);
+        //_lastScale = eventArgs.Scale;
+    }
+
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
         _core?.Unload();
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -7,7 +7,7 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Eto</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Eto</RootNamespace>
-    <Version>2.0.0-beta.90</Version>
+    <Version>2.0.0-beta.200</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Eto.Forms.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -15,16 +15,12 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
-    <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
-    <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

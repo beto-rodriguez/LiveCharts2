@@ -340,7 +340,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/nupkgs/pack.bat
-/nupkgs/publish.bat
-/nupkgs/nuget.config
-/nupkgs/push.github.bat
+/nupkg/*.*
+samples/XamarinSample/XamarinSample/XamarinSample.Android/XamarinSample.Android.csproj
+samples/XamarinSample/XamarinSample/XamarinSample.Android/Resources/Resource.designer.cs
+nuget.exe

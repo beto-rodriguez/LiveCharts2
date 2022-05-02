@@ -32,6 +32,11 @@ using SkiaSharp.Views.UWP;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using LiveChartsCore.SkiaSharpView.Uno.Helpers;
+
+#if __ANDROID__
+using Android.Views;
+#endif
 
 namespace LiveChartsCore.SkiaSharpView.Uno;
 
@@ -53,7 +58,13 @@ public sealed partial class MotionCanvas : UserControl
         var canvas = (SKXamlCanvas)FindName("canvas");
         _skiaElement = canvas;
         _skiaElement.PaintSurface += OnPaintSurface;
+
+#if __ANDROID__
+        _scaleDetector = new ScaleGestureDetector(Context, new AndroidScaleListener(this));
+#endif
     }
+
+    #region properties
 
     /// <summary>
     /// The paint tasks property
@@ -91,15 +102,22 @@ public sealed partial class MotionCanvas : UserControl
     /// </value>
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
+    #endregion
+
+    /// <summary>
+    /// Called when the canvas detects a pinch gesture.
+    /// </summary>
+    public event PinchHandler? Pinched;
+
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
     }
 
-    private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
-        var scaleFactor = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
-        args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
+        var scale = DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
+        args.Surface.Canvas.Scale((float)scale, (float)scale);
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
@@ -143,4 +161,119 @@ public sealed partial class MotionCanvas : UserControl
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         CanvasCore.Dispose();
     }
+
+    private void InvokePinch(LiveChartsPinchEventArgs args)
+    {
+        Pinched?.Invoke(this, args);
+    }
+
+    #region ANDROID
+
+#if __ANDROID__
+    // based on:
+    //https://docs.microsoft.com/en-us/xamarin/android/app-fundamentals/touch/android-touch-walkthrough
+
+    private readonly ScaleGestureDetector _scaleDetector;
+
+    private int _activePointerId = -1;
+    private float _lastTouchX;
+    private float _lastTouchY;
+    private float _posX;
+    private float _posY;
+
+    private class AndroidScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener
+    {
+        private readonly MotionCanvas _canvas;
+
+        public AndroidScaleListener(MotionCanvas canvas)
+        {
+            _canvas = canvas;
+        }
+
+        /// <summary>
+        /// Called on scale gesture.
+        /// </summary>
+        /// <param name="detector"></param>
+        /// <returns></returns>
+        public override bool OnScale(ScaleGestureDetector? detector)
+        {
+            if (detector is null) return false;
+
+            if (detector.ScaleFactor != 1.0f)
+            {
+                _canvas.InvokePinch(
+                    new LiveChartsPinchEventArgs
+                    {
+                        PinchStart = new LvcPoint { X = _canvas._lastTouchX, Y = _canvas._lastTouchY },
+                        Scale = detector.ScaleFactor
+                    });
+            }
+            return true;
+        }
+    }
+
+    public override bool OnTouchEvent(MotionEvent? ev)
+    {
+        if (ev is null) return false;
+
+        _ = _scaleDetector.OnTouchEvent(ev);
+
+        var action = ev.Action & MotionEventActions.Mask;
+        int pointerIndex;
+
+        switch (action)
+        {
+            case MotionEventActions.Down:
+                _lastTouchX = ev.GetX();
+                _lastTouchY = ev.GetY();
+                _activePointerId = ev.GetPointerId(0);
+                break;
+
+            case MotionEventActions.Move:
+                pointerIndex = ev.FindPointerIndex(_activePointerId);
+                var x = ev.GetX(pointerIndex);
+                var y = ev.GetY(pointerIndex);
+                if (!_scaleDetector.IsInProgress)
+                {
+                    // Only move the ScaleGestureDetector isn't already processing a gesture.
+                    var deltaX = x - _lastTouchX;
+                    var deltaY = y - _lastTouchY;
+                    _posX += deltaX;
+                    _posY += deltaY;
+                }
+
+                _lastTouchX = x;
+                _lastTouchY = y;
+                break;
+
+            case MotionEventActions.Up:
+            case MotionEventActions.Cancel:
+                // We no longer need to keep track of the active pointer.
+                _activePointerId = -1;
+                break;
+
+            case MotionEventActions.PointerUp:
+                // check to make sure that the pointer that went up is for the gesture we're tracking.
+                pointerIndex = (int)(ev.Action & MotionEventActions.PointerIndexMask) >> (int)MotionEventActions.PointerIndexShift;
+                var pointerId = ev.GetPointerId(pointerIndex);
+                if (pointerId == _activePointerId)
+                {
+                    // This was our active pointer going up. Choose a new
+                    // action pointer and adjust accordingly
+                    var newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                    _lastTouchX = ev.GetX(newPointerIndex);
+                    _lastTouchY = ev.GetY(newPointerIndex);
+                    _activePointerId = ev.GetPointerId(newPointerIndex);
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return true;
+    }
+#endif
+
+    #endregion
 }
