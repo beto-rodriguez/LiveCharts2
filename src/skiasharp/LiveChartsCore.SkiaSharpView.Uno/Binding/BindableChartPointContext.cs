@@ -20,50 +20,70 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Windows.UI.Text;
+using LiveChartsCore.Kernel;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
+namespace LiveChartsCore.SkiaSharpView.Uno.Binding;
 
 /// <summary>
-/// Defines the binding series class.
+/// Defines a bindable chart point context.
 /// </summary>
 [Bindable]
-public class BindingSeries
+public class BindableChartPointContext
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="chartPointContext"></param>
+    public BindableChartPointContext(ChartPointContext chartPointContext)
+    {
+        Chart = chartPointContext.Chart;
+        Series = chartPointContext.Series;
+        Index = chartPointContext.Index;
+        DataSource = chartPointContext.DataSource;
+        Visual = chartPointContext.Visual;
+        Label = chartPointContext.Label;
+    }
+
+    /// <summary>
+    /// Gets the chart.
+    /// </summary>
+    /// <value>
+    /// The chart.
+    /// </value>
+    public object Chart { get; }
+
     /// <summary>
     /// Gets the series.
     /// </summary>
-    public ISeries Series { get; set; } = null!;
+    /// <value>
+    /// The series.
+    /// </value>
+    public object Series { get; }
 
     /// <summary>
-    /// Gets the font family.
+    /// Gets the position of the point the collection that was used when the point was drawn.
     /// </summary>
-    public FontFamily FontFamily { get; set; } = null!;
+    public int Index { get; internal set; }
 
     /// <summary>
-    /// Gets the foreground.
+    /// Gets the DataSource.
     /// </summary>
-    public Brush Foreground { get; set; } = null!;
+    public object? DataSource { get; internal set; }
 
     /// <summary>
-    /// Gets the font size.
+    /// Gets the visual.
     /// </summary>
-    public double FontSize { get; set; }
+    /// <value>
+    /// The visual.
+    /// </value>
+    public object? Visual { get; internal set; }
 
     /// <summary>
-    /// Gets the font weight.
+    /// Gets the label.
     /// </summary>
-    public FontWeight FontWeight { get; set; }
-
-    /// <summary>
-    /// Gets the font style.
-    /// </summary>
-    public FontStyle FontStyle { get; set; }
-
-    /// <summary>
-    /// Gets the font stretch.
-    /// </summary>
-    public FontStretch FontStretch { get; set; }
+    /// <value>
+    /// The label.
+    /// </value>
+    public object? Label { get; internal set; }
 }

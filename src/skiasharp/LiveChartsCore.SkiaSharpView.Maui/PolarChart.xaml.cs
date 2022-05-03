@@ -721,7 +721,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        MainThread.BeginInvokeOnMainThread(action);
+        _ = MainThread.InvokeOnMainThreadAsync(action);
     }
 
     /// <summary>

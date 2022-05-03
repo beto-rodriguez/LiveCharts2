@@ -755,9 +755,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        // throws on win ui
-        // https://github.com/dotnet/maui/issues/2451
-        MainThread.BeginInvokeOnMainThread(action);
+        //_ = MainThread.InvokeOnMainThreadAsync(action);
+        _ = MainThread.InvokeOnMainThreadAsync(action);
     }
 
     /// <summary>
