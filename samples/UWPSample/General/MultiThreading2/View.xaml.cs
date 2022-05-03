@@ -23,8 +23,8 @@ namespace UWPSample.General.MultiThreading2
         // to invoke an action in the UI thred.
         private void InvokeOnUIThread(Action action)
         {
-            CoreApplication.MainView.CoreWindow.Dispatcher
-                .RunAsync(CoreDispatcherPriority.Normal, () => action());
+            _ = CoreApplication.MainView.CoreWindow.Dispatcher
+                .RunAsync(CoreDispatcherPriority.High, () => action());
         }
     }
 }

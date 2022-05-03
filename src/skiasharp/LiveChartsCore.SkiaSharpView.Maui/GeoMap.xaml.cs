@@ -243,7 +243,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {
-        MainThread.BeginInvokeOnMainThread(action);
+        _ = MainThread.InvokeOnMainThreadAsync(action);
     }
 
     private void GeoMap_SizeChanged(object? sender, EventArgs e)

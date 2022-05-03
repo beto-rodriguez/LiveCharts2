@@ -648,7 +648,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        MainThread.BeginInvokeOnMainThread(action);
+        _ = MainThread.InvokeOnMainThreadAsync(action);
     }
 
     /// <summary>

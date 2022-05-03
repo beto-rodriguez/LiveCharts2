@@ -21,56 +21,12 @@
 // SOFTWARE.
 
 using LiveChartsCore.Kernel;
-using Windows.UI.Text;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
-
-/// <summary>
-/// The Uwp poing class, just used to bind the tooltips.
-/// </summary>
-[Bindable]
-public class BindingPoint
-{
-    /// <summary>
-    /// Ges the chart point.
-    /// </summary>
-    public BindableChartPoint ChartPoint { get; set; } = null!;
-
-    /// <summary>
-    /// Gets the font family.
-    /// </summary>
-    public FontFamily FontFamily { get; set; } = null!;
-
-    /// <summary>
-    /// Gets the foreground.
-    /// </summary>
-    public Brush Foreground { get; set; } = null!;
-
-    /// <summary>
-    /// Gets the font size.
-    /// </summary>
-    public double FontSize { get; set; }
-
-    /// <summary>
-    /// Gets the font weight.
-    /// </summary>
-    public FontWeight FontWeight { get; set; }
-
-    /// <summary>
-    /// Gets the font style.
-    /// </summary>
-    public FontStyle FontStyle { get; set; }
-
-    /// <summary>
-    /// Gets the font stretch.
-    /// </summary>
-    public FontStretch FontStretch { get; set; }
-}
+namespace LiveChartsCore.SkiaSharpView.Uno.Binding;
 
 /// <summary>
-/// 
+/// Defines a biundable chart point.
 /// </summary>
 [Bindable]
 public class BindableChartPoint
@@ -93,7 +49,6 @@ public class BindableChartPoint
         QuinaryValue = chartpoint.QuinaryValue;
 
         if (chartpoint.StackedValue is not null)
-        {
             StackedValue = new BindableStackedValue
             {
                 Start = chartpoint.StackedValue.Start,
@@ -103,7 +58,6 @@ public class BindableChartPoint
                 NegativeEnd = chartpoint.StackedValue.NegativeEnd,
                 NegativeTotal = chartpoint.StackedValue.NegativeTotal,
             };
-        }
 
         Context = new BindableChartPointContext(chartpoint.Context);
     }
@@ -184,123 +138,4 @@ public class BindableChartPoint
     /// The context.
     /// </value>
     public BindableChartPointContext Context { get; }
-}
-
-
-/// <summary>
-/// 
-/// </summary>
-[Bindable]
-public class BindableStackedValue
-{
-    /// <summary>
-    /// Gets or sets the start.
-    /// </summary>
-    /// <value>
-    /// The start.
-    /// </value>
-    public double Start { get; set; }
-
-    /// <summary>
-    /// Gets or sets the end.
-    /// </summary>
-    /// <value>
-    /// The end.
-    /// </value>
-    public double End { get; set; }
-
-    /// <summary>
-    /// Gets or sets the total stacked.
-    /// </summary>
-    /// <value>
-    /// The total.
-    /// </value>
-    public double Total { get; set; }
-
-    /// <summary>
-    /// Gets or sets the start.
-    /// </summary>
-    /// <value>
-    /// The start.
-    /// </value>
-    public double NegativeStart { get; set; }
-
-    /// <summary>
-    /// Gets or sets the end.
-    /// </summary>
-    /// <value>
-    /// The end.
-    /// </value>
-    public double NegativeEnd { get; set; }
-
-    /// <summary>
-    /// Gets or sets the total stacked.
-    /// </summary>
-    /// <value>
-    /// The total.
-    /// </value>
-    public double NegativeTotal { get; set; }
-}
-
-/// <summary>
-/// 
-/// </summary>
-[Bindable]
-public class BindableChartPointContext
-{
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="chartPointContext"></param>
-    public BindableChartPointContext(ChartPointContext chartPointContext)
-    {
-        Chart = chartPointContext.Chart;
-        Series = chartPointContext.Series;
-        Index = chartPointContext.Index;
-        DataSource = chartPointContext.DataSource;
-        Visual = chartPointContext.Visual;
-        Label = chartPointContext.Label;
-    }
-
-    /// <summary>
-    /// Gets the chart.
-    /// </summary>
-    /// <value>
-    /// The chart.
-    /// </value>
-    public object Chart { get; }
-
-    /// <summary>
-    /// Gets the series.
-    /// </summary>
-    /// <value>
-    /// The series.
-    /// </value>
-    public object Series { get; }
-
-    /// <summary>
-    /// Gets the position of the point the collection that was used when the point was drawn.
-    /// </summary>
-    public int Index { get; internal set; }
-
-    /// <summary>
-    /// Gets the DataSource.
-    /// </summary>
-    public object? DataSource { get; internal set; }
-
-    /// <summary>
-    /// Gets the visual.
-    /// </summary>
-    /// <value>
-    /// The visual.
-    /// </value>
-    public object? Visual { get; internal set; }
-
-    /// <summary>
-    /// Gets the label.
-    /// </summary>
-    /// <value>
-    /// The label.
-    /// </value>
-    public object? Label { get; internal set; }
 }
