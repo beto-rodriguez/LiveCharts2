@@ -1,8 +1,4 @@
-﻿using System;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-using ViewModelsSamples.General.MultiThreading2;
+﻿using ViewModelsSamples.General.MultiThreading2;
 
 namespace MauiSample.General.MultiThreading2;
 

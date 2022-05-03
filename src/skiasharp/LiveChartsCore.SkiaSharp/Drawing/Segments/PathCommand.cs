@@ -20,34 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
+using SkiaSharp;
 
-namespace LiveChartsCore.Geo;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
-/// <summary>
-/// Defines a map factory.
-/// </summary>
-public interface IMapFactory<TDrawingContext> : IDisposable
-    where TDrawingContext : DrawingContext
+/// <inheritdoc cref="IPathCommand{TPathContext}" />
+public abstract class PathCommand : Animatable, IPathCommand<SKPath>
 {
-    /// <summary>
-    /// Updates the lands.
-    /// </summary>
-    /// <param name="context"></param>
-    void GenerateLands(MapContext<TDrawingContext> context);
+    /// <inheritdoc cref="IPathCommand{TPathContext}.Id" />
+    public int Id { get; set; }
 
-    /// <summary>
-    /// Move the map to the specified view.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="command">The command.</param>
-    void ViewTo(GeoMap<TDrawingContext> sender, object? command);
-
-    /// <summary>
-    /// Pans the map.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="delta">The delta.</param>
-    void Pan(GeoMap<TDrawingContext> sender, LvcPoint delta);
+    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
+    public abstract void Execute(SKPath path, long currentTime, Animatable pathGeometry);
 }
