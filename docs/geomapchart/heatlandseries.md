@@ -1,3 +1,7 @@
+<div id="edit-this-article-source">
+    {{ edit_source | replace_local_to_server}}
+</div>
+
 # HeatLand series
 
 The `HeatLandSeries` creates a heat map in the `GeoMap` control, it helps to assign a numeric value to a region (country, state, continent, ... depends on the map)
