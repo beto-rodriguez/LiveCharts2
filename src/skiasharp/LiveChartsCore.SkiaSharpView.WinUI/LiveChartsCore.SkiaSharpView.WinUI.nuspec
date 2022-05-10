@@ -8,16 +8,17 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/beto-rodriguez/LiveCharts2</projectUrl>
-    <!-- <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl> -->
     <description>Simple, flexible, interactive and powerful data visualization for WinUI.</description>
     <releaseNotes>https://github.com/beto-rodriguez/LiveCharts2/releases</releaseNotes>
     <copyright>BetoRodriguez</copyright>
     <tags>livechart chart charting plot plotting data</tags>
     <icon>icon.png</icon>
-    
+    <repository type="git" url="https://github.com/beto-rodriguez/LiveCharts2.git"></repository>
+
     <dependencies>
       <group targetFramework="net5.0-windows10.0.18362">
-        <dependency id="Newtonsoft.Json" version="[13.0.1]" />
+        <!--not necessary in net5+-->
+        <!--<dependency id="Newtonsoft.Json" version="[13.0.1]" />-->
         <dependency id="SkiaSharp.Views.WinUI" version="2.88.0-preview.254" />
         <dependency id="LiveChartsCore" version="2.0.0-beta.220" />
         <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.220" />
