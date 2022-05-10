@@ -1,3 +1,7 @@
+<div id="edit-this-article-source">
+    {{ edit_source | replace_local_to_server}}
+</div>
+
 # The Polar Chart Control
 
 :::info

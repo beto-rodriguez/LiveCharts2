@@ -1,3 +1,7 @@
+<div id="edit-this-article-source">
+    {{ edit_source | replace_local_to_server}}
+</div>
+
 # Cartesian chart control
 
 :::info
@@ -92,63 +96,63 @@ cover the most common scenarios.
 There are multiple series available in the library, you can add one or mix them all in the same chart, every series has unique properties,
 any image bellow is a link to an article explaining more about them.
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Line%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Line%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/lines/basic/result.png" alt="series"/>
 <div class="text-center"><b>Line series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Column%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Column%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/bars/basic/result.png"  alt="series"/>
 <div class="text-center"><b>Column series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Scatter%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Scatter%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/scatter/basic/result.png"  alt="series"/>
 <div class="text-center"><b>Scatter series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Step%20line%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Step%20line%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/stepline/basic/result.png" alt="series"/>
 <div class="text-center"><b>Step line series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Heat%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Heat%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/heat/basic/result.png" alt="series"/>
 <div class="text-center"><b>Heat series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Candle%20Sticks%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Candle%20Sticks%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/financial/basicCandlesticks/result.png" alt="series"/>
 <div class="text-center"><b>Candle sticks series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Line%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Line%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/stackedArea/basic/result.png" alt="series"/>
 <div class="text-center"><b>Stacked line series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Column%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Column%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/stackedBars/basic/result.png" alt="series"/>
 <div class="text-center"><b>Stacked column series</b></div>
 </div>
 </a>
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Step%20Line%20Series">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Step%20Line%20Series%20props">
 <div class="series-miniature">
 <img src="{{ assets_url }}/docs/samples/stackedStepLine/basic/result.png" alt="series"/>
 <div class="text-center"><b>Stacked step line series</b></div>
