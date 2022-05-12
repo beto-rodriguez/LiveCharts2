@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -8,17 +9,17 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Bars.AutoUpdate;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
-    private int index = 0;
-    private readonly Random random = new();
-    private readonly ObservableCollection<ObservablePoint> observableValues;
+    private int _index = 0;
+    private readonly Random _random = new();
+    private readonly ObservableCollection<ObservablePoint> _observableValues;
 
     public ViewModel()
     {
         // using an INotifyCollectionChanged as your values collection
         // will let the chart update every time a point is added, removed, replaced or the whole list was cleared
-        observableValues = new ObservableCollection<ObservablePoint>
+        _observableValues = new ObservableCollection<ObservablePoint>
             {
                 // using object that implements INotifyPropertyChanged
                 // will allow the chart to update everytime a property in a point changes.
@@ -28,19 +29,19 @@ public class ViewModel
                 // for more info please see:
                 // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
 
-                new(index++, 2),
-                new(index++, 5),
-                new(index++, 4),
-                new(index++, 5),
-                new(index++, 2),
-                new(index++, 6),
-                new(index++, 6),
-                new(index++, 6),
-                new(index++, 4),
-                new(index++, 2),
-                new(index++, 3),
-                new(index++, 8),
-                new(index++, 3)
+                new(_index++, 2),
+                new(_index++, 5),
+                new(_index++, 4),
+                new(_index++, 5),
+                new(_index++, 2),
+                new(_index++, 6),
+                new(_index++, 6),
+                new(_index++, 6),
+                new(_index++, 4),
+                new(_index++, 2),
+                new(_index++, 3),
+                new(_index++, 8),
+                new(_index++, 3)
             };
 
         // using a collection that implements INotifyCollectionChanged as your series collection
@@ -48,7 +49,7 @@ public class ViewModel
         // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
         Series = new ObservableCollection<ISeries>
             {
-                new ColumnSeries<ObservablePoint> { Values = observableValues }
+                new ColumnSeries<ObservablePoint> { Values = _observableValues }
             };
 
         // in the following series notice that the type int does not implement INotifyPropertyChanged
@@ -60,27 +61,29 @@ public class ViewModel
 
     public ObservableCollection<ISeries> Series { get; set; }
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public void AddRandomItem()
     {
         // for this sample only 50 items are supported.
-        if (observableValues.Count > 50) return;
+        if (_observableValues.Count > 50) return;
 
-        var randomValue = random.Next(1, 10);
-        observableValues.Add(new ObservablePoint(index++, randomValue));
+        var randomValue = _random.Next(1, 10);
+        _observableValues.Add(new ObservablePoint(_index++, randomValue));
     }
 
     public void RemoveFirstItem()
     {
-        if (observableValues.Count < 2) return;
+        if (_observableValues.Count < 2) return;
 
-        observableValues.RemoveAt(0);
+        _observableValues.RemoveAt(0);
     }
 
     public void ReplaceRandomItem()
     {
-        var randomValue = random.Next(1, 10);
-        var randomIndex = random.Next(0, observableValues.Count - 1);
-        observableValues[randomIndex] = new ObservablePoint(observableValues[randomIndex].X, randomValue);
+        var randomValue = _random.Next(1, 10);
+        var randomIndex = _random.Next(0, _observableValues.Count - 1);
+        _observableValues[randomIndex] = new ObservablePoint(_observableValues[randomIndex].X, randomValue);
     }
 
     public void AddSeries()
@@ -91,7 +94,7 @@ public class ViewModel
         Series.Add(
             new ColumnSeries<int>
             {
-                Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
+                Values = new List<int> { _random.Next(0, 10), _random.Next(0, 10), _random.Next(0, 10) }
             });
     }
 

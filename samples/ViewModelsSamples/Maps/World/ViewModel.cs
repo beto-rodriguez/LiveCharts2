@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -8,12 +9,11 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     private bool _isBrazilInChart = true;
     private readonly IWeigthedMapLand _brazil;
     private readonly Random _r = new();
-
 
     public ViewModel()
     {
@@ -44,6 +44,8 @@ public class ViewModel
         _brazil = lands.First(x => x.Name == "bra");
         DoRandomChanges();
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public HeatLandSeries[] Series { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore;
@@ -9,7 +10,7 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Pie;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     public ViewModel()
     {
@@ -40,6 +41,8 @@ public class ViewModel
 
         Series = seriesCollection;
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     private void Series_DataPointerDown(
         IChartView chart,

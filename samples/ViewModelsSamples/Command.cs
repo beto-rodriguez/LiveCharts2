@@ -8,7 +8,7 @@ namespace ViewModelsSamples;
 public class Command : ICommand
 {
     private readonly Action<object?> _command;
-    public event EventHandler? CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged { add { } remove { } }
 
     public Command(Action<object?> command)
     {

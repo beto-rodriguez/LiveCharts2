@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -8,7 +9,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.Sections;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     public ObservableCollection<RectangularSection> Sections { get; set; }
         = new()
@@ -74,4 +75,6 @@ public class ViewModel
         };
 
     public ICommand ToggleFirstCommand => new Command(o => Sections[0].IsVisible = !Sections[0].IsVisible);
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 }

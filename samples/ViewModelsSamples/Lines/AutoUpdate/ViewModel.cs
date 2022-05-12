@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -8,7 +9,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.AutoUpdate;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     private readonly Random _random = new();
     private readonly ObservableCollection<ObservableValue> _observableValues;
@@ -44,6 +45,8 @@ public class ViewModel
     }
 
     public ObservableCollection<ISeries> Series { get; set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void AddItem()
     {

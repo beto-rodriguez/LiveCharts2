@@ -1,4 +1,5 @@
-﻿using LiveChartsCore;
+﻿using System.ComponentModel;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -7,7 +8,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.Sections2;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     public RectangularSection[] Sections { get; set; }
         = new[]
@@ -51,4 +52,6 @@ public class ViewModel
                 }
             }
         };
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 }

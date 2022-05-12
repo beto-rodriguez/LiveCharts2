@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.VisualTest.DataTemplate;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     public IEnumerable<IEnumerable<ISeries>> Models { get; set; }
         = new List<IEnumerable<ISeries>>
@@ -32,4 +33,6 @@ public class ViewModel
                     }
                 }
         };
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 }
