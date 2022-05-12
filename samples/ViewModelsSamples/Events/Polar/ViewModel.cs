@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore;
@@ -10,7 +11,7 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Polar;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     public ViewModel()
     {
@@ -43,6 +44,8 @@ public class ViewModel
             new PolarLineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
         };
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     private void PolarLineSeries_DataPointerDown(IChartView chart, IEnumerable<ChartPoint<City, BezierPoint<CircleGeometry>, LabelGeometry>> points)
     {

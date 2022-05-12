@@ -312,6 +312,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         XAxes = Array.Empty<ICartesianAxis>();
         YAxes = Array.Empty<ICartesianAxis>();
         Sections = Array.Empty<RectangularSection>();
+
         _seriesObserver = null!;
         _xObserver = null!;
         _yObserver = null!;

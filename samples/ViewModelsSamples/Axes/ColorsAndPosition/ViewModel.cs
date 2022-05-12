@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
@@ -11,7 +12,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.ColorsAndPosition;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     private AxisPosition _selectedPosition;
     private int _selectedColor = 0;
@@ -67,6 +68,8 @@ public class ViewModel
     public List<Axis> XAxes { get; set; }
 
     public List<Axis> YAxes { get; set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void SetNewColor()
     {

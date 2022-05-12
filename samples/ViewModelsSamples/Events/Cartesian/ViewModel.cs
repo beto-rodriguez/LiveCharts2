@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore;
@@ -10,7 +11,7 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Cartesian;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     public ViewModel()
     {
@@ -54,6 +55,8 @@ public class ViewModel
         Series = new ISeries[] { salesPerDaysSeries, stockSeries };
     }
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     private void SalesPerDaysSeries_ChartPointPointerDown(
         IChartView chart,
         ChartPoint<Fruit, BezierPoint<CircleGeometry>, LabelGeometry> point)
@@ -61,7 +64,6 @@ public class ViewModel
         Trace.WriteLine(
             $"[salesPerDay ChartPointPointerDown] clicked on {point.Model?.Name}, {point.Model?.SalesPerDay} items sold per day");
     }
-
 
     private void StockSeries_ChartPointPointerDown(
         IChartView chart,

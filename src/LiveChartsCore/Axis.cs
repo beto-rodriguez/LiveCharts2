@@ -590,6 +590,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         _orientation = orientation;
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
+        if (_animatableBounds is null) _animatableBounds = new();
         Initialized?.Invoke(this);
     }
 

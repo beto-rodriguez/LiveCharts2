@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Paging;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     private readonly Random _random = new();
 
@@ -35,6 +36,8 @@ public class ViewModel
     public ISeries[] Series { get; set; }
 
     public Axis[] XAxes { get; set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public ICommand GoToPage1Command => new Command(o => GoToPage1());
     public ICommand GoToPage2Command => new Command(o => GoToPage2());

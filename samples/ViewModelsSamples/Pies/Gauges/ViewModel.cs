@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
@@ -8,7 +9,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Pies.Gauges;
 
-public class ViewModel
+public class ViewModel : INotifyPropertyChanged
 {
     public ViewModel()
     {
@@ -248,4 +249,6 @@ public class ViewModel
     public double GaugeTotal14 { get; set; }
     public double InitialRotation14 { get; set; }
     public double MaxAngle14 { get; set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 }
