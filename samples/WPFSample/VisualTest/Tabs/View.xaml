@@ -18,15 +18,6 @@
             <TabItem Header="tab 3">
                 <scatter:View></scatter:View>
             </TabItem>
-            <TabItem Header="tab 4">
-                <bars:View></bars:View>
-            </TabItem>
-            <TabItem Header="tab 5">
-                <lines:View></lines:View>
-            </TabItem>
-            <TabItem Header="tab 6">
-                <scatter:View></scatter:View>
-            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

@@ -391,6 +391,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                                // while they are not visible, the problem is when the control is visible again
                                // the animations are not as expected because previously it ran in an invalid case.
 
+        if (_chartView.XAxes is null || _chartView.YAxes is null || _chartView.Series is null)
+        {
+            Trace.WriteLine(
+                $"{(_chartView.XAxes is null ? "-null x-" : "")} {(_chartView.YAxes is null ? "-null y-" : "")} {(_chartView.Series is null ? "-null series-" : "")}");
+            return;
+        }
+
         InvokeOnMeasuring();
 
         if (preserveFirstDraw)
