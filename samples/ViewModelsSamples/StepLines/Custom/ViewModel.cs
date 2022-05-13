@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -6,9 +7,10 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.StepLines.Custom;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public List<ISeries> Series { get; set; } = new()
+    public ISeries[] Series { get; set; } =
     {
         // use the second argument type to specify the geometry to draw for every point
         // there are already many predefined geometries in the

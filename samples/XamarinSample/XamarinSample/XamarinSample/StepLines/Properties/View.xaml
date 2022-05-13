@@ -26,7 +26,7 @@
         </StackLayout>
         <StackLayout Grid.Row="2" Orientation="Horizontal">
             <Button Command="{Binding IncreaseGeometrySizeCommand}" Text="+ size"></Button>
-            <Button Command="{Binding DecreseGeometrySizeCommand}" Text="- size"></Button>
+            <Button Command="{Binding DecreaseGeometrySizeCommand}" Text="- size"></Button>
         </StackLayout>
         <lvc:CartesianChart Grid.Row="3" Series="{Binding Series}"></lvc:CartesianChart>
     </Grid>

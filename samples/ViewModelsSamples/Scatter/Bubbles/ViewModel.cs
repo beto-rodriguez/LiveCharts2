@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Scatter.Bubbles;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -37,22 +38,22 @@ public class ViewModel
             values2.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 100)));
         }
 
-        Series = new ObservableCollection<ISeries>
+        Series = new ISeries[]
+        {
+            new ScatterSeries<WeightedPoint>
             {
-                new ScatterSeries<WeightedPoint>
-                {
-                    Values = values1,
-                    GeometrySize = 50,
-                    MinGeometrySize = 5
-                },
-                new ScatterSeries<WeightedPoint, RoundedRectangleGeometry>
-                {
-                    Values = values2,
-                    GeometrySize = 50,
-                    MinGeometrySize = 5
-                }
-            };
+                Values = values1,
+                GeometrySize = 50,
+                MinGeometrySize = 5
+            },
+            new ScatterSeries<WeightedPoint, RoundedRectangleGeometry>
+            {
+                Values = values2,
+                GeometrySize = 50,
+                MinGeometrySize = 5
+            }
+        };
     }
 
-    public IEnumerable<ISeries> Series { get; set; }
+    public ISeries[] Series { get; set; }
 }

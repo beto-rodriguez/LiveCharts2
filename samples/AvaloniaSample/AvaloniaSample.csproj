@@ -82,9 +82,6 @@
     <Compile Update="Bars\RowsWithLabels\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Bars\States\View.axaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
     <Compile Update="Bars\WithBackground\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Logarithmic;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     // base 10 log, change the base if you require it.
     // or use any custom scale the logic is the same.
     private static readonly int s_logBase = 10;
 
-    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public ISeries[] Series { get; set; } =
     {
         new LineSeries<LogarithmicPoint>
         {
@@ -24,9 +24,9 @@ public class ViewModel
                 // but for the Y coordinate, we will map to the logarithm of the value
                 chartPoint.PrimaryValue = Math.Log(logPoint.Y, s_logBase); // mark
             },
-            Values = new ObservableCollection<LogarithmicPoint>
+            Values = new LogarithmicPoint[]
             {
-                new LogarithmicPoint { X = 1, Y = 10 },
+                new() { X = 1, Y = 10 },
                 new() { X = 2, Y = 100 },
                 new() { X = 3, Y = 1000 },
                 new() { X = 4, Y = 10000 },

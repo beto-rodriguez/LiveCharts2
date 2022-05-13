@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Gauges;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -249,6 +250,4 @@ public class ViewModel : INotifyPropertyChanged
     public double GaugeTotal14 { get; set; }
     public double InitialRotation14 { get; set; }
     public double MaxAngle14 { get; set; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 }

@@ -36,7 +36,6 @@ public static class Index
         "Bars/Race",
         "Bars/RowsWithLabels",
         "Bars/Layered",
-        "Bars/States",
 
         "StackedBars/Basic",
         "StackedBars/Groups",

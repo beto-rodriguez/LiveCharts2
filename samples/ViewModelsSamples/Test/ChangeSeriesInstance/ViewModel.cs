@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
@@ -11,28 +10,29 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Test.ChangeSeriesInstance;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public partial class ViewModel
 {
     private readonly Random _r = new();
-    private ISeries[]? _cartesianSeries;
-    private IEnumerable<ISeries>? _pieSeries;
-    private ISeries[]? _polarSeries;
-    private IGeoSeries[]? _geoSeries;
 
     public ViewModel()
     {
         GenerateData();
     }
 
-    public ISeries[]? CartesianSeries { get => _cartesianSeries; set { _cartesianSeries = value; OnPropertyChanged(); } }
-    public IEnumerable<ISeries>? PieSeries { get => _pieSeries; set { _pieSeries = value; OnPropertyChanged(); } }
-    public ISeries[]? PolarSeries { get => _polarSeries; set { _polarSeries = value; OnPropertyChanged(); } }
-    public IGeoSeries[]? GeoSeries { get => _geoSeries; set { _geoSeries = value; OnPropertyChanged(); } }
+    [ObservableProperty]
+    private ISeries[]? _cartesianSeries;
 
-    public ICommand GenerateDataCommand => new Command(o => GenerateData());
+    [ObservableProperty]
+    private IEnumerable<ISeries>? _pieSeries;
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    [ObservableProperty]
+    private ISeries[]? _polarSeries;
 
+    [ObservableProperty]
+    private IGeoSeries[]? _geoSeries;
+
+    [ICommand]
     public void GenerateData()
     {
         var data = new double[] { _r.Next(0, 10), _r.Next(0, 10), _r.Next(0, 10) };
@@ -67,10 +67,5 @@ public class ViewModel : INotifyPropertyChanged
                 }
             }
         };
-    }
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

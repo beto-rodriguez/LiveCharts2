@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
@@ -7,9 +8,10 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.RowsWithLabels;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public List<ISeries> Series { get; set; } = new()
+    public ISeries[] Series { get; set; } =
     {
         new RowSeries<int>
         {

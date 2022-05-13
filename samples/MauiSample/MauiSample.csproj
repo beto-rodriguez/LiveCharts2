@@ -111,9 +111,6 @@
 	  <MauiXaml Update="Bars\Spacing\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Bars\States\View.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Bars\WithBackground\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

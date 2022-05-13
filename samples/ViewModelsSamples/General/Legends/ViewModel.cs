@@ -19,23 +19,23 @@ public class ViewModel : INotifyPropertyChanged
     }
 
     public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    {
+        new ColumnSeries<double>
         {
-            new ColumnSeries<double>
-            {
-                Name = "Peru",
-                Values = new ObservableCollection<double> { 3, 7, 3,},
-            },
-            new ColumnSeries<double>
-            {
-                Name = "Egypt",
-                Values = new ObservableCollection<double> { 5, 3, 2 },
-            },
-            new ColumnSeries<double>
-            {
-                Name = "Portugal",
-                Values = new ObservableCollection<double> { 8, 2, 4 },
-            }
-        };
+            Name = "Peru",
+            Values = new ObservableCollection<double> { 3, 7, 3,},
+        },
+        new ColumnSeries<double>
+        {
+            Name = "Egypt",
+            Values = new ObservableCollection<double> { 5, 3, 2 },
+        },
+        new ColumnSeries<double>
+        {
+            Name = "Portugal",
+            Values = new ObservableCollection<double> { 8, 2, 4 },
+        }
+    };
 
     public List<AvailablePosition> Positions => new()
     {

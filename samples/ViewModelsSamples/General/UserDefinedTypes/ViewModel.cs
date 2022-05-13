@@ -1,16 +1,17 @@
-﻿using LiveChartsCore;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.UserDefinedTypes;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
-        // Ideally you should call this when your application starts
-        // If you need help to decide where to add this code
-        // please see the installation guide in this docs.
+        // you can configure a type globally // mark
 
+        // Ideally you should call this when your application starts
         // in this case we have an array of the City class
         // we need to compare the Population property of every city in our array
 
@@ -42,11 +43,17 @@ public class ViewModel
             );
     }
 
-    public ISeries[] Series { get; set; } = {
+    public ISeries[] Series { get; set; } =
+    {
         new LineSeries<City>
         {
             Name = "Population",
-            //TooltipLabelFormatter = point => point.mode
+            // you can also configure this series locally // mark
+            //Mapping = (city, point) =>
+            //{
+            //    point.PrimaryValue = (float)city.Population;
+            //    point.SecondaryValue = point.Context.Index;
+            //},
             Values = new[]
             {
                 new City { Name = "Tokyo", Population = 4 },

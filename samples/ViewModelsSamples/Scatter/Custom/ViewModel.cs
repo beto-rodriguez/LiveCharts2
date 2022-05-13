@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
@@ -10,7 +10,8 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Scatter.Custom;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -24,28 +25,28 @@ public class ViewModel
             values2.Add(new ObservablePoint(r.Next(0, 20), r.Next(0, 20)));
         }
 
-        Series = new ObservableCollection<ISeries>
+        Series = new ISeries[]
+        {
+            // use the second type argument to specify the geometry to draw for every point
+            // there are already many predefined geometries in the
+            // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
+            new ScatterSeries<ObservablePoint, RoundedRectangleGeometry>
             {
-                // use the second type argument to specify the geometry to draw for every point
-                // there are already many predefined geometries in the
-                // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
-                new ScatterSeries<ObservablePoint, RoundedRectangleGeometry>
-                {
-                    Values = values1,
-                    Stroke = null,
-                    GeometrySize = 40,
-                },
+                Values = values1,
+                Stroke = null,
+                GeometrySize = 40,
+            },
 
-                // Or Define your own SVG geometry
-                new ScatterSeries<ObservablePoint, MyGeometry>
-                {
-                    Values = values2,
-                    GeometrySize = 40,
-                    Stroke = null,
-                    Fill = new SolidColorPaint(SKColors.DarkOliveGreen)
-                }
-            };
+            // Or Define your own SVG geometry
+            new ScatterSeries<ObservablePoint, MyGeometry>
+            {
+                Values = values2,
+                GeometrySize = 40,
+                Stroke = null,
+                Fill = new SolidColorPaint(SKColors.DarkOliveGreen)
+            }
+        };
     }
 
-    public IEnumerable<ISeries> Series { get; set; }
+    public ISeries[] Series { get; set; }
 }

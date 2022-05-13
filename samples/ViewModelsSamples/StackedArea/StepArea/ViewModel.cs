@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.StackedArea.StepArea;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public List<ISeries> Series { get; set; } = new()
+    public ISeries[] Series { get; set; } =
     {
         new StackedStepAreaSeries<double>
         {

@@ -1,10 +1,12 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.VisualTest.TwoChartsOneSeries;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {

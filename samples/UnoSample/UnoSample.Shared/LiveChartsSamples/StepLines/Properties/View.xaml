@@ -24,9 +24,9 @@
             <Button Command="{Binding NewGeometryFillCommand}">geometry fill</Button>
             <Button Command="{Binding NewGeometryStrokeCommand}">geom stroke</Button>
             <Button Command="{Binding IncreaseLineSmoothnessCommand}">+ smoothness</Button>
-            <Button Command="{Binding DecreseLineSmoothnessCommand}">- smoothness</Button>
+            <Button Command="{Binding DecreaseLineSmoothnessCommand}">- smoothness</Button>
             <Button Command="{Binding IncreaseGeometrySizeCommand}">+ geom size</Button>
-            <Button Command="{Binding DecreseGeometrySizeCommand}">- geom size</Button>
+            <Button Command="{Binding DecreaseGeometrySizeCommand}">- geom size</Button>
         </VariableSizedWrapGrid>
         <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}"></lvc:CartesianChart>
     </Grid>

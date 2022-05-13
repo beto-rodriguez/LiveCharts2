@@ -27,7 +27,6 @@
     <None Remove="Bars\Spacing\View.xaml" />
     <None Remove="Bars\Custom\View.xaml" />
     <None Remove="Bars\WithBackground\View.xaml" />
-    <None Remove="Bars\States\View.xaml" />
     <None Remove="Bars\RowsWithLabels\View.xaml" />
     <None Remove="Bars\Race\View.xaml" />
     <None Remove="Bars\Layered\View.xaml" />

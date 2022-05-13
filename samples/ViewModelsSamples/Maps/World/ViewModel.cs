@@ -1,15 +1,16 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public  partial class ViewModel
 {
     private bool _isBrazilInChart = true;
     private readonly IWeigthedMapLand _brazil;
@@ -45,11 +46,24 @@ public class ViewModel : INotifyPropertyChanged
         DoRandomChanges();
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public HeatLandSeries[] Series { get; set; }
 
-    public ICommand ToggleBrazilCommand => new Command(o => ToggleBrazil());
+    [ICommand]
+    public void ToggleBrazil()
+    {
+        var lands = Series[0].Lands;
+        if (lands is null) return;
+
+        if (_isBrazilInChart)
+        {
+            Series[0].Lands = lands.Where(x => x != _brazil).ToArray();
+            _isBrazilInChart = false;
+            return;
+        }
+
+        Series[0].Lands = lands.Concat(new[] { _brazil }).ToArray();
+        _isBrazilInChart = true;
+    }
 
     private async void DoRandomChanges()
     {
@@ -64,21 +78,5 @@ public class ViewModel : INotifyPropertyChanged
 
             await Task.Delay(500);
         }
-    }
-
-    private void ToggleBrazil()
-    {
-        var lands = Series[0].Lands;
-        if (lands is null) return;
-
-        if (_isBrazilInChart)
-        {
-            Series[0].Lands = lands.Where(x => x != _brazil).ToArray();
-            _isBrazilInChart = false;
-            return;
-        }
-
-        Series[0].Lands = lands.Concat(new[] { _brazil }).ToArray();
-        _isBrazilInChart = true;
     }
 }

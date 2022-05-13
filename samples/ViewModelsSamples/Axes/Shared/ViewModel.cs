@@ -1,10 +1,12 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Shared;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -26,7 +28,7 @@ public class ViewModel
         SeriesCollection1 = new ISeries[] { new LineSeries<int> { Values = values1 } };
         SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
 
-        // sharing the same instance for both charts will keep the zooming and panning synced
+        // sharing the same instance for both charts will keep the zooming and panning synced // mark
         SharedXAxis = new Axis[] { new Axis() };
     }
 
