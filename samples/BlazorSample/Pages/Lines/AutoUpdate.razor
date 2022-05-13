@@ -4,11 +4,11 @@
 
 <div>
 	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddItem">Add item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveFirstItem">Remove item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.UpdateLastItem">Update item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.ReplaceRandomItem">Replace item</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveItem">Remove item</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.UpdateItem">Update item</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.ReplaceItem">Replace item</button>
 	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddSeries">Add Series</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveLastSeries">Remove Series</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveSeries">Remove Series</button>
 	<button type="button" class="btn btn-primary" @onclick="ToggleConstantChanges">Constant changes</button>
 </div>
 
@@ -27,7 +27,7 @@
 
 		while (_isStreaming.Value)
 		{
-			ViewModel.RemoveFirstItem();
+			ViewModel.RemoveItem();
 			ViewModel.AddItem();
 			await Task.Delay(100);
 		}

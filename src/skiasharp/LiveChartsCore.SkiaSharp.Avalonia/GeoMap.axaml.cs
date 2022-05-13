@@ -276,11 +276,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     private void GeoMap_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
-        Series = Array.Empty<IGeoSeries>();
-        _seriesObserver = null!;
-
-        Canvas.Dispose();
-
         if (_core is null) return;
         _core.Unload();
     }

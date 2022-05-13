@@ -152,9 +152,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     protected override void OnUnloaded()
     {
         core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        _seriesObserver = null!;
     }
 
     private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

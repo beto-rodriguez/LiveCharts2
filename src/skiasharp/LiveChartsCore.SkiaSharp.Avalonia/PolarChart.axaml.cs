@@ -836,13 +836,6 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     private void PolarChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        AngleAxes = Array.Empty<IPolarAxis>();
-        RadiusAxes = Array.Empty<IPolarAxis>();
-        _seriesObserver = null!;
-        _angleObserver = null!;
-        _radiusObserver = null!;
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)

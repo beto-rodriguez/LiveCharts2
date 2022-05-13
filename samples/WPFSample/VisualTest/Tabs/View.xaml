@@ -10,7 +10,7 @@
         </Grid.RowDefinitions>
         <TabControl>
             <TabItem Header="tab 1">
-                <bars:View Background="Red"></bars:View>
+                <bars:View></bars:View>
             </TabItem>
             <TabItem Header="tab 2">
                 <lines:View></lines:View>

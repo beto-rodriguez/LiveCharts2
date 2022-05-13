@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.Test.Dispose.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Test.Dispose;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <lvc:CartesianChart Grid.Row="0" Series="{Binding CartesianSeries}" />
+            <lvc:PieChart Grid.Row="1" Series="{Binding PieSeries}"/>
+            <lvc:PolarChart Grid.Row="2" Series="{Binding PolarSeries}"/>
+            <lvc:GeoMap Grid.Row="3" Series="{Binding GeoSeries}" MapProjection="Mercator"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

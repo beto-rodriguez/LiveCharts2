@@ -284,11 +284,6 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<IGeoSeries>();
-        _seriesObserver = null!;
-
-        Canvas.Dispose();
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

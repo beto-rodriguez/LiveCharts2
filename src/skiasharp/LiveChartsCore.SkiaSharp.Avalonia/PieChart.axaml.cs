@@ -737,9 +737,6 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     private void PieChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        _seriesObserver = null!;
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
