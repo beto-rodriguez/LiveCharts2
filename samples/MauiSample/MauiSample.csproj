@@ -306,6 +306,9 @@
 	  <MauiXaml Update="StepLines\Zoom\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Test\Dispose\NewPage1.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Test\Dispose\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
