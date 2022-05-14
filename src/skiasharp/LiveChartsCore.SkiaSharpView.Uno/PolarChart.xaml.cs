@@ -927,13 +927,6 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        AngleAxes = Array.Empty<IPolarAxis>();
-        RadiusAxes = Array.Empty<IPolarAxis>();
-        _seriesObserver = null!;
-        _angleObserver = null!;
-        _radiusObserver = null!;
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

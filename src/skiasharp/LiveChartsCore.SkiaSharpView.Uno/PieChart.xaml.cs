@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -815,9 +816,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        _seriesObserver = null!;
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

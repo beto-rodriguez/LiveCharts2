@@ -1,4 +1,5 @@
-﻿namespace ViewModelsSamples;
+﻿
+namespace ViewModelsSamples;
 
 public static class Index
 {

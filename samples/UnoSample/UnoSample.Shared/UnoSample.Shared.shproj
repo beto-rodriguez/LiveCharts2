@@ -149,6 +149,13 @@
     <_Globbed_Compile Remove="LiveChartsSamples\StepLines\Custom\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\StepLines\Properties\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\StepLines\Zoom\View.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\Test\Dispose\UserControl1.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\Test\Dispose\View - Copy.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\Test\Dispose\View.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\VisualTest - Copy\DataTemplate\View.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\VisualTest - Copy\ReattachVisual\View.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\VisualTest - Copy\Tabs\View.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\VisualTest - Copy\TwoChartsOneSeries\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\VisualTest\DataTemplate\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\VisualTest\ReattachVisual\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\VisualTest\Tabs\View.xaml.cs" />
@@ -329,6 +336,12 @@
     <_Globbled_Page Remove="LiveChartsSamples\StepLines\Custom\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\StepLines\Properties\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\StepLines\Zoom\View.xaml" />
+    <_Globbled_Page Remove="LiveChartsSamples\Test\Dispose\UserControl1.xaml" />
+    <_Globbled_Page Remove="LiveChartsSamples\Test\Dispose\View.xaml" />
+    <_Globbled_Page Remove="LiveChartsSamples\VisualTest - Copy\DataTemplate\View.xaml" />
+    <_Globbled_Page Remove="LiveChartsSamples\VisualTest - Copy\ReattachVisual\View.xaml" />
+    <_Globbled_Page Remove="LiveChartsSamples\VisualTest - Copy\Tabs\View.xaml" />
+    <_Globbled_Page Remove="LiveChartsSamples\VisualTest - Copy\TwoChartsOneSeries\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\VisualTest\DataTemplate\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\VisualTest\ReattachVisual\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\VisualTest\Tabs\View.xaml" />
