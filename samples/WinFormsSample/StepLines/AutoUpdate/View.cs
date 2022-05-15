@@ -7,20 +7,20 @@ namespace WinFormsSample.StepLines.AutoUpdate;
 
 public partial class View : UserControl
 {
-    private readonly CartesianChart cartesianChart;
-    private readonly ViewModel viewModel;
-    private bool? isStreaming = false;
+    private readonly CartesianChart _cartesianChart;
+    private readonly ViewModel _viewModel;
+    private bool? _isStreaming = false;
 
     public View()
     {
         InitializeComponent();
         Size = new System.Drawing.Size(100, 100);
 
-        viewModel = new ViewModel();
+        _viewModel = new ViewModel();
 
-        cartesianChart = new CartesianChart
+        _cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
+            Series = _viewModel.Series,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 50),
@@ -28,26 +28,26 @@ public partial class View : UserControl
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(cartesianChart);
+        Controls.Add(_cartesianChart);
 
         var b1 = new Button { Text = "Add item", Location = new System.Drawing.Point(0, 0) };
-        b1.Click += (object sender, System.EventArgs e) => viewModel.AddItem();
+        b1.Click += (object sender, System.EventArgs e) => _viewModel.AddItem();
         Controls.Add(b1);
 
         var b2 = new Button { Text = "Replace item", Location = new System.Drawing.Point(80, 0) };
-        b2.Click += (object sender, System.EventArgs e) => viewModel.ReplaceRandomItem();
+        b2.Click += (object sender, System.EventArgs e) => _viewModel.ReplaceItem();
         Controls.Add(b2);
 
         var b3 = new Button { Text = "Remove item", Location = new System.Drawing.Point(160, 0) };
-        b3.Click += (object sender, System.EventArgs e) => viewModel.RemoveFirstItem();
+        b3.Click += (object sender, System.EventArgs e) => _viewModel.RemoveItem();
         Controls.Add(b3);
 
         var b4 = new Button { Text = "Add series", Location = new System.Drawing.Point(240, 0) };
-        b4.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
+        b4.Click += (object sender, System.EventArgs e) => _viewModel.AddSeries();
         Controls.Add(b4);
 
         var b5 = new Button { Text = "Remove series", Location = new System.Drawing.Point(320, 0) };
-        b5.Click += (object sender, System.EventArgs e) => viewModel.RemoveLastSeries();
+        b5.Click += (object sender, System.EventArgs e) => _viewModel.RemoveSeries();
         Controls.Add(b5);
 
         var b6 = new Button { Text = "Constant changes", Location = new System.Drawing.Point(400, 0) };
@@ -57,12 +57,12 @@ public partial class View : UserControl
 
     private async void OnConstantChangesClick(object sender, System.EventArgs e)
     {
-        isStreaming = isStreaming is null ? true : !isStreaming;
+        _isStreaming = _isStreaming is null ? true : !_isStreaming;
 
-        while (isStreaming.Value)
+        while (_isStreaming.Value)
         {
-            viewModel.RemoveFirstItem();
-            viewModel.AddItem();
+            _viewModel.RemoveItem();
+            _viewModel.AddItem();
             await Task.Delay(1000);
         }
     }

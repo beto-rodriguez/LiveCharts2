@@ -21,7 +21,7 @@ namespace UWPSample.Lines.AutoUpdate
 
             while (_isStreaming.Value)
             {
-                vm.RemoveFirstItem();
+                vm.RemoveItem();
                 vm.AddItem();
                 await Task.Delay(1000);
             }

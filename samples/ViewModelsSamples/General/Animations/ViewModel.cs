@@ -1,140 +1,104 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Animations;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public partial class ViewModel
 {
-    private AvailableEasingCurve _selectedAvailableCurve;
-    private Func<float, float> _actualCurve;
-    private AvailableSpeed _selectedAvailableSpeed;
-    private TimeSpan _actualSpeed;
-
-    private ISeries[] _series = {
-        new ColumnSeries<int> { Values = new [] { 5, 6, 3, 1, 8, 5, 3, 5, 6, 3, 1} }
-    };
+    private (string, Func<float, float>) _selectedCurve;
+    private (string, TimeSpan) _selectedSpeed;
 
     public ViewModel()
     {
-        _selectedAvailableCurve = AvalaibaleCurves[0];
-        _actualCurve = _selectedAvailableCurve.EasingFunction;
-        _selectedAvailableSpeed = AvailableSpeeds[1];
-        _actualSpeed = _selectedAvailableSpeed.Speed;
+        _selectedCurve = AvalaibaleCurves[0];
+        _selectedSpeed = AvailableSpeeds[1];
     }
 
-    public ISeries[] Series { get => _series; set { _series = value; OnPropertyChanged(); } }
+    public ISeries[] Series { get; set; } =
+        { new ColumnSeries<int> { Values = new[] { 5, 6, 3, 1, 8, 5, 3, 5, 6, 3, 1 } } };
 
-    public AvailableEasingCurve SelectedCurve
-    {
-        get => _selectedAvailableCurve;
-        set
-        {
-            _selectedAvailableCurve = value;
-            ActualCurve = _selectedAvailableCurve.EasingFunction;
-            OnPropertyChanged();
-        }
-    }
-
-    public Func<float, float> ActualCurve
-    {
-        get => _actualCurve;
-        set
-        {
-            _actualCurve = value;
-            RestartAnimations();
-            OnPropertyChanged();
-        }
-    }
-
-    public AvailableEasingCurve[] AvalaibaleCurves => new[]
+    public (string, Func<float, float>)[] AvalaibaleCurves => new (string, Func<float, float>)[]
     {
         // LiveCharts already contains many common animating curves in the EasingFunctions static class.
-        new AvailableEasingCurve("Back in", EasingFunctions.BackIn),
-        new AvailableEasingCurve("Back out", EasingFunctions.BackOut),
-        new AvailableEasingCurve("Back in out", EasingFunctions.BackInOut),
-        new AvailableEasingCurve("Bounce in", EasingFunctions.BounceIn),
-        new AvailableEasingCurve("Bounce out", EasingFunctions.BounceOut),
-        new AvailableEasingCurve("Bounce in out", EasingFunctions.BounceInOut),
-        new AvailableEasingCurve("Circle in", EasingFunctions.CircleIn),
-        new AvailableEasingCurve("Circle out", EasingFunctions.CircleOut),
-        new AvailableEasingCurve("Circle in out", EasingFunctions.CircleInOut),
-        new AvailableEasingCurve("Cubic in", EasingFunctions.CubicIn),
-        new AvailableEasingCurve("Cubic out", EasingFunctions.CubicOut),
-        new AvailableEasingCurve("Cubic in out", EasingFunctions.CubicInOut),
-        new AvailableEasingCurve("Ease", EasingFunctions.Ease),
-        new AvailableEasingCurve("Ease in", EasingFunctions.EaseIn),
-        new AvailableEasingCurve("Ease out", EasingFunctions.EaseOut),
-        new AvailableEasingCurve("Ease in out", EasingFunctions.EaseInOut),
-        new AvailableEasingCurve("Elastic in", EasingFunctions.ElasticIn),
-        new AvailableEasingCurve("Elastic out", EasingFunctions.ElasticOut),
-        new AvailableEasingCurve("Elastic in out", EasingFunctions.ElasticInOut),
-        new AvailableEasingCurve("Exponential in", EasingFunctions.ExponentialIn),
-        new AvailableEasingCurve("Exponential out", EasingFunctions.ExponentialOut),
-        new AvailableEasingCurve("Exponential in out", EasingFunctions.ExponentialInOut),
-        new AvailableEasingCurve("Lineal", EasingFunctions.Lineal),
-        new AvailableEasingCurve("Polinominal in", EasingFunctions.PolinominalIn),
-        new AvailableEasingCurve("Poliniminal out", EasingFunctions.PolinominalOut),
-        new AvailableEasingCurve("Polinominal in out ", EasingFunctions.PolinominalInOut),
-        new AvailableEasingCurve("Quadratic in", EasingFunctions.QuadraticIn),
-        new AvailableEasingCurve("Quadratic out", EasingFunctions.QuadraticOut),
-        new AvailableEasingCurve("Quadratic in out", EasingFunctions.QuadraticInOut),
-        new AvailableEasingCurve("Sin in", EasingFunctions.SinIn),
-        new AvailableEasingCurve("Sin out", EasingFunctions.SinOut),
-        new AvailableEasingCurve("Sin in out", EasingFunctions.SinInOut),
+        ("Back in", EasingFunctions.BackIn),
+        ("Back out", EasingFunctions.BackOut),
+        ("Back in out", EasingFunctions.BackInOut),
+        ("Bounce in", EasingFunctions.BounceIn),
+        ("Bounce out", EasingFunctions.BounceOut),
+        ("Bounce in out", EasingFunctions.BounceInOut),
+        ("Circle in", EasingFunctions.CircleIn),
+        ("Circle out", EasingFunctions.CircleOut),
+        ("Circle in out", EasingFunctions.CircleInOut),
+        ("Cubic in", EasingFunctions.CubicIn),
+        ("Cubic out", EasingFunctions.CubicOut),
+        ("Cubic in out", EasingFunctions.CubicInOut),
+        ("Ease", EasingFunctions.Ease),
+        ("Ease in", EasingFunctions.EaseIn),
+        ("Ease out", EasingFunctions.EaseOut),
+        ("Ease in out", EasingFunctions.EaseInOut),
+        ("Elastic in", EasingFunctions.ElasticIn),
+        ("Elastic out", EasingFunctions.ElasticOut),
+        ("Elastic in out", EasingFunctions.ElasticInOut),
+        ("Exponential in", EasingFunctions.ExponentialIn),
+        ("Exponential out", EasingFunctions.ExponentialOut),
+        ("Exponential in out", EasingFunctions.ExponentialInOut),
+        ("Lineal", EasingFunctions.Lineal),
+        ("Polinominal in", EasingFunctions.PolinominalIn),
+        ("Poliniminal out", EasingFunctions.PolinominalOut),
+        ("Polinominal in out ", EasingFunctions.PolinominalInOut),
+        ("Quadratic in", EasingFunctions.QuadraticIn),
+        ("Quadratic out", EasingFunctions.QuadraticOut),
+        ("Quadratic in out", EasingFunctions.QuadraticInOut),
+        ("Sin in", EasingFunctions.SinIn),
+        ("Sin out", EasingFunctions.SinOut),
+        ("Sin in out", EasingFunctions.SinInOut),
 
         // the library also provides some common builders based on https://github.com/d3/d3-ease
-        new AvailableEasingCurve("Custom back in", EasingFunctions.BuildCustomBackIn(2)),
-        new AvailableEasingCurve("Custom elastic in", EasingFunctions.BuildCustomElasticIn(1.20f, 0.20f)),
-        new AvailableEasingCurve("Custom back in", EasingFunctions.BuildCustomPolinominalIn(5)),
+        ("Custom back in", EasingFunctions.BuildCustomBackIn(2)),
+        ("Custom elastic in", EasingFunctions.BuildCustomElasticIn(1.20f, 0.20f)),
+        ("Custom back in", EasingFunctions.BuildCustomPolinominalIn(5)),
 
         // and also based on cubic bezier curves that are common in web development
         // you can build and play with custom cubic bezier curves at https://cubic-bezier.com/#.17,.67,.83,.67
-        new AvailableEasingCurve("custom cubic bezier", EasingFunctions.BuildCubicBezier(0.17f, 0.67f, 0.83f, 0.67f)),
+        ("custom cubic bezier", EasingFunctions.BuildCubicBezier(0.17f, 0.67f, 0.83f, 0.67f)),
     };
 
-    public AvailableSpeed SelectedSpeed
+    public (string, TimeSpan)[] AvailableSpeeds => new (string, TimeSpan)[]
     {
-        get => _selectedAvailableSpeed;
+        ("Slowest", TimeSpan.FromMilliseconds(1300)),
+        ("Slow", TimeSpan.FromMilliseconds(800)),
+        ("Medium", TimeSpan.FromMilliseconds(500)),
+        ("Fast", TimeSpan.FromMilliseconds(300)),
+        ("Fastest", TimeSpan.FromMilliseconds(100)),
+    };
+
+    public (string, Func<float, float>) SelectedCurve
+    {
+        get => _selectedCurve;
         set
         {
-            _selectedAvailableSpeed = value;
-            ActualSpeed = _selectedAvailableSpeed.Speed;
-            OnPropertyChanged();
-        }
-    }
-    public TimeSpan ActualSpeed
-    {
-        get => _actualSpeed;
-        set
-        {
-            _actualSpeed = value;
+            _selectedCurve = value;
+            OnPropertyChanged(nameof(SelectedCurve));
             RestartAnimations();
-            OnPropertyChanged();
         }
     }
 
-    public AvailableSpeed[] AvailableSpeeds => new[]
+    public (string, TimeSpan) SelectedSpeed
     {
-        new AvailableSpeed("Slowest", TimeSpan.FromMilliseconds(1300)),
-        new AvailableSpeed("Slow", TimeSpan.FromMilliseconds(800)),
-        new AvailableSpeed("Medium", TimeSpan.FromMilliseconds(500)),
-        new AvailableSpeed("Fast", TimeSpan.FromMilliseconds(300)),
-        new AvailableSpeed("Fastest", TimeSpan.FromMilliseconds(100)),
-    };
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        get => _selectedSpeed;
+        set
+        {
+            _selectedSpeed = value;
+            OnPropertyChanged(nameof(SelectedSpeed));
+            RestartAnimations();
+        }
     }
 
     private void RestartAnimations()
     {
-        foreach (var series in Series)
-            series.RestartAnimations();
+        foreach (var series in Series) series.RestartAnimations();
     }
 }

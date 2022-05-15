@@ -162,13 +162,7 @@ public sealed partial class MotionCanvas : UserControl
         CanvasCore.Dispose();
     }
 
-    private void InvokePinch(LiveChartsPinchEventArgs args)
-    {
-        Pinched?.Invoke(this, args);
-    }
-
     #region ANDROID
-
 #if __ANDROID__
     // based on:
     //https://docs.microsoft.com/en-us/xamarin/android/app-fundamentals/touch/android-touch-walkthrough
@@ -273,7 +267,11 @@ public sealed partial class MotionCanvas : UserControl
 
         return true;
     }
-#endif
 
+    private void InvokePinch(LiveChartsPinchEventArgs args)
+    {
+        Pinched?.Invoke(this, args);
+    }
+#endif
     #endregion
 }

@@ -791,16 +791,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         if (Parent == null)
         {
             core?.Unload();
-
-            Series = Array.Empty<ISeries>();
-            XAxes = Array.Empty<ICartesianAxis>();
-            YAxes = Array.Empty<ICartesianAxis>();
-            Sections = Array.Empty<RectangularSection>();
-            _seriesObserver = null!;
-            _xObserver = null!;
-            _yObserver = null!;
-            _sectionsObserver = null!;
-
             return;
         }
 

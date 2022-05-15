@@ -1,60 +1,51 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.NamedLabels;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public ViewModel()
+    public ISeries[] Series { get; set; } =
     {
-        Series = new ObservableCollection<ISeries>
-            {
-                new ColumnSeries<int>
-                {
-                    Name = "Sales",
-                    Values = new ObservableCollection<int> { 200, 558, 458, 249 },
-                },
-                new LineSeries<int>
-                {
-                    Name = "Projected",
-                    Values = new ObservableCollection<int> { 300, 450, 400, 280 },
-                    Fill = null
-                }
-            };
+        new ColumnSeries<int>
+        {
+            Name = "Sales",
+            Values = new int[] { 200, 558, 458, 249 },
+        },
+        new LineSeries<int>
+        {
+            Name = "Projected",
+            Values = new int[] { 300, 450, 400, 280 },
+            Fill = null
+        }
+    };
 
-        XAxes = new List<Axis>
-            {
-                new()
-                {
-                    // Use the labels property to define named labels.
-                    Labels = new string[] { "Anne", "Johnny", "Zac", "Rosa" }
-                }
-            };
+    public Axis[] XAxes { get; set; } =
+    {
+        new Axis
+        {
+            // Use the labels property to define named labels.
+            Labels = new string[] { "Anne", "Johnny", "Zac", "Rosa" }
+        }
+    };
 
-        YAxes = new List<Axis>
-            {
-                new()
-                {
-                    // Now the Y axis we will display labels as currency
-                    // LiveCharts provides some common formatters
-                    // in this case we are using the currency formatter.
-                    Labeler = Labelers.Currency
+    public Axis[] YAxes { get; set; } =
+    {
+        new Axis
+        {
+            // Now the Y axis we will display labels as currency
+            // LiveCharts provides some common formatters
+            // in this case we are using the currency formatter.
+            Labeler = Labelers.Currency
 
-                    // you could also build your own currency formatter
-                    // for example:
-                    // Labeler = (value) => value.ToString("C")
+            // you could also build your own currency formatter
+            // for example:
+            // Labeler = (value) => value.ToString("C")
 
-                    // But the one that LiveCharts provides creates shorter labels when
-                    // the amount is in millions or trillions
-                }
-            };
-    }
-
-    public IEnumerable<ISeries> Series { get; set; }
-
-    public List<Axis> XAxes { get; set; }
-
-    public List<Axis> YAxes { get; set; }
+            // But the one that LiveCharts provides creates shorter labels when
+            // the amount is in millions or trillions
+        }
+    };
 }

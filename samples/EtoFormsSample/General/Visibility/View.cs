@@ -18,13 +18,13 @@ public class View : Panel
         };
 
         var b1 = new Button { Text = "toggle 1" };
-        b1.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries0();
+        b1.Click += (object sender, System.EventArgs e) => viewModel.ToggleSeries0();
 
         var b2 = new Button { Text = "toggle 2" };
-        b2.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries1();
+        b2.Click += (object sender, System.EventArgs e) => viewModel.ToggleSeries1();
 
         var b3 = new Button { Text = "toggle 3" };
-        b3.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries2();
+        b3.Click += (object sender, System.EventArgs e) => viewModel.ToggleSeries2();
 
         var buttons = new StackLayout(b1, b2, b3) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
 

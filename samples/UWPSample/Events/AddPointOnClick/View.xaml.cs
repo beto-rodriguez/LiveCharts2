@@ -19,8 +19,8 @@ namespace UWPSample.Events.AddPointOnClick
             // gets the point in the UI coordinates.
             var p = e.GetCurrentPoint(chart);
 
-            // scales the UI coordintaes to the corresponging data in the chart.
-            // ScaleUIPoint retuns an array of double
+            // scales the UI coordinates to the corresponding data in the chart.
+            // ScaleUIPoint returns an array of double
             var scaledPoint = chart.ScaleUIPoint(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
 
             // where the X coordinate is in the first position

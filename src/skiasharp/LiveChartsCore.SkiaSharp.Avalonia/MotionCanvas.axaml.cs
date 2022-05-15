@@ -51,7 +51,7 @@ public class MotionCanvas : UserControl
     public MotionCanvas()
     {
         InitializeComponent();
-        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+        AttachedToVisualTree += MotionCanvas_AttachedToVisualTree;
         DetachedFromVisualTree += MotionCanvas_DetachedFromVisualTree;
     }
 
@@ -127,6 +127,12 @@ public class MotionCanvas : UserControl
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
     {
         InvalidateVisual();
+    }
+
+    private void MotionCanvas_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    {
+        _isDeatached = false;
+        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
     }
 
     private void MotionCanvas_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)

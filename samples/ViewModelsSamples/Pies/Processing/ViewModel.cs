@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Processing;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public partial class ViewModel
 {
     private readonly ObservableValue _processing;
     private readonly ObservableValue _completed;
@@ -59,8 +61,6 @@ public class ViewModel : INotifyPropertyChanged
     public ObservableValue Value { get; set; }
 
     public ValueSeries[] ValueSeries { get; set; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     public async void Read()
     {

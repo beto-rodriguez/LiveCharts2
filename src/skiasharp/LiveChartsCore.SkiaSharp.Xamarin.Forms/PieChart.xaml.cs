@@ -685,10 +685,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         if (Parent == null)
         {
             core?.Unload();
-
-            Series = Array.Empty<ISeries>();
-            _seriesObserver = null!;
-
             return;
         }
 

@@ -23,7 +23,7 @@ public partial class View : UserControl
 
         while (isStreaming.Value)
         {
-            vm.RemoveLastSeries();
+            vm.RemoveSeries();
             vm.AddSeries();
             await Task.Delay(1000);
         }

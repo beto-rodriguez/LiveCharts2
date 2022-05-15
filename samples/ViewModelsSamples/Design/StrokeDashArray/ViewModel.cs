@@ -1,4 +1,5 @@
-﻿using LiveChartsCore;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -6,7 +7,8 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Design.StrokeDashArray;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -24,20 +26,20 @@ public class ViewModel
 
         Series = new ISeries[]
         {
-                new LineSeries<int>
+            new LineSeries<int>
+            {
+                Values = new [] { 4, 2, 8, 5, 3 },
+                LineSmoothness = 1,
+                GeometrySize = 22,
+                Stroke = new SolidColorPaint
                 {
-                    Values = new [] { 4, 2, 8, 5, 3 },
-                    LineSmoothness = 1,
-                    GeometrySize = 22,
-                    Stroke = new SolidColorPaint
-                    {
-                        Color = SKColors.CornflowerBlue,
-                        StrokeCap = SKStrokeCap.Round,
-                        StrokeThickness = strokeThickness,
-                        PathEffect = effect
-                    },
-                    Fill = null
-                }
+                    Color = SKColors.CornflowerBlue,
+                    StrokeCap = SKStrokeCap.Round,
+                    StrokeThickness = strokeThickness,
+                    PathEffect = effect
+                },
+                Fill = null
+            }
         };
     }
 

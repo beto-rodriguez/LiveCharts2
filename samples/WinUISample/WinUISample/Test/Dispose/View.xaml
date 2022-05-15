@@ -1,0 +1,30 @@
+﻿<UserControl
+    x:Class="WinUISample.Test.Dispose.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:ViewModelsSamples.VisualTest.ReattachVisual"
+    xmlns:sample="using:WinUISample.Test.Dispose"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Button Grid.Row="0" Click="Button_Click">Change content</Button>
+
+        <ContentControl x:Name="content" Grid.Row="1"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch">
+            <ContentControl.Content>
+                <sample:UserControl1></sample:UserControl1>
+            </ContentControl.Content>
+        </ContentControl>
+    </Grid>
+</UserControl>

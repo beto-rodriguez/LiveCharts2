@@ -2,65 +2,76 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.AutoUpdate;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public partial class ViewModel
 {
     private readonly Random _random = new();
     private readonly ObservableCollection<ObservableValue> _observableValues;
 
     public ViewModel()
     {
-        // LiveCharts already provides the LiveChartsCore.Defaults.ObservableValue class.
+        // Use ObservableCollections to let the chart listen for changes (or any INotifyCollectionChanged). // mark
         _observableValues = new ObservableCollection<ObservableValue>
-            {
-                new ObservableValue(2),
-                new(5), // the ObservableValue type is redundant and inferred by the compiler (C# 9 and above)
-                new(4),
-                new(5),
-                new(2),
-                new(6),
-                new(6),
-                new(6),
-                new(4),
-                new(2),
-                new(3),
-                new(4),
-                new(3)
-            };
+        {
+            // Use the ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
+            // or use any INotifyPropertyChanged implementation // mark
+            new ObservableValue(2),
+            new(5), // the ObservableValue type is redundant and inferred by the compiler (C# 9 and above)
+            new(4),
+            new(5),
+            new(2),
+            new(6),
+            new(6),
+            new(6),
+            new(4),
+            new(2),
+            new(3),
+            new(4),
+            new(3)
+        };
 
         Series = new ObservableCollection<ISeries>
         {
             new LineSeries<ObservableValue>
             {
                 Values = _observableValues,
-                //Fill = null
+                Fill = null
             }
         };
+
+        // in the following sample notice that the type int does not implement INotifyPropertyChanged
+        // and our Series.Values property is of type List<T>
+        // List<T> does not implement INotifyCollectionChanged
+        // this means the following series is not listening for changes.
+        // Series.Add(new ColumnSeries<int> { Values = new List<int> { 2, 4, 6, 1, 7, -2 } }); // mark
     }
 
     public ObservableCollection<ISeries> Series { get; set; }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
+    [ICommand]
     public void AddItem()
     {
         var randomValue = _random.Next(1, 10);
-        _observableValues.Add(new(randomValue)); // or the old syntax = new ObservableValue(randomValue)
+        _observableValues.Add(new(randomValue));
     }
 
-    public void RemoveFirstItem()
+    [ICommand]
+    public void RemoveItem()
     {
         if (_observableValues.Count == 0) return;
         _observableValues.RemoveAt(0);
     }
 
-    public void UpdateLastItem()
+    [ICommand]
+    public void UpdateItem()
     {
         var randomValue = _random.Next(1, 10);
 
@@ -71,13 +82,15 @@ public class ViewModel : INotifyPropertyChanged
         lastInstance.Value = randomValue;
     }
 
-    public void ReplaceRandomItem()
+    [ICommand]
+    public void ReplaceItem()
     {
         var randomValue = _random.Next(1, 10);
         var randomIndex = _random.Next(0, _observableValues.Count - 1);
         _observableValues[randomIndex] = new(randomValue);
     }
 
+    [ICommand]
     public void AddSeries()
     {
         //  for this sample only 5 series are supported.
@@ -95,19 +108,11 @@ public class ViewModel : INotifyPropertyChanged
             });
     }
 
-    public void RemoveLastSeries()
+    [ICommand]
+    public void RemoveSeries()
     {
         if (Series.Count == 1) return;
 
         Series.RemoveAt(Series.Count - 1);
     }
-
-    // The next commands are only to enable XAML bindings // mark
-    // they are not used in the WinForms or blazor sample // mark
-    public ICommand AddItemCommand => new Command(o => AddItem());
-    public ICommand RemoveItemCommand => new Command(o => RemoveFirstItem());
-    public ICommand UpdateItemCommand => new Command(o => UpdateLastItem());
-    public ICommand ReplaceItemCommand => new Command(o => ReplaceRandomItem());
-    public ICommand AddSeriesCommand => new Command(o => AddSeries());
-    public ICommand RemoveSeriesCommand => new Command(o => RemoveLastSeries());
 }

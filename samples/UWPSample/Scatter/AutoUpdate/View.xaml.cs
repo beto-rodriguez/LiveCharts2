@@ -21,8 +21,8 @@ namespace UWPSample.Scatter.AutoUpdate
 
             while (_isStreaming.Value)
             {
-                vm.RemoveFirstItem();
-                vm.AddRandomItem();
+                vm.RemoveItem();
+                vm.AddItem();
                 await Task.Delay(1000);
             }
         }

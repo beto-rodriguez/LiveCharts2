@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -11,7 +11,8 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Cartesian;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -55,14 +56,15 @@ public class ViewModel : INotifyPropertyChanged
         Series = new ISeries[] { salesPerDaysSeries, stockSeries };
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public ISeries[] Series { get; set; }
 
     private void SalesPerDaysSeries_ChartPointPointerDown(
         IChartView chart,
         ChartPoint<Fruit, BezierPoint<CircleGeometry>, LabelGeometry> point)
     {
         Trace.WriteLine(
-            $"[salesPerDay ChartPointPointerDown] clicked on {point.Model?.Name}, {point.Model?.SalesPerDay} items sold per day");
+            $"[salesPerDay ChartPointPointerDown] clicked on {point.Model?.Name}, " +
+            $"{point.Model?.SalesPerDay} items sold per day");
     }
 
     private void StockSeries_ChartPointPointerDown(
@@ -73,8 +75,33 @@ public class ViewModel : INotifyPropertyChanged
             $"[stock ChartPointPointerDown] clicked on {point.Model?.Name},  current stock {point.Model?.Stock}");
     }
 
-    public IEnumerable<ISeries> Series { get; set; }
+    [ICommand]
+    private void DataPointerDown(IEnumerable<ChartPoint>? points)
+    {
+        if (points is null) return;
 
-    // XAML platforms also support ICommands
-    public ICommand DataPointerDownCommand { get; set; } = new RelayCommand(); // mark
+        // notice in the chart command we are not able to use strongly typed points
+        // but we can cast the point.Context.DataSource to the actual type.
+
+        foreach (var point in points)
+        {
+            if (point.Context.DataSource is Fruit city)
+            {
+                Trace.WriteLine($"[chart.dataPointerDownCommand] clicked on {city.Name}");
+                continue;
+            }
+
+            if (point.Context.DataSource is int integer)
+            {
+                Trace.WriteLine($"[chart.dataPointerDownCommand] clicked on number {integer}");
+                continue;
+            }
+
+            // handle more possible types here...
+            // if (point.Context.DataSource is Foo foo)
+            // {
+            //     ...
+            // }
+        }
+    }
 }

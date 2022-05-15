@@ -21,19 +21,19 @@ public class View : Panel
         };
 
         var b1 = new Button { Text = "Add item" };
-        b1.Click += (object sender, System.EventArgs e) => viewModel.AddRandomItem();
+        b1.Click += (object sender, System.EventArgs e) => viewModel.AddItem();
 
         var b2 = new Button { Text = "Replace item" };
-        b2.Click += (object sender, System.EventArgs e) => viewModel.ReplaceRandomItem();
+        b2.Click += (object sender, System.EventArgs e) => viewModel.ReplaceItem();
 
         var b3 = new Button { Text = "Remove item" };
-        b3.Click += (object sender, System.EventArgs e) => viewModel.RemoveFirstItem();
+        b3.Click += (object sender, System.EventArgs e) => viewModel.RemoveItem();
 
         var b4 = new Button { Text = "Add series" };
         b4.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
 
         var b5 = new Button { Text = "Remove series" };
-        b5.Click += (object sender, System.EventArgs e) => viewModel.RemoveLastSeries();
+        b5.Click += (object sender, System.EventArgs e) => viewModel.RemoveSeries();
 
         var b6 = new Button { Text = "Constant changes" };
         b6.Click += OnConstantChangesClick;
@@ -49,8 +49,8 @@ public class View : Panel
 
         while (isStreaming.Value)
         {
-            viewModel.RemoveFirstItem();
-            viewModel.AddRandomItem();
+            viewModel.RemoveItem();
+            viewModel.AddItem();
             await Task.Delay(1000);
         }
     }

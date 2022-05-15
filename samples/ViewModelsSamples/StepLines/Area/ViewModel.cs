@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -6,13 +6,14 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.StepLines.Area;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public List<ISeries> Series { get; set; } = new()
+    public ISeries[] Series { get; set; } =
     {
         new StepLineSeries<double>
         {
-            Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
+            Values = new double[] { -2, -1, 3, 5, 3, 4, 6 },
             // Set he Fill property to build an area series
             // by default the series has a fill color based on your app theme
             Fill = new SolidColorPaint(SKColors.CornflowerBlue),

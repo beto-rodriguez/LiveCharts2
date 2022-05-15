@@ -755,14 +755,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         if (Parent == null)
         {
             core?.Unload();
-
-            Series = Array.Empty<ISeries>();
-            AngleAxes = Array.Empty<IPolarAxis>();
-            RadiusAxes = Array.Empty<IPolarAxis>();
-            _seriesObserver = null!;
-            _angleObserver = null!;
-            _radiusObserver = null!;
-
             return;
         }
 

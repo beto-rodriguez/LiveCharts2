@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.StepLines.Basic;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public ISeries[] Series { get; set; } =
+    {
+        new StepLineSeries<double?>
         {
-            new StepLineSeries<double?>
-            {
-                Values = new ObservableCollection<double?> { 2, 1, 3, 4, 3, 4, 6 },
-                Fill = null
-            }
-        };
+            Values = new ObservableCollection<double?> { 2, 1, 3, 4, 3, 4, 6 },
+            Fill = null
+        }
+    };
 }

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Basic;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -17,7 +18,7 @@ public class ViewModel
             new PieSeries<double> { Values = new double[] { 3 }, Name = "Slice 5" }
         };
 
-        // the next code is equivalent to the previous one,
+        // the next code is equivalent to the previous one, // mark
         // but using the AsLiveChartsPieSeries() extension.
 
         // you could convert any IEnumerable to a pie series collection
@@ -26,7 +27,7 @@ public class ViewModel
         //var data = new List<double> { 2, 4, 1, 4, 3 };
         //Series = data.AsLiveChartsPieSeries();
 
-        // and the name property? try this:
+        // and the name property? try this: // mark
         //Series = data.AsLiveChartsPieSeries((value, series) =>
         //{
         //    // here you can configure the series assigned to each value.
@@ -34,5 +35,5 @@ public class ViewModel
         //});
     }
 
-    public IEnumerable<ISeries> Series { get; set; }
+    public ISeries[] Series { get; set; }
 }

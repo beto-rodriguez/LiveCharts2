@@ -28,15 +28,15 @@ public partial class View : UserControl
         Controls.Add(cartesianChart);
 
         var b1 = new Button { Text = "toggle 1", Location = new System.Drawing.Point(0, 0) };
-        b1.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries0();
+        b1.Click += (object sender, System.EventArgs e) => viewModel.ToggleSeries0();
         Controls.Add(b1);
 
         var b2 = new Button { Text = "toggle 2", Location = new System.Drawing.Point(80, 0) };
-        b2.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries1();
+        b2.Click += (object sender, System.EventArgs e) => viewModel.ToggleSeries1();
         Controls.Add(b2);
 
         var b3 = new Button { Text = "toggle 3", Location = new System.Drawing.Point(160, 0) };
-        b3.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries2();
+        b3.Click += (object sender, System.EventArgs e) => viewModel.ToggleSeries2();
         Controls.Add(b3);
     }
 }

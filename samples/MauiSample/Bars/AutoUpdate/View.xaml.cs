@@ -20,8 +20,8 @@ public partial class View : ContentPage
 
         while (isStreaming.Value)
         {
-            vm.RemoveFirstItem();
-            vm.AddRandomItem();
+            vm.RemoveItem();
+            vm.AddItem();
             await Task.Delay(1000);
         }
     }

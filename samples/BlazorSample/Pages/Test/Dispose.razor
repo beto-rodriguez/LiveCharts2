@@ -1,0 +1,43 @@
+﻿@page "/Test/Dispose"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Test.Dispose
+
+<button type="button" class="btn btn-primary" @onclick="Toggle">Toggle</button>
+
+@if (IsVisible)
+{
+	<div style="max-width: 400px">
+		<CartesianChart
+			Series="ViewModel.CartesianSeries">
+		</CartesianChart>
+	</div>
+
+	<div style="max-width: 400px">
+		<PieChart
+			Series="ViewModel.PieSeries">
+		</PieChart>
+	</div>
+
+	<div style="max-width: 400px">
+		<PolarChart
+			Series="ViewModel.PolarSeries">
+		</PolarChart>
+	</div>
+
+    <div style="max-width: 400px">
+		<GeoMap
+			Series="ViewModel.GeoSeries">
+		</GeoMap>
+	</div>
+}
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+
+	public bool IsVisible{ get; set; }
+
+	public void Toggle()
+	{
+		IsVisible = !IsVisible;
+	}
+}
