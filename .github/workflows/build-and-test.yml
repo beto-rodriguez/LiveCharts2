@@ -76,7 +76,7 @@ jobs:
       run: dotnet build ./samples/EtoFormsSample
 
     - name: Build WinUI
-      run: msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
+      run: msbuild ./samples/WinUISample/WinUISample/WinUISample.csproj /t:Restore
 
     - name: Run unit tests
       run: dotnet test ./tests/LiveChartsCore.UnitTesting
