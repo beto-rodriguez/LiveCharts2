@@ -176,13 +176,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     protected override void OnHandleDestroyed(EventArgs e)
     {
         base.OnHandleDestroyed(e);
-
         _core?.Unload();
-
-        Series = Array.Empty<IGeoSeries>();
-        _seriesObserver = null!;
-
-        Canvas.Dispose();
     }
 
     private void GeoMap_Resize(object? sender, EventArgs e)

@@ -178,19 +178,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         core.Update();
     }
 
-    /// <inheritdoc cref="Chart.OnUnloading"/>
-    protected override void OnUnloading()
-    {
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-        _seriesObserver = null!;
-        _xObserver = null!;
-        _yObserver = null!;
-        _sectionsObserver = null!;
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
     public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
