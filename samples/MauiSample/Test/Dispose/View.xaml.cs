@@ -15,9 +15,8 @@ public partial class View : ContentPage
     {
         _ = container.Remove(_currentView);
         _currentView = null;
-
-        //_currentView = new NewPage1();
-        //Grid.SetRow(_currentView, 1);
-        //container.Add(_currentView);
+        _currentView = new NewPage1();
+        Grid.SetRow(_currentView, 1);
+        container.Add(_currentView);
     }
 }

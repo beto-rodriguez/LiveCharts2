@@ -12,13 +12,5 @@
         <Button Grid.Row="0" Clicked="Button_Clicked" Text="Change"></Button>
 
         <local:NewPage1 Grid.Row="1" x:Name="content"></local:NewPage1>
-
-        <!--<ContentPresenter Grid.Row="1">
-            <ContentPresenter.Content>
-                <local:NewPage1 Grid.Row="1"></local:NewPage1>
-            </ContentPresenter.Content>
-        </ContentPresenter>-->
-        
-        
     </Grid>
 </ContentPage>
