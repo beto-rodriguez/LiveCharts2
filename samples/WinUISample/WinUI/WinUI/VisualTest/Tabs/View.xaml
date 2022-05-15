@@ -4,18 +4,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:bars="using:WinUISample.Bars.Basic"
-    xmlns:lines="using:WinUISample.Lines.Basic"
+    xmlns:bars="using:WinUISample.Bars.AutoUpdate"
+    xmlns:lines="using:WinUISample.Lines.AutoUpdate"
     mc:Ignorable="d">
 
     <Grid>
-        <TabView>
+        <TabView
+            Height="600"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch">
+            
             <TabViewItem Header="tab 1">
-                <bars:View Height="200" Width="200"></bars:View>
+                <bars:View></bars:View>
             </TabViewItem>
             <TabViewItem Header="tab 2">
-                <lines:View  Height="200" Width="200"></lines:View>
+                <lines:View></lines:View>
             </TabViewItem>
+
         </TabView>
     </Grid>
     

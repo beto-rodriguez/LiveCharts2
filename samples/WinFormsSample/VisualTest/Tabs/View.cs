@@ -20,7 +20,7 @@ public partial class View : UserControl
         };
 
         var tabPage1 = new TabPage("tab 1");
-        tabPage1.Controls.Add(new Lines.Basic.View
+        tabPage1.Controls.Add(new Lines.AutoUpdate.View
         {
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),
@@ -28,7 +28,7 @@ public partial class View : UserControl
         });
 
         var tabPage2 = new TabPage("tab 2");
-        tabPage2.Controls.Add(new Bars.Basic.View
+        tabPage2.Controls.Add(new Bars.AutoUpdate.View
         {
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),

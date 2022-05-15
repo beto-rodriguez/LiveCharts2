@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.19041</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.19041</TargetFramework>
     <TargetPlatformMinVersion>10.0.18362</TargetPlatformMinVersion>
     <RootNamespace>WinUISample</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
+    
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <IsPackable>false</IsPackable>
@@ -95,6 +96,8 @@
     <None Remove="StackedArea\Basic\View.xaml" />
     <None Remove="StackedBars\Groups\View.xaml" />
     <None Remove="StackedBars\Basic\View.xaml" />
+    <None Remove="Test\Dispose\UserControl1.xaml" />
+    <None Remove="Test\Dispose\View.xaml" />
     <None Remove="VisualTest\DataTemplate\View.xaml" />
     <None Remove="VisualTest\Tabs\View.xaml" />
     <None Remove="VisualTest\TwoChartOneSeries\View.xaml" />
@@ -344,6 +347,21 @@
     <Page Update="StackedBars\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Test\Dispose\UserControl1.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="VisualTest - Copy\DataTemplate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="VisualTest - Copy\ReattachVisual\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="VisualTest - Copy\Tabs\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="VisualTest - Copy\TwoChartOneSeries\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="VisualTest\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
