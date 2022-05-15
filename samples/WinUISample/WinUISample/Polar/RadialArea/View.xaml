@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="WinUISample.Polar.RadialArea.View"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+            xmlns:vms="using:ViewModelsSamples.Polar.RadialArea"
+            mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <lvc:PolarChart Series="{Binding Series}" AngleAxes="{Binding AngleAxes}" InitialRotation="-45" />
+</UserControl>

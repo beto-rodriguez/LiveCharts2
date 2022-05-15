@@ -1,0 +1,40 @@
+﻿<UserControl
+    x:Class="WinUISample.General.ChartToImage.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.General.ChartToImage"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel></vms:ViewModel>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            x:Name="cartesianChart"
+            Series="{Binding CatesianSeries}">
+        </lvc:CartesianChart>
+        
+        <lvc:PieChart
+            Grid.Row="1"
+            x:Name="pieChart"
+            Series="{Binding PieSeries}">
+        </lvc:PieChart>
+
+        <lvc:GeoMap
+            Grid.Row="2"
+            x:Name="geoChart"
+            Series="{Binding GeoSeries}">
+        </lvc:GeoMap>
+    </Grid>
+</UserControl>
