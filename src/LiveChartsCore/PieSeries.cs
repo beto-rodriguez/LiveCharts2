@@ -331,7 +331,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             _ = toDeletePoints.Remove(point);
 
-            if (DataLabelsPaint is not null && point.PrimaryValue > 0)
+            if (DataLabelsPaint is not null && point.PrimaryValue >= 0)
             {
                 var label = (TLabel?)point.Context.Label;
 
