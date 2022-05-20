@@ -407,8 +407,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
                 .GetSolidColorPaint(new LvcColor(255, 255, 255, 180));
             hoverPaint.ZIndex = int.MaxValue;
             hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
-            chartView.CoreCanvas.AddDrawableTask(hoverPaint);
         }
+
+        chartView.CoreCanvas.AddDrawableTask(hoverPaint);
 
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null || visual.HighlightableGeometry is null) return;

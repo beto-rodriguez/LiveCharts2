@@ -184,7 +184,7 @@ public class GeoMap<TDrawingContext>
     /// <summary>
     /// Measures the chart.
     /// </summary>
-    private void Measure()
+    internal void Measure()
     {
         if (_activeMap is not null && _activeMap != View.ActiveMap)
         {

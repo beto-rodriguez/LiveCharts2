@@ -150,13 +150,13 @@ You can find another example at the source code of the `DefaultLegend` class
 
 {{~ end ~}}
 
-{{~ if uwp ~}}
-{{~ "~/../samples/UWPSample/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
+{{~ if uno ~}}
+{{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
 
 :::tip
 You can find another example at the source code of the `DefaultLegend` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultLegend.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultLegend.xaml.cs)).
+([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/DefaultLegend.xaml), 
+[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/DefaultLegend.xaml.cs)).
 :::
 
 {{~ end ~}}

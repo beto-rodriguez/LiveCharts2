@@ -376,7 +376,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// Measures this chart.
     /// </summary>
     /// <returns></returns>
-    protected override void Measure()
+    protected internal override void Measure()
     {
 #if DEBUG
         if (LiveCharts.EnableLogging)
@@ -390,13 +390,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
                                // while they are not visible, the problem is when the control is visible again
                                // the animations are not as expected because previously it ran in an invalid case.
-
-        if (_chartView.XAxes is null || _chartView.YAxes is null || _chartView.Series is null)
-        {
-            Trace.WriteLine(
-                $"{(_chartView.XAxes is null ? "-null x-" : "")} {(_chartView.YAxes is null ? "-null y-" : "")} {(_chartView.Series is null ? "-null series-" : "")}");
-            return;
-        }
 
         InvokeOnMeasuring();
 
@@ -753,6 +746,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         foreach (var axis in totalAxes)
         {
+            if (!axis.IsVisible) continue;
+
             axis.IsNotifyingChanges = false;
             axis.ActualBounds.HasPreviousState = true;
             axis.IsNotifyingChanges = true;

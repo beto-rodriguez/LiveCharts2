@@ -145,14 +145,14 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
     public SKImage GetImage()
     {
-        load();
         Canvas.DisableAnimations = true;
 
         using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
-
-        var canvas = surface.Canvas;
+        using var canvas = surface.Canvas;
         using var clearColor = new SKPaint { Color = Background };
+
         canvas.DrawRect(0, 0, Width, Height, clearColor);
+        _core.Measure();
 
         Canvas.DrawFrame(
             new SkiaSharpDrawingContext(
@@ -163,6 +163,8 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
             {
                 ClearColor = Background
             });
+
+        _core.Unload();
 
         return surface.Snapshot();
     }
@@ -170,26 +172,7 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     /// <inheritdoc cref="ISkiaSharpChart.SaveImage(string, SKEncodedImageFormat, int)"/>
     public void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
     {
-        load();
-        Canvas.DisableAnimations = true;
-
-        using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
-
-        var canvas = surface.Canvas;
-        using var clearColor = new SKPaint { Color = Background };
-        canvas.DrawRect(0, 0, Width, Height, clearColor);
-
-        Canvas.DrawFrame(
-            new SkiaSharpDrawingContext(
-                Canvas,
-                new SKImageInfo(Height, Width),
-                surface,
-                canvas)
-            {
-                ClearColor = Background
-            });
-
-        using var image = surface.Snapshot();
+        using var image = GetImage();
         using var data = image.Encode(format, quality);
         using var stream = File.OpenWrite(path);
         data.SaveTo(stream);
@@ -198,10 +181,5 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {
         action();
-    }
-
-    private void load()
-    {
-        _core.Update(new Kernel.ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
     }
 }
