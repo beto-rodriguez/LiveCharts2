@@ -753,6 +753,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         foreach (var axis in totalAxes)
         {
+            if (!axis.IsVisible) continue;
+
             axis.IsNotifyingChanges = false;
             axis.ActualBounds.HasPreviousState = true;
             axis.IsNotifyingChanges = true;
