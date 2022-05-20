@@ -229,9 +229,9 @@ public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharp
         using var clearColor = new SKPaint { Color = Background };
         canvas.DrawRect(0, 0, Width, Height, clearColor);
 
-        Core.Load();
-        Core.Update(new ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
-
+        Core.IsLoaded = true;
+        Core.IsFirstDraw = true;
+        Core.Measure();
         CoreCanvas.DrawFrame(
             new SkiaSharpDrawingContext(
                 CoreCanvas,
@@ -241,6 +241,7 @@ public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharp
             {
                 ClearColor = Background
             });
+        Core.Unload();
 
         return surface.Snapshot();
     }

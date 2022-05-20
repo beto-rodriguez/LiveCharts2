@@ -150,7 +150,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     /// Measures this chart.
     /// </summary>
     /// <returns></returns>
-    protected override void Measure()
+    protected internal override void Measure()
     {
 #if DEBUG
         if (LiveCharts.EnableLogging)

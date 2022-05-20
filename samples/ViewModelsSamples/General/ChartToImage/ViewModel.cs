@@ -1,11 +1,13 @@
-﻿using LiveChartsCore;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.General.ChartToImage;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ISeries[] CatesianSeries { get; set; } =
     {
