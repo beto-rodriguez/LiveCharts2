@@ -21,6 +21,7 @@
 )
 
 $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+
 class Project {
     [string]$src
     [bool]$useMsbuild
@@ -120,6 +121,7 @@ function Add-Pack {
         ./nuget pack $project.nuspecFile -OutputDirectory $nupkgOutputPath -Symbols
     }
 }
+
 function Write-ColorOutput($foregroundColor)
 {
     # save the current color
@@ -149,4 +151,4 @@ foreach ($p in $projects) {
     Add-Pack $p
 }
 
-Write-ColorOutput green $("`n`nSuccessfully build and packed " + $projects.length + " projects at '" + $nupkgOutputPath + "' using '" + $configuration + "' config.`n`n")
+Write-ColorOutput green $("`n`nSuccessfully built and packed " + $projects.length + " projects at '" + $nupkgOutputPath + "' using '" + $configuration + "' config.`n`n")
