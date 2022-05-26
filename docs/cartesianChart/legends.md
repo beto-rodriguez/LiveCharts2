@@ -185,7 +185,7 @@ You can find another example at the source code of the `DefaultLegend` class
 {{~ end ~}}
 
 {{~ if winui ~}}
-{{~ "~/../samples/WinUISample/WinUI/WinUI/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
+{{~ "~/../samples/WinUISample/WinUISample/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
 
 :::tip
 You can find another example at the source code of the `DefaultLegend` class 
