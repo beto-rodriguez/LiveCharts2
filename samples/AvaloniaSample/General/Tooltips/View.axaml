@@ -20,6 +20,6 @@
         </DataTemplate>
       </ComboBox.ItemTemplate>
     </ComboBox>
-    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" TooltipPosition="{Binding Position}"></lvc:CartesianChart>
+    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" TooltipPosition="{Binding Position}" LegendPosition="Left"></lvc:CartesianChart>
   </Grid>  
 </UserControl>

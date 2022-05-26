@@ -151,7 +151,7 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.ControlSize);
+                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.DrawMarginSize);
         }
         if (chart is PieChart<SkiaSharpDrawingContext>)
         {
@@ -172,13 +172,15 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
         if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
         Transitions ??= new Transitions
-            {
-                new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
-                new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
-            };
+        {
+            new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
+            new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
+        };
 
-        Canvas.SetTop(this, y);
-        Canvas.SetLeft(this, x);
+        var canvasLocation = avaloniaChart.GetCanvasPosition();
+
+        Canvas.SetTop(this, y + canvasLocation.Y);
+        Canvas.SetLeft(this, x + canvasLocation.X);
     }
 
     /// <summary>
