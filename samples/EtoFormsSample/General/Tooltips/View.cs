@@ -16,6 +16,7 @@ public class View : Panel
         cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            LegendPosition = LegendPosition.Left
         };
 
         var b1 = new DropDown();

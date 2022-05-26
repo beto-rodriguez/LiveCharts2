@@ -714,7 +714,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
-    public Point GetCanvasPosition()
+    Point IAvaloniaChart.GetCanvasPosition()
     {
         var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
         return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
