@@ -21,7 +21,7 @@
                   DisplayMemberPath="Name"
                   SelectedValuePath="Position"
                   SelectedValue="{Binding Position}"/>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" TooltipPosition="{Binding Position}" />
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" TooltipPosition="Top" LegendPosition="Left" />
     </Grid>
 
 </UserControl>
