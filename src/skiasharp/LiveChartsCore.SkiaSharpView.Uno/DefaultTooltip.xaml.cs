@@ -31,6 +31,7 @@ using LiveChartsCore.SkiaSharpView.Uno.Binding;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace LiveChartsCore.SkiaSharpView.Uno;
 
@@ -73,7 +74,6 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
         if (ActualTemplate != template) ActualTemplate = template;
 
         LvcPoint? location = null;
-        //uwpChart.TooltipControl.IsOpen = true; // FREEZEES UNO MOBILE.
         Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
         DataContext = new TooltipBindingContext
@@ -105,12 +105,20 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
 
         if (location is null) throw new Exception("location not supported");
 
-        Canvas.SetLeft(unoChart.TooltipElement, location.Value.X);
-        Canvas.SetTop(unoChart.TooltipElement, location.Value.Y);
+        var canvasPosition = unoChart.GetCanvasPosition();
 
-        // obsolete.. instead use a canvas as container and move the tooltip manually to support uno mobile
-        //uwpChart.TooltipControl.PlacementRect =
-        //    new Rect(location.Value.X, location.Value.Y + DesiredSize.Height, DesiredSize.Width, DesiredSize.Height);
+        var x = location.Value.X + canvasPosition.X;
+        var y = location.Value.Y + canvasPosition.Y;
+        var s = chart.ControlSize;
+        var w = s.Width;
+        var h = s.Height;
+        if (location.Value.X + DesiredSize.Width > w) x = w - DesiredSize.Width;
+        if (location.Value.X < 0) x = 0;
+        if (location.Value.Y < 0) y = 0;
+        if (location.Value.Y + DesiredSize.Height > h) x = h - DesiredSize.Height;
+
+        Canvas.SetLeft(unoChart.TooltipElement, x);
+        Canvas.SetTop(unoChart.TooltipElement, y);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()

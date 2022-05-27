@@ -161,8 +161,10 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
 
         if (location is null) throw new Exception("location not found");
 
-        double x = location.Value.X;
-        double y = location.Value.Y;
+        var canvasLocation = avaloniaChart.GetCanvasPosition();
+
+        var x = location.Value.X + canvasLocation.X;
+        var y = location.Value.Y + canvasLocation.Y;
         var s = chart.ControlSize;
         var w = s.Width;
         var h = s.Height;
@@ -177,10 +179,8 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
             new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
         };
 
-        var canvasLocation = avaloniaChart.GetCanvasPosition();
-
-        Canvas.SetTop(this, y + canvasLocation.Y);
-        Canvas.SetLeft(this, x + canvasLocation.X);
+        Canvas.SetTop(this, y);
+        Canvas.SetLeft(this, x);
     }
 
     /// <summary>
