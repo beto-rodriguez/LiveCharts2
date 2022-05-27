@@ -7,7 +7,7 @@
 
     <ContentView.Resources>
         <DataTemplate x:Key="defaultTemplate">
-            <Frame BackgroundColor="{Binding BackgroundColor}">
+            <Frame BackgroundColor="{Binding BackgroundColor}" HasShadow="False">
                 <StackLayout 
                     BindableLayout.ItemsSource="{Binding Series, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
                     BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
