@@ -879,12 +879,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         if (core is null) return;
 
-        if (TooltipPosition != TooltipPosition.Hidden)
-        {
-            var location = new LvcPoint(e.Location.X, e.Location.Y);
-            core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
-        }
+        var location = new LvcPoint(e.Location.X, e.Location.Y);
+        core.InvokePointerDown(location);
+        core.InvokePointerMove(location);
 
         Touched?.Invoke(this, e);
     }
