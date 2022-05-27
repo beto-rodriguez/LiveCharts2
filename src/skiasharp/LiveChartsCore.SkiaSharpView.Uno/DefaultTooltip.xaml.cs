@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -31,7 +32,6 @@ using LiveChartsCore.SkiaSharpView.Uno.Binding;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 
 namespace LiveChartsCore.SkiaSharpView.Uno;
 
@@ -59,9 +59,9 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
     /// <summary>
     /// Gets or sets the actual template.
     /// </summary>
-    public DataTemplate ActualTemplate
+    public DataTemplate? ActualTemplate
     {
-        get => (DataTemplate)GetValue(ActualTemplateProperty);
+        get => (DataTemplate?)GetValue(ActualTemplateProperty);
         set => SetValue(ActualTemplateProperty, value);
     }
 
@@ -124,6 +124,8 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
     {
         if (_unoChart is null) return;
-        //_unoChart.TooltipControl.IsOpen = false;
+
+        Canvas.SetLeft(_unoChart.TooltipElement, -1000);
+        Canvas.SetTop(_unoChart.TooltipElement, -1000);
     }
 }
