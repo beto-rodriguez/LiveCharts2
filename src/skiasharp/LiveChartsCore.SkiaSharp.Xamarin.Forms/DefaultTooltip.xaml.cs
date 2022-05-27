@@ -148,11 +148,15 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
 
         _chart = chart;
 
+        var canvasPosition = mobileChart.GetCanvasPosition();
+        canvasPosition.X = (float)(canvasPosition.X * DeviceDisplay.MainDisplayInfo.Density);
+        canvasPosition.Y = (float)(canvasPosition.Y * DeviceDisplay.MainDisplayInfo.Density);
+
         AbsoluteLayout.SetLayoutBounds(
             this,
             new Rectangle(
-                location.Value.X / DeviceDisplay.MainDisplayInfo.Density,
-                location.Value.Y / DeviceDisplay.MainDisplayInfo.Density,
+                (location.Value.X + canvasPosition.X) / DeviceDisplay.MainDisplayInfo.Density,
+                (location.Value.Y + canvasPosition.Y) / DeviceDisplay.MainDisplayInfo.Density,
                 r.Request.Width,
                 r.Request.Height));
         AbsoluteLayout.SetLayoutFlags(this, AbsoluteLayoutFlags.None);

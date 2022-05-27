@@ -716,6 +716,12 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
     }
 
+    /// <inheritdoc cref="IMobileChart.GetCanvasPosition" />
+    LvcPoint IMobileChart.GetCanvasPosition()
+    {
+        return new LvcPoint((float)canvas.X, (float)canvas.Y);
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {

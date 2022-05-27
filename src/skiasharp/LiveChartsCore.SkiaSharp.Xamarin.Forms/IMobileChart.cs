@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using Xamarin.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.XamarinForms;
@@ -148,4 +149,10 @@ public interface IMobileChart
     /// The legend font attributes.
     /// </value>
     FontAttributes LegendFontAttributes { get; set; }
+
+    /// <summary>
+    /// Gets the canvas position.
+    /// </summary>
+    /// <returns>The canvas position.</returns>
+    LvcPoint GetCanvasPosition();
 }
