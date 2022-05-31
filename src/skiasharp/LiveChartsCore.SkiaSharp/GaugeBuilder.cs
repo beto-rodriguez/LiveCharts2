@@ -55,6 +55,8 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     private double? _maxColumnWidth = null;
     private Func<ChartPoint, string> _labelFormatter = point => point.PrimaryValue.ToString();
 
+    internal static IPaint<SkiaSharpDrawingContext> DefaultLabelsPaint { get; set; } = new SolidColorPaint(new SKColor(40, 40, 40));
+
     /// <summary>
     /// Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.
     /// </summary>
@@ -402,7 +404,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     {
         var series = new List<PieSeries<ObservableValue>>();
 
-        var defaultLabelsPaint = _labelsPosition is null ? null : new SolidColorPaint(new SKColor(40, 40, 40));
+        var defaultLabelsPaint = _labelsPosition is null ? null : DefaultLabelsPaint;
 
         var i = 0;
         foreach (var item in _tuples)
