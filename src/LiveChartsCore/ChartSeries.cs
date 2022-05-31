@@ -64,15 +64,6 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
         set => SetPaintProperty(ref _dataLabelsPaint, value);
     }
 
-    /// <summary>
-    /// Gets or sets the data labels drawable task.
-    /// </summary>
-    /// <value>
-    /// The data labels drawable task.
-    /// </value>
-    [Obsolete("Renamed to DataLabelsPaint")]
-    public IPaint<TDrawingContext>? DataLabelsDrawableTask { get => DataLabelsPaint; set => DataLabelsPaint = value; }
-
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsSize"/>
     public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }
 
