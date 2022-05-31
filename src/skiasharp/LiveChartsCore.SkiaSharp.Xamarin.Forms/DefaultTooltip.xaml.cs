@@ -191,12 +191,7 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            AbsoluteLayout.SetLayoutBounds(
-                this,
-                new Rectangle(
-                    -1000, -1000,
-                    0, 0));
-
+            AbsoluteLayout.SetLayoutBounds(this, new Rectangle(-1000, -1000, 0, 0));
             _chart?.ClearTooltipData();
             _chart?.Update();
         });

@@ -168,6 +168,7 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
         var s = chart.ControlSize;
         var w = s.Width;
         var h = s.Height;
+
         if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
         if (location.Value.X < 0) x = 0;
         if (location.Value.Y < 0) y = 0;
