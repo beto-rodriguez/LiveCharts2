@@ -45,7 +45,6 @@ public static class MeasureExtensions
         while (!builder.Finished) yield return YieldReturnUntilNextNullChartPoint(builder, onDeleteNullPoint);
     }
 
-
     /// <summary>
     /// Builds a anumerator with the necessary data to build an Spline.
     /// </summary>

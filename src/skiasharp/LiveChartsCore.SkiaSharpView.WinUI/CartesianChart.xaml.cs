@@ -849,6 +849,14 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
     }
 
+    /// <inheritdoc cref="IWinUIChart.GetCanvasPosition"/>
+    Windows.Foundation.Point IWinUIChart.GetCanvasPosition()
+    {
+        return _canvas is null
+            ? throw new Exception("Canvas not found")
+            : _canvas.TransformToVisual(this).TransformPoint(new Windows.Foundation.Point(0, 0));
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -921,7 +929,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
-        var p = e.GetCurrentPoint(this);
+        var p = e.GetCurrentPoint(_canvas);
         _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 

@@ -692,6 +692,11 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         tooltip.Hide();
     }
 
+    internal Point GetCanvasPosition()
+    {
+        return canvas is null ? throw new Exception("Canvas not found") : canvas.TranslatePoint(new Point(0, 0), this);
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -760,7 +765,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        var p = e.GetPosition(this);
+        var p = e.GetPosition(canvas);
         core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 

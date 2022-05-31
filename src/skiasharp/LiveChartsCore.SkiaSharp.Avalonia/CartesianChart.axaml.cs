@@ -713,6 +713,13 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         tooltip.Hide();
     }
 
+    /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
+    Point IAvaloniaChart.GetCanvasPosition()
+    {
+        var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
+        return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -814,7 +821,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
     {
-        var p = e.GetPosition(this);
+        var p = e.GetPosition(_avaloniaCanvas);
         _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 

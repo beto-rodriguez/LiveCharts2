@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Avalonia;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 
@@ -141,4 +142,10 @@ public interface IAvaloniaChart
     /// The legend background.
     /// </value>
     IBrush LegendBackground { get; set; }
+
+    /// <summary>
+    /// Gets the canvas position relative to the control.
+    /// </summary>
+    /// <returns>the postion.</returns>
+    Point GetCanvasPosition();
 }

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
@@ -149,4 +150,10 @@ public interface IMauiChart
     /// The legend font attributes.
     /// </value>
     FontAttributes LegendFontAttributes { get; set; }
+
+    /// <summary>
+    /// Gets the canvas position.
+    /// </summary>
+    /// <returns>The canvas position.</returns>
+    LvcPoint GetCanvasPosition();
 }

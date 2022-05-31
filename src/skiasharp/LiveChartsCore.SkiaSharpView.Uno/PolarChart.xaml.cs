@@ -814,6 +814,12 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
     }
 
+    /// <inheritdoc cref="IUnoChart.GetCanvasPosition"/>
+    Windows.Foundation.Point IUnoChart.GetCanvasPosition()
+    {
+        return motionCanvas.TransformToVisual(this).TransformPoint(new Windows.Foundation.Point(0, 0));
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -875,7 +881,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        var p = e.GetCurrentPoint(this);
+        var p = e.GetCurrentPoint(motionCanvas);
         _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 
