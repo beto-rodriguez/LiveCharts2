@@ -43,7 +43,7 @@ public class ObservableValue : INotifyPropertyChanged
     /// Initializes a new instance of the <see cref="ObservableValue"/> class.
     /// </summary>
     /// <param name="value">The value.</param>
-    public ObservableValue(double value)
+    public ObservableValue(double? value)
     {
         _value = value;
     }

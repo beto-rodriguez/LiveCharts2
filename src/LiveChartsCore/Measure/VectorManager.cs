@@ -103,6 +103,14 @@ public class VectorManager<TSegment, TDrawingContext>
     }
 
     /// <summary>
+    /// Clears the current vector segments.
+    /// </summary>
+    public void Clear()
+    {
+        AreaGeometry.ClearCommands();
+    }
+
+    /// <summary>
     /// Ends the vector.
     /// </summary>
     public void End()
