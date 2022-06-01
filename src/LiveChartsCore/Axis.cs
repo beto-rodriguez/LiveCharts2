@@ -554,7 +554,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
+
         var s = axisTick.Value;
+
+        if (s == 0) s = 1;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
