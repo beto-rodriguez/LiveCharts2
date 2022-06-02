@@ -619,7 +619,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public override void RemoveFromUI(Chart<TDrawingContext> chart)
     {
         base.RemoveFromUI(chart);
-        _animatableBounds = null!;
+        _animatableBounds = new();
         _ = activeSeparators.Remove(chart);
     }
 
