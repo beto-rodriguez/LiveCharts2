@@ -16,9 +16,8 @@ public partial class ViewModel
         {
             Values = new ObservableCollection<double> { 20, 50, 40, 20, 40, 30, 50, 20, 50, 40 },
 
-            // Defines the distance between every group of bars that share
-            // the same secondary coordinate (normally the X coordinate)
-            GroupPadding = 0,
+            // Defines the distance between every bars in the series
+            Padding = 0,
 
             // Defines the max width a bar can have
             MaxBarWidth = double.PositiveInfinity,

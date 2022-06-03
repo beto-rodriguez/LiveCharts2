@@ -12,14 +12,12 @@ public partial class ViewModel
         new ColumnSeries<double>
         {
             Name = "Mary",
-            Values = new double[] { 2, 5, 4 },
-            //GroupPadding = 0
+            Values = new double[] { 2, 5, 4 }
         },
         new ColumnSeries<double>
         {
             Name = "Ana",
-            Values = new double[] { 3, 1, 6 },
-            //GroupPadding = 20
+            Values = new double[] { 3, 1, 6 }
         }
     };
 
