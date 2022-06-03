@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
@@ -35,7 +36,7 @@ public partial class ViewModel
                 Stroke = null,
                 MaxBarWidth = 50,
                 DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
-                DataLabelsPosition = DataLabelsPosition.End,
+                DataLabelsPosition = DataLabelsPosition.Start,
                 DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
             })
             .ToArray();

@@ -70,11 +70,13 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
         var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
 
-        var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot));
+        var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
+            cartesianChart.DrawMarginLocation.Y, cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height);
         var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
             ? null
             : new MeasureHelper(
-                previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot));
+                previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
+                cartesianChart.DrawMarginLocation.Y, cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)
@@ -350,9 +352,13 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             CartesianChart<TDrawingContext> cartesianChart,
             IBarSeries<TDrawingContext> barSeries,
             ICartesianAxis axis,
-            float p)
+            float p,
+            float minP,
+            float maxP)
         {
             this.p = p;
+            if (p < minP) this.p = minP;
+            if (p > maxP) this.p = maxP;
 
             uw = scaler.MeasureInPixels(axis.UnitWidth);
             actualUw = uw;

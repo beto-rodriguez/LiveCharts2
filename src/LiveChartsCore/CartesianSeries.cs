@@ -146,23 +146,6 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         LvcPoint drawMarginLocation,
         LvcSize drawMarginSize)
     {
-        if ((seriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
-        {
-            var oy = y + height;
-            if (y < drawMarginLocation.Y) y = drawMarginLocation.Y;
-            var maxHeight = isGreaterThanPivot
-                ? drawMarginLocation.Y + drawMarginSize.Height - y
-                : oy - y;
-            if (height > maxHeight) height = maxHeight;
-
-            var ox = x + width;
-            if (x < drawMarginLocation.X) x = drawMarginLocation.X;
-            var maxWidth = isGreaterThanPivot
-                ? drawMarginLocation.X + drawMarginSize.Width - x
-                : ox - x;
-            if (width > maxWidth) width = maxWidth;
-        }
-
         var middleX = (x + x + width) * 0.5f;
         var middleY = (y + y + height) * 0.5f;
 
