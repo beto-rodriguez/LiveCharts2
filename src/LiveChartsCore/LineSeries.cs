@@ -334,9 +334,13 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
+                    var m = label.Measure(DataLabelsPaint);
                     var labelPosition = GetLabelPosition(
-                        x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition,
+                        x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
                         SeriesProperties, data.TargetPoint.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                    if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }

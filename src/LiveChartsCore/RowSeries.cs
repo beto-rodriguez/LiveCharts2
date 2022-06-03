@@ -216,11 +216,12 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
                 var m = label.Measure(DataLabelsPaint);
-                if (DataLabelsTranslate is not null)
-                    label.TranslateTransform = new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
                 var labelPosition = GetLabelPosition(
                     cx, y, b, helper.uw, label.Measure(DataLabelsPaint),
                     DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }

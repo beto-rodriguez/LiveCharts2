@@ -213,9 +213,13 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
-                    x, cy, helper.uw, b, label.Measure(DataLabelsPaint),
+                    x, cy, helper.uw, b, m,
                     DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }

@@ -220,9 +220,13 @@ public class StackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : Sta
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
-                    x, primaryJ, uw, primaryI - primaryJ, label.Measure(DataLabelsPaint), DataLabelsPosition,
+                    x, primaryJ, uw, primaryI - primaryJ, m, DataLabelsPosition,
                     SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }
