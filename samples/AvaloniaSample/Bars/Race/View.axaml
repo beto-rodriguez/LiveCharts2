@@ -13,7 +13,8 @@
     <lvc:CartesianChart
         Series="{Binding Series}"
         XAxes="{Binding XAxes}"
-        YAxes="{Binding YAxes}">
+        YAxes="{Binding YAxes}"
+        TooltipPosition="Hidden">
     </lvc:CartesianChart>
   </Grid>  
 </UserControl>

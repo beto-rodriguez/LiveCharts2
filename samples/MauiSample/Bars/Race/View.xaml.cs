@@ -17,7 +17,7 @@ public partial class View : ContentPage
         while (true)
         {
             _ = Dispatcher.Dispatch(vm.RandomIncrement);
-            await Task.Delay(1500);
+            await Task.Delay(100);
         }
     }
 }

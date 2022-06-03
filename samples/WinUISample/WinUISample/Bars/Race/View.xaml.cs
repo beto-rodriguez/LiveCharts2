@@ -18,7 +18,7 @@ public sealed partial class View : UserControl
         while (true)
         {
             _ = DispatcherQueue.TryEnqueue(vm.RandomIncrement);
-            await Task.Delay(1500);
+            await Task.Delay(100);
         }
     }
 }

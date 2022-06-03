@@ -37,8 +37,8 @@ public partial class ViewModel
                 Stroke = null,
                 MaxBarWidth = 25,
                 DataLabelsPaint = new SolidColorPaint(new SKColor(245, 245, 245)),
-                DataLabelsPosition = DataLabelsPosition.Left,
-                DataLabelsTranslate = new LvcPoint(1, 0),
+                DataLabelsPosition = DataLabelsPosition.End,
+                DataLabelsTranslate = new LvcPoint(-1, 0),
                 DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
             })
             .OrderByDescending(x => ((ObservableValue[])x.Values!)[0].Value)
