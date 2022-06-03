@@ -48,6 +48,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     private int _scalesXAt;
     private int _scalesYAt;
     private DataLabelsPosition _labelsPosition;
+    private LvcPoint? _labelsTranslate = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -63,6 +64,9 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsPosition"/>
     public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsTranslate"/>
+    public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set { _labelsTranslate = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(

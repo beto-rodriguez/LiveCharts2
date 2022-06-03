@@ -216,7 +216,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
                 var m = label.Measure(DataLabelsPaint);
-                //label.TranslateTransform = new LvcPoint(-m.Width, 0);
+                if (DataLabelsTranslate is not null)
+                    label.TranslateTransform = new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
                 var labelPosition = GetLabelPosition(
                     cx, y, b, helper.uw, label.Measure(DataLabelsPaint),
                     DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);

@@ -16,13 +16,13 @@ public class View : UserControl
 
     public async void Update()
     {
-        //var vm = (ViewModel?)DataContext;
-        //if (vm is null) return;
-        //while (true)
-        //{
-        //    await Dispatcher.UIThread.InvokeAsync(vm.RandomIncrement, DispatcherPriority.Background);
-        //    await Task.Delay(1500);
-        //}
+        var vm = (ViewModel?)DataContext;
+        if (vm is null) return;
+        while (true)
+        {
+            Dispatcher.UIThread.Post(vm.RandomIncrement, DispatcherPriority.Background);
+            await Task.Delay(100);
+        }
     }
 
     private void InitializeComponent()
