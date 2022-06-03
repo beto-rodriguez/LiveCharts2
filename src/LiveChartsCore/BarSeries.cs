@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -42,7 +43,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private double _groupPadding = 10;
+    private double _pading = 10;
     private double _maxBarWidth = 50;
     private bool _ignoresBarPosition = false;
     private double _rx;
@@ -57,7 +58,11 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     { }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
-    public double GroupPadding { get => _groupPadding; set { _groupPadding = value; OnPropertyChanged(); } }
+    [Obsolete($"Replace by {nameof(Padding)} property.")]
+    public double GroupPadding { get => _pading; set { _pading = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
+    public double Padding { get => _pading; set { _pading = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
     public double MaxBarWidth { get => _maxBarWidth; set { _maxBarWidth = value; OnPropertyChanged(); } }

@@ -379,17 +379,28 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             var count = cartesianChart.SeriesContext.GetColumnSeriesCount();
             cp = 0f;
 
+            var padding = (float)barSeries.Padding;
+
             if (!barSeries.IgnoresBarPosition && count > 1)
             {
                 uw /= count;
                 uwm = 0.5f * uw;
                 cp = (pos - count / 2f) * uw + uwm;
+
+                // apply the pading
+                uw -= padding;
+                cp += padding * 0.5f;
             }
 
             if (uw > barSeries.MaxBarWidth)
             {
                 uw = (float)barSeries.MaxBarWidth;
                 uwm = uw * 0.5f;
+                cp = (pos - count / 2f) * uw + uwm + padding * 0.5f;
+
+                // apply the pading
+                uw -= padding;
+                cp += padding * 0.5f;
             }
 
             if (uw < 1)
