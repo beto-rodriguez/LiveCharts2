@@ -5,47 +5,10 @@
 @using ViewModelsSamples.Events.Cartesian
 
 <CartesianChart
-	@ref="_chart"
 	Series="ViewModel.Series"
 	TooltipFindingStrategy="LiveChartsCore.Measure.TooltipFindingStrategy.CompareOnlyX">
 </CartesianChart>
 
 @code {
-	private CartesianChart? _chart;
 	public ViewModel ViewModel { get; set; } = new();
-
-	protected override void OnAfterRender(bool firstRender)
-	{
-		base.OnAfterRender(firstRender);
-
-		if (_chart is null) return;
-		_chart.DataPointerDown += OnDataPointerDown;
-	}
-
-	private void OnDataPointerDown(IChartView view, IEnumerable<ChartPoint> points)
-	{
-		// notice in the chart event we are not able to use strongly typed points
-        // but we can cast the point.Context.DataSource to the actual type.
-
-        foreach (var point in points)
-        {
-            if (point.Context.DataSource is Fruit city)
-            {
-                Console.WriteLine($"[chart.dataPointerDownEvent] clicked on {city.Name}");
-                continue;
-            }
-
-            if (point.Context.DataSource is int integer)
-            {
-                Console.WriteLine($"[chart.dataPointerDownEvent] clicked on number {integer}");
-                continue;
-            }
-
-            // handle more possible types here...
-            // if (point.Context.DataSource is Foo foo)
-            // {
-            //     ...
-            // }
-        }
-	}
 }

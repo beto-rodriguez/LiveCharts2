@@ -854,4 +854,9 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
     }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
+    }
 }

@@ -134,4 +134,9 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     {
         throw new NotImplementedException();
     }
+
+    public void Invalidate()
+    {
+        throw new NotImplementedException();
+    }
 }

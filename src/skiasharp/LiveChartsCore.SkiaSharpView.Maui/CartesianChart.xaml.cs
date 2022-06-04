@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -922,5 +923,10 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

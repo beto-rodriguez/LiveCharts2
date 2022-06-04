@@ -405,4 +405,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
+    }
 }

@@ -57,7 +57,7 @@ public partial class ViewModel
             if (item.Values is null) continue;
 
             var i = ((ObservableValue[])item.Values)[0];
-            i.Value += _r.Next(0, 10);
+            i.Value += _r.Next(0, 100);
         }
 
         Series = Series.OrderByDescending(x => ((ObservableValue[])x.Values!)[0].Value).ToArray();

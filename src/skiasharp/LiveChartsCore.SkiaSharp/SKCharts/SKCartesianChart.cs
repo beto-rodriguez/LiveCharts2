@@ -279,4 +279,9 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
+
+    void IChartView.Invalidate()
+    {
+        throw new NotImplementedException();
+    }
 }
