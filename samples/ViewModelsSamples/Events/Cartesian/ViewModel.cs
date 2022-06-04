@@ -41,8 +41,8 @@ public partial class ViewModel
             }
         };
 
-        // notice that the event signature is different for every series use the intellisense. // mark
-        // see the 'strongly typed events' note bellow this article. // mark
+        // notice that the event signature is different for every series
+        // use the  IDE intellisense to help you (see more bellow in this article). // mark
         salesPerDaysSeries.ChartPointPointerDown += OnPointerDown; // mark
         salesPerDaysSeries.ChartPointPointerHover += OnPointerHover; // mark
         salesPerDaysSeries.ChartPointPointerHoverLost += OnPointerHoverLost; // mark

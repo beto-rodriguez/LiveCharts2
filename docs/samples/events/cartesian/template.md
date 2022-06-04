@@ -1,4 +1,4 @@
-# Strongly typed events (Recommended)
+# Series events
 
 {{~ if xaml ~}}
 
@@ -44,24 +44,24 @@ restores the default paint when the pointer leaves.
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
 </div>
 
-## View model
+### View model
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/Cartesian/ViewModel.cs" ~}}
 
-## Fruit.cs
+### Fruit.cs
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/Cartesian/Fruit.cs" ~}}
 
 {{~ if xaml ~}}
-## XAML
+### XAML
 {{~ end ~}}
 
 {{~ if winforms ~}}
-## Form code behind
+### Form code behind
 {{~ end ~}}
 
 {{~ if blazor~}}
-## HTML
+### HTML
 {{~ end~}}
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/Cartesian/$PlatformViewFile" ~}}
@@ -72,7 +72,7 @@ the visual, the type of the label and the data context we are drawing.
 LiveCharts allows you to use any shape to represent a chart point 
 ([see custom svg point example](https://lvcharts.com/docs/{{ platform }}/{{ version }}/samples.scatter.custom)), you can also
 plot any type you need for example in the example above we are plotting instances of the `Fruit` class, the library is able
-to keep events strongly typed but it could be tricky to guess the signature since the signature changes depending on the series type,
+to keep events strongly typed, but it could be tricky to guess the signature since the it changes depending on the series type,
 the visual shape and the geometry.
 
 Please use the IDE intellisense to complete the signature:
@@ -89,10 +89,12 @@ type `double` and is drawing `RectangleGeometry` instances to represent the visu
 You could also detect the pointer down events/commands at the chart level but since the chart `Series` property is of type 
 `ISeries` the library is not able to determine the type of the series and we lose the strongly typed chart points.
 
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/Polar/ViewModel.cs" ~}}
+
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/Polar/$PlatformViewFile" ~}}
 
 {{~ if xaml ~}}
-## View code behind
+### View code behind
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/Polar/$PlatformViewCodeBehindFile" ~}}
 {{~ end ~}}

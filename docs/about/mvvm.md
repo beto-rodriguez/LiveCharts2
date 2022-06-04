@@ -46,7 +46,7 @@ As you can see both are basically identical, they set the data source to our vie
 property to the `Series` defined in our view model. This was a really useful pattern in the 10's specially it maximizes code reusability and makes
 it easy to build cross platform apps, now we have better options, we have cross platform frameworks that handle this for us 
 (Maui, Uno Platform or Avalonia for example). In conclusion the library uses MVVM to re-use the same view model for all the supported 
-frameworks in the library and implement `INotifyPropertyChanged` to handle automatic updates.
+frameworks by the library and to implement `INotifyPropertyChanged` to handle automatic updates.
 
 ## This site uses CommunityToolkit.Mvvm package
 
@@ -83,8 +83,7 @@ public class ViewModel2 : INotifyPropertyChanged
     }
 }</code></pre>
 
-Too much code to declare a property isn't it? but now we can use the `CommunityToolkit.Mvvm` package and write a much simpler 
-view model:
+Too much code to declare a property isn't it? but now we can use the `CommunityToolkit.Mvvm` package and write a cleaner view model:
 
 <pre><code>using LiveChartsCore;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -97,5 +96,5 @@ public partial class ViewModel
 }</code></pre>
 
 Notice the `ObservableProperty` attribute was added to the *_series*  field. By convention and with the magic of source generators the property
-`Series` now exists in our class, source generators are adding all this boring and repetitive code for us! this is just a quick guide
+`Series` now exists in our class, source generators are adding all this boring and repetitive code for us, this is just a quick guide
 to get started with the docs in this site but you can learn more about the toolkit [here](https://www.youtube.com/watch?v=aCxl0z04BN8).
