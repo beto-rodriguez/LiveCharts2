@@ -2,7 +2,7 @@
     {{ edit_source | replace_local_to_server}}
 </div>
 
-# About MVVM an this site examples
+# About MVVM and this site examples
 
 The examples in this site use MVVM, **it is not necessary to follow the MVVM pattern to use LiveCharts**, but MVVM is really helpful, in the case
 of this set of examples it is useful because we need to share the same data for all the supported platforms and we also need automatic updates. 
