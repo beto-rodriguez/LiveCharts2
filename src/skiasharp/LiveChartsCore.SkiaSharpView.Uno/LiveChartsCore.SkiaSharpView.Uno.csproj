@@ -1,11 +1,12 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.23">
   <!--
-	Adding project references to this project requires some manual adjustments.
-	Please see https://github.com/unoplatform/uno/issues/3909 for more details.
-	-->
+    Adding project references to this project requires some manual adjustments.
+    Please see https://github.com/unoplatform/uno/issues/3909 for more details.
+    -->
   <PropertyGroup>
     <TargetFrameworks>uap10.0.18362;netstandard2.0;net6.0-ios;net6.0-macos;net6.0-android</TargetFrameworks>
-	<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
 
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
