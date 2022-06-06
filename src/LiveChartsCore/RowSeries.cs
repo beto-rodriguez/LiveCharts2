@@ -381,27 +381,15 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
             var padding = (float)barSeries.Padding;
 
-            if (!barSeries.IgnoresBarPosition && count > 1)
-            {
-                uw /= count;
-                uwm = 0.5f * uw;
-                cp = (pos - count / 2f) * uw + uwm;
+            uw /= count;
+            var mw = (float)barSeries.MaxBarWidth;
+            if (uw > mw) uw = mw;
+            uwm = 0.5f * uw;
+            cp = barSeries.IgnoresBarPosition ? 0 : (pos - count / 2f) * uw + uwm;
 
-                // apply the pading
-                uw -= padding;
-                cp += padding * 0.5f;
-            }
-
-            if (uw > barSeries.MaxBarWidth)
-            {
-                uw = (float)barSeries.MaxBarWidth;
-                uwm = uw * 0.5f;
-                cp = (pos - count / 2f) * uw + uwm + padding * 0.5f;
-
-                // apply the pading
-                uw -= padding;
-                cp += padding * 0.5f;
-            }
+            // apply the pading
+            uw -= padding;
+            cp += padding * 0.5f;
 
             if (uw < 1)
             {

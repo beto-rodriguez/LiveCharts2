@@ -20,10 +20,7 @@ public partial class ViewModel
             Padding = 0,
 
             // Defines the max width a bar can have
-            MaxBarWidth = double.PositiveInfinity,
-
-            DataLabelsPaint = new SolidColorPaint(SKColors.Red),
-            DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Bottom
+            MaxBarWidth = double.PositiveInfinity
         }
     };
 }
