@@ -16,9 +16,7 @@
 
             <lvc:CartesianChart
                 Series="{Binding Series}"
-                TooltipFindingStrategy="CompareOnlyX"
-                DataPointerDownCommand="{Binding DataPointerDownCommand}"
-                DataPointerDown="Chart_DataPointerDown">
+                TooltipFindingStrategy="CompareOnlyX">
             </lvc:CartesianChart>
         </Grid>
     </ContentPage.Content>

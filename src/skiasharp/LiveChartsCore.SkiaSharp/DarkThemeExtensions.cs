@@ -46,6 +46,8 @@ public static class DarkThemeExtensions
     public static LiveChartsSettings AddDarkTheme(
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
+        GaugeBuilder.DefaultLabelsPaint = new SolidColorPaint(new SKColor(250, 250, 250));
+
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {

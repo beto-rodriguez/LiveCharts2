@@ -20,8 +20,8 @@ public class View : UserControl
         if (vm is null) return;
         while (true)
         {
-            await Dispatcher.UIThread.InvokeAsync(vm.RandomIncrement, DispatcherPriority.Background);
-            await Task.Delay(1500);
+            Dispatcher.UIThread.Post(vm.RandomIncrement, DispatcherPriority.Background);
+            await Task.Delay(100);
         }
     }
 

@@ -195,4 +195,10 @@ public interface IUnoChart
     /// The legend template.
     /// </value>
     DataTemplate LegendTemplate { get; set; }
+
+    /// <summary>
+    /// Gets the canvas position.
+    /// </summary>
+    /// <returns></returns>
+    Windows.Foundation.Point GetCanvasPosition();
 }

@@ -291,6 +291,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         tooltip.Hide();
     }
 
+    internal Point GetCanvasPosition()
+    {
+        return motionCanvas.Location;
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -397,5 +402,10 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     {
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

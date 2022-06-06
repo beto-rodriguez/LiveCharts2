@@ -249,6 +249,7 @@ public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingConte
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
     {
         var wpfChart = (Chart)chart.View;
+
         var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
         if (Template != template) Template = template;
 
@@ -270,7 +271,7 @@ public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingConte
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)border.DesiredSize.Width, (float)border.DesiredSize.Height), chart.ControlSize);
+                chart.TooltipPosition, new LvcSize((float)border.DesiredSize.Width, (float)border.DesiredSize.Height), chart.DrawMarginSize);
         }
         if (chart is PieChart<SkiaSharpDrawingContext>)
         {
@@ -280,8 +281,10 @@ public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingConte
 
         if (location is null) throw new Exception("location not supported");
 
+        var canvasLocation = wpfChart.GetCanvasPosition();
+
         var from = PlacementRectangle;
-        var to = new Rect(location.Value.X, location.Value.Y, DesiredSize.Width, DesiredSize.Height);
+        var to = new Rect(location.Value.X + canvasLocation.X, location.Value.Y + canvasLocation.Y, DesiredSize.Width, DesiredSize.Height);
         if (from == Rect.Empty) from = to;
         var animation = new RectAnimation(from, to, AnimationsSpeed) { EasingFunction = EasingFunction };
         BeginAnimation(PlacementRectangleProperty, animation);

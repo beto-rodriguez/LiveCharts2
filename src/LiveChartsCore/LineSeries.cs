@@ -150,8 +150,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         }
 
         var dls = (float)DataLabelsSize;
-
-        var segmentI = 0;
         var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
@@ -169,6 +167,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         uwx = uwx < gs ? gs : uwx;
 
+        var segmentI = 0;
+
         foreach (var segment in segments)
         {
             TPathGeometry fillPath;
@@ -179,13 +179,21 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             {
                 isNew = true;
                 fillPath = new TPathGeometry { ClosingMethod = VectorClosingMethod.CloseToPivot };
-                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
                 fillPathHelperContainer.Add(fillPath);
-                strokePathHelperContainer.Add(strokePath);
             }
             else
             {
                 fillPath = fillPathHelperContainer[segmentI];
+            }
+
+            if (segmentI >= strokePathHelperContainer.Count)
+            {
+                isNew = true;
+                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
+                strokePathHelperContainer.Add(strokePath);
+            }
+            else
+            {
                 strokePath = strokePathHelperContainer[segmentI];
             }
 
@@ -227,8 +235,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 }
             }
 
+            var isSegmentEmpty = true;
+
             foreach (var data in GetSpline(segment, stacker))
             {
+                isSegmentEmpty = false;
                 var s = 0d;
                 if (stacker is not null)
                     s = data.TargetPoint.PrimaryValue > 0
@@ -323,9 +334,13 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
+                    var m = label.Measure(DataLabelsPaint);
                     var labelPosition = GetLabelPosition(
-                        x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition,
+                        x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
                         SeriesProperties, data.TargetPoint.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                    if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
@@ -348,20 +363,31 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 GeometryStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 GeometryStroke.ZIndex = actualZIndex + 0.4;
             }
-            segmentI++;
+
+            if (!isSegmentEmpty) segmentI++;
         }
 
-        while (segmentI > fillPathHelperContainer.Count)
-        {
-            var iFill = fillPathHelperContainer.Count - 1;
-            var fillHelper = fillPathHelperContainer[iFill];
-            if (Fill is not null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper);
-            fillPathHelperContainer.RemoveAt(iFill);
+        var maxSegment = fillPathHelperContainer.Count > strokePathHelperContainer.Count
+            ? fillPathHelperContainer.Count
+            : strokePathHelperContainer.Count;
 
-            var iStroke = strokePathHelperContainer.Count - 1;
-            var strokeHelper = strokePathHelperContainer[iStroke];
-            if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper);
-            strokePathHelperContainer.RemoveAt(iStroke);
+        for (var i = maxSegment - 1; i >= segmentI; i--)
+        {
+            if (i < fillPathHelperContainer.Count)
+            {
+                var segmentFill = fillPathHelperContainer[i];
+                Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentFill);
+                segmentFill.ClearCommands();
+                fillPathHelperContainer.RemoveAt(i);
+            }
+
+            if (i < strokePathHelperContainer.Count)
+            {
+                var segmentStroke = strokePathHelperContainer[i];
+                Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentStroke);
+                segmentStroke.ClearCommands();
+                strokePathHelperContainer.RemoveAt(i);
+            }
         }
 
         if (DataLabelsPaint is not null)

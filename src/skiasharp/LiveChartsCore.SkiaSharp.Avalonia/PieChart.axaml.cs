@@ -637,6 +637,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         tooltip.Hide();
     }
 
+    /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
+    Point IAvaloniaChart.GetCanvasPosition()
+    {
+        var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
+        return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -698,7 +705,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
 
     private void Chart_PointerMoved(object? sender, PointerEventArgs e)
     {
-        var p = e.GetPosition(this);
+        var p = e.GetPosition(_avaloniaCanvas);
         _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
@@ -747,5 +754,10 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

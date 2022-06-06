@@ -250,6 +250,11 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
                     visual.RemoveOnCompleted = true;
                     point.Context.Visual = null;
                 }
+
+                var md2 = minDimension;
+                var w2 = md2 - (md2 - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
+                stackedInnerRadius = (w2 + relativeOuterRadius * 2) * 0.5f;
+                i++;
                 continue;
             }
 
@@ -391,6 +396,13 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
 
                     label.HorizontalAlign = a > 180 ? Align.Start : Align.End;
                     label.RotateTransform = (float)(a - c);
+                }
+
+                if (DataLabelsPosition == PolarLabelsPosition.Outer)
+                {
+                    var a = start + initialRotation + end * 0.5;
+                    var isStart = a is < 90 or (> 270 and < 360);
+                    label.HorizontalAlign = label.HorizontalAlign = isStart ? Align.Start : Align.End;
                 }
 
                 var labelPosition = GetLabelPolarPosition(
@@ -636,6 +648,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
                 break;
             case PolarLabelsPosition.Start:
                 angle = startAngle;
+                break;
+            case PolarLabelsPosition.Outer:
+                angle = startAngle + sweepAngle * 0.5f;
+                radius *= 2;
                 break;
             case PolarLabelsPosition.Middle:
                 angle = startAngle + sweepAngle * 0.5f;

@@ -827,6 +827,10 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     Math.Pow(labelSize.Width + geometrySize * 0.5f, 2) +
                     Math.Pow(labelSize.Height + geometrySize * 0.5f, 2)) * 0.5f;
                 break;
+            case PolarLabelsPosition.Outer:
+                actualAngle = angle;
+                radius *= 2;
+                break;
             case PolarLabelsPosition.Middle:
                 actualAngle = angle;
                 break;

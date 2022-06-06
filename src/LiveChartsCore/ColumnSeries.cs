@@ -47,10 +47,10 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
-    protected ColumnSeries()
+    protected ColumnSeries(bool isStacked = false)
         : base(
               SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
-              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
+              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
         DataPadding = new LvcPoint(0, 1);
         _isRounded = typeof(IRoundedRectangleChartPoint<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
@@ -70,11 +70,15 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
         var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
 
-        var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot));
+        var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
+
+        var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
+            cartesianChart.DrawMarginLocation.Y, cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked);
         var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
             ? null
             : new MeasureHelper(
-                previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot));
+                previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
+                cartesianChart.DrawMarginLocation.Y, cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)
@@ -101,6 +105,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
         var rx = (float)Rx;
         var ry = (float)Ry;
+
+        var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -170,6 +176,26 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             var cy = point.PrimaryValue > pivot ? primary : primary - b;
             var x = secondary - helper.uwm + helper.cp;
 
+            if (stacker is not null)
+            {
+                var sy = stacker.GetStack(point);
+
+                float primaryI, primaryJ;
+                if (point.PrimaryValue >= 0)
+                {
+                    primaryI = primaryScale.ToPixels(sy.Start);
+                    primaryJ = primaryScale.ToPixels(sy.End);
+                }
+                else
+                {
+                    primaryI = primaryScale.ToPixels(sy.NegativeStart);
+                    primaryJ = primaryScale.ToPixels(sy.NegativeEnd);
+                }
+
+                cy = primaryJ;
+                b = primaryI - primaryJ;
+            }
+
             visual.X = x;
             visual.Y = cy;
             visual.Width = helper.uw;
@@ -211,9 +237,13 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
-                    x, cy, helper.uw, b, label.Measure(DataLabelsPaint),
+                    x, cy, helper.uw, b, m,
                     DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }
@@ -341,53 +371,5 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
-    }
-
-    private class MeasureHelper
-    {
-        public MeasureHelper(
-            Scaler scaler,
-            CartesianChart<TDrawingContext> cartesianChart,
-            IBarSeries<TDrawingContext> barSeries,
-            ICartesianAxis axis,
-            float p)
-        {
-            this.p = p;
-
-            uw = scaler.MeasureInPixels(axis.UnitWidth);
-            actualUw = uw;
-
-            var gp = (float)barSeries.GroupPadding;
-
-            if (uw - gp < 1) gp -= uw - gp;
-
-            uw -= gp;
-            uwm = 0.5f * uw;
-
-            var pos = cartesianChart.SeriesContext.GetColumnPostion(barSeries);
-            var count = cartesianChart.SeriesContext.GetColumnSeriesCount();
-            cp = 0f;
-
-            if (!barSeries.IgnoresBarPosition && count > 1)
-            {
-                uw /= count;
-                uwm = 0.5f * uw;
-                cp = (pos - count / 2f) * uw + uwm;
-            }
-
-            if (uw > barSeries.MaxBarWidth)
-            {
-                uw = (float)barSeries.MaxBarWidth;
-                uwm = uw * 0.5f;
-            }
-
-            if (uw < 1)
-            {
-                uw = 1;
-                uwm = 0.5f;
-            }
-        }
-
-        public float uw, uwm, cp, p, actualUw;
     }
 }

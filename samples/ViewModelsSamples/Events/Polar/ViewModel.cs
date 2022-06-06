@@ -4,10 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Polar;
 
@@ -37,8 +34,6 @@ public partial class ViewModel
             }
         };
 
-        polarLineSeries.DataPointerDown += PolarLineSeries_DataPointerDown; ;
-
         Series = new ISeries[]
         {
             polarLineSeries,
@@ -47,15 +42,6 @@ public partial class ViewModel
     }
 
     public ISeries[] Series { get; set; }
-
-    private void PolarLineSeries_DataPointerDown(IChartView chart, IEnumerable<ChartPoint<City, BezierPoint<CircleGeometry>, LabelGeometry>> points)
-    {
-        // the event passes a collection of the points that were triggered by the pointer down event.
-        foreach (var point in points)
-        {
-            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model?.Name}");
-        }
-    }
 
     [ICommand]
     public void DataPointerDown(IEnumerable<ChartPoint>? points)

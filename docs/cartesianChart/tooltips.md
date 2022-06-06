@@ -272,7 +272,7 @@ You can find a another example at the source code of the `DefaultTooltip` class
 {{~ end ~}}
 
 {{~ if uno ~}}
-{{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedTooltips/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+{{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
 
 :::tip
 You can find a another example at the source code of the `DefaultTooltip` class 
@@ -306,7 +306,7 @@ You can find a another example at the source code of the `DefaultTooltip` class
 {{~ end ~}}
 
 {{~ if winui ~}}
-{{~ "~/../samples/WinUISample/WinUI/WinUI/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+{{~ "~/../samples/WinUISample/WinUISample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
 
 :::tip
 You can find a another example at the source code of the `DefaultTooltip` class 

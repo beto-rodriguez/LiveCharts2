@@ -12,9 +12,7 @@
         </Grid.RowDefinitions>
         <lvc:CartesianChart
             Series="{Binding Series}"
-            TooltipFindingStrategy="CompareOnlyX"
-            DataPointerDownCommand="{Binding DataPointerDownCommand}"
-            DataPointerDown="CartesianChart_DataPointerDown">
+            TooltipFindingStrategy="CompareOnlyX">
         </lvc:CartesianChart>
     </Grid>
 </UserControl>

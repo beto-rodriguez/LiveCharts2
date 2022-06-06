@@ -1,8 +1,10 @@
-﻿using System;
+﻿
+using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -16,13 +18,13 @@ public partial class ViewModel
     private readonly Random _r = new();
     private static readonly (string, double)[] s_initialData =
     {
-        ("Tsunoda", 50),
-        ("Sainz", 45),
-        ("Riccardo", 52),
-        ("Bottas", 55),
-        ("Perez", 66),
-        ("Verstapen", 92),
-        ("Hamilton", 100)
+        ("Tsunoda", 500),
+        ("Sainz", 450),
+        ("Riccardo", 520),
+        ("Bottas", 550),
+        ("Perez", 660),
+        ("Verstapen", 920),
+        ("Hamilton", 1000)
     };
 
     [ObservableProperty]
@@ -33,13 +35,20 @@ public partial class ViewModel
                 Values = new[] { new ObservableValue(x.Item2) },
                 Name = x.Item1,
                 Stroke = null,
-                MaxBarWidth = 50,
-                DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
+                MaxBarWidth = 25,
+                DataLabelsPaint = new SolidColorPaint(new SKColor(245, 245, 245)),
                 DataLabelsPosition = DataLabelsPosition.End,
+                DataLabelsTranslate = new LvcPoint(-1, 0),
                 DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
             })
+            .OrderByDescending(x => ((ObservableValue[])x.Values!)[0].Value)
             .ToArray();
 
+    [ObservableProperty]
+    private Axis[] _xAxes = { new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)) } };
+
+    [ObservableProperty]
+    private Axis[] _yAxes = { new Axis { IsVisible = false } };
 
     public void RandomIncrement()
     {
@@ -48,9 +57,9 @@ public partial class ViewModel
             if (item.Values is null) continue;
 
             var i = ((ObservableValue[])item.Values)[0];
-            i.Value += _r.Next(0, 30);
+            i.Value += _r.Next(0, 100);
         }
 
-        Series = Series.OrderBy(x => ((ObservableValue[])x.Values!)[0].Value).ToArray();
+        Series = Series.OrderByDescending(x => ((ObservableValue[])x.Values!)[0].Value).ToArray();
     }
 }

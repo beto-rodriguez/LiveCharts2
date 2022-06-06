@@ -18,7 +18,7 @@ public sealed partial class View : UserControl
         while (true)
         {
             _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => vm.RandomIncrement());
-            await Task.Delay(1500);
+            await Task.Delay(100);
         }
     }
 }

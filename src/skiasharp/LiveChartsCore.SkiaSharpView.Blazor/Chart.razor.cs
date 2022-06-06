@@ -368,6 +368,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
 
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
+    }
+
     async void IDisposable.Dispose()
     {
         OnDisposing();

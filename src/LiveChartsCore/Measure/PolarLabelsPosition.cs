@@ -33,17 +33,23 @@ public enum PolarLabelsPosition
     ChartCenter,
 
     /// <summary>
-    /// Aligns the label to the end in the axis direction.
+    /// Aligns the label to the end of the angle of the shape.
     /// </summary>
     End,
 
     /// <summary>
-    /// Aligns the label to the start  in the axis direction.
+    /// Aligns the label to the start of the angle of the shape.
     /// </summary>
     Start,
 
     /// <summary>
-    /// Aligns the label to the middle of the axis.
+    /// Aligns the label to the middle of the angle of the shape and the at the circumference radius.
     /// </summary>
-    Middle
+    Middle,
+
+    /// <summary>
+    /// Aligns the label to the middle of the angle of the shape and the at the circumference diameter.
+    /// </summary>
+    Outer
+
 }

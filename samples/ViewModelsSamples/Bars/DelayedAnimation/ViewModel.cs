@@ -29,13 +29,15 @@ public partial class ViewModel
         var columnSeries1 = new ColumnSeries<float>
         {
             Values = values1,
-            Stroke = null
+            Stroke = null,
+            Padding = 2
         };
 
         var columnSeries2 = new ColumnSeries<float>
         {
             Values = values2,
-            Stroke = null
+            Stroke = null,
+            Padding = 2
         };
 
         columnSeries1.PointMeasured += OnPointMeasured;

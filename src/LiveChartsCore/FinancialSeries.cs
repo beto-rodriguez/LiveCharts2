@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -270,9 +271,13 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
-                    x, high, uw, Math.Abs(low - high), label.Measure(DataLabelsPaint), DataLabelsPosition,
+                    x, high, uw, Math.Abs(low - high), m, DataLabelsPosition,
                     SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }

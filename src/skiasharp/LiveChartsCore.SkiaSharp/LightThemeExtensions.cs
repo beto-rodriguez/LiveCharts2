@@ -46,6 +46,8 @@ public static class LightThemeExtensions
     public static LiveChartsSettings AddLightTheme(
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
+        GaugeBuilder.DefaultLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40));
+
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
