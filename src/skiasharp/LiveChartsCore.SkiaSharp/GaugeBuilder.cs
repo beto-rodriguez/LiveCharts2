@@ -412,7 +412,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
             var list = new List<ObservableValue>();
             while (list.Count < _tuples.Count - 1)
             {
-                list.Add(new ObservableValue(0));
+                list.Add(new ObservableValue(null));
             }
             list.Insert(i, item.Item1);
 

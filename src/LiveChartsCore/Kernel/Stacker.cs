@@ -91,7 +91,7 @@ public class Stacker<TDrawingContext>
             var found = false;
 
             // keep diging until you find a stack in the same position.
-            while (ssp >= 0 && !found)
+            while (ssp >= 0 && !found && ssp - 1 >= 0)
             {
                 var stackCol = _stack[ssp - 1];
                 if (stackCol.TryGetValue(index, out var previousActiveStack))

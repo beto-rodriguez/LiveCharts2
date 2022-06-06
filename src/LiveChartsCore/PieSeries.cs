@@ -250,6 +250,11 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
                     visual.RemoveOnCompleted = true;
                     point.Context.Visual = null;
                 }
+
+                var md2 = minDimension;
+                var w2 = md2 - (md2 - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
+                stackedInnerRadius = (w2 + relativeOuterRadius * 2) * 0.5f;
+                i++;
                 continue;
             }
 
