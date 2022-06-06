@@ -20,13 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore;
 
@@ -37,325 +32,30 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="StackedBarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
-    where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-    where TDrawingContext : DrawingContext
+public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext>
+    : RowSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
+        where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
 {
+    private int _stackGroup = 0;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedRowSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
-    public StackedRowSeries()
-        : base(
-              SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation | SeriesProperties.Stacked |
-              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
+    public StackedRowSeries() : base(true)
     { }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<TDrawingContext> chart)
-    {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
-
-        var drawLocation = cartesianChart.DrawMarginLocation;
-        var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousSecondaryScale =
-            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-
-        var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth); //secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
-        var uwm = 0.5f * uw;
-        var sw = Stroke?.StrokeThickness ?? 0;
-        var p = primaryScale.ToPixels(pivot);
-
-        var pos = cartesianChart.SeriesContext.GetStackedColumnPostion(this);
-        var count = cartesianChart.SeriesContext.GetStackedColumnSeriesCount();
-        var cp = 0f;
-
-        if (count > 1)
-        {
-            uw /= count;
-            uwm = 0.5f * uw;
-            cp = (pos - count / 2f) * uw + uwm;
-        }
-
-        if (uw > MaxBarWidth)
-        {
-            uw = (float)MaxBarWidth;
-            uwm = uw / 2f;
-        }
-
-        var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        if (Fill is not null)
-        {
-            Fill.ZIndex = actualZIndex + 0.1;
-            Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            cartesianChart.Canvas.AddDrawableTask(Fill);
-        }
-        if (Stroke is not null)
-        {
-            Stroke.ZIndex = actualZIndex + 0.2;
-            Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            cartesianChart.Canvas.AddDrawableTask(Stroke);
-        }
-        if (DataLabelsPaint is not null)
-        {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            //DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
-        }
-        var dls = (float)DataLabelsSize;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
-
-        var stacker = cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup());
-        if (stacker is null) throw new NullReferenceException("Unexpected null stacker");
-
-        var rx = (float)Rx;
-        var ry = (float)Ry;
-
-        foreach (var point in Fetch(cartesianChart))
-        {
-            var visual = point.Context.Visual as TVisual;
-            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-
-            if (point.IsNull)
-            {
-                if (visual is not null)
-                {
-                    visual.X = p;
-                    visual.Y = secondary - uwm + cp;
-                    visual.Width = 0;
-                    visual.Height = uw;
-                    visual.RemoveOnCompleted = true;
-                    point.Context.Visual = null;
-                }
-                continue;
-            }
-
-            if (visual is null)
-            {
-                var yi = secondary - uwm + cp;
-                if (previousSecondaryScale is not null) yi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
-
-                var r = new TVisual
-                {
-                    X = p,
-                    Y = yi,
-                    Width = 0,
-                    Height = uw,
-                    Rx = rx,
-                    Ry = ry
-                };
-
-                visual = r;
-                point.Context.Visual = visual;
-                OnPointCreated(point);
-
-                _ = everFetched.Add(point);
-            }
-
-            if (Fill is not null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-
-            var sizedGeometry = visual;
-
-            var sy = stacker.GetStack(point);
-            var primaryI = primaryScale.ToPixels(sy.Start);
-            var primaryJ = primaryScale.ToPixels(sy.End);
-            var y = secondary - uwm + cp;
-
-            sizedGeometry.X = primaryJ;
-            sizedGeometry.Y = y;
-            sizedGeometry.Width = primaryI - primaryJ;
-            sizedGeometry.Height = uw;
-            sizedGeometry.Rx = rx;
-            sizedGeometry.Ry = ry;
-            sizedGeometry.RemoveOnCompleted = false;
-
-            point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, primaryJ, uw, primaryI - primaryJ);
-
-            _ = toDeletePoints.Remove(point);
-
-            if (DataLabelsPaint is not null)
-            {
-                var label = (TLabel?)point.Context.Label;
-
-                if (label is null)
-                {
-                    var l = new TLabel { X = secondary - uwm + cp, Y = p, RotateTransform = (float)DataLabelsRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    l.CompleteTransition(null);
-                    label = l;
-                    point.Context.Label = label;
-                }
-
-                DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
-                label.TextSize = dls;
-                label.Padding = DataLabelsPadding;
-                var m = label.Measure(DataLabelsPaint);
-                var labelPosition = GetLabelPosition(
-                    primaryJ, y, primaryI - primaryJ, uw, m, DataLabelsPosition,
-                    SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
-                if (DataLabelsTranslate is not null) label.TranslateTransform =
-                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
-
-                label.X = labelPosition.X;
-                label.Y = labelPosition.Y;
-            }
-
-            OnPointMeasured(point);
-        }
-
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != cartesianChart.View) continue;
-            SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
-            _ = everFetched.Remove(point);
-        }
-    }
+    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
+    public int StackGroup { get => _stackGroup; set { _stackGroup = value; OnPropertyChanged(); } }
 
     /// <summary>
-    /// Gets the bounds.
+    /// Gets the stack group.
     /// </summary>
-    /// <param name="chart">The chart.</param>
-    /// <param name="secondaryAxis">The secondary axis.</param>
-    /// <param name="primaryAxis">The primary axis.</param>
     /// <returns></returns>
-    public override SeriesBounds GetBounds(
-     CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc />
+    public override int GetStackGroup()
     {
-        var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-        if (baseSeriesBounds.HasData) return baseSeriesBounds;
-        var baseBounds = baseSeriesBounds.Bounds;
-
-        var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
-        var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
-
-        var ts = tickSecondary.Value * DataPadding.X;
-        var tp = tickPrimary.Value * DataPadding.Y;
-
-        if (baseBounds.VisibleSecondaryBounds.Delta == 0)
-        {
-            var ms = baseBounds.VisibleSecondaryBounds.Min == 0 ? 1 : baseBounds.VisibleSecondaryBounds.Min;
-            ts = 0.1 * ms * DataPadding.X;
-        }
-
-        if (baseBounds.VisiblePrimaryBounds.Delta == 0)
-        {
-            var mp = baseBounds.VisiblePrimaryBounds.Min == 0 ? 1 : baseBounds.VisiblePrimaryBounds.Min;
-            tp = 0.1 * mp * DataPadding.Y;
-        }
-
-        return
-            new SeriesBounds(
-                new DimensionalBounds
-                {
-                    PrimaryBounds = new Bounds
-                    {
-                        Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
-                        Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts,
-                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
-                        PaddingMax = ts,
-                        PaddingMin = ts
-                    },
-                    SecondaryBounds = new Bounds
-                    {
-                        Max = baseBounds.PrimaryBounds.Max + tp,
-                        Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min : 0,
-                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
-                        PaddingMax = tp,
-                        PaddingMin = baseBounds.PrimaryBounds.Min < 0 ? tp : 0,
-                    },
-                    VisiblePrimaryBounds = new Bounds
-                    {
-                        Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
-                        Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
-                    },
-                    VisibleSecondaryBounds = new Bounds
-                    {
-                        Max = baseBounds.VisiblePrimaryBounds.Max + tp,
-                        Min = baseBounds.VisiblePrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
-                    }
-                }, false);
-    }
-
-    /// <summary>
-    /// Sets the default point transitions.
-    /// </summary>
-    /// <param name="chartPoint">The chart point.</param>
-    /// <exception cref="Exception">Unable to initialize the point instance.</exception>
-    protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
-    {
-        var chart = chartPoint.Context.Chart;
-
-        if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.X),
-                nameof(visual.Width))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.Y),
-                nameof(visual.Height))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-    }
-
-    /// <summary>
-    /// Softs the delete point.
-    /// </summary>
-    /// <param name="point">The point.</param>
-    /// <param name="primaryScale">The primary scale.</param>
-    /// <param name="secondaryScale">The secondary scale.</param>
-    protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        if (DataFactory is null) throw new Exception("Data provider not found");
-
-        var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
-        if (chartView.Core.IsZoomingOrPanning)
-        {
-            visual.CompleteTransition(null);
-            visual.RemoveOnCompleted = true;
-            DataFactory.DisposePoint(point);
-            return;
-        }
-
-        var p = primaryScale.ToPixels(pivot);
-        var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-
-        visual.X = p;
-        visual.Y = secondary;
-        visual.Width = 0;
-        visual.RemoveOnCompleted = true;
-
-        DataFactory.DisposePoint(point);
-
-        var label = (TLabel?)point.Context.Label;
-        if (label is null) return;
-
-        label.TextSize = 1;
-        label.RemoveOnCompleted = true;
+        return _stackGroup;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -14,32 +15,24 @@ public partial class ViewModel
         {
             Values = new List<int> { 3, 5, 3 },
             Stroke = null,
-            MaxBarWidth = 80,
-            GroupPadding = 60,
             StackGroup = 0 // mark
         },
         new StackedColumnSeries<int>
         {
             Values = new List<int> { 4, 2, 3 },
             Stroke = null,
-            MaxBarWidth = 80,
-            GroupPadding = 60,
             StackGroup = 0 // mark
         },
         new StackedColumnSeries<int>
         {
             Values = new List<int> { 4, 6, 6 },
             Stroke = null,
-            MaxBarWidth = 80,
-            GroupPadding = 60,
             StackGroup = 1 // mark
         },
         new StackedColumnSeries<int>
         {
             Values = new List<int> { 2, 5, 4 },
             Stroke = null,
-            MaxBarWidth = 80,
-            GroupPadding = 60,
             StackGroup = 1 // mark
         }
     };

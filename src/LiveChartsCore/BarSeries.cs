@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore;
 
@@ -124,5 +125,85 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         context.Height = w + MaxSeriesStroke * 2;
 
         CanvasSchedule = context;
+    }
+
+    /// <summary>
+    /// A mesure helper class.
+    /// </summary>
+    protected class MeasureHelper
+    {
+        /// <summary>
+        /// Initializes a new instance of the measue helper class.
+        /// </summary>
+        /// <param name="scaler">The scaler.</param>
+        /// <param name="cartesianChart">The chart.</param>
+        /// <param name="barSeries">The series.</param>
+        /// <param name="axis">The axis.</param>
+        /// <param name="p">The pivot.</param>
+        /// <param name="minP">The min pivot allowed.</param>
+        /// <param name="maxP">The max pivot allowed.</param>
+        /// <param name="isStacked">Indicates whether the series is stacked or not.</param>
+        public MeasureHelper(
+            Scaler scaler,
+            CartesianChart<TDrawingContext> cartesianChart,
+            IBarSeries<TDrawingContext> barSeries,
+            ICartesianAxis axis,
+            float p,
+            float minP,
+            float maxP,
+            bool isStacked)
+        {
+            this.p = p;
+            if (p < minP) this.p = minP;
+            if (p > maxP) this.p = maxP;
+
+            uw = scaler.MeasureInPixels(axis.UnitWidth);
+            actualUw = uw;
+
+            var gp = (float)barSeries.GroupPadding;
+
+            if (uw - gp < 1) gp -= uw - gp;
+
+            uw -= gp;
+            uwm = 0.5f * uw;
+
+            int pos, count;
+
+            if (isStacked)
+            {
+                pos = cartesianChart.SeriesContext.GetStackedColumnPostion(barSeries);
+                count = cartesianChart.SeriesContext.GetStackedColumnSeriesCount();
+            }
+            else
+            {
+                pos = cartesianChart.SeriesContext.GetColumnPostion(barSeries);
+                count = cartesianChart.SeriesContext.GetColumnSeriesCount();
+            }
+
+            cp = 0f;
+
+            var padding = (float)barSeries.Padding;
+
+            uw /= count;
+            var mw = (float)barSeries.MaxBarWidth;
+            if (uw > mw) uw = mw;
+            uwm = 0.5f * uw;
+            cp = barSeries.IgnoresBarPosition ? 0 : (pos - count / 2f) * uw + uwm;
+
+            // apply the pading
+            uw -= padding;
+            cp += padding * 0.5f;
+
+            if (uw < 1)
+            {
+                uw = 1;
+                uwm = 0.5f;
+            }
+        }
+
+        /// <summary>
+        /// helper units.
+        /// </summary>
+        public float uw, uwm, cp, p, actualUw;
     }
 }
