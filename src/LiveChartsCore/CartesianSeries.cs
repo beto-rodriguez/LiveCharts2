@@ -26,6 +26,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore;
 
@@ -48,6 +49,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     private int _scalesXAt;
     private int _scalesYAt;
     private DataLabelsPosition _labelsPosition;
+    private LvcPoint? _labelsTranslate = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -63,6 +65,9 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsPosition"/>
     public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsTranslate"/>
+    public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set { _labelsTranslate = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(
@@ -146,23 +151,6 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         LvcPoint drawMarginLocation,
         LvcSize drawMarginSize)
     {
-        if ((seriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
-        {
-            var oy = y + height;
-            if (y < drawMarginLocation.Y) y = drawMarginLocation.Y;
-            var maxHeight = isGreaterThanPivot
-                ? drawMarginLocation.Y + drawMarginSize.Height - y
-                : oy - y;
-            if (height > maxHeight) height = maxHeight;
-
-            var ox = x + width;
-            if (x < drawMarginLocation.X) x = drawMarginLocation.X;
-            var maxWidth = isGreaterThanPivot
-                ? drawMarginLocation.X + drawMarginSize.Width - x
-                : ox - x;
-            if (width > maxWidth) width = maxWidth;
-        }
-
         var middleX = (x + x + width) * 0.5f;
         var middleY = (y + y + height) * 0.5f;
 

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Polar;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -35,8 +34,6 @@ public class ViewModel
             }
         };
 
-        polarLineSeries.DataPointerDown += PolarLineSeries_DataPointerDown; ;
-
         Series = new ISeries[]
         {
             polarLineSeries,
@@ -44,17 +41,35 @@ public class ViewModel
         };
     }
 
-    private void PolarLineSeries_DataPointerDown(IChartView chart, IEnumerable<ChartPoint<City, BezierPoint<CircleGeometry>, LabelGeometry>> points)
+    public ISeries[] Series { get; set; }
+
+    [ICommand]
+    public void DataPointerDown(IEnumerable<ChartPoint>? points)
     {
-        // the event passes a collection of the points that were triggered by the pointer down event.
+        if (points is null) return;
+
+        // notice in the chart command we are not able to use strongly typed points
+        // but we can cast the point.Context.DataSource to the actual type.
+
         foreach (var point in points)
         {
-            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model?.Name}");
+            if (point.Context.DataSource is City city)
+            {
+                Trace.WriteLine($"[chart.dataPointerDownCommand] clicked on {city.Name}");
+                continue;
+            }
+
+            if (point.Context.DataSource is int integer)
+            {
+                Trace.WriteLine($"[chart.dataPointerDownCommand] clicked on number {integer}");
+                continue;
+            }
+
+            // handle more possible types here...
+            // if (point.Context.DataSource is Foo foo)
+            // {
+            //     ...
+            // }
         }
     }
-
-    public IEnumerable<ISeries> Series { get; set; }
-
-    // XAML platforms also support ICommands
-    public ICommand DataPointerDownCommand { get; set; } = new RelayCommand(); // mark
 }

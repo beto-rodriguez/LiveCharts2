@@ -48,10 +48,10 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
     /// <summary>
     /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
-    public RowSeries()
+    public RowSeries(bool isStacked = false)
         : base(
-              SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation
-              | SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips)
+              SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
+              SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
         _isRounded = typeof(IRoundedRectangleChartPoint<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
@@ -65,38 +65,21 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousSecondaryScale =
-            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
+        var secondaryScale = primaryAxis.GetNextScaler(cartesianChart);
+        var primaryScale = secondaryAxis.GetNextScaler(cartesianChart);
+        var previousPrimaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousSecondaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
 
-        var uw = secondaryScale.MeasureInPixels(primaryAxis.UnitWidth); //secondaryScale.ToPixels(0f) - secondaryScale.ToPixels(primaryAxis.UnitWidth);
-        var uwm = 0.5f * uw;
+        var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
 
-        var gp = (float)GroupPadding;
-        if (uw - gp < 1) gp -= uw - gp;
-        uw -= gp;
-        //puw -= (float)GroupPadding;
+        var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
+            cartesianChart.DrawMarginLocation.X, cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked);
 
-        var sw = Stroke?.StrokeThickness ?? 0;
-        var p = primaryScale.ToPixels((float)Pivot);
-
-        var pos = cartesianChart.SeriesContext.GetColumnPostion(this);
-        var count = cartesianChart.SeriesContext.GetColumnSeriesCount();
-        var cp = 0f;
-
-        if (!IgnoresBarPosition && count > 1)
-        {
-            uw /= count;
-            uwm = 0.5f * uw;
-            cp = (pos - count / 2f) * uw + uwm;
-        }
-
-        if (uw > MaxBarWidth)
-        {
-            uw = (float)MaxBarWidth;
-            uwm = uw / 2f;
-        }
+        var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
+            ? null
+            : new MeasureHelper(
+                previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
+                cartesianChart.DrawMarginLocation.X, cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)
@@ -107,13 +90,13 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         }
         if (Stroke is not null)
         {
-            Stroke.ZIndex = actualZIndex + 0.1;
+            Stroke.ZIndex = actualZIndex + 0.2;
             Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
         if (DataLabelsPaint is not null)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.1;
+            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
             //DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
@@ -124,21 +107,23 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         var rx = (float)Rx;
         var ry = (float)Ry;
 
+        var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
+
         foreach (var point in Fetch(cartesianChart))
         {
             var visual = point.Context.Visual as TVisual;
             var primary = primaryScale.ToPixels(point.PrimaryValue);
             var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-            var b = Math.Abs(primary - p);
+            var b = Math.Abs(primary - helper.p);
 
             if (point.IsNull)
             {
                 if (visual is not null)
                 {
-                    visual.X = p;
-                    visual.Y = secondary - uwm + cp;
-                    visual.Width = 0;
-                    visual.Height = uw;
+                    visual.X = secondary - helper.uwm + helper.cp;
+                    visual.Y = helper.p;
+                    visual.Width = helper.uw;
+                    visual.Height = 0;
                     visual.RemoveOnCompleted = true;
                     point.Context.Visual = null;
                 }
@@ -147,15 +132,29 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
             if (visual is null)
             {
-                var yi = secondary - uwm + cp;
-                if (previousSecondaryScale is not null) yi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
+                var yi = secondary - helper.uwm + helper.cp;
+                var pi = helper.p;
+                var uwi = helper.uw;
+                var hi = 0f;
+
+                if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
+                {
+                    var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
+                    var bp = Math.Abs(previousPrimary - pHelper.p);
+                    var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
+
+                    yi = previousSecondaryScale.ToPixels(point.SecondaryValue) - pHelper.uwm + pHelper.cp;
+                    pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
+                    uwi = pHelper.uw;
+                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
+                }
 
                 var r = new TVisual
                 {
-                    X = p,
+                    X = pi,
                     Y = yi,
-                    Width = 0,
-                    Height = uw
+                    Width = hi,
+                    Height = uwi
                 };
 
                 if (_isRounded)
@@ -175,24 +174,43 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             if (Fill is not null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
             if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
-            var sizedGeometry = visual;
+            var cx = point.PrimaryValue > pivot ? primary - b : primary;
+            var y = secondary - helper.uwm + helper.cp;
 
-            var cx = point.PrimaryValue > Pivot ? primary - b : primary;
-            var y = secondary - uwm + cp;
+            if (stacker is not null)
+            {
+                var sx = stacker.GetStack(point);
 
-            sizedGeometry.X = cx;
-            sizedGeometry.Y = y;
-            sizedGeometry.Width = b;
-            sizedGeometry.Height = uw;
+                float primaryI, primaryJ;
+                if (point.PrimaryValue >= 0)
+                {
+                    primaryI = primaryScale.ToPixels(sx.Start);
+                    primaryJ = primaryScale.ToPixels(sx.End);
+                }
+                else
+                {
+                    primaryI = primaryScale.ToPixels(sx.NegativeStart);
+                    primaryJ = primaryScale.ToPixels(sx.NegativeEnd);
+                }
+
+                cx = primaryJ;
+                b = primaryI - primaryJ;
+            }
+
+            visual.X = cx;
+            visual.Y = y;
+            visual.Width = b;
+            visual.Height = helper.uw;
+
             if (_isRounded)
             {
                 var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)visual;
                 rounded.Rx = rx;
                 rounded.Ry = ry;
             }
-            sizedGeometry.RemoveOnCompleted = false;
+            visual.RemoveOnCompleted = false;
 
-            point.Context.HoverArea = new RectangleHoverArea().SetDimensions(cx, y, b, uw);
+            point.Context.HoverArea = new RectangleHoverArea(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw);
 
             _ = toDeletePoints.Remove(point);
 
@@ -202,7 +220,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
                 if (label is null)
                 {
-                    var l = new TLabel { X = p, Y = secondary - uwm + cp, RotateTransform = (float)DataLabelsRotation };
+                    var l = new TLabel { X = helper.p, Y = secondary - helper.uwm + helper.cp, RotateTransform = (float)DataLabelsRotation };
 
                     _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                         .WithAnimation(animation =>
@@ -216,12 +234,17 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 }
 
                 DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
+
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
-                    cx, y, b, uw, label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties,
-                    point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                    cx, y, b, helper.uw, label.Measure(DataLabelsPaint),
+                    DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                if (DataLabelsTranslate is not null) label.TranslateTransform =
+                        new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }

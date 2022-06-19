@@ -2,10 +2,12 @@
 using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Gauge3;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public IEnumerable<ISeries> Series { get; set; }
         = new GaugeBuilder()

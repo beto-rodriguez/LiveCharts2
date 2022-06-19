@@ -60,6 +60,16 @@ public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContex
     DataLabelsPosition DataLabelsPosition { get; set; }
 
     /// <summary>
+    /// Gets or sets the data labels translate transform, the property is of type <see cref="LvcPoint"/>,
+    /// where the <see cref="LvcPoint.X"/> property is in normalized units (from 0 to 1), where 1 is the width of the label and
+    /// the <see cref="LvcPoint.Y"/> property is also in normalized units (from 0 to 1), where 1 is the height of the label.
+    /// </summary>
+    /// <value>
+    /// The data labels trasnlate.
+    /// </value>
+    LvcPoint? DataLabelsTranslate { get; set; }
+
+    /// <summary>
     /// Gets the series bounds.
     /// </summary>
     /// <param name="chart">The chart.</param>

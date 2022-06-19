@@ -4,28 +4,38 @@
 Hover over the image to see the chart animation
 :::
 
-{{~ if wpf || avalonia ~}}
+{{~ if xaml ~}}
 
 :::info
-Notice this web site wraps every sample using the `UserControl` class, but LiveCharts controls can be used inside any container, 
-this sample also follows a Model-View-* pattern.
+The `[ObservableObject]`, `[ObservableProperty]` and `[ICommand]` attributes come from the 
+[CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm/) package, you can read more about it 
+[here]({{ website_url }}/docs/{{ platform }}/{{ version }}/About.About%20this%20samples).
 :::
 
 {{~ end ~}}
 
-{{~ if xamarin ~}}
+{{~ if wpf || avalonia || uno || winui  ~}}
 
 :::info
-Notice this web site wraps every sample using the `ContentPage` class, but LiveCharts controls can be used inside any container, 
-this sample also follows a Model-View-* pattern.
+This web site wraps every sample using a `UserControl` instance, but LiveCharts controls can be used inside any container.
 :::
 
 {{~ end ~}}
+
+
+{{~ if xamarin || maui ~}}
+
+:::info
+This web site wraps every sample using a `ContentPage` instance, but LiveCharts controls can be used inside any container.
+:::
+
+{{~ end ~}}
+
 
 {{~ if winforms ~}}
 
 :::info
-Notice this web site builds the control from code behind but you could also grab it from the toolbox,
+This web site builds the control from code behind but you could also grab it from the toolbox,
 this sample also uses a ViewModel to populate the properties of the control(s) in this sample.
 :::
 

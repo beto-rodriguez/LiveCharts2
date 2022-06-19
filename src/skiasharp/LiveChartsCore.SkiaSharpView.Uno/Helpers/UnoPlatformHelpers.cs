@@ -67,8 +67,13 @@ public static class UnoPlatformHelpers
         // How can we help UWP to handle this? What am I missing?
 
         _ = CoreApplication.MainView.CoreWindow.Dispatcher
-            .RunAsync(CoreDispatcherPriority.Normal, () => action());
+            .RunAsync(CoreDispatcherPriority.High, () => action());
     }
 }
 
+/// <summary>
+/// Defines a custom pinch event handler.
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="eventArgs"></param>
 public delegate void PinchHandler(object sender, LiveChartsPinchEventArgs eventArgs);

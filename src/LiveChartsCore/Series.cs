@@ -166,19 +166,31 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointCreated;
 
     /// <summary>
+    /// Occurs when the pointer goes down over a chart point(s).
+    /// </summary>
+    public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
+
+    /// <summary>
     /// Occurs when the pointer is over a chart point.
     /// </summary>
+    [Obsolete($"Renamed to {nameof(ChartPointPointerHover)}")]
     public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHover;
 
     /// <summary>
     /// Occurs when the pointer left a chart point.
     /// </summary>
+    [Obsolete($"Renamed to {nameof(ChartPointPointerHoverLost)}")]
     public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHoverLost;
 
     /// <summary>
-    /// Occurs when the pointer goes down over a chart point(s).
+    /// Occurs when the pointer is over a chart point.
     /// </summary>
-    public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
+    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerHover;
+
+    /// <summary>
+    /// Occurs when the pointer left a chart point.
+    /// </summary>
+    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerHoverLost;
 
     /// <summary>
     /// Occurs when the pointer goes down over a chart point, if there are multiple points, the closest one will be selected.
@@ -407,8 +419,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
                 .GetSolidColorPaint(new LvcColor(255, 255, 255, 180));
             hoverPaint.ZIndex = int.MaxValue;
             hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
-            chartView.CoreCanvas.AddDrawableTask(hoverPaint);
         }
+
+        chartView.CoreCanvas.AddDrawableTask(hoverPaint);
 
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null || visual.HighlightableGeometry is null) return;
@@ -416,6 +429,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         hoverPaint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.HighlightableGeometry);
 
         DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+        ChartPointPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
     /// <summary>
@@ -434,6 +448,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             visual.HighlightableGeometry);
 
         DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+        ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>

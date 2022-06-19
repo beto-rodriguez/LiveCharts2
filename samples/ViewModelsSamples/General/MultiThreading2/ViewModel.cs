@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -9,7 +10,8 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.MultiThreading2;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     private readonly Random _r = new();
     private readonly int _delay = 100;

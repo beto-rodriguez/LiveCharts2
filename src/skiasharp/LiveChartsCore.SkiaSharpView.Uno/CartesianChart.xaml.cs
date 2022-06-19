@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -857,6 +858,12 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
     }
 
+    /// <inheritdoc cref="IUnoChart.GetCanvasPosition"/>
+    Windows.Foundation.Point IUnoChart.GetCanvasPosition()
+    {
+        return motionCanvas.TransformToVisual(this).TransformPoint(new Windows.Foundation.Point(0, 0));
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -956,7 +963,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     {
         if (DateTime.Now < _panLocketUntil) return;
 
-        var p = e.GetCurrentPoint(this);
+        var p = e.GetCurrentPoint(motionCanvas);
         _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 
@@ -998,15 +1005,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-        _seriesObserver = null!;
-        _xObserver = null!;
-        _yObserver = null!;
-        _sectionsObserver = null!;
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
@@ -1025,5 +1023,10 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

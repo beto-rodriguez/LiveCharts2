@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
@@ -11,63 +11,53 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.ColorsAndPosition;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    private AxisPosition _selectedPosition;
+    private AxisPosition _selectedPosition = AxisPosition.End;
     private int _selectedColor = 0;
     private readonly LvcColor[] _colors = ColorPalletes.FluentDesign;
 
-    public ViewModel()
+    public ISeries[] Series { get; set; } =
     {
-        Series = new ObservableCollection<ISeries>
-            {
-                new ColumnSeries<double>
-                {
-                    Values = new ObservableCollection<double> { 2, 5, 4, -2, 4, -3, 5 },
-                    Stroke = null,
-                    Fill = new SolidColorPaint { Color = SKColors.DarkOliveGreen }
-                }
-            };
+        new ColumnSeries<double>
+        {
+            Values = new ObservableCollection<double> { 2, 5, 4, -2, 4, -3, 5 },
+            Stroke = null,
+            Fill = new SolidColorPaint { Color = SKColors.DarkOliveGreen }
+        }
+    };
 
-        // Places the axis to the right (or top for X axes)
-        _selectedPosition = AxisPosition.End;
+    public Axis[] XAxes { get; set; } =
+    {
+        new Axis
+        {
+            //Name = "X axis",
+            TextSize = 20,
 
-        XAxes = new List<Axis>
-            {
-                new()
-                {
-                    //Name = "X axis",
-                    TextSize = 20,
+            // LabelsPaint = null will not draw the axis labels.
+            LabelsPaint = new SolidColorPaint{ Color = SKColors.CornflowerBlue },
 
-                    // LabelsPaint = null will not draw the axis labels.
-                    LabelsPaint = new SolidColorPaint{ Color = SKColors.CornflowerBlue },
+            // SeparatorsPaint = null will not draw the separator lines
+            SeparatorsPaint = new SolidColorPaint { Color = SKColors.LightBlue, StrokeThickness = 3 },
 
-                    // SeparatorsPaint = null will not draw the separator lines
-                    SeparatorsPaint = new SolidColorPaint { Color = SKColors.LightBlue, StrokeThickness = 3 },
+            Position = AxisPosition.End
+        }
+    };
 
-                    Position = _selectedPosition
-                }
-            };
+    public Axis[] YAxes { get; set; } =
+    {
+        new Axis
+        {
+            //Name = "Y axis",
+            TextSize = 20,
+            LabelsPaint = new SolidColorPaint { Color = SKColors.Red },
+            SeparatorsPaint = new SolidColorPaint { Color = SKColors.LightPink, StrokeThickness = 3 },
+            Position = AxisPosition.End
+        }
+    };
 
-        YAxes = new List<Axis>
-            {
-                new()
-                {
-                    //Name = "Y axis",
-                    TextSize = 20,
-                    LabelsPaint = new SolidColorPaint { Color = SKColors.Red },
-                    SeparatorsPaint = new SolidColorPaint { Color = SKColors.LightPink, StrokeThickness = 3 },
-                    Position = _selectedPosition
-                }
-            };
-    }
-
-    public IEnumerable<ISeries> Series { get; set; }
-
-    public List<Axis> XAxes { get; set; }
-
-    public List<Axis> YAxes { get; set; }
-
+    [ICommand]
     public void SetNewColor()
     {
         var nextColor = _colors[_selectedColor++ % _colors.Length];
@@ -75,15 +65,11 @@ public class ViewModel
         XAxes[0].SeparatorsPaint = new SolidColorPaint(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
     }
 
+    [ICommand]
     public void TogglePosition()
     {
         _selectedPosition = _selectedPosition == AxisPosition.End ? AxisPosition.Start : AxisPosition.End;
         XAxes[0].Position = _selectedPosition;
         YAxes[0].Position = _selectedPosition;
     }
-
-    // The next commands are only to enable XAML bindings
-    // they are not used in the WinForms sample
-    public ICommand SetNewColorCommand => new Command(o => SetNewColor());
-    public ICommand TogglePositionCommand => new Command(o => TogglePosition());
 }

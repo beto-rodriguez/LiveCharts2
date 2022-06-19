@@ -11,7 +11,14 @@
       <RowDefinition Height="50"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <TextBlock Text="Use the mouse wheel to zoom in/out, click hold and drag to move panning"></TextBlock>
-    <lvc:CartesianChart Grid.Row="1" Series="{Binding SeriesCollection}" ZoomMode="X"></lvc:CartesianChart>
-  </Grid>  
+      
+    <TextBlock Text="Use the mouse wheel to zoom in/out, click hold and drag to move panning"/>
+
+    <lvc:CartesianChart
+        Grid.Row="1"
+        Series="{Binding SeriesCollection}"
+        TooltipPosition="Hidden"
+        ZoomMode="X"> <!-- mark -->
+    </lvc:CartesianChart>
+  </Grid>
 </UserControl>

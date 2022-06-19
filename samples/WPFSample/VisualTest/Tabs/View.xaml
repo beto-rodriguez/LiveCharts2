@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:bars="clr-namespace:WPFSample.Bars.AutoUpdate"
-             xmlns:lines="clr-namespace:WPFSample.Lines.Basic">
+             xmlns:lines="clr-namespace:WPFSample.Lines.AutoUpdate"
+             xmlns:scatter="clr-namespace:WPFSample.Scatter.AutoUpdate">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -13,6 +14,9 @@
             </TabItem>
             <TabItem Header="tab 2">
                 <lines:View></lines:View>
+            </TabItem>
+            <TabItem Header="tab 3">
+                <scatter:View></scatter:View>
             </TabItem>
         </TabControl>
     </Grid>

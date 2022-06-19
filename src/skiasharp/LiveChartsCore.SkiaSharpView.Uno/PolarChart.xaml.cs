@@ -34,8 +34,6 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Uno.Helpers;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -816,6 +814,12 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
     }
 
+    /// <inheritdoc cref="IUnoChart.GetCanvasPosition"/>
+    Windows.Foundation.Point IUnoChart.GetCanvasPosition()
+    {
+        return motionCanvas.TransformToVisual(this).TransformPoint(new Windows.Foundation.Point(0, 0));
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -877,7 +881,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        var p = e.GetCurrentPoint(this);
+        var p = e.GetCurrentPoint(motionCanvas);
         _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 
@@ -929,13 +933,6 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        AngleAxes = Array.Empty<IPolarAxis>();
-        RadiusAxes = Array.Empty<IPolarAxis>();
-        _seriesObserver = null!;
-        _angleObserver = null!;
-        _radiusObserver = null!;
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
@@ -954,5 +951,10 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

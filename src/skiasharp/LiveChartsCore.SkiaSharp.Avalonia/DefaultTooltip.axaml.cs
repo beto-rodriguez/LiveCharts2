@@ -151,7 +151,7 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.ControlSize);
+                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.DrawMarginSize);
         }
         if (chart is PieChart<SkiaSharpDrawingContext>)
         {
@@ -161,21 +161,24 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
 
         if (location is null) throw new Exception("location not found");
 
-        double x = location.Value.X;
-        double y = location.Value.Y;
+        var canvasLocation = avaloniaChart.GetCanvasPosition();
+
+        var x = location.Value.X + canvasLocation.X;
+        var y = location.Value.Y + canvasLocation.Y;
         var s = chart.ControlSize;
         var w = s.Width;
         var h = s.Height;
+
         if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
         if (location.Value.X < 0) x = 0;
         if (location.Value.Y < 0) y = 0;
         if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
         Transitions ??= new Transitions
-            {
-                new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
-                new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
-            };
+        {
+            new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
+            new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
+        };
 
         Canvas.SetTop(this, y);
         Canvas.SetLeft(this, x);

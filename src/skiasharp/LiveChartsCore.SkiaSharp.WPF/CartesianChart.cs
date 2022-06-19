@@ -307,15 +307,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     protected override void OnUnloaded()
     {
         core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-        _seriesObserver = null!;
-        _xObserver = null!;
-        _yObserver = null!;
-        _sectionsObserver = null!;
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

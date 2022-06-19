@@ -22,7 +22,7 @@ public partial class View : UserControl
         while (true)
         {
             Application.Current.Dispatcher.Invoke(vm.RandomIncrement);
-            await Task.Delay(1500);
+            await Task.Delay(100);
         }
     }
 }

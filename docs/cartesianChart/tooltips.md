@@ -271,13 +271,13 @@ You can find a another example at the source code of the `DefaultTooltip` class
 
 {{~ end ~}}
 
-{{~ if uwp ~}}
-{{~ "~/../samples/UWPSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+{{~ if uno ~}}
+{{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
 
 :::tip
 You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultTooltip.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultTooltip.xaml.cs)).
+([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/DefaultTooltip.xaml), 
+[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/DefaultTooltip.xaml.cs)).
 :::
 
 {{~ end ~}}
@@ -306,7 +306,7 @@ You can find a another example at the source code of the `DefaultTooltip` class
 {{~ end ~}}
 
 {{~ if winui ~}}
-{{~ "~/../samples/WinUISample/WinUI/WinUI/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+{{~ "~/../samples/WinUISample/WinUISample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
 
 :::tip
 You can find a another example at the source code of the `DefaultTooltip` class 

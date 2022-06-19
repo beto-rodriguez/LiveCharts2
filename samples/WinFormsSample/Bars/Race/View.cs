@@ -20,6 +20,9 @@ public partial class View : UserControl
         cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            XAxes = viewModel.XAxes,
+            YAxes = viewModel.YAxes,
+            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
@@ -38,7 +41,7 @@ public partial class View : UserControl
         {
             viewModel.RandomIncrement();
             cartesianChart.Series = viewModel.Series;
-            await Task.Delay(1500);
+            await Task.Delay(100);
         }
     }
 }

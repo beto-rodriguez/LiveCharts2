@@ -230,20 +230,12 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         if (Parent == null)
         {
             _core.Unload();
-
-            Series = Array.Empty<IGeoSeries>();
-            _seriesObserver = null!;
-
-            Canvas.Dispose();
-
-            if (_core is null) return;
-            _core.Unload();
         }
     }
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {
-        MainThread.BeginInvokeOnMainThread(action);
+        _ = MainThread.InvokeOnMainThreadAsync(action);
     }
 
     private void GeoMap_SizeChanged(object? sender, EventArgs e)

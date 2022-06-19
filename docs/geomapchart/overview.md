@@ -1,3 +1,7 @@
+<div id="edit-this-article-source">
+    {{ edit_source | replace_local_to_server}}
+</div>
+
 # The GeoMap Chart
 
 The `GeoMap` control is useful to create geographical maps, it uses files in [geojson](https://en.wikipedia.org/wiki/GeoJSON) format to render

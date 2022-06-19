@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-using ViewModelsSamples.Bars.AutoUpdate;
+﻿using ViewModelsSamples.Bars.AutoUpdate;
 
 namespace MauiSample.Bars.AutoUpdate;
 
@@ -23,8 +20,8 @@ public partial class View : ContentPage
 
         while (isStreaming.Value)
         {
-            vm.RemoveFirstItem();
-            vm.AddRandomItem();
+            vm.RemoveItem();
+            vm.AddItem();
             await Task.Delay(1000);
         }
     }

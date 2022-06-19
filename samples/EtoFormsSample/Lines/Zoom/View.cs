@@ -15,7 +15,8 @@ public class View : Panel
         cartesianChart = new CartesianChart
         {
             Series = viewModel.SeriesCollection,
-            ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
+            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden,
+            ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X // mark
         };
 
         Content = cartesianChart;

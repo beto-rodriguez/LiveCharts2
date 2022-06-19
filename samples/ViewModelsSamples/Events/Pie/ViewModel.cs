@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Input;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -9,7 +11,8 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Pie;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -38,8 +41,10 @@ public class ViewModel
                 series.DataPointerDown += Series_DataPointerDown;
             });
 
-        Series = seriesCollection;
+        Series = seriesCollection.ToArray();
     }
+
+    public ISeries[] Series { get; set; }
 
     private void Series_DataPointerDown(
         IChartView chart,
@@ -52,8 +57,33 @@ public class ViewModel
         }
     }
 
-    public IEnumerable<ISeries> Series { get; set; }
+    [ICommand]
+    public void DataPointerDown(IEnumerable<ChartPoint>? points)
+    {
+        if (points is null) return;
 
-    // XAML platforms also support ICommands
-    public ICommand DataPointerDownCommand { get; set; } = new RelayCommand(); // mark
+        // notice in the chart command we are not able to use strongly typed points
+        // but we can cast the point.Context.DataSource to the actual type.
+
+        foreach (var point in points)
+        {
+            if (point.Context.DataSource is City city)
+            {
+                Trace.WriteLine($"[chart.dataPointerDownCommand] clicked on {city.Name}");
+                continue;
+            }
+
+            if (point.Context.DataSource is int integer)
+            {
+                Trace.WriteLine($"[chart.dataPointerDownCommand] clicked on number {integer}");
+                continue;
+            }
+
+            // handle more possible types here...
+            // if (point.Context.DataSource is Foo foo)
+            // {
+            //     ...
+            // }
+        }
+    }
 }

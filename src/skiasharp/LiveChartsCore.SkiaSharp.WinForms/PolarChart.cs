@@ -185,17 +185,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         core.Update();
     }
 
-    /// <inheritdoc cref="Chart.OnUnloading"/>
-    protected override void OnUnloading()
-    {
-        Series = Array.Empty<ISeries>();
-        AngleAxes = Array.Empty<IPolarAxis>();
-        RadiusAxes = Array.Empty<IPolarAxis>();
-        _seriesObserver = null!;
-        _angleObserver = null!;
-        _radiusObserver = null!;
-    }
-
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
     public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
     {

@@ -156,6 +156,12 @@ public interface IChartView
     /// </summary>
     /// <param name="action"></param>
     void InvokeOnUIThread(Action action);
+
+
+    /// <summary>
+    /// Invalidates the control.
+    /// </summary>
+    void Invalidate();
 }
 
 /// <summary>

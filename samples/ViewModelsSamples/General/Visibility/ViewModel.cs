@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Visibility;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public List<ISeries> Series { get; set; } = new()
+    public ISeries[] Series { get; set; } =
     {
         new ColumnSeries<double>
         {
@@ -27,26 +28,21 @@ public class ViewModel
         }
     };
 
-    public void ToogleSeries0()
+    [ICommand]
+    public void ToggleSeries0()
     {
         Series[0].IsVisible = !Series[0].IsVisible;
     }
 
-    public void ToogleSeries1()
+    [ICommand]
+    public void ToggleSeries1()
     {
         Series[1].IsVisible = !Series[1].IsVisible;
     }
 
-    public void ToogleSeries2()
+    [ICommand]
+    public void ToggleSeries2()
     {
         Series[2].IsVisible = !Series[2].IsVisible;
     }
-
-    // The next commands are only to enable XAML bindings
-    // they are not used in the WinForms sample
-    public ICommand ToggleSeries0Command => new Command(o => ToogleSeries0());
-
-    public ICommand ToggleSeries1Command => new Command(o => ToogleSeries1());
-
-    public ICommand ToggleSeries2Command => new Command(o => ToogleSeries2());
 }

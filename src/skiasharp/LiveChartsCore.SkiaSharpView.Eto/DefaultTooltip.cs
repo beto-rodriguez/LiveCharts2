@@ -97,7 +97,9 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
         var x = l.X + location.Value.X;
         var y = l.Y + location.Value.Y;
 
-        Location = new Point((int)x, (int)y);
+        var canvasPosition = wfChart.GetCanvasPosition();
+
+        Location = new Point((int)(x + canvasPosition.X), (int)(y + canvasPosition.Y));
     }
 
     private void DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)

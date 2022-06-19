@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Zoom;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -22,5 +23,5 @@ public class ViewModel
         SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values } };
     }
 
-    public IEnumerable<ISeries> SeriesCollection { get; set; }
+    public ISeries[] SeriesCollection { get; set; }
 }

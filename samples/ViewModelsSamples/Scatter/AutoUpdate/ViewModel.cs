@@ -1,55 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Scatter.AutoUpdate;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    private int index = 0;
-    private readonly Random random = new();
-    private readonly ObservableCollection<WeightedPoint> observableValues;
+    private int _index = 0;
+    private readonly Random _random = new();
+    private readonly ObservableCollection<WeightedPoint> _observableValues;
 
     public ViewModel()
     {
-        // using an INotifyCollectionChanged as your values collection
-        // will let the chart update every time a point is added, removed, replaced or the whole list was cleared
-        observableValues = new ObservableCollection<WeightedPoint>
-            {
-                // using object that implements INotifyPropertyChanged
-                // will allow the chart to update everytime a property in a point changes.
+        // Use ObservableCollections to let the chart listen for changes (or any INotifyCollectionChanged). // mark
+        _observableValues = new ObservableCollection<WeightedPoint>
+        {
+            // Use the WeightedPoint, ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
+            // or use any INotifyPropertyChanged implementation // mark
+            new WeightedPoint(_index++, 2, 6),
+            new(_index++, 5, 5), // the WeightedPoint type is redundant and inferred by the compiler (C# 9 and above)
+            new(_index++, 4, 3),
+            new(_index++, 5, 9),
+            new(_index++, 2, 3),
+            new(_index++, 6, 2),
+            new(_index++, 6, 7),
+            new(_index++, 6, 8),
+            new(_index++, 4, 5),
+            new(_index++, 2, 3),
+            new(_index++, 3, 8),
+            new(_index++, 8, 9),
+            new(_index++, 3, 4)
+        };
 
-                // LiveCharts already provides the ObservableValue class
-                // notice you can plot any type, but you must let LiveCharts know how to handle it
-                // for more info please see:
-                // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
-
-                new(index++, 2, 6),
-                new(index++, 5, 5),
-                new(index++, 4, 3),
-                new(index++, 5, 9),
-                new(index++, 2, 3),
-                new(index++, 6, 2),
-                new(index++, 6, 7),
-                new(index++, 6, 8),
-                new(index++, 4, 5),
-                new(index++, 2, 3),
-                new(index++, 3, 8),
-                new(index++, 8, 9),
-                new(index++, 3, 4)
-            };
-
-        // using a collection that implements INotifyCollectionChanged as your series collection
-        // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
-        // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
         Series = new ObservableCollection<ISeries>
-            {
-                new ScatterSeries<WeightedPoint> { Values = observableValues, GeometrySize = 50 }
-            };
+        {
+            new ScatterSeries<WeightedPoint> { Values = _observableValues, GeometrySize = 50 }
+        };
 
         // in the following series notice that the type int does not implement INotifyPropertyChanged
         // and our Series.Values collection is of type List<T>
@@ -60,31 +52,35 @@ public class ViewModel
 
     public ObservableCollection<ISeries> Series { get; set; }
 
-    public void AddRandomItem()
+    [ICommand]
+    public void AddItem()
     {
         // for this sample only 50 items are supported.
-        if (observableValues.Count > 50) return;
+        if (_observableValues.Count > 50) return;
 
-        var randomValue = random.Next(1, 10);
-        var randomWeight = random.Next(1, 10);
-        observableValues.Add(new WeightedPoint(index++, randomValue, randomWeight));
+        var randomValue = _random.Next(1, 10);
+        var randomWeight = _random.Next(1, 10);
+        _observableValues.Add(new WeightedPoint(_index++, randomValue, randomWeight));
     }
 
-    public void RemoveFirstItem()
+    [ICommand]
+    public void RemoveItem()
     {
-        if (observableValues.Count < 2) return;
+        if (_observableValues.Count < 2) return;
 
-        observableValues.RemoveAt(0);
+        _observableValues.RemoveAt(0);
     }
 
-    public void ReplaceRandomItem()
+    [ICommand]
+    public void ReplaceItem()
     {
-        var randomValue = random.Next(1, 10);
-        var randomWeight = random.Next(1, 10);
-        var randomIndex = random.Next(0, observableValues.Count - 1);
-        observableValues[randomIndex] = new WeightedPoint(observableValues[randomIndex].X, randomValue, randomWeight);
+        var randomValue = _random.Next(1, 10);
+        var randomWeight = _random.Next(1, 10);
+        var randomIndex = _random.Next(0, _observableValues.Count - 1);
+        _observableValues[randomIndex] = new WeightedPoint(_observableValues[randomIndex].X, randomValue, randomWeight);
     }
 
+    [ICommand]
     public void AddSeries()
     {
         //  for this sample only 5 series are supported.
@@ -93,22 +89,15 @@ public class ViewModel
         Series.Add(
             new ScatterSeries<int>
             {
-                Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
+                Values = new List<int> { _random.Next(0, 10), _random.Next(0, 10), _random.Next(0, 10) }
             });
     }
 
-    public void RemoveLastSeries()
+    [ICommand]
+    public void RemoveSeries()
     {
         if (Series.Count == 1) return;
 
         Series.RemoveAt(Series.Count - 1);
     }
-
-    // The next commands are only to enable XAML bindings
-    // they are not used in the WinForms sample
-    public ICommand AddItemCommand => new Command(o => AddRandomItem());
-    public ICommand RemoveItemCommand => new Command(o => RemoveFirstItem());
-    public ICommand ReplaceItemCommand => new Command(o => ReplaceRandomItem());
-    public ICommand AddSeriesCommand => new Command(o => AddSeries());
-    public ICommand RemoveSeriesCommand => new Command(o => RemoveLastSeries());
 }

@@ -1,88 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Bars.AutoUpdate;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    private int index = 0;
-    private readonly Random random = new();
-    private readonly ObservableCollection<ObservablePoint> observableValues;
+    private int _index = 0;
+    private readonly Random _random = new();
+    private readonly ObservableCollection<ObservablePoint> _observableValues;
 
     public ViewModel()
     {
-        // using an INotifyCollectionChanged as your values collection
-        // will let the chart update every time a point is added, removed, replaced or the whole list was cleared
-        observableValues = new ObservableCollection<ObservablePoint>
-            {
-                // using object that implements INotifyPropertyChanged
-                // will allow the chart to update everytime a property in a point changes.
+        // Use ObservableCollections to let the chart listen for changes (or any INotifyCollectionChanged). // mark
+        _observableValues = new ObservableCollection<ObservablePoint>
+        {
+            // Use the ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
+            // or use any INotifyPropertyChanged implementation // mark
+            new ObservablePoint(_index++, 2),
+            new(_index++, 5), // the ObservablePoint type is redundant and inferred by the compiler (C# 9 and above)
+            new(_index++, 4),
+            new(_index++, 5),
+            new(_index++, 2),
+            new(_index++, 6),
+            new(_index++, 6),
+            new(_index++, 6),
+            new(_index++, 4),
+            new(_index++, 2),
+            new(_index++, 3),
+            new(_index++, 8),
+            new(_index++, 3)
+        };
 
-                // LiveCharts already provides the ObservableValue class
-                // notice you can plot any type, but you must let LiveCharts know how to handle it
-                // for more info please see:
-                // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
-
-                new(index++, 2),
-                new(index++, 5),
-                new(index++, 4),
-                new(index++, 5),
-                new(index++, 2),
-                new(index++, 6),
-                new(index++, 6),
-                new(index++, 6),
-                new(index++, 4),
-                new(index++, 2),
-                new(index++, 3),
-                new(index++, 8),
-                new(index++, 3)
-            };
-
-        // using a collection that implements INotifyCollectionChanged as your series collection
-        // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
-        // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
         Series = new ObservableCollection<ISeries>
+        {
+            new ColumnSeries<ObservablePoint>
             {
-                new ColumnSeries<ObservablePoint> { Values = observableValues }
-            };
+                Values = _observableValues
+            }
+        };
 
-        // in the following series notice that the type int does not implement INotifyPropertyChanged
-        // and our Series.Values collection is of type List<T>
+        // in the following sample notice that the type int does not implement INotifyPropertyChanged
+        // and our Series.Values property is of type List<T>
         // List<T> does not implement INotifyCollectionChanged
         // this means the following series is not listening for changes.
-        //Series.Add(new ColumnSeries<int> { Values = new List<int> { 2, 4, 6, 1, 7, -2 } });
+        // Series.Add(new ColumnSeries<int> { Values = new List<int> { 2, 4, 6, 1, 7, -2 } }); // mark
     }
 
     public ObservableCollection<ISeries> Series { get; set; }
 
-    public void AddRandomItem()
+    [ICommand]
+    public void AddItem()
     {
         // for this sample only 50 items are supported.
-        if (observableValues.Count > 50) return;
+        if (_observableValues.Count > 50) return;
 
-        var randomValue = random.Next(1, 10);
-        observableValues.Add(new ObservablePoint(index++, randomValue));
+        var randomValue = _random.Next(1, 10);
+        _observableValues.Add(new ObservablePoint(_index++, randomValue));
     }
 
-    public void RemoveFirstItem()
+    [ICommand]
+    public void RemoveItem()
     {
-        if (observableValues.Count < 2) return;
+        if (_observableValues.Count < 2) return;
 
-        observableValues.RemoveAt(0);
+        _observableValues.RemoveAt(0);
     }
 
-    public void ReplaceRandomItem()
+    [ICommand]
+    public void ReplaceItem()
     {
-        var randomValue = random.Next(1, 10);
-        var randomIndex = random.Next(0, observableValues.Count - 1);
-        observableValues[randomIndex] = new ObservablePoint(observableValues[randomIndex].X, randomValue);
+        var randomValue = _random.Next(1, 10);
+        var randomIndex = _random.Next(0, _observableValues.Count - 1);
+        _observableValues[randomIndex] = new(_observableValues[randomIndex].X, randomValue);
     }
 
+
+    [ICommand]
     public void AddSeries()
     {
         //  for this sample only 5 series are supported.
@@ -91,22 +91,20 @@ public class ViewModel
         Series.Add(
             new ColumnSeries<int>
             {
-                Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
+                Values = new List<int>
+                {
+                    _random.Next(0, 10),
+                    _random.Next(0, 10),
+                    _random.Next(0, 10)
+                }
             });
     }
 
-    public void RemoveLastSeries()
+    [ICommand]
+    public void RemoveSeries()
     {
         if (Series.Count == 1) return;
 
         Series.RemoveAt(Series.Count - 1);
     }
-
-    // The next commands are only to enable XAML bindings
-    // they are not used in the WinForms sample
-    public ICommand AddItemCommand => new Command(o => AddRandomItem());
-    public ICommand RemoveItemCommand => new Command(o => RemoveFirstItem());
-    public ICommand ReplaceItemCommand => new Command(o => ReplaceRandomItem());
-    public ICommand AddSeriesCommand => new Command(o => AddSeries());
-    public ICommand RemoveSeriesCommand => new Command(o => RemoveLastSeries());
 }

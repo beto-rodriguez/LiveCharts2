@@ -108,7 +108,7 @@ public partial class MotionCanvas : ContentView
     /// <returns></returns>
     public void Invalidate()
     {
-        MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
+        _ = MainThread.InvokeOnMainThreadAsync(RunDrawingLoop);
     }
 
     /// <inheritdoc cref="NavigableElement.OnParentSet"/>

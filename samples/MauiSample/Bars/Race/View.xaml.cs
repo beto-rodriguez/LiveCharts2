@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-using ViewModelsSamples.Bars.Race;
+﻿using ViewModelsSamples.Bars.Race;
 
 namespace MauiSample.Bars.Race;
 
@@ -20,7 +17,7 @@ public partial class View : ContentPage
         while (true)
         {
             _ = Dispatcher.Dispatch(vm.RandomIncrement);
-            await Task.Delay(1500);
+            await Task.Delay(100);
         }
     }
 }

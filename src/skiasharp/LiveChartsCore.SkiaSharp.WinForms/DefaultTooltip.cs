@@ -36,7 +36,6 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
 {
     private Panel? _tooltipContainer;
 
-
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
     /// </summary>
@@ -59,7 +58,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
+                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.DrawMarginSize);
         }
         if (chart is PieChart<SkiaSharpDrawingContext>)
         {
@@ -74,7 +73,10 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         var l = wfChart.PointToScreen(Point.Empty);
         var x = l.X + (int)location.Value.X;
         var y = l.Y + (int)location.Value.Y;
-        Location = new Point(x, y);
+
+        var canvasLocation = wfChart.GetCanvasPosition();
+
+        Location = new Point(x + canvasLocation.X, y + canvasLocation.Y);
         Show();
     }
 

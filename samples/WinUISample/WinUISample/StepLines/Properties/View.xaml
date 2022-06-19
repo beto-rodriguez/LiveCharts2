@@ -1,0 +1,34 @@
+﻿<UserControl
+    x:Class="WinUISample.StepLines.Properties.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.StepLines.Properties"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <VariableSizedWrapGrid Orientation="Horizontal">
+            <Button Command="{Binding ChangeValuesInstanceCommand}">values</Button>
+            <Button Command="{Binding ChangeSeriesInstanceCommand}">series</Button>
+            <Button Command="{Binding NewFillCommand}">fill</Button>
+            <Button Command="{Binding NewStrokeCommand}">stroke</Button>
+            <Button Command="{Binding NewGeometryFillCommand}">geometry fill</Button>
+            <Button Command="{Binding NewGeometryStrokeCommand}">geom stroke</Button>
+            <Button Command="{Binding IncreaseLineSmoothnessCommand}">+ smoothness</Button>
+            <Button Command="{Binding DecreaseLineSmoothnessCommand}">- smoothness</Button>
+            <Button Command="{Binding IncreaseGeometrySizeCommand}">+ geom size</Button>
+            <Button Command="{Binding DecreaseGeometrySizeCommand}">- geom size</Button>
+        </VariableSizedWrapGrid>
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}"></lvc:CartesianChart>
+    </Grid>
+
+</UserControl>

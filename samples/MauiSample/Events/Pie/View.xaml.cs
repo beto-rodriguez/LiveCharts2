@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
 using ViewModelsSamples.Events.Pie;
 
 namespace MauiSample.Events.Pie;

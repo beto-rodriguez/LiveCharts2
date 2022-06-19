@@ -1,0 +1,1730 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LiveChartsCore.SkiaSharpView.WinUI</name>
+    </assembly>
+    <members>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint">
+            <summary>
+            The Uwp poing class, just used to bind the tooltips.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint.ChartPoint">
+            <summary>
+            Ges the chart point.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint.FontFamily">
+            <summary>
+            Gets the font family.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint.Foreground">
+            <summary>
+            Gets the foreground.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint.FontSize">
+            <summary>
+            Gets the font size.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint.FontWeight">
+            <summary>
+            Gets the font weight.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint.FontStyle">
+            <summary>
+            Gets the font style.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingPoint.FontStretch">
+            <summary>
+            Gets the font stretch.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries">
+            <summary>
+            Defines the binding series class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries.Series">
+            <summary>
+            Gets the series.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries.FontFamily">
+            <summary>
+            Gets the font family.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries.Foreground">
+            <summary>
+            Gets the foreground.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries.FontSize">
+            <summary>
+            Gets the font size.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries.FontWeight">
+            <summary>
+            Gets the font weight.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries.FontStyle">
+            <summary>
+            Gets the font style.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.BindingSeries.FontStretch">
+            <summary>
+            Gets the font stretch.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.Sketches.IChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.XAxesProperty">
+            <summary>
+            The x axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.YAxesProperty">
+            <summary>
+            The y axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.SectionsProperty">
+            <summary>
+            The sections property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.SyncContextProperty">
+            <summary>
+            The sync context property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.DrawMarginFrameProperty">
+            <summary>
+            The zoom mode property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ZoomModeProperty">
+            <summary>
+            The zoom mode property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ZoomingSpeedProperty">
+            <summary>
+            The zooming speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFindingStrategyProperty">
+            <summary>
+            The tool tip finding strategy property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.DrawMarginProperty">
+            <summary>
+            The draw margin property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.EasingFunctionProperty">
+            <summary>
+            The easing function property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendPositionProperty">
+            <summary>
+            The legend position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipTextBrushProperty">
+            <summary>
+            The tool tip text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontWeightProperty">
+            <summary>
+            The tool tip font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontStretchProperty">
+            <summary>
+            The tool tip font stretch property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontStyleProperty">
+            <summary>
+            The tool tip font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendTextBrushProperty">
+            <summary>
+            The legend text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendBackgroundProperty">
+            <summary>
+            The legend background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontWeightProperty">
+            <summary>
+            The legend font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontStretchProperty">
+            <summary>
+            The legend font stretch property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontStyleProperty">
+            <summary>
+            The legend font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendTemplateProperty">
+            <summary>
+            The legend template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.DataPointerDownCommandProperty">
+            <summary>
+            The data pointer down command property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ChartPointPointerDownCommandProperty">
+            <summary>
+            The chart point pointer down command property
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.DataPointerDown">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView.DataPointerDown" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ChartPointPointerDown">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView.ChartPointPointerDown" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LiveChartsCore#Kernel#Sketches#IChartView#DesignerMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.DesignerMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.CoreChart">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.CoreChart" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.SyncContext">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.SyncContext" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.XAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.XAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.YAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.YAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.Sections">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.Sections" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.DrawMarginFrame">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.DrawMarginFrame" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ZoomMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.ZoomMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ZoomingSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.ZoomingSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFindingStrategy">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.TooltipFindingStrategy" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipBackground">
+            <summary>
+            Gets or sets the default tool tip background.
+            </summary>
+            <value>
+            The tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the default tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipTextBrush">
+            <summary>
+            Gets or sets the default color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontSize">
+            <summary>
+            Gets or sets the default size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontWeight">
+            <summary>
+            Gets or sets the default tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontStretch">
+            <summary>
+            Gets or sets the default tool tip font stretch.
+            </summary>
+            <value>
+            The tool tip font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.TooltipFontStyle">
+            <summary>
+            Gets or sets the default tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontFamily">
+            <summary>
+            Gets or sets the default legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendTextBrush">
+            <summary>
+            Gets or sets the default color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendBackground">
+            <summary>
+            Gets or sets the legend background.
+            </summary>
+            <value>
+            The legend t background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontSize">
+            <summary>
+            Gets or sets the default size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontWeight">
+            <summary>
+            Gets or sets the default legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontStretch">
+            <summary>
+            Gets or sets the default legend font stretch.
+            </summary>
+            <value>
+            The legend font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.LegendFontStyle">
+            <summary>
+            Gets or sets the default legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.AutoUpdateEnabled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.AutoUpdateEnabled" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.UpdaterThrottler">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.UpdaterThrottler" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.DataPointerDownCommand">
+            <summary>
+            Gets or sets a command to execute when the pointer goes down on a data or data points.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ChartPointPointerDownCommand">
+            <summary>
+            Gets or sets a command to execute when the pointer goes down on a chart point.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ScaleUIPoint(LiveChartsCore.Drawing.LvcPoint,System.Int32,System.Int32)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.ScaleUIPoint(LiveChartsCore.Drawing.LvcPoint,System.Int32,System.Int32)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.ChartPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.ChartPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView`1.HideTooltip"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.SetTooltipStyle(LiveChartsCore.Drawing.LvcColor,LiveChartsCore.Drawing.LvcColor)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView.SetTooltipStyle(LiveChartsCore.Drawing.LvcColor,LiveChartsCore.Drawing.LvcColor)"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.Sketches.IChartLegend`1"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend.ActualTemplateProperty">
+            <summary>
+            The actual tempalte property.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend.ActualTemplate">
+            <summary>
+            Gets or sets the actual template.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultLegend.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.Sketches.IChartTooltip`1"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip.#ctor">
+            <summary>
+            Initialices a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip.ActualTemplateProperty">
+            <summary>
+            The actual tempalte property.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip.ActualTemplate">
+            <summary>
+            Gets or sets the actual template.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.DefaultTooltip.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.GeoMap">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.Sketches.IChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinUI.GeoMap"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.ActiveMapProperty">
+            <summary>
+            The active map property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.SyncContextProperty">
+            <summary>
+            The sync context property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.ViewCommandProperty">
+            <summary>
+            The sync context property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.MapProjectionProperty">
+            <summary>
+            The map projection property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.StrokeProperty">
+            <summary>
+            The stroke property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.FillProperty">
+            <summary>
+            The fill property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.AutoUpdateEnabled">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.AutoUpdateEnabled" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.LiveChartsCore#Geo#IGeoMapView{LiveChartsCore#SkiaSharpView#Drawing#SkiaSharpDrawingContext}#DesignerMode">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.DesignerMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.SyncContext">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.SyncContext" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.ViewCommand">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.ViewCommand" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.Canvas">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.Canvas"/>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.ActiveMap">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.ActiveMap"/>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.LiveChartsCore#Geo#IGeoMapView{LiveChartsCore#SkiaSharpView#Drawing#SkiaSharpDrawingContext}#Width">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.Width"/>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.LiveChartsCore#Geo#IGeoMapView{LiveChartsCore#SkiaSharpView#Drawing#SkiaSharpDrawingContext}#Height">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.Height"/>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.MapProjection">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.MapProjection"/>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.Stroke">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.Stroke"/>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.Fill">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.Fill"/>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.Series">
+            <inheritdoc cref="P:LiveChartsCore.Geo.IGeoMapView`1.Series"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.GeoMap.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart">
+            <summary>
+            Defines a win ui chart.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LayoutGrid">
+            <summary>
+            Gets the layout grid.
+            </summary>
+            <value>
+            The layout grid.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipControl">
+            <summary>
+            Gets the tooltip control.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.Canvas">
+            <summary>
+            Gets the canvas.
+            </summary>
+            <value>
+            The canvas.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.Legend">
+            <summary>
+            Gets the legend.
+            </summary>
+            <value>
+            The legend.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipFontSize">
+            <summary>
+            Gets or sets the size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipTextBrush">
+            <summary>
+            Gets or sets the color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipBackground">
+            <summary>
+            Gets or sets the color of the tool tip background.
+            </summary>
+            <value>
+            The color of the tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipFontWeight">
+            <summary>
+            Gets or sets the legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipFontStretch">
+            <summary>
+            Gets or sets the legend font stretch.
+            </summary>
+            <value>
+            The legend font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.TooltipFontStyle">
+            <summary>
+            Gets or sets the legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendFontFamily">
+            <summary>
+            Gets or sets the legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendFontSize">
+            <summary>
+            Gets or sets the size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendTextBrush">
+            <summary>
+            Gets or sets the color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendBackground">
+            <summary>
+            Gets or sets the color of the legend background.
+            </summary>
+            <value>
+            The color of the legend background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendFontStretch">
+            <summary>
+            Gets or sets the legend font stretch.
+            </summary>
+            <value>
+            The legend font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendFontStyle">
+            <summary>
+            Gets or sets the legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendFontWeight">
+            <summary>
+            Gets or sets the legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.IWinUIChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.LegendBindingContext">
+            <summary>
+            Defines the legend binding context.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.LegendBindingContext.SeriesCollection">
+            <summary>
+            Gets the series.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.LegendBindingContext.Background">
+            <summary>
+            Gets the background.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.LegendBindingContext.Orientation">
+            <summary>
+            Gets the orientation.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas">
+            <summary>
+            The motion canvas control.
+            </summary>
+            <seealso cref="T:Microsoft.UI.Xaml.Controls.UserControl" />
+            <seealso cref="T:Microsoft.UI.Xaml.Markup.IComponentConnector" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.PaintTasksProperty">
+            <summary>
+            The paint tasks property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.PaintTasks">
+            <summary>
+            Gets or sets the paint tasks.
+            </summary>
+            <value>
+            The paint tasks.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.MaxFps">
+            <summary>
+            Gets or sets the frames per second.
+            </summary>
+            <value>
+            The frames per second.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.CanvasCore">
+            <summary>
+            Gets the canvas core.
+            </summary>
+            <value>
+            The canvas core.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.MotionCanvas.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.PieChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.Sketches.IChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PieChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinUI.CartesianChart"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.SyncContextProperty">
+            <summary>
+            The sync context property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.InitialRotationProperty">
+            <summary>
+            The initial rotation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.MaxAngleProperty">
+            <summary>
+            The maximum angle property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TotalProperty">
+            <summary>
+            The total property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.DrawMarginProperty">
+            <summary>
+            The draw margin property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.EasingFunctionProperty">
+            <summary>
+            The easing function property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendPositionProperty">
+            <summary>
+            The legend position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipTextBrushProperty">
+            <summary>
+            The tool tip text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontWeightProperty">
+            <summary>
+            The tool tip font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontStretchProperty">
+            <summary>
+            The tool tip font stretch property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontStyleProperty">
+            <summary>
+            The tool tip font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendTextBrushProperty">
+            <summary>
+            The legend text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendBackgroundProperty">
+            <summary>
+            The legend background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontWeightProperty">
+            <summary>
+            The legend font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontStretchProperty">
+            <summary>
+            The legend font stretch property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontStyleProperty">
+            <summary>
+            The legend font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendTemplateProperty">
+            <summary>
+            The legend template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.DataPointerDownCommandProperty">
+            <summary>
+            The data pointer down command property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PieChart.ChartPointPointerDownCommandProperty">
+            <summary>
+            The chart point pointer down command property
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PieChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PieChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PieChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PieChart.DataPointerDown">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView.DataPointerDown" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PieChart.ChartPointPointerDown">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView.ChartPointPointerDown" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LiveChartsCore#Kernel#Sketches#IChartView#DesignerMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.DesignerMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.CoreChart">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.CoreChart" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.SyncContext">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.SyncContext" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.ICartesianChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.InitialRotation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPieChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.MaxAngle">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPieChartView`1.MaxAngle" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.Total">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPieChartView`1.Total" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipBackground">
+            <summary>
+            Gets or sets the default tool tip background.
+            </summary>
+            <value>
+            The tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the default tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipTextBrush">
+            <summary>
+            Gets or sets the default color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontSize">
+            <summary>
+            Gets or sets the default size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontWeight">
+            <summary>
+            Gets or sets the default tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontStretch">
+            <summary>
+            Gets or sets the default tool tip font stretch.
+            </summary>
+            <value>
+            The tool tip font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.TooltipFontStyle">
+            <summary>
+            Gets or sets the default tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontFamily">
+            <summary>
+            Gets or sets the default legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendTextBrush">
+            <summary>
+            Gets or sets the default color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendBackground">
+            <summary>
+            Gets or sets the legend background.
+            </summary>
+            <value>
+            The legend t background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontSize">
+            <summary>
+            Gets or sets the default size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontWeight">
+            <summary>
+            Gets or sets the default legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontStretch">
+            <summary>
+            Gets or sets the default legend font stretch.
+            </summary>
+            <value>
+            The legend font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.LegendFontStyle">
+            <summary>
+            Gets or sets the default legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.AutoUpdateEnabled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.AutoUpdateEnabled" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.UpdaterThrottler">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.UpdaterThrottler" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.DataPointerDownCommand">
+            <summary>
+            Gets or sets a command to execute when the pointer goes down on a data or data points.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PieChart.ChartPointPointerDownCommand">
+            <summary>
+            Gets or sets a command to execute when the pointer goes down on a chart point.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PieChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.ChartPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.ChartPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PieChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView`1.HideTooltip"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PieChart.SetTooltipStyle(LiveChartsCore.Drawing.LvcColor,LiveChartsCore.Drawing.LvcColor)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView.SetTooltipStyle(LiveChartsCore.Drawing.LvcColor,LiveChartsCore.Drawing.LvcColor)"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PieChart.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PieChart.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PieChart.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.PolarChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.Sketches.IPolarChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinUI.PolarChart"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.FitToBoundsProperty">
+            <summary>
+            The fit to bounds property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TotalAngleProperty">
+            <summary>
+            The total angle property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.InnerRadiusProperty">
+            <summary>
+            The Inner radius property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.InitialRotationProperty">
+            <summary>
+            The initial rotation property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.SeriesProperty">
+            <summary>
+            The series property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.AngleAxesProperty">
+            <summary>
+            The x axes property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.RadiusAxesProperty">
+            <summary>
+            The y axes property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.SyncContextProperty">
+            <summary>
+            The sync context property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.EasingFunctionProperty">
+            <summary>
+            The easing function property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendPositionProperty">
+            <summary>
+            The legend position property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipTextBrushProperty">
+            <summary>
+            The tool tip text color property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontWeightProperty">
+            <summary>
+            The tool tip font weight property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontStretchProperty">
+            <summary>
+            The tool tip font stretch property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontStyleProperty">
+            <summary>
+            The tool tip font style property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendTextBrushProperty">
+            <summary>
+            The legend text color property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendBackgroundProperty">
+            <summary>
+            The legend background property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontWeightProperty">
+            <summary>
+            The legend font weight property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontStretchProperty">
+            <summary>
+            The legend font stretch property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontStyleProperty">
+            <summary>
+            The legend font style property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendTemplateProperty">
+            <summary>
+            The legend template property.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.DataPointerDownCommandProperty">
+            <summary>
+            The data pointer down command property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.ChartPointPointerDownCommandProperty">
+            <summary>
+            The chart point pointer down command property
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.DataPointerDown">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView.DataPointerDown" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.ChartPointPointerDown">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.Sketches.IChartView.ChartPointPointerDown" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LiveChartsCore#Kernel#Sketches#IChartView#DesignerMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.DesignerMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.CoreChart">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.CoreChart" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.SyncContext">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.SyncContext" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.FitToBounds">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.FitToBounds" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TotalAngle">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.TotalAngle" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.InnerRadius">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.InnerRadius" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.InitialRotation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.AngleAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.AngleAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.RadiusAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.RadiusAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipBackground">
+            <summary>
+            Gets or sets the default tool tip background.
+            </summary>
+            <value>
+            The tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the default tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipTextBrush">
+            <summary>
+            Gets or sets the default color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontSize">
+            <summary>
+            Gets or sets the default size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontWeight">
+            <summary>
+            Gets or sets the default tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontStretch">
+            <summary>
+            Gets or sets the default tool tip font stretch.
+            </summary>
+            <value>
+            The tool tip font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.TooltipFontStyle">
+            <summary>
+            Gets or sets the default tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontFamily">
+            <summary>
+            Gets or sets the default legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendTextBrush">
+            <summary>
+            Gets or sets the default color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendBackground">
+            <summary>
+            Gets or sets the legend background.
+            </summary>
+            <value>
+            The legend t background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontSize">
+            <summary>
+            Gets or sets the default size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontWeight">
+            <summary>
+            Gets or sets the default legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontStretch">
+            <summary>
+            Gets or sets the default legend font stretch.
+            </summary>
+            <value>
+            The legend font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.LegendFontStyle">
+            <summary>
+            Gets or sets the default legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.AutoUpdateEnabled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView`1.AutoUpdateEnabled" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.UpdaterThrottler">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.Sketches.IChartView.UpdaterThrottler" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.DataPointerDownCommand">
+            <summary>
+            Gets or sets a command to execute when the pointer goes down on a data or data points.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.ChartPointPointerDownCommand">
+            <summary>
+            Gets or sets a command to execute when the pointer goes down on a chart point.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.ScaleUIPoint(LiveChartsCore.Drawing.LvcPoint,System.Int32,System.Int32)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IPolarChartView`1.ScaleUIPoint(LiveChartsCore.Drawing.LvcPoint,System.Int32,System.Int32)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.ChartPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.ChartPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView`1.HideTooltip"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.SetTooltipStyle(LiveChartsCore.Drawing.LvcColor,LiveChartsCore.Drawing.LvcColor)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.Sketches.IChartView.SetTooltipStyle(LiveChartsCore.Drawing.LvcColor,LiveChartsCore.Drawing.LvcColor)"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.PolarChart.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.TooltipBindingContext">
+            <summary>
+            Defines the tooltip binding context class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.TooltipBindingContext.Background">
+            <summary>
+            Gets the background.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinUI.TooltipBindingContext.Points">
+            <summary>
+            Gets the points.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinUI.LiveChartsCore_SkiaSharpView_WinUI_XamlTypeInfo.XamlMetaDataProvider">
+            <summary>
+            Main class for providing metadata for the app or library
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.LiveChartsCore_SkiaSharpView_WinUI_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
+            <summary>
+            GetXamlType(Type)
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.LiveChartsCore_SkiaSharpView_WinUI_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
+            <summary>
+            GetXamlType(String)
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinUI.LiveChartsCore_SkiaSharpView_WinUI_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
+            <summary>
+            GetXmlnsDefinitions()
+            </summary>
+        </member>
+    </members>
+</doc>

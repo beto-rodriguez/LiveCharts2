@@ -26,7 +26,7 @@ public class View : Panel
         b1.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
 
         var b2 = new Button { Text = "Remove series" };
-        b2.Click += (object sender, System.EventArgs e) => viewModel.RemoveLastSeries();
+        b2.Click += (object sender, System.EventArgs e) => viewModel.RemoveSeries();
 
         var b3 = new Button { Text = "Update all" };
         b3.Click += (object sender, System.EventArgs e) => viewModel.UpdateAll();
@@ -45,7 +45,7 @@ public class View : Panel
 
         while (isStreaming.Value)
         {
-            viewModel.RemoveLastSeries();
+            viewModel.RemoveSeries();
             viewModel.AddSeries();
             await Task.Delay(1000);
         }

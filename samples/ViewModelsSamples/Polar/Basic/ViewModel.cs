@@ -18,39 +18,36 @@ public class ViewModel : INotifyPropertyChanged
     private double _labelsAngle = -60;
 
     public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    {
+        new PolarLineSeries<double>
         {
-            new PolarLineSeries<double>
-            {
-                Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
-                DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
-                //GeometryFill = null,
-                //GeometryStroke = null,
-                GeometrySize = 30,
-                DataLabelsSize = 15,
-                DataLabelsPosition = PolarLabelsPosition.Middle,
-                DataLabelsRotation = LiveCharts.CotangentAngle,
-                IsClosed = true
-            }
-        };
+            Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+            DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
+            GeometrySize = 30,
+            DataLabelsSize = 15,
+            DataLabelsPosition = PolarLabelsPosition.Middle,
+            DataLabelsRotation = LiveCharts.CotangentAngle,
+            IsClosed = true
+        }
+    };
 
-    public PolarAxis[] RadialAxes { get; set; }
-        = {
-                new()
-                {
-                    LabelsAngle = -60,
-                    Labeler = v => (v * 10).ToString("N2")
-                }
-        };
+    public PolarAxis[] RadialAxes { get; set; } =
+    {
+        new PolarAxis
+        {
+            LabelsAngle = -60,
+            Labeler = v => (v * 10).ToString("N2")
+        }
+    };
 
-    public PolarAxis[] AngleAxes { get; set; }
-        = {
-                new()
-                {
-                    //LabelsRotation = 90,
-                    LabelsRotation = LiveCharts.TangentAngle,
-                    Labeler = v => (v * 1000).ToString("N2")
-                }
-        };
+    public PolarAxis[] AngleAxes { get; set; } =
+    {
+        new PolarAxis
+        {
+            LabelsRotation = LiveCharts.TangentAngle,
+            Labeler = v => (v * 1000).ToString("N2")
+        }
+    };
 
     public bool FitToBounds
     {

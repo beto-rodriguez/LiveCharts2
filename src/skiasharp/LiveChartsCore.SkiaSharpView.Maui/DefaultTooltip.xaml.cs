@@ -32,6 +32,7 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Layouts;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -115,18 +116,19 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
         var mobileChart = (IMauiChart)chart.View;
 
         Points = tooltipPoints;
+        var r = Measure(double.PositiveInfinity, double.PositiveInfinity);
 
         LvcPoint? location = null;
         var size = new Size
         {
-            Width = Width * DeviceDisplay.MainDisplayInfo.Density,
-            Height = Height * DeviceDisplay.MainDisplayInfo.Density
+            Width = r.Request.Width * DeviceDisplay.MainDisplayInfo.Density,
+            Height = r.Request.Height * DeviceDisplay.MainDisplayInfo.Density
         };
 
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
+                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.DrawMarginSize);
         }
         if (chart is PieChart<SkiaSharpDrawingContext>)
         {
@@ -146,16 +148,31 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
         BuildContent();
         InvalidateLayout();
 
-        _ = Measure(double.PositiveInfinity, double.PositiveInfinity);
-        var chartSize = chart.ControlSize;
         _chart = chart;
+
+        var canvasPosition = mobileChart.GetCanvasPosition();
+        canvasPosition.X = (float)(canvasPosition.X * DeviceDisplay.MainDisplayInfo.Density);
+        canvasPosition.Y = (float)(canvasPosition.Y * DeviceDisplay.MainDisplayInfo.Density);
+
+        var x = location.Value.X + canvasPosition.X;
+        var y = location.Value.Y + canvasPosition.Y;
+        var s = chart.ControlSize;
+        var w = s.Width;
+        var h = s.Height;
+
+        if (location.Value.X + r.Request.Width > w) x = w - (float)r.Request.Width;
+        if (location.Value.X < 0) x = 0;
+        if (location.Value.Y < 0) y = 0;
+        if (location.Value.Y + r.Request.Height > h) x = h - (float)r.Request.Height;
 
         AbsoluteLayout.SetLayoutBounds(
             this,
             new Rect(
-                location.Value.X / chartSize.Width,
-                location.Value.Y / chartSize.Height,
-                AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+                x / DeviceDisplay.MainDisplayInfo.Density,
+                y / DeviceDisplay.MainDisplayInfo.Density,
+                r.Request.Width,
+                r.Request.Height));
+        AbsoluteLayout.SetLayoutFlags(this, AbsoluteLayoutFlags.None);
 
         _closeTimer.Stop();
         _closeTimer.Start();
@@ -187,12 +204,8 @@ public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawin
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            AbsoluteLayout.SetLayoutBounds(
-                this,
-                new Rect(
-                    -1, -1,
-                    AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
-
+            AbsoluteLayout.SetLayoutBounds(this, new Rect(-1000, -1000, 0, 0));
+            _chart?.ClearTooltipData();
             _chart?.Update();
         });
     }

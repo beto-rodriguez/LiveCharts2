@@ -45,7 +45,6 @@ public static class MeasureExtensions
         while (!builder.Finished) yield return YieldReturnUntilNextNullChartPoint(builder, onDeleteNullPoint);
     }
 
-
     /// <summary>
     /// Builds a anumerator with the necessary data to build an Spline.
     /// </summary>
@@ -93,9 +92,11 @@ public static class MeasureExtensions
                 onDeleteNullPoint(builder.Enumerator.Current);
                 if (!wasEmpty) yield break; // if there are no points then do not return an empty enumerable...
             }
-
-            yield return builder.Enumerator.Current;
-            builder.IsEmpty = false;
+            else
+            {
+                yield return builder.Enumerator.Current;
+                builder.IsEmpty = false;
+            }
         }
 
         builder.Finished = true;

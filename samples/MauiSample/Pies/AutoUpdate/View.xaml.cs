@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-using ViewModelsSamples.Pies.AutoUpdate;
+﻿using ViewModelsSamples.Pies.AutoUpdate;
 
 namespace MauiSample.Pies.AutoUpdate;
 
@@ -23,7 +20,7 @@ public partial class View : ContentPage
 
         while (isStreaming.Value)
         {
-            vm.RemoveLastSeries();
+            vm.RemoveSeries();
             vm.AddSeries();
             await Task.Delay(1000);
         }

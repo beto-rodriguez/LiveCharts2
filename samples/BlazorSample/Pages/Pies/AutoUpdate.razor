@@ -1,10 +1,11 @@
-﻿@page "/Pies/AutoUpdate"
+﻿
+@page "/Pies/AutoUpdate"
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.Pies.AutoUpdate
 
 <div>
 	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddSeries">Add item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveLastSeries">Remove item</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveSeries">Remove item</button>
 	<button type="button" class="btn btn-primary" @onclick="ViewModel.UpdateAll">Update item</button>
 	<button type="button" class="btn btn-primary" @onclick="ToggleConstantChanges">Constant changes</button>
 </div>
@@ -24,7 +25,7 @@
 
 		while (_isStreaming.Value)
 		{
-			ViewModel.RemoveLastSeries();
+			ViewModel.RemoveSeries();
 			ViewModel.AddSeries();
 			await Task.Delay(100);
 		}

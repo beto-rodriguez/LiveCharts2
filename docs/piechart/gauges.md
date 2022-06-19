@@ -1,3 +1,7 @@
+<div id="edit-this-article-source">
+    {{ edit_source | replace_local_to_server}}
+</div>
+
 ## Gauges
 
 You can also create gauges with the `PieChart` control, the library provides the `GaugeBuilder` class, 

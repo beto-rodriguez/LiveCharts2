@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Paging;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     private readonly Random _random = new();
 
@@ -21,7 +23,7 @@ public class ViewModel
             values.Add(trend);
         }
 
-        Series = new[]
+        Series = new ISeries[]
         {
             new ColumnSeries<int>
             {
@@ -32,15 +34,11 @@ public class ViewModel
         XAxes = new[] { new Axis() };
     }
 
-    public ISeries[] Series { get; set; }
+    public ISeries[] Series { get; }
 
-    public Axis[] XAxes { get; set; }
+    public Axis[] XAxes { get; }
 
-    public ICommand GoToPage1Command => new Command(o => GoToPage1());
-    public ICommand GoToPage2Command => new Command(o => GoToPage2());
-    public ICommand GoToPage3Command => new Command(o => GoToPage3());
-    public ICommand SeeAllCommand => new Command(o => SeeAll());
-
+    [ICommand]
     public void GoToPage1()
     {
         var axis = XAxes[0];
@@ -48,6 +46,7 @@ public class ViewModel
         axis.MaxLimit = 10.5;
     }
 
+    [ICommand]
     public void GoToPage2()
     {
         var axis = XAxes[0];
@@ -55,6 +54,7 @@ public class ViewModel
         axis.MaxLimit = 20.5;
     }
 
+    [ICommand]
     public void GoToPage3()
     {
         var axis = XAxes[0];
@@ -62,6 +62,7 @@ public class ViewModel
         axis.MaxLimit = 30.5;
     }
 
+    [ICommand]
     public void SeeAll()
     {
         var axis = XAxes[0];

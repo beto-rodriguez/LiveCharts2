@@ -136,7 +136,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Gets whether the control is loaded.
     /// </summary>
-    public bool IsLoaded { get; protected set; } = false;
+    public bool IsLoaded { get; internal set; } = false;
 
     /// <summary>
     /// Gets or sets a value indicating whether this it is the first draw of this instance.
@@ -144,7 +144,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     ///   <c>true</c> if this it is the first draw; otherwise, <c>false</c>.
     /// </value>
-    public bool IsFirstDraw { get; protected set; } = true;
+    public bool IsFirstDraw { get; internal set; } = true;
 
     /// <summary>
     /// Gets the canvas.
@@ -390,7 +390,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// Measures this chart.
     /// </summary>
     /// <returns></returns>
-    protected abstract void Measure();
+    protected internal abstract void Measure();
 
     /// <summary>
     /// Sets the draw margin.

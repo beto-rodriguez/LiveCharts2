@@ -17,6 +17,9 @@ public class View : Panel
         cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            XAxes = viewModel.XAxes,
+            YAxes = viewModel.YAxes,
+            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden
         };
 
         Content = cartesianChart;
@@ -32,7 +35,7 @@ public class View : Panel
         {
             viewModel.RandomIncrement();
             cartesianChart.Series = viewModel.Series;
-            await Task.Delay(1500);
+            await Task.Delay(100);
         }
     }
 }

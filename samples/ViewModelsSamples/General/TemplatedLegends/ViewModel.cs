@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.TemplatedLegends;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
-    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public ISeries[] Series { get; set; } =
+    {
+        new ColumnSeries<double>
         {
-            new ColumnSeries<double>
-            {
-                Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 }
-            }
-        };
+            Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 }
+        }
+    };
 }

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ViewModelsSamples.Pies.Gauge5;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     private readonly Random _random = new();
 
@@ -28,8 +30,8 @@ public class ViewModel
     public ObservableValue ObservableValue1 { get; set; }
     public ObservableValue ObservableValue2 { get; set; }
     public IEnumerable<ISeries> Series { get; set; }
-    public ICommand DoRandomChangeCommand => new Command(o => DoRandomChange());
 
+    [ICommand]
     public void DoRandomChange()
     {
         // modifying the Value property updates and animates the chart automatically

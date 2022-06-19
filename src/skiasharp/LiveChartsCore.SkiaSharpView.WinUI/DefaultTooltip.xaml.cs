@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -96,7 +95,7 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);
+                chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height), chart.DrawMarginSize);
         }
         if (chart is PieChart<SkiaSharpDrawingContext>)
         {
@@ -106,9 +105,10 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
 
         if (location is null) throw new Exception("location not supported");
 
-        // strange.... something is strange here...
+        var canvasLocation = winuiChart.GetCanvasPosition();
+
         winuiChart.TooltipControl.PlacementRect =
-            new Rect(location.Value.X, location.Value.Y + DesiredSize.Height, DesiredSize.Width, DesiredSize.Height);
+            new Rect(location.Value.X + canvasLocation.X, location.Value.Y + canvasLocation.Y + DesiredSize.Height, DesiredSize.Width, DesiredSize.Height);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()

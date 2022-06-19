@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Easing;
 using LiveChartsCore.Kernel;
@@ -7,7 +8,8 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Bars.DelayedAnimation;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -27,13 +29,15 @@ public class ViewModel
         var columnSeries1 = new ColumnSeries<float>
         {
             Values = values1,
-            Stroke = null
+            Stroke = null,
+            Padding = 2
         };
 
         var columnSeries2 = new ColumnSeries<float>
         {
             Values = values2,
-            Stroke = null
+            Stroke = null,
+            Padding = 2
         };
 
         columnSeries1.PointMeasured += OnPointMeasured;

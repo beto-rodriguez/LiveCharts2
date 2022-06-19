@@ -376,7 +376,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// Measures this chart.
     /// </summary>
     /// <returns></returns>
-    protected override void Measure()
+    protected internal override void Measure()
     {
 #if DEBUG
         if (LiveCharts.EnableLogging)
@@ -746,6 +746,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         foreach (var axis in totalAxes)
         {
+            if (!axis.IsVisible) continue;
+
             axis.IsNotifyingChanges = false;
             axis.ActualBounds.HasPreviousState = true;
             axis.IsNotifyingChanges = true;

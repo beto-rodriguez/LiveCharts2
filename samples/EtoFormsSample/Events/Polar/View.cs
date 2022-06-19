@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using Eto.Forms;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
+﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Events.Polar;
 

@@ -1,7 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-
-namespace MauiSample.StepLines.Basic;
+﻿namespace MauiSample.StepLines.Basic;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

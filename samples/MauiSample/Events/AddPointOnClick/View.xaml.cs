@@ -1,7 +1,5 @@
 ﻿using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
 using ViewModelsSamples.Events.AddPointOnClick;
 
 namespace MauiSample.Events.AddPointOnClick;
@@ -18,8 +16,8 @@ public partial class View : ContentPage
     {
         var viewModel = (ViewModel)BindingContext;
 
-        // scales the UI coordintaes to the corresponging data in the chart.
-        // ScaleUIPoint retuns an array of double
+        // scales the UI coordinates to the corresponding data in the chart.
+        // ScaleUIPoint returns an array of double
         var scaledPoint = chart.ScaleUIPoint(new LvcPoint(e.Location.X, e.Location.Y));
 
         // where the X coordinate is in the first position

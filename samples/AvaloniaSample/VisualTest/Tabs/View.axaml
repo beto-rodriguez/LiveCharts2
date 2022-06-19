@@ -2,8 +2,9 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:bars="using:AvaloniaSample.Bars.Basic"
-             xmlns:lines="using:AvaloniaSample.Lines.Basic">
+             xmlns:bars="using:AvaloniaSample.Bars.AutoUpdate"
+             xmlns:lines="using:AvaloniaSample.Lines.AutoUpdate"
+             xmlns:scatter="using:AvaloniaSample.Scatter.AutoUpdate">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -16,6 +17,9 @@
             </TabItem>
             <TabItem Header="tab 2">
                 <lines:View></lines:View>
+            </TabItem>
+            <TabItem Header="tab 3">
+                <scatter:View></scatter:View>
             </TabItem>
         </TabControl>
     </Grid>

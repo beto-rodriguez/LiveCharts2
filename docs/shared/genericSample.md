@@ -1,6 +1,6 @@
 {{ render this "~/shared/genericSampleHeader.md" }}
 
-## View model
+## View Model
 
 ```
 {{ full_name | get_vm_from_docs }}
@@ -11,7 +11,7 @@
 {{~ end ~}}
 
 {{~ if winforms ~}}
-## Form code behind
+## Code Behind
 {{~ end ~}}
 
 {{~ if blazor~}}

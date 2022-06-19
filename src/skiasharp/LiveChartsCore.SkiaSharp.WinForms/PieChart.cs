@@ -108,13 +108,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         core.Update();
     }
 
-    /// <inheritdoc cref="Chart.OnUnloading"/>
-    protected override void OnUnloading()
-    {
-        Series = Array.Empty<ISeries>();
-        _seriesObserver = null!;
-    }
-
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
         core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));

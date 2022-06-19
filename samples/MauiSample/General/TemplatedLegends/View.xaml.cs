@@ -1,7 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-
-namespace MauiSample.General.TemplatedLegends;
+﻿namespace MauiSample.General.TemplatedLegends;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

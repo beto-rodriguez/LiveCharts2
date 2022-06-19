@@ -3,25 +3,28 @@
 @using ViewModelsSamples.Bars.Race
 
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="ViewModel.Series"
+    XAxes="ViewModel.XAxes"
+    YAxes="ViewModel.YAxes"
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Hidden">
 </CartesianChart>
 
 @code {
-	protected override void OnAfterRender(bool firstRender)
-	{
-		base.OnAfterRender(firstRender);
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
 
-		Update();
-	}
+        Update();
+    }
 
-	public ViewModel ViewModel { get; set; } = new();
+    public ViewModel ViewModel { get; set; } = new();
 
-	public async void Update()
-	{
-		while (true)
-		{
-			ViewModel.RandomIncrement();
-			await Task.Delay(1500);
+    public async void Update()
+    {
+        while (true)
+        {
+            ViewModel.RandomIncrement();
+            await Task.Delay(100);
 		}
 	}
 }

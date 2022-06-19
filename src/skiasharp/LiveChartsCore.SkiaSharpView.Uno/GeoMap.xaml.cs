@@ -34,8 +34,6 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Uno.Helpers;
 using SkiaSharp;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -234,10 +232,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
 
     private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
     {
-        Series = Array.Empty<IGeoSeries>();
-        _seriesObserver = null!;
-
-        Canvas.Dispose();
+        _core.Unload();
     }
 
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)

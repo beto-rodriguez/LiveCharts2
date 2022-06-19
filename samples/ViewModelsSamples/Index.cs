@@ -36,7 +36,6 @@ public static class Index
         "Bars/Race",
         "Bars/RowsWithLabels",
         "Bars/Layered",
-        "Bars/States",
 
         "StackedBars/Basic",
         "StackedBars/Groups",
@@ -106,9 +105,9 @@ public static class Index
         "VisualTest/DataTemplate",
         "VisualTest/Tabs",
 
-        "Test/ChangeSeriesInstance",
-        "Test/Dispose",
-        "Test/MotionCanvasDispose",
+        //"Test/ChangeSeriesInstance",
+        //"Test/Dispose",
+        //"Test/MotionCanvasDispose",
 
         "Maps/World"
         };

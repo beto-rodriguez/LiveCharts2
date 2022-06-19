@@ -62,10 +62,10 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _avaloniaCanvas;
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
 
     #endregion
 
@@ -713,6 +713,13 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         tooltip.Hide();
     }
 
+    /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
+    Point IAvaloniaChart.GetCanvasPosition()
+    {
+        var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
+        return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -814,7 +821,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
     {
-        var p = e.GetPosition(this);
+        var p = e.GetPosition(_avaloniaCanvas);
         _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
@@ -865,15 +872,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     private void CartesianChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
-
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-        _seriesObserver = null!;
-        _xObserver = null!;
-        _yObserver = null!;
-        _sectionsObserver = null!;
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
@@ -884,5 +882,10 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

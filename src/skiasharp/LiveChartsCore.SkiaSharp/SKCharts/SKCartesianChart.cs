@@ -226,13 +226,14 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         CoreCanvas.DisableAnimations = true;
 
         using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
-
-        var canvas = surface.Canvas;
+        using var canvas = surface.Canvas;
         using var clearColor = new SKPaint { Color = Background };
+
         canvas.DrawRect(0, 0, Width, Height, clearColor);
 
-        Core.Load();
-        Core.Update(new ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
+        Core.IsLoaded = true;
+        Core.IsFirstDraw = true;
+        Core.Measure();
 
         CoreCanvas.DrawFrame(
             new SkiaSharpDrawingContext(
@@ -243,6 +244,8 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
             {
                 ClearColor = Background
             });
+
+        Core.Unload();
 
         return surface.Snapshot();
     }
@@ -275,5 +278,10 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     {
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+    }
+
+    void IChartView.Invalidate()
+    {
+        throw new NotImplementedException();
     }
 }

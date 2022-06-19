@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -746,6 +747,12 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
     }
 
+    /// <inheritdoc cref="IMauiChart.GetCanvasPosition" />
+    LvcPoint IMauiChart.GetCanvasPosition()
+    {
+        return new LvcPoint((float)canvas.X, (float)canvas.Y);
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -755,9 +762,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        // throws on win ui
-        // https://github.com/dotnet/maui/issues/2451
-        MainThread.BeginInvokeOnMainThread(action);
+        //_ = MainThread.InvokeOnMainThreadAsync(action);
+        _ = MainThread.InvokeOnMainThreadAsync(action);
     }
 
     /// <summary>
@@ -793,16 +799,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         if (Parent == null)
         {
             core?.Unload();
-
-            Series = Array.Empty<ISeries>();
-            XAxes = Array.Empty<ICartesianAxis>();
-            YAxes = Array.Empty<ICartesianAxis>();
-            Sections = Array.Empty<RectangularSection>();
-            _seriesObserver = null!;
-            _xObserver = null!;
-            _yObserver = null!;
-            _sectionsObserver = null!;
-
             return;
         }
 
@@ -897,12 +893,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         if (core is null) return;
 
-        if (TooltipPosition != TooltipPosition.Hidden)
-        {
-            var location = new LvcPoint(e.Location.X, e.Location.Y);
-            core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
-        }
+        var location = new LvcPoint(e.Location.X, e.Location.Y);
+        core.InvokePointerDown(location);
+        core.InvokePointerMove(location);
 
         Touched?.Invoke(this, e);
     }
@@ -930,5 +923,10 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

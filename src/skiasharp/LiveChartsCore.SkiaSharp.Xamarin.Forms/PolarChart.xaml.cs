@@ -716,6 +716,12 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
     }
 
+    /// <inheritdoc cref="IMobileChart.GetCanvasPosition" />
+    LvcPoint IMobileChart.GetCanvasPosition()
+    {
+        return new LvcPoint((float)canvas.X, (float)canvas.Y);
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
@@ -759,14 +765,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         if (Parent == null)
         {
             core?.Unload();
-
-            Series = Array.Empty<ISeries>();
-            AngleAxes = Array.Empty<IPolarAxis>();
-            RadiusAxes = Array.Empty<IPolarAxis>();
-            _seriesObserver = null!;
-            _angleObserver = null!;
-            _radiusObserver = null!;
-
             return;
         }
 
@@ -820,12 +818,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     {
         if (core is null) return;
 
-        if (TooltipPosition != TooltipPosition.Hidden)
-        {
-            var location = new LvcPoint(e.Location.X, e.Location.Y);
-            core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
-        }
+        var location = new LvcPoint(e.Location.X, e.Location.Y);
+        core.InvokePointerDown(location);
+        core.InvokePointerMove(location);
 
         Touched?.Invoke(this, e);
     }
@@ -853,5 +848,10 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView.Invalidate()
+    {
+        CoreCanvas.Invalidate();
     }
 }

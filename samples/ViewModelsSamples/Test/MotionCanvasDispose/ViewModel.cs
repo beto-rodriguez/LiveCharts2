@@ -1,4 +1,5 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
@@ -9,7 +10,8 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Test.MotionCanvasDispose;
 
-public class ViewModel
+[ObservableObject]
+public partial class ViewModel
 {
     public static void Generate(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {

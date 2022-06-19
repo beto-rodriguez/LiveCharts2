@@ -1,0 +1,37 @@
+﻿<UserControl
+    x:Class="UnoSample.Test.Dispose.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sample="using:UnoSample.Test.Dispose"
+    xmlns:vms="using:ViewModelsSamples.Bars.AutoUpdate"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Button x:Name="button" Grid.Row="0">Change content</Button>
+
+        <!--
+        it seems that it is not attaching the event in UWP, Uno bug?
+        as a workaround I set it from code.
+        <Button x:Name="button" Grid.Row="0" PointerPressed="Button_PointerPressed2">Change content</Button>
+        -->
+
+        <ContentControl x:Name="content" Grid.Row="1" HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch">
+            <ContentControl.Content>
+                <sample:UserControl1></sample:UserControl1>
+            </ContentControl.Content>
+        </ContentControl>
+    </Grid>
+    
+</UserControl>
