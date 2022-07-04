@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -76,6 +77,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         MouseWheel += OnMouseWheel;
         MouseDown += OnMouseDown;
         MouseUp += OnMouseUp;
+        ManipulationDelta += OnManipulationDelta;
+        ManipulationStarting += OnManipulationStarting;
     }
 
     #region dependency properties
@@ -341,5 +344,29 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
         var p = e.GetPosition(this);
         c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+    private void OnManipulationDelta(object sender, ManipulationDeltaEventArgs e)
+    {
+        if (core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+        if (e.DeltaManipulation.Scale.Y != 1)
+        {
+            LvcPoint p = new((float)e.ManipulationOrigin.X, (float)e.ManipulationOrigin.Y);
+            c.Zoom(p, ZoomDirection.DefinedByScaleFactor, e.DeltaManipulation.Scale.Y, true);
+            e.Handled = true;
+            return;
+        }
+        if (e.DeltaManipulation.Translation.X != 0 || e.DeltaManipulation.Translation.Y != 0)
+        {
+            LvcPoint p = new((float)e.DeltaManipulation.Translation.X, (float)e.DeltaManipulation.Translation.Y);
+            c.Pan(p, false);
+            e.Handled = true;
+            return;
+        }
+    }
+    private void OnManipulationStarting(object sender, ManipulationStartingEventArgs e)
+    {
+        e.ManipulationContainer = this;
+        e.Handled = true;
     }
 }
