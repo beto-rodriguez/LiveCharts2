@@ -3,7 +3,7 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
 
-    <TargetFrameworks>net5.0-windows10.0.19041;</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows10.0.19041</TargetFrameworks>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
