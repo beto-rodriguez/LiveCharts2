@@ -33,14 +33,14 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Uno.Helpers;
+using LiveChartsCore.SkiaSharpView.UnoWinUI.Helpers;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI;
 
 /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
 public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IUnoChart

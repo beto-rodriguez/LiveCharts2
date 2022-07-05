@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.Helpers;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI.Helpers;
 
 // based on https://youtu.be/RInO5Jqru4s?t=4083
 

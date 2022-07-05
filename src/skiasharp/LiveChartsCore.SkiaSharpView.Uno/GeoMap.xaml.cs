@@ -32,13 +32,13 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.Uno.Helpers;
+using LiveChartsCore.SkiaSharpView.UnoWinUI.Helpers;
 using SkiaSharp;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI;
 
 /// <summary>
 /// Defines a geographic map.

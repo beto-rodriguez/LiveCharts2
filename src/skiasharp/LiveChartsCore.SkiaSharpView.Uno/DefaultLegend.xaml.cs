@@ -24,11 +24,11 @@ using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Uno.Binding;
+using LiveChartsCore.SkiaSharpView.UnoWinUI.Binding;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI;
 
 /// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
 public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>

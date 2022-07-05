@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.Binding;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI.Binding;
 
 /// <summary>
 /// Defines the legend binding context.

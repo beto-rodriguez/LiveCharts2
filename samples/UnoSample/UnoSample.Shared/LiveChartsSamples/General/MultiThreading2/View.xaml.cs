@@ -23,6 +23,6 @@ public sealed partial class View : UserControl
     {
         // the InvokeOnUIThread method provided by livecharts is a simple helper class
         // that handles the invoke in the multiple platforms Uno supports.
-        LiveChartsCore.SkiaSharpView.Uno.Helpers.UnoPlatformHelpers.InvokeOnUIThread(action);
+        LiveChartsCore.SkiaSharpView.UnoWinUI.Helpers.UnoPlatformHelpers.InvokeOnUIThread(action);
     }
 }

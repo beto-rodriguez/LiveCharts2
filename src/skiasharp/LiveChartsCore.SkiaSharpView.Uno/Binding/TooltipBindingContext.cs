@@ -24,7 +24,7 @@ using System;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.Binding;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI.Binding;
 
 /// <summary>
 /// Defines the tooltip binding context class.

@@ -28,12 +28,12 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Uno.Binding;
+using LiveChartsCore.SkiaSharpView.UnoWinUI.Binding;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI;
 
 /// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
 public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>

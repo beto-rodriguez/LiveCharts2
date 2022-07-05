@@ -33,7 +33,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Uno.Helpers;
+using LiveChartsCore.SkiaSharpView.UnoWinUI.Helpers;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -42,7 +42,7 @@ using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace LiveChartsCore.SkiaSharpView.Uno;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI;
 
 /// <inheritdoc cref="IPolarChartView{TDrawingContext}"/>
 public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>, IUnoChart

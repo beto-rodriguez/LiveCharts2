@@ -22,7 +22,7 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.Helpers;
+namespace LiveChartsCore.SkiaSharpView.UnoWinUI.Helpers;
 
 public class LiveChartsPinchEventArgs
 {

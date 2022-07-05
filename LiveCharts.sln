@@ -78,7 +78,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiSample", "samples\MauiS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Uno", "src\skiasharp\LiveChartsCore.SkiaSharpView.Uno\LiveChartsCore.SkiaSharpView.Uno.csproj", "{DFCDB92D-2678-464D-A679-3866702FC6BF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnoPlatform", "UnoPlatform", "{89C3B8F3-7013-4AFA-ADA8-8FD7F94EE477}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnoPlatform (UWP-Xamarin)", "UnoPlatform (UWP-Xamarin)", "{89C3B8F3-7013-4AFA-ADA8-8FD7F94EE477}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UnoSample.Shared", "samples\UnoSample\UnoSample.Shared\UnoSample.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
 EndProject
@@ -101,6 +101,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinUI", "WinUI", "{39D52D6D-70BC-40D3-84E3-CF8CD0D73D10}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinUISample", "samples\WinUISample\WinUISample\WinUISample.csproj", "{BACC7B19-20AB-41B1-AF7C-AB0682E64184}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Uno.WinUI", "src\skiasharp\LiveChartsCore.SkiaSharpView.UnoWinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", "{54A22959-F9C1-4254-B8FE-0E1DE297E412}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -2088,6 +2090,62 @@ Global
 		{BACC7B19-20AB-41B1-AF7C-AB0682E64184}.Release|x86.ActiveCfg = Release|x86
 		{BACC7B19-20AB-41B1-AF7C-AB0682E64184}.Release|x86.Build.0 = Release|x86
 		{BACC7B19-20AB-41B1-AF7C-AB0682E64184}.Release|x86.Deploy.0 = Release|x86
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|Any CPU.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|ARM.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|ARM.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|ARM64.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|ARM64.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|x64.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|x86.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Ad-Hoc|x86.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|Any CPU.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|ARM.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|ARM.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|ARM64.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|ARM64.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|iPhone.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|x64.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|x64.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|x86.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.AppStore|x86.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|ARM.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|x64.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Debug|x86.Build.0 = Debug|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|ARM.ActiveCfg = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|ARM.Build.0 = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|ARM64.Build.0 = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|iPhone.Build.0 = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|x64.ActiveCfg = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|x64.Build.0 = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|x86.ActiveCfg = Release|Any CPU
+		{54A22959-F9C1-4254-B8FE-0E1DE297E412}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
