@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "UnoWinUISample.Windows": {
+      "commandName": "MsixPackage"
+    }
+  }
+}
