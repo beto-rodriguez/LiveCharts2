@@ -20,17 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
+using LiveChartsCore.Drawing;
 
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Avalonia")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WPF")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.XamarinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Eto")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Blazor")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
-[assembly: InternalsVisibleTo("LiveChartsBackersPackage")]
+namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+
+public class LiveChartsPinchEventArgs
+{
+    public float Scale { get; set; }
+
+    public LvcPoint PinchStart { get; set; }
+}

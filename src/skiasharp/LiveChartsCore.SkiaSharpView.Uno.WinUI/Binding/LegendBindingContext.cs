@@ -20,17 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
 
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Avalonia")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WPF")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.XamarinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Eto")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Blazor")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
-[assembly: InternalsVisibleTo("LiveChartsBackersPackage")]
+namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Binding;
+
+/// <summary>
+/// Defines the legend binding context.
+/// </summary>
+[Bindable]
+public class LegendBindingContext
+{
+    /// <summary>
+    /// Gets the series.
+    /// </summary>
+    public IEnumerable<BindingSeries> SeriesCollection { get; set; } = Enumerable.Empty<BindingSeries>();
+
+    /// <summary>
+    /// Gets the background.
+    /// </summary>
+    public Brush Background { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the orientation.
+    /// </summary>
+    public Orientation Orientation { get; set; }
+}

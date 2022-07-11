@@ -20,17 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
+using Windows.UI.Text;
 
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Avalonia")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WPF")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.XamarinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Eto")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Blazor")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
-[assembly: InternalsVisibleTo("LiveChartsBackersPackage")]
+namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Binding;
+
+/// <summary>
+/// The Uwp poing class, just used to bind the tooltips.
+/// </summary>
+[Bindable]
+public class BindingPoint
+{
+    /// <summary>
+    /// Ges the chart point.
+    /// </summary>
+    public BindableChartPoint ChartPoint { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the font family.
+    /// </summary>
+    public FontFamily FontFamily { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the foreground.
+    /// </summary>
+    public Brush Foreground { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the font size.
+    /// </summary>
+    public double FontSize { get; set; }
+
+    /// <summary>
+    /// Gets the font weight.
+    /// </summary>
+    public FontWeight FontWeight { get; set; }
+
+    /// <summary>
+    /// Gets the font style.
+    /// </summary>
+    public FontStyle FontStyle { get; set; }
+
+    /// <summary>
+    /// Gets the font stretch.
+    /// </summary>
+    public FontStretch FontStretch { get; set; }
+}

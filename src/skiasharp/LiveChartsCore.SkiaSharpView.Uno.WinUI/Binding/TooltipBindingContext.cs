@@ -20,17 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
+using System;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
 
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Avalonia")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WPF")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.XamarinForms")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Eto")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Blazor")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
-[assembly: InternalsVisibleTo("LiveChartsBackersPackage")]
+namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Binding;
+
+/// <summary>
+/// Defines the tooltip binding context class.
+/// </summary>
+[Bindable]
+public class TooltipBindingContext
+{
+    /// <summary>
+    /// Gets the background.
+    /// </summary>
+    public Brush Background { get; set; } = null!;
+
+    /// <summary>
+    /// Gets the points.
+    /// </summary>
+    public BindingPoint[] Points { get; set; } = Array.Empty<BindingPoint>();
+}
