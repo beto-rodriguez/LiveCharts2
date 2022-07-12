@@ -12,10 +12,10 @@
     <Grid>
         <muxc:TabView HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <muxc:TabViewItem Header="tab 1">
-                <bars:View></bars:View>
+                <!--<bars:View></bars:View>-->
             </muxc:TabViewItem>
             <muxc:TabViewItem Header="tab 2">
-                <lines:View></lines:View>
+                <!--<lines:View></lines:View>-->
             </muxc:TabViewItem>
         </muxc:TabView>
     </Grid>

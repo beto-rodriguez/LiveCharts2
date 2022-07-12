@@ -22,12 +22,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+using Microsoft.UI.Dispatching;
 
 namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
-
-// based on https://youtu.be/RInO5Jqru4s?t=4083
 
 /// <summary>
 /// Defines Uno platform helpers.
@@ -43,7 +40,8 @@ public static class UnoPlatformHelpers
     /// Invokes a given acction in the UI thread.
     /// </summary>
     /// <param name="action">The action.</param>
-    public static void InvokeOnUIThread(Action action)
+    /// <param name="dispatcherQueue">The dispatcher queue</param>
+    public static void InvokeOnUIThread(Action action, DispatcherQueue dispatcherQueue)
     {
         if (IsWebAssembly)
         {
@@ -51,23 +49,8 @@ public static class UnoPlatformHelpers
             return;
         }
 
-        // we get about 20 fps when the chart is updated in short periods of time.
-
-        // see general/multithreading2 sample
-        // this samples forces the data update to run in the UI thread always, and adds a new data point every 10ms.
-
-        // UWP seems to struggle handling the updates.
-        // theorically the chart is redrawn at a rate of 20~ fps
-        // but that is not true, the UI thread seems to be locked.
-
-        // NOTES:
-        // 1. UWP is the only platform that behaves like this.
-        // 2. Notice the WPF.Host sample behaves much better.
-
-        // How can we help UWP to handle this? What am I missing?
-
-        _ = CoreApplication.MainView.CoreWindow.Dispatcher
-            .RunAsync(CoreDispatcherPriority.High, () => action());
+        _ = dispatcherQueue.TryEnqueue(
+            DispatcherQueuePriority.Normal, () => action());
     }
 }
 

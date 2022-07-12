@@ -874,7 +874,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        UnoPlatformHelpers.InvokeOnUIThread(action);
+        UnoPlatformHelpers.InvokeOnUIThread(action, DispatcherQueue);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

@@ -23,7 +23,8 @@
             <Border Grid.Row="0">
                 <Image>
                     <Image.Source>
-                        <BitmapImage  UriSource="/Images/livecharts.png" />
+                        <!-- Throws at least on WPF -->
+                        <!--<BitmapImage  UriSource="/Images/livecharts.png" />-->
                     </Image.Source>
                 </Image>
             </Border>

@@ -830,7 +830,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        UnoPlatformHelpers.InvokeOnUIThread(action);
+        UnoPlatformHelpers.InvokeOnUIThread(action, DispatcherQueue);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

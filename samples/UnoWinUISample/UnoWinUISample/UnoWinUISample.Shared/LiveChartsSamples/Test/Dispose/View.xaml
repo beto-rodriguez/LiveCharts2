@@ -29,7 +29,7 @@
         <ContentControl x:Name="content" Grid.Row="1" HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch">
             <ContentControl.Content>
-                <sample:UserControl1></sample:UserControl1>
+                <!--<sample:UserControl1></sample:UserControl1>-->
             </ContentControl.Content>
         </ContentControl>
     </Grid>

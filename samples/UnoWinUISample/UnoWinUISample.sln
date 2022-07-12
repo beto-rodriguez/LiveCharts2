@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32611.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UnoWinUISample.Shared", "UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UnoWinUISample.Shared", "UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.shproj", "{046D062C-95EA-4CFF-9562-D35B2D459C34}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{6D908C1C-7A69-4B5D-A7E0-6E6708452EF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoWinUISample.Wasm", "UnoWinUISample\UnoWinUISample.Wasm\UnoWinUISample.Wasm.csproj", "{81A7E396-6D85-49A1-A1B9-7B21956A03B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoWinUISample.Wasm", "UnoWinUISample\UnoWinUISample.Wasm\UnoWinUISample.Wasm.csproj", "{81A7E396-6D85-49A1-A1B9-7B21956A03B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoWinUISample.Mobile", "UnoWinUISample\UnoWinUISample.Mobile\UnoWinUISample.Mobile.csproj", "{39C7084E-CC45-43E4-BF62-B2D4585C22BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoWinUISample.Mobile", "UnoWinUISample\UnoWinUISample.Mobile\UnoWinUISample.Mobile.csproj", "{39C7084E-CC45-43E4-BF62-B2D4585C22BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoWinUISample.Skia.Gtk", "UnoWinUISample\UnoWinUISample.Skia.Gtk\UnoWinUISample.Skia.Gtk.csproj", "{0CD35592-E051-40A7-ADF8-036AD90616F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoWinUISample.Skia.Gtk", "UnoWinUISample\UnoWinUISample.Skia.Gtk\UnoWinUISample.Skia.Gtk.csproj", "{0CD35592-E051-40A7-ADF8-036AD90616F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoWinUISample.Windows", "UnoWinUISample\UnoWinUISample.Windows\UnoWinUISample.Windows.csproj", "{677D5875-ADEE-4EB0-BD0E-C426912538CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoWinUISample.Windows", "UnoWinUISample\UnoWinUISample.Windows\UnoWinUISample.Windows.csproj", "{677D5875-ADEE-4EB0-BD0E-C426912538CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoWinUISample.Skia.Wpf", "UnoWinUISample\UnoWinUISample.Skia.Wpf\UnoWinUISample.Skia.Wpf.csproj", "{2B827F3E-88D4-423D-924D-9D40F6F45A8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoWinUISample.Skia.Wpf", "UnoWinUISample\UnoWinUISample.Skia.Wpf\UnoWinUISample.Skia.Wpf.csproj", "{2B827F3E-88D4-423D-924D-9D40F6F45A8E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Uno.WinUI", "..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", "{2C21F2CE-7DF0-493A-90CA-749C25194EB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +127,22 @@ Global
 		{2B827F3E-88D4-423D-924D-9D40F6F45A8E}.Release|x64.Build.0 = Release|Any CPU
 		{2B827F3E-88D4-423D-924D-9D40F6F45A8E}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B827F3E-88D4-423D-924D-9D40F6F45A8E}.Release|x86.Build.0 = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|arm64.Build.0 = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|x64.Build.0 = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Debug|x86.Build.0 = Debug|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|arm64.ActiveCfg = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|arm64.Build.0 = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|x64.ActiveCfg = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|x64.Build.0 = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C21F2CE-7DF0-493A-90CA-749C25194EB2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,10 +158,10 @@ Global
 		SolutionGuid = {E83A6E13-23DE-4096-9847-FB250033EE6D}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.projitems*{046d062c-95ea-4cff-9562-d35b2d459c34}*SharedItemsImports = 13
 		UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.projitems*{0cd35592-e051-40a7-adf8-036ad90616f4}*SharedItemsImports = 5
 		UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.projitems*{2b827f3e-88d4-423d-924d-9d40f6f45a8e}*SharedItemsImports = 5
 		UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.projitems*{39c7084e-cc45-43e4-bf62-b2d4585c22bf}*SharedItemsImports = 5
-		UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.projitems*{677d5875-adee-4eb0-bd0e-c426912538cf}*SharedItemsImports = 5
 		UnoWinUISample\UnoWinUISample.Shared\UnoWinUISample.Shared.projitems*{81a7e396-6d85-49a1-a1b9-7b21956a03b8}*SharedItemsImports = 5
 	EndGlobalSection

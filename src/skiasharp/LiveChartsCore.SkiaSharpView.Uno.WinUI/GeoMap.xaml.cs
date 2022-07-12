@@ -222,7 +222,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {
-        UnoPlatformHelpers.InvokeOnUIThread(action);
+        UnoPlatformHelpers.InvokeOnUIThread(action, DispatcherQueue);
     }
 
     private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
