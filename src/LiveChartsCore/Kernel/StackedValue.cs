@@ -52,6 +52,11 @@ public class StackedValue
     public double Total { get; set; }
 
     /// <summary>
+    /// Gets the share in the total stack.
+    /// </summary>
+    public double Share => (End - Start) / Total;
+
+    /// <summary>
     /// Gets or sets the start.
     /// </summary>
     /// <value>

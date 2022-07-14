@@ -148,6 +148,7 @@ public class ChartPoint<TModel, TVisual, TLabel> : ChartPoint
         TertiaryValue = point.TertiaryValue;
         QuaternaryValue = point.QuaternaryValue;
         QuinaryValue = point.QuinaryValue;
+        StackedValue = point.StackedValue;
         Context.Index = point.Context.Index;
         Context.DataSource = point.Context.DataSource;
         Context.Visual = point.Context.Visual;
