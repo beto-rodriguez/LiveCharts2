@@ -43,6 +43,7 @@ using System.Reflection;
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinForms")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinUI")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno")]
+[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WPF")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.XamarinForms")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Eto")]

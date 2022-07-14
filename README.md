@@ -31,7 +31,7 @@ LiveCharts supports:
 - Eto Forms
 - Uwp
 
-You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, take a look at [this guide](https://lvcharts.com/docs/Uno/2.0.0-beta.200/samples.general.chartToImage#build-an-image-in-the-server-side-or-console-app).
+You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, take a look at [this guide](https://lvcharts.com/docs/Uno/latest/samples.general.chartToImage#build-an-image-in-the-server-side-or-console-app).
 
 ### The Errors of v0
 
