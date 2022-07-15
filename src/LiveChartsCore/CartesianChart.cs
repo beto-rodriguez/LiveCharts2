@@ -548,7 +548,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             if (axis.DataBounds.Max == axis.DataBounds.Min)
             {
-                var c = axis.DataBounds.Min * 0.3;
+                var c = axis.UnitWidth * 0.5;
                 axis.DataBounds.Min = axis.DataBounds.Min - c;
                 axis.DataBounds.Max = axis.DataBounds.Max + c;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
@@ -593,7 +593,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             if (axis.DataBounds.Max == axis.DataBounds.Min)
             {
-                var c = axis.DataBounds.Min * 0.3;
+                var c = axis.UnitWidth * 0.5;
                 axis.DataBounds.Min = axis.DataBounds.Min - c;
                 axis.DataBounds.Max = axis.DataBounds.Max + c;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
