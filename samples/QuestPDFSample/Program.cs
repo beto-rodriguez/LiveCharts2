@@ -35,7 +35,8 @@ Document.Create(container =>
                     }
                 };
 
-                canvas.DrawImage(cartesianChart.GetImage(), new SKPoint(0, 0));
+                using var chartImage = cartesianChart.GetImage();
+                canvas.DrawImage(chartImage, new SKPoint(0, 0));
             });
 
         page.Footer()
