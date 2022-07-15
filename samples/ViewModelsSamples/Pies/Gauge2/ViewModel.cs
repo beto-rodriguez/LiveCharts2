@@ -18,6 +18,6 @@ public partial class ViewModel
         .WithBackgroundInnerRadius(75)
         .WithBackground(new SolidColorPaint(new SKColor(100, 181, 246, 90)))
         .WithLabelsPosition(PolarLabelsPosition.ChartCenter)
-        .AddValue(30)
+        .AddValue(30, "gauge value", SKColors.YellowGreen, SKColors.Red) // defines the value and the color // mark
         .BuildSeries();
 }
