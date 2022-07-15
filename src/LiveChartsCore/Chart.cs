@@ -285,7 +285,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Gets the previous series.
     /// </summary>
-    public IReadOnlyList<IChartSeries<TDrawingContext>> PreviousSeries { get; protected set; } = Array.Empty<IChartSeries<TDrawingContext>>();
+    public IReadOnlyList<IChartSeries<TDrawingContext>> PreviousSeriesAtLegend { get; protected set; } = Array.Empty<IChartSeries<TDrawingContext>>();
 
     object IChart.Canvas => Canvas;
 
@@ -456,13 +456,13 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         if (position == LegendPosition.Hidden && PreviousLegendPosition == LegendPosition.Hidden) return false;
         if (position != PreviousLegendPosition) return true;
-        if (PreviousSeries.Count != newSeries.Count) return true;
+        if (PreviousSeriesAtLegend.Count != newSeries.Count) return true;
 
         for (var i = 0; i < newSeries.Count; i++)
         {
-            if (i + 1 > PreviousSeries.Count) return true;
+            if (i + 1 > PreviousSeriesAtLegend.Count) return true;
 
-            var a = PreviousSeries[i];
+            var a = PreviousSeriesAtLegend[i];
             var b = newSeries[i];
 
             if (!a.MiniatureEquals(b)) return true;

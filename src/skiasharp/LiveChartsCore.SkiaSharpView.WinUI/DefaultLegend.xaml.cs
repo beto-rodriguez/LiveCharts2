@@ -62,7 +62,7 @@ public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpD
     {
         var winuiChart = (IWinUIChart)chart.View;
 
-        var series = chart.ChartSeries;
+        var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
         var legendOrientation = chart.LegendOrientation;
         var legendPosition = chart.LegendPosition;
 

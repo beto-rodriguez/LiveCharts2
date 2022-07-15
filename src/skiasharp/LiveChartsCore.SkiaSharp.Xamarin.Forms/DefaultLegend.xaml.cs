@@ -113,7 +113,7 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
         var mobileChart = (IMobileChart)chart.View;
-        var series = chart.ChartSeries;
+        var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
         var legendOrientation = chart.LegendOrientation;
         var legendPosition = chart.LegendPosition;
         Series = series;

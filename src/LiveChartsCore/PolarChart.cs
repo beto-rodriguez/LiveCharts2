@@ -305,7 +305,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             Legend.Draw(this);
             Update();
             PreviousLegendPosition = LegendPosition;
-            PreviousSeries = Series;
+            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
             preserveFirstDraw = IsFirstDraw;
         }
 
@@ -509,7 +509,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         IsFirstDraw = false;
         ThemeId = LiveCharts.CurrentSettings.ThemeId;
-        PreviousSeries = Series;
+        PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         PreviousLegendPosition = LegendPosition;
 
         Canvas.Invalidate();
