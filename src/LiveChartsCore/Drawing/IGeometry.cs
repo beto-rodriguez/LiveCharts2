@@ -88,6 +88,7 @@ public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaint
     /// Measures the specified drawable task.
     /// </summary>
     /// <param name="drawableTask">The drawable task.</param>
+    /// <param name="mesureRotatedGeometry">Indicates whether the measurement should consider the geometry rotation.</param>
     /// <returns></returns>
-    LvcSize Measure(IPaint<TDrawingContext> drawableTask);
+    LvcSize Measure(IPaint<TDrawingContext> drawableTask, bool mesureRotatedGeometry = true);
 }

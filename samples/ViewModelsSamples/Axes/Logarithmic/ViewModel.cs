@@ -37,10 +37,30 @@ public partial class ViewModel
         }
     };
 
+    public Axis[] XAxes { get; set; } =
+   {
+        new Axis
+        {
+            Position = LiveChartsCore.Measure.AxisPosition.Start,
+            LabelsAlignment = LiveChartsCore.Drawing.Align.End,
+            LabelsRotation = -45,
+
+            // forces the step of the axis to be at least 1
+            MinStep = 1,
+
+            // converts the log scale back for the label
+            Labels = new [] { "label", "labeel", "labeeel", "labeeeel", "labeeeeeel", "labeeeeeeel", "labeeeeeeeeel", "labeeeeeeeeeeeeeel", }
+        }
+    };
+
     public Axis[] YAxes { get; set; } =
     {
         new Axis
         {
+            Position = LiveChartsCore.Measure.AxisPosition.Start,
+            LabelsAlignment = LiveChartsCore.Drawing.Align.End,
+            LabelsRotation = -45,
+
             // forces the step of the axis to be at least 1
             MinStep = 1,
 
