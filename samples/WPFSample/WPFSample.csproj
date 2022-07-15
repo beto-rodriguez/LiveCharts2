@@ -191,6 +191,9 @@
     <Compile Update="Pies\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Polar\Test\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Polar\Coordinates\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -508,6 +511,11 @@
     <Page Update="Pies\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Polar\Test\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Polar\Coordinates\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

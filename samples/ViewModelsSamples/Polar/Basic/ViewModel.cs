@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
@@ -9,15 +9,10 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Polar.Basic;
 
-public class ViewModel : INotifyPropertyChanged
+[ObservableObject]
+public partial class ViewModel
 {
-    private bool _fitToBounds = false;
-    private double _initialRotation = 15;
-    private double _innerRadius = 50;
-    private double _totalAngle = 360;
-    private double _labelsAngle = -60;
-
-    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public ISeries[] Series { get; set; } =
     {
         new PolarLineSeries<double>
         {
@@ -36,7 +31,7 @@ public class ViewModel : INotifyPropertyChanged
         new PolarAxis
         {
             LabelsAngle = -60,
-            Labeler = v => (v * 10).ToString("N2")
+            MaxLimit = 30 // null to let the chart autoscale (defualt is null) // mark
         }
     };
 
@@ -44,61 +39,7 @@ public class ViewModel : INotifyPropertyChanged
     {
         new PolarAxis
         {
-            LabelsRotation = LiveCharts.TangentAngle,
-            Labeler = v => (v * 1000).ToString("N2")
+            LabelsRotation = LiveCharts.TangentAngle
         }
     };
-
-    public bool FitToBounds
-    {
-        get => _fitToBounds;
-        set
-        {
-            _fitToBounds = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FitToBounds)));
-        }
-    }
-
-    public double InitialRotation
-    {
-        get => _initialRotation;
-        set
-        {
-            _initialRotation = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InitialRotation)));
-        }
-    }
-
-    public double InnerRadius
-    {
-        get => _innerRadius;
-        set
-        {
-            _innerRadius = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InnerRadius)));
-        }
-    }
-
-    public double TotalAngle
-    {
-        get => _totalAngle;
-        set
-        {
-            _totalAngle = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalAngle)));
-        }
-    }
-
-    public double LabelsAngle
-    {
-        get => _labelsAngle;
-        set
-        {
-            _labelsAngle = value;
-            RadialAxes[0].LabelsAngle = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LabelsAngle)));
-        }
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 }

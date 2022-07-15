@@ -16,6 +16,8 @@ public class View : Panel
         var polarChart = new PolarChart
         {
             Series = viewModel.Series,
+            AngleAxes = viewModel.AngleAxes,
+            RadiusAxes = viewModel.RadialAxes
         };
 
         Content = polarChart;

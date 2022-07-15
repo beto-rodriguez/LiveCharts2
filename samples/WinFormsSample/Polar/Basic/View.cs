@@ -19,6 +19,8 @@ public partial class View : UserControl
         var polarChart = new PolarChart
         {
             Series = viewModel.Series,
+            AngleAxes = viewModel.AngleAxes,
+            RadiusAxes = viewModel.RadialAxes,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
