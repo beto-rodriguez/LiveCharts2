@@ -116,9 +116,15 @@ public sealed partial class MotionCanvas : UserControl
 
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
+#if HAS_UNO_WINUI
+        var scale = DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
+        args.Surface.Canvas.Scale((float)scale, (float)scale);
+        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+#else
         var scaleFactor = XamlRoot.RasterizationScale;
         args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+#endif
     }
 
     private async void RunDrawingLoop()
