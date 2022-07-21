@@ -89,13 +89,13 @@ You can find another example at the source code of the `DefaultLegend` class
 
 {{~ end ~}}
 
-{{~ if uno ~}}
+{{~ if uno || uno-winui ~}}
 {{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
 
 :::tip
 You can find another example at the source code of the `DefaultLegend` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/DefaultLegend.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/DefaultLegend.xaml.cs)).
+([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinWI/DefaultLegend.xaml), 
+[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WInUI/DefaultLegend.xaml.cs)).
 :::
 
 {{~ end ~}}
