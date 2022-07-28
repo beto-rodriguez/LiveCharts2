@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -164,7 +165,7 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
     {
         var wpfChart = (Chart)chart.View;
 
-        var series = chart.ChartSeries;
+        var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
         var legendOrientation = chart.LegendOrientation;
         var legendPosition = chart.LegendPosition;
         var template = wpfChart.LegendTemplate ?? _defaultTempalte;

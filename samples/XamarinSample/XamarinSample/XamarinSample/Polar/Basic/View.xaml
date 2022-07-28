@@ -8,9 +8,6 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <lvc:PolarChart Series="{Binding Series}"></lvc:PolarChart>
+        <lvc:PolarChart Series="{Binding Series}" AngleAxes="{Binding AngleAxes}" RadiusAxes="{Binding RadialAxes}"></lvc:PolarChart>
     </Grid>
 </ContentPage>

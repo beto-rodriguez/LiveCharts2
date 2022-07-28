@@ -17,7 +17,7 @@
 
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
-    <Version>2.0.0-beta.300</Version>
+    <Version>2.0.0-beta.330</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -35,7 +35,7 @@
   <ItemGroup>
     <PackageReference Include="Uno.UI" Version="4.2.6" />
     <PackageReference Include="SkiaSharp.Views.Uno">
-      <Version>2.88.0-preview.254</Version>
+      <Version>2.88.1-preview.91</Version>
     </PackageReference>
   </ItemGroup>
 

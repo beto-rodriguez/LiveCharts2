@@ -12,6 +12,7 @@
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Eto/LiveChartsCore.SkiaSharpView.Eto.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/LiveChartsCore.SkiaSharpView.Maui.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/LiveChartsCore.SkiaSharpView.Uno.csproj", $true)
+    [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", $true)
     [Project]::new(
         "./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj", 
         $true,
@@ -80,7 +81,7 @@ function Add-Build {
     if ($project.useMsbuild) {
         # skip the build, it will be built in the pack method.
         if ($project.packingMethod -ne "msbuild") {            
-            & $msbuild $project.src /p:configuration=$configuration
+            & $msbuild $project.src /p:configuration=$configuration /restore
         }
     }
     else {

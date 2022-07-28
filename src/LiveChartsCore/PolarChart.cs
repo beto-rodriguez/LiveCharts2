@@ -305,7 +305,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             Legend.Draw(this);
             Update();
             PreviousLegendPosition = LegendPosition;
-            PreviousSeries = Series;
+            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
             preserveFirstDraw = IsFirstDraw;
         }
 
@@ -387,7 +387,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
                 if (axis.DataBounds.Max == axis.DataBounds.Min)
                 {
-                    var c = axis.DataBounds.Min * 0.3;
+                    var c = axis.UnitWidth * 0.5;
                     axis.DataBounds.Min = axis.DataBounds.Min - c;
                     axis.DataBounds.Max = axis.DataBounds.Max + c;
                     axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
@@ -413,7 +413,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
                 if (axis.DataBounds.Max == axis.DataBounds.Min)
                 {
-                    var c = axis.DataBounds.Min * 0.3;
+                    var c = axis.UnitWidth * 0.5;
                     axis.DataBounds.Min = axis.DataBounds.Min - c;
                     axis.DataBounds.Max = axis.DataBounds.Max + c;
                     axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
@@ -509,7 +509,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         IsFirstDraw = false;
         ThemeId = LiveCharts.CurrentSettings.ThemeId;
-        PreviousSeries = Series;
+        PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         PreviousLegendPosition = LegendPosition;
 
         Canvas.Invalidate();

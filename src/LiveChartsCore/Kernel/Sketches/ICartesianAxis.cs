@@ -41,6 +41,14 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     AxisOrientation Orientation { get; }
 
     /// <summary>
+    /// Gets or sets the labels alignent, default is <see cref="Align.Auto"/> and it lets the library decide it based on the axis position.
+    /// </summary>
+    /// <value>
+    /// The labels rotation.
+    /// </value>
+    Align LabelsAlignment { get; set; }
+    
+    /// <summary>
     /// Gets or sets the padding around the tick labels along the axis.
     /// </summary>
     /// <value>

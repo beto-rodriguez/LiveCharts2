@@ -68,6 +68,8 @@ public class DefaultLegend : DynamicLayout, IChartLegend<SkiaSharpDrawingContext
 
         foreach (var s in series)
         {
+            if (!s.IsVisibleAtLegend) continue;
+
             var marker = new MotionCanvas
             {
                 PaintTasks = s.CanvasSchedule.PaintSchedules,

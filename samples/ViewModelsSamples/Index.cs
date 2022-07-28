@@ -110,5 +110,5 @@ public static class Index
         //"Test/MotionCanvasDispose",
 
         "Maps/World"
-        };
+    };
 }

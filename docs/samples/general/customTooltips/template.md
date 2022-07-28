@@ -63,7 +63,7 @@ You can find a another example at the source code of the `DefaultTooltip` class
 
 {{~ end ~}}
 
-{{~ if uno ~}}
+{{~ if uno || uno ~}}
 {{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
 
 :::tip

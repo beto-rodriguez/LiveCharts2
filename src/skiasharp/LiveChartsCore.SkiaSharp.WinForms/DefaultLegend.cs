@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -52,7 +53,7 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
     {
         var wfChart = (Chart)chart.View;
 
-        var series = chart.ChartSeries;
+        var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
         var legendOrientation = chart.LegendOrientation;
         var legendPosition = chart.LegendPosition;
 

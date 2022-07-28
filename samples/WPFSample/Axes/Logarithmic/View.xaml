@@ -8,6 +8,8 @@
     </UserControl.DataContext>
     <lvc:CartesianChart
         Series="{Binding Series}"
+        DrawMarginFrame="{Binding Frame}"
+        XAxes="{Binding XAxes}"
         YAxes="{Binding YAxes}">
     </lvc:CartesianChart>
 </UserControl>

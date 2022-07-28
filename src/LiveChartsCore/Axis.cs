@@ -62,6 +62,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     private double _minStep = 0;
     private double _labelsRotation;
+    private Align _labelsAlignment = Align.Auto;
     private LvcRectangle _labelsDesiredSize = new(), _nameDesiredSize = new();
     private TTextGeometry? _nameGeometry;
     private AxisPosition _position = AxisPosition.Start;
@@ -136,6 +137,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.LabelsRotation"/>
     public double LabelsRotation { get => _labelsRotation; set { _labelsRotation = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis.LabelsAlignment"/>
+    public Align LabelsAlignment { get => _labelsAlignment; set { _labelsAlignment = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPlane.TextSize"/>
     public double TextSize { get => _textSize; set { _textSize = value; OnPropertyChanged(); } }
@@ -347,6 +351,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
 
+        var actualAlignment = _labelsAlignment;
+        if (actualAlignment == Align.Auto) actualAlignment = _position == AxisPosition.Start ? Align.End : Align.Start;
+        var ao = actualAlignment == Align.Start ? -1 : (actualAlignment == Align.End ? 1 : 0);
+        if (_orientation == AxisOrientation.X) ao *= -1;
+
         for (var i = start; i <= max; i += s)
         {
             if (i < min) continue;
@@ -475,12 +484,17 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (LabelsPaint is not null && visualSeparator.Label is not null)
                 LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Label);
 
-            if (visualSeparator.Label is not null)
+            if (LabelsPaint is not null && visualSeparator.Label is not null)
             {
                 visualSeparator.Label.Text = label;
                 visualSeparator.Label.Padding = _padding;
-                visualSeparator.Label.X = x;
-                visualSeparator.Label.Y = y;
+
+                var rls = visualSeparator.Label.Measure(LabelsPaint);
+                var aox = _orientation == AxisOrientation.Y ? _xo - rls.Width * 0.5f : 0;
+                var aoy = _orientation == AxisOrientation.X ? _yo - rls.Height * 0.5f : 0;
+
+                visualSeparator.Label.X = x + ao * aox;
+                visualSeparator.Label.Y = y + ao * aoy;
                 if (hasRotation) visualSeparator.Label.RotateTransform = r;
 
                 visualSeparator.Label.Opacity = 1;
