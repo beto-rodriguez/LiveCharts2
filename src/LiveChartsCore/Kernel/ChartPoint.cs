@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -28,7 +29,7 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a point in a chart.
 /// </summary>
-public class ChartPoint
+public class ChartPoint : ICoordinate
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartPoint"/> class.
@@ -46,7 +47,16 @@ public class ChartPoint
     /// <value>
     ///   <c>true</c> if this instance is null; otherwise, <c>false</c>.
     /// </value>
-    public bool IsNull { get; set; }
+    [Obsolete($"Renamed to {nameof(IsEmpty)}")]
+    public bool IsNull { get => IsEmpty; set => IsEmpty = value; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is empty.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is empty; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsEmpty { get; set; }
 
     /// <summary>
     /// Gets or sets the primary value.
@@ -54,7 +64,13 @@ public class ChartPoint
     /// <value>
     /// The primary value.
     /// </value>
-    public double PrimaryValue { get; set; }
+    public double PrimaryValue
+    {
+        get => Coordinate.PrimaryValue;
+        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
+        set => OnCoordinateChanged(
+            new Coordinate(value, Coordinate.SecondaryValue, Coordinate.TertiaryValue, Coordinate.QuaternaryValue, Coordinate.QuinaryValue));
+    }
 
     /// <summary>
     /// Gets or sets the secondary value.
@@ -62,7 +78,13 @@ public class ChartPoint
     /// <value>
     /// The secondary value.
     /// </value>
-    public double SecondaryValue { get; set; }
+    public double SecondaryValue
+    {
+        get => Coordinate.SecondaryValue;
+        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
+        set => OnCoordinateChanged(
+            new Coordinate(Coordinate.PrimaryValue, value, Coordinate.TertiaryValue, Coordinate.QuaternaryValue, Coordinate.QuinaryValue));
+    }
 
     /// <summary>
     /// Gets or sets the tertiary value.
@@ -70,7 +92,13 @@ public class ChartPoint
     /// <value>
     /// The tertiary value.
     /// </value>
-    public double TertiaryValue { get; set; }
+    public double TertiaryValue
+    {
+        get => Coordinate.TertiaryValue;
+        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
+        set => OnCoordinateChanged(
+            new Coordinate(Coordinate.PrimaryValue, Coordinate.SecondaryValue, value, Coordinate.QuaternaryValue, Coordinate.QuinaryValue));
+    }
 
     /// <summary>
     /// Gets or sets the quaternary value.
@@ -78,7 +106,13 @@ public class ChartPoint
     /// <value>
     /// The quaternary value.
     /// </value>
-    public double QuaternaryValue { get; set; }
+    public double QuaternaryValue
+    {
+        get => Coordinate.QuaternaryValue;
+        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
+        set => OnCoordinateChanged(
+            new Coordinate(Coordinate.PrimaryValue, Coordinate.SecondaryValue, Coordinate.TertiaryValue, value, Coordinate.QuinaryValue));
+    }
 
     /// <summary>
     /// Gets or sets the quinary value.
@@ -86,7 +120,13 @@ public class ChartPoint
     /// <value>
     /// The quinary value.
     /// </value>
-    public double QuinaryValue { get; set; }
+    public double QuinaryValue
+    {
+        get => Coordinate.QuinaryValue;
+        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
+        set => OnCoordinateChanged(
+            new Coordinate(Coordinate.PrimaryValue, Coordinate.SecondaryValue, Coordinate.TertiaryValue, Coordinate.QuaternaryValue, value));
+    }
 
     /// <summary>
     /// Gets or sets the stacked value, if the point do not belongs to a stacked series then this property is null.
@@ -117,6 +157,9 @@ public class ChartPoint
     /// </value>
     public ChartPointContext Context { get; }
 
+    /// <inheritdoc cref="ICoordinate.Coordinate" />
+    public Coordinate Coordinate { get; set; }
+
     /// <summary>
     /// Gets the distance to a given point.
     /// </summary>
@@ -125,6 +168,11 @@ public class ChartPoint
     public double DistanceTo(LvcPoint point)
     {
         return Context.HoverArea?.DistanceTo(point) ?? double.NaN;
+    }
+
+    private void OnCoordinateChanged(Coordinate coordinate)
+    {
+        Coordinate = coordinate;
     }
 }
 
@@ -143,11 +191,7 @@ public class ChartPoint<TModel, TVisual, TLabel> : ChartPoint
     public ChartPoint(ChartPoint point) : base(point.Context.Chart, point.Context.Series)
     {
         IsNull = point.IsNull;
-        PrimaryValue = point.PrimaryValue;
-        SecondaryValue = point.SecondaryValue;
-        TertiaryValue = point.TertiaryValue;
-        QuaternaryValue = point.QuaternaryValue;
-        QuinaryValue = point.QuinaryValue;
+        Coordinate = point.Coordinate;
         StackedValue = point.StackedValue;
         Context.Index = point.Context.Index;
         Context.DataSource = point.Context.DataSource;

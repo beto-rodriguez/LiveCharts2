@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
@@ -247,6 +248,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
                 var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
+
 
                 if (visual is null)
                 {
