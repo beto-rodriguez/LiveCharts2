@@ -28,6 +28,11 @@ namespace LiveChartsCore.Kernel;
 public interface IChartEntity : ICoordinate
 {
     /// <summary>
+    /// Gets or sets the entity id.
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
     /// Gets or sets the chart point.
     /// </summary>
     public ChartPoint? ChartPoint { get; set; }

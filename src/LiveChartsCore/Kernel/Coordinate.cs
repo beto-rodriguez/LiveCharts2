@@ -48,16 +48,6 @@ public readonly struct Coordinate
         QuinaryValue = quinaryValue;
     }
 
-    internal Coordinate(int id, double primaryValue, double secondaryValue, double tertiaryValue, double quaternaryValue, double quinaryValue) : this()
-    {
-        Id = id;
-        PrimaryValue = primaryValue;
-        SecondaryValue = secondaryValue;
-        TertiaryValue = tertiaryValue;
-        QuaternaryValue = quaternaryValue;
-        QuinaryValue = quinaryValue;
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Coordinate"/> struct.
     /// </summary>
@@ -79,8 +69,6 @@ public readonly struct Coordinate
     {
         _isEmpty = isEmpty;
     }
-
-    internal readonly int Id { get; }
 
     /// <summary>
     /// Gets an empty coordinate instance.

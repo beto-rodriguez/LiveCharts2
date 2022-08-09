@@ -30,5 +30,5 @@ public interface ICoordinate
     /// <summary>
     /// Gets the coordinate.
     /// </summary>
-    public Coordinate Coordinate { get; set; }
+    public Coordinate Coordinate { get; }
 }

@@ -23,13 +23,14 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Defaults;
 
 /// <summary>
 /// Defines a point with financial data.
 /// </summary>
-public class FinancialPoint : INotifyPropertyChanged
+public class FinancialPoint : IChartEntity, INotifyPropertyChanged
 {
     private double _high;
     private double _open;
@@ -99,6 +100,15 @@ public class FinancialPoint : INotifyPropertyChanged
     /// The low.
     /// </value>
     public double Low { get => _low; set { _low = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Id"/>
+    public int Id { get; set; }
+
+    /// <inheritdoc cref="ICoordinate.Coordinate"/>
+    public Coordinate Coordinate => new(_high, _date.Ticks, _open, _close, _low);
 
     /// <summary>
     /// Occurs when a property value changes.

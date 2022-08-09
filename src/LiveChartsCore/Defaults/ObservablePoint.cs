@@ -22,6 +22,7 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Defaults;
 
@@ -29,7 +30,7 @@ namespace LiveChartsCore.Defaults;
 /// Defines a point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
 /// </summary>
 /// <seealso cref="INotifyPropertyChanged" />
-public class ObservablePoint : INotifyPropertyChanged
+public class ObservablePoint : IChartEntity, INotifyPropertyChanged
 {
     private double? _x;
     private double? _y;
@@ -66,6 +67,15 @@ public class ObservablePoint : INotifyPropertyChanged
     /// The y.
     /// </value>
     public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Id"/>
+    public int Id { get; set; }
+
+    /// <inheritdoc cref="ICoordinate.Coordinate"/>
+    public Coordinate Coordinate => new(_x ?? 0d, _y ?? 0d);
 
     /// <summary>
     /// Occurs when a property value changes.
