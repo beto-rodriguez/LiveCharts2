@@ -64,7 +64,7 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     public int Id { get; set; }
 
     /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(ChartPoint?.Context.Index ?? 0d, _value ?? 0d);
+    public Coordinate Coordinate => new(Id, _value ?? 0d);
 
     /// <summary>
     /// Occurs when a property value changes.
