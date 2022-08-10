@@ -30,7 +30,7 @@ using LiveChartsCore.Motion;
 namespace LiveChartsCore.Kernel.Providers;
 
 /// <summary>
-/// Defines a data provider.
+/// Defines the default data factory.
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
 /// <typeparam name="TDrawingContext"></typeparam>

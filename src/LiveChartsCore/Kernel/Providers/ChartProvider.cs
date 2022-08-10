@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
@@ -40,7 +41,11 @@ public abstract class ChartProvider<TDrawingContext>
     /// <returns></returns>
     public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
     {
-        return new DataFactory<TModel, TDrawingContext>();
+        var isChartEntity = typeof(IChartEntity).IsAssignableFrom(typeof(TModel));
+
+        return isChartEntity
+            ? new EntitiesDataFactory<TModel, TDrawingContext>() // <- this is the way to go
+            : new DataFactory<TModel, TDrawingContext>(); // <- this factory is just here to support older versions and by val types.
     }
 
     /// <summary>

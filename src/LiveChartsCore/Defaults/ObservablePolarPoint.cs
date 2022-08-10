@@ -22,25 +22,26 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Defaults;
 
 /// <summary>
 /// Defines a point for the polar coordinate system that implements <see cref="INotifyPropertyChanged"/>.
 /// </summary>
-public class ObservablePolarPoint : INotifyPropertyChanged
+public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
 {
     private double? _angle;
     private double? _radius;
 
     /// <summary>
-    /// Inializes a new instance of the <see cref="ObservablePoint"/> class.
+    /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
     /// </summary>
     public ObservablePolarPoint()
     { }
 
     /// <summary>
-    /// Inializes a new instance of the <see cref="ObservablePoint"/> class.
+    /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
     /// </summary>
     /// <param name="angle">The angle.</param>
     /// <param name="radius">The radius.</param>
@@ -59,6 +60,15 @@ public class ObservablePolarPoint : INotifyPropertyChanged
     /// Gets or sets the Radius.
     /// </summary>
     public double? Radius { get => _radius; set { _radius = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.EntityId"/>
+    public int EntityId { get; set; }
+
+    /// <inheritdoc cref="ICoordinate.Coordinate"/>
+    public Coordinate Coordinate => new(_radius ?? 0d, _angle ?? 0d, 0d, 0d, 0d);
 
     /// <summary>
     /// Called when a property changes.
