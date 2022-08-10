@@ -20,23 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+using System.Collections.Generic;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+
+namespace LiveChartsCore.Kernel.Providers;
 
 /// <summary>
-/// Defines the drawing alignment.
+/// Just a cleaner <see cref="DataFactory{TModel, TDrawingContext}"/> but optimized for <see cref="IChartEntity"/> objects.
 /// </summary>
-public enum Align
+public class EntitiesDataFactory<TModel, TDrawingContext> : DataFactory<TModel, TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
-    /// <summary>
-    /// Aligns to the start
-    /// </summary>
-    Start,
-    /// <summary>
-    /// Aligns to the end
-    /// </summary>
-    End,
-    /// <summary>
-    /// Aligns to the middle
-    /// </summary>
-    Middle
+    /// <inheritdoc cref="DataFactory{TModel, TDrawingContext}.Fetch(ISeries{TModel}, IChart)"/>
+    public override IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, IChart chart)
+    {
+        if (series.Values is null) yield break;
+        var index = 0;
+
+        foreach (var value in series.Values)
+        {
+            if (value is not IChartEntity entity) continue;
+
+            entity.ChartPoint ??= new ChartPoint(chart.View, series);
+            entity.ChartPoint.Context.DataSource = entity;
+            entity.ChartPoint.Context.Index = index;
+            entity.EntityId = index;
+            entity.ChartPoint.Coordinate = entity.Coordinate;
+
+            yield return entity.ChartPoint;
+
+            index++;
+        }
+    }
 }

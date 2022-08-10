@@ -22,6 +22,7 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Defaults;
 
@@ -29,7 +30,7 @@ namespace LiveChartsCore.Defaults;
 /// Defines an object that notifies when the value property changes.
 /// </summary>
 /// <seealso cref="INotifyPropertyChanged" />
-public class ObservableValue : INotifyPropertyChanged
+public class ObservableValue : IChartEntity, INotifyPropertyChanged
 {
     private double? _value;
 
@@ -55,6 +56,15 @@ public class ObservableValue : INotifyPropertyChanged
     /// The value.
     /// </value>
     public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.EntityId"/>
+    public int EntityId { get; set; }
+
+    /// <inheritdoc cref="ICoordinate.Coordinate"/>
+    public Coordinate Coordinate => new(EntityId, _value ?? 0d);
 
     /// <summary>
     /// Occurs when a property value changes.

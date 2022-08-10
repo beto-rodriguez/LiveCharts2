@@ -22,6 +22,7 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Defaults;
 
@@ -29,7 +30,7 @@ namespace LiveChartsCore.Defaults;
 /// Defines a point with a weighted coordinate.
 /// </summary>
 /// <seealso cref="INotifyPropertyChanged" />
-public class WeightedPoint : INotifyPropertyChanged
+public class WeightedPoint : IChartEntity, INotifyPropertyChanged
 {
     private double? _x;
     private double? _y;
@@ -77,6 +78,15 @@ public class WeightedPoint : INotifyPropertyChanged
     /// The weight.
     /// </value>
     public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.EntityId"/>
+    public int EntityId { get; set; }
+
+    /// <inheritdoc cref="ICoordinate.Coordinate"/>
+    public Coordinate Coordinate => new(_x ?? 0, _y ?? 0, _weight ?? 0);
 
     /// <summary>
     /// Occurs when a property value changes.

@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
@@ -125,11 +126,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var p = primaryScale.ToPixels(pivot);
 
         // Note #240222
-        // the following cases probably have a similar perfamnce impact
-        // this options were neccesary at some older point when _enableNullSplitting = false could improve perfomance
-        // ToDo: Check this out, maybe this is unessesary now and we should just go for the first approach all the times.
+        // the following cases probably have a similar performance impact
+        // this options were necessary at some older point when _enableNullSplitting = false could improve performance
+        // ToDo: Check this out, maybe this is unnecessary now and we should just go for the first approach all the times.
         var segments = _enableNullSplitting
-            ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale)) // callling this method is probably as expensive as the line bellow
+            ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale)) // calling this method is probably as expensive as the line bellow
             : new List<IEnumerable<ChartPoint>>() { Fetch(cartesianChart) };
 
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
@@ -247,6 +248,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
                 var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
+
 
                 if (visual is null)
                 {
@@ -534,7 +536,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     }
 
     /// <summary>
-    /// Buils an spline from the given points.
+    /// Builds an spline from the given points.
     /// </summary>
     /// <param name="points">The points.</param>
     /// <param name="stacker">The stacker.</param>

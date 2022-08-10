@@ -20,23 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines the drawing alignment.
+/// Defines an object with a coordinate coordinate.
 /// </summary>
-public enum Align
+public interface ICoordinate
 {
     /// <summary>
-    /// Aligns to the start
+    /// Gets the coordinate.
     /// </summary>
-    Start,
-    /// <summary>
-    /// Aligns to the end
-    /// </summary>
-    End,
-    /// <summary>
-    /// Aligns to the middle
-    /// </summary>
-    Middle
+    public Coordinate Coordinate { get; }
 }

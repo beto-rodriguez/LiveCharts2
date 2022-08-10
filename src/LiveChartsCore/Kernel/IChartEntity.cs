@@ -20,23 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines the drawing alignment.
+/// Defines a point with a visual representation in the user interface.
 /// </summary>
-public enum Align
+public interface IChartEntity : ICoordinate
 {
     /// <summary>
-    /// Aligns to the start
+    /// Gets or sets the entity id.
     /// </summary>
-    Start,
+    public int EntityId { get; set; }
+
     /// <summary>
-    /// Aligns to the end
+    /// Gets or sets the chart point.
     /// </summary>
-    End,
-    /// <summary>
-    /// Aligns to the middle
-    /// </summary>
-    Middle
+    public ChartPoint? ChartPoint { get; set; }
 }

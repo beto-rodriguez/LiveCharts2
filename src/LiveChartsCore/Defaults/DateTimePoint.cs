@@ -23,13 +23,14 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Defaults;
 
 /// <summary>
 /// Defines a date time point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
 /// </summary>
-public class DateTimePoint : INotifyPropertyChanged
+public class DateTimePoint : IChartEntity, INotifyPropertyChanged
 {
     private DateTime _dateTime;
     private double? _value;
@@ -66,6 +67,15 @@ public class DateTimePoint : INotifyPropertyChanged
     /// The value.
     /// </value>
     public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.EntityId"/>
+    public int EntityId { get; set; }
+
+    /// <inheritdoc cref="ICoordinate.Coordinate"/>
+    public Coordinate Coordinate => new(_dateTime.Ticks, _value ?? 0d);
 
     /// <summary>
     /// Occurs when a property value changes.

@@ -256,11 +256,14 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
     /// <param name="paint">The paint.</param>
     public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.Measure(IPaint{TDrawingContext}, bool)"/>
-    public LvcSize Measure(IPaint<SkiaSharpDrawingContext> drawableTask, bool mesureRotatedGeometry = true)
+    /// <summary>
+    /// Measures the geometry.
+    /// </summary>
+    /// <param name="drawableTask">The drawable task.</param>
+    /// <returns>the size of the geometry.</returns>
+    public LvcSize Measure(IPaint<SkiaSharpDrawingContext> drawableTask)
     {
         var measure = OnMeasure((Paint)drawableTask);
-        if (!mesureRotatedGeometry) return measure;
 
         var r = RotateTransform;
         if (Math.Abs(r) > 0)

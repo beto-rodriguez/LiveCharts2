@@ -150,7 +150,7 @@ You can find another example at the source code of the `DefaultLegend` class
 
 {{~ end ~}}
 
-{{~ if uno || uno-winui ~}}
+{{~ if uno || unowinui ~}}
 {{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
 
 :::tip
