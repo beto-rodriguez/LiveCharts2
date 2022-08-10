@@ -1,4 +1,3 @@
-
 [string]$configuration = "Release"
 [string]$nupkgOutputPath = "./nupkg"
 [Project[]]$projects = @(
@@ -143,8 +142,10 @@ function Write-ColorOutput($foregroundColor)
     $host.UI.RawUI.ForegroundColor = $fc
 }
 
-if (Test-Path ./nupkg) {
-    Get-ChildItem ./nupkg -Include *.* -File -Recurse | ForEach-Object { $_.Delete() }
+if (Test-Path $nupkgOutputPath) {
+    Get-ChildItem $nupkgOutputPath -Include *.* -File -Recurse | ForEach-Object { $_.Delete() }
+} else {
+    New-Item $nupkgOutputPath -ItemType "directory"
 }
 
 foreach ($p in $projects) {

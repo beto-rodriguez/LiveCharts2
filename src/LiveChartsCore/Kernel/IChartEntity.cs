@@ -30,7 +30,7 @@ public interface IChartEntity : ICoordinate
     /// <summary>
     /// Gets or sets the entity id.
     /// </summary>
-    public int Id { get; set; }
+    public int EntityId { get; set; }
 
     /// <summary>
     /// Gets or sets the chart point.

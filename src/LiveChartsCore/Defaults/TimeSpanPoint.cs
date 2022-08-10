@@ -71,8 +71,8 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <inheritdoc cref="IChartEntity.ChartPoint"/>
     public ChartPoint? ChartPoint { get; set; }
 
-    /// <inheritdoc cref="IChartEntity.Id"/>
-    public int Id { get; set; }
+    /// <inheritdoc cref="IChartEntity.EntityId"/>
+    public int EntityId { get; set; }
 
     /// <inheritdoc cref="ICoordinate.Coordinate"/>
     public Coordinate Coordinate => new(_timeSpan.Ticks, _value ?? 0d);

@@ -45,7 +45,7 @@ public class EntitiesDataFactory<TModel, TDrawingContext> : DataFactory<TModel, 
             entity.ChartPoint ??= new ChartPoint(chart.View, series);
             entity.ChartPoint.Context.DataSource = entity;
             entity.ChartPoint.Context.Index = index;
-            entity.Id = index;
+            entity.EntityId = index;
             entity.ChartPoint.Coordinate = entity.Coordinate;
 
             yield return entity.ChartPoint;
