@@ -28,22 +28,15 @@ namespace LiveChartsCore.Drawing;
 public enum Align
 {
     /// <summary>
-    /// Aligns to the start of the axis.
+    /// Aligns to the start
     /// </summary>
     Start,
-
     /// <summary>
-    /// Aligns to the end of the axis.
+    /// Aligns to the end
     /// </summary>
     End,
-
     /// <summary>
-    /// Aligns to the middle.
+    /// Aligns to the middle
     /// </summary>
-    Middle,
-
-    /// <summary>
-    /// Aligns to the automatic position (defined by the object).
-    /// </summary>
-    Auto
+    Middle
 }
