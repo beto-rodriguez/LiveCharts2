@@ -18,7 +18,7 @@
             Grid.Row="1"
             Series="{Binding SeriesCollection}"
             TooltipPosition="Hidden"
-            ZoomMode="X"> <!-- mark -->
+            ZoomMode="Y"> <!-- mark -->
         </lvc:CartesianChart>
     </Grid>
 </UserControl>

@@ -343,8 +343,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         Canvas.Invalidate();
     }
-
-    internal void InvokePointerDown(LvcPoint point)
+    internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         PointerDown?.Invoke(point);
 
@@ -366,12 +365,12 @@ public abstract class Chart<TDrawingContext> : IChart
         View.OnDataPointerDown(iterable, point);
     }
 
-    internal void InvokePointerMove(LvcPoint point)
+    internal virtual void InvokePointerMove(LvcPoint point)
     {
         PointerMove?.Invoke(point);
     }
 
-    internal void InvokePointerUp(LvcPoint point)
+    internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
     {
         PointerUp?.Invoke(point);
     }

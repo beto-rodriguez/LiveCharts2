@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -157,6 +158,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         var p = e.GetPosition(this);
-        core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+        core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
     }
 }
