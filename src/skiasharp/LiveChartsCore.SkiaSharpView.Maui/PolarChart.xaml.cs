@@ -815,7 +815,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         if (core is null) return;
 
         var location = new LvcPoint(e.Location.X, e.Location.Y);
-        core.InvokePointerDown(location);
+        core.InvokePointerDown(location, false);
         core.InvokePointerMove(location);
 
         Touched?.Invoke(this, e);
