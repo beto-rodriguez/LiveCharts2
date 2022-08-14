@@ -31,6 +31,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
 
@@ -172,8 +174,18 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     protected override void InitializeCore()
     {
+        var zoomingSection = new RectangleGeometry();
+        var zoomingSectionPaint = new SolidColorPaint
+        {
+            IsFill = true,
+            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+            ZIndex = int.MaxValue
+        };
+        zoomingSectionPaint.AddGeometryToPaintTask(motionCanvas.CanvasCore, zoomingSection);
+        motionCanvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, zoomingSection, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }
@@ -209,11 +221,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
-        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), e.Button == MouseButtons.Right);
     }
 
     private void OnMouseUp(object? sender, MouseEventArgs e)
     {
-        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
+        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y), e.Button == MouseButtons.Right);
     }
 }

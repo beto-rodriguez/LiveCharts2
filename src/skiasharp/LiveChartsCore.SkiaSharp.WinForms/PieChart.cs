@@ -110,6 +110,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
-        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), false);
     }
 }

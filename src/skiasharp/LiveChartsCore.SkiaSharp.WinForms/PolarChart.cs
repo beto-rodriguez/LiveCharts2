@@ -217,11 +217,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
-        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), false);
     }
 
     private void OnMouseUp(object? sender, MouseEventArgs e)
     {
-        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
+        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y), false);
     }
 }

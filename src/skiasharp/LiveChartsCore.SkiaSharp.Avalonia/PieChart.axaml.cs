@@ -712,7 +712,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     private void Chart_PointerPressed(object sender, PointerPressedEventArgs e)
     {
         var p = e.GetPosition(this);
-        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), false);
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

@@ -55,7 +55,7 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         initializer.ApplyStyleToChart(this);
 
         Core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas, null);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;
