@@ -37,11 +37,12 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     private double? _close;
     private double? _low;
     private DateTime _date;
+    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
     /// </summary>
-    public FinancialPoint() : this(DateTime.Now, 0, 0, 0, 0)
+    public FinancialPoint()
     { }
 
     /// <summary>
@@ -54,12 +55,11 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="low">The low.</param>
     public FinancialPoint(DateTime date, double? high, double? open, double? close, double? low)
     {
-        _date = date;
-        _high = high;
-        _open = open;
-        _close = close;
-        _low = low;
-        OnCoordinateChanged();
+        Date = date;
+        High = high;
+        Open = open;
+        Close = close;
+        Low = low;
     }
 
     /// <summary>
@@ -68,16 +68,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The date.
     /// </value>
-    public DateTime Date
-    {
-        get => _date;
-        set
-        {
-            _date = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public DateTime Date { get => _date; set { _date = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the high.
@@ -85,16 +76,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The high.
     /// </value>
-    public double? High
-    {
-        get => _high;
-        set
-        {
-            _high = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? High { get => _high; set { _high = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the open.
@@ -102,16 +84,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The open.
     /// </value>
-    public double? Open
-    {
-        get => _open;
-        set
-        {
-            _open = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? Open { get => _open; set { _open = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the close.
@@ -119,16 +92,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The close.
     /// </value>
-    public double? Close
-    {
-        get => _close;
-        set
-        {
-            _close = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? Close { get => _close; set { _close = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the low.
@@ -136,31 +100,16 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The low.
     /// </value>
-    public double? Low
-    {
-        get => _low;
-        set
-        {
-            _low = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate { get; protected set; }
+    public double? Low { get => _low; set { _low = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Called when a property changed.
@@ -171,12 +120,9 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 
-    /// <summary>
-    /// Called when the coordinate changes.
-    /// </summary>
-    protected virtual void OnCoordinateChanged()
+    private Coordinate AsCoordinate()
     {
-        Coordinate = _open is null || _high is null || _low is null || _close is null
+        return _open is null || _high is null || _low is null || _close is null
             ? Coordinate.Empty
             : new(_high.Value, _date.Ticks, _open.Value, _close.Value, _low.Value);
     }

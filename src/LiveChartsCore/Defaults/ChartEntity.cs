@@ -25,22 +25,13 @@ using LiveChartsCore.Kernel;
 namespace LiveChartsCore.Defaults;
 
 /// <summary>
-/// Defines the <see cref="ChartEntity"/> class..
+/// Defines the <see cref="ChartEntity"/> class.
 /// </summary>
 public class ChartEntity : IChartEntity
 {
-    /// <summary>
-    /// Gets or sets the entity id.
-    /// </summary>
-    public int EntityId { get; set; }
+    private ChartEntityMetadata? _chartMetadata;
 
-    /// <summary>
-    /// Gets or sets the chart point.
-    /// </summary>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <summary>
-    /// Gets the coordinate.
-    /// </summary>
-    public Coordinate Coordinate => ChartPoint?.Coordinate ?? Coordinate.Empty;
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata =>
+        _chartMetadata ??= new(() => ChartMetadata.ChartPoint?.Coordinate ?? Coordinate.Empty);
 }

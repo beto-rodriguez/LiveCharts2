@@ -29,7 +29,7 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a point in a chart.
 /// </summary>
-public class ChartPoint : ICoordinate
+public class ChartPoint
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartPoint"/> class.

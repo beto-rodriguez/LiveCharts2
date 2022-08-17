@@ -35,11 +35,12 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     private double? _x;
     private double? _y;
     private double? _weight;
+    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WeightedPoint"/> class.
     /// </summary>
-    public WeightedPoint() : this(0, 0, 0)
+    public WeightedPoint()
     { }
 
     /// <summary>
@@ -50,10 +51,9 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="weight">The weight.</param>
     public WeightedPoint(double? x, double? y, double? weight)
     {
-        _x = x;
-        _y = y;
-        _weight = weight;
-        OnCoordinateChanged();
+        X = x;
+        Y = y;
+        Weight = weight;
     }
 
     /// <summary>
@@ -62,16 +62,7 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The x.
     /// </value>
-    public double? X
-    {
-        get => _x;
-        set
-        {
-            _x = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the y.
@@ -79,16 +70,7 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The y.
     /// </value>
-    public double? Y
-    {
-        get => _y;
-        set
-        {
-            _y = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the weight.
@@ -96,31 +78,16 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The weight.
     /// </value>
-    public double? Weight
-    {
-        get => _weight;
-        set
-        {
-            _weight = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate { get; protected set; }
+    public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Called when a property changed.
@@ -131,12 +98,9 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 
-    /// <summary>
-    /// Called when the coordinate changes.
-    /// </summary>
-    protected virtual void OnCoordinateChanged()
+    private Coordinate AsCoordinate()
     {
-        Coordinate = _x is null || _y is null
+        return _x is null || _y is null
             ? Coordinate.Empty
             : new(_x ?? 0, _y ?? 0, _weight ?? 0);
     }

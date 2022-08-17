@@ -33,11 +33,12 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
 {
     private double? _angle;
     private double? _radius;
+    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
     /// </summary>
-    public ObservablePolarPoint() : this(0, 0)
+    public ObservablePolarPoint()
     { }
 
     /// <summary>
@@ -49,50 +50,25 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     {
         _angle = angle;
         _radius = radius;
-        OnCoordinateChanged();
     }
 
     /// <summary>
     /// Gets or sets the angle.
     /// </summary>
-    public double? Angle
-    {
-        get => _angle;
-        set
-        {
-            _angle = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? Angle { get => _angle; set { _angle = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the Radius.
     /// </summary>
-    public double? Radius
-    {
-        get => _radius;
-        set
-        {
-            _radius = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate { get; protected set; }
+    public double? Radius { get => _radius; set { _radius = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Called when a property changes.
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Raises the property changed event.
@@ -102,12 +78,9 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    /// <summary>
-    /// Called when the coordinate changes.
-    /// </summary>
-    protected virtual void OnCoordinateChanged()
+    private Coordinate AsCoordinate()
     {
-        Coordinate = _radius is null || _angle is null
+        return _radius is null || _angle is null
             ? Coordinate.Empty
             : new(_angle.Value, _radius.Value);
     }

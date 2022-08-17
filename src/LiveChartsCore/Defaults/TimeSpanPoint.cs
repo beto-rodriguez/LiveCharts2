@@ -34,11 +34,12 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
 {
     private TimeSpan _timeSpan;
     private double? _value;
+    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.
     /// </summary>
-    public TimeSpanPoint() : this(TimeSpan.Zero, 0)
+    public TimeSpanPoint()
     { }
 
     /// <summary>
@@ -48,9 +49,8 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="value">The value.</param>
     public TimeSpanPoint(TimeSpan timeSpan, double? value)
     {
-        _timeSpan = timeSpan;
-        _value = value;
-        OnCoordinateChanged();
+        TimeSpan = timeSpan;
+        Value = value;
     }
 
     /// <summary>
@@ -59,16 +59,7 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The date time.
     /// </value>
-    public TimeSpan TimeSpan
-    {
-        get => _timeSpan;
-        set
-        {
-            _timeSpan = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public TimeSpan TimeSpan { get => _timeSpan; set { _timeSpan = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the value.
@@ -76,25 +67,10 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value
-    {
-        get => _value;
-        set
-        {
-            _value = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate { get; protected set; }
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -111,12 +87,9 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 
-    /// <summary>
-    /// Called when the coordinate changes.
-    /// </summary>
-    protected virtual void OnCoordinateChanged()
+    private Coordinate AsCoordinate()
     {
-        Coordinate = _value is null
+        return _value is null
             ? Coordinate.Empty
             : new(_timeSpan.Ticks, _value ?? 0d);
     }

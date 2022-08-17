@@ -33,12 +33,12 @@ namespace LiveChartsCore.Defaults;
 public class ObservableValue : IChartEntity, INotifyPropertyChanged
 {
     private double? _value;
-    private int _entityId;
+    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableValue"/> class.
     /// </summary>
-    public ObservableValue() : this(0)
+    public ObservableValue()
     { }
 
     /// <summary>
@@ -47,8 +47,7 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// <param name="value">The value.</param>
     public ObservableValue(double? value)
     {
-        _value = value;
-        OnCoordinateChanged();
+        Value = value;
     }
 
     /// <summary>
@@ -57,39 +56,16 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value
-    {
-        get => _value;
-        set
-        {
-            _value = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId
-    {
-        get => _entityId;
-        set
-        {
-            _entityId = value;
-            OnCoordinateChanged();
-        }
-    }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate { get; protected set; }
+    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Called when am property changed.
@@ -100,13 +76,10 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 
-    /// <summary>
-    /// Called when the coordinate changes.
-    /// </summary>
-    protected virtual void OnCoordinateChanged()
+    private Coordinate AsCoordinate()
     {
-        Coordinate = _value is null
+        return _value is null
             ? Coordinate.Empty
-            : new(_entityId, _value.Value);
+            : new(ChartMetadata.EntityIndex, _value.Value);
     }
 }

@@ -25,15 +25,10 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a point with a visual representation in the user interface.
 /// </summary>
-public interface IChartEntity : ICoordinate
+public interface IChartEntity
 {
     /// <summary>
-    /// Gets or sets the entity id.
+    /// Gets the chart entity metadata, just some information LiveCharts needs to make this object a chart point.
     /// </summary>
-    public int EntityId { get; set; }
-
-    /// <summary>
-    /// Gets or sets the chart point.
-    /// </summary>
-    public ChartPoint? ChartPoint { get; set; }
+    public ChartEntityMetadata ChartMetadata { get; }
 }

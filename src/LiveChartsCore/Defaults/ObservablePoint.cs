@@ -34,11 +34,12 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
 {
     private double? _x;
     private double? _y;
+    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
     /// </summary>
-    public ObservablePoint() : this(0d, 0d)
+    public ObservablePoint()
     { }
 
     /// <summary>
@@ -48,9 +49,8 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="y">The y coordinate.</param>
     public ObservablePoint(double? x, double? y)
     {
-        _x = x;
-        _y = y;
-        OnCoordinateChanged();
+        X = x;
+        Y = y;
     }
 
     /// <summary>
@@ -59,16 +59,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The x.
     /// </value>
-    public double? X
-    {
-        get => _x;
-        set
-        {
-            _x = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the y coordinate.
@@ -76,31 +67,16 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The y.
     /// </value>
-    public double? Y
-    {
-        get => _y;
-        set
-        {
-            _y = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate { get; private set; }
+    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Called when a property changes.
@@ -111,13 +87,10 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 
-    /// <summary>
-    /// Called when the coordinate changes.
-    /// </summary>
-    protected virtual void OnCoordinateChanged()
+    private Coordinate AsCoordinate()
     {
-        Coordinate = _x is null || _y is null
+        return _x is null || _y is null
             ? Coordinate.Empty
-            : new(_x.Value, _y.Value);
+            : new Coordinate(_x.Value, _y.Value);
     }
 }

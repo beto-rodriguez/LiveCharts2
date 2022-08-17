@@ -34,11 +34,12 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
 {
     private DateTime _dateTime;
     private double? _value;
+    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
     /// </summary>
-    public DateTimePoint() : this(DateTime.Now, 0)
+    public DateTimePoint()
     { }
 
     /// <summary>
@@ -48,9 +49,8 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="value">The value.</param>
     public DateTimePoint(DateTime dateTime, double? value)
     {
-        _dateTime = dateTime;
-        _value = value;
-        OnCoordinateChanged();
+        DateTime = dateTime;
+        Value = value;
     }
 
     /// <summary>
@@ -59,16 +59,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The date time.
     /// </value>
-    public DateTime DateTime
-    {
-        get => _dateTime;
-        set
-        {
-            _dateTime = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
+    public DateTime DateTime { get => _dateTime; set { _dateTime = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the value.
@@ -76,31 +67,16 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value
-    {
-        get => _value;
-        set
-        {
-            _value = value;
-            OnCoordinateChanged();
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate { get; protected set; }
+    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
+    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Called when a property changed.
@@ -111,12 +87,9 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 
-    /// <summary>
-    /// Called when the coordinate changes.
-    /// </summary>
-    protected virtual void OnCoordinateChanged()
+    private Coordinate AsCoordinate()
     {
-        Coordinate = _value is null
+        return _value is null
             ? Coordinate.Empty
             : new(_dateTime.Ticks, _value.Value);
     }
