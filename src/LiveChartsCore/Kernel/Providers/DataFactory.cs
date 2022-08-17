@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -37,30 +38,10 @@ namespace LiveChartsCore.Kernel.Providers;
 public class DataFactory<TModel, TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    /// <summary>
-    /// Gets the by value map.
-    /// </summary>
-    protected Dictionary<object, Dictionary<int, ChartPoint>> ByChartbyValueVisualMap { get; } = new();
-
-#nullable disable
-
-    // note #270422
-    // We use the ByChartbyValueVisualMap for nullable and value types
-    // for reference types we use the ByChartByReferenceVisualMap it does not allows nulls, it throws in the mapper
-    // when it founds a null type and then it warns you on how to use it.
-    // this is a current limitation and could be supported in future verions.
-
-    /// <summary>
-    /// Gets the by reference map.
-    /// </summary>
-    protected Dictionary<object, Dictionary<TModel, ChartPoint>> ByChartByReferenceVisualMap { get; } = new();
-
-#nullable restore
-
-    /// <summary>
-    /// Indicates whether the factory uses value or reference types.
-    /// </summary>
-    protected bool IsValueType { get; private set; } = false;
+    private readonly bool _isTModelChartEntity = false;
+    private readonly bool _isValueType = false;
+    private Dictionary<object, Dictionary<int, IChartEntity>> ChartIndexEntityMap { get; } = new();
+    private Dictionary<object, Dictionary<TModel, IChartEntity>> ChartRefEntityMap { get; } = new();
 
     /// <summary>
     /// Gets or sets the previous known bounds.
@@ -72,11 +53,13 @@ public class DataFactory<TModel, TDrawingContext>
     /// </summary>
     public DataFactory()
     {
-        var t = typeof(TModel);
-        IsValueType = t.IsValueType;
-
         var bounds = new DimensionalBounds(true);
         PreviousKnownBounds = bounds;
+
+        var t = typeof(TModel);
+        _isValueType = t.IsValueType;
+
+        _isTModelChartEntity = typeof(IChartEntity).IsAssignableFrom(typeof(TModel));
     }
 
     /// <summary>
@@ -89,58 +72,16 @@ public class DataFactory<TModel, TDrawingContext>
     {
         if (series.Values is null) yield break;
 
-        var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        var dataSource = _isTModelChartEntity
+            ? EnumerateChartEntities(series, chart)
+            : (_isValueType
+                ? EnumerateByValEntities(series, chart)
+                : EnumerateByRefEntities(series, chart));
 
-        var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
-        var index = 0;
-
-        if (IsValueType)
+        foreach (var value in dataSource)
         {
-            _ = ByChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
-            if (d is null)
-            {
-                d = new Dictionary<int, ChartPoint>();
-                ByChartbyValueVisualMap[canvas.Sync] = d;
-            }
-            var byValueVisualMap = d;
-
-            foreach (var item in series.Values)
-            {
-                if (!byValueVisualMap.TryGetValue(index, out var cp))
-                    byValueVisualMap[index] = cp = new ChartPoint(chart.View, series);
-
-                cp.Context.Index = index++;
-                cp.Context.DataSource = item;
-
-                mapper(item, cp);
-
-                yield return cp;
-            }
-        }
-        else
-        {
-            _ = ByChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
-            if (d is null)
-            {
-#nullable disable
-                // see note #270422
-                d = new Dictionary<TModel, ChartPoint>();
-#nullable restore
-                ByChartByReferenceVisualMap[canvas.Sync] = d;
-            }
-            var byReferenceVisualMap = d;
-
-            foreach (var item in series.Values)
-            {
-                if (!byReferenceVisualMap.TryGetValue(item, out var cp))
-                    byReferenceVisualMap[item] = cp = new ChartPoint(chart.View, series);
-
-                cp.Context.Index = index++;
-                cp.Context.DataSource = item;
-                mapper(item, cp);
-
-                yield return cp;
-            }
+            if (value is null) yield return ChartPoint.Empty;
+            yield return value?.ChartPoint ?? ChartPoint.Empty;
         }
     }
 
@@ -151,23 +92,13 @@ public class DataFactory<TModel, TDrawingContext>
     /// <returns></returns>
     public virtual void DisposePoint(ChartPoint point)
     {
-        if (IsValueType)
-        {
-            var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
-            _ = ByChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
-            var byValueVisualMap = d;
-            if (byValueVisualMap is null) return;
-            _ = byValueVisualMap.Remove(point.Context.Index);
-        }
-        else
-        {
-            if (point.Context.DataSource is null) return;
-            var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
-            _ = ByChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
-            var byReferenceVisualMap = d;
-            if (byReferenceVisualMap is null) return;
-            _ = byReferenceVisualMap.Remove((TModel)point.Context.DataSource);
-        }
+        if (_isTModelChartEntity) return;
+
+        var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
+        _ = ChartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
+        var byValueVisualMap = d;
+        if (byValueVisualMap is null) return;
+        _ = byValueVisualMap.Remove(point.Context.Index);
     }
 
     /// <summary>
@@ -176,16 +107,10 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="chart"></param>
     public virtual void Dispose(IChart chart)
     {
-        if (IsValueType)
-        {
-            var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-            _ = ByChartbyValueVisualMap.Remove(canvas.Sync);
-        }
-        else
-        {
-            var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-            _ = ByChartByReferenceVisualMap.Remove(canvas.Sync);
-        }
+        if (_isTModelChartEntity) return;
+
+        var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        _ = ChartIndexEntityMap.Remove(canvas.Sync);
     }
 
     /// <summary>
@@ -346,30 +271,97 @@ public class DataFactory<TModel, TDrawingContext>
         return new SeriesBounds(bounds, false);
     }
 
-    /// <summary>
-    /// Clears the visuals in the cache.
-    /// </summary>
-    /// <returns></returns>
-    public virtual void RestartVisuals()
+    private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries<TModel> series, IChart chart)
     {
-        foreach (var byReferenceVisualMap in ByChartByReferenceVisualMap)
-        {
-            foreach (var item in byReferenceVisualMap.Value)
-            {
-                if (item.Value.Context.Visual is not IAnimatable visual) continue;
-                visual.RemoveTransition(null);
-            }
-            byReferenceVisualMap.Value.Clear();
-        }
+        if (series.Values is null) yield break;
+        var entities = (IEnumerable<IChartEntity>)series.Values;
+        var index = 0;
 
-        foreach (var byValueVisualMap in ByChartbyValueVisualMap)
+        foreach (var entity in entities)
         {
-            foreach (var item in byValueVisualMap.Value)
+            if (entity is null) continue;
+
+            entity.ChartPoint ??= new ChartPoint(chart.View, series);
+            entity.ChartPoint.Context.DataSource = entity;
+            entity.ChartPoint.Context.Index = index;
+            entity.EntityId = index++;
+            entity.ChartPoint.Coordinate = entity.Coordinate;
+
+            yield return entity;
+        }
+    }
+
+    private IEnumerable<IChartEntity?> EnumerateByValEntities(ISeries<TModel> series, IChart chart)
+    {
+        if (series.Values is null) yield break;
+
+        var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
+        var index = 0;
+
+        _ = ChartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
+        if (d is null)
+        {
+            d = new Dictionary<int, IChartEntity>();
+            ChartIndexEntityMap[canvas.Sync] = d;
+        }
+        var IndexEntityMap = d;
+
+        foreach (var item in series.Values)
+        {
+            if (!IndexEntityMap.TryGetValue(index, out var entity))
             {
-                if (item.Value.Context.Visual is not IAnimatable visual) continue;
-                visual.RemoveTransition(null);
+                IndexEntityMap[index] = entity = new ChartEntity();
             }
-            byValueVisualMap.Value.Clear();
+
+            entity.ChartPoint ??= new ChartPoint(chart.View, series);
+            entity.ChartPoint.Context.DataSource = item;
+            entity.EntityId = index;
+            entity.ChartPoint.Context.Index = index++;
+
+            mapper(item, entity.ChartPoint);
+
+            yield return entity;
+        }
+    }
+
+    private IEnumerable<IChartEntity?> EnumerateByRefEntities(ISeries<TModel> series, IChart chart)
+    {
+        if (series.Values is null) yield break;
+
+        var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
+        var index = 0;
+
+        _ = ChartRefEntityMap.TryGetValue(canvas.Sync, out var d);
+        if (d is null)
+        {
+            d = new Dictionary<TModel, IChartEntity>();
+            ChartRefEntityMap[canvas.Sync] = d;
+        }
+        var IndexEntityMap = d;
+
+        foreach (var item in series.Values)
+        {
+            if (item is null)
+            {
+                yield return new ChartEntity { ChartPoint = new ChartPoint().AsEmpty() };
+                continue;
+            }
+
+            if (!IndexEntityMap.TryGetValue(item, out var entity))
+            {
+                IndexEntityMap[item] = entity = new ChartEntity();
+            }
+
+            entity.ChartPoint ??= new ChartPoint(chart.View, series);
+            entity.ChartPoint.Context.DataSource = item;
+            entity.EntityId = index;
+            entity.ChartPoint.Context.Index = index++;
+
+            mapper(item, entity.ChartPoint);
+
+            yield return entity;
         }
     }
 }

@@ -109,6 +109,6 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     {
         Coordinate = _radius is null || _angle is null
             ? Coordinate.Empty
-            : new(_radius.Value, _angle.Value);
+            : new(_angle.Value, _radius.Value);
     }
 }

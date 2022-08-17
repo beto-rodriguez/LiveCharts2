@@ -41,13 +41,18 @@ public class ChartPoint : ICoordinate
         Context = new ChartPointContext(chart, series);
     }
 
+    internal ChartPoint()
+    {
+        Context = new ChartPointContext();
+    }
+
     /// <summary>
     /// Gets or sets a value indicating whether this instance is null.
     /// </summary>
     /// <value>
     ///   <c>true</c> if this instance is null; otherwise, <c>false</c>.
     /// </value>
-    [Obsolete($"Renamed to {nameof(IsEmpty)}")]
+    [Obsolete($"Replaced by {nameof(Coordinate)}.{nameof(Coordinate.Empty)}")]
     public bool IsNull { get => IsEmpty; set => IsEmpty = value; }
 
     /// <summary>
@@ -68,7 +73,6 @@ public class ChartPoint : ICoordinate
     public double PrimaryValue
     {
         get => Coordinate.PrimaryValue;
-        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
         set => OnCoordinateChanged(
             new Coordinate(value, Coordinate.SecondaryValue, Coordinate.TertiaryValue, Coordinate.QuaternaryValue, Coordinate.QuinaryValue));
     }
@@ -82,7 +86,6 @@ public class ChartPoint : ICoordinate
     public double SecondaryValue
     {
         get => Coordinate.SecondaryValue;
-        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
         set => OnCoordinateChanged(
             new Coordinate(Coordinate.PrimaryValue, value, Coordinate.TertiaryValue, Coordinate.QuaternaryValue, Coordinate.QuinaryValue));
     }
@@ -96,7 +99,6 @@ public class ChartPoint : ICoordinate
     public double TertiaryValue
     {
         get => Coordinate.TertiaryValue;
-        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
         set => OnCoordinateChanged(
             new Coordinate(Coordinate.PrimaryValue, Coordinate.SecondaryValue, value, Coordinate.QuaternaryValue, Coordinate.QuinaryValue));
     }
@@ -110,7 +112,6 @@ public class ChartPoint : ICoordinate
     public double QuaternaryValue
     {
         get => Coordinate.QuaternaryValue;
-        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
         set => OnCoordinateChanged(
             new Coordinate(Coordinate.PrimaryValue, Coordinate.SecondaryValue, Coordinate.TertiaryValue, value, Coordinate.QuinaryValue));
     }
@@ -124,7 +125,6 @@ public class ChartPoint : ICoordinate
     public double QuinaryValue
     {
         get => Coordinate.QuinaryValue;
-        [Obsolete($"Coordinate setters are obsolete, please set the {nameof(Coordinate)} property instead.")]
         set => OnCoordinateChanged(
             new Coordinate(Coordinate.PrimaryValue, Coordinate.SecondaryValue, Coordinate.TertiaryValue, Coordinate.QuaternaryValue, value));
     }
@@ -159,7 +159,21 @@ public class ChartPoint : ICoordinate
     public ChartPointContext Context { get; }
 
     /// <inheritdoc cref="ICoordinate.Coordinate" />
-    public Coordinate Coordinate { get; set; }
+    public Coordinate Coordinate { get; internal set; }
+
+    /// <summary>
+    /// Marks the point as null or empty, it will be ignored in the UI.
+    /// </summary>
+    public ChartPoint AsEmpty()
+    {
+        Coordinate = Coordinate.Empty;
+        return this;
+    }
+
+    /// <summary>
+    /// Gets a new instance of an empty chart point.
+    /// </summary>
+    public static ChartPoint Empty => new ChartPoint().AsEmpty();
 
     /// <summary>
     /// Gets the distance to a given point.

@@ -41,6 +41,14 @@ public class ChartPointContext
         Series = series;
     }
 
+    internal ChartPointContext()
+    {
+        // dummy empty constructor..
+        // This is used only when the IChartEntity was null
+        Chart = null!;
+        Series = null!;
+    }
+
     /// <summary>
     /// Gets the chart.
     /// </summary>

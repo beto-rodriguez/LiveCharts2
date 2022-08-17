@@ -143,20 +143,20 @@ public class LiveChartsSettings
             : (Action<TModel, ChartPoint>)mapper;
     }
 
-    internal LiveChartsSettings HasProvider<TDrawingContext>(ChartProvider<TDrawingContext> factory)
+    internal LiveChartsSettings HasProvider<TDrawingContext>(ChartEngine<TDrawingContext> factory)
         where TDrawingContext : DrawingContext
     {
         _currentProvider = factory;
         return this;
     }
 
-    internal ChartProvider<TDrawingContext> GetProvider<TDrawingContext>()
+    internal ChartEngine<TDrawingContext> GetProvider<TDrawingContext>()
         where TDrawingContext : DrawingContext
     {
         return _currentProvider is null
             ? throw new NotImplementedException(
-                $"There is no a {nameof(ChartProvider<TDrawingContext>)} registered.")
-            : (ChartProvider<TDrawingContext>)_currentProvider;
+                $"There is no a {nameof(ChartEngine<TDrawingContext>)} registered.")
+            : (ChartEngine<TDrawingContext>)_currentProvider;
     }
 
     /// <summary>
@@ -286,74 +286,80 @@ public class LiveChartsSettings
             })
             .HasMap<decimal>((model, point) =>
             {
-                point.PrimaryValue = unchecked((double)model);
+                point.PrimaryValue = (double)model;
                 point.SecondaryValue = point.Context.Index;
             })
             .HasMap<short?>((model, point) =>
             {
-                if (model is null)
+                if (model is not null)
                 {
-                    point.IsNull = true;
-                    return;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
                 }
-                point.IsNull = false;
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                else
+                {
+                    _ = point.AsEmpty();
+                }
             })
             .HasMap<int?>((model, point) =>
             {
-                if (model is null)
+                if (model is not null)
                 {
-                    point.IsNull = true;
-                    return;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
                 }
-                point.IsNull = false;
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                else
+                {
+                    _ = point.AsEmpty();
+                }
             })
             .HasMap<long?>((model, point) =>
             {
-                if (model is null)
+                if (model is not null)
                 {
-                    point.IsNull = true;
-                    return;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
                 }
-                point.IsNull = false;
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                else
+                {
+                    _ = point.AsEmpty();
+                }
             })
             .HasMap<float?>((model, point) =>
             {
-                if (model is null)
+                if (model is not null)
                 {
-                    point.IsNull = true;
-                    return;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
                 }
-                point.IsNull = false;
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                else
+                {
+                    _ = point.AsEmpty();
+                }
             })
             .HasMap<double?>((model, point) =>
             {
-                if (model is null)
+                if (model is not null)
                 {
-                    point.IsNull = true;
-                    return;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
                 }
-                point.IsNull = false;
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                else
+                {
+                    _ = point.AsEmpty();
+                }
             })
             .HasMap<decimal?>((model, point) =>
             {
-                if (model is null)
+                if (model is not null)
                 {
-                    point.IsNull = true;
-                    return;
+                    point.PrimaryValue = (double)model.Value;
+                    point.SecondaryValue = point.Context.Index;
                 }
-                point.IsNull = false;
-                point.PrimaryValue = unchecked((double)model.Value);
-                point.SecondaryValue = point.Context.Index;
+                else
+                {
+                    _ = point.AsEmpty();
+                }
             });
     }
 }
