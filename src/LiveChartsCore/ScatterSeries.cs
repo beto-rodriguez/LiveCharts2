@@ -129,7 +129,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             var x = xScale.ToPixels(point.SecondaryValue);
             var y = yScale.ToPixels(point.PrimaryValue);
 
-            if (point.IsNull)
+            if (point.Coordinate.IsEmpty || point.IsNull)
             {
                 if (visual is not null)
                 {

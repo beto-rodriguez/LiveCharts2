@@ -56,6 +56,7 @@ public class ChartPoint : ICoordinate
     /// <value>
     ///   <c>true</c> if this instance is empty; otherwise, <c>false</c>.
     /// </value>
+    [Obsolete($"Replaced by {nameof(Coordinate)}.{nameof(Coordinate.Empty)}")]
     public bool IsEmpty { get; set; }
 
     /// <summary>

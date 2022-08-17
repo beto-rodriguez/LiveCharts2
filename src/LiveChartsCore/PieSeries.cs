@@ -232,7 +232,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
         {
             var visual = point.Context.Visual as TVisual;
 
-            if (point.IsNull)
+            if (point.Coordinate.IsEmpty || point.IsNull)
             {
                 if (visual is not null)
                 {

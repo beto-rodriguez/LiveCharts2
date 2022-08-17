@@ -85,7 +85,7 @@ public static class MeasureExtensions
     {
         while (builder.Enumerator.MoveNext())
         {
-            if (builder.Enumerator.Current.IsNull)
+            if (builder.Enumerator.Current.Coordinate.IsEmpty || builder.Enumerator.Current.IsNull)
             {
                 var wasEmpty = builder.IsEmpty;
                 builder.IsEmpty = true;
