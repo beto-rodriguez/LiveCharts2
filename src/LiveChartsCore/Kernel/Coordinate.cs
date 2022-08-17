@@ -73,7 +73,7 @@ public readonly struct Coordinate
     /// <summary>
     /// Gets an empty coordinate instance.
     /// </summary>
-    public static readonly Coordinate Empty = new(true);
+    public static Coordinate Empty => new(true);
 
     /// <summary>
     /// Evaluates whether the instance is empty.

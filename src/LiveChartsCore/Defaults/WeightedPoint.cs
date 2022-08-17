@@ -39,7 +39,7 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Initializes a new instance of the <see cref="WeightedPoint"/> class.
     /// </summary>
-    public WeightedPoint()
+    public WeightedPoint() : this(0, 0, 0)
     { }
 
     /// <summary>
@@ -53,6 +53,7 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
         _x = x;
         _y = y;
         _weight = weight;
+        OnCoordinateChanged();
     }
 
     /// <summary>
@@ -61,7 +62,16 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The x.
     /// </value>
-    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
+    public double? X
+    {
+        get => _x;
+        set
+        {
+            _x = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// Gets or sets the y.
@@ -69,7 +79,16 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The y.
     /// </value>
-    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double? Y
+    {
+        get => _y;
+        set
+        {
+            _y = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// Gets or sets the weight.
@@ -77,7 +96,16 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The weight.
     /// </value>
-    public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
+    public double? Weight
+    {
+        get => _weight;
+        set
+        {
+            _weight = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <inheritdoc cref="IChartEntity.ChartPoint"/>
     public ChartPoint? ChartPoint { get; set; }
@@ -86,7 +114,7 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     public int EntityId { get; set; }
 
     /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_x ?? 0, _y ?? 0, _weight ?? 0);
+    public Coordinate Coordinate { get; protected set; }
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -101,5 +129,15 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Called when the coordinate changes.
+    /// </summary>
+    protected virtual void OnCoordinateChanged()
+    {
+        Coordinate = _x is null || _y is null
+            ? Coordinate.Empty
+            : new(_x ?? 0, _y ?? 0, _weight ?? 0);
     }
 }

@@ -38,7 +38,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
     /// </summary>
-    public DateTimePoint()
+    public DateTimePoint() : this(DateTime.Now, 0)
     { }
 
     /// <summary>
@@ -50,6 +50,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     {
         _dateTime = dateTime;
         _value = value;
+        OnCoordinateChanged();
     }
 
     /// <summary>
@@ -58,7 +59,16 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The date time.
     /// </value>
-    public DateTime DateTime { get => _dateTime; set { _dateTime = value; OnPropertyChanged(); } }
+    public DateTime DateTime
+    {
+        get => _dateTime;
+        set
+        {
+            _dateTime = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// Gets or sets the value.
@@ -66,7 +76,16 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+    public double? Value
+    {
+        get => _value;
+        set
+        {
+            _value = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <inheritdoc cref="IChartEntity.ChartPoint"/>
     public ChartPoint? ChartPoint { get; set; }
@@ -75,7 +94,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     public int EntityId { get; set; }
 
     /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_dateTime.Ticks, _value ?? 0d);
+    public Coordinate Coordinate { get; protected set; }
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -90,5 +109,15 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Called when the coordinate changes.
+    /// </summary>
+    protected virtual void OnCoordinateChanged()
+    {
+        Coordinate = _value is null
+            ? Coordinate.Empty
+            : new(_dateTime.Ticks, _value.Value);
     }
 }

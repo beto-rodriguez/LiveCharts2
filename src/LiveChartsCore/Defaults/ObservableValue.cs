@@ -33,11 +33,12 @@ namespace LiveChartsCore.Defaults;
 public class ObservableValue : IChartEntity, INotifyPropertyChanged
 {
     private double? _value;
+    private int _entityId;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableValue"/> class.
     /// </summary>
-    public ObservableValue()
+    public ObservableValue() : this(0)
     { }
 
     /// <summary>
@@ -47,6 +48,7 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     public ObservableValue(double? value)
     {
         _value = value;
+        OnCoordinateChanged();
     }
 
     /// <summary>
@@ -55,16 +57,33 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+    public double? Value
+    {
+        get => _value;
+        set
+        {
+            _value = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <inheritdoc cref="IChartEntity.ChartPoint"/>
     public ChartPoint? ChartPoint { get; set; }
 
     /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
+    public int EntityId
+    {
+        get => _entityId;
+        set
+        {
+            _entityId = value;
+            OnCoordinateChanged();
+        }
+    }
 
     /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(EntityId, _value ?? 0d);
+    public Coordinate Coordinate { get; protected set; }
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -79,5 +98,15 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Called when the coordinate changes.
+    /// </summary>
+    protected virtual void OnCoordinateChanged()
+    {
+        Coordinate = _value is null
+            ? Coordinate.Empty
+            : new(_entityId, _value.Value);
     }
 }

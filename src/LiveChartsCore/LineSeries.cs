@@ -249,7 +249,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
 
-
                 if (visual is null)
                 {
                     var v = new TVisualPoint();

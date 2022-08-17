@@ -37,7 +37,7 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
     /// </summary>
-    public ObservablePolarPoint()
+    public ObservablePolarPoint() : this(0, 0)
     { }
 
     /// <summary>
@@ -49,17 +49,36 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     {
         _angle = angle;
         _radius = radius;
+        OnCoordinateChanged();
     }
 
     /// <summary>
     /// Gets or sets the angle.
     /// </summary>
-    public double? Angle { get => _angle; set { _angle = value; OnPropertyChanged(); } }
+    public double? Angle
+    {
+        get => _angle;
+        set
+        {
+            _angle = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// Gets or sets the Radius.
     /// </summary>
-    public double? Radius { get => _radius; set { _radius = value; OnPropertyChanged(); } }
+    public double? Radius
+    {
+        get => _radius;
+        set
+        {
+            _radius = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <inheritdoc cref="IChartEntity.ChartPoint"/>
     public ChartPoint? ChartPoint { get; set; }
@@ -68,7 +87,7 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     public int EntityId { get; set; }
 
     /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_radius ?? 0d, _angle ?? 0d, 0d, 0d, 0d);
+    public Coordinate Coordinate { get; protected set; }
 
     /// <summary>
     /// Called when a property changes.
@@ -81,5 +100,15 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Called when the coordinate changes.
+    /// </summary>
+    protected virtual void OnCoordinateChanged()
+    {
+        Coordinate = _radius is null || _angle is null
+            ? Coordinate.Empty
+            : new(_radius.Value, _angle.Value);
     }
 }

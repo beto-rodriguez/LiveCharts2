@@ -38,7 +38,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
     /// </summary>
-    public ObservablePoint()
+    public ObservablePoint() : this(0d, 0d)
     { }
 
     /// <summary>
@@ -50,6 +50,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     {
         _x = x;
         _y = y;
+        OnCoordinateChanged();
     }
 
     /// <summary>
@@ -58,7 +59,16 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The x.
     /// </value>
-    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
+    public double? X
+    {
+        get => _x;
+        set
+        {
+            _x = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// Gets or sets the y coordinate.
@@ -66,7 +76,16 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The y.
     /// </value>
-    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double? Y
+    {
+        get => _y;
+        set
+        {
+            _y = value;
+            OnCoordinateChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <inheritdoc cref="IChartEntity.ChartPoint"/>
     public ChartPoint? ChartPoint { get; set; }
@@ -75,7 +94,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     public int EntityId { get; set; }
 
     /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_x ?? 0d, _y ?? 0d);
+    public Coordinate Coordinate { get; private set; }
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -84,11 +103,21 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    /// Called when a property changed.
+    /// Called when a property changes.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Called when the coordinate changes.
+    /// </summary>
+    protected virtual void OnCoordinateChanged()
+    {
+        Coordinate = _x is null || _y is null
+            ? Coordinate.Empty
+            : new(_x.Value, _y.Value);
     }
 }

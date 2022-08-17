@@ -460,11 +460,11 @@ public class LiveChartsSettings
                     throw new Exception(
                         $"A {nameof(FinancialPoint)} can not be null");
 
-                point.PrimaryValue = model.High;
+                point.PrimaryValue = model.High.Value;
                 point.SecondaryValue = model.Date.Ticks;
-                point.TertiaryValue = model.Open;
-                point.QuaternaryValue = model.Close;
-                point.QuinaryValue = model.Low;
+                point.TertiaryValue = model.Open.Value;
+                point.QuaternaryValue = model.Close.Value;
+                point.QuinaryValue = model.Low.Value;
             });
     }
 }
