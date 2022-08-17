@@ -127,8 +127,16 @@ public class DataFactory<TModel, TDrawingContext>
     {
         if (_isTModelChartEntity) return;
 
-        var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-        _ = ChartIndexEntityMap.Remove(canvas.Sync);
+        if (_isValueType)
+        {
+            var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+            _ = ChartIndexEntityMap.Remove(canvas.Sync);
+        }
+        else
+        {
+            var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+            _ = ChartRefEntityMap.Remove(canvas.Sync);
+        }
     }
 
     /// <summary>
