@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
-using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Basic;
@@ -10,16 +9,9 @@ public partial class ViewModel
 {
     public ISeries[] Series { get; set; } =
     {
-        new LineSeries<ObservablePoint>
+        new LineSeries<double>
         {
-            Values = new ObservablePoint[]
-            {
-                new ObservablePoint { X = 2, Y = 0 },
-                new ObservablePoint { X = 3, Y = 3 },
-                new ObservablePoint { X = 5, Y = null },
-                new ObservablePoint { X = 6, Y = 4 },
-                new ObservablePoint { X = 8, Y = 6 }
-            },
+            Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
             Fill = null
         }
     };
