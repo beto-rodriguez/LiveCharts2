@@ -27,7 +27,7 @@ using LiveChartsCore.Kernel.Sketches;
 namespace LiveChartsCore.Kernel.Providers;
 
 /// <summary>
-/// Defines the chart provider class.
+/// Defines the <see cref="ChartEngine{TDrawingContext}"/> class.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class ChartEngine<TDrawingContext>

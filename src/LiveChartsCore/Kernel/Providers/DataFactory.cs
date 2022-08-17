@@ -80,8 +80,13 @@ public class DataFactory<TModel, TDrawingContext>
 
         foreach (var value in dataSource)
         {
-            if (value is null) yield return ChartPoint.Empty;
-            yield return value?.ChartPoint ?? ChartPoint.Empty;
+            if (value is null)
+            {
+                yield return ChartPoint.Empty;
+                continue;
+            }
+
+            yield return value.ChartPoint ?? ChartPoint.Empty;
         }
     }
 
@@ -95,10 +100,23 @@ public class DataFactory<TModel, TDrawingContext>
         if (_isTModelChartEntity) return;
 
         var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
-        _ = ChartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
-        var byValueVisualMap = d;
-        if (byValueVisualMap is null) return;
-        _ = byValueVisualMap.Remove(point.Context.Index);
+
+        if (_isValueType)
+        {
+            _ = ChartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
+            var map = d;
+            if (map is null) return;
+            _ = map.Remove(point.Context.Index);
+        }
+        else
+        {
+            _ = ChartRefEntityMap.TryGetValue(canvas.Sync, out var d);
+            var map = d;
+            if (map is null) return;
+            var src = (TModel?)point.Context.DataSource;
+            if (src is null) return;
+            _ = map.Remove(src);
+        }
     }
 
     /// <summary>
