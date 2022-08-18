@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+using LiveChartsCore.Kernel.Sketches;
+
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
@@ -33,9 +36,9 @@ public interface IChartEntity
     public int EntityIndex { get; set; }
 
     /// <summary>
-    /// Gets the chart point.
+    /// Gets the chart points dictionary.
     /// </summary>
-    public ChartPoint? ChartPoint { get; set; }
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
     /// <summary>
     /// Gets the coordinate.

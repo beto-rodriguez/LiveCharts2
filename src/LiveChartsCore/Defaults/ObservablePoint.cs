@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -71,8 +73,8 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <inheritdoc cref="IChartEntity.EntityIndex"/>
     public int EntityIndex { get; set; }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
     public Coordinate Coordinate { get; private set; } = Coordinate.Empty;

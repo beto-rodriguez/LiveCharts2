@@ -20,21 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
 /// <summary>
-/// Defines the <see cref="ChartEntity"/> class.
+/// Defines the <see cref="ChartEntity"/> class, a helper class to map any object that does not implements <see cref="IChartEntity"/>,
+/// when you need a better performance you should implement <see cref="IChartEntity"/> in your DTOs, the default objects in the library
+/// already implement <see cref="IChartEntity"/>.
 /// </summary>
-public class ChartEntity : IChartEntity
+public sealed class ChartEntity : IChartEntity
 {
     /// <inheritdoc cref="IChartEntity.EntityIndex"/>
     public int EntityIndex { get; set; }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
-    public Coordinate Coordinate => ChartPoint?.Coordinate ?? Coordinate.Empty;
+    public Coordinate Coordinate => ChartPoints?.Values.FirstOrDefault()?.Coordinate ?? Coordinate.Empty;
 }
