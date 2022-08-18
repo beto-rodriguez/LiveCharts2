@@ -28,7 +28,17 @@ namespace LiveChartsCore.Kernel;
 public interface IChartEntity
 {
     /// <summary>
-    /// Gets the chart entity metadata, just some information LiveCharts needs to make this object a chart point.
+    /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.
     /// </summary>
-    public ChartEntityMetadata ChartMetadata { get; }
+    public int EntityIndex { get; set; }
+
+    /// <summary>
+    /// Gets the chart point.
+    /// </summary>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <summary>
+    /// Gets the coordinate.
+    /// </summary>
+    Coordinate Coordinate { get; }
 }

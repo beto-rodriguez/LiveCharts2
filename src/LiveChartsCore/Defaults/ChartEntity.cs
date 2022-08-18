@@ -29,9 +29,12 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class ChartEntity : IChartEntity
 {
-    private ChartEntityMetadata? _chartMetadata;
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
 
-    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
-    public ChartEntityMetadata ChartMetadata =>
-        _chartMetadata ??= new(() => ChartMetadata.ChartPoint?.Coordinate ?? Coordinate.Empty);
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate => ChartPoint?.Coordinate ?? Coordinate.Empty;
 }

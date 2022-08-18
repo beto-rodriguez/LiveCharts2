@@ -33,7 +33,6 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
 {
     private double? _angle;
     private double? _radius;
-    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
@@ -48,8 +47,8 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="radius">The radius.</param>
     public ObservablePolarPoint(double? angle, double? radius)
     {
-        _angle = angle;
-        _radius = radius;
+        Angle = angle;
+        Radius = radius;
     }
 
     /// <summary>
@@ -62,26 +61,28 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// </summary>
     public double? Radius { get => _radius; set { _radius = value; OnPropertyChanged(); } }
 
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+
     /// <summary>
     /// Called when a property changes.
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
-    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Raises the property changed event.
     /// </summary>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private Coordinate AsCoordinate()
-    {
-        return _radius is null || _angle is null
+        Coordinate = _radius is null || _angle is null
             ? Coordinate.Empty
             : new(_angle.Value, _radius.Value);
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

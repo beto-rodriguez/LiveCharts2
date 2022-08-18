@@ -42,7 +42,11 @@ public class DataFactory<TModel, TDrawingContext>
     private readonly bool _isValueType = false;
     private readonly Dictionary<object, Dictionary<int, IChartEntity>> _chartIndexEntityMap = new();
     private readonly Dictionary<object, Dictionary<TModel, IChartEntity>> _chartRefEntityMap = new();
-    private DimensionalBounds _previousKnownBounds;
+
+    /// <summary>
+    /// Gets or sets the previous known bounds.
+    /// </summary>
+    protected DimensionalBounds PreviousKnownBounds { get; set; } = new DimensionalBounds(true);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DataFactory{TModel, TDrawingContext}"/> class.
@@ -50,7 +54,7 @@ public class DataFactory<TModel, TDrawingContext>
     public DataFactory()
     {
         var bounds = new DimensionalBounds(true);
-        _previousKnownBounds = bounds;
+        PreviousKnownBounds = bounds;
 
         var t = typeof(TModel);
         _isValueType = t.IsValueType;
@@ -82,7 +86,7 @@ public class DataFactory<TModel, TDrawingContext>
                 continue;
             }
 
-            yield return value.ChartMetadata.ChartPoint ?? ChartPoint.Empty;
+            yield return value.ChartPoint ?? ChartPoint.Empty;
         }
     }
 
@@ -194,8 +198,8 @@ public class DataFactory<TModel, TDrawingContext>
         }
 
         return !hasData
-            ? new SeriesBounds(_previousKnownBounds, true)
-            : new SeriesBounds(_previousKnownBounds = bounds, false);
+            ? new SeriesBounds(PreviousKnownBounds, true)
+            : new SeriesBounds(PreviousKnownBounds = bounds, false);
     }
 
     /// <summary>
@@ -254,8 +258,8 @@ public class DataFactory<TModel, TDrawingContext>
         }
 
         return !hasData
-            ? new SeriesBounds(_previousKnownBounds, true)
-            : new SeriesBounds(_previousKnownBounds = bounds, false);
+            ? new SeriesBounds(PreviousKnownBounds, true)
+            : new SeriesBounds(PreviousKnownBounds = bounds, false);
     }
 
     /// <summary>
@@ -303,11 +307,11 @@ public class DataFactory<TModel, TDrawingContext>
         {
             if (entity is null) continue;
 
-            entity.ChartMetadata.ChartPoint ??= new ChartPoint(chart.View, series);
-            entity.ChartMetadata.ChartPoint.Context.DataSource = entity;
-            entity.ChartMetadata.ChartPoint.Context.Index = index;
-            entity.ChartMetadata.EntityIndex = index++;
-            entity.ChartMetadata.ChartPoint.Coordinate = entity.ChartMetadata.Coordinate;
+            entity.ChartPoint ??= new ChartPoint(chart.View, series);
+            entity.ChartPoint.Context.DataSource = entity;
+            entity.ChartPoint.Context.Index = index;
+            entity.EntityIndex = index++;
+            entity.ChartPoint.Coordinate = entity.Coordinate;
 
             yield return entity;
         }
@@ -336,12 +340,12 @@ public class DataFactory<TModel, TDrawingContext>
                 IndexEntityMap[index] = entity = new ChartEntity();
             }
 
-            entity.ChartMetadata.ChartPoint ??= new ChartPoint(chart.View, series);
-            entity.ChartMetadata.ChartPoint.Context.DataSource = item;
-            entity.ChartMetadata.EntityIndex = index;
-            entity.ChartMetadata.ChartPoint.Context.Index = index++;
+            entity.ChartPoint ??= new ChartPoint(chart.View, series);
+            entity.ChartPoint.Context.DataSource = item;
+            entity.EntityIndex = index;
+            entity.ChartPoint.Context.Index = index++;
 
-            mapper(item, entity.ChartMetadata.ChartPoint);
+            mapper(item, entity.ChartPoint);
 
             yield return entity;
         }
@@ -376,12 +380,12 @@ public class DataFactory<TModel, TDrawingContext>
                 IndexEntityMap[item] = entity = new ChartEntity();
             }
 
-            entity.ChartMetadata.ChartPoint ??= new ChartPoint(chart.View, series);
-            entity.ChartMetadata.ChartPoint.Context.DataSource = item;
-            entity.ChartMetadata.EntityIndex = index;
-            entity.ChartMetadata.ChartPoint.Context.Index = index++;
+            entity.ChartPoint ??= new ChartPoint(chart.View, series);
+            entity.ChartPoint.Context.DataSource = item;
+            entity.EntityIndex = index;
+            entity.ChartPoint.Context.Index = index++;
 
-            mapper(item, entity.ChartMetadata.ChartPoint);
+            mapper(item, entity.ChartPoint);
 
             yield return entity;
         }

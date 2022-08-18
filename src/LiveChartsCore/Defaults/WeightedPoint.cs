@@ -35,7 +35,6 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     private double? _x;
     private double? _y;
     private double? _weight;
-    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WeightedPoint"/> class.
@@ -86,8 +85,14 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
-    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
     /// Called when a property changed.
@@ -95,13 +100,9 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private Coordinate AsCoordinate()
-    {
-        return _x is null || _y is null
+        Coordinate = _x is null || _y is null
             ? Coordinate.Empty
             : new(_x ?? 0, _y ?? 0, _weight ?? 0);
+        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 }

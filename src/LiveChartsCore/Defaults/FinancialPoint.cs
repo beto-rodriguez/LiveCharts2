@@ -37,7 +37,6 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     private double? _close;
     private double? _low;
     private DateTime _date;
-    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
@@ -102,14 +101,20 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Low { get => _low; set { _low = value; OnPropertyChanged(); } }
 
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
-    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Called when a property changed.
@@ -117,13 +122,9 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private Coordinate AsCoordinate()
-    {
-        return _open is null || _high is null || _low is null || _close is null
+        Coordinate = _open is null || _high is null || _low is null || _close is null
             ? Coordinate.Empty
             : new(_high.Value, _date.Ticks, _open.Value, _close.Value, _low.Value);
+        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 }

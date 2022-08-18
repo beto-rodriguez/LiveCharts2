@@ -34,7 +34,6 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
 {
     private DateTime _dateTime;
     private double? _value;
-    private ChartEntityMetadata? _chartMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
@@ -51,6 +50,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     {
         DateTime = dateTime;
         Value = value;
+        Coordinate = value is null ? Coordinate.Empty : new(dateTime.Ticks, value.Value);
     }
 
     /// <summary>
@@ -69,14 +69,20 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
+    public ChartPoint? ChartPoint { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <inheritdoc cref="IChartEntity.ChartMetadata"/>
-    public ChartEntityMetadata ChartMetadata => _chartMetadata ??= new(this, AsCoordinate);
 
     /// <summary>
     /// Called when a property changed.
@@ -84,13 +90,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        Coordinate = _value is null ? Coordinate.Empty : new(_dateTime.Ticks, _value.Value);
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private Coordinate AsCoordinate()
-    {
-        return _value is null
-            ? Coordinate.Empty
-            : new(_dateTime.Ticks, _value.Value);
     }
 }
