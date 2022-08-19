@@ -311,7 +311,11 @@ public class DataFactory<TModel, TDrawingContext>
 
         foreach (var entity in entities)
         {
-            if (entity is null) continue;
+            if (entity is null)
+            {
+                index++;
+                continue;
+            }
 
             entity.ChartPoints ??= new Dictionary<IChartView, ChartPoint>();
             if (!entity.ChartPoints.TryGetValue(chart.View, out var point))
@@ -348,6 +352,7 @@ public class DataFactory<TModel, TDrawingContext>
             if (item is null)
             {
                 yield return new MappedChartEntity();
+                index++;
                 continue;
             }
 
@@ -396,6 +401,7 @@ public class DataFactory<TModel, TDrawingContext>
             if (item is null)
             {
                 yield return new MappedChartEntity();
+                index++;
                 continue;
             }
 
