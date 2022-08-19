@@ -166,7 +166,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
             var low = primaryScale.ToPixels(point.QuinaryValue);
             var middle = open;
 
-            if (point.Coordinate.IsEmpty || point.IsNull)
+            if (point.IsEmpty)
             {
                 if (visual is not null)
                 {

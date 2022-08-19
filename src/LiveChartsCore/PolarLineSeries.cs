@@ -857,7 +857,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
         foreach (var point in points)
         {
-            if (point.Coordinate.IsEmpty || point.IsNull)
+            if (point.IsEmpty)
             {
                 if (point.Context.Visual is TVisualPoint visual)
                 {

@@ -21,18 +21,17 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
 /// <summary>
-/// Defines the <see cref="ChartEntity"/> class, a helper class to map any object that does not implements <see cref="IChartEntity"/>,
+/// Defines the <see cref="MappedChartEntity"/> class, a helper class to map any object that does not implements <see cref="IChartEntity"/>,
 /// when you need a better performance you should implement <see cref="IChartEntity"/> in your DTOs, the default objects in the library
 /// already implement <see cref="IChartEntity"/>.
 /// </summary>
-public sealed class ChartEntity : IChartEntity
+public sealed class MappedChartEntity : IChartEntity
 {
     /// <inheritdoc cref="IChartEntity.EntityIndex"/>
     public int EntityIndex { get; set; }
@@ -41,5 +40,11 @@ public sealed class ChartEntity : IChartEntity
     public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
-    public Coordinate Coordinate => ChartPoints?.Values.FirstOrDefault()?.Coordinate ?? Coordinate.Empty;
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+
+    internal void UpdateCoordinate(ChartPoint chartPoint)
+    {
+        Coordinate = new Coordinate(
+            chartPoint.PrimaryValue, chartPoint.SecondaryValue, chartPoint.TertiaryValue, chartPoint.QuaternaryValue, chartPoint.QuinaryValue);
+    }
 }

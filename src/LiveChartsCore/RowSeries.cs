@@ -116,7 +116,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             var secondary = secondaryScale.ToPixels(point.SecondaryValue);
             var b = Math.Abs(primary - helper.p);
 
-            if (point.Coordinate.IsEmpty || point.IsNull)
+            if (point.IsEmpty)
             {
                 if (visual is not null)
                 {

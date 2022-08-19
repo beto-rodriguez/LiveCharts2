@@ -27,10 +27,6 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public readonly struct Coordinate
 {
-#pragma warning disable IDE0032 // Use auto property
-    private readonly bool _isEmpty;
-#pragma warning restore IDE0032 // Use auto property
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Coordinate"/> struct.
     /// </summary>
@@ -67,7 +63,7 @@ public readonly struct Coordinate
 
     private Coordinate(bool isEmpty) : this(0, 0, 0, 0, 0)
     {
-        _isEmpty = isEmpty;
+        IsEmpty = isEmpty;
     }
 
     /// <summary>
@@ -78,9 +74,7 @@ public readonly struct Coordinate
     /// <summary>
     /// Evaluates whether the instance is empty.
     /// </summary>
-#pragma warning disable IDE0032 // Use auto property
-    public readonly bool IsEmpty => _isEmpty;
-#pragma warning restore IDE0032 // Use auto property
+    public readonly bool IsEmpty { get; }
 
     /// <summary>
     /// Gets or sets the primary value, normally the Y coordinate or the value in a gauge.
