@@ -345,7 +345,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// Called when the pointer leaves the control.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerLeave(PointerEventArgs e)
+    protected virtual void OnPointerOut(PointerEventArgs e)
     {
         HideTooltip();
         core?.InvokePointerLeft();
