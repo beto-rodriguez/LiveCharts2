@@ -48,7 +48,6 @@ public partial class MotionCanvas : UserControl
     public MotionCanvas()
     {
         InitializeComponent();
-        CanvasCore.Invalidated += CanvasCore_Invalidated;
     }
 
     /// <summary>
@@ -89,6 +88,13 @@ public partial class MotionCanvas : UserControl
     protected override void OnParentChanged(EventArgs e)
     {
         base.OnParentChanged(e);
+    }
+
+    /// <inheritdoc cref="Control.CreateHandle()"/>
+    protected override void CreateHandle()
+    {
+        base.CreateHandle();
+        CanvasCore.Invalidated += CanvasCore_Invalidated;
     }
 
     /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
