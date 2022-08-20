@@ -342,8 +342,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ISeries.RestartAnimations"/>
     public void RestartAnimations()
     {
-        //if (DataFactory is null) throw new Exception("Data provider not found");
-        //DataFactory.Fetch(
+        if (DataFactory is null) throw new Exception("Data provider not found");
+        DataFactory.RestartVisuals();
     }
 
     /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>

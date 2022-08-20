@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -42,6 +43,7 @@ public class DataFactory<TModel, TDrawingContext>
     private readonly bool _isValueType = false;
     private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = new();
     private readonly Dictionary<object, Dictionary<TModel, MappedChartEntity>> _chartRefEntityMap = new();
+    private ISeries? _series;
 
     /// <summary>
     /// Gets or sets the previous known bounds.
@@ -71,14 +73,9 @@ public class DataFactory<TModel, TDrawingContext>
     public virtual IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, IChart chart)
     {
         if (series.Values is null) yield break;
+        _series = series;
 
-        var dataSource = _isTModelChartEntity
-            ? EnumerateChartEntities(series, chart)
-            : (_isValueType
-                ? EnumerateByValEntities(series, chart)
-                : EnumerateByRefEntities(series, chart));
-
-        foreach (var value in dataSource)
+        foreach (var value in GetEntities(series, chart))
         {
             if (value is null)
             {
@@ -125,6 +122,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="chart"></param>
     public virtual void Dispose(IChart chart)
     {
+        _series = null;
         if (_isTModelChartEntity) return;
 
         if (_isValueType)
@@ -301,6 +299,60 @@ public class DataFactory<TModel, TDrawingContext>
         }
 
         return new SeriesBounds(bounds, false);
+    }
+
+
+    /// <summary>
+    /// Clears the visuals in the cache.
+    /// </summary>
+    public void RestartVisuals()
+    {
+        if (_series is not null && _series.Values is IEnumerable<IChartEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                foreach (var chartPoint in entity.ChartPoints?.Values ?? Enumerable.Empty<ChartPoint>())
+                {
+                    if (chartPoint.Context.Visual is not IAnimatable visual) continue;
+                    visual.RemoveTransition(null);
+                }
+            }
+        }
+
+        foreach (var item in _chartIndexEntityMap.Values)
+        {
+            foreach (var index in item.Values)
+            {
+                foreach (var chartPoint in index.ChartPoints?.Values ?? Enumerable.Empty<ChartPoint>())
+                {
+                    if (chartPoint.Context.Visual is not IAnimatable visual) continue;
+                    visual.RemoveTransition(null);
+                }
+            }
+        }
+        _chartIndexEntityMap.Clear();
+
+        foreach (var item in _chartRefEntityMap.Values)
+        {
+            foreach (var index in item.Values)
+            {
+                foreach (var chartPoint in index.ChartPoints?.Values ?? Enumerable.Empty<ChartPoint>())
+                {
+                    if (chartPoint.Context.Visual is not IAnimatable visual) continue;
+                    visual.RemoveTransition(null);
+                }
+            }
+        }
+        _chartRefEntityMap.Clear();
+    }
+
+    private IEnumerable<IChartEntity?> GetEntities(ISeries<TModel> series, IChart chart)
+    {
+        return _isTModelChartEntity
+            ? EnumerateChartEntities(series, chart)
+            : (_isValueType
+                ? EnumerateByValEntities(series, chart)
+                : EnumerateByRefEntities(series, chart));
     }
 
     private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries<TModel> series, IChart chart)
