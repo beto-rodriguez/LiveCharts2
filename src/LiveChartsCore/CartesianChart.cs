@@ -696,9 +696,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             }
 
             var drawablePlane = (IPlane<TDrawingContext>)axis;
-            _ = _everMeasuredAxes.Add(drawablePlane);
             if (drawablePlane.IsVisible)
             {
+                _everMeasuredAxes.Add(drawablePlane);
                 drawablePlane.Measure(this);
                 _ = toDeleteAxes.Remove(drawablePlane);
             }
