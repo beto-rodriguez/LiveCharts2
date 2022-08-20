@@ -21,9 +21,11 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -48,8 +50,8 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="value">The value.</param>
     public TimeSpanPoint(TimeSpan timeSpan, double? value)
     {
-        _timeSpan = timeSpan;
-        _value = value;
+        TimeSpan = timeSpan;
+        Value = value;
     }
 
     /// <summary>
@@ -68,14 +70,14 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
 
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_timeSpan.Ticks, _value ?? 0d);
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -89,6 +91,9 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        Coordinate = _value is null
+            ? Coordinate.Empty
+            : new(_timeSpan.Ticks, _value ?? 0d);
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 }

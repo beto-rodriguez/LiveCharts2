@@ -44,6 +44,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
     internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
     private readonly ICartesianChartView<TDrawingContext> _chartView;
+    private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private readonly bool _requiresLegendMeasureAlways = false;
@@ -58,16 +59,23 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="view">The view.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="canvas">The canvas.</param>
+    /// <param name="zoomingSection">The zooming section.</param>
     /// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
     public CartesianChart(
         ICartesianChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
+        ISizedGeometry<TDrawingContext>? zoomingSection,
         bool requiresLegendMeasureAlways = false)
         : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
         _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
+        _zoomingSection = zoomingSection ?? throw new Exception($"{nameof(zoomingSection)} is required.");
+        _zoomingSection.X = -1;
+        _zoomingSection.Y = -1;
+        _zoomingSection.Width = 0;
+        _zoomingSection.Height = 0;
     }
 
     /// <summary>
@@ -227,7 +235,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     maxt = max + ld * 0.5 * dir;
                 }
 
-                if (maxt - mint < xi.DataBounds.MinDelta * 5) return;
+                if (direction == ZoomDirection.ZoomIn && maxt - mint < xi.DataBounds.MinDelta * 3) return;
 
                 var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
                 if (maxt > xi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = xi.DataBounds.Max + xm;
@@ -281,7 +289,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     maxt = max + ld * 0.5 * dir;
                 }
 
-                if (maxt - mint < yi.DataBounds.MinDelta * 5) return;
+                if (direction == ZoomDirection.ZoomIn && maxt - mint < yi.DataBounds.MinDelta * 3) return;
 
                 var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
                 if (maxt > yi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = yi.DataBounds.Max + ym;
@@ -688,9 +696,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             }
 
             var drawablePlane = (IPlane<TDrawingContext>)axis;
-            _ = _everMeasuredAxes.Add(drawablePlane);
             if (drawablePlane.IsVisible)
             {
+                _everMeasuredAxes.Add(drawablePlane);
                 drawablePlane.Measure(this);
                 _ = toDeleteAxes.Remove(drawablePlane);
             }
@@ -781,5 +789,138 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         Canvas.Dispose();
 
         IsFirstDraw = true;
+    }
+
+    private LvcPoint? _sectionZoomingStart = null;
+
+    internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
+    {
+        if (isSecondaryAction)
+        {
+            _sectionZoomingStart = point;
+
+            _zoomingSection.X = point.X;
+            _zoomingSection.Y = point.Y;
+
+            var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
+            var yMode = (_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
+
+            if (!xMode)
+            {
+                _zoomingSection.X = DrawMarginLocation.X;
+                _zoomingSection.Width = DrawMarginSize.Width;
+            }
+
+            if (!yMode)
+            {
+                _zoomingSection.Y = DrawMarginLocation.Y;
+                _zoomingSection.Height = DrawMarginSize.Height;
+            }
+
+            Update();
+            return;
+        }
+
+        base.InvokePointerDown(point, isSecondaryAction);
+    }
+
+    internal override void InvokePointerMove(LvcPoint point)
+    {
+        if (_sectionZoomingStart is not null)
+        {
+            var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
+            var yMode = (_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
+
+            if (xMode) _zoomingSection.Width = point.X - _sectionZoomingStart.Value.X;
+            if (yMode) _zoomingSection.Height = point.Y - _sectionZoomingStart.Value.Y;
+
+            Update();
+            return;
+        }
+
+        base.InvokePointerMove(point);
+    }
+
+    internal override void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
+    {
+        if (_sectionZoomingStart is not null)
+        {
+            if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
+            {
+                for (var i = 0; i < XAxes.Length; i++)
+                {
+                    var x = XAxes[i];
+
+                    var xi = ScaleUIPoint(_sectionZoomingStart.Value, i, 0)[0];
+                    var xj = ScaleUIPoint(point, i, 0)[0];
+
+                    double xMax, xMin;
+
+                    if (xi > xj)
+                    {
+                        xMax = xi;
+                        xMin = xj;
+                    }
+                    else
+                    {
+                        xMax = xj;
+                        xMin = xi;
+                    }
+
+                    if (xMax > (x.MaxLimit ?? double.MaxValue)) xMax = x.MaxLimit ?? double.MaxValue;
+                    if (xMin < (x.MinLimit ?? double.MinValue)) xMin = x.MinLimit ?? double.MinValue;
+
+                    if (xMax - xMin > x.DataBounds.MinDelta * 3)
+                    {
+                        x.MinLimit = xMin;
+                        x.MaxLimit = xMax;
+                    }
+                }
+            }
+
+            if ((_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
+            {
+                for (var i = 0; i < YAxes.Length; i++)
+                {
+                    var y = YAxes[i];
+
+                    var yi = ScaleUIPoint(_sectionZoomingStart.Value, 0, i)[1];
+                    var yj = ScaleUIPoint(point, 0, i)[1];
+
+                    double yMax, yMin;
+
+                    if (yi > yj)
+                    {
+                        yMax = yi;
+                        yMin = yj;
+                    }
+                    else
+                    {
+                        yMax = yj;
+                        yMin = yi;
+                    }
+
+                    if (yMax > (y.MaxLimit ?? double.MaxValue)) yMax = y.MaxLimit ?? double.MaxValue;
+                    if (yMin < (y.MinLimit ?? double.MinValue)) yMin = y.MinLimit ?? double.MinValue;
+
+                    if (yMax - yMin > y.DataBounds.MinDelta * 3)
+                    {
+                        y.MinLimit = yMin;
+                        y.MaxLimit = yMax;
+                    }
+                }
+            }
+
+            _zoomingSection.X = -1;
+            _zoomingSection.Y = -1;
+            _zoomingSection.Width = 0;
+            _zoomingSection.Height = 0;
+            Update();
+
+            _sectionZoomingStart = null;
+            return;
+        }
+
+        base.InvokePointerUp(point, isSecondaryAction);
     }
 }

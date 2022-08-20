@@ -20,20 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+using LiveChartsCore.Kernel.Sketches;
+
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
 /// Defines a point with a visual representation in the user interface.
 /// </summary>
-public interface IChartEntity : ICoordinate
+public interface IChartEntity
 {
     /// <summary>
-    /// Gets or sets the entity id.
+    /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.
     /// </summary>
-    public int EntityId { get; set; }
+    public int EntityIndex { get; set; }
 
     /// <summary>
-    /// Gets or sets the chart point.
+    /// Gets the chart points dictionary.
     /// </summary>
-    public ChartPoint? ChartPoint { get; set; }
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+
+    /// <summary>
+    /// Gets the coordinate.
+    /// </summary>
+    Coordinate Coordinate { get; }
 }

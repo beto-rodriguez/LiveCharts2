@@ -32,6 +32,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
@@ -40,10 +42,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 {
     #region fields
 
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly RectangleGeometry _zoomingSection = new();
 
     #endregion
 
@@ -299,10 +302,23 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     {
         if (canvas is null) throw new Exception("canvas not found");
 
+        var zoomingSection = new RectangleGeometry();
+        var zoomingSectionPaint = new SolidColorPaint
+        {
+            IsFill = true,
+            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+            ZIndex = int.MaxValue
+        };
+        zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
         legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
         tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+
+
+
         core.Update();
     }
 
@@ -328,13 +344,13 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     {
         _ = CaptureMouse();
         var p = e.GetPosition(this);
-        core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+        core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
     }
 
     private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         var p = e.GetPosition(this);
-        core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+        core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
         ReleaseMouseCapture();
     }
 

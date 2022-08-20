@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -50,9 +52,9 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="weight">The weight.</param>
     public WeightedPoint(double? x, double? y, double? weight)
     {
-        _x = x;
-        _y = y;
-        _weight = weight;
+        X = x;
+        Y = y;
+        Weight = weight;
     }
 
     /// <summary>
@@ -79,20 +81,20 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
-
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_x ?? 0, _y ?? 0, _weight ?? 0);
-
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
     /// Called when a property changed.
@@ -100,6 +102,9 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        Coordinate = _x is null || _y is null
+            ? Coordinate.Empty
+            : new(_x ?? 0, _y ?? 0, _weight ?? 0);
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 }

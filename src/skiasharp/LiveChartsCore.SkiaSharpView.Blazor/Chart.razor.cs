@@ -306,7 +306,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <param name="e"></param>
     protected virtual void OnPointerDown(PointerEventArgs e)
     {
-        core?.InvokePointerDown(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+        core?.InvokePointerDown(new LvcPoint((float)e.OffsetX, (float)e.OffsetY), e.Button == 2);
         _ = OnPointerDownCallback.InvokeAsync(e);
     }
 
@@ -326,7 +326,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <param name="e"></param>
     protected virtual void OnPointerUp(PointerEventArgs e)
     {
-        core?.InvokePointerUp(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+        core?.InvokePointerUp(new LvcPoint((float)e.OffsetX, (float)e.OffsetY), e.Button == 2);
         _ = OnPointerUpCallback.InvokeAsync(e);
     }
 
@@ -345,7 +345,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// Called when the pointer leaves the control.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerLeave(PointerEventArgs e)
+    protected virtual void OnPointerOut(PointerEventArgs e)
     {
         HideTooltip();
         core?.InvokePointerLeft();

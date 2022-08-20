@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -35,10 +37,21 @@ public class ChartPointContext
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <param name="series">The series.</param>
-    public ChartPointContext(IChartView chart, ISeries series)
+    /// <param name="entity">The entity.</param>
+    public ChartPointContext(IChartView chart, ISeries series, IChartEntity entity)
     {
         Chart = chart;
         Series = series;
+        Entity = entity;
+    }
+
+    internal ChartPointContext()
+    {
+        // dummy empty constructor..
+        // This is used only when the IChartEntity was null
+        Chart = null!;
+        Series = null!;
+        Entity = new MappedChartEntity();
     }
 
     /// <summary>
@@ -58,14 +71,20 @@ public class ChartPointContext
     public ISeries Series { get; }
 
     /// <summary>
-    /// Gets the position of the point the collection that was used when the point was drawn.
+    /// Gets the <see cref="IChartEntity"/>.
     /// </summary>
-    public int Index { get; internal set; }
+    public IChartEntity Entity { get; }
 
     /// <summary>
     /// Gets the DataSource.
     /// </summary>
     public object? DataSource { get; internal set; }
+
+    /// <summary>
+    /// Gets the position of the point the collection that was used when the point was drawn.
+    /// </summary>
+    [Obsolete("Use Entity.EntityIndex")]
+    public int Index => Entity?.EntityIndex ?? 0;
 
     /// <summary>
     /// Gets the visual.

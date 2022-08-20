@@ -41,6 +41,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
 using Windows.UI.Text;
+using LiveChartsCore.SkiaSharpView.Painting;
+using Microsoft.UI.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -885,8 +887,18 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         if (_core is null)
         {
+            var zoomingSection = new Drawing.Geometries.RectangleGeometry();
+            var zoomingSectionPaint = new SolidColorPaint
+            {
+                IsFill = true,
+                Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+                ZIndex = int.MaxValue
+            };
+            zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+            canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+
             _core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
 
             if (SyncContext != null)
                 _motionCanvas.CanvasCore.Sync = SyncContext;
@@ -957,7 +969,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     {
         _ = CapturePointer(e.Pointer);
         var p = e.GetCurrentPoint(this);
-        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        var isRight = false;
+        if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+        {
+            var properties = e.GetCurrentPoint(this).Properties;
+            isRight = properties.IsRightButtonPressed;
+        }
+        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), isRight);
     }
 
     private void OnPointerMoved(object? sender, PointerRoutedEventArgs e)
@@ -971,7 +989,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private void OnPointerReleased(object? sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(this);
-        _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        var isRight = false;
+        if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+        {
+            var properties = e.GetCurrentPoint(this).Properties;
+            isRight = properties.IsRightButtonPressed;
+        }
+        _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y), isRight);
         ReleasePointerCapture(e.Pointer);
     }
 

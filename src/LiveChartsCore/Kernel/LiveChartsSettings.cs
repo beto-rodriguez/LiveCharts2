@@ -143,20 +143,20 @@ public class LiveChartsSettings
             : (Action<TModel, ChartPoint>)mapper;
     }
 
-    internal LiveChartsSettings HasProvider<TDrawingContext>(ChartProvider<TDrawingContext> factory)
+    internal LiveChartsSettings HasProvider<TDrawingContext>(ChartEngine<TDrawingContext> factory)
         where TDrawingContext : DrawingContext
     {
         _currentProvider = factory;
         return this;
     }
 
-    internal ChartProvider<TDrawingContext> GetProvider<TDrawingContext>()
+    internal ChartEngine<TDrawingContext> GetProvider<TDrawingContext>()
         where TDrawingContext : DrawingContext
     {
         return _currentProvider is null
             ? throw new NotImplementedException(
-                $"There is no a {nameof(ChartProvider<TDrawingContext>)} registered.")
-            : (ChartProvider<TDrawingContext>)_currentProvider;
+                $"There is no a {nameof(ChartEngine<TDrawingContext>)} registered.")
+            : (ChartEngine<TDrawingContext>)_currentProvider;
     }
 
     /// <summary>
@@ -262,209 +262,68 @@ public class LiveChartsSettings
             HasMap<short>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<int>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<long>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<float>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<double>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<decimal>((model, point) =>
             {
-                point.PrimaryValue = unchecked((double)model);
-                point.SecondaryValue = point.Context.Index;
+                point.PrimaryValue = (double)model;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<short?>((model, point) =>
             {
-                if (model is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-                point.IsNull = false;
+                if (model is null) throw new Exception("Unexpected exception");
                 point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<int?>((model, point) =>
             {
-                if (model is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-                point.IsNull = false;
+                if (model is null) throw new Exception("Unexpected exception");
                 point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<long?>((model, point) =>
             {
-                if (model is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-                point.IsNull = false;
+                if (model is null) throw new Exception("Unexpected exception");
                 point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<float?>((model, point) =>
             {
-                if (model is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-                point.IsNull = false;
+                if (model is null) throw new Exception("Unexpected exception");
                 point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<double?>((model, point) =>
             {
-                if (model is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-                point.IsNull = false;
+                if (model is null) throw new Exception("Unexpected exception");
                 point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             })
             .HasMap<decimal?>((model, point) =>
             {
-                if (model is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-                point.IsNull = false;
-                point.PrimaryValue = unchecked((double)model.Value);
-                point.SecondaryValue = point.Context.Index;
-            })
-            .HasMap<WeightedPoint>((model, point) =>
-            {
-                if (model is null)
-                    throw new Exception(
-                        $"A {nameof(WeightedPoint)} can not be null, instead set to null to any of its properties.");
-
-                if (model.Weight is null || model.X is null || model.Y is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-
-                point.IsNull = false;
-                point.PrimaryValue = model.Y.Value;
-                point.SecondaryValue = model.X.Value;
-                point.TertiaryValue = model.Weight.Value;
-            })
-            .HasMap<ObservableValue>((model, point) =>
-            {
-                if (model is null)
-                    throw new Exception(
-                        $"A {nameof(ObservableValue)} can not be null, instead set to null to any of its properties.");
-
-                if (model.Value is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-
-                point.IsNull = false;
-                point.PrimaryValue = model.Value.Value;
-                point.SecondaryValue = point.Context.Index;
-            })
-            .HasMap<ObservablePoint>((model, point) =>
-            {
-                if (model is null)
-                    throw new Exception(
-                        $"A {nameof(ObservablePoint)} can not be null, instead set to null to any of its properties.");
-
-                if (model.X is null || model.Y is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-
-                point.IsNull = false;
-                point.PrimaryValue = model.Y.Value;
-                point.SecondaryValue = model.X.Value;
-            })
-            .HasMap<ObservablePolarPoint>((model, point) =>
-            {
-                if (model is null)
-                    throw new Exception(
-                        $"A {nameof(ObservablePolarPoint)} can not be null, instead set to null to any of its properties.");
-
-                if (model.Angle is null || model.Radius is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-
-                point.IsNull = false;
-                point.PrimaryValue = model.Radius.Value;
-                point.SecondaryValue = model.Angle.Value;
-            })
-            .HasMap<DateTimePoint>((model, point) =>
-            {
-                if (model is null)
-                    throw new Exception(
-                        $"A {nameof(DateTimePoint)} can not be null, instead set to null the " +
-                        $"{nameof(DateTimePoint.Value)} property.");
-
-                if (model.Value is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-
-                point.IsNull = false;
-                point.PrimaryValue = model.Value.Value;
-                point.SecondaryValue = model.DateTime.Ticks;
-            })
-            .HasMap<TimeSpanPoint>((model, point) =>
-            {
-                if (model is null)
-                    throw new Exception(
-                        $"A {nameof(TimeSpanPoint)} can not be null, instead set to null the " +
-                        $"{nameof(TimeSpanPoint.Value)} property.");
-
-                if (model.Value is null)
-                {
-                    point.IsNull = true;
-                    return;
-                }
-
-                point.IsNull = false;
-                point.PrimaryValue = model.Value.Value;
-                point.SecondaryValue = model.TimeSpan.Ticks;
-            })
-            .HasMap<FinancialPoint>((model, point) =>
-            {
-                if (model is null)
-                    throw new Exception(
-                        $"A {nameof(FinancialPoint)} can not be null");
-
-                point.PrimaryValue = model.High;
-                point.SecondaryValue = model.Date.Ticks;
-                point.TertiaryValue = model.Open;
-                point.QuaternaryValue = model.Close;
-                point.QuinaryValue = model.Low;
+                if (model is null) throw new Exception("Unexpected exception");
+                point.PrimaryValue = (double)model.Value;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             });
     }
 }

@@ -28,6 +28,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -182,8 +184,18 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     {
         if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
 
+        var zoomingSection = new RectangleGeometry();
+        var zoomingSectionPaint = new SolidColorPaint
+        {
+            IsFill = true,
+            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+            ZIndex = int.MaxValue
+        };
+        zoomingSectionPaint.AddGeometryToPaintTask(motionCanvas.CanvasCore, zoomingSection);
+        motionCanvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, zoomingSection);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

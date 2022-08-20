@@ -910,13 +910,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(this);
-        _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
     }
 
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(this);
-        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
     }
 
     private void OnWheelChanged(object sender, PointerRoutedEventArgs e)

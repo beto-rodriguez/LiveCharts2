@@ -797,7 +797,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         var p = e.GetPosition(this);
         foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
-        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), false);
     }
 
     private void PolarChart_PointerMoved(object? sender, PointerEventArgs e)
@@ -811,7 +811,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
         var p = e.GetPosition(this);
-        _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+        _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), false);
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

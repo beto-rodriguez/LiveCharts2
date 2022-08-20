@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -47,8 +49,8 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="radius">The radius.</param>
     public ObservablePolarPoint(double? angle, double? radius)
     {
-        _angle = angle;
-        _radius = radius;
+        Angle = angle;
+        Radius = radius;
     }
 
     /// <summary>
@@ -61,14 +63,14 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// </summary>
     public double? Radius { get => _radius; set { _radius = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
 
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_radius ?? 0d, _angle ?? 0d, 0d, 0d, 0d);
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
     /// Called when a property changes.
@@ -80,6 +82,9 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// </summary>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        Coordinate = _radius is null || _angle is null
+            ? Coordinate.Empty
+            : new(_angle.Value, _radius.Value);
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

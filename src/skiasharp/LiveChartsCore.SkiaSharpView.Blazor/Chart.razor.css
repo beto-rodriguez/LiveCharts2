@@ -1,8 +1,17 @@
-﻿::deep canvas {
+﻿::deep.lvc-content {
+    height: 100%;
+    width: 100%;
+}
+
+::deep canvas {
+    height: 100%;
     width: 100%;
 }
 
 ::deep .lvc-chart-container {
+    height: 100%;
+    width: 100%;
+
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
@@ -45,7 +54,9 @@
     }
 
 ::deep .lvc-canvas-container {
+    height: 100%;
     width: 100%;
+
     -webkit-order: 0;
     -ms-flex-order: 0;
     order: 0;

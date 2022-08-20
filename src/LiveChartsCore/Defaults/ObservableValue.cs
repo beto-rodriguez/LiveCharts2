@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -33,6 +35,7 @@ namespace LiveChartsCore.Defaults;
 public class ObservableValue : IChartEntity, INotifyPropertyChanged
 {
     private double? _value;
+    private int _entityIndex;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableValue"/> class.
@@ -46,7 +49,7 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// <param name="value">The value.</param>
     public ObservableValue(double? value)
     {
-        _value = value;
+        Value = value;
     }
 
     /// <summary>
@@ -57,14 +60,25 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex
+    {
+        get => _entityIndex;
+        set
+        {
+            // the coordinate of this type depends on the index of element in the data collection.
+            // we update the coordinate if the index changed.
+            if (value == _entityIndex) return;
+            _entityIndex = value;
+            OnCoordinateChanged();
+        }
+    }
 
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(EntityId, _value ?? 0d);
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -78,6 +92,17 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        OnCoordinateChanged();
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Called when the coordinate changed.
+    /// </summary>
+    protected virtual void OnCoordinateChanged()
+    {
+        Coordinate = _value is null
+            ? Coordinate.Empty
+            : new(EntityIndex, _value.Value);
     }
 }

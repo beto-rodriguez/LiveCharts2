@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -48,8 +50,8 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="y">The y coordinate.</param>
     public ObservablePoint(double? x, double? y)
     {
-        _x = x;
-        _y = y;
+        X = x;
+        Y = y;
     }
 
     /// <summary>
@@ -68,14 +70,14 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.ChartPoint"/>
-    public ChartPoint? ChartPoint { get; set; }
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
 
-    /// <inheritdoc cref="IChartEntity.EntityId"/>
-    public int EntityId { get; set; }
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
-    /// <inheritdoc cref="ICoordinate.Coordinate"/>
-    public Coordinate Coordinate => new(_x ?? 0d, _y ?? 0d);
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -84,11 +86,14 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    /// Called when a property changed.
+    /// Called when a property changes.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        Coordinate = _x is null || _y is null
+            ? Coordinate.Empty
+            : new Coordinate(_x.Value, _y.Value);
         PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 }

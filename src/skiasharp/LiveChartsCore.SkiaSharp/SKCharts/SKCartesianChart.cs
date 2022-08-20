@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -55,7 +56,7 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         initializer.ApplyStyleToChart(this);
 
         Core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas, new RectangleGeometry());
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;

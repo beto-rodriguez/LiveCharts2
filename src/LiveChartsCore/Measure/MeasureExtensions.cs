@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Measure;
@@ -52,7 +53,7 @@ public static class MeasureExtensions
     /// <returns></returns>
     internal static IEnumerable<SplineData> AsSplineData(this IEnumerable<ChartPoint> source)
     {
-        using var e = source.GetEnumerator();
+        using var e = source.Where(x => !x.IsEmpty).GetEnumerator();
 
         if (!e.MoveNext()) yield break;
         var data = new SplineData(e.Current);
@@ -85,7 +86,7 @@ public static class MeasureExtensions
     {
         while (builder.Enumerator.MoveNext())
         {
-            if (builder.Enumerator.Current.IsNull)
+            if (builder.Enumerator.Current.IsEmpty)
             {
                 var wasEmpty = builder.IsEmpty;
                 builder.IsEmpty = true;

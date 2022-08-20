@@ -789,7 +789,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(this);
-        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
     }
 
     private void OnPointerMoved(object sender, PointerRoutedEventArgs e)

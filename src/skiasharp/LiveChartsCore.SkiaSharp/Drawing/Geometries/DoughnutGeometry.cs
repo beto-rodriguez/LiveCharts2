@@ -136,7 +136,7 @@ public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingCont
             (float)(cx + Math.Cos((sweepAngle + startAngle) * toRadians) * wedge),
             (float)(cy + Math.Sin((sweepAngle + startAngle) * toRadians) * wedge));
         path.ArcTo(
-            new SKPoint { X = wedge + pushout, Y = wedge + pushout },
+            new SKPoint { X = wedge, Y = wedge },
             0,
             sweepAngle > 180 ? SKPathArcSize.Large : SKPathArcSize.Small,
             SKPathDirection.CounterClockwise,

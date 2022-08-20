@@ -30,28 +30,28 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
 
-/// <inheritdoc cref="ChartProvider{TDrawingContext}"/>
-public class SkiaSharpProvider : ChartProvider<SkiaSharpDrawingContext>
+/// <inheritdoc cref="ChartEngine{TDrawingContext}"/>
+public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultMapFactory"/>
+    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultMapFactory"/>
     public override IMapFactory<SkiaSharpDrawingContext> GetDefaultMapFactory()
     {
         return new MapFactory();
     }
 
-    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultCartesianAxis"/>
+    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultCartesianAxis"/>
     public override ICartesianAxis GetDefaultCartesianAxis()
     {
         return new Axis();
     }
 
-    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultPolarAxis"/>
+    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultPolarAxis"/>
     public override IPolarAxis GetDefaultPolarAxis()
     {
         return new PolarAxis();
     }
 
-    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
+    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
     public override IPaint<SkiaSharpDrawingContext> GetSolidColorPaint(LvcColor color)
     {
         return new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));

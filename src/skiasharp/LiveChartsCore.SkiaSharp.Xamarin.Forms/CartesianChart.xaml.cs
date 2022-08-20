@@ -33,6 +33,8 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.XamarinForms;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
@@ -771,8 +773,18 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <returns></returns>
     protected void InitializeCore()
     {
+        var zoomingSection = new RectangleGeometry();
+        var zoomingSectionPaint = new SolidColorPaint
+        {
+            IsFill = true,
+            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+            ZIndex = int.MaxValue
+        };
+        zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
         core.Update();
     }
 
@@ -886,7 +898,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         if (core is null) return;
 
         var location = new LvcPoint(e.Location.X, e.Location.Y);
-        core.InvokePointerDown(location);
+        core.InvokePointerDown(location, false);
         core.InvokePointerMove(location);
 
         Touched?.Invoke(this, e);

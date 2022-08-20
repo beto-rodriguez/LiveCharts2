@@ -20,15 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel;
+using System.Collections.Generic;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
+
+namespace LiveChartsCore.Defaults;
 
 /// <summary>
-/// Defines an object with a coordinate coordinate.
+/// Defines the <see cref="MappedChartEntity"/> class, a helper class to map any object that does not implements <see cref="IChartEntity"/>,
+/// when you need a better performance you should implement <see cref="IChartEntity"/> in your DTOs, the default objects in the library
+/// already implement <see cref="IChartEntity"/>.
 /// </summary>
-public interface ICoordinate
+public sealed class MappedChartEntity : IChartEntity
 {
-    /// <summary>
-    /// Gets the coordinate.
-    /// </summary>
-    public Coordinate Coordinate { get; }
+    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    public int EntityIndex { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+
+    /// <inheritdoc cref="IChartEntity.Coordinate"/>
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+
+    internal void UpdateCoordinate(ChartPoint chartPoint)
+    {
+        Coordinate = new Coordinate(
+            chartPoint.PrimaryValue, chartPoint.SecondaryValue, chartPoint.TertiaryValue, chartPoint.QuaternaryValue, chartPoint.QuinaryValue);
+    }
 }

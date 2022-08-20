@@ -20,37 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Kernel.Providers;
 
 /// <summary>
-/// Just a cleaner <see cref="DataFactory{TModel, TDrawingContext}"/> but optimized for <see cref="IChartEntity"/> objects.
+/// Defines the <see cref="ChartEngine{TDrawingContext}"/> class.
 /// </summary>
-public class EntitiesDataFactory<TModel, TDrawingContext> : DataFactory<TModel, TDrawingContext>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public abstract class ChartEngine<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    /// <inheritdoc cref="DataFactory{TModel, TDrawingContext}.Fetch(ISeries{TModel}, IChart)"/>
-    public override IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, IChart chart)
+    /// <summary>
+    /// Gets a new instance of the default data factory.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <returns></returns>
+    public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
     {
-        if (series.Values is null) yield break;
-        var index = 0;
-
-        foreach (var value in series.Values)
-        {
-            if (value is not IChartEntity entity) continue;
-
-            entity.ChartPoint ??= new ChartPoint(chart.View, series);
-            entity.ChartPoint.Context.DataSource = entity;
-            entity.ChartPoint.Context.Index = index;
-            entity.EntityId = index;
-            entity.ChartPoint.Coordinate = entity.Coordinate;
-
-            yield return entity.ChartPoint;
-
-            index++;
-        }
+        return new DataFactory<TModel, TDrawingContext>();
     }
+
+    /// <summary>
+    /// Gets a new instance of the default map factory.
+    /// </summary>
+    /// <returns></returns>
+    public abstract IMapFactory<TDrawingContext> GetDefaultMapFactory();
+
+    /// <summary>
+    /// Gets a new instance of the default Cartesian axis.
+    /// </summary>
+    /// <returns></returns>
+    public abstract ICartesianAxis GetDefaultCartesianAxis();
+
+    /// <summary>
+    /// Gets a new instance of the default polar axis.
+    /// </summary>
+    /// <returns></returns>
+    public abstract IPolarAxis GetDefaultPolarAxis();
+
+    /// <summary>
+    /// Gets a new paint of the given color.
+    /// </summary>
+    /// <returns></returns>
+    public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new());
 }

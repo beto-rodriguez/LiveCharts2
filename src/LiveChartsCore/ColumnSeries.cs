@@ -115,7 +115,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             var secondary = secondaryScale.ToPixels(point.SecondaryValue);
             var b = Math.Abs(primary - helper.p);
 
-            if (point.IsNull)
+            if (point.IsEmpty)
             {
                 if (visual is not null)
                 {

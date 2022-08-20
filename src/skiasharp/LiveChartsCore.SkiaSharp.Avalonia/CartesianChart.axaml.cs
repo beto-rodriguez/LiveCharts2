@@ -42,6 +42,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -739,9 +740,20 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     protected void InitializeCore()
     {
         var canvas = this.FindControl<MotionCanvas>("canvas");
+
+        var zoomingSection = new Drawing.Geometries.RectangleGeometry();
+        var zoomingSectionPaint = new SolidColorPaint
+        {
+            IsFill = true,
+            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+            ZIndex = int.MaxValue
+        };
+        zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+
         _avaloniaCanvas = canvas;
         _core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
@@ -816,7 +828,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         var p = e.GetPosition(this);
         foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
-        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.GetCurrentPoint(this).Properties.IsRightButtonPressed);
     }
 
     private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
@@ -830,7 +842,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
         var p = e.GetPosition(this);
-        _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+        _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), e.GetCurrentPoint(this).Properties.IsRightButtonPressed);
     }
 
     private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)

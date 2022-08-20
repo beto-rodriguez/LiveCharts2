@@ -30,7 +30,7 @@ using LiveChartsCore.Measure;
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// LiveCharts kerner extensions.
+/// LiveCharts kernel extensions.
 /// </summary>
 public static class Extensions
 {
@@ -141,15 +141,19 @@ public static class Extensions
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
         var range = max - min;
+        if (range == 0) range = min;
+
         var separations = axis.Orientation == AxisOrientation.Y
             ? Math.Round(controlSize.Height / (12 * Cf), 0)
             : Math.Round(controlSize.Width / (20 * Cf), 0);
+
         var minimum = range / separations;
 
         var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));
 
         var residual = minimum / magnitude;
         var tick = residual > 5 ? 10 * magnitude : residual > 2 ? 5 * magnitude : residual > 1 ? 2 * magnitude : magnitude;
+
         return new AxisTick { Value = tick, Magnitude = magnitude };
     }
 
@@ -301,7 +305,7 @@ public static class Extensions
     /// <summary>
     /// Finds the closest point to the specified location in UI coordinates.
     /// </summary>
-    /// <param name="points">The points to look in to.</param>bcv 
+    /// <param name="points">The points to look in to.</param>
     /// <param name="point">The location.</param>
     /// <returns></returns>
     public static ChartPoint FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
@@ -312,7 +316,7 @@ public static class Extensions
     /// <summary>
     /// Finds the closest point to the specified location in UI coordinates.
     /// </summary>
-    /// <param name="points">The points to look in to.</param>bcv 
+    /// <param name="points">The points to look in to.</param>
     /// <param name="point">The location.</param>
     /// <returns></returns>
     public static ChartPoint<TModel, TVisual, TLabel> FindClosestTo<TModel, TVisual, TLabel>(
@@ -359,7 +363,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Returns an enumeration with only the fisrt element.
+    /// Returns an enumeration with only the first element.
     /// </summary>
     /// <typeparam name="T">The source type.</typeparam>
     /// <typeparam name="T1">The target type.</typeparam>
@@ -373,6 +377,17 @@ public static class Extensions
             yield return predicate(item);
             yield break;
         }
+    }
+
+    /// <summary>
+    /// Gets the point for the given view.
+    /// </summary>
+    /// <param name="dictionary">The points dictionary.</param>
+    /// <param name="view">The view.</param>
+    /// <returns></returns>
+    public static ChartPoint? GetPointForView(this Dictionary<IChartView, ChartPoint> dictionary, IChartView view)
+    {
+        return dictionary.TryGetValue(view, out var point) ? point : null;
     }
 
     private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)

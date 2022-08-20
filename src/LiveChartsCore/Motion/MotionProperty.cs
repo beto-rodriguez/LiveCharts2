@@ -122,7 +122,7 @@ public abstract class MotionProperty<T> : IMotionProperty
     {
         if (Animation is null || Animation.EasingFunction is null || fromValue is null || IsCompleted) return OnGetMovement(1);
 
-        if (_requiresToInitialize)
+        if (_requiresToInitialize || _startTime == long.MinValue)
         {
             _startTime = animatable.CurrentTime;
             _endTime = animatable.CurrentTime + Animation._duration;
