@@ -141,15 +141,19 @@ public static class Extensions
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
         var range = max - min;
+        if (range == 0) range = min;
+
         var separations = axis.Orientation == AxisOrientation.Y
             ? Math.Round(controlSize.Height / (12 * Cf), 0)
             : Math.Round(controlSize.Width / (20 * Cf), 0);
+
         var minimum = range / separations;
 
         var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));
 
         var residual = minimum / magnitude;
         var tick = residual > 5 ? 10 * magnitude : residual > 2 ? 5 * magnitude : residual > 1 ? 2 * magnitude : magnitude;
+
         return new AxisTick { Value = tick, Magnitude = magnitude };
     }
 
