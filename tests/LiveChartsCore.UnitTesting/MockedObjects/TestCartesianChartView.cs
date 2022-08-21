@@ -30,6 +30,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects;
 
@@ -46,7 +47,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
         initializer.ApplyStyleToChart(this);
 
         Core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas, new RectangleGeometry());
     }
 
     public bool DesignerMode => false;

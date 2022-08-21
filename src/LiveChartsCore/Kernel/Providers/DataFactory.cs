@@ -366,6 +366,7 @@ public class DataFactory<TModel, TDrawingContext>
             if (entity is null)
             {
                 index++;
+                yield return new MappedChartEntity();
                 continue;
             }
 
