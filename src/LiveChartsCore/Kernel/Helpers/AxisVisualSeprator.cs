@@ -56,6 +56,14 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     public ILineGeometry<TDrawingContext>? Line { get; set; }
 
     /// <summary>
+    /// Gets or sets the line.
+    /// </summary>
+    /// <value>
+    /// The line.
+    /// </value>
+    public ILineGeometry<TDrawingContext>? Tick { get; set; }
+
+    /// <summary>
     /// Gets the geometry.
     /// </summary>
     public IGeometry<TDrawingContext>? Geometry => Line;

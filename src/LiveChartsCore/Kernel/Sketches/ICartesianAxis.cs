@@ -93,3 +93,27 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// </summary>
     event Action<ICartesianAxis>? Initialized;
 }
+
+/// <summary>
+/// Defines an Axis in a Cartesian chart.
+/// </summary>
+/// <typeparam name="TDrawingContext"></typeparam>
+public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
+    where TDrawingContext : DrawingContext
+{
+    /// <summary>
+    /// Gets or sets the separators paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? TicksPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the separators paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    bool ShowTicks { get; set; }
+}
