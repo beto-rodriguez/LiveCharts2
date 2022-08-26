@@ -294,16 +294,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
         }
+        var ticksClipRectangle = _orientation == AxisOrientation.X
+                ? new LvcRectangle(new LvcPoint(drawLocation.X, 0), new LvcSize(drawMarginSize.Width, controlSize.Height))
+                : new LvcRectangle(new LvcPoint(0, drawLocation.Y), new LvcSize(controlSize.Width, drawMarginSize.Height));
         if (TicksPaint is not null)
         {
             if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = -1;
-            //TicksPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            TicksPaint.SetClipRectangle(cartesianChart.Canvas, ticksClipRectangle);
             cartesianChart.Canvas.AddDrawableTask(TicksPaint);
         }
         if (SubticksPaint is not null)
         {
             if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = -1;
-            //SubticksPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            SubticksPaint.SetClipRectangle(cartesianChart.Canvas, ticksClipRectangle);
             cartesianChart.Canvas.AddDrawableTask(SubticksPaint);
         }
 
@@ -383,10 +386,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             }
         }
 
-        for (var i = start; i <= max; i += s)
+        for (var i = start - s; i <= max + s; i += s)
         {
-            if (i < min) continue;
-            var labelContent = labeler(i - 1d + 1d);
+            var labelContent = i < min || i > max ? string.Empty : labeler(i - 1d + 1d);
 
             float x, y;
             if (_orientation == AxisOrientation.X)
@@ -898,7 +900,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         switch (mode)
         {
             case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndComplete:
-                geometry.Opacity = 0;
+                if(_animatableBounds.HasPreviousState) geometry.Opacity = 0;
                 geometry.CompleteTransition(null);
                 break;
             case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndRemove:
