@@ -102,12 +102,36 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     where TDrawingContext : DrawingContext
 {
     /// <summary>
+    /// Gets or sets the sub-separators paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? SubseparatorsPaint { get; set; }
+
+    /// <summary>
     /// Gets or sets the separators paint.
     /// </summary>
     /// <value>
     /// The separators paint.
     /// </value>
     IPaint<TDrawingContext>? TicksPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the separators paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? SubticksPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the zero paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? ZeroPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the separators paint.

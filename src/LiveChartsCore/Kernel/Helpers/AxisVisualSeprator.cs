@@ -53,7 +53,7 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     /// <value>
     /// The line.
     /// </value>
-    public ILineGeometry<TDrawingContext>? Line { get; set; }
+    public ILineGeometry<TDrawingContext>? Separator { get; set; }
 
     /// <summary>
     /// Gets or sets the line.
@@ -64,7 +64,17 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     public ILineGeometry<TDrawingContext>? Tick { get; set; }
 
     /// <summary>
+    /// Gets or sets the sub separators.
+    /// </summary>
+    public ILineGeometry<TDrawingContext>[]? Subseparators { get; set; }
+
+    /// <summary>
+    /// Gets or sets the sub ticks.
+    /// </summary>
+    public ILineGeometry<TDrawingContext>[]? Subticks { get; set; }
+
+    /// <summary>
     /// Gets the geometry.
     /// </summary>
-    public IGeometry<TDrawingContext>? Geometry => Line;
+    public IGeometry<TDrawingContext>? Geometry => Separator;
 }

@@ -107,6 +107,7 @@ public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMar
 {
     private TSizedGeometry? _fillSizedGeometry;
     private TSizedGeometry? _strokeSizedGeometry;
+    private bool _isInitialized = false;
 
     /// <summary>
     /// Measures the specified chart.
@@ -145,6 +146,36 @@ public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMar
 
             Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
             chart.Canvas.AddDrawableTask(Stroke);
+        }
+
+        if (!_isInitialized)
+        {
+            if (_fillSizedGeometry is not null)
+            {
+                _ = _fillSizedGeometry
+                    .TransitionateProperties(
+                       nameof(_fillSizedGeometry.X), nameof(_fillSizedGeometry.Y),
+                       nameof(_fillSizedGeometry.Width), nameof(_fillSizedGeometry.Height))
+                   .WithAnimation(animation =>
+                       animation
+                           .WithDuration(chart.AnimationsSpeed)
+                           .WithEasingFunction(chart.EasingFunction))
+                   .CompleteCurrentTransitions();
+            }
+            if (_strokeSizedGeometry is not null)
+            {
+                _ = _strokeSizedGeometry
+                    .TransitionateProperties(
+                       nameof(_fillSizedGeometry.X), nameof(_fillSizedGeometry.Y),
+                       nameof(_fillSizedGeometry.Width), nameof(_fillSizedGeometry.Height))
+                   .WithAnimation(animation =>
+                       animation
+                           .WithDuration(chart.AnimationsSpeed)
+                           .WithEasingFunction(chart.EasingFunction))
+                   .CompleteCurrentTransitions();
+            }
+
+            _isInitialized = true;
         }
     }
 }
