@@ -2,14 +2,18 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.Style">
+             xmlns:vms="using:ViewModelsSamples.Axes.Style"
+             Background="#333333">
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
   <lvc:CartesianChart
+    Margin="20"
     Series="{Binding Series}"
     XAxes="{Binding XAxes}"
     YAxes="{Binding YAxes}"
-    DrawMarginFrame="{Binding Frame}">
+    DrawMarginFrame="{Binding Frame}"
+    ZoomMode="Both"
+    TooltipPosition="Hidden">
   </lvc:CartesianChart>
 </UserControl>

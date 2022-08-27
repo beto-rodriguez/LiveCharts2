@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Axes.Style;
 
@@ -12,6 +13,7 @@ public partial class View : UserControl
     {
         InitializeComponent();
         Size = new System.Drawing.Size(100, 100);
+        BackColor = Color.FromArgb(255, 50, 50, 50);
 
         var viewModel = new ViewModel();
 
@@ -21,6 +23,8 @@ public partial class View : UserControl
             XAxes = viewModel.XAxes,
             YAxes = viewModel.YAxes,
             DrawMarginFrame = viewModel.Frame,
+            ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.Both,
+            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
