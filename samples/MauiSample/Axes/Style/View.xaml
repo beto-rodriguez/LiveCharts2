@@ -8,9 +8,12 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
     <lvc:CartesianChart
+        Margin="20"
         Series="{Binding Series}"
         XAxes="{Binding XAxes}"
         YAxes="{Binding YAxes}"
-        DrawMarginFrame="{Binding Frame}">
+        DrawMarginFrame="{Binding Frame}"
+        ZoomMode="Both"
+        TooltipPosition="Hidden">
     </lvc:CartesianChart>
 </ContentPage>

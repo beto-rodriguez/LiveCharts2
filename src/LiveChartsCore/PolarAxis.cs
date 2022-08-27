@@ -354,7 +354,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                     {
                         var lineGeometry = new TLineGeometry();
 
-                        linearSeparator.Line = lineGeometry;
+                        linearSeparator.Separator = lineGeometry;
 
                         _ = lineGeometry
                             .TransitionateProperties(
@@ -437,16 +437,16 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
             if (visualSeparator.Geometry is not null)
             {
-                if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSepartator && lineSepartator.Line is not null)
+                if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSepartator && lineSepartator.Separator is not null)
                 {
                     var innerPos = scaler.ToPixels(visualSeparator.Value, scaler.MinRadius);
 
-                    lineSepartator.Line.X = innerPos.X;
-                    lineSepartator.Line.X1 = location.X;
-                    lineSepartator.Line.Y = innerPos.Y;
-                    lineSepartator.Line.Y1 = location.Y;
+                    lineSepartator.Separator.X = innerPos.X;
+                    lineSepartator.Separator.X1 = location.X;
+                    lineSepartator.Separator.Y = innerPos.Y;
+                    lineSepartator.Separator.Y1 = location.Y;
 
-                    if (!_animatableBounds.HasPreviousState) lineSepartator.Line.CompleteTransition(null);
+                    if (!_animatableBounds.HasPreviousState) lineSepartator.Separator.CompleteTransition(null);
                 }
 
                 if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
@@ -623,10 +623,10 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
         if (separator is AxisVisualSeprator<TDrawingContext> lineSeparator)
         {
-            lineSeparator.Line!.X = scaler.CenterX;
-            lineSeparator.Line.Y = scaler.CenterY;
-            lineSeparator.Line.X1 = location.X;
-            lineSeparator.Line.Y1 = location.Y;
+            lineSeparator.Separator!.X = scaler.CenterX;
+            lineSeparator.Separator.Y = scaler.CenterY;
+            lineSeparator.Separator.X1 = location.X;
+            lineSeparator.Separator.Y1 = location.Y;
         }
 
         if (separator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)

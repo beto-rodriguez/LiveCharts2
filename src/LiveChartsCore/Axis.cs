@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
@@ -41,17 +42,17 @@ namespace LiveChartsCore;
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
-    : ChartElement<TDrawingContext>, ICartesianAxis, IPlane<TDrawingContext>
+    : ChartElement<TDrawingContext>, ICartesianAxis<TDrawingContext>, IPlane<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
-        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
+        where TLineGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
     #region fields
 
     /// <summary>
     /// The active separators
     /// </summary>
-    protected readonly Dictionary<IChart, Dictionary<double, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+    protected readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
 
     // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
     internal float _xo = 0f, _yo = 0f;
@@ -76,10 +77,18 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private double _unitWidth = 1;
     private double _textSize = 16;
     private IPaint<TDrawingContext>? _separatorsPaint;
+    private IPaint<TDrawingContext>? _subseparatorsPaint;
+    private IPaint<TDrawingContext>? _ticksPaint;
+    private IPaint<TDrawingContext>? _subticksPaint;
+    private IPaint<TDrawingContext>? _zeroPaint;
+    private ILineGeometry<TDrawingContext>? _zeroLine;
+    private bool _showTicks = true;
     private bool _showSeparatorLines = true;
     private bool _isVisible = true;
     private bool _isInverted;
     private bool _forceStepToMin;
+    private readonly float _tickLength = 8f;
+    private readonly int _subSections = 3;
 
     #endregion
 
@@ -145,6 +154,21 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
     public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsPaint"/>
+    public IPaint<TDrawingContext>? SubseparatorsPaint { get => _subseparatorsPaint; set { _subseparatorsPaint = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
+    public IPaint<TDrawingContext>? TicksPaint { get => _ticksPaint; set { _ticksPaint = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubticksPaint"/>
+    public IPaint<TDrawingContext>? SubticksPaint { get => _subticksPaint; set { _subticksPaint = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ZeroPaint"/>
+    public IPaint<TDrawingContext>? ZeroPaint { get => _zeroPaint; set { _zeroPaint = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ShowTicks"/>
+    public bool ShowTicks { get => _showTicks; set { _showTicks = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPlane.IsVisible"/>
     public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
@@ -214,12 +238,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
 
-        _animatableBounds.MinLimit = MinLimit;
-        _animatableBounds.MaxLimit = MaxLimit;
-        _animatableBounds.MaxDataBound = _dataBounds.Max;
-        _animatableBounds.MinDataBound = _dataBounds.Min;
-        _animatableBounds.MaxVisibleBound = _visibleDataBounds.Max;
-        _animatableBounds.MinVisibleBound = _visibleDataBounds.Min;
+        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
+        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+
+        _animatableBounds.MaxVisibleBound = max;
+        _animatableBounds.MinVisibleBound = min;
 
         if (!_animatableBounds.HasPreviousState)
         {
@@ -235,7 +258,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         var scale = this.GetNextScaler(cartesianChart);
-        var actualScale = this.GetActualScalerScaler(cartesianChart);
+        var actualScale = this.GetActualScalerScaler(cartesianChart) ?? scale;
 
         var axisTick = this.GetTick(drawMarginSize);
 
@@ -260,11 +283,32 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = -0.9;
             cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
         }
+        if (SubseparatorsPaint is not null)
+        {
+            if (SubseparatorsPaint.ZIndex == 0) SubseparatorsPaint.ZIndex = -1;
+            SubseparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            cartesianChart.Canvas.AddDrawableTask(SubseparatorsPaint);
+        }
         if (SeparatorsPaint is not null)
         {
             if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = -1;
             SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
+        }
+        var ticksClipRectangle = _orientation == AxisOrientation.X
+                ? new LvcRectangle(new LvcPoint(drawLocation.X, 0), new LvcSize(drawMarginSize.Width, controlSize.Height))
+                : new LvcRectangle(new LvcPoint(0, drawLocation.Y), new LvcSize(controlSize.Width, drawMarginSize.Height));
+        if (TicksPaint is not null)
+        {
+            if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = -1;
+            TicksPaint.SetClipRectangle(cartesianChart.Canvas, ticksClipRectangle);
+            cartesianChart.Canvas.AddDrawableTask(TicksPaint);
+        }
+        if (SubticksPaint is not null)
+        {
+            if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = -1;
+            SubticksPaint.SetClipRectangle(cartesianChart.Canvas, ticksClipRectangle);
+            cartesianChart.Canvas.AddDrawableTask(SubticksPaint);
         }
 
         var lyi = drawLocation.Y;
@@ -291,72 +335,62 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var r = (float)_labelsRotation;
         var hasRotation = Math.Abs(r) > 0.01f;
 
-        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
-        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
-
         var start = Math.Truncate(min / s) * s;
         if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
         {
-            separators = new Dictionary<double, AxisVisualSeprator<TDrawingContext>>();
+            separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
             activeSeparators[cartesianChart] = separators;
         }
 
         if (Name is not null && NamePaint is not null)
-        {
-            var isNew = false;
+            DrawName(cartesianChart, (float)NameTextSize, lxi, lxj, lyi, lyj);
 
-            if (_nameGeometry is null)
-            {
-                _nameGeometry = new TTextGeometry
-                {
-                    TextSize = size,
-                    HorizontalAlign = Align.Middle,
-                    VerticalAlign = Align.Middle
-                };
+        if (NamePaint is not null && _nameGeometry is not null)
+            NamePaint.AddGeometryToPaintTask(cartesianChart.Canvas, _nameGeometry);
 
-                _ = _nameGeometry
-                     .TransitionateProperties(
-                             nameof(_nameGeometry.X),
-                             nameof(_nameGeometry.Y))
-                     .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                isNew = true;
-            }
-
-            _nameGeometry.Padding = NamePadding;
-            _nameGeometry.Text = Name;
-            _nameGeometry.TextSize = (float)NameTextSize;
-
-            if (_orientation == AxisOrientation.X)
-            {
-                _nameGeometry.X = (lxi + lxj) * 0.5f;
-                _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
-            }
-            else
-            {
-                _nameGeometry.RotateTransform = -90;
-                _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
-                _nameGeometry.Y = (lyi + lyj) * 0.5f;
-            }
-
-            if (isNew) _nameGeometry.CompleteTransition(null);
-        }
+        var hasActivePaint =
+            NamePadding is not null || SeparatorsPaint is not null || LabelsPaint is not null ||
+            TicksPaint is not null || SubticksPaint is not null || SubseparatorsPaint is not null;
 
         var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
 
-        for (var i = start; i <= max; i += s)
+        if (ZeroPaint is not null)
         {
-            if (i < min) continue;
+            float x, y;
+            if (_orientation == AxisOrientation.X)
+            {
+                x = scale.ToPixels(0);
+                y = yoo;
+            }
+            else
+            {
+                x = xoo;
+                y = scale.ToPixels(0);
+            }
 
-            // - 1d + 1d is a dummy operation to fix a bug
-            // where i == 0 then calling i.ToString() returns "-0"...
-            // that dummy operation seems to hide that issue
-            // I am not completly sure of what causes that
-            // it seems that the bits storing that number (i) have the negative bit on
-            var label = labeler(i - 1d + 1d);
+            if (ZeroPaint.ZIndex == 0) ZeroPaint.ZIndex = -1;
+            ZeroPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            cartesianChart.Canvas.AddDrawableTask(ZeroPaint);
+
+            if (_zeroLine is null)
+            {
+                _zeroLine = new TLineGeometry();
+                ZeroPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _zeroLine);
+
+                InitializeLine(_zeroLine, cartesianChart);
+                UpdateSeparator(_zeroLine!, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+            }
+
+            if (min <= 0 && max >= 0)
+            {
+                UpdateSeparator(_zeroLine!, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            }
+        }
+
+        for (var i = start - s; i <= max + s; i += s)
+        {
+            var separatorKey = labeler(i - 1d + 1d);
+            var labelContent = i < min || i > max ? string.Empty : separatorKey;
 
             float x, y;
             if (_orientation == AxisOrientation.X)
@@ -370,155 +404,98 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 y = scale.ToPixels(i);
             }
 
-            if (!separators.TryGetValue(i, out var visualSeparator))
+            float xc = 0, yc = 0;
+            if (_orientation == AxisOrientation.X)
+            {
+                xc = actualScale.ToPixels(i);
+                yc = yoo;
+            }
+            else
+            {
+                xc = xoo;
+                yc = actualScale.ToPixels(i);
+            }
+
+            if (_orientation == AxisOrientation.Y) Trace.WriteLine($"@{i:N2}");
+
+            if (!separators.TryGetValue(separatorKey, out var visualSeparator))
             {
                 visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
 
-                if (LabelsPaint is not null)
-                {
-                    var textGeometry = new TTextGeometry { TextSize = size };
-                    visualSeparator.Label = textGeometry;
-                    if (hasRotation) textGeometry.RotateTransform = r;
-
-                    _ = textGeometry
-                        .TransitionateProperties(
-                            nameof(textGeometry.X),
-                            nameof(textGeometry.Y),
-                            nameof(textGeometry.Opacity))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    textGeometry.Opacity = 0;
-
-                    if (actualScale is not null)
-                    {
-                        float xi, yi;
-
-                        if (_orientation == AxisOrientation.X)
-                        {
-                            xi = actualScale.ToPixels(i);
-                            yi = yoo;
-                        }
-                        else
-                        {
-                            xi = xoo;
-                            yi = actualScale.ToPixels(i);
-                        }
-
-                        textGeometry.X = xi;
-                        textGeometry.Y = yi;
-                        textGeometry.CompleteTransition(null);
-                    }
-                }
-
                 if (SeparatorsPaint is not null && ShowSeparatorLines)
                 {
-                    var lineGeometry = new TLineGeometry();
-
-                    visualSeparator.Line = lineGeometry;
-
-                    _ = lineGeometry
-                        .TransitionateProperties(
-                            nameof(lineGeometry.X), nameof(lineGeometry.X1),
-                            nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
-                            nameof(lineGeometry.Opacity))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    lineGeometry.Opacity = 0;
-
-                    if (actualScale is not null)
-                    {
-                        float xi, yi;
-
-                        if (_orientation == AxisOrientation.X)
-                        {
-                            xi = actualScale.ToPixels(i);
-                            yi = yoo;
-                        }
-                        else
-                        {
-                            xi = xoo;
-                            yi = actualScale.ToPixels(i);
-                        }
-
-                        if (_orientation == AxisOrientation.X)
-                        {
-                            lineGeometry.X = xi;
-                            lineGeometry.X1 = xi;
-                            lineGeometry.Y = lyi;
-                            lineGeometry.Y1 = lyj;
-                        }
-                        else
-                        {
-                            lineGeometry.X = lxi;
-                            lineGeometry.X1 = lxj;
-                            lineGeometry.Y = yi;
-                            lineGeometry.Y1 = yi;
-                        }
-
-                        lineGeometry.CompleteTransition(null);
-                    }
+                    InitializeSeparator(visualSeparator, cartesianChart);
+                    UpdateSeparator(visualSeparator.Separator!, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                    if (_orientation == AxisOrientation.Y) Trace.WriteLine($"{i:N2} => {yc:N2}");
+                }
+                if (SubseparatorsPaint is not null)
+                {
+                    InitializeSubseparators(visualSeparator, cartesianChart);
+                    UpdateSubseparators(visualSeparator.Subseparators!, actualScale, s, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                }
+                if (TicksPaint is not null && ShowTicks)
+                {
+                    InitializeTick(visualSeparator, cartesianChart);
+                    UpdateTick(visualSeparator.Tick!, _tickLength, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                }
+                if (SubticksPaint is not null && _subSections > 0)
+                {
+                    InitializeSubticks(visualSeparator, cartesianChart);
+                    UpdateSubticks(visualSeparator.Subticks!, actualScale, s, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                }
+                if (LabelsPaint is not null)
+                {
+                    IntializeLabel(visualSeparator, cartesianChart, size, hasRotation, r);
+                    UpdateLabel(visualSeparator.Label!, xc, yc, labeler(i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
                 }
 
-                separators.Add(i, visualSeparator);
+                separators.Add(separatorKey, visualSeparator);
             }
 
-            if (NamePaint is not null && _nameGeometry is not null)
-                NamePaint.AddGeometryToPaintTask(cartesianChart.Canvas, _nameGeometry);
-            if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Line is not null)
-                SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Line);
+            if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Separator is not null)
+                SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Separator);
+            if (SubseparatorsPaint is not null && visualSeparator.Subseparators is not null)
+                foreach (var subtick in visualSeparator.Subseparators) SubseparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
             if (LabelsPaint is not null && visualSeparator.Label is not null)
                 LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Label);
+            if (TicksPaint is not null && visualSeparator.Tick is not null)
+                TicksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Tick);
+            if (SubticksPaint is not null && visualSeparator.Subticks is not null)
+                foreach (var subtick in visualSeparator.Subticks) SubticksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
 
-            if (visualSeparator.Label is not null)
-            {
-                visualSeparator.Label.Text = label;
-                visualSeparator.Label.Padding = _padding;
-                visualSeparator.Label.X = x;
-                visualSeparator.Label.Y = y;
-                if (hasRotation) visualSeparator.Label.RotateTransform = r;
+            if (visualSeparator.Separator is not null) UpdateSeparator(visualSeparator.Separator, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Subseparators is not null) UpdateSubseparators(visualSeparator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Tick is not null) UpdateTick(visualSeparator.Tick, _tickLength, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Subticks is not null) UpdateSubticks(visualSeparator.Subticks, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Label is not null) UpdateLabel(visualSeparator.Label, x, y, labelContent, hasRotation, r, UpdateMode.Update);
 
-                visualSeparator.Label.Opacity = 1;
-
-                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteTransition(null);
-            }
-
-            if (visualSeparator.Line is not null)
-            {
-                if (_orientation == AxisOrientation.X)
-                {
-                    visualSeparator.Line.X = x;
-                    visualSeparator.Line.X1 = x;
-                    visualSeparator.Line.Y = lyi;
-                    visualSeparator.Line.Y1 = lyj;
-                }
-                else
-                {
-                    visualSeparator.Line.X = lxi;
-                    visualSeparator.Line.X1 = lxj;
-                    visualSeparator.Line.Y = y;
-                    visualSeparator.Line.Y1 = y;
-                }
-
-                visualSeparator.Line.Opacity = 1;
-
-                if (!_animatableBounds.HasPreviousState) visualSeparator.Line.CompleteTransition(null);
-            }
-
-            if (visualSeparator.Label is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
+            if (hasActivePaint) _ = measured.Add(visualSeparator);
         }
 
-        foreach (var separator in separators.ToArray())
+        foreach (var separatorValueKey in separators.ToArray())
         {
-            if (measured.Contains(separator.Value)) continue;
+            var separator = separatorValueKey.Value;
+            if (measured.Contains(separator)) continue;
 
-            SoftDeleteSeparator(cartesianChart, separator.Value, scale);
-            _ = separators.Remove(separator.Key);
+            float x, y;
+            if (_orientation == AxisOrientation.X)
+            {
+                x = scale.ToPixels(separator.Value);
+                y = yoo;
+            }
+            else
+            {
+                x = xoo;
+                y = scale.ToPixels(separator.Value);
+            }
+
+            if (separator.Separator is not null) UpdateSeparator(separator.Separator, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Subseparators is not null) UpdateSubseparators(separator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Tick is not null) UpdateTick(separator.Tick, _tickLength, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Subticks is not null) UpdateSubticks(separator.Subticks, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Label is not null) UpdateLabel(separator.Label, x, y, labeler(separator.Value - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndRemove);
+
+            _ = separators.Remove(separatorValueKey.Key);
         }
     }
 
@@ -593,7 +570,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         _orientation = orientation;
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
-        if (_animatableBounds is null) _animatableBounds = new();
+        _animatableBounds ??= new();
         Initialized?.Invoke(this);
     }
 
@@ -635,84 +612,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <summary>
-    /// Softly deletes the separator.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    /// <param name="separator">The separator.</param>
-    /// <param name="scaler">The scaler.</param>
-    /// <returns></returns>
-    protected virtual void SoftDeleteSeparator(
-        Chart<TDrawingContext> chart,
-        AxisVisualSeprator<TDrawingContext> separator,
-        Scaler scaler)
-    {
-        var controlSize = chart.ControlSize;
-        var drawLocation = chart.DrawMarginLocation;
-        var drawMarginSize = chart.DrawMarginSize;
-
-        var lyi = drawLocation.Y;
-        var lyj = drawLocation.Y + drawMarginSize.Height;
-        var lxi = drawLocation.X;
-        var lxj = drawLocation.X + drawMarginSize.Width;
-
-        float xoo = 0f, yoo = 0f;
-
-        if (_orientation == AxisOrientation.X)
-        {
-            yoo = _position == AxisPosition.Start
-                 ? controlSize.Height - _yo
-                 : _yo;
-        }
-        else
-        {
-            xoo = _position == AxisPosition.Start
-                ? _xo
-                : controlSize.Width - _xo;
-        }
-
-        float x, y;
-        if (_orientation == AxisOrientation.X)
-        {
-            x = scaler.ToPixels(separator.Value);
-            y = yoo;
-        }
-        else
-        {
-            x = xoo;
-            y = scaler.ToPixels(separator.Value);
-        }
-
-        if (separator.Line is not null)
-        {
-            if (_orientation == AxisOrientation.X)
-            {
-                separator.Line.X = x;
-                separator.Line.X1 = x;
-                separator.Line.Y = lyi;
-                separator.Line.Y1 = lyj;
-            }
-            else
-            {
-                separator.Line.X = lxi;
-                separator.Line.X1 = lxj;
-                separator.Line.Y = y;
-                separator.Line.Y1 = y;
-            }
-
-            separator.Line.Opacity = 0;
-            separator.Line.RemoveOnCompleted = true;
-        }
-
-        if (separator.Label is not null)
-        {
-            separator.Label.X = x;
-            separator.Label.Y = y;
-            separator.Label.Opacity = 0;
-            separator.Label.RemoveOnCompleted = true;
-        }
-    }
-
-    /// <summary>
     /// Called when [paint changed].
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
@@ -728,6 +627,302 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <returns></returns>
     protected override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _separatorsPaint, _labelsPaint, _namePaint };
+        return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
+    }
+
+    private void DrawName(
+        CartesianChart<TDrawingContext> cartesianChart,
+        float size,
+        float lxi,
+        float lxj,
+        float lyi,
+        float lyj)
+    {
+        var isNew = false;
+
+        if (_nameGeometry is null)
+        {
+            _nameGeometry = new TTextGeometry
+            {
+                TextSize = size,
+                HorizontalAlign = Align.Middle,
+                VerticalAlign = Align.Middle
+            };
+
+            _ = _nameGeometry
+                 .TransitionateProperties(
+                         nameof(_nameGeometry.X),
+                         nameof(_nameGeometry.Y))
+                 .WithAnimation(animation =>
+                     animation
+                         .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                         .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+
+            isNew = true;
+        }
+
+        _nameGeometry.Padding = NamePadding;
+        _nameGeometry.Text = Name ?? string.Empty;
+        _nameGeometry.TextSize = (float)NameTextSize;
+
+        if (_orientation == AxisOrientation.X)
+        {
+            _nameGeometry.X = (lxi + lxj) * 0.5f;
+            _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
+        }
+        else
+        {
+            _nameGeometry.RotateTransform = -90;
+            _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
+            _nameGeometry.Y = (lyi + lyj) * 0.5f;
+        }
+
+        if (isNew) _nameGeometry.CompleteTransition(null);
+    }
+
+    private void InitializeSeparator(
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart, TLineGeometry? separatorGeometry = null)
+    {
+        TLineGeometry lineGeometry;
+
+        if (separatorGeometry is not null)
+        {
+            lineGeometry = separatorGeometry;
+        }
+        else
+        {
+            lineGeometry = new TLineGeometry();
+            visualSeparator.Separator = lineGeometry;
+        }
+
+        visualSeparator.Separator = lineGeometry;
+        InitializeLine(lineGeometry, cartesianChart);
+    }
+
+    private void InitializeSubseparators(
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
+    {
+        visualSeparator.Subseparators = new TLineGeometry[_subSections];
+
+        for (var j = 0; j < _subSections; j++)
+        {
+            var subSeparator = new TLineGeometry();
+            visualSeparator.Subseparators[j] = subSeparator;
+            InitializeTick(visualSeparator, cartesianChart, subSeparator);
+        }
+    }
+
+    private void InitializeLine(ILineGeometry<TDrawingContext> lineGeometry, CartesianChart<TDrawingContext> cartesianChart)
+    {
+        _ = lineGeometry
+            .TransitionateProperties(
+                nameof(lineGeometry.X), nameof(lineGeometry.X1),
+                nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
+                nameof(lineGeometry.Opacity))
+            .WithAnimation(animation =>
+                animation
+                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+    }
+
+    private void InitializeTick(
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart, TLineGeometry? subTickGeometry = null)
+    {
+        TLineGeometry tickGeometry;
+
+        if (subTickGeometry is not null)
+        {
+            tickGeometry = subTickGeometry;
+        }
+        else
+        {
+            tickGeometry = new TLineGeometry();
+            visualSeparator.Tick = tickGeometry;
+        }
+
+        _ = tickGeometry
+            .TransitionateProperties(
+                nameof(tickGeometry.X), nameof(tickGeometry.X1),
+                nameof(tickGeometry.Y), nameof(tickGeometry.Y1),
+                nameof(tickGeometry.Opacity))
+            .WithAnimation(animation =>
+                animation
+                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+    }
+
+    private void InitializeSubticks(
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
+    {
+        visualSeparator.Subticks = new TLineGeometry[_subSections];
+
+        for (var j = 0; j < _subSections; j++)
+        {
+            var subTick = new TLineGeometry();
+            visualSeparator.Subticks[j] = subTick;
+            InitializeTick(visualSeparator, cartesianChart, subTick);
+        }
+    }
+
+    private void IntializeLabel(
+        AxisVisualSeprator<TDrawingContext> visualSeparator,
+        CartesianChart<TDrawingContext> cartesianChart,
+        float size,
+        bool hasRotation,
+        float r)
+    {
+        var textGeometry = new TTextGeometry { TextSize = size };
+        visualSeparator.Label = textGeometry;
+        if (hasRotation) textGeometry.RotateTransform = r;
+
+        _ = textGeometry
+            .TransitionateProperties(
+                nameof(textGeometry.X),
+                nameof(textGeometry.Y),
+                nameof(textGeometry.Opacity))
+            .WithAnimation(animation =>
+                animation
+                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+    }
+
+    private void UpdateSeparator(
+        ILineGeometry<TDrawingContext> line,
+        float x,
+        float y,
+        float lxi,
+        float lxj,
+        float lyi,
+        float lyj,
+        UpdateMode mode)
+    {
+        if (_orientation == AxisOrientation.X)
+        {
+            line.X = x;
+            line.X1 = x;
+            line.Y = lyi;
+            line.Y1 = lyj;
+        }
+        else
+        {
+            line.X = lxi;
+            line.X1 = lxj;
+            line.Y = y;
+            line.Y1 = y;
+        }
+
+        SetUpdateMode(line, mode);
+    }
+
+    private void UpdateTick(
+        ILineGeometry<TDrawingContext> tick, float length, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
+    {
+        if (_orientation == AxisOrientation.X)
+        {
+            tick.X = x;
+            tick.X1 = x;
+            tick.Y = lyj;
+            tick.Y1 = lyj + length;
+        }
+        else
+        {
+            tick.X = lxi;
+            tick.X1 = lxi - length;
+            tick.Y = y;
+            tick.Y1 = y;
+        }
+
+        SetUpdateMode(tick, mode);
+    }
+
+    private void UpdateSubseparators(
+        ILineGeometry<TDrawingContext>[] subseparators, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
+    {
+        for (var j = 0; j < subseparators.Length; j++)
+        {
+            var subseparator = subseparators[j];
+            var kl = (j + 1) / (double)(_subSections + 1);
+
+            float xs = 0f, ys = 0f;
+            if (_orientation == AxisOrientation.X)
+            {
+                xs = scale.MeasureInPixels(s * kl);
+            }
+            else
+            {
+                ys = scale.MeasureInPixels(s * kl);
+            }
+
+            UpdateSeparator(subseparator, x + xs, y + ys, lxi, lxj, lyi, lyj, mode);
+        }
+    }
+
+    private void UpdateSubticks(
+        ILineGeometry<TDrawingContext>[] subticks, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
+    {
+        for (var j = 0; j < subticks.Length; j++)
+        {
+            var subtick = subticks[j];
+
+            var k = 0.6f;
+            var kl = (j + 1) / (double)(_subSections + 1);
+            if (Math.Abs(kl - 0.5f) < 0.01) k += 0.5f;
+
+            float xs = 0f, ys = 0f;
+            if (_orientation == AxisOrientation.X)
+            {
+                xs = scale.MeasureInPixels(s * kl);
+            }
+            else
+            {
+                ys = scale.MeasureInPixels(s * kl);
+            }
+
+            UpdateTick(subtick, _tickLength * k, x + xs, y + ys, lxi, lxj, lyi, lyj, mode);
+        }
+    }
+
+    private void UpdateLabel(
+        ILabelGeometry<TDrawingContext> label,
+        float x,
+        float y,
+        string text,
+        bool hasRotation,
+        float r,
+        UpdateMode mode)
+    {
+        label.Text = text;
+        label.Padding = _padding;
+        label.X = x;
+        label.Y = y;
+        if (hasRotation) label.RotateTransform = r;
+
+        SetUpdateMode(label, mode);
+    }
+
+    private void SetUpdateMode(IGeometry<TDrawingContext> geometry, UpdateMode mode)
+    {
+        switch (mode)
+        {
+            case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndComplete:
+                if(_animatableBounds.HasPreviousState) geometry.Opacity = 0;
+                geometry.CompleteTransition(null);
+                break;
+            case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndRemove:
+                geometry.Opacity = 0;
+                geometry.RemoveOnCompleted = true;
+                break;
+            case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.Update:
+            default:
+                geometry.Opacity = 1;
+                break;
+        }
+    }
+
+    private enum UpdateMode
+    {
+        Update,
+        UpdateAndComplete,
+        UpdateAndRemove
     }
 }

@@ -10,10 +10,15 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        YAxes="{Binding YAxes}"
-        DrawMarginFrame="{Binding Frame}">
-    </lvc:CartesianChart>
+    <Grid Background="#333333">
+        <lvc:CartesianChart
+            Margin="20"
+            Series="{Binding Series}"
+            XAxes="{Binding XAxes}"
+            YAxes="{Binding YAxes}"
+            DrawMarginFrame="{Binding Frame}"
+            ZoomMode="Both"
+            TooltipPosition="Hidden">
+        </lvc:CartesianChart>
+    </Grid>
 </UserControl>
