@@ -128,5 +128,4 @@ public partial class ViewModel
 
         return list;
     }
-
 }
