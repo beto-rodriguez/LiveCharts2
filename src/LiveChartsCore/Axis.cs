@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
@@ -388,7 +389,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         for (var i = start - s; i <= max + s; i += s)
         {
-            var labelContent = i < min || i > max ? string.Empty : labeler(i - 1d + 1d);
+            var separatorKey = labeler(i - 1d + 1d);
+            var labelContent = i < min || i > max ? string.Empty : separatorKey;
 
             float x, y;
             if (_orientation == AxisOrientation.X)
@@ -414,7 +416,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 yc = actualScale.ToPixels(i);
             }
 
-            if (!separators.TryGetValue(labelContent, out var visualSeparator))
+            if (_orientation == AxisOrientation.Y) Trace.WriteLine($"@{i:N2}");
+
+            if (!separators.TryGetValue(separatorKey, out var visualSeparator))
             {
                 visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
 
@@ -422,6 +426,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 {
                     InitializeSeparator(visualSeparator, cartesianChart);
                     UpdateSeparator(visualSeparator.Separator!, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                    if (_orientation == AxisOrientation.Y) Trace.WriteLine($"{i:N2} => {yc:N2}");
                 }
                 if (SubseparatorsPaint is not null)
                 {
@@ -444,7 +449,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                     UpdateLabel(visualSeparator.Label!, xc, yc, labeler(i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
                 }
 
-                separators.Add(labelContent, visualSeparator);
+                separators.Add(separatorKey, visualSeparator);
             }
 
             if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Separator is not null)
