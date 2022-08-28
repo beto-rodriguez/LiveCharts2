@@ -139,7 +139,7 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
-    public IChartLegend<SkiaSharpDrawingContext>? Legend => null;
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; } = new SKDefaultLegend();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
