@@ -32,7 +32,6 @@ public partial class ViewModel
     {
         new Axis
         {
-            Position = LiveChartsCore.Measure.AxisPosition.End,
             Name = "X axis",
             NamePaint = new SolidColorPaint(s_gray1),
             TextSize = 18,
@@ -71,7 +70,6 @@ public partial class ViewModel
     {
         new Axis
         {
-            Position = LiveChartsCore.Measure.AxisPosition.End,
             Name = "Y axis",
             NamePaint = new SolidColorPaint(s_gray1),
             TextSize = 18,

@@ -377,15 +377,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             {
                 _zeroLine = new TLineGeometry();
                 ZeroPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _zeroLine);
-
+                
                 InitializeLine(_zeroLine, cartesianChart);
-                UpdateSeparator(_zeroLine!, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                UpdateSeparator(_zeroLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
             }
-
-            if (min <= 0 && max >= 0)
-            {
-                UpdateSeparator(_zeroLine!, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
-            }
+            
+            UpdateSeparator(_zeroLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
         }
 
         if (TicksPaint is not null && _drawTicksPath)
@@ -399,7 +396,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
             if (_orientation == AxisOrientation.X)
             {
-                var yp = xoo + _size.Height * 0.5f * (_position == AxisPosition.Start ? -1 : 1);
+                var yp = yoo + _size.Height * 0.5f * (_position == AxisPosition.Start ? -1 : 1);
                 _ticksPath.X = lxi;
                 _ticksPath.X1 = lxj;
                 _ticksPath.Y = yp;
@@ -848,8 +845,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         if (_orientation == AxisOrientation.X)
         {
-            var lyi = y - _size.Height * 0.5f;
-            var lyj = y + _size.Height * 0.5f;
+            var lyi = y + _size.Height * 0.5f;
+            var lyj = y - _size.Height * 0.5f;
             tick.X = x;
             tick.X1 = x;
             tick.Y = _position == AxisPosition.Start ? lyj : lyi - length;
@@ -897,9 +894,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         {
             var subtick = subticks[j];
 
-            var k = 0.6f;
+            var k = 0.5f;
             var kl = (j + 1) / (double)(_subSections + 1);
-            if (Math.Abs(kl - 0.5f) < 0.01) k += 0.5f;
+            if (Math.Abs(kl - 0.5f) < 0.01) k += 0.25f;
 
             float xs = 0f, ys = 0f;
             if (_orientation == AxisOrientation.X)
