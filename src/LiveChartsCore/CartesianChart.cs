@@ -566,6 +566,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var drawablePlane = (IPlane<TDrawingContext>)axis;
             var ns = drawablePlane.GetNameLabelSize(this);
             var s = drawablePlane.GetPossibleSize(this);
+            axis.Size = s;
+
             if (axis.Position == AxisPosition.Start)
             {
                 // X Bottom
@@ -611,6 +613,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var drawablePlane = (IPlane<TDrawingContext>)axis;
             var ns = drawablePlane.GetNameLabelSize(this);
             var s = drawablePlane.GetPossibleSize(this);
+            axis.Size = s;
             var w = s.Width;
 
             if (axis.Position == AxisPosition.Start)

@@ -65,6 +65,14 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     float Yo { get; set; }
 
     /// <summary>
+    /// Gets or sets the size of the axis, this value is used internally to calculate the axis position.
+    /// </summary>
+    /// <value>
+    /// The length.
+    /// </value>
+    LvcSize Size { get; set; }
+
+    /// <summary>
     /// Gets or sets the reserved area for the labels.
     /// </summary>
     LvcRectangle LabelsDesiredSize { get; set; }
@@ -110,6 +118,11 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     IPaint<TDrawingContext>? SubseparatorsPaint { get; set; }
 
     /// <summary>
+    /// Gets or sets whether the ticks path should be drawn.
+    /// </summary>
+    bool DrawTicksPath { get; set; }
+
+    /// <summary>
     /// Gets or sets the separators paint.
     /// </summary>
     /// <value>
@@ -132,12 +145,4 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// The separators paint.
     /// </value>
     IPaint<TDrawingContext>? ZeroPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the separators paint.
-    /// </summary>
-    /// <value>
-    /// The separators paint.
-    /// </value>
-    bool ShowTicks { get; set; }
 }
