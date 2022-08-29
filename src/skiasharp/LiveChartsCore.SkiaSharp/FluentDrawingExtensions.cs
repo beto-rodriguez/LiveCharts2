@@ -65,6 +65,19 @@ public static class DrawingFluentExtensions
         public MotionCanvas<SkiaSharpDrawingContext> Canvas { get; }
 
         /// <summary>
+        /// Selects the specified paint.
+        /// </summary>
+        /// <param name="paint">The paint.</param>
+        /// <returns>The current drawing instance.</returns>
+        public Drawing SelectPaint(IPaint<SkiaSharpDrawingContext> paint)
+        {
+            _selectedPaint = paint;
+            Canvas.AddDrawableTask(_selectedPaint);
+
+            return this;
+        }
+
+        /// <summary>
         /// Selects the specified color.
         /// </summary>
         /// <param name="color">The color to draw with.</param>
@@ -75,24 +88,23 @@ public static class DrawingFluentExtensions
         {
             strokeWidth ??= 1;
             isFill ??= false;
-            _selectedPaint = new SolidColorPaint(color, strokeWidth.Value) { IsFill = isFill.Value };
-            Canvas.AddDrawableTask(_selectedPaint);
+            var paint = new SolidColorPaint(color, strokeWidth.Value) { IsFill = isFill.Value };
 
-            return this;
+            return SelectPaint(paint);
         }
 
         /// <summary>
-        /// 
+        /// Draws the specified object.
         /// </summary>
-        /// <param name="geometry"></param>
+        /// <param name="drawable">The drawable.</param>
         /// <returns></returns>
-        public Drawing DrawGeometry(IGeometry<SkiaSharpDrawingContext> geometry)
+        public Drawing Draw(IDrawable<SkiaSharpDrawingContext> drawable)
         {
             if (_selectedPaint is null)
                 throw new Exception(
                     "There is no paint selected, please select a paint (By calling a Select method) to add the geometry to.");
 
-            _selectedPaint.AddGeometryToPaintTask(Canvas, geometry);
+            _selectedPaint.AddGeometryToPaintTask(Canvas, drawable);
 
             return this;
         }

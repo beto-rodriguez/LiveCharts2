@@ -31,6 +31,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -38,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// In-memory chart that is able to generate a chart images.
 /// </summary>
-public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, ISkiaSharpChart
+public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, ISkiaSharpChart, IDrawnLegend
 {
     private LvcColor _backColor;
 
@@ -140,6 +141,12 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
     public IChartLegend<SkiaSharpDrawingContext>? Legend { get; } = new SKDefaultLegend();
+
+    /// <inheritdoc cref="IDrawnLegend.LegendFontPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendFontPaint { get; set; } = new SolidColorPaint { FontFamily = "Arial", Color = new SKColor(40, 40, 40) };
+
+    /// <inheritdoc cref="IDrawnLegend.LegendFontSize" />
+    public double LegendFontSize { get; set; } = 13;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
