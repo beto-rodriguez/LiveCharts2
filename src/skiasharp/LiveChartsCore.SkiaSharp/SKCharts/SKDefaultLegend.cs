@@ -39,7 +39,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     /// <inheritdoc cref="IImageControl.Measure(object[])"/>
     public LvcSize Measure(params object[] data)
     {
-        return DrawOrMeasure((Chart<SkiaSharpDrawingContext>)data[0]);
+        return DrawOrMeasure((Chart<SkiaSharpDrawingContext>)data[0], true);
     }
 
     private LvcSize DrawOrMeasure(Chart<SkiaSharpDrawingContext> chart, bool isMeasure = false)
