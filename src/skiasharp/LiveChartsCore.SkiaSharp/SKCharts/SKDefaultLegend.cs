@@ -43,6 +43,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     private void DrawOrMeasure(Chart<SkiaSharpDrawingContext> chart, bool draw)
     {
         float xi, yi;
+        var p = 8f;
 
         if (draw)
         {
@@ -101,8 +102,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
             });
 
         // set a padding
-        var p = 4f;
-        miniatureMaxSize = new LvcSize(miniatureMaxSize.Width + p, miniatureMaxSize.Height + p);
+        miniatureMaxSize = new LvcSize(miniatureMaxSize.Width, miniatureMaxSize.Height);
         labelMaxSize = new LvcSize(labelMaxSize.Width + p, labelMaxSize.Height + p);
 
         var maxY = miniatureMaxSize.Height > labelMaxSize.Height ? miniatureMaxSize.Height : labelMaxSize.Height;
@@ -132,7 +132,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
                 }
             }
 
-            x += miniatureMaxSize.Width;
+            x += miniatureMaxSize.Width + p;
 
             if (drawnLegendChart.LegendFontPaint is not null)
             {
@@ -155,11 +155,11 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
                         .SelectPaint(drawnLegendChart.LegendFontPaint)
                         .Draw(label);
 
-                x += size.Width;
+                x += labelMaxSize.Width + p;
             }
 
             y += maxY;
-            if (!draw) Size = new LvcSize(x - xi, y - yi);
+            if (!draw) Size = GetMaxSize(Size, new LvcSize(x - xi, y - yi));
         }
     }
 
