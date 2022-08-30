@@ -535,17 +535,20 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
+        var a = SeriesMiniatureChanged(Series, LegendPosition);
+        var b = _requiresLegendMeasureAlways && SizeChanged();
         if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
         {
             Legend.Draw(this);
-            Update();
+            //Update();
             PreviousLegendPosition = LegendPosition;
             PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
             preserveFirstDraw = IsFirstDraw;
+            Measure();
+            return;
         }
 
         // calculate draw margin
-
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         SetDrawMargin(ControlSize, m);

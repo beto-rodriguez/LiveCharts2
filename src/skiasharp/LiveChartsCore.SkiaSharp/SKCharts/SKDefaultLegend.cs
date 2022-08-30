@@ -31,29 +31,39 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
 {
+    /// <inheritdoc cref="IImageControl.Size"/>
+    public LvcSize Size { get; set; }
+
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        _ = DrawOrMeasure(chart);
+        DrawOrMeasure(chart, false);
+        DrawOrMeasure(chart, true);
     }
 
-    /// <inheritdoc cref="IImageControl.Measure(object[])"/>
-    public LvcSize Measure(params object[] data)
+    private void DrawOrMeasure(Chart<SkiaSharpDrawingContext> chart, bool draw)
     {
-        return DrawOrMeasure((Chart<SkiaSharpDrawingContext>)data[0], true);
-    }
+        float xi, yi;
 
-    private LvcSize DrawOrMeasure(Chart<SkiaSharpDrawingContext> chart, bool isMeasure = false)
-    {
-        float xi = 0f, yi = 0f;
+        if (draw)
+        {
+            var actualChartSize = chart.View.ControlSize;
+            xi = actualChartSize.Width;
+            yi = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+        }
+        else
+        {
+            xi = 0f;
+            yi = 0f;
+        }
 
         var drawnLegendChart = (IDrawnLegend)chart.View;
-        if (drawnLegendChart.LegendFontPaint is null) return new LvcSize();
+        if (drawnLegendChart.LegendFontPaint is null) return;
 
         var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
         var legendOrientation = chart.LegendOrientation;
         var legendPosition = chart.LegendPosition;
 
-        var drawing = chart.Canvas.Draw();
+        var drawing = draw ? chart.Canvas.Draw() : null;
 
         var miniatureMaxSize = series
             .Aggregate(new LvcSize(), (current, s) =>
@@ -104,8 +114,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
             foreach (var miniatureSchedule in s.CanvasSchedule.PaintSchedules)
             {
-                if (!isMeasure)
-                    _ = drawing.SelectPaint(miniatureSchedule.PaintTask);
+                if (draw) _ = drawing!.SelectPaint(miniatureSchedule.PaintTask);
 
                 foreach (var geometry in miniatureSchedule.Geometries.Cast<IGeometry<SkiaSharpDrawingContext>>())
                 {
@@ -119,7 +128,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
                     geometry.X = x; // + cx; // this is already centered by the LiveCharts API
                     geometry.Y = y + cy;
 
-                    if (!isMeasure) _ = drawing.Draw(geometry);
+                    if (draw) _ = drawing!.Draw(geometry);
                 }
             }
 
@@ -141,16 +150,17 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
                 var cy = (maxY - size.Height) * 0.5f;
                 label.Y = y + cy;
 
-                if (!isMeasure)
-                    _ = drawing
+                if (draw)
+                    _ = drawing!
                         .SelectPaint(drawnLegendChart.LegendFontPaint)
                         .Draw(label);
+
+                x += size.Width;
             }
 
             y += maxY;
+            if (!draw) Size = new LvcSize(x - xi, y - yi);
         }
-
-        return new LvcSize(xi - xi, y - yi);
     }
 
     private LvcSize GetMaxSize(LvcSize size1, LvcSize size2)

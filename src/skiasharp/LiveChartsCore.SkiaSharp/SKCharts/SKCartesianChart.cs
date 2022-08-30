@@ -164,7 +164,7 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         }
     }
 
-    LvcSize IChartView.ControlSize => new(Width, Height);
+    LvcSize IChartView.ControlSize => GetControlSize();
 
     /// <inheritdoc cref="IChartView.DrawMargin"/>
     public Margin? DrawMargin { get; set; }
@@ -280,6 +280,19 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
+    }
+
+    private LvcSize GetControlSize()
+    {
+        if (LegendPosition == LegendPosition.Hidden || Legend is null) return new(Width, Height);
+
+        if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
+        {
+            var imageControl = (IImageControl)Legend;
+            return new(Width - imageControl.Size.Width, Height);
+        }
+
+        return new(Width, Height);
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
