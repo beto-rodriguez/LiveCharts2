@@ -13,7 +13,7 @@ var cartesianChart = new SKCartesianChart
         new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
         new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
     },
-    LegendPosition = LiveChartsCore.Measure.LegendPosition.Left
+    LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom
 };
 
 // you can save the image to png (by default)

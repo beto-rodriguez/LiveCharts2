@@ -292,6 +292,12 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
             return new(Width - imageControl.Size.Width, Height);
         }
 
+        if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
+        {
+            var imageControl = (IImageControl)Legend;
+            return new(Width, Height - imageControl.Size.Height);
+        }
+
         return new(Width, Height);
     }
 
