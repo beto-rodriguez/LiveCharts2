@@ -37,11 +37,16 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        //DrawOrMeasureVertical(chart, false);
-        //DrawOrMeasureVertical(chart, true);
-
-        DrawOrMeasureHorizontal(chart, false);
-        DrawOrMeasureHorizontal(chart, true);
+        if (chart.LegendPosition is LegendPosition.Left or LegendPosition.Right)
+        {
+            DrawOrMeasureVertical(chart, false);
+            DrawOrMeasureVertical(chart, true);
+        }
+        else
+        {
+            DrawOrMeasureHorizontal(chart, false);
+            DrawOrMeasureHorizontal(chart, true);
+        }
     }
 
     private void DrawOrMeasureVertical(Chart<SkiaSharpDrawingContext> chart, bool draw)
