@@ -37,12 +37,14 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
+/// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
+public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _stroke = null;
     private IPaint<TDrawingContext>? _fill = null;
@@ -60,7 +62,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
     protected PieSeries(bool isGauge = false, bool isGaugeFill = false)
         : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
@@ -456,16 +458,12 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
                 strokeClone.StrokeThickness = MaxSeriesStroke;
             }
 
-            var visual = new TVisual
+            var visual = new TMiniatureGeometry
             {
                 X = st + MaxSeriesStroke - st,
                 Y = st + MaxSeriesStroke - st,
                 Height = (float)LegendShapeSize,
-                Width = (float)LegendShapeSize,
-                CenterX = (float)LegendShapeSize * 0.5f,
-                CenterY = (float)LegendShapeSize * 0.5f,
-                StartAngle = 0,
-                SweepAngle = 359.9999f
+                Width = (float)LegendShapeSize
             };
             sh = st;
             strokeClone.ZIndex = 1;
@@ -475,16 +473,12 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
         if (Fill is not null)
         {
             var fillClone = Fill.CloneTask();
-            var visual = new TVisual
+            var visual = new TMiniatureGeometry
             {
                 X = sh + MaxSeriesStroke - sh,
                 Y = sh + MaxSeriesStroke - sh,
                 Height = (float)LegendShapeSize,
-                Width = (float)LegendShapeSize,
-                CenterX = (float)LegendShapeSize * 0.5f,
-                CenterY = (float)LegendShapeSize * 0.5f,
-                StartAngle = 0,
-                SweepAngle = 359.9999f
+                Width = (float)LegendShapeSize
             };
             context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
         }
@@ -545,7 +539,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public override bool MiniatureEquals(IChartSeries<TDrawingContext> instance)
     {
-        return instance is PieSeries<TModel, TVisual, TLabel, TDrawingContext> pieSeries &&
+        return instance is PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext> pieSeries &&
            Name == pieSeries.Name && Fill == pieSeries.Fill && Stroke == pieSeries.Stroke;
     }
 
