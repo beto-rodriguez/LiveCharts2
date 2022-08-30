@@ -74,6 +74,7 @@ public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharp
         TotalAngle = view.TotalAngle;
         InnerRadius = view.InnerRadius;
         InitialRotation = view.InitialRotation;
+        LegendPosition = view.LegendPosition;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />

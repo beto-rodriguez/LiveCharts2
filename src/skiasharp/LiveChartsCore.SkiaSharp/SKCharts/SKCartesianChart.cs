@@ -74,6 +74,7 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         Series = view.Series;
         Sections = view.Sections;
         DrawMarginFrame = view.DrawMarginFrame;
+        LegendPosition = view.LegendPosition;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />

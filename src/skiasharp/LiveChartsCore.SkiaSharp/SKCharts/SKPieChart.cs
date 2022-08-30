@@ -71,6 +71,7 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
         InitialRotation = view.InitialRotation;
         MaxAngle = view.MaxAngle;
         Total = view.Total;
+        LegendPosition = view.LegendPosition;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
