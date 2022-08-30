@@ -23,6 +23,7 @@
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
@@ -42,14 +43,24 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
     private void DrawOrMeasure(Chart<SkiaSharpDrawingContext> chart, bool draw)
     {
-        float xi, yi;
+        float xi = 0f, yi = 0f;
         var p = 8f;
 
         if (draw)
         {
             var actualChartSize = chart.View.ControlSize;
-            xi = actualChartSize.Width;
-            yi = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+
+            if (chart.LegendPosition == LegendPosition.Left)
+            {
+                chart.Canvas.StartPoint = new LvcPoint(Size.Width, 0);
+                xi = -Size.Width + p;
+                yi = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+            }
+            if (chart.LegendPosition == LegendPosition.Right)
+            {
+                xi = actualChartSize.Width;
+                yi = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+            }
         }
         else
         {

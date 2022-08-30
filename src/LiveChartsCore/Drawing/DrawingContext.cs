@@ -28,6 +28,18 @@ namespace LiveChartsCore.Drawing;
 public abstract class DrawingContext
 {
     /// <summary>
+    /// Called when the frame starts.
+    /// </summary>
+    public virtual void OnBegingDraw()
+    { }
+
+    /// <summary>
+    /// Called when the frame ends.
+    /// </summary>
+    public virtual void OnEndDraw()
+    { }
+
+    /// <summary>
     /// Clears the canvas.
     /// </summary>
     public abstract void ClearCanvas();

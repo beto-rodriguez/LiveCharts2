@@ -110,6 +110,22 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// </value>
     public SKColor ClearColor { get; set; } = SKColor.Empty;
 
+    /// <inheritdoc cref="DrawingContext.OnBegingDraw"/>
+    public override void OnBegingDraw()
+    {
+        if (MotionCanvas.StartPoint is null) return;
+
+        Canvas.Translate(new SKPoint(MotionCanvas.StartPoint.Value.X, MotionCanvas.StartPoint.Value.Y));
+    }
+
+    /// <inheritdoc cref="DrawingContext.OnEndDraw"/>
+    public override void OnEndDraw()
+    {
+        if (MotionCanvas.StartPoint is null) return;
+
+        Canvas.Restore();
+    }
+
     /// <summary>
     /// Clears the canvas.
     /// </summary>
