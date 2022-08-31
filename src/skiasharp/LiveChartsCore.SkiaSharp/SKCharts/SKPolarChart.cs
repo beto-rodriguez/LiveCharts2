@@ -245,10 +245,7 @@ public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharp
                 CoreCanvas,
                 new SKImageInfo(Height, Width),
                 surface,
-                canvas)
-            {
-                ClearColor = Background
-            });
+                canvas));
         Core.Unload();
 
         return surface.Snapshot();

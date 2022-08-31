@@ -227,10 +227,7 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
                 CoreCanvas,
                 new SKImageInfo(Height, Width),
                 surface,
-                canvas)
-            {
-                ClearColor = Background
-            });
+                canvas));
         Core.Unload();
 
         return surface.Snapshot();

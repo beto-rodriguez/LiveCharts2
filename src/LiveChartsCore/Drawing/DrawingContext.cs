@@ -38,9 +38,4 @@ public abstract class DrawingContext
     /// </summary>
     public virtual void OnEndDraw()
     { }
-
-    /// <summary>
-    /// Clears the canvas.
-    /// </summary>
-    public abstract void ClearCanvas();
 }

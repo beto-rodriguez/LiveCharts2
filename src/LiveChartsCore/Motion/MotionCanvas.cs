@@ -107,7 +107,6 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
             var isValid = true;
             var frameTime = _stopwatch.ElapsedMilliseconds;
-            context.ClearCanvas();
 
             var toRemoveGeometries = new List<Tuple<IPaint<TDrawingContext>, IDrawable<TDrawingContext>>>();
 

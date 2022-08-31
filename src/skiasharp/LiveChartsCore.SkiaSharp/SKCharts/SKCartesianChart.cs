@@ -249,10 +249,7 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
                 CoreCanvas,
                 new SKImageInfo(Height, Width),
                 surface,
-                canvas)
-            {
-                ClearColor = Background
-            });
+                canvas));
 
         Core.Unload();
 
