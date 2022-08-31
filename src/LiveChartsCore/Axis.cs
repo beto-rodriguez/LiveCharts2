@@ -377,11 +377,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             {
                 _zeroLine = new TLineGeometry();
                 ZeroPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _zeroLine);
-                
                 InitializeLine(_zeroLine, cartesianChart);
                 UpdateSeparator(_zeroLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
             }
-            
+
             UpdateSeparator(_zeroLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
         }
 
@@ -935,7 +934,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         switch (mode)
         {
             case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndComplete:
-                if(_animatableBounds.HasPreviousState) geometry.Opacity = 0;
+                if (_animatableBounds.HasPreviousState) geometry.Opacity = 0;
                 geometry.CompleteTransition(null);
                 break;
             case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndRemove:

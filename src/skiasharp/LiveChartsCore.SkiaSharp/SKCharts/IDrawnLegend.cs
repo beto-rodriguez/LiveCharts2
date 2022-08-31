@@ -20,22 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
+
+namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 /// <summary>
-/// Defines a context that is able to draw 2D shapes in the user interface.
+/// A chart with a drawn legend using SkiaSharp.
 /// </summary>
-public abstract class DrawingContext
+public interface IDrawnLegend
 {
     /// <summary>
-    /// Called when the frame starts.
+    /// Gets or sets the font paint.
     /// </summary>
-    public virtual void OnBegingDraw()
-    { }
+    IPaint<SkiaSharpDrawingContext>? LegendFontPaint { get; set; }
 
     /// <summary>
-    /// Called when the frame ends.
+    /// Gets or sets the legend font size.
     /// </summary>
-    public virtual void OnEndDraw()
-    { }
+    double LegendFontSize { get; set; }
 }

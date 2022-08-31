@@ -52,7 +52,7 @@ public abstract class Animatable : IAnimatable
     {
         var a = animation?.Duration == 0 ? null : animation;
 
-        if (propertyName is null) propertyName = MotionProperties.Keys.ToArray();
+        propertyName ??= MotionProperties.Keys.ToArray();
 
         foreach (var name in propertyName)
         {
@@ -63,7 +63,7 @@ public abstract class Animatable : IAnimatable
     /// <inheritdoc cref="IAnimatable.RemoveTransition(string[])" />
     public void RemoveTransition(params string[]? propertyName)
     {
-        if (propertyName is null) propertyName = MotionProperties.Keys.ToArray();
+        propertyName ??= MotionProperties.Keys.ToArray();
 
         foreach (var name in propertyName)
         {
@@ -74,7 +74,7 @@ public abstract class Animatable : IAnimatable
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
     public virtual void CompleteTransition(params string[]? propertyName)
     {
-        if (propertyName is null) propertyName = MotionProperties.Keys.ToArray();
+        propertyName ??= MotionProperties.Keys.ToArray();
 
         foreach (var property in propertyName)
         {

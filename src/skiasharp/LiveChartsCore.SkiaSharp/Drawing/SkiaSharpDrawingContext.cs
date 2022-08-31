@@ -102,19 +102,19 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// </value>
     public SKPaint Paint { get; set; }
 
-    /// <summary>
-    /// Gets or sets the color of the clear.
-    /// </summary>
-    /// <value>
-    /// The color of the clear.
-    /// </value>
-    public SKColor ClearColor { get; set; } = SKColor.Empty;
-
-    /// <summary>
-    /// Clears the canvas.
-    /// </summary>
-    public override void ClearCanvas()
+    /// <inheritdoc cref="DrawingContext.OnBegingDraw"/>
+    public override void OnBegingDraw()
     {
-        Canvas.Clear(ClearColor);
+        Canvas.Clear();
+
+        if (MotionCanvas.StartPoint is null) return;
+        Canvas.Translate(new SKPoint(MotionCanvas.StartPoint.Value.X, MotionCanvas.StartPoint.Value.Y));
+    }
+
+    /// <inheritdoc cref="DrawingContext.OnEndDraw"/>
+    public override void OnEndDraw()
+    {
+        if (MotionCanvas.StartPoint is null) return;
+        Canvas.Restore();
     }
 }

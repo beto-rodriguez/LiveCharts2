@@ -47,7 +47,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
-    private readonly bool _requiresLegendMeasureAlways = false;
     private ZoomAndPanMode _zoomMode;
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
@@ -60,17 +59,14 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="canvas">The canvas.</param>
     /// <param name="zoomingSection">The zooming section.</param>
-    /// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
     public CartesianChart(
         ICartesianChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
-        ISizedGeometry<TDrawingContext>? zoomingSection,
-        bool requiresLegendMeasureAlways = false)
+        ISizedGeometry<TDrawingContext>? zoomingSection)
         : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
-        _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
         _zoomingSection = zoomingSection ?? throw new Exception($"{nameof(zoomingSection)} is required.");
         _zoomingSection.X = -1;
         _zoomingSection.Y = -1;
@@ -535,17 +531,18 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
+        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || SizeChanged()))
         {
             Legend.Draw(this);
-            Update();
             PreviousLegendPosition = LegendPosition;
             PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
             preserveFirstDraw = IsFirstDraw;
+            SetPreviousSize();
+            Measure();
+            return;
         }
 
         // calculate draw margin
-
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         SetDrawMargin(ControlSize, m);

@@ -20,22 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing;
+
+namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 /// <summary>
-/// Defines a context that is able to draw 2D shapes in the user interface.
+/// An image control
 /// </summary>
-public abstract class DrawingContext
+public interface IImageControl
 {
     /// <summary>
-    /// Called when the frame starts.
+    /// Gets the sized.
     /// </summary>
-    public virtual void OnBegingDraw()
-    { }
-
-    /// <summary>
-    /// Called when the frame ends.
-    /// </summary>
-    public virtual void OnEndDraw()
-    { }
+    public LvcSize Size { get; set; }
 }

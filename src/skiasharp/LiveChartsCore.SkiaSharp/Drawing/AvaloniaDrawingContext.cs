@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
@@ -42,8 +43,10 @@ public class AvaloniaDrawingContext : SkiaSharpDrawingContext
         : base(motionCanvas, info, surface, canvas)
     { }
 
-    /// <summary>
-    /// Clears the canvas.
-    /// </summary>
-    public override void ClearCanvas() { }
+    /// <inheritdoc cref="DrawingContext.OnBegingDraw"/>
+    public override void OnBegingDraw()
+    {
+        if (MotionCanvas.StartPoint is null) return;
+        Canvas.Translate(new SKPoint(MotionCanvas.StartPoint.Value.X, MotionCanvas.StartPoint.Value.Y));
+    }
 }
