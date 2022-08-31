@@ -177,7 +177,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         motionCanvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
 
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, zoomingSection, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, zoomingSection);
         core.Update();
     }
 
