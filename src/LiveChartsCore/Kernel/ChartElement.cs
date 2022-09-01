@@ -35,6 +35,9 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
 {
     private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
 
+    /// <inheritdoc cref="IChartElement{TDrawingContext}.Tag" />
+    public object? Tag { get; set; }
+
     /// <inheritdoc cref="IChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})" />
     public abstract void Measure(Chart<TDrawingContext> chart);
 

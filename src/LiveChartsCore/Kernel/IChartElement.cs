@@ -32,6 +32,11 @@ public interface IChartElement<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
+    /// Gets or sets the object that contains data about the control.
+    /// </summary>
+    object? Tag { get; set; }
+
+    /// <summary>
     /// Measures and schedule the draw of the element in the user interface.
     /// </summary>
     /// <param name="chart">The chart.</param>
