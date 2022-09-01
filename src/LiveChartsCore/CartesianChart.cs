@@ -536,6 +536,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             Legend.Draw(this);
             PreviousLegendPosition = LegendPosition;
             PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
+            foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
             preserveFirstDraw = IsFirstDraw;
             SetPreviousSize();
             Measure();

@@ -43,7 +43,12 @@ public interface ISeries : IStopNPC
     /// <summary>
     /// Gets the properties of the series.
     /// </summary>
-    SeriesProperties SeriesProperties { get; }
+    SeriesProperties SeriesProperties { get;  }
+
+    /// <summary>
+    /// Gets a value indicating whether any paint changed.
+    /// </summary>
+    bool PaintsChanged { get; set; }
 
     /// <summary>
     /// Gets the active pints.

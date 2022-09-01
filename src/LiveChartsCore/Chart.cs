@@ -474,7 +474,6 @@ public abstract class Chart<TDrawingContext> : IChart
             var b = newSeries[i];
 
             if (!a.MiniatureEquals(b)) return true;
-            //if (a.Name != b.Name || a.Fill != b.Fill || a.Stroke != b.Stroke) return true;
         }
 
         return false;

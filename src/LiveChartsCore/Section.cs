@@ -160,6 +160,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <param name="propertyName"></param>
     protected override void OnPaintChanged(string? propertyName)
     {
+        base.OnPaintChanged(propertyName);
         OnPropertyChanged(propertyName);
     }
 

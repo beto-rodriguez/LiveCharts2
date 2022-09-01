@@ -532,6 +532,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// <returns></returns>
     protected override void OnPaintChanged(string? propertyName)
     {
+        base.OnPaintChanged(propertyName);
         OnSeriesMiniatureChanged();
         OnPropertyChanged(propertyName);
     }
