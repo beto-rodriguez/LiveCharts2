@@ -845,6 +845,18 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     {
         if (_sectionZoomingStart is not null)
         {
+            var xy = Math.Sqrt(Math.Pow(point.X - _sectionZoomingStart.Value.X, 2) + Math.Pow(point.Y - _sectionZoomingStart.Value.Y, 2));
+            if (xy < 15)
+            {
+                _zoomingSection.X = -1;
+                _zoomingSection.Y = -1;
+                _zoomingSection.Width = 0;
+                _zoomingSection.Height = 0;
+                Update();
+                _sectionZoomingStart = null;
+                return;
+            }
+
             if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
             {
                 for (var i = 0; i < XAxes.Length; i++)
@@ -916,7 +928,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             _zoomingSection.Width = 0;
             _zoomingSection.Height = 0;
             Update();
-
             _sectionZoomingStart = null;
             return;
         }
