@@ -103,15 +103,12 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             var actualLineContent = line ?? string.Empty;
             var lineSize = MeasureLine(paint, actualLineContent);
 
-            //var oy = (lineSize.Height - lineSize.Height / LineHeight) * 0.5f;
-            //var ox = HorizontalAlign == Align.Start
-            //    ? 0
-            //    : (HorizontalAlign == Align.End
-            //        ? totalSize.Width - lineSize.Width
-            //        : (totalSize.Width - lineSize.Width) * 0.5f);
-
-            var oy = 0;
-            var ox = 0;
+            var oy = (lineSize.Height - lineSize.Height / LineHeight) * 0.5f;
+            var ox = HorizontalAlign == Align.Start
+                ? 0
+                : (HorizontalAlign == Align.End
+                    ? totalSize.Width - lineSize.Width
+                    : (totalSize.Width - lineSize.Width) * 0.5f);
 
             if (paint.Typeface != null)
             {
