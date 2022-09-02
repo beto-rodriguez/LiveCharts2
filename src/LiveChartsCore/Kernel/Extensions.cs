@@ -116,8 +116,12 @@ public static class Extensions
     public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null, LvcSize? maxLabelSize = null)
     {
         bounds ??= axis.VisibleDataBounds;
-        var w = maxLabelSize is not null ? maxLabelSize.Value.Width * 0.60 : 20 * Cf;
-        var h = maxLabelSize is not null ? maxLabelSize.Value.Height * 0.60 : 12 * Cf;
+
+        var w = (maxLabelSize?.Width ?? 0d) * 0.60;
+        if (w < 20 * Cf) w = 20 * Cf;
+
+        var h = maxLabelSize?.Height ?? 0d;
+        if (h < 12 * Cf) h = 12 * Cf;
 
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
