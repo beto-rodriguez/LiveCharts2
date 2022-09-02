@@ -110,33 +110,12 @@ public static class Extensions
     /// </summary>
     /// <param name="axis">The axis.</param>
     /// <param name="controlSize">Size of the control.</param>
-    /// <returns></returns>
-    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize)
-    {
-        return GetTick(axis, controlSize, axis.VisibleDataBounds);
-    }
-
-    /// <summary>
-    /// Gets the tick.
-    /// </summary>
-    /// <param name="axis">The axis.</param>
-    /// <param name="chart">The chart.</param>
-    /// <returns></returns>
-    public static AxisTick GetTick<TDrawingContext>(this IPolarAxis axis, PolarChart<TDrawingContext> chart)
-        where TDrawingContext : DrawingContext
-    {
-        return GetTick(axis, chart, axis.VisibleDataBounds);
-    }
-
-    /// <summary>
-    /// Gets the tick.
-    /// </summary>
-    /// <param name="axis">The axis.</param>
-    /// <param name="controlSize">Size of the control.</param>
     /// <param name="bounds">The bounds.</param>
     /// <returns></returns>
-    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds bounds)
+    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null)
     {
+        bounds ??= axis.VisibleDataBounds;
+
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
@@ -164,9 +143,11 @@ public static class Extensions
     /// <param name="chart">The chart.</param>
     /// <param name="bounds">The bounds.</param>
     /// <returns></returns> 
-    public static AxisTick GetTick<TDrawingContext>(this IPolarAxis axis, PolarChart<TDrawingContext> chart, Bounds bounds)
+    public static AxisTick GetTick<TDrawingContext>(this IPolarAxis axis, PolarChart<TDrawingContext> chart, Bounds? bounds = null)
         where TDrawingContext : DrawingContext
     {
+        bounds ??= axis.VisibleDataBounds;
+
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
