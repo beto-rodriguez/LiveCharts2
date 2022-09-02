@@ -261,7 +261,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var scale = this.GetNextScaler(cartesianChart);
         var actualScale = this.GetActualScalerScaler(cartesianChart) ?? scale;
 
-        var axisTick = this.GetTick(drawMarginSize);
+        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize());
 
         var labeler = Labeler;
         if (Labels is not null)
@@ -659,6 +659,43 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     protected override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
+    }
+
+    private LvcSize GetPossibleMaxLabelSize()
+    {
+        if (LabelsPaint is null) return new LvcSize();
+
+        var labeler = Labeler;
+
+        if (Labels is not null)
+        {
+            labeler = Labelers.BuildNamedLabeler(Labels).Function;
+            _minStep = 1;
+        }
+
+        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
+        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+        var s = (max - min) / 20d;
+
+        var maxLabelSize = new LvcSize();
+        for (var i = min; i <= max; i += s)
+        {
+            var textGeometry = new TTextGeometry
+            {
+                Text = labeler(i),
+                TextSize = (float)TextSize,
+                RotateTransform = (float)LabelsRotation,
+                Padding = _padding
+            };
+
+            var m = textGeometry.Measure(LabelsPaint);
+
+            maxLabelSize = new LvcSize(
+                maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
+                maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
+        }
+
+        return maxLabelSize;
     }
 
     private void DrawName(

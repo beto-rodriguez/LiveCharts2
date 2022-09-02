@@ -111,10 +111,13 @@ public static class Extensions
     /// <param name="axis">The axis.</param>
     /// <param name="controlSize">Size of the control.</param>
     /// <param name="bounds">The bounds.</param>
+    /// <param name="maxLabelSize">The max label size.</param>
     /// <returns></returns>
-    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null)
+    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null, LvcSize? maxLabelSize = null)
     {
         bounds ??= axis.VisibleDataBounds;
+        var w = maxLabelSize is not null ? maxLabelSize.Value.Width * 0.60 : 20 * Cf;
+        var h = maxLabelSize is not null ? maxLabelSize.Value.Height * 0.60 : 12 * Cf;
 
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
@@ -123,8 +126,8 @@ public static class Extensions
         if (range == 0) range = min;
 
         var separations = axis.Orientation == AxisOrientation.Y
-            ? Math.Round(controlSize.Height / (12 * Cf), 0)
-            : Math.Round(controlSize.Width / (20 * Cf), 0);
+            ? Math.Round(controlSize.Height / h, 0)
+            : Math.Round(controlSize.Width / w, 0);
 
         var minimum = range / separations;
 
