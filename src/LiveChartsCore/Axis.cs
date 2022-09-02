@@ -477,8 +477,13 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 separators.Add(separatorKey, visualSeparator);
             }
 
-            if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Separator is not null)
-                SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Separator);
+            if (SeparatorsPaint is not null && visualSeparator.Separator is not null)
+            {
+                if (ShowSeparatorLines)
+                    SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Separator);
+                else
+                    SeparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, visualSeparator.Separator);
+            }
             if (SubseparatorsPaint is not null && visualSeparator.Subseparators is not null)
                 foreach (var subtick in visualSeparator.Subseparators) SubseparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
             if (LabelsPaint is not null && visualSeparator.Label is not null)
