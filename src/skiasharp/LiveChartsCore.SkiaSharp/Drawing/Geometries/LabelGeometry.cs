@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -65,6 +68,10 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Text" />
     public string Text { get; set; } = string.Empty;
 
+
+    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
+    public float LineHeight { get; set; } = 1.2f;
+
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.TextSize" />
     public float TextSize { get => _textSizeProperty.GetMovement(this); set => _textSizeProperty.SetMovement(value, this); }
 
@@ -78,25 +85,45 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         var bg = Background;
+        var totalSize = OnMeasure(context.PaintTask);
+
         if (bg != LvcColor.Empty)
         {
-            var m = OnMeasure(context.PaintTask);
             using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity)) })
             {
                 var p = Padding;
-                context.Canvas.DrawRect(X - p.Left, Y - m.Height + p.Top, m.Width, m.Height, bgPaint);
+                context.Canvas.DrawRect(X - p.Left, Y - totalSize.Height + p.Top, totalSize.Width, totalSize.Height, bgPaint);
             }
         }
-        if (paint.Typeface != null)
+
+        var currentY = Padding.Top;
+
+        var lines = GetLines(Text).ToArray();
+        foreach (var line in lines)
         {
-            using (var eventTextShaper = new SKShaper(paint.Typeface))
+            var actualLineContent = line ?? string.Empty;
+            var lineSize = MeasureLine(paint, actualLineContent);
+
+            var oy = (lineSize.Height - lineSize.Height / LineHeight) * 0.5f;
+            var ox = HorizontalAlign == Align.Start
+                ? 0
+                : (HorizontalAlign == Align.End
+                    ? totalSize.Width - lineSize.Width
+                    : (totalSize.Width - lineSize.Width) * 0.5f);
+
+            if (paint.Typeface != null)
             {
-                context.Canvas.DrawShapedText(eventTextShaper, Text ?? "", new SKPoint(X, Y), paint);
+                using (var eventTextShaper = new SKShaper(paint.Typeface))
+                {
+                    context.Canvas.DrawShapedText(eventTextShaper, actualLineContent, new SKPoint(X + ox, Y + currentY + oy), paint);
+                }
             }
-        }
-        else
-        {
-            context.Canvas.DrawText(Text ?? "", new SKPoint(X, Y), paint);
+            else
+            {
+                context.Canvas.DrawText(actualLineContent, new SKPoint(X + ox, Y + currentY + oy), paint);
+            }
+
+            currentY += lineSize.Height;
         }
     }
 
@@ -112,10 +139,14 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             TextSize = TextSize
         };
 
-        var bounds = new SKRect();
+        var size = new LvcSize();
+        foreach (var line in GetLines(Text))
+        {
+            var result = MeasureLine(p, line);
+            size = new LvcSize(size.Width > result.Width ? size.Width : result.Width, size.Height + result.Height);
+        }
 
-        _ = p.MeasureText(Text, ref bounds);
-        return new LvcSize(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
+        return new LvcSize(size.Width + Padding.Left + Padding.Right, size.Height + Padding.Top + Padding.Bottom);
     }
 
     /// <inheritdoc cref="Geometry.ApplyCustomGeometryTransform(SkiaSharpDrawingContext)" />
@@ -156,5 +187,18 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         // just for consistency with the rest of the shapes in the library (and Skia??),
         // and also translate according to the vertical an horizontal alignment properties
         context.Canvas.Translate((float)xp, (float)yp);
+    }
+
+    private SKRect MeasureLine(SKPaint paint, string text)
+    {
+        var bounds = new SKRect();
+        _ = paint.MeasureText(text, ref bounds);
+        bounds = new SKRect(0, 0, bounds.Width, bounds.Height * LineHeight);
+        return bounds;
+    }
+
+    private IEnumerable<string> GetLines(string rawText)
+    {
+        return rawText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
     }
 }

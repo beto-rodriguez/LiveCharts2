@@ -71,6 +71,11 @@ public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
     float TextSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the line height, in percentage of the raw hight.
+    /// </summary>
+    float LineHeight { get; set; }
+
+    /// <summary>
     /// Gets or sets the background color.
     /// </summary>
     LvcColor Background { get; set; }
