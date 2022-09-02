@@ -66,7 +66,6 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Text" />
     public string Text { get; set; } = string.Empty;
 
-
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
     public float LineHeight { get; set; } = 1.2f;
 
