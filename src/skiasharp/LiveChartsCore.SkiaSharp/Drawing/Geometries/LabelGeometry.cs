@@ -96,20 +96,22 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             }
         }
 
-        var currentY = Padding.Top;
+        var currentY = 0f;
 
-        var lines = GetLines(Text).ToArray();
-        foreach (var line in lines)
+        foreach (var line in GetLines(Text))
         {
             var actualLineContent = line ?? string.Empty;
             var lineSize = MeasureLine(paint, actualLineContent);
 
-            var oy = (lineSize.Height - lineSize.Height / LineHeight) * 0.5f;
-            var ox = HorizontalAlign == Align.Start
-                ? 0
-                : (HorizontalAlign == Align.End
-                    ? totalSize.Width - lineSize.Width
-                    : (totalSize.Width - lineSize.Width) * 0.5f);
+            //var oy = (lineSize.Height - lineSize.Height / LineHeight) * 0.5f;
+            //var ox = HorizontalAlign == Align.Start
+            //    ? 0
+            //    : (HorizontalAlign == Align.End
+            //        ? totalSize.Width - lineSize.Width
+            //        : (totalSize.Width - lineSize.Width) * 0.5f);
+
+            var oy = 0;
+            var ox = 0;
 
             if (paint.Typeface != null)
             {
