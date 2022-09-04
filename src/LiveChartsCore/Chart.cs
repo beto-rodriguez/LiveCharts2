@@ -425,7 +425,6 @@ public abstract class Chart<TDrawingContext> : IChart
         Measuring?.Invoke(View);
     }
 
-
     /// <summary>
     /// Invokes the on update started.
     /// </summary>
