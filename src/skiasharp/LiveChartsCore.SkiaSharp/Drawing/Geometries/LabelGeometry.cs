@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -66,9 +65,6 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Text" />
     public string Text { get; set; } = string.Empty;
 
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
-    public float LineHeight { get; set; } = 1.2f;
-
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.TextSize" />
     public float TextSize { get => _textSizeProperty.GetMovement(this); set => _textSizeProperty.SetMovement(value, this); }
 
@@ -81,45 +77,24 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        var bg = Background;
-        var totalSize = OnMeasure(context.PaintTask);
+        var size = OnMeasure(context.PaintTask);
 
+        var bg = Background;
         if (bg != LvcColor.Empty)
         {
             using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity)) })
             {
                 var p = Padding;
-                context.Canvas.DrawRect(X - p.Left, Y - totalSize.Height + p.Top, totalSize.Width, totalSize.Height, bgPaint);
+                context.Canvas.DrawRect(X - p.Left, Y - size.Height + p.Top, size.Width, size.Height, bgPaint);
             }
         }
 
-        var currentY = 0f;
-
-        foreach (var line in GetLines(Text))
+        var lines = GetLines(Text);
+        double linesCount = lines.Length;
+        var lineNumber = 0;
+        foreach (var line in lines)
         {
-            var actualLineContent = line ?? string.Empty;
-            var lineSize = MeasureLine(paint, actualLineContent);
-
-            var oy = (lineSize.Height - lineSize.Height / LineHeight) * 0.5f;
-            var ox = HorizontalAlign == Align.Start
-                ? 0
-                : (HorizontalAlign == Align.End
-                    ? totalSize.Width - lineSize.Width
-                    : (totalSize.Width - lineSize.Width) * 0.5f);
-
-            if (paint.Typeface != null)
-            {
-                using (var eventTextShaper = new SKShaper(paint.Typeface))
-                {
-                    context.Canvas.DrawShapedText(eventTextShaper, actualLineContent, new SKPoint(X + ox, Y + currentY + oy), paint);
-                }
-            }
-            else
-            {
-                context.Canvas.DrawText(actualLineContent, new SKPoint(X + ox, Y + currentY + oy), paint);
-            }
-
-            currentY += lineSize.Height;
+            DrawLine(line, -size.Height + (float)(++lineNumber / linesCount * size.Height), context, paint);
         }
     }
 
@@ -135,24 +110,18 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             TextSize = TextSize
         };
 
-        var size = new LvcSize();
-        foreach (var line in GetLines(Text))
-        {
-            var result = MeasureLine(p, line);
-            size = new LvcSize(size.Width > result.Width ? size.Width : result.Width, size.Height + result.Height);
-        }
+        var bounds = MeasureLines(p);
 
-        return new LvcSize(size.Width + Padding.Left + Padding.Right, size.Height + Padding.Top + Padding.Bottom);
+        return new LvcSize(bounds.Width + Padding.Left + Padding.Right, bounds.Height + Padding.Top + Padding.Bottom);
     }
 
     /// <inheritdoc cref="Geometry.ApplyCustomGeometryTransform(SkiaSharpDrawingContext)" />
     protected override void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context)
     {
-        var size = new SKRect();
         context.Paint.TextSize = TextSize;
-        _ = context.Paint.MeasureText(Text, ref size);
-        const double toRadians = Math.PI / 180d;
+        var size = MeasureLines(context.Paint);
 
+        const double toRadians = Math.PI / 180d;
         var p = Padding;
         float w = 0.5f, h = 0.5f;
 
@@ -185,16 +154,36 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         context.Canvas.Translate((float)xp, (float)yp);
     }
 
-    private SKRect MeasureLine(SKPaint paint, string text)
+    private void DrawLine(string content, float yLine, SkiaSharpDrawingContext context, SKPaint paint)
     {
-        var bounds = new SKRect();
-        _ = paint.MeasureText(text, ref bounds);
-        bounds = new SKRect(0, 0, bounds.Width, bounds.Height * LineHeight);
-        return bounds;
+        if (paint.Typeface is not null)
+        {
+            using var eventTextShaper = new SKShaper(paint.Typeface);
+            context.Canvas.DrawShapedText(content, new SKPoint(X, Y + yLine), paint);
+            return;
+        }
+
+        context.Canvas.DrawText(content, new SKPoint(X, Y + yLine), paint);
     }
 
-    private IEnumerable<string> GetLines(string rawText)
+    private LvcSize MeasureLines(SKPaint paint)
     {
-        return rawText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+        float w = 0f, h = 0f;
+
+        foreach (var line in GetLines(Text))
+        {
+            var bounds = new SKRect();
+            _ = paint.MeasureText(line, ref bounds);
+
+            if (bounds.Width > w) w = bounds.Width;
+            h += bounds.Height;
+        }
+
+        return new LvcSize(w, h);
+    }
+
+    private string[] GetLines(string multiLineText)
+    {
+        return multiLineText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
     }
 }
