@@ -119,6 +119,9 @@ public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharp
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series"/>
     public IEnumerable<ISeries> Series { get; set; } = Array.Empty<ISeries>();
 
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.VisualElements"/>
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
 

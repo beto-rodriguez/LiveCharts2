@@ -43,6 +43,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     internal readonly HashSet<ISeries> _everMeasuredSeries = new();
     internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
     internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
+    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredVisuals = new();
     private readonly IPolarChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
     private readonly bool _requiresLegendMeasureAlways = false;
@@ -88,6 +89,14 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     /// The series.
     /// </value>
     public IPolarSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPolarSeries<TDrawingContext>>();
+
+    /// <summary>
+    /// Gets the visual elements.
+    /// </summary>
+    /// <value>
+    /// The visual elements.
+    /// </value>
+    public ChartElement<TDrawingContext>[] VisualElements { get; private set; } = Array.Empty<ChartElement<TDrawingContext>>();
 
     /// <summary>
     /// Gets whether the series fit to bounds or not.
@@ -207,6 +216,8 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         Series = actualSeries
             .Cast<IPolarSeries<TDrawingContext>>()
             .ToArray();
+
+        VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         #endregion
 
@@ -476,6 +487,15 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             drawablePlane.RemoveOldPaints(View);
         }
 
+        var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
+        foreach (var visual in VisualElements)
+        {
+            visual.Measure(this);
+            visual.RemoveOldPaints(View);
+            _ = _everMeasuredVisuals.Add(visual);
+            _ = toDeleteVisualElements.Remove(visual);
+        }
+
         var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
         foreach (var series in Series)
         {
@@ -494,6 +514,11 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         {
             axis.RemoveFromUI(this);
             _ = _everMeasuredAxes.Remove(axis);
+        }
+        foreach (var visual in toDeleteVisualElements)
+        {
+            visual.RemoveFromUI(this);
+            _ = _everMeasuredVisuals.Remove(visual);
         }
 
         foreach (var axis in totalAxes)
@@ -545,6 +570,8 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         _everMeasuredAxes.Clear();
         foreach (var item in _everMeasuredSections) item.RemoveFromUI(this);
         _everMeasuredSections.Clear();
+        foreach (var item in _everMeasuredVisuals) item.RemoveFromUI(this);
+        _everMeasuredVisuals.Clear();
         foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
         _everMeasuredSeries.Clear();
         IsFirstDraw = true;

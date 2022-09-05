@@ -674,12 +674,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </_Globbled_Page>
-    <Page Include="@(_Globbled_Page)" />
+    <Page Include="$(MSBuildThisFileDirectory)LiveChartsSamples\General\VisualElements\View.xaml" />
     <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.xaml.cs" Exclude="@(Compile)">
       <DependentUpon>%(Filename)</DependentUpon>
     </_Globbed_Compile>
     <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.cs" Exclude="@(Compile);@(_Globbed_Compile)" />
-    <Compile Include="@(_Globbed_Compile)" />
+    <Compile Include="$(MSBuildThisFileDirectory)LiveChartsSamples\General\VisualElements\View.xaml.cs" />
     <_Globbed_PRIResource Include="$(MSBuildThisFileDirectory)**/*.resw" Exclude="@(PRIResource)" />
     <PRIResource Include="@(_Globbed_PRIResource)" />
     <_Globbed_Content Include="$(MSBuildThisFileDirectory)Assets/**/*.*" Exclude="@(Content)" />
@@ -689,5 +689,17 @@
     <ApplicationDefinition Update="$(MSBuildThisFileDirectory)**/*.xaml" XamlRuntime="WinUI" />
     <!-- Make sure XAML files force reevaluation of up-to-date checks -->
     <UpToDateCheckInput Include="$(MSBuildThisFileDirectory)**/*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="C:\_dev\LiveCharts2\samples\UnoWinUISample\UnoWinUISample\UnoWinUISample.Shared\LiveChartsSamples\General\Sections - Copy\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="C:\_dev\LiveCharts2\samples\UnoWinUISample\UnoWinUISample\UnoWinUISample.Shared\LiveChartsSamples\General\Sections - Copy\View.xaml">
+      <XamlRuntime>WinUI</XamlRuntime>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

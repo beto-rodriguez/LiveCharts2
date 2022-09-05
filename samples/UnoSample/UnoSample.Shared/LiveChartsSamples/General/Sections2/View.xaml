@@ -13,6 +13,6 @@
     </UserControl.DataContext>
     <lvc:CartesianChart
         Series="{Binding Series}"
-        Sections="{Binding Sections}">        
+        Sections="{Binding Sections}">
     </lvc:CartesianChart>
 </UserControl>

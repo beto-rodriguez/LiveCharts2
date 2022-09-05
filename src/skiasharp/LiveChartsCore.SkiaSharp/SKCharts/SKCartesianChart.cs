@@ -119,6 +119,9 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
     public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; } = Array.Empty<RectangularSection>();
 
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements"/>
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series"/>
     public IEnumerable<ISeries> Series { get; set; } = Array.Empty<ISeries>();
 

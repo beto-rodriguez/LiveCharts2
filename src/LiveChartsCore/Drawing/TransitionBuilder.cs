@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Drawing;
 
@@ -64,6 +65,18 @@ public class TransitionBuilder
         var animation = new Animation();
         animationBuilder(animation);
         return WithAnimation(animation);
+    }
+
+    /// <summary>
+    /// Sets the animations based on the chart <see cref="IChartView.EasingFunction"/> and <see cref="IChartView.AnimationsSpeed"/> properties.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <returns>The transition</returns>
+    public TransitionBuilder WithAnimation(IChart chart)
+    {
+        return WithAnimation(new Animation()
+            .WithDuration(chart.View.AnimationsSpeed)
+            .WithEasingFunction(chart.View.EasingFunction));
     }
 
     /// <summary>

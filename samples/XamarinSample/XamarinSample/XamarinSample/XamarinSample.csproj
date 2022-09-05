@@ -128,6 +128,9 @@
     <Compile Update="General\MultiThreading\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\VisualElements\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\Sections2\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

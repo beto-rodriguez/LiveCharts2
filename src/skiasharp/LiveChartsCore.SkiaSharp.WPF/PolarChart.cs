@@ -39,9 +39,10 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
+    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
 
     #endregion
 
@@ -58,6 +59,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
             {
@@ -68,6 +71,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
 
         MouseWheel += OnMouseWheel;
         MouseDown += OnMouseDown;
@@ -122,6 +126,28 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                 (DependencyObject o, object value) =>
                 {
                     return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
+                }));
+
+    /// <summary>
+    /// The visual elements property
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsProperty =
+        DependencyProperty.Register(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(PolarChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (PolarChart)o;
+                    var observer = chart._visualsObserver;
+                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<ChartElement<SkiaSharpDrawingContext>>
+                    ? value
+                    : new List<ChartElement<SkiaSharpDrawingContext>>();
                 }));
 
     /// <summary>
@@ -214,6 +240,13 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
+    }
+
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />

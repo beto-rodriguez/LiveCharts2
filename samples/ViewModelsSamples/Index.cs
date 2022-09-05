@@ -88,6 +88,7 @@ public static class Index
 
         "General/Sections",
         "General/Sections2",
+        "General/VisualElements",
         "General/ChartToImage",
         "General/Tooltips",
         "General/Legends",

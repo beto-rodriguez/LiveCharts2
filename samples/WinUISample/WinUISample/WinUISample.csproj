@@ -47,6 +47,7 @@
     <None Remove="General\MultiThreading2\View.xaml" />
     <None Remove="General\MultiThreading\View.xaml" />
     <None Remove="General\NullPoints\View.xaml" />
+    <None Remove="General\VisualElements\View.xaml" />
     <None Remove="General\Sections2\View.xaml" />
     <None Remove="General\Sections\View.xaml" />
     <None Remove="General\TemplatedLegends\View.xaml" />
@@ -235,6 +236,9 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="General\NullPoints\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\Sections - Copy\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="General\Sections2\View.xaml">

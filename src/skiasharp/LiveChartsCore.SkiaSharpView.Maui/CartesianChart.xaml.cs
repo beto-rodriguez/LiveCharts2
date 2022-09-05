@@ -57,10 +57,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     protected Chart<SkiaSharpDrawingContext>? core;
 
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private double _lastScale = 0;
     private DateTime _panLocketUntil;
     private double _lastPanX = 0;
@@ -92,6 +93,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes = new List<ICartesianAxis>()
             {
@@ -102,6 +105,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
         canvas.SkCanvasView.EnableTouchEvents = true;
         canvas.SkCanvasView.Touch += OnSkCanvasTouched;
@@ -188,6 +192,22 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
                 var observer = chart._sectionsObserver;
                 observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
                 observer?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
+                if (chart.core is null) return;
+                chart.core.Update();
+            });
+
+    /// <summary>
+    /// The visual elements property.
+    /// </summary>
+    public static readonly BindableProperty VisualElementsProperty =
+        BindableProperty.Create(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(CartesianChart), new List<ChartElement<SkiaSharpDrawingContext>>(),
+            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
+            {
+                var chart = (CartesianChart)o;
+                var observer = chart._visualsObserver;
+                observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)oldValue);
+                observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -475,6 +495,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />

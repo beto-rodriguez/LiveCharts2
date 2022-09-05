@@ -50,6 +50,11 @@ public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
     IEnumerable<ISeries> Series { get; set; }
 
     /// <summary>
+    /// Gets or sets the visual elements.
+    /// </summary>
+    IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; set; }
+
+    /// <summary>
     /// Gets or sets the initial rotation in degrees, this angle specifies where the first pie slice will be drawn, then the remaining
     /// slices will stack according to its corresponding position.
     /// </summary>

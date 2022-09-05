@@ -35,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView;
 public static class DrawingFluentExtensions
 {
     /// <summary>
-    /// Adds a paint task to the canvas.
+    /// Initializes a drawing in the given canvas.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     public static Drawing Draw(this MotionCanvas<SkiaSharpDrawingContext> canvas)
