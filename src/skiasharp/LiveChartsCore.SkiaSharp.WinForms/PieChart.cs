@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -35,8 +36,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
 public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
-    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
+    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
     private double _initialRotation;
     private double _maxAngle = 360;
     private double? _total;
@@ -66,6 +69,21 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
                OnPropertyChanged();
            },
            true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+           (object? sender, NotifyCollectionChangedEventArgs e) =>
+           {
+               if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+               OnPropertyChanged();
+           },
+           (object? sender, PropertyChangedEventArgs e) =>
+           {
+               if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+               OnPropertyChanged();
+           },
+           true);
+
+        Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
         var c = Controls[0].Controls[0];
         c.MouseDown += OnMouseDown;
@@ -84,6 +102,20 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             _seriesObserver?.Dispose(_series);
             _seriesObserver?.Initialize(value);
             _series = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => _visuals;
+        set
+        {
+            _visualsObserver?.Dispose(_visuals);
+            _visualsObserver?.Initialize(value);
+            _visuals = value;
             OnPropertyChanged();
         }
     }
