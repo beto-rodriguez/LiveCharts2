@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -47,7 +48,8 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 {
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _canvas;
-    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart"/> class.
@@ -75,6 +77,20 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
                 if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
                 _core.Update();
             });
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            (object sender, NotifyCollectionChangedEventArgs e) =>
+            {
+                if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+                _core.Update();
+            },
+            (object sender, PropertyChangedEventArgs e) =>
+            {
+                if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+                _core.Update();
+            });
+
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -94,6 +110,22 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
                     var seriesObserver = chart._seriesObserver;
                     seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
                     seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    if (chart._core == null) return;
+                    chart._core.Update();
+                }));
+
+    /// <summary>
+    /// The visual elements property
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsProperty =
+        DependencyProperty.Register(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(PieChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (PieChart)o;
+                    var observer = chart._visualsObserver;
+                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -376,6 +408,13 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
