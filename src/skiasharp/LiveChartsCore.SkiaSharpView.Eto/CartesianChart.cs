@@ -43,10 +43,12 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private CollectionDeepObserver<ICartesianAxis> _xObserver;
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
     private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
     private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
+    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
     private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
 
@@ -67,6 +69,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes = new List<ICartesianAxis>()
@@ -141,6 +145,19 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => _visuals;
+        set
+        {
+            _visualsObserver?.Dispose(_visuals);
+            _visualsObserver?.Initialize(value);
+            _visuals = value;
+            OnPropertyChanged();
+        }
+    }
+
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
     public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
     {
@@ -188,10 +205,12 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         XAxes = Array.Empty<ICartesianAxis>();
         YAxes = Array.Empty<ICartesianAxis>();
         Sections = Array.Empty<RectangularSection>();
+        VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
         _seriesObserver = null!;
         _xObserver = null!;
         _yObserver = null!;
         _sectionsObserver = null!;
+        _visualsObserver = null!;
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
