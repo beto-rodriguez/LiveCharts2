@@ -100,6 +100,7 @@
     <_Globbed_Compile Remove="LiveChartsSamples\General\MultiThreading2\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\MultiThreading\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\NullPoints\View.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\General\Sections - Copy\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\Sections2\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\Sections\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\TemplatedLegends\View.xaml.cs" />

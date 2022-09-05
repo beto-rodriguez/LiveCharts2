@@ -133,7 +133,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
        AvaloniaProperty.Register<PolarChart, IEnumerable<ISeries>>(nameof(Series), Enumerable.Empty<ISeries>(), inherits: true);
 
     /// <summary>
-    /// The sections property
+    /// The visual elements property
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
         AvaloniaProperty.Register<PolarChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(

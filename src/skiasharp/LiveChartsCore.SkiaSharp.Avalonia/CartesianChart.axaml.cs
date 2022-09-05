@@ -163,11 +163,11 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
             nameof(Sections), Enumerable.Empty<Section<SkiaSharpDrawingContext>>(), inherits: true);
 
     /// <summary>
-    /// The sections property
+    /// The visual elements property
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
         AvaloniaProperty.Register<CartesianChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(
-            nameof(Sections), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
+            nameof(VisualElements), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
 
     /// <summary>
     /// The draw margin frame property

@@ -143,11 +143,11 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
 
     /// <summary>
-    /// The sections property
+    /// The visual elements property
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
         AvaloniaProperty.Register<PieChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(
-            nameof(Visual), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
+            nameof(VisualElements), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
 
     /// <summary>
     /// The initial rotation property
