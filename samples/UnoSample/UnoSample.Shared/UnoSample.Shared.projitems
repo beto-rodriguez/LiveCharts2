@@ -123,6 +123,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)LiveChartsSamples\General\NullPoints\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)LiveChartsSamples\General\VisualElements\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)LiveChartsSamples\General\Sections2\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
@@ -674,7 +677,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </_Globbled_Page>
-    <Page Include="@(_Globbled_Page)" />
+    <Page Include="$(MSBuildThisFileDirectory)LiveChartsSamples\General\VisualElements\View.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.xaml.cs" Exclude="@(Compile)">
       <DependentUpon>%(Filename)</DependentUpon>
     </_Globbed_Compile>
@@ -683,5 +688,11 @@
     <PRIResource Include="@(_Globbed_PRIResource)" />
     <_Globbed_Content Include="$(MSBuildThisFileDirectory)Assets/**/*.*" Exclude="@(Content)" />
     <Content Include="@(_Globbed_Content)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="C:\_dev\LiveCharts2\samples\UnoSample\UnoSample.Shared\LiveChartsSamples\General\Sections - Copy\View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

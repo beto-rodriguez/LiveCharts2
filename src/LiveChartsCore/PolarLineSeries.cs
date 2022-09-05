@@ -489,6 +489,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <returns></returns>
     protected override void OnPaintChanged(string? propertyName)
     {
+        base.OnPaintChanged(propertyName);
         OnSeriesMiniatureChanged();
         OnPropertyChanged();
     }

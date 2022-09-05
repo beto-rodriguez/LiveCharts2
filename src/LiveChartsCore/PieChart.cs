@@ -41,6 +41,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     private readonly HashSet<ISeries> _everMeasuredSeries = new();
+    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredVisuals = new();
     private readonly IPieChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
     private readonly bool _requiresLegendMeasureAlways = false;
@@ -70,6 +71,14 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// The series.
     /// </value>
     public IPieSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPieSeries<TDrawingContext>>();
+
+    /// <summary>
+    /// Gets the visual elements.
+    /// </summary>
+    /// <value>
+    /// The visual elements.
+    /// </value>
+    public ChartElement<TDrawingContext>[] VisualElements { get; private set; } = Array.Empty<ChartElement<TDrawingContext>>();
 
     /// <summary>
     /// Gets the drawable series.
@@ -163,6 +172,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             .Cast<IPieSeries<TDrawingContext>>()
             .ToArray();
 
+        VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
+
         LegendPosition = _chartView.LegendPosition;
         LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
@@ -221,6 +232,15 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
+        var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
+        foreach (var visual in VisualElements)
+        {
+            visual.Measure(this);
+            visual.RemoveOldPaints(View);
+            _ = _everMeasuredVisuals.Add(visual);
+            _ = toDeleteVisualElements.Remove(visual);
+        }
+
         var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
         foreach (var series in Series)
         {
@@ -234,6 +254,11 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         {
             series.SoftDeleteOrDispose(View);
             _ = _everMeasuredSeries.Remove(series);
+        }
+        foreach (var visual in toDeleteVisualElements)
+        {
+            visual.RemoveFromUI(this);
+            _ = _everMeasuredVisuals.Remove(visual);
         }
 
         InvokeOnUpdateStarted();
@@ -252,6 +277,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
         _everMeasuredSeries.Clear();
+        foreach (var item in _everMeasuredVisuals) item.RemoveFromUI(this);
+        _everMeasuredVisuals.Clear();
         IsFirstDraw = true;
     }
 }

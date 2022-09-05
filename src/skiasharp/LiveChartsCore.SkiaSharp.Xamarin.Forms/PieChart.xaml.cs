@@ -38,7 +38,6 @@ using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using c = Xamarin.Forms.Color;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 
@@ -52,7 +51,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// The core
     /// </summary>
     protected Chart<SkiaSharpDrawingContext>? core;
-    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private Grid? _grid;
 
     #endregion
@@ -87,8 +87,20 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
                if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
                core.Update();
            });
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+           (object sender, NotifyCollectionChangedEventArgs e) =>
+           {
+               if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+               core.Update();
+           },
+           (object sender, PropertyChangedEventArgs e) =>
+           {
+               if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+               core.Update();
+           });
 
         Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
         canvas.SkCanvasView.EnableTouchEvents = true;
         canvas.SkCanvasView.Touch += OnSkCanvasTouched;
@@ -130,6 +142,22 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
                   if (chart.core is null) return;
                   chart.core.Update();
               });
+
+    /// <summary>
+    /// The visual elements property.
+    /// </summary>
+    public static readonly BindableProperty VisualElementsProperty =
+        BindableProperty.Create(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(PieChart), new List<ChartElement<SkiaSharpDrawingContext>>(),
+            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
+            {
+                var chart = (PieChart)o;
+                var observer = chart._visualsObserver;
+                observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)oldValue);
+                observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)newValue);
+                if (chart.core is null) return;
+                chart.core.Update();
+            });
 
     /// <summary>
     /// The initial rotation property
@@ -215,7 +243,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty LegendTextBrushProperty =
         BindableProperty.Create(
-            nameof(LegendTextBrush), typeof(c), typeof(CartesianChart),
+            nameof(LegendTextBrush), typeof(Color), typeof(CartesianChart),
             new Color(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -223,7 +251,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty LegendBackgroundProperty =
         BindableProperty.Create(
-            nameof(LegendBackground), typeof(c), typeof(CartesianChart),
+            nameof(LegendBackground), typeof(Color), typeof(CartesianChart),
             new Color(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -343,7 +371,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             ? new LvcColor()
             : LvcColor.FromArgb(
                 (byte)(b.Color.A * 255), (byte)(b.Color.R * 255), (byte)(b.Color.G * 255), (byte)(b.Color.B * 255));
-        set => Background = new SolidColorBrush(new c(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
+        set => Background = new SolidColorBrush(new Color(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
     }
 
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
@@ -383,6 +411,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
@@ -651,8 +686,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
-        TooltipBackground = new c(background.R, background.G, background.B, background.A);
-        TooltipTextBrush = new c(textColor.R, textColor.G, textColor.B, textColor.A);
+        TooltipBackground = new Color(background.R, background.G, background.B, background.A);
+        TooltipTextBrush = new Color(textColor.R, textColor.G, textColor.B, textColor.A);
     }
 
     void IChartView.InvokeOnUIThread(Action action)

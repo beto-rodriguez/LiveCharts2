@@ -50,10 +50,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _canvas;
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
 
     #endregion
 
@@ -77,6 +78,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -91,6 +94,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             });
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
     }
 
     #region dependency properties
@@ -155,6 +159,22 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
                     var observer = chart._sectionsObserver;
                     observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
                     observer?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
+                    if (chart._core == null) return;
+                    chart._core.Update();
+                }));
+
+    /// <summary>
+    /// The visual elements property
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsProperty =
+        DependencyProperty.Register(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (CartesianChart)o;
+                    var observer = chart._visualsObserver;
+                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -487,6 +507,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     {
         get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />

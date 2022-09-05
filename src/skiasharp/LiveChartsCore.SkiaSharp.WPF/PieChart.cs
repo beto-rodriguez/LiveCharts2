@@ -37,7 +37,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
 public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
-    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
 
     static PieChart()
     {
@@ -59,9 +60,21 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             {
                 if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
                 core.Update();
-            });
+            }, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            (object? sender, NotifyCollectionChangedEventArgs e) =>
+            {
+                if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+                core.Update();
+            },
+            (object? sender, PropertyChangedEventArgs e) =>
+            {
+                if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+                core.Update();
+            }, true);
 
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
         MouseDown += OnMouseDown;
     }
 
@@ -83,6 +96,28 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
                 (DependencyObject o, object value) =>
                 {
                     return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
+                }));
+
+    /// <summary>
+    /// The visual elements property
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsProperty =
+        DependencyProperty.Register(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(PieChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (PieChart)o;
+                    var observer = chart._visualsObserver;
+                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<ChartElement<SkiaSharpDrawingContext>>
+                    ? value
+                    : new List<ChartElement<SkiaSharpDrawingContext>>();
                 }));
 
     /// <summary>
@@ -113,6 +148,13 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
@@ -155,7 +197,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         core?.Unload();
     }
 
-    private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
         var p = e.GetPosition(this);
         core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);

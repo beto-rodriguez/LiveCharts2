@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
@@ -532,6 +531,16 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         context.Height = w + MaxSeriesStroke * 2;
 
         CanvasSchedule = context;
+    }
+
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
+    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
+    {
+        return series is LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint> lineSeries &&
+            Name == series.Name &&
+            !((ISeries)this).PaintsChanged &&
+            Fill == lineSeries.Fill && Stroke == lineSeries.Stroke &&
+            GeometryFill == lineSeries.GeometryFill && GeometryStroke == lineSeries.GeometryStroke;
     }
 
     /// <summary>

@@ -66,16 +66,26 @@ public partial class ViewModel
             Name = "Tens",
             NameTextSize = 14,
             NamePaint = new SolidColorPaint(s_blue),
+            NamePadding = new LiveChartsCore.Drawing.Padding(0, 20),
+            Padding =  new LiveChartsCore.Drawing.Padding(0, 0, 20, 0),
             TextSize = 12,
             LabelsPaint = new SolidColorPaint(s_blue),
+            TicksPaint = new SolidColorPaint(s_blue),
+            SubticksPaint = new SolidColorPaint(s_blue),
+            DrawTicksPath = true
         },
         new Axis // the "hundreds" series will be scaled on this axis
         {
             Name = "Hundreds",
             NameTextSize = 14,
             NamePaint = new SolidColorPaint(s_red),
+            NamePadding = new LiveChartsCore.Drawing.Padding(0, 20),
+            Padding =  new LiveChartsCore.Drawing.Padding(20, 0, 0, 0),
             TextSize = 12,
             LabelsPaint = new SolidColorPaint(s_red),
+            TicksPaint = new SolidColorPaint(s_red),
+            SubticksPaint = new SolidColorPaint(s_red),
+            DrawTicksPath = true,
             ShowSeparatorLines = false,
             Position = LiveChartsCore.Measure.AxisPosition.End
         },
@@ -83,9 +93,14 @@ public partial class ViewModel
         {
             Name = "Thousands",
             NameTextSize = 14,
+            NamePadding = new LiveChartsCore.Drawing.Padding(0, 20),
+            Padding =  new LiveChartsCore.Drawing.Padding(20, 0, 0, 0),
             NamePaint = new SolidColorPaint(s_yellow),
             TextSize = 12,
             LabelsPaint = new SolidColorPaint(s_yellow),
+            TicksPaint = new SolidColorPaint(s_yellow),
+            SubticksPaint = new SolidColorPaint(s_yellow),
+            DrawTicksPath = true,
             ShowSeparatorLines = false,
             Position = LiveChartsCore.Measure.AxisPosition.End
         }

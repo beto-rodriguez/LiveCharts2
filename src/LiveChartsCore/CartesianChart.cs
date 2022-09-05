@@ -43,11 +43,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     internal readonly HashSet<ISeries> _everMeasuredSeries = new();
     internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
     internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
+    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredVisuals = new();
     private readonly ICartesianChartView<TDrawingContext> _chartView;
     private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
-    private readonly bool _requiresLegendMeasureAlways = false;
     private ZoomAndPanMode _zoomMode;
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
@@ -60,17 +60,14 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="canvas">The canvas.</param>
     /// <param name="zoomingSection">The zooming section.</param>
-    /// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
     public CartesianChart(
         ICartesianChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
-        ISizedGeometry<TDrawingContext>? zoomingSection,
-        bool requiresLegendMeasureAlways = false)
+        ISizedGeometry<TDrawingContext>? zoomingSection)
         : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
-        _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
         _zoomingSection = zoomingSection ?? throw new Exception($"{nameof(zoomingSection)} is required.");
         _zoomingSection.X = -1;
         _zoomingSection.Y = -1;
@@ -109,6 +106,14 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The sections.
     /// </value>
     public Section<TDrawingContext>[] Sections { get; private set; } = Array.Empty<Section<TDrawingContext>>();
+
+    /// <summary>
+    /// Gets the visual elements.
+    /// </summary>
+    /// <value>
+    /// The visual elements.
+    /// </value>
+    public ChartElement<TDrawingContext>[] VisualElements { get; private set; } = Array.Empty<ChartElement<TDrawingContext>>();
 
     /// <summary>
     /// Gets the drawable series.
@@ -443,6 +448,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             .ToArray();
 
         Sections = _chartView.Sections?.Where(x => x.IsVisible).ToArray() ?? Array.Empty<Section<TDrawingContext>>();
+        VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         #endregion
 
@@ -535,17 +541,19 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
+        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || SizeChanged()))
         {
             Legend.Draw(this);
-            Update();
             PreviousLegendPosition = LegendPosition;
             PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
+            foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
             preserveFirstDraw = IsFirstDraw;
+            SetPreviousSize();
+            Measure();
+            return;
         }
 
         // calculate draw margin
-
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         SetDrawMargin(ControlSize, m);
@@ -566,6 +574,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var drawablePlane = (IPlane<TDrawingContext>)axis;
             var ns = drawablePlane.GetNameLabelSize(this);
             var s = drawablePlane.GetPossibleSize(this);
+            axis.Size = s;
+
             if (axis.Position == AxisPosition.Start)
             {
                 // X Bottom
@@ -611,6 +621,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var drawablePlane = (IPlane<TDrawingContext>)axis;
             var ns = drawablePlane.GetNameLabelSize(this);
             var s = drawablePlane.GetPossibleSize(this);
+            axis.Size = s;
             var w = s.Width;
 
             if (axis.Position == AxisPosition.Start)
@@ -715,6 +726,15 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             _ = toDeleteSections.Remove(section);
         }
 
+        var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
+        foreach (var visual in VisualElements)
+        {
+            visual.Measure(this);
+            visual.RemoveOldPaints(View);
+            _ = _everMeasuredVisuals.Add(visual);
+            _ = toDeleteVisualElements.Remove(visual);
+        }
+
         var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
         foreach (var series in Series)
         {
@@ -751,6 +771,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             section.RemoveFromUI(this);
             _ = _everMeasuredSections.Remove(section);
         }
+        foreach (var visual in toDeleteVisualElements)
+        {
+            visual.RemoveFromUI(this);
+            _ = _everMeasuredVisuals.Remove(visual);
+        }
 
         foreach (var axis in totalAxes)
         {
@@ -783,6 +808,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _everMeasuredAxes.Clear();
         foreach (var item in _everMeasuredSections) item.RemoveFromUI(this);
         _everMeasuredSections.Clear();
+        foreach (var item in _everMeasuredVisuals) item.RemoveFromUI(this);
+        _everMeasuredVisuals.Clear();
         foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
         _everMeasuredSeries.Clear();
 
@@ -845,6 +872,18 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     {
         if (_sectionZoomingStart is not null)
         {
+            var xy = Math.Sqrt(Math.Pow(point.X - _sectionZoomingStart.Value.X, 2) + Math.Pow(point.Y - _sectionZoomingStart.Value.Y, 2));
+            if (xy < 15)
+            {
+                _zoomingSection.X = -1;
+                _zoomingSection.Y = -1;
+                _zoomingSection.Width = 0;
+                _zoomingSection.Height = 0;
+                Update();
+                _sectionZoomingStart = null;
+                return;
+            }
+
             if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
             {
                 for (var i = 0; i < XAxes.Length; i++)
@@ -916,7 +955,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             _zoomingSection.Width = 0;
             _zoomingSection.Height = 0;
             Update();
-
             _sectionZoomingStart = null;
             return;
         }

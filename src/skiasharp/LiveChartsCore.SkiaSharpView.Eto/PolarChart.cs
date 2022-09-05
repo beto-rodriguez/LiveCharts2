@@ -43,9 +43,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     private CollectionDeepObserver<ISeries> _seriesObserver;
     private CollectionDeepObserver<IPolarAxis> _angleObserver;
     private CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private IEnumerable<IPolarAxis> _angleAxes = new List<PolarAxis>();
     private IEnumerable<IPolarAxis> _radiusAxes = new List<PolarAxis>();
+    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarChart"/> class.
@@ -63,6 +65,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         AngleAxes = new List<IPolarAxis>()
             {
@@ -141,6 +145,19 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => _visuals;
+        set
+        {
+            _visualsObserver?.Dispose(_visuals);
+            _visualsObserver?.Initialize(value);
+            _visuals = value;
+            OnPropertyChanged();
+        }
+    }
+
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
     public IEnumerable<IPolarAxis> AngleAxes
     {
@@ -183,9 +200,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         Series = Array.Empty<ISeries>();
         AngleAxes = Array.Empty<IPolarAxis>();
         RadiusAxes = Array.Empty<IPolarAxis>();
+        VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
         _seriesObserver = null!;
         _angleObserver = null!;
         _radiusObserver = null!;
+        _visualsObserver = null!;
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -59,7 +60,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
     private Chart<SkiaSharpDrawingContext>? _core;
-    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private MotionCanvas? _avaloniaCanvas;
 
     #endregion
@@ -98,9 +100,21 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
            {
                if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
                _core.Update();
-           });
+           }, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+          (object? sender, NotifyCollectionChangedEventArgs e) =>
+          {
+              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+              _core.Update();
+          },
+          (object? sender, PropertyChangedEventArgs e) =>
+          {
+              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+              _core.Update();
+          }, true);
 
         Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
         PointerLeave += Chart_PointerLeave;
 
         PointerMoved += Chart_PointerMoved;
@@ -127,6 +141,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
         AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
+
+    /// <summary>
+    /// The visual elements property
+    /// </summary>
+    public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
+        AvaloniaProperty.Register<PieChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(
+            nameof(VisualElements), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
 
     /// <summary>
     /// The initial rotation property
@@ -354,6 +375,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
@@ -692,6 +720,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         {
             _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
             _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            return;
+        }
+
+        if (change.Property.Name == nameof(VisualElements))
+        {
+            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.OldValue.Value);
+            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.NewValue.Value);
             return;
         }
 

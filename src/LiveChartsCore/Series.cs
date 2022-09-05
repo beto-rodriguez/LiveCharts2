@@ -117,6 +117,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             (sender, e) => NotifySubscribers());
     }
 
+    bool ISeries.PaintsChanged { get; set; }
+
     /// <inheritdoc cref="ISeries.ActivePoints" />
     public HashSet<ChartPoint> ActivePoints => everFetched;
 
@@ -453,6 +455,13 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
         DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+    }
+
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.OnPaintChanged(string?)"/>
+    protected override void OnPaintChanged(string? propertyName)
+    {
+        base.OnPaintChanged(propertyName);
+        ((ISeries)this).PaintsChanged = true;
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>

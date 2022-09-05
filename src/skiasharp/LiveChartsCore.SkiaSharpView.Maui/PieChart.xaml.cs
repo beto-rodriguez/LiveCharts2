@@ -52,7 +52,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// The core
     /// </summary>
     protected Chart<SkiaSharpDrawingContext>? core;
-    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
 
     #endregion
 
@@ -86,8 +87,20 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
                if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
                core.Update();
            });
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+          (object? sender, NotifyCollectionChangedEventArgs e) =>
+          {
+              if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+              core.Update();
+          },
+          (object? sender, PropertyChangedEventArgs e) =>
+          {
+              if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+              core.Update();
+          });
 
         Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
         canvas.SkCanvasView.EnableTouchEvents = true;
         canvas.SkCanvasView.Touch += OnSkCanvasTouched;
@@ -129,6 +142,22 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
                   if (chart.core is null) return;
                   chart.core.Update();
               });
+
+    /// <summary>
+    /// The visual elements property.
+    /// </summary>
+    public static readonly BindableProperty VisualElementsProperty =
+        BindableProperty.Create(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(PieChart), new List<ChartElement<SkiaSharpDrawingContext>>(),
+            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
+            {
+                var chart = (PieChart)o;
+                var observer = chart._visualsObserver;
+                observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)oldValue);
+                observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)newValue);
+                if (chart.core is null) return;
+                chart.core.Update();
+            });
 
     /// <summary>
     /// The initial rotation property
@@ -380,6 +409,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />

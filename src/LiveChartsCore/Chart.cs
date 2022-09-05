@@ -409,6 +409,14 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
+    /// Saves the previous size of the chart.
+    /// </summary>
+    protected void SetPreviousSize()
+    {
+        _previousSize = ControlSize;
+    }
+
+    /// <summary>
     /// Invokes the <see cref="Measuring"/> event.
     /// </summary>
     /// <returns></returns>
@@ -423,7 +431,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <returns></returns>
     protected void InvokeOnUpdateStarted()
     {
-        _previousSize = ControlSize;
+        SetPreviousSize();
         UpdateStarted?.Invoke(View);
     }
 
@@ -465,7 +473,6 @@ public abstract class Chart<TDrawingContext> : IChart
             var b = newSeries[i];
 
             if (!a.MiniatureEquals(b)) return true;
-            //if (a.Name != b.Name || a.Fill != b.Fill || a.Stroke != b.Stroke) return true;
         }
 
         return false;

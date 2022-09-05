@@ -125,8 +125,8 @@ public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingCont
             (float)(cx + Math.Cos(startAngle * toRadians) * wedge),
             (float)(cy + Math.Sin(startAngle * toRadians) * wedge));
         path.LineTo(
-            (float)(cx + Math.Cos(startAngle * toRadians) * (r + pushout)),
-            (float)(cy + Math.Sin(startAngle * toRadians) * (r + pushout)));
+            (float)(cx + Math.Cos(startAngle * toRadians) * r),
+            (float)(cy + Math.Sin(startAngle * toRadians) * r));
         path.ArcTo(
             new SKRect { Left = X, Top = Y, Size = new SKSize { Width = Width, Height = Height } },
             startAngle,

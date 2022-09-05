@@ -159,10 +159,7 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
                 Canvas,
                 new SKImageInfo(Height, Width),
                 surface,
-                canvas)
-            {
-                ClearColor = Background
-            });
+                canvas));
 
         _core.Unload();
 

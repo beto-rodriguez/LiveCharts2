@@ -656,6 +656,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     /// <returns></returns>
     protected override void OnPaintChanged(string? propertyName)
     {
+        base.OnPaintChanged(propertyName);
         OnPropertyChanged(propertyName);
     }
 

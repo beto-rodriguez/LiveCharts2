@@ -111,6 +111,9 @@
     <Compile Update="General\MultiThreading\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="General\VisualElements\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\Sections2\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

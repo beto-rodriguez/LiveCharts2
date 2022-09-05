@@ -420,6 +420,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <returns></returns>
     protected override void OnPaintChanged(string? propertyName)
     {
+        base.OnPaintChanged(propertyName);
         OnSeriesMiniatureChanged();
         OnPropertyChanged();
     }
