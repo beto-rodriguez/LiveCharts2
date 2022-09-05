@@ -28,7 +28,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
@@ -62,7 +61,7 @@ public abstract class GeometryVisualElement : ChartElement<SkiaSharpDrawingConte
     public IPaint<SkiaSharpDrawingContext>? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value);
+        set => SetPaintProperty(ref _stroke, value, true);
     }
 
     /// <summary>

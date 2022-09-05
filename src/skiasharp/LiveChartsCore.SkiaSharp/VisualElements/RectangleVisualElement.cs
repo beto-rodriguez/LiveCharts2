@@ -84,8 +84,8 @@ public class RectangleVisualElement : GeometryVisualElement
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
-            w = secondaryAxisScale.ToPixels(w);
-            h = primaryAxisScale.ToPixels(h);
+            w = secondaryAxisScale.MeasureInPixels(w);
+            h = primaryAxisScale.MeasureInPixels(h);
         }
 
         if (_rectangleGeometry is null)

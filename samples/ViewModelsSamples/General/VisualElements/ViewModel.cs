@@ -15,13 +15,14 @@ public partial class ViewModel
     {
          new RectangleVisualElement
          {
-             X = 5,
-             Y = 1,
+             X = 2.5,
+             Y = 3.5,
              LocationUnit = MeasureUnit.ChartValues,
-             Width = 1,
-             Height = 1,
+             Width = 4,
+             Height = 2,
              SizeUnit = MeasureUnit.ChartValues,
-             Stroke = new SolidColorPaint(SKColors.Red, 2)
+             Fill = new SolidColorPaint(new SKColor(239, 83, 80, 120)) { ZIndex = 10 },
+             Stroke = new SolidColorPaint(new SKColor(239, 83, 80)) { ZIndex = 10, StrokeThickness = 1.5f },
          }
     };
 
