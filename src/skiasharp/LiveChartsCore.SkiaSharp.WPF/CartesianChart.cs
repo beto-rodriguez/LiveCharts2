@@ -46,6 +46,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<IChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private readonly RectangleGeometry _zoomingSection = new();
 
     #endregion
@@ -64,6 +65,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _visualsObserver = new CollectionDeepObserver<IChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
@@ -179,6 +182,28 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                 }));
 
     /// <summary>
+    /// The visual elements property
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsProperty =
+        DependencyProperty.Register(
+            nameof(VisualElements), typeof(IEnumerable<IChartElement<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (CartesianChart)o;
+                    var observer = chart._visualsObserver;
+                    observer?.Dispose((IEnumerable<IChartElement<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<IChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<Section<SkiaSharpDrawingContext>>
+                    ? value
+                    : new List<Section<SkiaSharpDrawingContext>>();
+                }));
+
+    /// <summary>
     /// The zoom mode property
     /// </summary>
     public static readonly DependencyProperty DrawMarginFrameProperty =
@@ -242,6 +267,13 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     {
         get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<IChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<IChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
@@ -340,21 +372,21 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         core.Update();
     }
 
-    private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
         _ = CaptureMouse();
         var p = e.GetPosition(this);
         core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
     }
 
-    private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void OnMouseUp(object sender, MouseButtonEventArgs e)
     {
         var p = e.GetPosition(this);
         core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
         ReleaseMouseCapture();
     }
 
-    private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
+    private void OnMouseWheel(object? sender, MouseWheelEventArgs e)
     {
         if (core is null) throw new Exception("core not found");
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
