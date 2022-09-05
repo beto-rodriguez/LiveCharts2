@@ -110,6 +110,9 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series"/>
     public IEnumerable<ISeries> Series { get; set; } = Array.Empty<ISeries>();
 
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.VisualElements"/>
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation"/>
     public double InitialRotation { get; set; }
 
