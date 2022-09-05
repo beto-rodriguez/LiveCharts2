@@ -40,7 +40,6 @@ using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using c = Xamarin.Forms.Color;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 
@@ -55,10 +54,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     protected Chart<SkiaSharpDrawingContext>? core;
 
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private Grid? _grid;
     private double _lastScale = 0;
     private DateTime _panLocketUntil;
@@ -91,6 +91,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes = new List<ICartesianAxis>()
             {
@@ -101,6 +103,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
         canvas.SkCanvasView.EnableTouchEvents = true;
         canvas.SkCanvasView.Touch += OnSkCanvasTouched;
@@ -187,6 +190,22 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
                 var observer = chart._sectionsObserver;
                 observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
                 observer?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
+                if (chart.core is null) return;
+                chart.core.Update();
+            });
+
+    /// <summary>
+    /// The visual elements property.
+    /// </summary>
+    public static readonly BindableProperty VisualElementsProperty =
+        BindableProperty.Create(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(CartesianChart), new List<ChartElement<SkiaSharpDrawingContext>>(),
+            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
+            {
+                var chart = (CartesianChart)o;
+                var observer = chart._visualsObserver;
+                observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)oldValue);
+                observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -415,7 +434,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             ? new LvcColor()
             : LvcColor.FromArgb(
                 (byte)(b.Color.R * 255), (byte)(b.Color.G * 255), (byte)(b.Color.B * 255), (byte)(b.Color.A * 255));
-        set => Background = new SolidColorBrush(new c(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
+        set => Background = new SolidColorBrush(new Color(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
     }
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -475,6 +494,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
@@ -758,8 +784,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
-        TooltipBackground = new c(background.R, background.G, background.B, background.A);
-        TooltipTextBrush = new c(textColor.R, textColor.G, textColor.B, textColor.A);
+        TooltipBackground = new Color(background.R, background.G, background.B, background.A);
+        TooltipTextBrush = new Color(textColor.R, textColor.G, textColor.B, textColor.A);
     }
 
     void IChartView.InvokeOnUIThread(Action action)
