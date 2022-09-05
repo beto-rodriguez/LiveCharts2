@@ -21,8 +21,8 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.1-preview.91" />
-    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.1-preview.91" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.1" />
+    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.1" />
     <PackageReference Include="Uno.WinUI" Version="4.4.5" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">

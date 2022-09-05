@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.WPF" Version="2.88.1-preview.91" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="2.88.1" />
   </ItemGroup>
 
   <ItemGroup>

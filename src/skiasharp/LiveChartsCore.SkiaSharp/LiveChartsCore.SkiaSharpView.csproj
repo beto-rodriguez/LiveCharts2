@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -37,8 +37,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.1-preview.91" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.1-preview.91" />
+    <PackageReference Include="SkiaSharp" Version="2.88.1" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.1" />
   </ItemGroup>
 
   <ItemGroup>
