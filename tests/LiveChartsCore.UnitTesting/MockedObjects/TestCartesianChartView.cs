@@ -96,6 +96,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
     public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; }
     public object SyncContext { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
 
     public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
     public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;

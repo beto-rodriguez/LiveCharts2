@@ -26,7 +26,7 @@ public partial class ViewModel
         {
             // Use the Label property to indicate the format of the labels in the axis
             // The Labeler takes the value of the label as parameter and must return it as string
-            Labeler = (value) => "so long label with this Day " + value,
+            Labeler = (value) => "Day " + value,
 
             // The MinStep property lets you define the minimum separation (in chart values scale)
             // between every axis separator, in this case we don't want decimals,
@@ -44,7 +44,6 @@ public partial class ViewModel
     {
         new Axis
         {
-            IsVisible = false,
             LabelsRotation = 15,
 
             // Now the Y axis we will display it as currency
