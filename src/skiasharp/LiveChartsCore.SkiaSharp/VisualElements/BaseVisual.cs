@@ -32,12 +32,10 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
-/// Defines a visual element with stroke and fill properties.
+/// Defines the base visual element class, inheriting from this class makes it easy to implement a visual element.
 /// </summary>
-public abstract class GeometryVisualElement : ChartElement<SkiaSharpDrawingContext>, INotifyPropertyChanged
+public abstract class BaseVisual : ChartElement<SkiaSharpDrawingContext>, INotifyPropertyChanged
 {
-    private IPaint<SkiaSharpDrawingContext>? _fill;
-    private IPaint<SkiaSharpDrawingContext>? _stroke;
     private int _scalesXAt;
     private int _scalesYAt;
 
@@ -45,24 +43,6 @@ public abstract class GeometryVisualElement : ChartElement<SkiaSharpDrawingConte
     /// Called when a property changes.
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <summary>
-    /// Gets or sets the fill paint.
-    /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? Fill
-    {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the stroke paint.
-    /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
-    {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
-    }
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
@@ -116,12 +96,6 @@ public abstract class GeometryVisualElement : ChartElement<SkiaSharpDrawingConte
         if (primary is null || secondary is null) throw new Exception($"This chart does not support VisualElements");
 
         Draw(chart, primary, secondary);
-    }
-
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _fill, _stroke };
     }
 
     /// <summary>

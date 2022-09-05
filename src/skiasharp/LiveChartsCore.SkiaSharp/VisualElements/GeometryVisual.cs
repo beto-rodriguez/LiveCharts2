@@ -20,55 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
 /// Defines a visual element in a chart that draws a rectangle geometry in the user interface.
 /// </summary>
-public class RectangleVisualElement : GeometryVisualElement
+public class GeometryVisual<TGeometry> : BaseGeometryVisual
+    where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
 {
-    private RectangleGeometry? _rectangleGeometry;
-    private double _x;
-    private double _y;
-    private double _width;
-    private double _height;
+    private TGeometry? _rectangleGeometry;
 
-    /// <summary>
-    /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
-    /// </summary>
-    public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
-
-    /// <summary>
-    /// Gets or sets the height of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
-    /// </summary>
-    public double Width { get => _width; set { _width = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the width of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
-    /// </summary>
-    public double Height { get => _height; set { _height = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the unit of the <see cref="Height"/> and <see cref="Width"/> properties.
-    /// </summary>
-    public MeasureUnit SizeUnit { get; set; } = MeasureUnit.Pixels;
-
-    /// <inheritdoc cref="GeometryVisualElement.Draw"/>
+    /// <inheritdoc cref="BaseVisual.Draw"/>
     protected override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale)
     {
         var x = (float)X;
@@ -78,19 +45,19 @@ public class RectangleVisualElement : GeometryVisualElement
 
         if (SizeUnit == MeasureUnit.ChartValues)
         {
-            x = secondaryAxisScale.ToPixels(x);
-            y = primaryAxisScale.ToPixels(y);
-        }
-
-        if (LocationUnit == MeasureUnit.ChartValues)
-        {
             w = secondaryAxisScale.MeasureInPixels(w);
             h = primaryAxisScale.MeasureInPixels(h);
         }
 
+        if (LocationUnit == MeasureUnit.ChartValues)
+        {
+            x = secondaryAxisScale.ToPixels(x);
+            y = primaryAxisScale.ToPixels(y);
+        }
+
         if (_rectangleGeometry is null)
         {
-            _rectangleGeometry = new RectangleGeometry { X = x, Y = y, Width = w, Height = h };
+            _rectangleGeometry = new TGeometry { X = x, Y = y, Width = w, Height = h };
 
             _ = _rectangleGeometry
                 .TransitionateProperties()
