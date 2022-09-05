@@ -69,7 +69,7 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// <summary>
     /// Gets or sets the visual elements.
     /// </summary>
-    IEnumerable<IChartElement<TDrawingContext>> VisualElements { get; set; }
+    IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; set; }
 
     /// <summary>
     /// Gets or sets the series to plot in the user interface.

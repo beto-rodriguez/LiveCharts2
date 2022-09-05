@@ -46,7 +46,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
-    private readonly CollectionDeepObserver<IChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private readonly RectangleGeometry _zoomingSection = new();
 
     #endregion
@@ -66,7 +66,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<IChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
@@ -79,6 +79,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
 
         MouseWheel += OnMouseWheel;
         MouseDown += OnMouseDown;
@@ -186,21 +187,21 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     public static readonly DependencyProperty VisualElementsProperty =
         DependencyProperty.Register(
-            nameof(VisualElements), typeof(IEnumerable<IChartElement<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._visualsObserver;
-                    observer?.Dispose((IEnumerable<IChartElement<SkiaSharpDrawingContext>>)args.OldValue);
-                    observer?.Initialize((IEnumerable<IChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
                 (DependencyObject o, object value) =>
                 {
-                    return value is IEnumerable<Section<SkiaSharpDrawingContext>>
+                    return value is IEnumerable<ChartElement<SkiaSharpDrawingContext>>
                     ? value
-                    : new List<Section<SkiaSharpDrawingContext>>();
+                    : new List<ChartElement<SkiaSharpDrawingContext>>();
                 }));
 
     /// <summary>
@@ -270,9 +271,9 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<IChartElement<SkiaSharpDrawingContext>> VisualElements
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
-        get => (IEnumerable<IChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 
