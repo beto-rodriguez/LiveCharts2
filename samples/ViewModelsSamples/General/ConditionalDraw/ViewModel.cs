@@ -6,6 +6,7 @@ using LiveChartsCore.ConditionalDraw;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 
 namespace ViewModelsSamples.General.ConditionalDraw;
@@ -20,7 +21,7 @@ public partial class ViewModel
             Name = "Mary",
             Values = new ObservableValue[] { new(2), new(5), new(4), new(6), new(8), new(3), new(2), new(4), new(6) }
         }
-        .UsePaint(new SolidColorPaint(SKColors.Black) { IsStroke = true, StrokeThickness = 5 })
+        .UsePaint(new SolidColorPaint(SKColors.White.WithAlpha(200)))
         .When(point => point.Model?.Value > 5);
 
         var series2 = new ColumnSeries<City>
@@ -33,7 +34,7 @@ public partial class ViewModel
                 point.SecondaryValue = point.Context.Entity.EntityIndex;
             }
         }
-        .UsePaint(new SolidColorPaint(SKColors.Black) { IsStroke = true, StrokeThickness = 5 })
+        .UsePaint(new SolidColorPaint(SKColors.White.WithAlpha(200)))
         .When(point => point.Model?.Population > 5);
 
         Series = new ISeries[]
@@ -48,6 +49,26 @@ public partial class ViewModel
 
     public ISeries[] Series { get; set; }
 
+    public RectangularSection[] Sections { get; set; } =
+    {
+        new RectangularSection
+        {
+            Yi = 5,
+            Yj = 5,
+            Stroke = new SolidColorPaint
+            {
+                Color = SKColors.Black,
+                StrokeThickness = 3,
+                PathEffect = new DashEffect(new float[] { 6, 6 })
+            }
+        }
+    };
+
+    public Axis[] Y { get; set; } =
+    {
+        new Axis { MinLimit = 0 }
+    };
+
     private async void Randomize<T>(ISeries<T> series)
     {
         var r = new Random();
@@ -55,7 +76,7 @@ public partial class ViewModel
 
         while (true)
         {
-            await Task.Delay(500);
+            await Task.Delay(3000);
 
             foreach (var item in series.Values)
             {

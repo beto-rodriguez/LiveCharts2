@@ -7,6 +7,8 @@
     <vms:ViewModel/>
   </UserControl.DataContext>
   <lvc:CartesianChart
-      Series="{Binding Series}">
+      Series="{Binding Series}"
+      Sections="{Binding Sections}"
+      YAxes="{Binding Y}">
   </lvc:CartesianChart>
 </UserControl>
