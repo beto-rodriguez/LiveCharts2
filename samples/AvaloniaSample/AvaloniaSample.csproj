@@ -112,6 +112,9 @@
     <Compile Update="Financial\BasicCandlesticks\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\ConditionalDraw\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\MultiThreading2\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

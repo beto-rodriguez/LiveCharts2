@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Diagnostics;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -35,12 +37,21 @@ namespace LiveChartsCore.SkiaSharpView;
 public static class DrawingFluentExtensions
 {
     /// <summary>
-    /// Initializes a drawing in the given canvas.
+    /// Initializes a drawing in the given canvas, it is just a simplified API to draw in the chart.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     public static Drawing Draw(this MotionCanvas<SkiaSharpDrawingContext> canvas)
     {
         return new Drawing(canvas);
+    }
+
+    /// <summary>
+    /// Initializes a drawing in the canvas of the given chart.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    public static Drawing Draw(this IChartView chart)
+    {
+        return Draw(((Chart<SkiaSharpDrawingContext>)chart.CoreChart).Canvas);
     }
 
     /// <summary>

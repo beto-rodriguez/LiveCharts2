@@ -20,21 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing;
 
-// Note #20221909
-// ToDo:
-// IVisualChartPoint? is it necessary?
-// maybe we just need to make this an IDrawable<T>.
+namespace LiveChartsCore.ConditionalDraw;
 
 /// <summary>
-/// Defines an object that contains a <see cref="IDrawable{TDrawingContext}"/> to highlight when the point requires so.
+/// Defines some conditional drawing extensions, things will draw according to this conditions...
 /// </summary>
-public interface IVisualChartPoint<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public static class ConditionalDrawExtensions
 {
     /// <summary>
-    /// Gets the drawable to style when a chart points requires to highlight it.
+    /// Returns a <see cref="ConditionalDrawBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> for the given paint.
     /// </summary>
-    IGeometry<TDrawingContext>? HighlightableGeometry { get; }
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TVisual"></typeparam>
+    /// <typeparam name="TLabel"></typeparam>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <param name="series">The series.</param>
+    /// <param name="paint">The paint.</param>
+    /// <returns></returns>
+    public static ConditionalDrawBuilder<TModel, TVisual, TLabel, TDrawingContext> UsePaint<TModel, TVisual, TLabel, TDrawingContext>(
+        this Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    {
+        return new ConditionalDrawBuilder<TModel, TVisual, TLabel, TDrawingContext>(series, paint);
+    }
 }
