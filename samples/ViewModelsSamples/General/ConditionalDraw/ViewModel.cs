@@ -21,7 +21,7 @@ public partial class ViewModel
             Name = "Mary",
             Values = new ObservableValue[] { new(2), new(5), new(4), new(6), new(8), new(3), new(2), new(4), new(6) }
         }
-        .UsePaint(new SolidColorPaint(SKColors.White.WithAlpha(200)))
+        .WithConditionalPaint(new SolidColorPaint(SKColors.Black.WithAlpha(50)))
         .When(point => point.Model?.Value > 5);
 
         var series2 = new ColumnSeries<City>
@@ -34,7 +34,7 @@ public partial class ViewModel
                 point.SecondaryValue = point.Context.Entity.EntityIndex;
             }
         }
-        .UsePaint(new SolidColorPaint(SKColors.White.WithAlpha(200)))
+        .WithConditionalPaint(new SolidColorPaint(SKColors.Black.WithAlpha(50)))
         .When(point => point.Model?.Population > 5);
 
         Series = new ISeries[]

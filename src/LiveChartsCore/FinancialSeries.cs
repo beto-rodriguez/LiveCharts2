@@ -408,7 +408,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    protected override IPaint<TDrawingContext>?[] GetPaintTasks()
+    public override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint, hoverPaint };
     }

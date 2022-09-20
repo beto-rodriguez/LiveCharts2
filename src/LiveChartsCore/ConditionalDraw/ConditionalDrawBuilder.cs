@@ -27,9 +27,9 @@ using LiveChartsCore.Kernel;
 namespace LiveChartsCore.ConditionalDraw;
 
 /// <summary>
-/// Defines a <see cref="ConditionalDrawBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> instance.
+/// Defines a <see cref="ConditionalPaintBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> instance.
 /// </summary>
-public class ConditionalDrawBuilder<TModel, TVisual, TLabel, TDrawingContext>
+public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
     where TDrawingContext : DrawingContext
     where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -44,14 +44,10 @@ public class ConditionalDrawBuilder<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     /// <param name="series">The series.</param>
     /// <param name="paint">The paint.</param>
-    public ConditionalDrawBuilder(Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
+    public ConditionalPaintBuilder(Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
     {
         _series = series;
         _paint = paint;
-
-        // let's just make things work magically
-        // just set an 'above all' z-index.
-        if (paint.ZIndex == 0) paint.ZIndex = ((ISeries)series).SeriesId + 1050;
     }
 
     /// <summary>
@@ -91,6 +87,12 @@ public class ConditionalDrawBuilder<TModel, TVisual, TLabel, TDrawingContext>
         if (isTriggered)
         {
             _paint.AddGeometryToPaintTask(canvas, drawable);
+
+            foreach (var paint in _series.GetPaintTasks())
+            {
+                if (paint is null) continue;
+                paint.RemoveGeometryFromPainTask(canvas, drawable);
+            }
         }
         else
         {

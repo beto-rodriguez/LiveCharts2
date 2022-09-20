@@ -30,21 +30,21 @@ namespace LiveChartsCore.ConditionalDraw;
 public static class ConditionalDrawExtensions
 {
     /// <summary>
-    /// Returns a <see cref="ConditionalDrawBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> for the given paint.
+    /// Returns a <see cref="ConditionalPaintBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> for the given paint.
     /// </summary>
-    /// <typeparam name="TModel"></typeparam>
-    /// <typeparam name="TVisual"></typeparam>
-    /// <typeparam name="TLabel"></typeparam>
-    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="series">The series.</param>
     /// <param name="paint">The paint.</param>
     /// <returns></returns>
-    public static ConditionalDrawBuilder<TModel, TVisual, TLabel, TDrawingContext> UsePaint<TModel, TVisual, TLabel, TDrawingContext>(
+    public static ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext> WithConditionalPaint<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
             where TDrawingContext : DrawingContext
             where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        return new ConditionalDrawBuilder<TModel, TVisual, TLabel, TDrawingContext>(series, paint);
+        return new ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>(series, paint);
     }
 }
