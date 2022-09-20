@@ -33,18 +33,18 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// </summary>
 public class LabelVisual : BaseVisual
 {
-    private LabelGeometry? _labelGeometry;
-    private IPaint<SkiaSharpDrawingContext>? _paint;
-    private double _x;
-    private double _y;
-    private string _text = string.Empty;
-    private double _textSize = 12;
-    private Align _verticalAlignment = Align.Middle;
-    private Align _horizontalAlignment = Align.Middle;
-    private LvcColor _backgroundColor;
-    private Padding _padding = new(0);
-    private double _rotation;
-    private LvcPoint _translate = new();
+    internal LabelGeometry? _labelGeometry;
+    internal IPaint<SkiaSharpDrawingContext>? _paint;
+    internal double _x;
+    internal double _y;
+    internal string _text = string.Empty;
+    internal double _textSize = 12;
+    internal Align _verticalAlignment = Align.Middle;
+    internal Align _horizontalAlignment = Align.Middle;
+    internal LvcColor _backgroundColor;
+    internal Padding _padding = new(0);
+    internal double _rotation;
+    internal LvcPoint _translate = new();
 
     /// <summary>
     /// Gets or sets the fill paint.
