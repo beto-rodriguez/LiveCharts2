@@ -67,6 +67,12 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     }
 
     /// <summary>
+    /// Gets the paint tasks registered by the <see cref="ChartElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <returns></returns>
+    internal abstract IPaint<TDrawingContext>?[] GetPaintTasks();
+
+    /// <summary>
     /// Sets the property value.
     /// </summary>
     /// <param name="reference">The referenced paint task.</param>
@@ -106,10 +112,4 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// </summary>
     /// <returns></returns>
     protected virtual void OnPaintChanged(string? propertyName) { }
-
-    /// <summary>
-    /// Gets the paint tasks.
-    /// </summary>
-    /// <returns></returns>
-    protected abstract IPaint<TDrawingContext>?[] GetPaintTasks();
 }
