@@ -656,7 +656,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
-    public override IPaint<TDrawingContext>?[] GetPaintTasks()
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
     }

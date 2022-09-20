@@ -702,7 +702,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
-    public override IPaint<TDrawingContext>?[] GetPaintTasks()
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
     }

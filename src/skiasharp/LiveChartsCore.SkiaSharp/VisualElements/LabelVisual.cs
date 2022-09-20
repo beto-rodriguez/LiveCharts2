@@ -111,7 +111,7 @@ public class LabelVisual : BaseVisual
     public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    public override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
+    internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paint };
     }
