@@ -259,7 +259,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         var scale = this.GetNextScaler(cartesianChart);
-        var actualScale = this.GetActualScalerScaler(cartesianChart) ?? scale;
+        var actualScale = this.GetActualScaler(cartesianChart) ?? scale;
 
         var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize());
 

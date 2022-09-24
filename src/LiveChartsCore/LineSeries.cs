@@ -116,8 +116,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
         var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
-        var actualSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
-        var actualPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
+        var actualSecondaryScale = secondaryAxis.GetActualScaler(cartesianChart);
+        var actualPrimaryScale = primaryAxis.GetActualScaler(cartesianChart);
 
         var gs = _geometrySize;
         var hgs = gs / 2f;

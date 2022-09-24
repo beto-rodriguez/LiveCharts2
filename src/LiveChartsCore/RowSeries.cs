@@ -67,8 +67,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = primaryAxis.GetNextScaler(cartesianChart);
         var primaryScale = secondaryAxis.GetNextScaler(cartesianChart);
-        var previousPrimaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
-        var previousSecondaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousPrimaryScale = secondaryAxis.GetActualScaler(cartesianChart);
+        var previousSecondaryScale = primaryAxis.GetActualScaler(cartesianChart);
 
         var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
 

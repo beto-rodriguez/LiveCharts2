@@ -35,6 +35,7 @@ public class LabelVisual : BaseVisual
 {
     internal LabelGeometry? _labelGeometry;
     internal IPaint<SkiaSharpDrawingContext>? _paint;
+    internal bool _isVirtual = false;
     internal double _x;
     internal double _y;
     internal string _text = string.Empty;
