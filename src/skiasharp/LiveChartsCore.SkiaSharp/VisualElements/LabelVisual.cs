@@ -25,13 +25,14 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
 /// Defines a visual element with stroke and fill properties.
 /// </summary>
-public class LabelVisual : BaseVisual
+public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 {
     internal LabelGeometry? _labelGeometry;
     internal IPaint<SkiaSharpDrawingContext>? _paint;
@@ -46,6 +47,7 @@ public class LabelVisual : BaseVisual
     internal Padding _padding = new(0);
     internal double _rotation;
     internal LvcPoint _translate = new();
+    private LvcSize _actualSize = new();
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -117,16 +119,16 @@ public class LabelVisual : BaseVisual
         return new[] { _paint };
     }
 
-    /// <inheritdoc cref="BaseVisual.Draw"/>
-    protected override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    protected override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
     {
         var x = (float)X;
         var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
-            x = secondaryAxisScale.ToPixels(x);
-            y = primaryAxisScale.ToPixels(y);
+            x = secondaryScaler.ToPixels(x);
+            y = primaryScaler.ToPixels(y);
         }
 
         if (_labelGeometry is null)
@@ -163,5 +165,19 @@ public class LabelVisual : BaseVisual
 
         var drawing = chart.Canvas.Draw();
         if (Paint is not null) _ = drawing.SelectPaint(Paint).Draw(_labelGeometry);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    {
+        return _actualSize = _paint is null || _labelGeometry is null
+            ? new LvcSize()
+            : _labelGeometry.Measure(_paint);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
+    public override LvcSize GetActualSize()
+    {
+        return _actualSize;
     }
 }

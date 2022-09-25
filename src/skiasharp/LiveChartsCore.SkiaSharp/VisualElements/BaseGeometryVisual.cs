@@ -22,14 +22,16 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
 /// Defines a visual element with stroke and fill properties.
 /// </summary>
-public abstract class BaseGeometryVisual : BaseVisual
+public abstract class BaseGeometryVisual : VisualElement<SkiaSharpDrawingContext>
 {
     private double _x;
     private double _y;
