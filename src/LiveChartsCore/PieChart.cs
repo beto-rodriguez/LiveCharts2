@@ -235,7 +235,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
         foreach (var visual in VisualElements)
         {
-            visual.Measure(this);
+            visual.Invalidate(this);
             visual.RemoveOldPaints(View);
             _ = _everMeasuredVisuals.Add(visual);
             _ = toDeleteVisualElements.Remove(visual);
@@ -244,7 +244,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
         foreach (var series in Series)
         {
-            series.Measure(this);
+            series.Invalidate(this);
             series.RemoveOldPaints(View);
             _ = _everMeasuredSeries.Add(series);
             _ = toDeleteSeries.Remove(series);

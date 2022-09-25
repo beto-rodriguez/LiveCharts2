@@ -199,7 +199,7 @@ public abstract class Section<TSizedGeometry, TDrawingContext> : Section<TDrawin
     /// Measures the specified chart.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    public override void Measure(Chart<TDrawingContext> chart)
+    public override void Invalidate(Chart<TDrawingContext> chart)
     {
         var drawLocation = chart.DrawMarginLocation;
         var drawMarginSize = chart.DrawMarginSize;

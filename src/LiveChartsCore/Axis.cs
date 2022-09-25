@@ -230,8 +230,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override void Invalidate(Chart<TDrawingContext> chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 

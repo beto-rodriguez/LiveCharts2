@@ -37,10 +37,10 @@ public interface IChartElement<TDrawingContext>
     object? Tag { get; set; }
 
     /// <summary>
-    /// Measures and schedule the draw of the element in the user interface.
+    /// Invalidates the <see cref="IChartElement{TDrawingContext}"/> in the user interface.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void Measure(Chart<TDrawingContext> chart);
+    void Invalidate(Chart<TDrawingContext> chart);
 
     /// <summary>
     /// Deletes the <see cref="IPaint{TDrawingContext}"/> instances that changed from the user interface.

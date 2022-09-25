@@ -62,8 +62,8 @@ public abstract class BaseVisual : ChartElement<SkiaSharpDrawingContext>, INotif
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override void Invalidate(Chart<SkiaSharpDrawingContext> chart)
     {
         Scaler? primary = null;
         Scaler? secondary = null;
