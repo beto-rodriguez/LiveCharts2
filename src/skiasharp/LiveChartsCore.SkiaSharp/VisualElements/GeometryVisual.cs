@@ -59,7 +59,7 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw"/>
-    protected override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    protected internal override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
     {
         var x = (float)X;
         var y = (float)Y;

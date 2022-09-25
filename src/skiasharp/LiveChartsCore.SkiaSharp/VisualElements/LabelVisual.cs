@@ -37,8 +37,6 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     internal LabelGeometry? _labelGeometry;
     internal IPaint<SkiaSharpDrawingContext>? _paint;
     internal bool _isVirtual = false;
-    internal double _x;
-    internal double _y;
     internal string _text = string.Empty;
     internal double _textSize = 12;
     internal Align _verticalAlignment = Align.Middle;
@@ -57,16 +55,6 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         get => _paint;
         set => SetPaintProperty(ref _paint, value);
     }
-
-    /// <summary>
-    /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the label text.
@@ -108,11 +96,6 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// </summary>
     public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
-    /// </summary>
-    public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
-
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {
@@ -120,7 +103,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    protected internal override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
     {
         var x = (float)X;
         var y = (float)Y;
@@ -130,7 +113,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
             x = secondaryScaler.ToPixels(x);
             y = primaryScaler.ToPixels(y);
         }
-
+        
         if (_labelGeometry is null)
         {
             _labelGeometry = new LabelGeometry

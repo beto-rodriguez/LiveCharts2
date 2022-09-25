@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -36,13 +38,25 @@ namespace LiveChartsCore.VisualElements;
 public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
+    internal double _x;
+    internal double _y;
     private int _scalesXAt;
     private int _scalesYAt;
 
     /// <summary>
-    /// Called when a property changes.
+    /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
     /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
+    /// </summary>
+    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
+    /// </summary>
+    public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
@@ -61,6 +75,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The index of the axis.
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Called when a property changes.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -150,5 +169,5 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <param name="secondaryScaler">
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
-    protected abstract void Draw(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
+    protected internal abstract void Draw(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
 }
