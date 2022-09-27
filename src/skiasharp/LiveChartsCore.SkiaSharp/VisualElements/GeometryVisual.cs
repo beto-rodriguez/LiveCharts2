@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
@@ -34,8 +35,13 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 public class GeometryVisual<TGeometry> : BaseGeometryVisual
     where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
 {
-    private TGeometry? _geometry;
+    internal TGeometry? _geometry;
     private LvcSize _actualSize = new();
+
+    /// <summary>
+    /// Occurs when the geometry is initialized.
+    /// </summary>
+    public event Action<TGeometry>? GeometryIntialized;
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure"/>
     public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale)
@@ -75,6 +81,7 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
         if (_geometry is null)
         {
             _geometry = new TGeometry { X = x, Y = y, Width = _actualSize.Width, Height = _actualSize.Height };
+            GeometryIntialized?.Invoke(_geometry);
 
             _ = _geometry
                 .TransitionateProperties()

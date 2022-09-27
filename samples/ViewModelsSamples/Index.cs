@@ -88,8 +88,8 @@ public static class Index
 
         //"General/Sections",
         //"General/Sections2",
-        "General/ConditionalDraw"
-        //"General/VisualElements",
+        "General/ConditionalDraw",
+        "General/VisualElements",
         //"General/ChartToImage",
         //"General/Tooltips",
         //"General/Legends",

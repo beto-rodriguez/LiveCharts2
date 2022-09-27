@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -113,11 +114,12 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
             x = secondaryScaler.ToPixels(x);
             y = primaryScaler.ToPixels(y);
         }
-        
+
         if (_labelGeometry is null)
         {
             _labelGeometry = new LabelGeometry
             {
+                Text = Text,
                 TextSize = (float)TextSize,
                 X = x,
                 Y = y,
@@ -153,9 +155,11 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
     public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
     {
-        return _actualSize = _paint is null || _labelGeometry is null
+        var l = _labelGeometry ?? new LabelGeometry() { };
+
+        return _actualSize = _paint is null
             ? new LvcSize()
-            : _labelGeometry.Measure(_paint);
+            : l.Measure(_paint);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
