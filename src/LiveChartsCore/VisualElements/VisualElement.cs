@@ -21,28 +21,42 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.VisualElements;
+namespace LiveChartsCore.VisualElements;
 
 /// <summary>
 /// Defines the base visual element class, inheriting from this class makes it easy to implement a visual element.
 /// </summary>
-public abstract class BaseVisual : ChartElement<SkiaSharpDrawingContext>, INotifyPropertyChanged
+public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
+    where TDrawingContext : DrawingContext
 {
+    internal double _x;
+    internal double _y;
     private int _scalesXAt;
     private int _scalesYAt;
 
     /// <summary>
-    /// Called when a property changes.
+    /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
     /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
+    /// </summary>
+    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
+    /// </summary>
+    public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
@@ -62,15 +76,20 @@ public abstract class BaseVisual : ChartElement<SkiaSharpDrawingContext>, INotif
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<SkiaSharpDrawingContext> chart)
+    /// <summary>
+    /// Called when a property changes.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override void Invalidate(Chart<TDrawingContext> chart)
     {
         Scaler? primary = null;
         Scaler? secondary = null;
 
-        CartesianChart<SkiaSharpDrawingContext>? cartesianChart = null;
+        CartesianChart<TDrawingContext>? cartesianChart = null;
 
-        if (chart is CartesianChart<SkiaSharpDrawingContext> cc)
+        if (chart is CartesianChart<TDrawingContext> cc)
         {
             cartesianChart = cc;
             var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -99,6 +118,26 @@ public abstract class BaseVisual : ChartElement<SkiaSharpDrawingContext>, INotif
     }
 
     /// <summary>
+    /// Measures the element and returns the size.
+    /// </summary>
+    /// <param name = "chart" > The chart.</param>
+    /// <param name="primaryScaler">
+    /// The primary axis scaler, normally the Y axis. If the chart is Polar then it is the Angle scaler. If the chart is a pie chart
+    /// then it is the Values Scaler.
+    /// </param>
+    /// <param name="secondaryScaler">
+    /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
+    /// then it is the index Scaler.</param>
+    /// <returns>The size of the element.</returns>
+    public abstract LvcSize Measure(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
+
+    /// <summary>
+    /// Gets the actual size of the element.
+    /// </summary>
+    /// <returns>The actual size.</returns>
+    public abstract LvcSize GetActualSize();
+
+    /// <summary>
     /// Called when [paint changed].
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
@@ -123,12 +162,12 @@ public abstract class BaseVisual : ChartElement<SkiaSharpDrawingContext>, INotif
     /// Called when the visual is drawn.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    /// <param name="primaryAxisScale">
+    /// <param name="primaryScaler">
     /// The primary axis scaler, normally the Y axis. If the chart is Polar then it is the Angle scaler. If the chart is a pie chart
     /// then it is the Values Scaler.
     /// </param>
-    /// <param name="secondaryAxisScale">
+    /// <param name="secondaryScaler">
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
-    protected abstract void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale);
+    protected internal abstract void Draw(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
 }

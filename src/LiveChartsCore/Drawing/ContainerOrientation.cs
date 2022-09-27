@@ -20,37 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
-
-namespace LiveChartsCore.Kernel;
+namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a visual element in a chart.
+/// Defines orientation.
 /// </summary>
-public interface IChartElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public enum ContainerOrientation
 {
     /// <summary>
-    /// Gets or sets the object that contains data about the control.
+    /// The horizontal orientation.
     /// </summary>
-    object? Tag { get; set; }
+    Horizontal,
 
     /// <summary>
-    /// Invalidates the <see cref="IChartElement{TDrawingContext}"/> in the user interface.
+    /// The vertical orientation.
     /// </summary>
-    /// <param name="chart">The chart.</param>
-    void Invalidate(Chart<TDrawingContext> chart);
-
-    /// <summary>
-    /// Deletes the <see cref="IPaint{TDrawingContext}"/> instances that changed from the user interface.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    void RemoveOldPaints(IChartView<TDrawingContext> chart);
-
-    /// <summary>
-    /// Removes the element from the UI.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    void RemoveFromUI(Chart<TDrawingContext> chart);
+    Vertical
 }

@@ -22,36 +22,21 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
 /// Defines a visual element with stroke and fill properties.
 /// </summary>
-public abstract class BaseGeometryVisual : BaseVisual
+public abstract class BaseGeometryVisual : VisualElement<SkiaSharpDrawingContext>
 {
-    private double _x;
-    private double _y;
     private double _width;
     private double _height;
     private IPaint<SkiaSharpDrawingContext>? _fill;
     private IPaint<SkiaSharpDrawingContext>? _stroke;
-
-    /// <summary>
-    /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
-    /// </summary>
-    public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
 
     /// <summary>
     /// Gets or sets the height of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].

@@ -22,22 +22,22 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
 /// Defines a visual element with stroke and fill properties.
 /// </summary>
-public class LabelVisual : BaseVisual
+public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 {
     internal LabelGeometry? _labelGeometry;
     internal IPaint<SkiaSharpDrawingContext>? _paint;
     internal bool _isVirtual = false;
-    internal double _x;
-    internal double _y;
     internal string _text = string.Empty;
     internal double _textSize = 12;
     internal Align _verticalAlignment = Align.Middle;
@@ -46,6 +46,7 @@ public class LabelVisual : BaseVisual
     internal Padding _padding = new(0);
     internal double _rotation;
     internal LvcPoint _translate = new();
+    private LvcSize _actualSize = new();
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -55,16 +56,6 @@ public class LabelVisual : BaseVisual
         get => _paint;
         set => SetPaintProperty(ref _paint, value);
     }
-
-    /// <summary>
-    /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
-    /// </summary>
-    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the label text.
@@ -106,33 +97,29 @@ public class LabelVisual : BaseVisual
     /// </summary>
     public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
-    /// </summary>
-    public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
-
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paint };
     }
 
-    /// <inheritdoc cref="BaseVisual.Draw"/>
-    protected override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    protected internal override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
     {
         var x = (float)X;
         var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
-            x = secondaryAxisScale.ToPixels(x);
-            y = primaryAxisScale.ToPixels(y);
+            x = secondaryScaler.ToPixels(x);
+            y = primaryScaler.ToPixels(y);
         }
 
         if (_labelGeometry is null)
         {
             _labelGeometry = new LabelGeometry
             {
+                Text = Text,
                 TextSize = (float)TextSize,
                 X = x,
                 Y = y,
@@ -163,5 +150,21 @@ public class LabelVisual : BaseVisual
 
         var drawing = chart.Canvas.Draw();
         if (Paint is not null) _ = drawing.SelectPaint(Paint).Draw(_labelGeometry);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    {
+        var l = _labelGeometry ?? new LabelGeometry() { };
+
+        return _actualSize = _paint is null
+            ? new LvcSize()
+            : l.Measure(_paint);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
+    public override LvcSize GetActualSize()
+    {
+        return _actualSize;
     }
 }
