@@ -156,20 +156,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
     public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsPaint"/>
-    public IPaint<TDrawingContext>? SubseparatorsPaint { get => _subseparatorsPaint; set { _subseparatorsPaint = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
-    public bool DrawTicksPath { get => _drawTicksPath; set { _drawTicksPath = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
-    public IPaint<TDrawingContext>? TicksPaint { get => _ticksPaint; set { _ticksPaint = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubticksPaint"/>
-    public IPaint<TDrawingContext>? SubticksPaint { get => _subticksPaint; set { _subticksPaint = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ZeroPaint"/>
-    public IPaint<TDrawingContext>? ZeroPaint { get => _zeroPaint; set { _zeroPaint = value; OnPropertyChanged(); } }
+    
 
     /// <inheritdoc cref="IPlane.IsVisible"/>
     public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
@@ -196,6 +183,37 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         get => _separatorsPaint;
         set => SetPaintProperty(ref _separatorsPaint, value);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsPaint"/>
+    public IPaint<TDrawingContext>? SubseparatorsPaint
+    {
+        get => _subseparatorsPaint;
+        set => SetPaintProperty(ref _subseparatorsPaint, value);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
+    public bool DrawTicksPath { get => _drawTicksPath; set { _drawTicksPath = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
+    public IPaint<TDrawingContext>? TicksPaint
+    {
+        get => _ticksPaint;
+        set => SetPaintProperty(ref _ticksPaint, value);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubticksPaint"/>
+    public IPaint<TDrawingContext>? SubticksPaint
+    {
+        get => _subticksPaint;
+        set => SetPaintProperty(ref _subticksPaint, value);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ZeroPaint"/>
+    public IPaint<TDrawingContext>? ZeroPaint
+    {
+        get => _zeroPaint;
+        set => SetPaintProperty(ref _zeroPaint, value);
     }
 
     /// <summary>
