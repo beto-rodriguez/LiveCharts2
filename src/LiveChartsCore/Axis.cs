@@ -390,8 +390,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             {
                 _ticksPath = new TLineGeometry();
                 InitializeLine(_ticksPath, cartesianChart);
-                TicksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _ticksPath);
             }
+            TicksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _ticksPath);
 
             if (_orientation == AxisOrientation.X)
             {
