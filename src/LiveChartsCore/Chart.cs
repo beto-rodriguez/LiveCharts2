@@ -627,6 +627,7 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         if (!_isPanning) return;
         _isPanning = false;
+        _pointerPanningPosition = pointerPosition;
         _panningThrottler.Call();
     }
 }
