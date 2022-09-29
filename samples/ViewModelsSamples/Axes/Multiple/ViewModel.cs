@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
@@ -105,4 +106,27 @@ public partial class ViewModel
             Position = LiveChartsCore.Measure.AxisPosition.End
         }
     };
+
+    public ViewModel()
+    {
+        DoThis();
+    }
+
+    public async void DoThis()
+    {
+        var ax = YAxes[0] as Axis;
+        await Task.Delay(1000);
+        ax.IsVisible = false;
+
+        await Task.Delay(1000);
+        ax.ShowSeparatorLines = false;
+
+        await Task.Delay(1000);
+        ax.IsVisible = true;
+
+        await Task.Delay(1000);
+        ax.ShowSeparatorLines = true;
+
+        var a = 1;
+    }
 }

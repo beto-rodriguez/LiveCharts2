@@ -156,8 +156,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
     public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
 
-    
-
     /// <inheritdoc cref="IPlane.IsVisible"/>
     public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
@@ -465,35 +463,38 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (!separators.TryGetValue(separatorKey, out var visualSeparator))
             {
                 visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
-
-                if (SeparatorsPaint is not null && ShowSeparatorLines)
-                {
-                    InitializeSeparator(visualSeparator, cartesianChart);
-                    UpdateSeparator(visualSeparator.Separator!, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
-                }
-                if (SubseparatorsPaint is not null && ShowSeparatorLines)
-                {
-                    InitializeSubseparators(visualSeparator, cartesianChart);
-                    UpdateSubseparators(visualSeparator.Subseparators!, actualScale, s, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
-                }
-                if (TicksPaint is not null)
-                {
-                    InitializeTick(visualSeparator, cartesianChart);
-                    UpdateTick(visualSeparator.Tick!, _tickLength, xc, yc, UpdateMode.UpdateAndComplete);
-                }
-                if (SubticksPaint is not null && _subSections > 0)
-                {
-                    InitializeSubticks(visualSeparator, cartesianChart);
-                    UpdateSubticks(visualSeparator.Subticks!, actualScale, s, xc, yc, UpdateMode.UpdateAndComplete);
-                }
-                if (LabelsPaint is not null)
-                {
-                    IntializeLabel(visualSeparator, cartesianChart, size, hasRotation, r);
-                    UpdateLabel(visualSeparator.Label!, xc, yc, labeler(i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
-                }
-
                 separators.Add(separatorKey, visualSeparator);
             }
+
+            #region Initialize shapes
+
+            if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Separator is null)
+            {
+                InitializeSeparator(visualSeparator, cartesianChart);
+                UpdateSeparator(visualSeparator.Separator!, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+            }
+            if (SubseparatorsPaint is not null && ShowSeparatorLines && (visualSeparator.Subseparators is null || visualSeparator.Subseparators.Length == 0))
+            {
+                InitializeSubseparators(visualSeparator, cartesianChart);
+                UpdateSubseparators(visualSeparator.Subseparators!, actualScale, s, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+            }
+            if (TicksPaint is not null && visualSeparator.Tick is null)
+            {
+                InitializeTick(visualSeparator, cartesianChart);
+                UpdateTick(visualSeparator.Tick!, _tickLength, xc, yc, UpdateMode.UpdateAndComplete);
+            }
+            if (SubticksPaint is not null && _subSections > 0 && (visualSeparator.Subticks is null || visualSeparator.Subticks.Length == 0))
+            {
+                InitializeSubticks(visualSeparator, cartesianChart);
+                UpdateSubticks(visualSeparator.Subticks!, actualScale, s, xc, yc, UpdateMode.UpdateAndComplete);
+            }
+            if (LabelsPaint is not null && visualSeparator.Label is null)
+            {
+                IntializeLabel(visualSeparator, cartesianChart, size, hasRotation, r);
+                UpdateLabel(visualSeparator.Label!, xc, yc, labeler(i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
+            }
+
+            #endregion
 
             if (SeparatorsPaint is not null && visualSeparator.Separator is not null)
             {
