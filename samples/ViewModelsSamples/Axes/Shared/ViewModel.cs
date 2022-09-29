@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 
 namespace ViewModelsSamples.Axes.Shared;
 
@@ -21,7 +24,7 @@ public partial class ViewModel
             t += r.Next(-90, 100);
             values1[i] = t;
 
-            t2 += r.Next(-90, 100);
+            t2 += r.Next(-9000, 10000);
             values2[i] = t2;
         }
 
@@ -30,9 +33,30 @@ public partial class ViewModel
 
         // sharing the same instance for both charts will keep the zooming and panning synced // mark
         SharedXAxis = new Axis[] { new Axis() };
+
+        // Force the chart to use 70px margin on the left, this way we can align both charts. // mark
+        DrawMargin = new Margin(70, Margin.Auto, Margin.Auto, Margin.Auto);
+        // and thats it!
+
+
+        // Advanced alternative:
+        // you can also ask an axis its posible dimensions to determine the margin you need.
+
+        // Get a chart from the UI
+        // in this sample we use the in-memory chart provided by the library.
+        var cartesianChart = new SKCartesianChart();
+        var axis = cartesianChart.YAxes.First() as Axis;
+        var size = axis!.GetPossibleSize(cartesianChart.Core);
+
+        // finally instead of using the static 70px, we can use the actual size of the axis.
+        DrawMargin = new Margin(size.Width, Margin.Auto, Margin.Auto, Margin.Auto);
+
+        // normally you would need to get the axis with the greater width, then set this width to the
+        // marging that aligns all the target charts.
     }
 
     public ISeries[] SeriesCollection1 { get; set; }
     public ISeries[] SeriesCollection2 { get; set; }
     public Axis[] SharedXAxis { get; set; }
+    public Margin DrawMargin { get; set; }
 }
