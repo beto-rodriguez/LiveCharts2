@@ -242,6 +242,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
         base.OnMouseDown(e);
+        if (ModifierKeys > 0) return;
         core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), e.Button == MouseButtons.Right);
     }
 

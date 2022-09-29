@@ -991,6 +991,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnPointerPressed(object? sender, PointerRoutedEventArgs e)
     {
+        if (e.KeyModifiers > 0) return;
         _ = CapturePointer(e.Pointer);
         var p = e.GetCurrentPoint(this);
         var isRight = false;

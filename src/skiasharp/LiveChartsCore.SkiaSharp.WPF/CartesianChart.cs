@@ -375,6 +375,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (Keyboard.Modifiers > 0) return;
         _ = CaptureMouse();
         var p = e.GetPosition(this);
         core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);

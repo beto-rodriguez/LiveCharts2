@@ -850,6 +850,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (e.KeyModifiers > 0) return;
         var p = e.GetPosition(this);
         foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
         _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.GetCurrentPoint(this).Properties.IsRightButtonPressed);
