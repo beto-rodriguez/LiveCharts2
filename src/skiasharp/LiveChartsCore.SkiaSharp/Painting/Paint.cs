@@ -105,6 +105,11 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     public SKTypeface? SKTypeface { get; set; }
 
     /// <summary>
+    /// Gets a value indication whether the paint has a custom font.
+    /// </summary>
+    public bool HasCustomFont => FontFamily is not null || SKTypeface is not null || SKFontStyle is not null;
+
+    /// <summary>
     /// Gets or sets a value indicating whether this instance is antialias.
     /// </summary>
     /// <value>

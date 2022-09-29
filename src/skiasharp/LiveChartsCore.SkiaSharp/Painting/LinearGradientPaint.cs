@@ -174,7 +174,8 @@ public class LinearGradientPaint : Paint
         _skiaPaint.StrokeJoin = StrokeJoin;
         _skiaPaint.StrokeMiter = StrokeMiter;
         _skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-        if (FontFamily != null) _skiaPaint.Typeface = GetTypeFaceFromFontFamily();
+
+        if (HasCustomFont) _skiaPaint.Typeface = GetTypeFaceFromFontFamily();
 
         if (PathEffect is not null)
         {
@@ -205,7 +206,7 @@ public class LinearGradientPaint : Paint
     /// </summary>
     public override void Dispose()
     {
-        if (FontFamily != null && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
+        if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
         if (PathEffect is not null) PathEffect.Dispose();
         if (ImageFilter is not null) ImageFilter.Dispose();
 
