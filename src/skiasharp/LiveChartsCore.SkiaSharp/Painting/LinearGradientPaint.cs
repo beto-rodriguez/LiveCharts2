@@ -125,6 +125,8 @@ public class LinearGradientPaint : Paint
             StrokeJoin = StrokeJoin,
             StrokeMiter = StrokeMiter,
             FontFamily = FontFamily,
+            SKFontStyle = SKFontStyle,
+            SKTypeface = SKTypeface,
             PathEffect = PathEffect?.Clone(),
             ImageFilter = ImageFilter?.Clone()
         };
@@ -145,7 +147,7 @@ public class LinearGradientPaint : Paint
     /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
     public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
     {
-        skiaPaint ??= new SKPaint();
+        _skiaPaint ??= new SKPaint();
 
         var size = GetDrawRectangleSize(drawingContext);
 
@@ -158,32 +160,32 @@ public class LinearGradientPaint : Paint
         var start = new SKPoint(xf + (xt - xf) * _startPoint.X, yf + (yt - yf) * _startPoint.Y);
         var end = new SKPoint(xf + (xt - xf) * _endPoint.X, yf + (yt - yf) * _endPoint.Y);
 
-        skiaPaint.Shader = SKShader.CreateLinearGradient(
+        _skiaPaint.Shader = SKShader.CreateLinearGradient(
                 start,
                 end,
                 _gradientStops,
                 _colorPos,
                 _tileMode);
 
-        skiaPaint.IsAntialias = IsAntialias;
-        skiaPaint.IsStroke = true;
-        skiaPaint.StrokeWidth = StrokeThickness;
-        skiaPaint.StrokeCap = StrokeCap;
-        skiaPaint.StrokeJoin = StrokeJoin;
-        skiaPaint.StrokeMiter = StrokeMiter;
-        skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-        if (FontFamily != null) skiaPaint.Typeface = GetTypeFaceFromFontFamily();
+        _skiaPaint.IsAntialias = IsAntialias;
+        _skiaPaint.IsStroke = true;
+        _skiaPaint.StrokeWidth = StrokeThickness;
+        _skiaPaint.StrokeCap = StrokeCap;
+        _skiaPaint.StrokeJoin = StrokeJoin;
+        _skiaPaint.StrokeMiter = StrokeMiter;
+        _skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
+        if (FontFamily != null) _skiaPaint.Typeface = GetTypeFaceFromFontFamily();
 
         if (PathEffect is not null)
         {
             PathEffect.CreateEffect(drawingContext);
-            skiaPaint.PathEffect = PathEffect.SKPathEffect;
+            _skiaPaint.PathEffect = PathEffect.SKPathEffect;
         }
 
         if (ImageFilter is not null)
         {
             ImageFilter.CreateFilter(drawingContext);
-            skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
+            _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
         }
 
         var clip = GetClipRectangle(drawingContext.MotionCanvas);
@@ -194,7 +196,7 @@ public class LinearGradientPaint : Paint
             _drawingContext = drawingContext;
         }
 
-        drawingContext.Paint = skiaPaint;
+        drawingContext.Paint = _skiaPaint;
         drawingContext.PaintTask = this;
     }
 
@@ -203,7 +205,7 @@ public class LinearGradientPaint : Paint
     /// </summary>
     public override void Dispose()
     {
-        if (FontFamily != null && skiaPaint != null) skiaPaint.Typeface.Dispose();
+        if (FontFamily != null && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
         if (PathEffect is not null) PathEffect.Dispose();
         if (ImageFilter is not null) ImageFilter.Dispose();
 
