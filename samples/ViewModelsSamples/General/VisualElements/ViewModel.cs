@@ -20,10 +20,43 @@ public partial class ViewModel
 {
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = new List<ChartElement<SkiaSharpDrawingContext>>
     {
+         new GeometryVisual<RectangleGeometry>
+         {
+             X = 2.5,
+             Y = 3.5,
+             LocationUnit = MeasureUnit.ChartValues,
+             Width = 4,
+             Height = 2,
+             SizeUnit = MeasureUnit.ChartValues,
+             Fill = new SolidColorPaint(new SKColor(239, 83, 80, 50)) { ZIndex = 10 },
+             Stroke = new SolidColorPaint(new SKColor(239, 83, 80)) { ZIndex = 10, StrokeThickness = 1.5f },
+         },
+         new GeometryVisual<OvalGeometry>
+         {
+             X = 5.5,
+             Y = 6,
+             LocationUnit = MeasureUnit.ChartValues,
+             Width = 4,
+             Height = 5,
+             SizeUnit = MeasureUnit.ChartValues,
+             Fill = new SolidColorPaint(new SKColor(100, 221, 23, 50)) { ZIndex = - 10 },
+             Stroke = new SolidColorPaint(new SKColor(100, 221, 23)) { ZIndex = -10, StrokeThickness = 1.5f },
+         },
+         new GeometryVisual<MyGeometry>
+         {
+             X = 18,
+             Y = 6,
+             LocationUnit = MeasureUnit.ChartValues,
+             Width = 100,
+             Height = 100,
+             SizeUnit = MeasureUnit.Pixels,
+             Fill = new SolidColorPaint(new SKColor(251, 192, 45, 50)) { ZIndex = 10 },
+             Stroke = new SolidColorPaint(new SKColor(251, 192, 45)) { ZIndex = 10, StrokeThickness = 1.5f },
+         },
          new LabelVisual
          {
              Text = "What happened here?",
-             X = new DateTime(2022, 1, 2).Ticks,
+             X = 11,
              Y = 1,
              TextSize = 16,
              Paint = new SolidColorPaint(new SKColor(250, 250, 250)) { ZIndex = 11 },
