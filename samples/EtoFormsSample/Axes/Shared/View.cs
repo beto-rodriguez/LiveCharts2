@@ -14,6 +14,7 @@ public class View : Panel
         {
             Series = viewModel.SeriesCollection1,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
+            DrawMargin = viewModel.DrawMargin,
             XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
         };
 
@@ -21,6 +22,7 @@ public class View : Panel
         {
             Series = viewModel.SeriesCollection2,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
+            DrawMargin = viewModel.DrawMargin,
             XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
         };
 

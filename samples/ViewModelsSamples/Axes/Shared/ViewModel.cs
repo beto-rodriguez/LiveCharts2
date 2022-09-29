@@ -42,17 +42,19 @@ public partial class ViewModel
         // Advanced alternative:
         // you can also ask an axis its posible dimensions to determine the margin you need.
 
-        // Get a chart from the UI
+        // First you need to get a chart from the UI
         // in this sample we use the in-memory chart provided by the library.
-        var cartesianChart = new SKCartesianChart();
-        var axis = cartesianChart.YAxes.First() as Axis;
-        var size = axis!.GetPossibleSize(cartesianChart.Core);
 
-        // finally instead of using the static 70px, we can use the actual size of the axis.
-        DrawMargin = new Margin(size.Width, Margin.Auto, Margin.Auto, Margin.Auto);
+        // var cartesianChart = new SKCartesianChart();
+        // var axis = cartesianChart.YAxes.First() as Axis;
+        // var size = axis.GetPossibleSize(cartesianChart.Core);
 
-        // normally you would need to get the axis with the greater width, then set this width to the
-        // marging that aligns all the target charts.
+        // finally instead of using the static 70px, we can use the actual width of the axis.
+
+        // DrawMargin = new Margin(size.Width, Margin.Auto, Margin.Auto, Margin.Auto);
+
+        // normally you would need measure all the axes involved, and use the greater width to
+        // calculate the required margin.
     }
 
     public ISeries[] SeriesCollection1 { get; set; }

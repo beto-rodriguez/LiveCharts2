@@ -157,6 +157,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas?.CanvasCore ?? throw new Exception("canvas not found!");
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
+    [Parameter]
     public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.SyncContext" />

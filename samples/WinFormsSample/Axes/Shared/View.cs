@@ -17,6 +17,7 @@ public partial class View : UserControl
         {
             Series = viewModel.SeriesCollection1,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
+            DrawMargin = viewModel.DrawMargin,
             XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
 
             // out of livecharts properties...
@@ -29,6 +30,7 @@ public partial class View : UserControl
         {
             Series = viewModel.SeriesCollection2,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
+            DrawMargin = viewModel.DrawMargin,
             XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
 
             // out of livecharts properties...
