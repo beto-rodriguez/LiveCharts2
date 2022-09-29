@@ -42,6 +42,7 @@
     <None Remove="Events\Polar\View.xaml" />
     <None Remove="Financial\BasicCandlesticks\View.xaml" />
     <None Remove="General\Animations\View.xaml" />
+    <None Remove="General\ConditionalDraw\View.xaml" />
     <None Remove="General\ChartToImage\View.xaml" />
     <None Remove="General\Legends\View.xaml" />
     <None Remove="General\MultiThreading2\View.xaml" />
@@ -221,6 +222,9 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="General\Animations\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="General\ChartToImage\View.xaml">

@@ -119,6 +119,9 @@
     <Compile Update="General\Animations\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\ConditionalDraw\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\ChartToImage\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

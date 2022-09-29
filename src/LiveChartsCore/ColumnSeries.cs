@@ -56,8 +56,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         _isRounded = typeof(IRoundedRectangleChartPoint<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override void Invalidate(Chart<TDrawingContext> chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -67,8 +67,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
         var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
-        var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
-        var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousPrimaryScale = primaryAxis.GetActualScaler(cartesianChart);
+        var previousSecondaryScale = secondaryAxis.GetActualScaler(cartesianChart);
 
         var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
 

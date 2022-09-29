@@ -75,8 +75,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
     public Padding PointPadding { get => _pointPadding; set { _pointPadding = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override void Invalidate(Chart<TDrawingContext> chart)
     {
         _paintTaks ??= LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
 
@@ -88,8 +88,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
         var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
-        var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
-        var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousPrimaryScale = primaryAxis.GetActualScaler(cartesianChart);
+        var previousSecondaryScale = secondaryAxis.GetActualScaler(cartesianChart);
 
         var uws = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwp = primaryScale.MeasureInPixels(primaryAxis.UnitWidth);
@@ -372,7 +372,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected override IPaint<TDrawingContext>?[] GetPaintTasks()
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paintTaks, hoverPaint };
     }

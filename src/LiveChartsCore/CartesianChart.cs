@@ -710,7 +710,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             if (drawablePlane.IsVisible)
             {
                 _everMeasuredAxes.Add(drawablePlane);
-                drawablePlane.Measure(this);
+                drawablePlane.Invalidate(this);
                 _ = toDeleteAxes.Remove(drawablePlane);
             }
 
@@ -720,7 +720,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var toDeleteSections = new HashSet<Section<TDrawingContext>>(_everMeasuredSections);
         foreach (var section in Sections)
         {
-            section.Measure(this);
+            section.Invalidate(this);
             section.RemoveOldPaints(View);
             _ = _everMeasuredSections.Add(section);
             _ = toDeleteSections.Remove(section);
@@ -729,7 +729,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
         foreach (var visual in VisualElements)
         {
-            visual.Measure(this);
+            visual.Invalidate(this);
             visual.RemoveOldPaints(View);
             _ = _everMeasuredVisuals.Add(visual);
             _ = toDeleteVisualElements.Remove(visual);
@@ -738,7 +738,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
         foreach (var series in Series)
         {
-            series.Measure(this);
+            series.Invalidate(this);
             series.RemoveOldPaints(View);
             _ = _everMeasuredSeries.Add(series);
             _ = toDeleteSeries.Remove(series);
@@ -751,7 +751,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         if (_chartView.DrawMarginFrame is not null)
         {
-            _chartView.DrawMarginFrame.Measure(this);
+            _chartView.DrawMarginFrame.Invalidate(this);
             _chartView.DrawMarginFrame.RemoveOldPaints(View);
             _previousDrawMarginFrame = _chartView.DrawMarginFrame;
         }

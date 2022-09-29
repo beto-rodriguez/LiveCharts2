@@ -104,6 +104,9 @@
     <Compile Update="Events\Polar\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="General\ConditionalDraw\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\ChartToImage\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -371,6 +374,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Events\Polar\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\ConditionalDraw\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

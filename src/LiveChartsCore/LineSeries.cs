@@ -105,8 +105,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         set => SetPaintProperty(ref _geometryStroke, value, true);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override void Invalidate(Chart<TDrawingContext> chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -116,8 +116,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
         var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
-        var actualSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
-        var actualPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
+        var actualSecondaryScale = secondaryAxis.GetActualScaler(cartesianChart);
+        var actualPrimaryScale = primaryAxis.GetActualScaler(cartesianChart);
 
         var gs = _geometrySize;
         var hgs = gs / 2f;
@@ -702,7 +702,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
-    protected override IPaint<TDrawingContext>?[] GetPaintTasks()
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
     }

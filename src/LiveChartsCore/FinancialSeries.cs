@@ -94,8 +94,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
         set => SetPaintProperty(ref _downFill, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override void Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override void Invalidate(Chart<TDrawingContext> chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -105,8 +105,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
         var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
-        var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
-        var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousPrimaryScale = primaryAxis.GetActualScaler(cartesianChart);
+        var previousSecondaryScale = secondaryAxis.GetActualScaler(cartesianChart);
 
         var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
@@ -408,7 +408,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    protected override IPaint<TDrawingContext>?[] GetPaintTasks()
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint, hoverPaint };
     }

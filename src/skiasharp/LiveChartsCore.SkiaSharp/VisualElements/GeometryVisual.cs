@@ -20,10 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
@@ -33,13 +35,17 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 public class GeometryVisual<TGeometry> : BaseGeometryVisual
     where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
 {
-    private TGeometry? _rectangleGeometry;
+    internal TGeometry? _geometry;
+    private LvcSize _actualSize = new();
 
-    /// <inheritdoc cref="BaseVisual.Draw"/>
-    protected override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale)
+    /// <summary>
+    /// Occurs when the geometry is initialized.
+    /// </summary>
+    public event Action<TGeometry>? GeometryIntialized;
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale)
     {
-        var x = (float)X;
-        var y = (float)Y;
         var w = (float)Width;
         var h = (float)Height;
 
@@ -49,29 +55,47 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
             h = primaryAxisScale.MeasureInPixels(h);
         }
 
+        return _actualSize = new LvcSize(w, h);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
+    public override LvcSize GetActualSize()
+    {
+        return _actualSize;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw"/>
+    protected internal override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    {
+        var x = (float)X;
+        var y = (float)Y;
+
         if (LocationUnit == MeasureUnit.ChartValues)
         {
-            x = secondaryAxisScale.ToPixels(x);
-            y = primaryAxisScale.ToPixels(y);
+            x = secondaryScaler.ToPixels(x);
+            y = primaryScaler.ToPixels(y);
         }
 
-        if (_rectangleGeometry is null)
-        {
-            _rectangleGeometry = new TGeometry { X = x, Y = y, Width = w, Height = h };
+        _ = Measure(chart, primaryScaler, secondaryScaler);
 
-            _ = _rectangleGeometry
+        if (_geometry is null)
+        {
+            _geometry = new TGeometry { X = x, Y = y, Width = _actualSize.Width, Height = _actualSize.Height };
+            GeometryIntialized?.Invoke(_geometry);
+
+            _ = _geometry
                 .TransitionateProperties()
                 .WithAnimation(chart)
                 .CompleteCurrentTransitions();
         }
 
-        _rectangleGeometry.X = x;
-        _rectangleGeometry.Y = y;
-        _rectangleGeometry.Width = w;
-        _rectangleGeometry.Height = h;
+        _geometry.X = x;
+        _geometry.Y = y;
+        _geometry.Width = _actualSize.Width;
+        _geometry.Height = _actualSize.Height;
 
         var drawing = chart.Canvas.Draw();
-        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_rectangleGeometry);
-        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_rectangleGeometry);
+        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
+        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
     }
 }

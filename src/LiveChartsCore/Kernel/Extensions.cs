@@ -334,7 +334,7 @@ public static class Extensions
     /// <param name="axis"></param>
     /// <param name="chart"></param>
     /// <returns></returns>
-    public static Scaler? GetActualScalerScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
+    public static Scaler? GetActualScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
         where TDrawingContext : DrawingContext
     {
         return !axis.ActualBounds.HasPreviousState

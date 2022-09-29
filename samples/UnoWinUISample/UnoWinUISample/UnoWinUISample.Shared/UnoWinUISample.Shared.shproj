@@ -41,6 +41,7 @@
     <UpToDateCheckInput Remove="LiveChartsSamples\Events\Polar\View.xaml" />
     <UpToDateCheckInput Remove="LiveChartsSamples\Financial\BasicCandlesticks\View.xaml" />
     <UpToDateCheckInput Remove="LiveChartsSamples\General\Animations\View.xaml" />
+    <UpToDateCheckInput Remove="LiveChartsSamples\General\Basic\View.xaml" />
     <UpToDateCheckInput Remove="LiveChartsSamples\General\ChartToImage\View.xaml" />
     <UpToDateCheckInput Remove="LiveChartsSamples\General\Legends\View.xaml" />
     <UpToDateCheckInput Remove="LiveChartsSamples\General\MultiThreading2\View.xaml" />
@@ -133,6 +134,7 @@
     <_Globbed_Compile Remove="LiveChartsSamples\Events\Polar\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\Financial\BasicCandlesticks\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\Animations\View.xaml.cs" />
+    <_Globbed_Compile Remove="LiveChartsSamples\General\Basic\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\ChartToImage\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\Legends\View.xaml.cs" />
     <_Globbed_Compile Remove="LiveChartsSamples\General\MultiThreading2\View.xaml.cs" />
@@ -225,6 +227,7 @@
     <_Globbled_Page Remove="LiveChartsSamples\Events\Polar\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\Financial\BasicCandlesticks\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\General\Animations\View.xaml" />
+    <_Globbled_Page Remove="LiveChartsSamples\General\Basic\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\General\ChartToImage\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\General\Legends\View.xaml" />
     <_Globbled_Page Remove="LiveChartsSamples\General\MultiThreading2\View.xaml" />

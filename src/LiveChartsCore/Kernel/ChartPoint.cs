@@ -225,7 +225,7 @@ public class ChartPoint<TModel, TVisual, TLabel> : ChartPoint
     }
 
     /// <summary>
-    /// Gets the model.
+    /// Gets the model, this is the actual object that represents the point in the chart.
     /// </summary>
     /// <value>
     /// The model.

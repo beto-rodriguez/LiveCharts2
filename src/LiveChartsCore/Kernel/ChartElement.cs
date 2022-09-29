@@ -38,8 +38,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <inheritdoc cref="IChartElement{TDrawingContext}.Tag" />
     public object? Tag { get; set; }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})" />
-    public abstract void Measure(Chart<TDrawingContext> chart);
+    /// <inheritdoc cref="IChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})" />
+    public abstract void Invalidate(Chart<TDrawingContext> chart);
 
     /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveOldPaints(IChartView{TDrawingContext})" />
     public void RemoveOldPaints(IChartView<TDrawingContext> chart)
@@ -65,6 +65,12 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
             item.ClearGeometriesFromPaintTask(chart.Canvas);
         }
     }
+
+    /// <summary>
+    /// Gets the paint tasks registered by the <see cref="ChartElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <returns></returns>
+    internal abstract IPaint<TDrawingContext>?[] GetPaintTasks();
 
     /// <summary>
     /// Sets the property value.
@@ -106,10 +112,4 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// </summary>
     /// <returns></returns>
     protected virtual void OnPaintChanged(string? propertyName) { }
-
-    /// <summary>
-    /// Gets the paint tasks.
-    /// </summary>
-    /// <returns></returns>
-    protected abstract IPaint<TDrawingContext>?[] GetPaintTasks();
 }

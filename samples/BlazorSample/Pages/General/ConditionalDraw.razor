@@ -1,0 +1,13 @@
+﻿@page "/General/ConditionalDraw"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.ConditionalDraw
+
+<CartesianChart
+	Series="ViewModel.Series"
+    Sections="ViewModel.Sections"
+	YAxes="ViewModel.Y">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

@@ -102,6 +102,9 @@
     <Compile Update="General\Animations\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="General\ConditionalDraw\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\ChartToImage\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
