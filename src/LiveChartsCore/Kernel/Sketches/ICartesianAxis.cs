@@ -145,4 +145,40 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// The separators paint.
     /// </value>
     IPaint<TDrawingContext>? ZeroPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? CrosshairPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair labels paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? CrosshairLabelsPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair background.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    LvcColor? CrosshairLabelsBackground { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair labels padding.
+    /// </summary>
+    Padding? CrosshairPadding { get; set; }
+
+    /// <summary>
+    /// Invalidates the crosshair visual.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="pointerPosition">The pointer position</param>
+    void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition);
 }

@@ -85,7 +85,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity)) })
             {
                 var p = Padding;
-                context.Canvas.DrawRect(X - p.Left, Y - size.Height + p.Top, size.Width, size.Height, bgPaint);
+                context.Canvas.DrawRect(X - p.Left, Y - size.Height + p.Bottom, size.Width, size.Height, bgPaint);
             }
         }
 

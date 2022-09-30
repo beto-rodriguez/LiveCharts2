@@ -83,6 +83,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private IPaint<TDrawingContext>? _subticksPaint;
     private IPaint<TDrawingContext>? _zeroPaint;
     private ILineGeometry<TDrawingContext>? _zeroLine;
+    private ILineGeometry<TDrawingContext>? _crosshairLine;
+    private ILabelGeometry<TDrawingContext>? _crosshairLabel;
+    private IPaint<TDrawingContext>? _crosshairPaint;
+    private IPaint<TDrawingContext>? _crosshairLabelsPaint;
     private bool _showSeparatorLines = true;
     private bool _isVisible = true;
     private bool _isInverted;
@@ -180,14 +184,14 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public IPaint<TDrawingContext>? SeparatorsPaint
     {
         get => _separatorsPaint;
-        set => SetPaintProperty(ref _separatorsPaint, value);
+        set => SetPaintProperty(ref _separatorsPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsPaint"/>
     public IPaint<TDrawingContext>? SubseparatorsPaint
     {
         get => _subseparatorsPaint;
-        set => SetPaintProperty(ref _subseparatorsPaint, value);
+        set => SetPaintProperty(ref _subseparatorsPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
@@ -197,22 +201,42 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public IPaint<TDrawingContext>? TicksPaint
     {
         get => _ticksPaint;
-        set => SetPaintProperty(ref _ticksPaint, value);
+        set => SetPaintProperty(ref _ticksPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubticksPaint"/>
     public IPaint<TDrawingContext>? SubticksPaint
     {
         get => _subticksPaint;
-        set => SetPaintProperty(ref _subticksPaint, value);
+        set => SetPaintProperty(ref _subticksPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ZeroPaint"/>
     public IPaint<TDrawingContext>? ZeroPaint
     {
         get => _zeroPaint;
-        set => SetPaintProperty(ref _zeroPaint, value);
+        set => SetPaintProperty(ref _zeroPaint, value, true);
     }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPaint"/>
+    public IPaint<TDrawingContext>? CrosshairPaint
+    {
+        get => _crosshairPaint;
+        set => SetPaintProperty(ref _crosshairPaint, value, true);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsPaint"/>
+    public IPaint<TDrawingContext>? CrosshairLabelsPaint
+    {
+        get => _crosshairLabelsPaint;
+        set => SetPaintProperty(ref _crosshairLabelsPaint, value);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsBackground"/>
+    public LvcColor? CrosshairLabelsBackground { get; set; }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPadding"/>
+    public Padding? CrosshairPadding { get; set; }
 
     /// <summary>
     /// 
@@ -549,6 +573,114 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
             _ = separators.Remove(separatorValueKey.Key);
         }
+    }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.InvalidateCrosshair(Chart{TDrawingContext}, LvcPoint)"/>
+    public void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition)
+    {
+        if (CrosshairPaint is null || chart is not CartesianChart<TDrawingContext> cartesianChart) return;
+
+        var scale = this.GetNextScaler(cartesianChart);
+        var controlSize = cartesianChart.ControlSize;
+        var drawLocation = cartesianChart.DrawMarginLocation;
+        var drawMarginSize = cartesianChart.DrawMarginSize;
+
+        var lyi = drawLocation.Y;
+        var lyj = drawLocation.Y + drawMarginSize.Height;
+        var lxi = drawLocation.X;
+        var lxj = drawLocation.X + drawMarginSize.Width;
+
+        float xoo = 0f, yoo = 0f;
+
+        if (_orientation == AxisOrientation.X)
+        {
+            yoo = _position == AxisPosition.Start
+                 ? controlSize.Height - _yo
+                 : _yo;
+        }
+        else
+        {
+            xoo = _position == AxisPosition.Start
+                ? _xo
+                : controlSize.Width - _xo;
+        }
+
+        float x, y;
+        if (_orientation == AxisOrientation.X)
+        {
+            x = pointerPosition.X;
+            y = yoo;
+        }
+        else
+        {
+            x = xoo;
+            y = pointerPosition.Y;
+        }
+
+        if (CrosshairPaint.ZIndex == 0) CrosshairPaint.ZIndex = 1050;
+        CrosshairPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+        cartesianChart.Canvas.AddDrawableTask(CrosshairPaint);
+
+        if (_crosshairLine is null)
+        {
+            _crosshairLine = new TLineGeometry();
+            CrosshairPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLine);
+            UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+        }
+
+        if (CrosshairLabelsPaint is not null)
+        {
+            if (CrosshairLabelsPaint.ZIndex == 0) CrosshairLabelsPaint.ZIndex = 1050;
+            if(Orientation == AxisOrientation.X)
+            {
+                CrosshairLabelsPaint.SetClipRectangle(
+                    cartesianChart.Canvas,
+                    new LvcRectangle(new LvcPoint(drawLocation.X, 0),
+                    new LvcSize(drawMarginSize.Width, controlSize.Height)));
+            }
+            else
+            {
+                CrosshairLabelsPaint.SetClipRectangle(
+                    cartesianChart.Canvas,
+                    new LvcRectangle(new LvcPoint(0, drawLocation.Y),
+                    new LvcSize(controlSize.Width, drawMarginSize.Height)));
+            }
+            cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint);
+        }
+
+        if (_crosshairLabel is null && CrosshairLabelsPaint is not null)
+        {
+            _crosshairLabel = new TTextGeometry();
+            CrosshairLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLabel);
+        }
+
+        if (_crosshairLabel is not null)
+        {
+            var t = Orientation == AxisOrientation.X
+                ? scale.ToChartValues(x)
+                : scale.ToChartValues(y);
+
+            var labeler = Labeler;
+            if (Labels is not null)
+            {
+                labeler = Labelers.BuildNamedLabeler(Labels).Function;
+            }
+
+            _crosshairLabel.Text = labeler(t);
+            _crosshairLabel.TextSize = (float)TextSize;
+            _crosshairLabel.Background = CrosshairLabelsBackground ?? LvcColor.Empty;
+            _crosshairLabel.Padding = CrosshairPadding ?? _padding;
+            _crosshairLabel.X = x;
+            _crosshairLabel.Y = y;
+
+            var r = (float)_labelsRotation;
+            var hasRotation = Math.Abs(r) > 0.01f;
+            if (hasRotation) _crosshairLabel.RotateTransform = r;
+        }
+
+        UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
+
+        chart.Update();
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>

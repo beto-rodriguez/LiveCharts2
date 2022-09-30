@@ -52,6 +52,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
+    private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
@@ -81,7 +82,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The x axes.
     /// </value>
-    public ICartesianAxis[] XAxes { get; private set; } = Array.Empty<ICartesianAxis>();
+    public ICartesianAxis<TDrawingContext>[] XAxes { get; private set; } = Array.Empty<ICartesianAxis<TDrawingContext>>();
 
     /// <summary>
     /// Gets the y axes.
@@ -89,7 +90,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The y axes.
     /// </value>
-    public ICartesianAxis[] YAxes { get; private set; } = Array.Empty<ICartesianAxis>();
+    public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } = Array.Empty<ICartesianAxis<TDrawingContext>>();
 
     /// <summary>
     /// Gets the series.
@@ -419,8 +420,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        YAxes = _chartView.YAxes.Cast<ICartesianAxis>().Select(x => x).ToArray();
-        XAxes = _chartView.XAxes.Cast<ICartesianAxis>().Select(x => x).ToArray();
+        YAxes = _chartView.YAxes.Cast<ICartesianAxis<TDrawingContext>>().Select(x => x).ToArray();
+        XAxes = _chartView.XAxes.Cast<ICartesianAxis<TDrawingContext>>().Select(x => x).ToArray();
 
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
@@ -461,6 +462,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.Initialize(AxisOrientation.X);
             theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
+            if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
         foreach (var axis in YAxes)
         {
@@ -468,6 +470,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.Initialize(AxisOrientation.Y);
             theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
+            if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
 
         // get seriesBounds
@@ -765,6 +768,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             axis.RemoveFromUI(this);
             _ = _everMeasuredAxes.Remove(axis);
+            _crosshair.Remove((ICartesianAxis<TDrawingContext>)axis);
         }
         foreach (var section in toDeleteSections)
         {
@@ -815,6 +819,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         Canvas.Dispose();
 
+        _crosshair = new();
         IsFirstDraw = true;
     }
 
@@ -853,6 +858,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     internal override void InvokePointerMove(LvcPoint point)
     {
+        foreach (var axis in _crosshair)
+        {
+            axis.InvalidateCrosshair(this, point);
+        }
+
         if (_sectionZoomingStart is not null)
         {
             var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
