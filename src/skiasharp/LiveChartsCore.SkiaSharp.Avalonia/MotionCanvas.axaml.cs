@@ -114,7 +114,6 @@ public class MotionCanvas : UserControl
 
             CanvasCore.SetPaintTasks(tasks);
         }
-
     }
 
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
