@@ -105,7 +105,7 @@ public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     /// </value>
     public Orientation Orientation
     {
-        get => (Orientation)GetValue(OrientationProperty);
+        get => (Orientation)GetValue(OrientationProperty)!;
         set => SetValue(OrientationProperty, value);
     }
 
@@ -117,7 +117,7 @@ public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     /// </value>
     public Dock Dock
     {
-        get => (Dock)GetValue(DockProperty);
+        get => (Dock)GetValue(DockProperty)!;
         set => SetValue(DockProperty, value);
     }
 

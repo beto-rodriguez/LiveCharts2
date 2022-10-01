@@ -60,7 +60,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </summary>
     protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
-    private MotionCanvas? _avaloniaCanvas;
+    private MotionCanvas _avaloniaCanvas = null!;
     private Chart<SkiaSharpDrawingContext>? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
@@ -114,7 +114,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         PointerPressed += PolarChart_PointerPressed;
         PointerMoved += PolarChart_PointerMoved;
 
-        PointerLeave += PolarChart_PointerLeave;
+        PointerExited += PolarChart_PointerLeave;
         DetachedFromVisualTree += PolarChart_DetachedFromVisualTree;
     }
 
@@ -379,84 +379,89 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
     {
-        get => GetValue(SyncContextProperty);
+        get => GetValue(SyncContextProperty) ?? throw new Exception($"{nameof(SyncContext)} can not be null.");
         set => SetValue(SyncContextProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
     public bool FitToBounds
     {
-        get => (bool)GetValue(FitToBoundsProperty);
+        get => (bool)GetValue(FitToBoundsProperty)!;
         set => SetValue(FitToBoundsProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
     public double TotalAngle
     {
-        get => (double)GetValue(TotalAngleProperty);
+        get => (double)GetValue(TotalAngleProperty)!;
         set => SetValue(TotalAngleProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
     public double InnerRadius
     {
-        get => (double)GetValue(InnerRadiusProperty);
+        get => (double)GetValue(InnerRadiusProperty)!;
         set => SetValue(InnerRadiusProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
     public double InitialRotation
     {
-        get => (double)GetValue(InitialRotationProperty);
+        get => (double)GetValue(InitialRotationProperty)!;
         set => SetValue(InitialRotationProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (IEnumerable<ISeries>?)GetValue(SeriesProperty)
+            ?? throw new Exception($"{nameof(Series)} can not be null.");
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
     public IEnumerable<IPolarAxis> AngleAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty);
+        get => (IEnumerable<IPolarAxis>?)GetValue(AngleAxesProperty)
+            ?? throw new Exception($"{nameof(AngleAxes)} can not be null.");
         set => SetValue(AngleAxesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
     public IEnumerable<IPolarAxis> RadiusAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty);
+        get => (IEnumerable<IPolarAxis>?)GetValue(RadiusAxesProperty)
+            ?? throw new Exception($"{nameof(RadiusAxes)} can not be null.");
         set => SetValue(RadiusAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)GetValue(VisualElementsProperty)
+            ?? throw new Exception($"{nameof(VisualElements)} can not be null.");
         set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     public TimeSpan AnimationsSpeed
     {
-        get => (TimeSpan)GetValue(AnimationsSpeedProperty);
+        get => (TimeSpan)GetValue(AnimationsSpeedProperty)!;
         set => SetValue(AnimationsSpeedProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.EasingFunction" />
     public Func<float, float>? EasingFunction
     {
-        get => (Func<float, float>)GetValue(EasingFunctionProperty);
+        get => (Func<float, float>?)GetValue(EasingFunctionProperty)
+            ?? throw new Exception($"{nameof(EasingFunction)} can not be null.");
         set => SetValue(EasingFunctionProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
     {
-        get => (TooltipPosition)GetValue(TooltipPositionProperty);
+        get => (TooltipPosition)GetValue(TooltipPositionProperty)!;
         set => SetValue(TooltipPositionProperty, value);
     }
 
@@ -466,9 +471,9 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <value>
     /// The tool tip template.
     /// </value>
-    public DataTemplate TooltipTemplate
+    public DataTemplate? TooltipTemplate
     {
-        get => (DataTemplate)GetValue(TooltipTemplateProperty);
+        get => (DataTemplate?)GetValue(TooltipTemplateProperty);
         set => SetValue(TooltipTemplateProperty, value);
     }
 
@@ -480,7 +485,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public FontFamily TooltipFontFamily
     {
-        get => (FontFamily)GetValue(TooltipFontFamilyProperty);
+        get => (FontFamily?)GetValue(TooltipFontFamilyProperty)
+            ?? throw new Exception($"{nameof(TooltipFontFamily)} can not be null.");
         set => SetValue(TooltipFontFamilyProperty, value);
     }
 
@@ -492,7 +498,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public double TooltipFontSize
     {
-        get => (double)GetValue(TooltipFontSizeProperty);
+        get => (double)GetValue(TooltipFontSizeProperty)!;
         set => SetValue(TooltipFontSizeProperty, value);
     }
 
@@ -504,7 +510,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public FontWeight TooltipFontWeight
     {
-        get => (FontWeight)GetValue(TooltipFontWeightProperty);
+        get => (FontWeight)GetValue(TooltipFontWeightProperty)!;
         set => SetValue(TooltipFontWeightProperty, value);
     }
 
@@ -516,7 +522,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public FontStyle TooltipFontStyle
     {
-        get => (FontStyle)GetValue(TooltipFontStyleProperty);
+        get => (FontStyle)GetValue(TooltipFontStyleProperty)!;
         set => SetValue(TooltipFontStyleProperty, value);
     }
 
@@ -528,7 +534,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public SolidColorBrush TooltipTextBrush
     {
-        get => (SolidColorBrush)GetValue(TooltipTextBrushProperty);
+        get => (SolidColorBrush?)GetValue(TooltipTextBrushProperty)
+            ?? throw new Exception($"{nameof(TooltipTextBrush)} can not be null.");
         set => SetValue(TooltipTextBrushProperty, value);
     }
 
@@ -540,7 +547,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public IBrush TooltipBackground
     {
-        get => (IBrush)GetValue(TooltipBackgroundProperty);
+        get => (IBrush?)GetValue(TooltipBackgroundProperty)
+            ?? throw new Exception($"{nameof(TooltipBackground)} can not be null.");
         set => SetValue(TooltipBackgroundProperty, value);
     }
 
@@ -550,14 +558,14 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition
     {
-        get => (LegendPosition)GetValue(LegendPositionProperty);
+        get => (LegendPosition)GetValue(LegendPositionProperty)!;
         set => SetValue(LegendPositionProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.LegendOrientation" />
     public LegendOrientation LegendOrientation
     {
-        get => (LegendOrientation)GetValue(LegendOrientationProperty);
+        get => (LegendOrientation)GetValue(LegendOrientationProperty)!;
         set => SetValue(LegendOrientationProperty, value);
     }
 
@@ -567,9 +575,10 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <value>
     /// The legend template.
     /// </value>
-    public DataTemplate LegendTemplate
+    public DataTemplate? LegendTemplate
     {
-        get => (DataTemplate)GetValue(LegendTemplateProperty);
+        get => (DataTemplate?)GetValue(LegendTemplateProperty)
+            ?? throw new Exception($"{nameof(LegendTemplate)} can not be null.");
         set => SetValue(LegendTemplateProperty, value);
     }
 
@@ -581,7 +590,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public FontFamily LegendFontFamily
     {
-        get => (FontFamily)GetValue(LegendFontFamilyProperty);
+        get => (FontFamily?)GetValue(LegendFontFamilyProperty)
+            ?? throw new Exception($"{nameof(LegendFontFamily)} can not be null.");
         set => SetValue(LegendFontFamilyProperty, value);
     }
 
@@ -593,7 +603,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public double LegendFontSize
     {
-        get => (double)GetValue(LegendFontSizeProperty);
+        get => (double)GetValue(LegendFontSizeProperty)!;
         set => SetValue(LegendFontSizeProperty, value);
     }
 
@@ -605,7 +615,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public FontWeight LegendFontWeight
     {
-        get => (FontWeight)GetValue(LegendFontWeightProperty);
+        get => (FontWeight)GetValue(LegendFontWeightProperty)!;
         set => SetValue(LegendFontWeightProperty, value);
     }
 
@@ -617,7 +627,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public FontStyle LegendFontStyle
     {
-        get => (FontStyle)GetValue(LegendFontStyleProperty);
+        get => (FontStyle)GetValue(LegendFontStyleProperty)!;
         set => SetValue(LegendFontStyleProperty, value);
     }
 
@@ -629,7 +639,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public SolidColorBrush LegendTextBrush
     {
-        get => (SolidColorBrush)GetValue(LegendTextBrushProperty);
+        get => (SolidColorBrush?)GetValue(LegendTextBrushProperty)
+            ?? throw new Exception($"{nameof(LegendTextBrush)} can not be null.");
         set => SetValue(LegendTextBrushProperty, value);
     }
 
@@ -641,7 +652,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public IBrush LegendBackground
     {
-        get => (IBrush)GetValue(LegendBackgroundProperty);
+        get => (IBrush?)GetValue(LegendBackgroundProperty)
+            ?? throw new Exception($"{nameof(LegendBackground)} can not be null.");
         set => SetValue(LegendBackgroundProperty, value);
     }
 
@@ -733,7 +745,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <returns></returns>
     protected void InitializeCore()
     {
-        var canvas = this.FindControl<MotionCanvas>("canvas");
+        var canvas = this.FindControl<MotionCanvas>("canvas") ?? throw new Exception("Canvas not found");
         _avaloniaCanvas = canvas;
         _core = new PolarChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
@@ -748,8 +760,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         _core.Update();
     }
 
-    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
-    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
 
@@ -757,31 +769,31 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
 
         if (change.Property.Name == nameof(SyncContext))
         {
-            CoreCanvas.Sync = change.NewValue;
+            CoreCanvas.Sync = change.NewValue ?? throw new Exception("SyncContext can not be null");
         }
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-            _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<ISeries>?)change.OldValue);
+            _seriesObserver?.Initialize((IEnumerable<ISeries>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(AngleAxes))
         {
-            _angleObserver?.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
-            _angleObserver?.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
+            _angleObserver?.Dispose((IEnumerable<IPolarAxis>?)change.OldValue);
+            _angleObserver?.Initialize((IEnumerable<IPolarAxis>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(RadiusAxes))
         {
-            _radiusObserver?.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
-            _radiusObserver?.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
+            _radiusObserver?.Dispose((IEnumerable<IPolarAxis>?)change.OldValue);
+            _radiusObserver?.Initialize((IEnumerable<IPolarAxis>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(VisualElements))
         {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.OldValue.Value);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.NewValue.Value);
+            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.OldValue);
+            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.NewValue);
         }
 
         _core.Update();
@@ -818,7 +830,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
 
     private void PolarChart_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current!.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         var p = e.GetPosition(this);
         foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
         _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), false);
@@ -832,7 +844,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
 
     private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current!.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
         var p = e.GetPosition(this);
         _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), false);
