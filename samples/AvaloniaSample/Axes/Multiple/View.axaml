@@ -11,8 +11,21 @@
     YAxes="{Binding YAxes}"
     LegendPosition="Left"
     LegendFontFamily="Courier New"
+    LegendFontSize="12">
+  </lvc:CartesianChart>
+
+<!--
+ this used to work, colors are removed for now
+ https://github.com/AvaloniaUI/Avalonia/issues/9063
+
+ <lvc:CartesianChart
+    Series="{Binding Series}"
+    YAxes="{Binding YAxes}"
+    LegendPosition="Left"
+    LegendFontFamily="Courier New"
     LegendFontSize="12"
     LegendTextBrush="#505050"
     LegendBackground="#fafafa">
   </lvc:CartesianChart>
+-->
 </UserControl>
