@@ -78,7 +78,7 @@ public class TooltipBindingContext
     /// <value>
     /// The tool tip text brush.
     /// </value>
-    public SolidColorBrush TooltipTextBrush { get; set; } = new(Color.FromRgb(35, 35, 35));
+    public IBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
 
     /// <summary>
     /// Gets or sets the tool tip background.

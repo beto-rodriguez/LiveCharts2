@@ -239,8 +239,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <summary>
     /// The tool tip text brush property.
     /// </summary>
-    public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
-        AvaloniaProperty.Register<PolarChart, SolidColorBrush>(
+    public static readonly AvaloniaProperty<IBrush> TooltipTextBrushProperty =
+        AvaloniaProperty.Register<PolarChart, IBrush>(
             nameof(TooltipTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
     /// <summary>
@@ -299,8 +299,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <summary>
     /// The legend text brush property.
     /// </summary>
-    public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
-        AvaloniaProperty.Register<PolarChart, SolidColorBrush>(
+    public static readonly AvaloniaProperty<IBrush> LegendTextBrushProperty =
+        AvaloniaProperty.Register<PolarChart, IBrush>(
             nameof(LegendTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
     /// <summary>
@@ -532,9 +532,9 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <value>
     /// The tool tip text brush.
     /// </value>
-    public SolidColorBrush TooltipTextBrush
+    public IBrush TooltipTextBrush
     {
-        get => (SolidColorBrush?)GetValue(TooltipTextBrushProperty)
+        get => (IBrush?)GetValue(TooltipTextBrushProperty)
             ?? throw new Exception($"{nameof(TooltipTextBrush)} can not be null.");
         set => SetValue(TooltipTextBrushProperty, value);
     }
@@ -637,9 +637,9 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// <value>
     /// The legend text brush.
     /// </value>
-    public SolidColorBrush LegendTextBrush
+    public IBrush LegendTextBrush
     {
-        get => (SolidColorBrush?)GetValue(LegendTextBrushProperty)
+        get => (IBrush?)GetValue(LegendTextBrushProperty)
             ?? throw new Exception($"{nameof(LegendTextBrush)} can not be null.");
         set => SetValue(LegendTextBrushProperty, value);
     }

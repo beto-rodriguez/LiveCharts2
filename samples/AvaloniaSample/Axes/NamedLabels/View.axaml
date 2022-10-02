@@ -16,23 +16,9 @@
         YAxes="{Binding YAxes}"
         TooltipPosition="Left"
         TooltipFontFamily="Courier New"
-        TooltipFontSize="25">
-    </lvc:CartesianChart>
-
-<!--
- this used to work, colors are removed for now
- https://github.com/AvaloniaUI/Avalonia/issues/9063
-
- <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        YAxes="{Binding YAxes}"
-        TooltipPosition="Left"
-        TooltipFontFamily="Courier New"
         TooltipFontSize="25"
         TooltipTextBrush="#f2f4c3"
         TooltipBackground="#480032">
     </lvc:CartesianChart>
--->
   </Grid> 
 </UserControl>

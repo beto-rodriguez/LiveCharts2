@@ -77,7 +77,7 @@ public interface IAvaloniaChart
     /// <value>
     /// The tool tip text brush.
     /// </value>
-    SolidColorBrush TooltipTextBrush { get; set; }
+    IBrush TooltipTextBrush { get; set; }
 
     /// <summary>
     /// Gets or sets the tool tip background.
@@ -133,7 +133,7 @@ public interface IAvaloniaChart
     /// <value>
     /// The legend text brush.
     /// </value>
-    SolidColorBrush LegendTextBrush { get; set; }
+    IBrush LegendTextBrush { get; set; }
 
     /// <summary>
     /// Gets or sets the legend background.

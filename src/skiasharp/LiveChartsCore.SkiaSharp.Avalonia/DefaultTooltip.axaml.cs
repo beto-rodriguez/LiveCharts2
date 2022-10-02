@@ -29,6 +29,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
+using Avalonia.Rendering;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -117,8 +118,8 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
     /// <value>
     /// The tool tip text brush.
     /// </value>
-    public SolidColorBrush TooltipTextBrush { get; set; } = new(Color.FromRgb(35, 35, 35));
-
+    public IBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+    
     /// <summary>
     /// Gets or sets the tooltip background.
     /// </summary>

@@ -253,8 +253,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <summary>
     /// The tool tip text brush property
     /// </summary>
-    public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
-        AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
+    public static readonly AvaloniaProperty<IBrush> TooltipTextBrushProperty =
+        AvaloniaProperty.Register<CartesianChart, IBrush>(
             nameof(TooltipTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
     /// <summary>
@@ -313,8 +313,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <summary>
     /// The legend text brush property
     /// </summary>
-    public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
-        AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
+    public static readonly AvaloniaProperty<IBrush> LegendTextBrushProperty =
+        AvaloniaProperty.Register<CartesianChart, IBrush>(
             nameof(LegendTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
     /// <summary>
@@ -557,9 +557,10 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <value>
     /// The tool tip text brush.
     /// </value>
-    public SolidColorBrush TooltipTextBrush
+    public IBrush TooltipTextBrush
     {
-        get => (SolidColorBrush?)GetValue(TooltipTextBrushProperty) ?? throw new Exception($"{nameof(TooltipTextBrush)} must not be null.");
+        get => (IBrush?)GetValue(TooltipTextBrushProperty)
+            ?? throw new Exception($"{nameof(TooltipTextBrush)} must not be null.");
         set => SetValue(TooltipTextBrushProperty, value);
     }
 
@@ -658,9 +659,10 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <value>
     /// The legend text brush.
     /// </value>
-    public SolidColorBrush LegendTextBrush
+    public IBrush LegendTextBrush
     {
-        get => (SolidColorBrush?)GetValue(LegendTextBrushProperty) ?? throw new Exception($"{nameof(LegendTextBrush)} must not be null.");
+        get => (IBrush?)GetValue(LegendTextBrushProperty)
+            ?? throw new Exception($"{nameof(LegendTextBrush)} must not be null.");
         set => SetValue(LegendTextBrushProperty, value);
     }
 
@@ -672,7 +674,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </value>
     public IBrush LegendBackground
     {
-        get => (IBrush?)GetValue(LegendBackgroundProperty) ?? throw new Exception($"{nameof(LegendBackground)} must not be null.");
+        get => (IBrush?)GetValue(LegendBackgroundProperty)
+            ?? throw new Exception($"{nameof(LegendBackground)} must not be null.");
         set => SetValue(LegendBackgroundProperty, value);
     }
 
