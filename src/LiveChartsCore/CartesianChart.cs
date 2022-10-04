@@ -406,7 +406,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                                // the animations are not as expected because previously it ran in an invalid case.
 
         InvokeOnMeasuring();
-
+        
         if (preserveFirstDraw)
         {
             IsFirstDraw = true;

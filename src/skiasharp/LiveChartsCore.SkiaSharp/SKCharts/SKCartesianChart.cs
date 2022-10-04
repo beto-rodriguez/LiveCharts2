@@ -32,6 +32,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -190,6 +191,9 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
 
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     public TooltipPosition TooltipPosition { get; set; }
+
+    /// <inheritdoc cref="IChartView.TooltipPosition"/>
+    public VisualElement<SkiaSharpDrawingContext> Tile { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
