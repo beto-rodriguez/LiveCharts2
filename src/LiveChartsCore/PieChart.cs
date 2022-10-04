@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -213,7 +214,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             series.IsNotifyingChanges = true;
         }
 
-        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
+        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
         {
             Legend.Draw(this);
             Update();

@@ -311,7 +311,9 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
+
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
+        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
         {
             Legend.Draw(this);
             Update();

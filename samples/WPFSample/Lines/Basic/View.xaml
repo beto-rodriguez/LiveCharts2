@@ -6,5 +6,5 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:CartesianChart Series="{Binding Series}"/>
+    <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Bottom" />
 </UserControl>

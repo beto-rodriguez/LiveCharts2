@@ -544,7 +544,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || SizeChanged()))
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
+        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
         {
             Legend.Draw(this);
             PreviousLegendPosition = LegendPosition;
