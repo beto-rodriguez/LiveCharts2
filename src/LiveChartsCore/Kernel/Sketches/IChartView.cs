@@ -175,7 +175,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Gets or sets the chart title.
     /// </summary>
-    VisualElement<TDrawingContext> Tile { get; set; }
+    VisualElement<TDrawingContext>? Tile { get; set; }
 
     /// <summary>
     /// Occurs before the chart is measured, this is the first step before the chart updates.

@@ -193,7 +193,7 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
-    public VisualElement<SkiaSharpDrawingContext> Tile { get; set; }
+    public VisualElement<SkiaSharpDrawingContext>? Tile { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
