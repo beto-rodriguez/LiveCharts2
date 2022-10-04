@@ -47,7 +47,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// The preserve first draw
     /// </summary>
-    protected bool preserveFirstDraw = false;
+    internal bool _preserveFirstDraw = false;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;

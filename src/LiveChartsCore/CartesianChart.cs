@@ -406,11 +406,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                                // the animations are not as expected because previously it ran in an invalid case.
 
         InvokeOnMeasuring();
-        
-        if (preserveFirstDraw)
+
+        if (_preserveFirstDraw)
         {
             IsFirstDraw = true;
-            preserveFirstDraw = false;
+            _preserveFirstDraw = false;
         }
 
         MeasureWork = new object();
@@ -551,7 +551,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             PreviousLegendPosition = LegendPosition;
             PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
             foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-            preserveFirstDraw = IsFirstDraw;
+            _preserveFirstDraw = IsFirstDraw;
             SetPreviousSize();
             Measure();
             return;
@@ -665,6 +665,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             Margin.IsAuto(rm.Bottom) ? m.Bottom : rm.Bottom);
 
         SetDrawMargin(ControlSize, actualMargin);
+
+        if (View.Title is not null)
+        {
+            var titleSize = View.Title.Measure(this, null, null);
+        }
 
         // invalid dimensions, probably the chart is too small
         // or it is initializing in the UI and has no dimensions yet

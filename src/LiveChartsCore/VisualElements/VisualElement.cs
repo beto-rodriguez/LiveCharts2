@@ -20,10 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -98,6 +95,10 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
             primary = primaryAxis.GetNextScaler(cartesianChart);
         }
 
+        // Todo: polar and pie
+        // if (chart is PolarChart<TDrawingContext> pc)
+        // if (chart is PieChart<TDrawingContext> pc)
+
         foreach (var paintTask in GetPaintTasks())
         {
             if (paintTask is null) continue;
@@ -112,9 +113,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
             chart.Canvas.AddDrawableTask(paintTask);
         }
 
-        if (primary is null || secondary is null) throw new Exception($"This chart does not support VisualElements");
-
-        Draw(chart, primary, secondary);
+        OnInvalidated(chart, primary, secondary);
     }
 
     /// <summary>
@@ -129,7 +128,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
     /// <returns>The size of the element.</returns>
-    public abstract LvcSize Measure(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
+    public abstract LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
     /// <summary>
     /// Gets the actual size of the element.
@@ -169,5 +168,5 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <param name="secondaryScaler">
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
-    protected internal abstract void Draw(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
+    protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 }

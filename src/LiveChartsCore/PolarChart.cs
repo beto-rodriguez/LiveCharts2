@@ -175,10 +175,10 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         InvokeOnMeasuring();
 
-        if (preserveFirstDraw)
+        if (_preserveFirstDraw)
         {
             IsFirstDraw = true;
-            preserveFirstDraw = false;
+            _preserveFirstDraw = false;
         }
 
         MeasureWork = new object();
@@ -319,7 +319,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             Update();
             PreviousLegendPosition = LegendPosition;
             PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-            preserveFirstDraw = IsFirstDraw;
+            _preserveFirstDraw = IsFirstDraw;
         }
 
         // calculate draw margin

@@ -43,16 +43,19 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
     /// </summary>
     public event Action<TGeometry>? GeometryIntialized;
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler primaryAxisScale, Scaler secondaryAxisScale)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         var w = (float)Width;
         var h = (float)Height;
 
         if (SizeUnit == MeasureUnit.ChartValues)
         {
-            w = secondaryAxisScale.MeasureInPixels(w);
-            h = primaryAxisScale.MeasureInPixels(h);
+            if (primaryScaler is null || secondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
+            w = secondaryScaler.MeasureInPixels(w);
+            h = primaryScaler.MeasureInPixels(h);
         }
 
         return _actualSize = new LvcSize(w, h);
@@ -64,14 +67,17 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
         return _actualSize;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw"/>
-    protected internal override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         var x = (float)X;
         var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
+            if (primaryScaler is null || secondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
             x = secondaryScaler.ToPixels(x);
             y = primaryScaler.ToPixels(y);
         }
