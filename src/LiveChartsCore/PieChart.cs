@@ -215,7 +215,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         }
 
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
+        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
         {
             Legend.Draw(this);
             Update();
