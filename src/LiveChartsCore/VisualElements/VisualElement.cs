@@ -98,6 +98,14 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
         // Todo: polar and pie
         // if (chart is PolarChart<TDrawingContext> pc)
         // if (chart is PieChart<TDrawingContext> pc)
+        // if (chart is PolarChart<TDrawingContext> pc)
+        // {
+        //     var primaryAxis = pc.AngleAxes[ScalesYAt];
+        //     var secondaryAxis = pc.RadiusAxes[ScalesXAt];
+
+        //     var primary = new PolarScaler(
+        //         chart.DrawMarginLocation, chart.DrawMarginSize, primaryAxis, secondaryAxis, pc.InnerRadius, pc.InitialRotation, pc.TotalAnge);
+        // }
 
         foreach (var paintTask in GetPaintTasks())
         {
@@ -105,9 +113,9 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 
             if (cartesianChart is not null)
             {
-                paintTask.SetClipRectangle(
-                    cartesianChart.Canvas,
-                    new LvcRectangle(cartesianChart.DrawMarginLocation, cartesianChart.DrawMarginSize));
+                //paintTask.SetClipRectangle(
+                //    cartesianChart.Canvas,
+                //    new LvcRectangle(cartesianChart.DrawMarginLocation, cartesianChart.DrawMarginSize));
             }
 
             chart.Canvas.AddDrawableTask(paintTask);
@@ -169,4 +177,9 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
     protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
+
+    internal virtual void AlignToTopLeftCorner()
+    {
+        // just a workaround to align labels as the rest of the geometries.
+    }
 }

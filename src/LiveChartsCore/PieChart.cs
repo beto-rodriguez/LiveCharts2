@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -41,8 +40,6 @@ namespace LiveChartsCore;
 public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly HashSet<ISeries> _everMeasuredSeries = new();
-    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredVisuals = new();
     private readonly IPieChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
     private readonly bool _requiresLegendMeasureAlways = false;
@@ -234,34 +231,12 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
-        foreach (var visual in VisualElements)
-        {
-            visual.Invalidate(this);
-            visual.RemoveOldPaints(View);
-            _ = _everMeasuredVisuals.Add(visual);
-            _ = toDeleteVisualElements.Remove(visual);
-        }
+        InitializeVisualsCollector();
 
-        var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
-        foreach (var series in Series)
-        {
-            series.Invalidate(this);
-            series.RemoveOldPaints(View);
-            _ = _everMeasuredSeries.Add(series);
-            _ = toDeleteSeries.Remove(series);
-        }
+        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
+        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
 
-        foreach (var series in toDeleteSeries)
-        {
-            series.SoftDeleteOrDispose(View);
-            _ = _everMeasuredSeries.Remove(series);
-        }
-        foreach (var visual in toDeleteVisualElements)
-        {
-            visual.RemoveFromUI(this);
-            _ = _everMeasuredVisuals.Remove(visual);
-        }
+        CollectVisuals();
 
         InvokeOnUpdateStarted();
         IsFirstDraw = false;
@@ -276,11 +251,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     public override void Unload()
     {
         base.Unload();
-
-        foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
-        _everMeasuredSeries.Clear();
-        foreach (var item in _everMeasuredVisuals) item.RemoveFromUI(this);
-        _everMeasuredVisuals.Clear();
         IsFirstDraw = true;
     }
 }

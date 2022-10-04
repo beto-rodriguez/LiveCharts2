@@ -97,10 +97,15 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// </summary>
     public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paint };
+    }
+
+    internal override void AlignToTopLeftCorner()
+    {
+        VerticalAlignment = Align.Start;
+        HorizontalAlignment = Align.Start;
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
@@ -158,7 +163,17 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
     public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var l = _labelGeometry ?? new LabelGeometry() { };
+        var l = _labelGeometry ?? new LabelGeometry()
+        {
+            Text = Text,
+            TextSize = (float)TextSize,
+            RotateTransform = (float)Rotation,
+            TranslateTransform = Translate,
+            VerticalAlign = VerticalAlignment,
+            HorizontalAlign = HorizontalAlignment,
+            Background = BackgroundColor,
+            Padding = Padding,
+        };
 
         return _actualSize = _paint is null
             ? new LvcSize()

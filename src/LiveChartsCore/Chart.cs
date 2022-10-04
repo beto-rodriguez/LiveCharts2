@@ -330,10 +330,10 @@ public abstract class Chart<TDrawingContext> : IChart
     public virtual void Unload()
     {
         IsLoaded = false;
-
         _everMeasuredElements.Clear();
         _toDeleteElements.Clear();
         _activePoints.Clear();
+        Canvas.Dispose();
     }
 
     internal void ClearTooltipData()
@@ -532,7 +532,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Registers and tracks the specified element.
     /// </summary>
-    protected void RegisterVisual(ChartElement<TDrawingContext> element)
+    protected void RegisterAndInvalidateVisual(ChartElement<TDrawingContext> element)
     {
         element.Invalidate(this);
         element.RemoveOldPaints(View);

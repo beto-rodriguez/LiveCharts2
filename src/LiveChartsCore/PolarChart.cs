@@ -40,10 +40,6 @@ namespace LiveChartsCore;
 public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    internal readonly HashSet<ISeries> _everMeasuredSeries = new();
-    internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
-    internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
-    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredVisuals = new();
     private readonly IPolarChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
     private readonly bool _requiresLegendMeasureAlways = false;
@@ -311,7 +307,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
         {
@@ -443,8 +438,9 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
+        InitializeVisualsCollector();
+
         var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
-        var toDeleteAxes = new HashSet<IPlane<TDrawingContext>>(_everMeasuredAxes);
         foreach (var axis in totalAxes)
         {
             if (axis.DataBounds.Max == axis.DataBounds.Min)
@@ -478,50 +474,15 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.IsNotifyingChanges = true;
             }
 
-            var drawablePlane = (IPlane<TDrawingContext>)axis;
-            _ = _everMeasuredAxes.Add(drawablePlane);
-            if (drawablePlane.IsVisible)
-            {
-                drawablePlane.Invalidate(this);
-                _ = toDeleteAxes.Remove(drawablePlane);
-            }
-
-            drawablePlane.RemoveOldPaints(View);
+            if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
+            ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
+            // the probable issue is the "IsVisible" property
         }
 
-        var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
-        foreach (var visual in VisualElements)
-        {
-            visual.Invalidate(this);
-            visual.RemoveOldPaints(View);
-            _ = _everMeasuredVisuals.Add(visual);
-            _ = toDeleteVisualElements.Remove(visual);
-        }
+        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
+        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
 
-        var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
-        foreach (var series in Series)
-        {
-            series.Invalidate(this);
-            series.RemoveOldPaints(View);
-            _ = _everMeasuredSeries.Add(series);
-            _ = toDeleteSeries.Remove(series);
-        }
-
-        foreach (var series in toDeleteSeries)
-        {
-            series.SoftDeleteOrDispose(View);
-            _ = _everMeasuredSeries.Remove(series);
-        }
-        foreach (var axis in toDeleteAxes)
-        {
-            axis.RemoveFromUI(this);
-            _ = _everMeasuredAxes.Remove(axis);
-        }
-        foreach (var visual in toDeleteVisualElements)
-        {
-            visual.RemoveFromUI(this);
-            _ = _everMeasuredVisuals.Remove(visual);
-        }
+        CollectVisuals();
 
         foreach (var axis in totalAxes)
         {
@@ -567,15 +528,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     public override void Unload()
     {
         base.Unload();
-
-        foreach (var item in _everMeasuredAxes) item.RemoveFromUI(this);
-        _everMeasuredAxes.Clear();
-        foreach (var item in _everMeasuredSections) item.RemoveFromUI(this);
-        _everMeasuredSections.Clear();
-        foreach (var item in _everMeasuredVisuals) item.RemoveFromUI(this);
-        _everMeasuredVisuals.Clear();
-        foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
-        _everMeasuredSeries.Clear();
         IsFirstDraw = true;
     }
 }

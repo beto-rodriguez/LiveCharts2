@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using static System.Collections.Specialized.BitVector32;
 
 namespace LiveChartsCore;
 
@@ -40,10 +41,6 @@ namespace LiveChartsCore;
 public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    internal readonly HashSet<ISeries> _everMeasuredSeries = new();
-    internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
-    internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
-    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredVisuals = new();
     private readonly ICartesianChartView<TDrawingContext> _chartView;
     private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private int _nextSeries = 0;
@@ -557,9 +554,17 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             return;
         }
 
+        var title = View.Title;
+
         // calculate draw margin
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
+        if (title is not null)
+        {
+            var titleSize = title.Measure(this, null, null);
+            m.Top = titleSize.Height;
+            ts = titleSize.Height;
+        }
         SetDrawMargin(ControlSize, m);
 
         foreach (var axis in XAxes)
@@ -666,19 +671,23 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         SetDrawMargin(ControlSize, actualMargin);
 
-        if (View.Title is not null)
-        {
-            var titleSize = View.Title.Measure(this, null, null);
-        }
-
         // invalid dimensions, probably the chart is too small
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
         UpdateBounds();
+        InitializeVisualsCollector();
+
+        if (title is not null)
+        {
+            var titleSize = title.Measure(this, null, null);
+            title.AlignToTopLeftCorner();
+            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            title.Y = 0;
+            RegisterAndInvalidateVisual(title);
+        }
 
         var totalAxes = XAxes.Concat(YAxes).ToArray();
-        var toDeleteAxes = new HashSet<IPlane<TDrawingContext>>(_everMeasuredAxes);
 
         foreach (var axis in totalAxes)
         {
@@ -715,77 +724,29 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.IsNotifyingChanges = true;
             }
 
-            var drawablePlane = (IPlane<TDrawingContext>)axis;
-            if (drawablePlane.IsVisible)
-            {
-                _everMeasuredAxes.Add(drawablePlane);
-                drawablePlane.Invalidate(this);
-                _ = toDeleteAxes.Remove(drawablePlane);
-            }
-
-            drawablePlane.RemoveOldPaints(View);
+            if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
+            ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
+            // the probable issue is the "IsVisible" property
         }
 
-        var toDeleteSections = new HashSet<Section<TDrawingContext>>(_everMeasuredSections);
-        foreach (var section in Sections)
-        {
-            section.Invalidate(this);
-            section.RemoveOldPaints(View);
-            _ = _everMeasuredSections.Add(section);
-            _ = toDeleteSections.Remove(section);
-        }
-
-        var toDeleteVisualElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredVisuals);
-        foreach (var visual in VisualElements)
-        {
-            visual.Invalidate(this);
-            visual.RemoveOldPaints(View);
-            _ = _everMeasuredVisuals.Add(visual);
-            _ = toDeleteVisualElements.Remove(visual);
-        }
-
-        var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
-        foreach (var series in Series)
-        {
-            series.Invalidate(this);
-            series.RemoveOldPaints(View);
-            _ = _everMeasuredSeries.Add(series);
-            _ = toDeleteSeries.Remove(series);
-        }
+        foreach (var section in Sections) RegisterAndInvalidateVisual(section);
+        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
+        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
+            // probably obsolete?
+            // this should be handled by the RegisterAndInvalidateVisual() method.
             _previousDrawMarginFrame.RemoveFromUI(this);
             _previousDrawMarginFrame = null;
         }
         if (_chartView.DrawMarginFrame is not null)
         {
-            _chartView.DrawMarginFrame.Invalidate(this);
-            _chartView.DrawMarginFrame.RemoveOldPaints(View);
+            RegisterAndInvalidateVisual(_chartView.DrawMarginFrame);
             _previousDrawMarginFrame = _chartView.DrawMarginFrame;
         }
 
-        foreach (var series in toDeleteSeries)
-        {
-            series.SoftDeleteOrDispose(View);
-            _ = _everMeasuredSeries.Remove(series);
-        }
-        foreach (var axis in toDeleteAxes)
-        {
-            axis.RemoveFromUI(this);
-            _ = _everMeasuredAxes.Remove(axis);
-            _crosshair.Remove((ICartesianAxis<TDrawingContext>)axis);
-        }
-        foreach (var section in toDeleteSections)
-        {
-            section.RemoveFromUI(this);
-            _ = _everMeasuredSections.Remove(section);
-        }
-        foreach (var visual in toDeleteVisualElements)
-        {
-            visual.RemoveFromUI(this);
-            _ = _everMeasuredVisuals.Remove(visual);
-        }
+        CollectVisuals();
 
         foreach (var axis in totalAxes)
         {
@@ -813,18 +774,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public override void Unload()
     {
         base.Unload();
-
-        foreach (var item in _everMeasuredAxes) item.RemoveFromUI(this);
-        _everMeasuredAxes.Clear();
-        foreach (var item in _everMeasuredSections) item.RemoveFromUI(this);
-        _everMeasuredSections.Clear();
-        foreach (var item in _everMeasuredVisuals) item.RemoveFromUI(this);
-        _everMeasuredVisuals.Clear();
-        foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
-        _everMeasuredSeries.Clear();
-
-        Canvas.Dispose();
-
         _crosshair = new();
         IsFirstDraw = true;
     }
