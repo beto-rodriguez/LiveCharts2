@@ -177,8 +177,8 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     public TooltipPosition TooltipPosition { get; set; }
 
-    /// <inheritdoc cref="IChartView.TooltipPosition"/>
-    public VisualElement<SkiaSharpDrawingContext>? Tile { get; set; }
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;

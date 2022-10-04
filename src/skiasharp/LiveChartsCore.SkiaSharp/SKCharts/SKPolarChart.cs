@@ -189,8 +189,8 @@ public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharp
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }
 
-    /// <inheritdoc cref="IChartView.TooltipPosition"/>
-    public VisualElement<SkiaSharpDrawingContext>? Tile { get; set; }
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
