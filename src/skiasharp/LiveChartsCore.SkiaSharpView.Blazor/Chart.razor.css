@@ -166,7 +166,7 @@
 
     ::deep .lvc-tooltip-container.closed {
         display: none;
-        opacity: 1;
+        opacity: 0;
     }
 
 ::deep .lvc-tooltip {
