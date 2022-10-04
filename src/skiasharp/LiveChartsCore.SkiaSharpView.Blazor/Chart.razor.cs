@@ -136,7 +136,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     public string ContainerClass { get; set; } = string.Empty;
 
     /// <inheritdoc cref="IBlazorChart.LegendClass"/>
-    public string LegendClass { get; set; } = string.Empty;
+    public string LegendClass { get; set; } = "closed";
 
     /// <inheritdoc cref="IBlazorChart.TooltipClass"/>
     public string TooltipClass { get; set; } = "closed";
