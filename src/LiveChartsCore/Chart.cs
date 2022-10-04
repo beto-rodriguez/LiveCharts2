@@ -44,9 +44,9 @@ public abstract class Chart<TDrawingContext> : IChart
 {
     #region fields
 
-    /// <summary>
-    /// The preserve first draw
-    /// </summary>
+    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = new();
+    internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = new();
+
     internal bool _preserveFirstDraw = false;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
@@ -330,6 +330,9 @@ public abstract class Chart<TDrawingContext> : IChart
     public virtual void Unload()
     {
         IsLoaded = false;
+
+        _everMeasuredElements.Clear();
+        _toDeleteElements.Clear();
         _activePoints.Clear();
     }
 
@@ -516,6 +519,48 @@ public abstract class Chart<TDrawingContext> : IChart
 
             _ = Canvas.Trackers.Add(ActualBounds);
         }
+    }
+
+    /// <summary>
+    /// Initializes the visuals collector.
+    /// </summary>
+    protected void InitializeVisualsCollector()
+    {
+        _toDeleteElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredElements);
+    }
+
+    /// <summary>
+    /// Registers and tracks the specified element.
+    /// </summary>
+    protected void RegisterVisual(ChartElement<TDrawingContext> element)
+    {
+        element.Invalidate(this);
+        element.RemoveOldPaints(View);
+        _ = _everMeasuredElements.Add(element);
+        _ = _toDeleteElements.Remove(element);
+    }
+
+    /// <summary>
+    /// Collects and deletes from the UI the unused visuals.
+    /// </summary>
+    protected void CollectVisuals()
+    {
+        foreach (var visual in _toDeleteElements)
+        {
+            if (visual is ISeries series)
+            {
+                // series delete softly and animate as they leave the UI.
+                series.SoftDeleteOrDispose(View);
+            }
+            else
+            {
+                visual.RemoveFromUI(this);
+            }
+
+            _ = _everMeasuredElements.Remove(visual);
+        }
+
+        _toDeleteElements = new HashSet<ChartElement<TDrawingContext>>();
     }
 
     private Task TooltipThrottlerUnlocked()
