@@ -239,9 +239,6 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
 
         using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
         using var canvas = surface.Canvas;
-        using var clearColor = new SKPaint { Color = Background };
-
-        canvas.DrawRect(0, 0, Width, Height, clearColor);
 
         Core.IsLoaded = true;
         Core.IsFirstDraw = true;
@@ -252,7 +249,8 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
                 CoreCanvas,
                 new SKImageInfo(Height, Width),
                 surface,
-                canvas));
+                canvas,
+                Background));
 
         Core.Unload();
 
