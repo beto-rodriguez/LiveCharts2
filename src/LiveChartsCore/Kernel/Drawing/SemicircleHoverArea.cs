@@ -104,7 +104,7 @@ public class SemicircleHoverArea : HoverArea
     {
         var startAngle = StartAngle;
         // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
-        var endAngle = EndAngle - 0.01;//(EndAngle - 0.01) % 360;
+        var endAngle = EndAngle - 0.01;
 
         var dx = CenterX - pointerLocation.X;
         var dy = CenterY - pointerLocation.Y;
