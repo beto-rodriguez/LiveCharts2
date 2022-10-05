@@ -403,7 +403,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 if (DataLabelsPosition == PolarLabelsPosition.Outer)
                 {
                     var a = start + initialRotation + end * 0.5;
-                    var isStart = a is < 90 or (> 270 and < 360);
+                    var isStart = a % 360 is < 90 or (> 270 and < 360);
                     label.HorizontalAlign = label.HorizontalAlign = isStart ? Align.Start : Align.End;
                 }
 
@@ -657,8 +657,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 break;
         }
 
-        angle %= 360;
-        if (angle < 0) angle += 360;
+        //angle %= 360;
+        //if (angle < 0) angle += 360;
         angle *= toRadians;
 
         return new LvcPoint(
