@@ -36,6 +36,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.XamarinForms;
+using LiveChartsCore.VisualElements;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -129,6 +130,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
                 if (chart.core is null) return;
                 chart.core.Update();
             });
+
+    /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly BindableProperty TitleProperty =
+        BindableProperty.Create(
+            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(CartesianChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -466,6 +474,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         get => (Margin)GetValue(DrawMarginProperty);
         set => SetValue(DrawMarginProperty, value);
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />

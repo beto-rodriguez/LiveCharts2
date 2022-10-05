@@ -7,5 +7,5 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart Series="{Binding Series}"/>
+    <lvc:CartesianChart Series="{Binding Series}" Title="{Binding Title}" />
 </ContentPage>

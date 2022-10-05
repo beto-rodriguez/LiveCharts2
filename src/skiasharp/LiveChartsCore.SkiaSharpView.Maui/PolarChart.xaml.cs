@@ -150,6 +150,13 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
            propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly BindableProperty TitleProperty =
+        BindableProperty.Create(
+            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>), typeof(PolarChart), null, BindingMode.Default, null);
+
+    /// <summary>
     /// The series property.
     /// </summary>
     public static readonly BindableProperty SeriesProperty =
@@ -467,6 +474,13 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(InitialRotationProperty, value);
     }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
@@ -488,7 +502,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(RadiusAxesProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);

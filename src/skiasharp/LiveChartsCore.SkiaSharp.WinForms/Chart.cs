@@ -32,6 +32,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
 
@@ -68,6 +69,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     private Color _legendBackColor = Color.FromArgb(255, 255, 255, 255);
     private Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
     private Color _tooltipTextColor;
+    private VisualElement<SkiaSharpDrawingContext>? _title;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -169,6 +171,10 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.DrawMargin" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public VisualElement<SkiaSharpDrawingContext>? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

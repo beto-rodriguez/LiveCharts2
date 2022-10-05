@@ -36,6 +36,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Uno.Helpers;
+using LiveChartsCore.VisualElements;
 using Windows.Devices.Input;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
@@ -103,6 +104,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     }
 
     #region dependency properties
+
+    /// <summary>
+    /// The title property
+    /// </summary>
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(
+            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(CartesianChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property
@@ -486,6 +494,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
         _core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
+    }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
