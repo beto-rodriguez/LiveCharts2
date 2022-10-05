@@ -455,7 +455,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (TicksPaint is not null && _ticksPath is not null && !_drawTicksPath)
             TicksPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, _ticksPath);
 
-        for (var i = start - s; i <= max + s; i += s)
+        for (var i = start; i <= max; i += s)
         {
             var separatorKey = labeler(i - 1d + 1d);
             var labelContent = i < min || i > max ? string.Empty : separatorKey;
@@ -631,7 +631,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (CrosshairLabelsPaint is not null)
         {
             if (CrosshairLabelsPaint.ZIndex == 0) CrosshairLabelsPaint.ZIndex = 1050;
-            if(Orientation == AxisOrientation.X)
+            if (Orientation == AxisOrientation.X)
             {
                 CrosshairLabelsPaint.SetClipRectangle(
                     cartesianChart.Canvas,
