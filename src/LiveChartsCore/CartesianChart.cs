@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
-using static System.Collections.Specialized.BitVector32;
 
 namespace LiveChartsCore;
 
@@ -238,7 +237,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     maxt = max + ld * 0.5 * dir;
                 }
 
-                if (direction == ZoomDirection.ZoomIn && maxt - mint < xi.DataBounds.MinDelta * 3) return;
+                var minZoomDelta = xi.MinZoomDelta ?? xi.DataBounds.MinDelta * 3;
+                if (direction == ZoomDirection.ZoomIn && maxt - mint < minZoomDelta) continue;
 
                 var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
                 if (maxt > xi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = xi.DataBounds.Max + xm;
@@ -292,7 +292,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     maxt = max + ld * 0.5 * dir;
                 }
 
-                if (direction == ZoomDirection.ZoomIn && maxt - mint < yi.DataBounds.MinDelta * 3) return;
+                var minZoomDelta = yi.MinZoomDelta ?? yi.DataBounds.MinDelta * 3;
+                if (direction == ZoomDirection.ZoomIn && maxt - mint < minZoomDelta) continue;
 
                 var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
                 if (maxt > yi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = yi.DataBounds.Max + ym;

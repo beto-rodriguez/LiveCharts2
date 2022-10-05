@@ -259,6 +259,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
     bool IStopNPC.IsNotifyingChanges { get; set; }
 
+    /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
+    public double? MinZoomDelta { get; set; }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianAxis.Initialized"/>

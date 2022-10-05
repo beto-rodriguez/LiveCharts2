@@ -73,6 +73,12 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     LvcSize Size { get; set; }
 
     /// <summary>
+    /// Gets or sets the min zoom delta, the minimum difference between the max and min visible limits of the axis.
+    /// default is null and null means that the library will calculate this value based on the current data.
+    /// </summary>
+    double? MinZoomDelta { get; set; }
+
+    /// <summary>
     /// Gets or sets the reserved area for the labels.
     /// </summary>
     LvcRectangle LabelsDesiredSize { get; set; }
