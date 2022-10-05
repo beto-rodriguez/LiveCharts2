@@ -34,6 +34,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.XamarinForms;
+using LiveChartsCore.VisualElements;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -148,6 +149,13 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     public static readonly BindableProperty InitialRotationProperty =
        BindableProperty.Create(nameof(InitialRotation), typeof(double), typeof(PolarChart),
            LiveCharts.CurrentSettings.PolarInitialRotation, propertyChanged: OnBindablePropertyChanged);
+
+    /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly BindableProperty TitleProperty =
+        BindableProperty.Create(
+            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(PolarChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -469,6 +477,13 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(InitialRotationProperty, value);
     }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
@@ -476,7 +491,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(SeriesProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);

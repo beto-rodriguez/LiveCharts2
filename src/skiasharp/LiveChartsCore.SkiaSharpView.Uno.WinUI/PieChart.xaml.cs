@@ -35,6 +35,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+using LiveChartsCore.VisualElements;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -53,7 +54,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+    /// Initializes a new instance of the <see cref="PieChart"/> class.
     /// </summary>
     public PieChart()
     {
@@ -98,6 +99,13 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     }
 
     #region dependency properties
+
+    /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(
+            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(PieChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property
@@ -404,14 +412,21 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         set => SetValue(SyncContextProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);

@@ -38,7 +38,6 @@ public partial class ViewModel
         DrawMargin = new Margin(70, Margin.Auto, Margin.Auto, Margin.Auto);
         // and thats it!
 
-
         // Advanced alternative:
         // you can also ask an axis its posible dimensions to determine the margin you need.
 

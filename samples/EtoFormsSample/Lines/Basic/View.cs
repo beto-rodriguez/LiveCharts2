@@ -15,6 +15,7 @@ public class View : Panel
         cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            Title = viewModel.Title
         };
 
         Content = cartesianChart;

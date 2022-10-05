@@ -143,7 +143,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);

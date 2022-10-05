@@ -77,14 +77,14 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    public override LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         foreach (var child in Children) _ = child.Measure(chart, primaryScaler, secondaryScaler);
         return GetActualSize();
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void Draw(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
 
@@ -104,7 +104,7 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
                         ? y + controlSize.Height - childSize.Height
                         : y;
 
-                child.Draw(chart, primaryScaler, secondaryScaler);
+                child.OnInvalidated(chart, primaryScaler, secondaryScaler);
 
                 x += childSize.Width;
             }
@@ -122,7 +122,7 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
                         : x;
                 child._y = y;
 
-                child.Draw(chart, primaryScaler, secondaryScaler);
+                child.OnInvalidated(chart, primaryScaler, secondaryScaler);
 
                 y += childSize.Height;
             }

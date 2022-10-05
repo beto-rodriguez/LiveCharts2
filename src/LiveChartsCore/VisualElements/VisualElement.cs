@@ -20,10 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -98,23 +95,33 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
             primary = primaryAxis.GetNextScaler(cartesianChart);
         }
 
+        // Todo: polar and pie
+        // if (chart is PolarChart<TDrawingContext> pc)
+        // if (chart is PieChart<TDrawingContext> pc)
+        // if (chart is PolarChart<TDrawingContext> pc)
+        // {
+        //     var primaryAxis = pc.AngleAxes[ScalesYAt];
+        //     var secondaryAxis = pc.RadiusAxes[ScalesXAt];
+
+        //     var primary = new PolarScaler(
+        //         chart.DrawMarginLocation, chart.DrawMarginSize, primaryAxis, secondaryAxis, pc.InnerRadius, pc.InitialRotation, pc.TotalAnge);
+        // }
+
         foreach (var paintTask in GetPaintTasks())
         {
             if (paintTask is null) continue;
 
             if (cartesianChart is not null)
             {
-                paintTask.SetClipRectangle(
-                    cartesianChart.Canvas,
-                    new LvcRectangle(cartesianChart.DrawMarginLocation, cartesianChart.DrawMarginSize));
+                //paintTask.SetClipRectangle(
+                //    cartesianChart.Canvas,
+                //    new LvcRectangle(cartesianChart.DrawMarginLocation, cartesianChart.DrawMarginSize));
             }
 
             chart.Canvas.AddDrawableTask(paintTask);
         }
 
-        if (primary is null || secondary is null) throw new Exception($"This chart does not support VisualElements");
-
-        Draw(chart, primary, secondary);
+        OnInvalidated(chart, primary, secondary);
     }
 
     /// <summary>
@@ -129,7 +136,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
     /// <returns>The size of the element.</returns>
-    public abstract LvcSize Measure(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
+    public abstract LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
     /// <summary>
     /// Gets the actual size of the element.
@@ -169,5 +176,10 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <param name="secondaryScaler">
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
-    protected internal abstract void Draw(Chart<TDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler);
+    protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
+
+    internal virtual void AlignToTopLeftCorner()
+    {
+        // just a workaround to align labels as the rest of the geometries.
+    }
 }
