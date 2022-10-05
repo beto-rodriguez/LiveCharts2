@@ -88,12 +88,27 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+#if NET5_0_OR_GREATER
+    [System.Text.Json.Serialization.JsonIgnore]
+#else
+    [Newtonsoft.Json.JsonIgnore]
+#endif
     public int EntityIndex { get; set; }
 
     /// <inheritdoc cref="IChartEntity.ChartPoints"/>
+#if NET5_0_OR_GREATER
+    [System.Text.Json.Serialization.JsonIgnore]
+#else
+    [Newtonsoft.Json.JsonIgnore]
+#endif
     public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
+#if NET5_0_OR_GREATER
+    [System.Text.Json.Serialization.JsonIgnore]
+#else
+    [Newtonsoft.Json.JsonIgnore]
+#endif
     public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
