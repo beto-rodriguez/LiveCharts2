@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using System.Reflection;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -6,7 +7,18 @@ using LiveChartsCore.SkiaSharpView.SKCharts;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using SkiaSharp;
+
+var cartesianChart = new SKCartesianChart
+{
+    Width = 800,
+    Height = 100,
+    Series = new ISeries[]
+    {
+        new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
+        new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
+    }
+};
+cartesianChart.SaveImage("cartesianChart.png");
 
 Document.Create(container =>
 {
@@ -22,12 +34,16 @@ Document.Create(container =>
             .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
 
         page.Content()
-            .Canvas((canvas, size) =>
+            .PaddingVertical(1, Unit.Centimetre)
+            .Column(x =>
             {
+                x.Spacing(20);
+                x.Item().Text(Placeholders.LoremIpsum());
+
                 var cartesianChart = new SKCartesianChart
                 {
-                    Width = (int)size.Width,
-                    Height = (int)size.Width,
+                    Width = 1920,
+                    Height = 300,
                     Series = new ISeries[]
                     {
                         new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
@@ -36,7 +52,9 @@ Document.Create(container =>
                 };
 
                 using var chartImage = cartesianChart.GetImage();
-                canvas.DrawImage(chartImage, new SKPoint(0, 0));
+                using var data = chartImage.Encode();
+
+                x.Item().Image(data.AsSpan().ToArray());
             });
 
         page.Footer()
