@@ -432,11 +432,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
-    public DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
+    public virtual DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
     {
-        return DataFactory is null
-            ? throw new Exception("Data provider not found")
-            : DataFactory.GetPieBounds(chart, this).Bounds;
+        return DataFactory.GetPieBounds(chart, this).Bounds;
     }
 
     /// <summary>

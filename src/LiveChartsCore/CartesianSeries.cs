@@ -70,11 +70,113 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(
-        CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y)
+        CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
-        return DataFactory is null
-            ? throw new Exception("A data provider is required")
-            : DataFactory.GetCartesianBounds(chart, this, x, y);
+        var rawBounds = DataFactory.GetCartesianBounds(chart, this, secondaryAxis, primaryAxis);
+        if (rawBounds.HasData) return rawBounds;
+
+        var rawBaseBounds = rawBounds.Bounds;
+
+        var tickPrimary = primaryAxis.GetTick(chart.ControlSize, rawBaseBounds.VisiblePrimaryBounds);
+        var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, rawBaseBounds.VisibleSecondaryBounds);
+
+        var ts = tickSecondary.Value * DataPadding.X;
+        var tp = tickPrimary.Value * DataPadding.Y;
+
+        // using different methods for both primary and secondary axis seems to be the best solution
+        // if this the following 2 lines needs to be changed again, please ensure that the following test passes:
+        // https://github.com/beto-rodriguez/LiveCharts2/issues/522
+        // https://github.com/beto-rodriguez/LiveCharts2/issues/642
+
+        if (rawBaseBounds.VisibleSecondaryBounds.Delta == 0) ts = secondaryAxis.UnitWidth * DataPadding.X;
+        if (rawBaseBounds.VisiblePrimaryBounds.Delta == 0) tp = rawBaseBounds.VisiblePrimaryBounds.Max * 0.25f;
+
+        var rgs = GetRequestedGeometrySize();
+        var rso = GetRequestedSecondaryOffset();
+        var rpo = GetRequestedPrimaryOffset();
+
+        var dimensionalBounds = new DimensionalBounds
+        {
+            SecondaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.SecondaryBounds.Max + rso * secondaryAxis.UnitWidth,
+                Min = rawBaseBounds.SecondaryBounds.Min - rso * secondaryAxis.UnitWidth,
+                MinDelta = rawBaseBounds.SecondaryBounds.MinDelta,
+                PaddingMax = ts,
+                PaddingMin = ts,
+                RequestedGeometrySize = rgs
+            },
+            PrimaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.PrimaryBounds.Max + rpo * secondaryAxis.UnitWidth,
+                Min = rawBaseBounds.PrimaryBounds.Min - rpo * secondaryAxis.UnitWidth,
+                MinDelta = rawBaseBounds.PrimaryBounds.MinDelta,
+                PaddingMax = tp,
+                PaddingMin = tp,
+                RequestedGeometrySize = rgs
+            },
+            VisibleSecondaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.VisibleSecondaryBounds.Max + rso * secondaryAxis.UnitWidth,
+                Min = rawBaseBounds.VisibleSecondaryBounds.Min - rso * secondaryAxis.UnitWidth,
+            },
+            VisiblePrimaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.VisiblePrimaryBounds.Max + rpo * secondaryAxis.UnitWidth,
+                Min = rawBaseBounds.VisiblePrimaryBounds.Min - rpo * secondaryAxis.UnitWidth
+            }
+        };
+
+        if (GetIsInvertedBounds())
+        {
+            var tempSb = dimensionalBounds.SecondaryBounds;
+            var tempPb = dimensionalBounds.PrimaryBounds;
+            var tempVsb = dimensionalBounds.VisibleSecondaryBounds;
+            var tempVpb = dimensionalBounds.VisiblePrimaryBounds;
+
+            dimensionalBounds.SecondaryBounds = tempPb;
+            dimensionalBounds.PrimaryBounds = tempSb;
+            dimensionalBounds.VisibleSecondaryBounds = tempVpb;
+            dimensionalBounds.VisiblePrimaryBounds = tempVsb;
+        }
+
+        return new SeriesBounds(dimensionalBounds, false);
+    }
+
+    /// <summary>
+    /// Gets the geometry size to calculate the series bounds.
+    /// </summary>
+    /// <returns>The geometry requested size.</returns>
+    protected virtual double GetRequestedGeometrySize()
+    {
+        return 0;
+    }
+
+    /// <summary>
+    /// Gets the requested secondary offset [normalized as proportion of the axis' unit width].
+    /// </summary>
+    /// <returns>The offset.</returns>
+    protected virtual double GetRequestedSecondaryOffset()
+    {
+        return 0;
+    }
+
+    /// <summary>
+    /// Gets the requested secondary offset [normalized as proportion of the axis' unit width].
+    /// </summary>
+    /// <returns>The offset</returns>
+    protected virtual double GetRequestedPrimaryOffset()
+    {
+        return 0;
+    }
+
+    /// <summary>
+    /// Gets whether the requested bounds are inverted.
+    /// </summary>
+    /// <returns>The offset</returns>
+    protected virtual bool GetIsInvertedBounds()
+    {
+        return false;
     }
 
     /// <summary>
