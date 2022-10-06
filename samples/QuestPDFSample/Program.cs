@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using System.Reflection;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -7,18 +6,6 @@ using LiveChartsCore.SkiaSharpView.SKCharts;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-
-var cartesianChart = new SKCartesianChart
-{
-    Width = 800,
-    Height = 100,
-    Series = new ISeries[]
-    {
-        new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
-        new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
-    }
-};
-cartesianChart.SaveImage("cartesianChart.png");
 
 Document.Create(container =>
 {
