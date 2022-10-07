@@ -55,6 +55,26 @@ public class SkiaSharpDrawingContext : DrawingContext
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
+    /// </summary>
+    /// <param name="motionCanvas">The motion canvas.</param>
+    /// <param name="info">The information.</param>
+    /// <param name="surface">The surface.</param>
+    /// <param name="canvas">The canvas.</param>
+    /// <param name="background">The background.</param>
+    /// 
+    public SkiaSharpDrawingContext(
+        MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+        SKImageInfo info,
+        SKSurface surface,
+        SKCanvas canvas,
+        SKColor background)
+        : this(motionCanvas, info, surface, canvas)
+    {
+        Background = background;
+    }
+
+    /// <summary>
     /// Gets or sets the motion canvas.
     /// </summary>
     /// <value>
@@ -102,10 +122,16 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// </value>
     public SKPaint Paint { get; set; }
 
+    /// <summary>
+    /// Gets or sets the background.
+    /// </summary>
+    public SKColor Background { get; set; } = SKColor.Empty;
+
     /// <inheritdoc cref="DrawingContext.OnBegingDraw"/>
     public override void OnBegingDraw()
     {
-        Canvas.Clear();
+        if (Background != SKColor.Empty) Canvas.Clear(Background);
+        else Canvas.Clear();
 
         if (MotionCanvas.StartPoint is null) return;
         Canvas.Translate(new SKPoint(MotionCanvas.StartPoint.Value.X, MotionCanvas.StartPoint.Value.Y));

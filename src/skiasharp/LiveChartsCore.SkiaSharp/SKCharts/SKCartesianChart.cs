@@ -32,6 +32,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -191,6 +192,9 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     public TooltipPosition TooltipPosition { get; set; }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
+
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
 
@@ -239,9 +243,6 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
 
         using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
         using var canvas = surface.Canvas;
-        using var clearColor = new SKPaint { Color = Background };
-
-        canvas.DrawRect(0, 0, Width, Height, clearColor);
 
         Core.IsLoaded = true;
         Core.IsFirstDraw = true;
@@ -252,7 +253,8 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
                 CoreCanvas,
                 new SKImageInfo(Height, Width),
                 surface,
-                canvas));
+                canvas,
+                Background));
 
         Core.Unload();
 

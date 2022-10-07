@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -97,20 +97,28 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// </summary>
     public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paint };
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Draw(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void Draw(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    internal override void AlignToTopLeftCorner()
+    {
+        VerticalAlignment = Align.Start;
+        HorizontalAlignment = Align.Start;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         var x = (float)X;
         var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
+            if (primaryScaler is null || secondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
             x = secondaryScaler.ToPixels(x);
             y = primaryScaler.ToPixels(y);
         }
@@ -153,9 +161,19 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler primaryScaler, Scaler secondaryScaler)
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var l = _labelGeometry ?? new LabelGeometry() { };
+        var l = _labelGeometry ?? new LabelGeometry()
+        {
+            Text = Text,
+            TextSize = (float)TextSize,
+            RotateTransform = (float)Rotation,
+            TranslateTransform = Translate,
+            VerticalAlign = VerticalAlignment,
+            HorizontalAlign = HorizontalAlignment,
+            Background = BackgroundColor,
+            Padding = Padding,
+        };
 
         return _actualSize = _paint is null
             ? new LvcSize()

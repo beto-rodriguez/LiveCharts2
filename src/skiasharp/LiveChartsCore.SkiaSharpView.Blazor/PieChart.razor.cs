@@ -37,6 +37,7 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
     private double _initialRotation;
+    private bool _isClockwise = true;
     private double _maxAngle = 360;
     private double? _total;
 
@@ -103,6 +104,10 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             OnPropertyChanged();
         }
     }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    [Parameter]
+    public bool IsClockwise { get => _isClockwise; set { _isClockwise = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
     [Parameter]

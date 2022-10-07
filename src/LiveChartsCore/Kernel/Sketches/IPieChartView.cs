@@ -76,4 +76,9 @@ public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
     /// will be calculated automatically based on the series data. Default value is null.
     /// </summary>
     public double? Total { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the pie slices will be drawn clockwise, default is true.
+    /// </summary>
+    public bool IsClockwise { get; set; }
 }

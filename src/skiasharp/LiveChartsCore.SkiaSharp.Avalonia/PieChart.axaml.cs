@@ -41,6 +41,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -128,13 +129,19 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     /// The draw margin property
     /// </summary>
     public static readonly AvaloniaProperty<Margin?> DrawMarginProperty =
-       AvaloniaProperty.Register<CartesianChart, Margin?>(nameof(DrawMargin), null, inherits: true);
+       AvaloniaProperty.Register<PieChart, Margin?>(nameof(DrawMargin), null, inherits: true);
 
     /// <summary>
     /// The sync context property.
     /// </summary>
     public static readonly AvaloniaProperty<object> SyncContextProperty =
-       AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), new object(), inherits: true);
+       AvaloniaProperty.Register<PieChart, object>(nameof(SyncContext), new object(), inherits: true);
+
+    /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly AvaloniaProperty<VisualElement<SkiaSharpDrawingContext>?> TitleProperty =
+       AvaloniaProperty.Register<PieChart, VisualElement<SkiaSharpDrawingContext>?>(nameof(Title), null, inherits: true);
 
     /// <summary>
     /// The series property
@@ -148,6 +155,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
         AvaloniaProperty.Register<PieChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(
             nameof(VisualElements), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
+
+    /// <summary>
+    /// The IsClockwise property
+    /// </summary>
+    public static readonly AvaloniaProperty<bool> IsClockwiseProperty =
+        AvaloniaProperty.Register<PieChart, bool>(nameof(IsClockwise), true, inherits: true);
 
     /// <summary>
     /// The initial rotation property
@@ -185,113 +198,113 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     /// The tool tip template property
     /// </summary>
     public static readonly AvaloniaProperty<DataTemplate?> TooltipTemplateProperty =
-        AvaloniaProperty.Register<CartesianChart, DataTemplate?>(nameof(TooltipTemplate), null, inherits: true);
+        AvaloniaProperty.Register<PieChart, DataTemplate?>(nameof(TooltipTemplate), null, inherits: true);
 
     /// <summary>
     /// The tool tip position property
     /// </summary>
     public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
-        AvaloniaProperty.Register<CartesianChart, TooltipPosition>(
+        AvaloniaProperty.Register<PieChart, TooltipPosition>(
             nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
 
     /// <summary>
     /// The tool tip font family property
     /// </summary>
     public static readonly AvaloniaProperty<FontFamily> TooltipFontFamilyProperty =
-        AvaloniaProperty.Register<CartesianChart, FontFamily>(
+        AvaloniaProperty.Register<PieChart, FontFamily>(
             nameof(TooltipFontFamily), new FontFamily("Arial"), inherits: true);
 
     /// <summary>
     /// The tool tip font size property
     /// </summary>
     public static readonly AvaloniaProperty<double> TooltipFontSizeProperty =
-        AvaloniaProperty.Register<CartesianChart, double>(nameof(TooltipFontSize), 13d, inherits: true);
+        AvaloniaProperty.Register<PieChart, double>(nameof(TooltipFontSize), 13d, inherits: true);
 
     /// <summary>
     /// The tool tip font weight property
     /// </summary>
     public static readonly AvaloniaProperty<FontWeight> TooltipFontWeightProperty =
-        AvaloniaProperty.Register<CartesianChart, FontWeight>(nameof(TooltipFontWeight), FontWeight.Normal, inherits: true);
+        AvaloniaProperty.Register<PieChart, FontWeight>(nameof(TooltipFontWeight), FontWeight.Normal, inherits: true);
 
     /// <summary>
     /// The tool tip font style property
     /// </summary>
     public static readonly AvaloniaProperty<FontStyle> TooltipFontStyleProperty =
-        AvaloniaProperty.Register<CartesianChart, FontStyle>(
+        AvaloniaProperty.Register<PieChart, FontStyle>(
             nameof(TooltipFontStyle), FontStyle.Normal, inherits: true);
 
     /// <summary>
     /// The tool tip text brush property
     /// </summary>
-    public static readonly AvaloniaProperty<IBrush> TooltipTextBrushProperty =
-        AvaloniaProperty.Register<CartesianChart, IBrush>(
+    public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
+        AvaloniaProperty.Register<PieChart, SolidColorBrush>(
             nameof(TooltipTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
     /// <summary>
     /// The tool tip background property
     /// </summary>
     public static readonly AvaloniaProperty<IBrush> TooltipBackgroundProperty =
-        AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(TooltipBackground),
+        AvaloniaProperty.Register<PieChart, IBrush>(nameof(TooltipBackground),
             new SolidColorBrush(new Color(255, 250, 250, 250)), inherits: true);
 
     /// <summary>
     /// The legend position property
     /// </summary>
     public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
-        AvaloniaProperty.Register<CartesianChart, LegendPosition>(
+        AvaloniaProperty.Register<PieChart, LegendPosition>(
             nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
 
     /// <summary>
     /// The legend orientation property
     /// </summary>
     public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
-        AvaloniaProperty.Register<CartesianChart, LegendOrientation>(
+        AvaloniaProperty.Register<PieChart, LegendOrientation>(
             nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
 
     /// <summary>
     /// The legend template property
     /// </summary>
     public static readonly AvaloniaProperty<DataTemplate?> LegendTemplateProperty =
-        AvaloniaProperty.Register<CartesianChart, DataTemplate?>(nameof(LegendTemplate), null, inherits: true);
+        AvaloniaProperty.Register<PieChart, DataTemplate?>(nameof(LegendTemplate), null, inherits: true);
 
     /// <summary>
     /// The legend font family property
     /// </summary>
     public static readonly AvaloniaProperty<FontFamily> LegendFontFamilyProperty =
-       AvaloniaProperty.Register<CartesianChart, FontFamily>(
+       AvaloniaProperty.Register<PieChart, FontFamily>(
            nameof(LegendFontFamily), new FontFamily("Arial"), inherits: true);
 
     /// <summary>
     /// The legend font size property
     /// </summary>
     public static readonly AvaloniaProperty<double> LegendFontSizeProperty =
-        AvaloniaProperty.Register<CartesianChart, double>(nameof(LegendFontSize), 13d, inherits: true);
+        AvaloniaProperty.Register<PieChart, double>(nameof(LegendFontSize), 13d, inherits: true);
 
     /// <summary>
     /// The legend font weight property
     /// </summary>
     public static readonly AvaloniaProperty<FontWeight> LegendFontWeightProperty =
-        AvaloniaProperty.Register<CartesianChart, FontWeight>(nameof(LegendFontWeight), FontWeight.Normal, inherits: true);
+        AvaloniaProperty.Register<PieChart, FontWeight>(nameof(LegendFontWeight), FontWeight.Normal, inherits: true);
 
     /// <summary>
     /// The legend font style property
     /// </summary>
     public static readonly AvaloniaProperty<FontStyle> LegendFontStyleProperty =
-        AvaloniaProperty.Register<CartesianChart, FontStyle>(
+        AvaloniaProperty.Register<PieChart, FontStyle>(
             nameof(LegendFontStyle), FontStyle.Normal, inherits: true);
 
     /// <summary>
     /// The legend text brush property
     /// </summary>
-    public static readonly AvaloniaProperty<IBrush> LegendTextBrushProperty =
-        AvaloniaProperty.Register<CartesianChart, IBrush>(
+    public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
+        AvaloniaProperty.Register<PieChart, SolidColorBrush>(
             nameof(LegendTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
     /// <summary>
     /// The legend background property
     /// </summary>
     public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
-        AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
+        AvaloniaProperty.Register<PieChart, IBrush>(nameof(LegendBackground),
             new SolidColorBrush(new Color(255, 255, 255, 255)), inherits: true);
 
     /// <summary>
@@ -370,6 +383,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         set => SetValue(DrawMarginProperty, value);
     }
 
+    /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
@@ -384,6 +404,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)GetValue(VisualElementsProperty)
             ?? throw new Exception($"{nameof(VisualElements)} must not be null");
         set => SetValue(VisualElementsProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    public bool IsClockwise
+    {
+        get => (bool)GetValue(IsClockwiseProperty);
+        set => SetValue(IsClockwiseProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />

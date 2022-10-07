@@ -31,6 +31,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -83,7 +84,7 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     /// <value>
     /// The background.
     /// </value>
-    public SKColor Background { get; set; } = SKColors.White;
+    public SKColor Background { get; set; } = SKColors.Empty;
 
     /// <summary>
     /// Gets or sets the height.
@@ -176,6 +177,12 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     public TooltipPosition TooltipPosition { get; set; }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise"/>
+    public bool IsClockwise { get; set; } = true;
+
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
 
@@ -225,12 +232,15 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
         Core.IsLoaded = true;
         Core.IsFirstDraw = true;
         Core.Measure();
+
         CoreCanvas.DrawFrame(
             new SkiaSharpDrawingContext(
                 CoreCanvas,
                 new SKImageInfo(Height, Width),
                 surface,
-                canvas));
+                canvas,
+                Background));
+
         Core.Unload();
 
         return surface.Snapshot();

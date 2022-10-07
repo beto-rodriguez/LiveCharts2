@@ -31,6 +31,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects;
 
@@ -97,6 +98,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; }
     public object SyncContext { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
+    public VisualElement<SkiaSharpDrawingContext> Title { get; set; }
 
     public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
     public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;

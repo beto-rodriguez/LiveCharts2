@@ -228,7 +228,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             r -= LiveCharts.CotangentAngle;
             isCotangent = true;
         }
+
         var i = 1f;
+        var isClockWise = view.IsClockwise;
 
         foreach (var point in fetched)
         {
@@ -264,22 +266,24 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             var stackedValue = stack.Start;
             var total = chartTotal ?? stack.Total;
 
-            double start, end;
+            double start, sweep;
+
             if (total == 0)
             {
                 start = 0;
-                end = 0;
+                sweep = 0;
             }
             else
             {
                 start = stackedValue / total * completeAngle;
-                end = (stackedValue + point.PrimaryValue) / total * completeAngle - start;
+                sweep = (stackedValue + point.PrimaryValue) / total * completeAngle - start;
+                if (!isClockWise) start = completeAngle - start - sweep;
             }
 
             if (IsFillSeries)
             {
                 start = 0;
-                end = completeAngle - 0.1f;
+                sweep = completeAngle - 0.1f;
             }
 
             if (visual is null)
@@ -327,14 +331,14 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             dougnutGeometry.InnerRadius = stackedInnerRadius;
             dougnutGeometry.PushOut = pushout;
             dougnutGeometry.StartAngle = (float)(start + initialRotation);
-            dougnutGeometry.SweepAngle = (float)end;
+            dougnutGeometry.SweepAngle = (float)sweep;
             dougnutGeometry.CornerRadius = cornerRadius;
             dougnutGeometry.InvertedCornerRadius = InvertedCornerRadius;
             dougnutGeometry.RemoveOnCompleted = false;
-            if (start == initialRotation && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.1f;
+            if (start == initialRotation && sweep == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.1f;
 
             point.Context.HoverArea = new SemicircleHoverArea()
-                .SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + end), md * 0.5f);
+                .SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
 
             _ = toDeletePoints.Remove(point);
 
@@ -343,7 +347,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 var label = (TLabel?)point.Context.Label;
 
                 // middleAngle = startAngle + (sweepAngle/2);
-                var middleAngle = (float)(start + initialRotation + end * 0.5);
+                var middleAngle = (float)(start + initialRotation + sweep * 0.5);
 
                 var actualRotation = r +
                         (isTangent ? middleAngle - 90 : 0) +
@@ -389,7 +393,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 if (DataLabelsPosition == PolarLabelsPosition.End)
                 {
-                    var a = start + initialRotation + end;
+                    var a = start + initialRotation + sweep;
                     a %= 360;
                     if (a < 0) a += 360;
                     var c = 90;
@@ -402,14 +406,14 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 if (DataLabelsPosition == PolarLabelsPosition.Outer)
                 {
-                    var a = start + initialRotation + end * 0.5;
-                    var isStart = a is < 90 or (> 270 and < 360);
+                    var a = start + initialRotation + sweep * 0.5;
+                    var isStart = a % 360 is < 90 or (> 270 and < 360);
                     label.HorizontalAlign = label.HorizontalAlign = isStart ? Align.Start : Align.End;
                 }
 
                 var labelPosition = GetLabelPolarPosition(
                     cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
-                    (float)(start + initialRotation), (float)end,
+                    (float)(start + initialRotation), (float)sweep,
                     label.Measure(DataLabelsPaint), DataLabelsPosition);
 
                 label.X = labelPosition.X;
@@ -432,11 +436,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
-    public DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
+    public virtual DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
     {
-        return DataFactory is null
-            ? throw new Exception("Data provider not found")
-            : DataFactory.GetPieBounds(chart, this).Bounds;
+        return DataFactory.GetPieBounds(chart, this).Bounds;
     }
 
     /// <summary>
@@ -657,8 +659,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 break;
         }
 
-        angle %= 360;
-        if (angle < 0) angle += 360;
+        //angle %= 360;
+        //if (angle < 0) angle += 360;
         angle *= toRadians;
 
         return new LvcPoint(

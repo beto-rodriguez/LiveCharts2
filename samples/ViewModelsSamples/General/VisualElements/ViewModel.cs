@@ -69,16 +69,10 @@ public partial class ViewModel
 
     public ISeries[] Series { get; set; } =
     {
-        new LineSeries<DateTimePoint>
+        new LineSeries<int>
         {
             GeometrySize = 13,
-            Values = new DateTimePoint[]
-            {
-                new(new DateTime(2022, 1, 1), 1),
-                new(new DateTime(2022, 1, 2), 2),
-                new(new DateTime(2022, 1, 3), 1),
-                new(new DateTime(2022, 1, 4), 2)
-            }
+            Values = new int[] { 2,2,3,4,2,2,3,6,3,5,2,1,4,5,2,3,2,4,5,3,2,6 }
         }
     };
 }

@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
@@ -88,6 +89,13 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     }
 
     #region dependency properties
+
+    /// <summary>
+    /// The sync context property.
+    /// </summary>
+    public static readonly DependencyProperty TitleProperty =
+       DependencyProperty.Register(
+           nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(Chart), new PropertyMetadata(null));
 
     /// <summary>
     /// The sync context property.
@@ -325,6 +333,13 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
             ? new LvcColor()
             : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
         set => SetValueOrCurrentValue(BackgroundProperty, new SolidColorBrush(Color.FromArgb(value.A, value.R, value.G, value.B)));
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.SyncContext" />

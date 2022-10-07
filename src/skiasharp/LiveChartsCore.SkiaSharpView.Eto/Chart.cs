@@ -31,6 +31,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -67,6 +68,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private Color _legendBackColor = Color.FromArgb(255, 255, 255);
     private Color _legendTextColor = Color.FromArgb(35, 35, 35);
     private Color _tooltipTextColor = SystemColors.ControlText;
+    private VisualElement<SkiaSharpDrawingContext>? _title;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -266,6 +268,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         }
     }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    public VisualElement<SkiaSharpDrawingContext>? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
+
     #endregion
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
@@ -322,9 +327,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     {
         if (tooltip is IDisposable disposableTooltip)
         {
-//            disposableTooltip.Dispose();
+            //            disposableTooltip.Dispose();
 
- //           tooltip = null;
+            //           tooltip = null;
         }
 
         base.OnUnLoad(e);

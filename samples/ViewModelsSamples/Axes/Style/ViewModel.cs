@@ -39,7 +39,6 @@ public partial class ViewModel
             TextSize = 18,
             Padding = new Padding(5, 15, 5, 5),
             LabelsPaint = new SolidColorPaint(s_gray),
-            Labeler = value => value.ToString("N2"),
             SeparatorsPaint = new SolidColorPaint
             {
                 Color = s_gray,
@@ -90,7 +89,6 @@ public partial class ViewModel
             TextSize = 18,
             Padding = new Padding(5, 0, 15, 0),
             LabelsPaint = new SolidColorPaint(s_gray),
-            Labeler = value => value.ToString("N2"),
             SeparatorsPaint = new SolidColorPaint
             {
                 Color = s_gray,
