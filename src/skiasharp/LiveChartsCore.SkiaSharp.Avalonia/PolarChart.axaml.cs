@@ -591,8 +591,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </value>
     public DataTemplate? LegendTemplate
     {
-        get => (DataTemplate?)GetValue(LegendTemplateProperty)
-            ?? throw new Exception($"{nameof(LegendTemplate)} can not be null.");
+        get => (DataTemplate?)GetValue(LegendTemplateProperty);
         set => SetValue(LegendTemplateProperty, value);
     }
 
