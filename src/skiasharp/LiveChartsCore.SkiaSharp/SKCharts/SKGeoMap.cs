@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Motion;
@@ -33,7 +32,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 /// <inheritdoc cref="IGeoMapView{SkiaSharpDrawingContext}"/>
-public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
+public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
     private object? _viewCommand;
@@ -59,30 +58,6 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
         Fill = mapView.Fill;
         Series = mapView.Series;
     }
-
-    /// <summary>
-    /// Gets or sets the background.
-    /// </summary>
-    /// <value>
-    /// The background.
-    /// </value>
-    public SKColor Background { get; set; } = SKColors.White;
-
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
-    /// <value>
-    /// The height.
-    /// </value>
-    public int Height { get; set; } = 600;
-
-    /// <summary>
-    /// Gets or sets the width.
-    /// </summary>
-    /// <value>
-    /// The width.
-    /// </value>
-    public int Width { get; set; } = 900;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -142,37 +117,23 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
         }
     }
 
-    /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
-    public SKImage GetImage()
+    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawChart(SKCanvas, SKSurface?, bool)"/>
+    protected override void DrawChart(SKCanvas canvas, SKSurface? surface, bool clearCanvasOnBeginDraw = false)
     {
         Canvas.DisableAnimations = true;
 
-        using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
-        using var canvas = surface.Canvas;
-        using var clearColor = new SKPaint { Color = Background };
-
-        canvas.DrawRect(0, 0, Width, Height, clearColor);
         _core.Measure();
 
         Canvas.DrawFrame(
             new SkiaSharpDrawingContext(
                 Canvas,
                 new SKImageInfo(Height, Width),
-                surface,
-                canvas));
+                surface!,
+                canvas,
+                Background,
+                clearCanvasOnBeginDraw));
 
         _core.Unload();
-
-        return surface.Snapshot();
-    }
-
-    /// <inheritdoc cref="ISkiaSharpChart.SaveImage(string, SKEncodedImageFormat, int)"/>
-    public void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
-    {
-        using var image = GetImage();
-        using var data = image.Encode(format, quality);
-        using var stream = File.OpenWrite(path);
-        data.SaveTo(stream);
     }
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)

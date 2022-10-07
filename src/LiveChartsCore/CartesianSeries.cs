@@ -124,7 +124,9 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
             {
                 Max = rawBaseBounds.VisiblePrimaryBounds.Max + rpo * secondaryAxis.UnitWidth,
                 Min = rawBaseBounds.VisiblePrimaryBounds.Min - rpo * secondaryAxis.UnitWidth
-            }
+            },
+            TertiaryBounds = rawBaseBounds.TertiaryBounds,
+            VisibleTertiaryBounds = rawBaseBounds.VisibleTertiaryBounds
         };
 
         if (GetIsInvertedBounds())

@@ -27,21 +27,22 @@ Document.Create(container =>
                 x.Spacing(20);
                 x.Item().Text(Placeholders.LoremIpsum());
 
-                var cartesianChart = new SKCartesianChart
-                {
-                    Width = 1920,
-                    Height = 300,
-                    Series = new ISeries[]
+                x.Item()
+                    .Canvas((canvas, size) =>
                     {
-                        new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
-                        new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
-                    }
-                };
+                        var cartesianChart = new SKCartesianChart
+                        {
+                            Width = (int)size.Width,
+                            Height = (int)size.Height,
+                            Series = new ISeries[]
+                            {
+                                new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
+                                new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
+                            }
+                        };
 
-                using var chartImage = cartesianChart.GetImage();
-                using var data = chartImage.Encode();
-
-                x.Item().Image(data.AsSpan().ToArray());
+                        cartesianChart.SaveImage(canvas);
+                    });
             });
 
         page.Footer()

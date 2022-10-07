@@ -231,6 +231,14 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
     }
 
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    {
+        var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
+        _weightBounds = seriesBounds.Bounds.TertiaryBounds;
+        return seriesBounds;
+    }
+
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
     protected override double GetRequestedSecondaryOffset()
     {

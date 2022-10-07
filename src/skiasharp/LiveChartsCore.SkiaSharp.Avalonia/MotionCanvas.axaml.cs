@@ -181,13 +181,14 @@ public class MotionCanvas : UserControl
             }
 #endif
             _motionCanvas.DrawFrame(
-                new AvaloniaDrawingContext(
+                new SkiaSharpDrawingContext(
                     _motionCanvas,
                     new SKImageInfo(
                         (int)Bounds.Width, (int)Bounds.Height),
                         lease.SkSurface, lease.SkCanvas));
 
             if (_motionCanvas.IsValid) return;
+
             _avaloniaControl.InvalidateVisual();
         }
     }
