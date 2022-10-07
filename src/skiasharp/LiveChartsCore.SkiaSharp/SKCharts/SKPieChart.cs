@@ -114,7 +114,6 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
 
-
     LvcColor IChartView.BackColor
     {
         get => _backColor;

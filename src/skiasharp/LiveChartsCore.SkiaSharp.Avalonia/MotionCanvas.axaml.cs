@@ -203,6 +203,7 @@ public class MotionCanvas : UserControl
             //}
 
             if (_motionCanvas.IsValid) return;
+
             _avaloniaControl.InvalidateVisual();
         }
     }
