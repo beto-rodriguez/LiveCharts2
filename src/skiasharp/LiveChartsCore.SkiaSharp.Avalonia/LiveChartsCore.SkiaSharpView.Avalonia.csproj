@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <LangVersion>10.0</LangVersion>
@@ -28,7 +28,6 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0-preview1" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview1" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0-preview1" />
   </ItemGroup>
 
   <ItemGroup>
