@@ -136,10 +136,10 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <inheritdoc cref="DrawingContext.OnBegingDraw"/>
     public override void OnBegingDraw()
     {
-        if (_clearOnBegingDraw)
+        if (_clearOnBegingDraw) Canvas.Clear();
+        if (Background != SKColor.Empty)
         {
-            if (Background != SKColor.Empty) Canvas.Clear(Background);
-            else Canvas.Clear();
+            Canvas.DrawRect(Info.Rect, new SKPaint { Color = Background });
         }
 
         if (MotionCanvas.StartPoint is null) return;

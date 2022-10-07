@@ -124,7 +124,7 @@ public abstract class InMemorySkiaSharpChart
         skiaChart.Canvas.DrawFrame(
             new SkiaSharpDrawingContext(
                 CoreCanvas,
-                new SKImageInfo(Height, Width),
+                new SKImageInfo(Width, Height),
                 surface!,
                 canvas,
                 Background,
