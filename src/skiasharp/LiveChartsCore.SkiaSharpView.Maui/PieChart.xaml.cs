@@ -127,7 +127,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
                 chart.core.Update();
             });
 
-
     /// <summary>
     /// The title property.
     /// </summary>
