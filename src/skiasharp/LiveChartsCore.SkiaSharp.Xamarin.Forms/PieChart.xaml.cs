@@ -168,6 +168,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             });
 
     /// <summary>
+    /// The IsClockwise property
+    /// </summary>
+    public static readonly BindableProperty IsClockwiseProperty =
+        BindableProperty.Create(
+            nameof(IsClockwise), typeof(bool), typeof(PieChart), true, BindingMode.Default, null, OnBindablePropertyChanged);
+
+    /// <summary>
     /// The initial rotation property
     /// </summary>
     public static readonly BindableProperty InitialRotationProperty =
@@ -433,6 +440,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    public bool IsClockwise
+    {
+        get => (bool)GetValue(IsClockwiseProperty);
+        set => SetValue(IsClockwiseProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
