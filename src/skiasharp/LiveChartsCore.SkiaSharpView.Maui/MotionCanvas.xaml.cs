@@ -141,7 +141,7 @@ public partial class MotionCanvas : ContentView
         var ts = TimeSpan.FromSeconds(1 / MaxFps);
         while (!CanvasCore.IsValid)
         {
-            skiaElement.InvalidateSurface();
+            skiaElement?.InvalidateSurface();
             await Task.Delay(ts);
         }
 
