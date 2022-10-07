@@ -194,11 +194,12 @@ public class MotionCanvas : UserControl
             //lock (_motionCanvas.Sync)
             //{
             _motionCanvas.DrawFrame(
-                new AvaloniaDrawingContext(
+                new SkiaSharpDrawingContext(
                     _motionCanvas,
-                    new SKImageInfo(
-                        (int)Bounds.Width, (int)Bounds.Height),
-                        skiaContext.SkSurface, skiaContext.SkCanvas));
+                    new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
+                    skiaContext.SkSurface,
+                    skiaContext.SkCanvas,
+                    false));
             //}
 
             if (_motionCanvas.IsValid) return;
