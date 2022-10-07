@@ -175,6 +175,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             nameof(InitialRotation), typeof(double), typeof(PieChart), 0d, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
+    /// The IsClockwise angle property
+    /// </summary>
+    public static readonly BindableProperty IsClockwiseProperty =
+        BindableProperty.Create(
+            nameof(IsClockwise), typeof(bool), typeof(PieChart), true, BindingMode.Default, null, OnBindablePropertyChanged);
+
+    /// <summary>
     /// The maximum angle property
     /// </summary>
     public static readonly BindableProperty MaxAngleProperty =
@@ -431,6 +438,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    public bool IsClockwise
+    {
+        get => (bool)GetValue(IsClockwiseProperty);
+        set => SetValue(IsClockwiseProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />

@@ -157,6 +157,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
             nameof(VisualElements), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
 
     /// <summary>
+    /// The IsClockwise property
+    /// </summary>
+    public static readonly AvaloniaProperty<bool> IsClockwiseProperty =
+        AvaloniaProperty.Register<PieChart, bool>(nameof(IsClockwise), true, inherits: true);
+
+    /// <summary>
     /// The initial rotation property
     /// </summary>
     public static readonly AvaloniaProperty<double> InitialRotationProperty =
@@ -396,6 +402,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    public bool IsClockwise
+    {
+        get => (bool)GetValue(IsClockwiseProperty);
+        set => SetValue(IsClockwiseProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />

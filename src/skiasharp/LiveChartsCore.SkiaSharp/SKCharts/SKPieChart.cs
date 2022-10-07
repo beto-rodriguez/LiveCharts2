@@ -180,6 +180,9 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
     public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
 
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise"/>
+    public bool IsClockwise { get; set; } = true;
+
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
 
