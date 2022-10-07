@@ -73,6 +73,12 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     LvcSize Size { get; set; }
 
     /// <summary>
+    /// Gets or sets the min zoom delta, the minimum difference between the max and min visible limits of the axis.
+    /// default is null and null means that the library will calculate this value based on the current data.
+    /// </summary>
+    double? MinZoomDelta { get; set; }
+
+    /// <summary>
     /// Gets or sets the reserved area for the labels.
     /// </summary>
     LvcRectangle LabelsDesiredSize { get; set; }
@@ -145,4 +151,40 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// The separators paint.
     /// </value>
     IPaint<TDrawingContext>? ZeroPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? CrosshairPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair labels paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? CrosshairLabelsPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair background.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    LvcColor? CrosshairLabelsBackground { get; set; }
+
+    /// <summary>
+    /// Gets or sets the crosshair labels padding.
+    /// </summary>
+    Padding? CrosshairPadding { get; set; }
+
+    /// <summary>
+    /// Invalidates the crosshair visual.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="pointerPosition">The pointer position</param>
+    void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition);
 }

@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -136,7 +137,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     public string ContainerClass { get; set; } = string.Empty;
 
     /// <inheritdoc cref="IBlazorChart.LegendClass"/>
-    public string LegendClass { get; set; } = string.Empty;
+    public string LegendClass { get; set; } = "closed";
 
     /// <inheritdoc cref="IBlazorChart.TooltipClass"/>
     public string TooltipClass { get; set; } = "closed";
@@ -156,7 +157,12 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas?.CanvasCore ?? throw new Exception("canvas not found!");
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    [Parameter]
+    public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
+
     /// <inheritdoc cref="IChartView.DrawMargin" />
+    [Parameter]
     public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.SyncContext" />

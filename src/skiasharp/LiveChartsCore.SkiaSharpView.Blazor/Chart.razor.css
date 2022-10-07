@@ -151,6 +151,7 @@
 /* Tooltips */
 
 ::deep .lvc-tooltip-container {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
@@ -164,6 +165,7 @@
 }
 
     ::deep .lvc-tooltip-container.closed {
+        display: none;
         opacity: 0;
     }
 

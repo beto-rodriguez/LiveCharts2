@@ -34,6 +34,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Uno.Helpers;
+using LiveChartsCore.VisualElements;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -124,6 +125,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         DependencyProperty.Register(
             nameof(InitialRotation), typeof(double), typeof(PolarChart),
             new PropertyMetadata(LiveCharts.CurrentSettings.PolarInitialRotation, OnDependencyPropertyChanged));
+
+    /// <summary>
+    /// The title property
+    /// </summary>
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(
+            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(PolarChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property.
@@ -490,6 +498,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         set => SetValue(InitialRotationProperty, value);
     }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
@@ -511,7 +526,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         set => SetValue(RadiusAxesProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);

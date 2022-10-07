@@ -39,16 +39,8 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     private readonly Dictionary<object, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = new();
     private char? _matchesChar = null;
-
-    /// <summary>
-    /// The skia paint
-    /// </summary>
-    protected SKPaint? skiaPaint;
-
-    /// <summary>
-    /// The stroke width transition
-    /// </summary>
-    protected FloatMotionProperty strokeWidthTransition;
+    internal SKPaint? _skiaPaint;
+    internal FloatMotionProperty _strokeWidthTransition;
     private string? _fontFamily;
 
     /// <summary>
@@ -56,7 +48,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// </summary>
     protected Paint()
     {
-        strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
+        _strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
         _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
     }
 
@@ -73,7 +65,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     public double ZIndex { get; set; }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.StrokeThickness" />
-    public float StrokeThickness { get => strokeWidthTransition.GetMovement(this); set => strokeWidthTransition.SetMovement(value, this); }
+    public float StrokeThickness { get => _strokeWidthTransition.GetMovement(this); set => _strokeWidthTransition.SetMovement(value, this); }
 
     /// <summary>
     /// Gets or sets the style.
@@ -100,6 +92,22 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
             _matchesChar = Convert.ToChar(_fontFamily.Split('|')[1]);
         }
     }
+
+    /// <summary>
+    /// Gets or sets the font style.
+    /// </summary>
+    public SKFontStyle? SKFontStyle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the SKTypeface, if null, LiveCharts will build one based on the
+    /// <see cref="FontFamily"/> and <see cref="SKFontStyle"/> properties. Default is null.
+    /// </summary>
+    public SKTypeface? SKTypeface { get; set; }
+
+    /// <summary>
+    /// Gets a value indication whether the paint has a custom font.
+    /// </summary>
+    public bool HasCustomFont => FontFamily is not null || SKTypeface is not null || SKFontStyle is not null;
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is antialias.
@@ -248,8 +256,8 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// </summary>
     public virtual void Dispose()
     {
-        skiaPaint?.Dispose();
-        skiaPaint = null;
+        _skiaPaint?.Dispose();
+        _skiaPaint = null;
     }
 
     /// <summary>
@@ -258,9 +266,10 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// <returns></returns>
     protected SKTypeface GetTypeFaceFromFontFamily()
     {
-        return _matchesChar is not null
-            ? SKFontManager.Default.MatchCharacter(_matchesChar.Value)
-            : SKTypeface.FromFamilyName(_fontFamily);
+        return SKTypeface ??
+            (_matchesChar is not null
+                ? SKFontManager.Default.MatchCharacter(_matchesChar.Value)
+                : SKTypeface.FromFamilyName(_fontFamily, SKFontStyle ?? new SKFontStyle()));
     }
 
     private HashSet<IDrawable<SkiaSharpDrawingContext>>? GetGeometriesByCanvas(MotionCanvas<SkiaSharpDrawingContext> canvas)

@@ -20,19 +20,18 @@ public partial class ViewModel
         new Axis
         {
             Name = "Salesman/woman",
-            NamePaint = new SolidColorPaint { Color = SKColors.Red },
-            //Labels = new string[] { "王", "赵", "张" },
-            Labels = new string[] { "سرجیو", "لاندو", "لوئیس" },
+            Labels = new string[] { "王", "赵", "张" },
             LabelsPaint = new SolidColorPaint
             {
                 Color = SKColors.Black,
-                // you need to enable the Chinease characters for SkiaSharp
-                // Livecharts provides the MatchChar() function that relays on the
-                // SKFontManager.Default.MatchCharacter() SkiaSharp function.
-                //FontFamily = LiveChartsSkiaSharp.MatchChar('汉') // 汉语 // mark
-                FontFamily = LiveChartsSkiaSharp.MatchChar('أ'), // Arab
-                //FontFamily = LiveChartsSkiaSharp.MatchChar('あ'), // Japanease
-                //FontFamily = LiveChartsSkiaSharp.MatchChar('Ж'), // Russian
+
+                // you need to enable the Chinese characters for SkiaSharp
+                // use the SKFontManager.Default.MatchCharacter() SkiaSharp function.
+
+                SKTypeface = SKFontManager.Default.MatchCharacter('汉') // 汉语 // mark
+                // SKTypeface = SKFontManager.Default.MatchCharacter('أ'), // Arab
+                // SKTypeface = SKFontManager.Default.MatchCharacter('あ'), // Japanese
+                // SKTypeface = SKFontManager.Default.MatchCharacter('Ж'), // Russian
             }
         }
     };
@@ -43,7 +42,13 @@ public partial class ViewModel
         {
             Name = "Sales amount",
             NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
-            Labeler = Labelers.Currency
+            Labeler = Labelers.Currency,
+            LabelsPaint = new SolidColorPaint
+            {
+                Color = SKColors.Blue,
+                FontFamily = "Times New Roman",
+                SKFontStyle = new SKFontStyle(SKFontStyleWeight.ExtraBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Italic)
+            },
         }
     };
 }

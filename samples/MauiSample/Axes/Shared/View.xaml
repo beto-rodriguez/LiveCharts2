@@ -24,6 +24,7 @@
                 Grid.Row="0"
                 Series="{Binding SeriesCollection1}"
                 XAxes="{Binding SharedXAxis}"
+                DrawMargin="{Binding DrawMargin}"
                 ZoomMode="X">
             </lvc:CartesianChart>
 
@@ -31,6 +32,7 @@
                 Grid.Row="1"
                 Series="{Binding SeriesCollection2}"
                 XAxes="{Binding SharedXAxis}"
+                DrawMargin="{Binding DrawMargin}"
                 ZoomMode="X">
             </lvc:CartesianChart>
 

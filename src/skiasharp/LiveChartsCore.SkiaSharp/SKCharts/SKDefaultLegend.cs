@@ -37,6 +37,8 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
+        if (chart.Legend is null || chart.LegendPosition == LegendPosition.Hidden) return;
+
         if (chart.LegendPosition is LegendPosition.Left or LegendPosition.Right)
         {
             DrawOrMeasureVertical(chart, false);

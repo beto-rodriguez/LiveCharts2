@@ -133,6 +133,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             });
 
     /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly BindableProperty TitleProperty =
+        BindableProperty.Create(
+            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>), typeof(CartesianChart), null, BindingMode.Default, null);
+
+    /// <summary>
     /// The series property.
     /// </summary>
     public static readonly BindableProperty SeriesProperty =
@@ -467,6 +474,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         get => (Margin)GetValue(DrawMarginProperty);
         set => SetValue(DrawMarginProperty, value);
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />

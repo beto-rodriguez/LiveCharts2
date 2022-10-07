@@ -43,6 +43,7 @@ using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
 using Windows.UI.Text;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI.Input;
+using LiveChartsCore.VisualElements;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -106,7 +107,14 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     #region dependency properties
 
     /// <summary>
-    /// The series property
+    /// The title property.
+    /// </summary>
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(
+            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(CartesianChart), new PropertyMetadata(null));
+
+    /// <summary>
+    /// The series property.
     /// </summary>
     public static readonly DependencyProperty SeriesProperty =
         DependencyProperty.Register(
@@ -487,6 +495,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
         _core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series

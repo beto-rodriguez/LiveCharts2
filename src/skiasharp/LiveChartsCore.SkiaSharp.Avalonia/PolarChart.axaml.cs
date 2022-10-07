@@ -42,6 +42,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -125,6 +126,12 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// </summary>
     public static readonly AvaloniaProperty<object> SyncContextProperty =
        AvaloniaProperty.Register<PolarChart, object>(nameof(SyncContext), new object(), inherits: true);
+
+    /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly AvaloniaProperty<VisualElement<SkiaSharpDrawingContext>?> TitleProperty =
+       AvaloniaProperty.Register<PolarChart, VisualElement<SkiaSharpDrawingContext>?>(nameof(Title), null, inherits: true);
 
     /// <summary>
     /// The series property.
@@ -409,6 +416,13 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     {
         get => (double)GetValue(InitialRotationProperty);
         set => SetValue(InitialRotationProperty, value);
+    }
+
+    /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />

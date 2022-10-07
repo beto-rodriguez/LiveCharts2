@@ -231,57 +231,16 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
-    public override SeriesBounds GetBounds(
-        CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
+    protected override double GetRequestedSecondaryOffset()
     {
-        var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-        if (baseSeriesBounds.HasData) return baseSeriesBounds;
-        var baseBounds = baseSeriesBounds.Bounds;
+        return 0.5f;
+    }
 
-        _weightBounds = baseBounds.TertiaryBounds;
-
-        var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
-        var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
-
-        var ts = tickSecondary.Value * DataPadding.X;
-        var tp = tickPrimary.Value * DataPadding.Y;
-
-        if (baseBounds.VisibleSecondaryBounds.Delta == 0) ts = secondaryAxis.UnitWidth * DataPadding.X;
-        if (baseBounds.VisiblePrimaryBounds.Delta == 0) tp = primaryAxis.UnitWidth * DataPadding.Y;
-
-        return
-            new SeriesBounds(
-                new DimensionalBounds
-                {
-                    SecondaryBounds = new Bounds
-                    {
-                        Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
-                        Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
-                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
-                        PaddingMax = ts,
-                        PaddingMin = ts
-                    },
-                    PrimaryBounds = new Bounds
-                    {
-                        Max = baseBounds.PrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth,
-                        Min = baseBounds.PrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth,
-                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
-                        PaddingMax = tp,
-                        PaddingMin = tp
-                    },
-                    VisibleSecondaryBounds = new Bounds
-                    {
-                        Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
-                        Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth
-                    },
-                    VisiblePrimaryBounds = new Bounds
-                    {
-                        Max = baseBounds.VisiblePrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth,
-                        Min = baseBounds.VisiblePrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth
-                    }
-                },
-                false);
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedPrimaryOffset"/>
+    protected override double GetRequestedPrimaryOffset()
+    {
+        return 0.5f;
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>

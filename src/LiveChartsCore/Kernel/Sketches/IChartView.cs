@@ -26,6 +26,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -171,6 +172,11 @@ public interface IChartView
 public interface IChartView<TDrawingContext> : IChartView
     where TDrawingContext : DrawingContext
 {
+    /// <summary>
+    /// Gets or sets the chart title.
+    /// </summary>
+    VisualElement<TDrawingContext>? Title { get; set; }
+
     /// <summary>
     /// Occurs before the chart is measured, this is the first step before the chart updates.
     /// </summary>

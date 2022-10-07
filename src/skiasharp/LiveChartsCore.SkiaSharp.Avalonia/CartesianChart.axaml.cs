@@ -43,6 +43,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -136,6 +137,12 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly AvaloniaProperty<object> SyncContextProperty =
        AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), new object(), inherits: true);
+
+    /// <summary>
+    /// The title property.
+    /// </summary>
+    public static readonly AvaloniaProperty<VisualElement<SkiaSharpDrawingContext>?> TitleProperty =
+       AvaloniaProperty.Register<CartesianChart, VisualElement<SkiaSharpDrawingContext>?>(nameof(Title), null, inherits: true);
 
     /// <summary>
     /// The series property
@@ -399,6 +406,13 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     {
         get => GetValue(SyncContextProperty);
         set => SetValue(SyncContextProperty, value);
+    }
+
+    /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
+    public VisualElement<SkiaSharpDrawingContext>? Title
+    {
+        get => (VisualElement<SkiaSharpDrawingContext>)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />

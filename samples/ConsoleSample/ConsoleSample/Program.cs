@@ -1,8 +1,12 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.SkiaSharpView.VisualElements;
+using SkiaSharp;
 
 var cartesianChart = new SKCartesianChart
 {
@@ -13,7 +17,15 @@ var cartesianChart = new SKCartesianChart
         new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
         new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
     },
-    LegendPosition = LiveChartsCore.Measure.LegendPosition.Right
+    Title = new LabelVisual
+    {
+        Text = "Hello LiveCharts",
+        TextSize = 30,
+        Padding = new Padding(15),
+        Paint = new SolidColorPaint(0xff303030)
+    },
+    LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
+    Background = SKColors.White
 };
 
 // you can save the image to png (by default)
