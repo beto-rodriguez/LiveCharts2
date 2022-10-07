@@ -22,13 +22,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.VisualElements;
@@ -39,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// In-memory chart that is able to generate a chart images.
 /// </summary>
-public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChart, IDrawnLegend
+public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawingContext>, IDrawnLegend
 {
     private LvcColor _backColor;
 
@@ -60,6 +58,8 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;
+
+        CoreChart = Core;
     }
 
     /// <summary>
@@ -77,30 +77,6 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
     public bool DesignerMode => false;
-
-    /// <summary>
-    /// Gets or sets the background.
-    /// </summary>
-    /// <value>
-    /// The background.
-    /// </value>
-    public SKColor Background { get; set; } = SKColors.Empty;
-
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
-    /// <value>
-    /// The height.
-    /// </value>
-    public int Height { get; set; } = 600;
-
-    /// <summary>
-    /// Gets or sets the width.
-    /// </summary>
-    /// <value>
-    /// The width.
-    /// </value>
-    public int Width { get; set; } = 900;
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Core"/>
     public PieChart<SkiaSharpDrawingContext> Core { get; }
@@ -126,9 +102,6 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
     public IChartLegend<SkiaSharpDrawingContext>? Legend { get; } = new SKDefaultLegend();
 
@@ -140,9 +113,6 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
-
-    /// <inheritdoc cref="IChartView.CoreChart"/>
-    public IChart CoreChart => Core;
 
     LvcColor IChartView.BackColor
     {
@@ -216,43 +186,6 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     void IChartView.InvokeOnUIThread(Action action)
     {
         action();
-    }
-
-    /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
-    public SKImage GetImage()
-    {
-        CoreCanvas.DisableAnimations = true;
-
-        using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
-
-        var canvas = surface.Canvas;
-        using var clearColor = new SKPaint { Color = Background };
-        canvas.DrawRect(0, 0, Width, Height, clearColor);
-
-        Core.IsLoaded = true;
-        Core.IsFirstDraw = true;
-        Core.Measure();
-
-        CoreCanvas.DrawFrame(
-            new SkiaSharpDrawingContext(
-                CoreCanvas,
-                new SKImageInfo(Height, Width),
-                surface,
-                canvas,
-                Background));
-
-        Core.Unload();
-
-        return surface.Snapshot();
-    }
-
-    /// <inheritdoc cref="ISkiaSharpChart.SaveImage(string, SKEncodedImageFormat, int)"/>
-    public void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
-    {
-        using var image = GetImage();
-        using var data = image.Encode(format, quality);
-        using var stream = File.OpenWrite(path);
-        data.SaveTo(stream);
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

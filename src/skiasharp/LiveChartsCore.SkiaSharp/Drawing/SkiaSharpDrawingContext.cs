@@ -33,6 +33,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// <seealso cref="DrawingContext" />
 public class SkiaSharpDrawingContext : DrawingContext
 {
+    private readonly bool _clearOnBegingDraw;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
     /// </summary>
@@ -40,11 +42,13 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <param name="info">The information.</param>
     /// <param name="surface">The surface.</param>
     /// <param name="canvas">The canvas.</param>
+    /// <param name="clearOnBegingDraw">Indicates whether the canvas is cleared on frame draw.</param>
     public SkiaSharpDrawingContext(
         MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
         SKImageInfo info,
         SKSurface surface,
-        SKCanvas canvas)
+        SKCanvas canvas,
+        bool clearOnBegingDraw = true)
     {
         MotionCanvas = motionCanvas;
         Info = info;
@@ -52,6 +56,7 @@ public class SkiaSharpDrawingContext : DrawingContext
         Canvas = canvas;
         PaintTask = null!;
         Paint = null!;
+        _clearOnBegingDraw = clearOnBegingDraw;
     }
 
     /// <summary>
@@ -62,14 +67,15 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <param name="surface">The surface.</param>
     /// <param name="canvas">The canvas.</param>
     /// <param name="background">The background.</param>
-    /// 
+    /// <param name="clearOnBegingDraw">Indicates whether the canvas is cleared on frame draw.</param>
     public SkiaSharpDrawingContext(
         MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
         SKImageInfo info,
         SKSurface surface,
         SKCanvas canvas,
-        SKColor background)
-        : this(motionCanvas, info, surface, canvas)
+        SKColor background,
+        bool clearOnBegingDraw = true)
+        : this(motionCanvas, info, surface, canvas, clearOnBegingDraw)
     {
         Background = background;
     }
@@ -130,8 +136,11 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <inheritdoc cref="DrawingContext.OnBegingDraw"/>
     public override void OnBegingDraw()
     {
-        if (Background != SKColor.Empty) Canvas.Clear(Background);
-        else Canvas.Clear();
+        if (_clearOnBegingDraw) Canvas.Clear();
+        if (Background != SKColor.Empty)
+        {
+            Canvas.DrawRect(Info.Rect, new SKPaint { Color = Background });
+        }
 
         if (MotionCanvas.StartPoint is null) return;
         Canvas.Translate(new SKPoint(MotionCanvas.StartPoint.Value.X, MotionCanvas.StartPoint.Value.Y));

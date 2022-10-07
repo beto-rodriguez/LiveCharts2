@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
   <PropertyGroup>
     <TargetFrameworks>net6.0-windows10.0.18362;netstandard2.0;net6.0-ios;net6.0-macos;net6.0-maccatalyst;net6.0-android</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
@@ -6,7 +6,7 @@
 
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
-    <Version>2.0.0-beta.500</Version>
+    <Version>2.0.0-beta.501</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -21,9 +21,9 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
-    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.3" />
-    <PackageReference Include="Uno.WinUI" Version="4.4.5" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.2" />
+    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.2" />
+    <PackageReference Include="Uno.WinUI" Version="4.5.12" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
