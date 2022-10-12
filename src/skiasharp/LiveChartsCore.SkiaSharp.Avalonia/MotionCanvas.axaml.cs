@@ -29,6 +29,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
@@ -95,6 +96,9 @@ public class MotionCanvas : UserControl
         if (_isDeatached) return;
         var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height));
         context.Custom(drawOperation);
+
+        if (CanvasCore.IsValid) return;
+        Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
     }
 
     /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
@@ -187,10 +191,6 @@ public class MotionCanvas : UserControl
                     lease.SkSurface,
                     lease.SkCanvas,
                     false));
-
-            if (_motionCanvas.IsValid) return;
-
-            _avaloniaControl.InvalidateVisual();
         }
     }
 }
