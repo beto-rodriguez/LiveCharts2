@@ -75,8 +75,7 @@ public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingCont
     /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.SweepAngle" />
     public float SweepAngle
     {
-        get =>
-            _sweepProperty.GetMovement(this);
+        get => _sweepProperty.GetMovement(this);
         set => _sweepProperty.SetMovement(value, this);
     }
 
