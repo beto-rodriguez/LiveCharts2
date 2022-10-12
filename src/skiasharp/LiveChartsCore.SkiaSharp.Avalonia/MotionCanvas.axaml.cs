@@ -183,9 +183,10 @@ public class MotionCanvas : UserControl
             _motionCanvas.DrawFrame(
                 new SkiaSharpDrawingContext(
                     _motionCanvas,
-                    new SKImageInfo(
-                        (int)Bounds.Width, (int)Bounds.Height),
-                        lease.SkSurface, lease.SkCanvas));
+                    new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
+                    lease.SkSurface,
+                    lease.SkCanvas,
+                    false));
 
             if (_motionCanvas.IsValid) return;
 
