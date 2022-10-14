@@ -29,17 +29,5 @@ namespace LiveChartsCore.SkiaSharpView;
 /// <inheritdoc cref="ICartesianAxis" />
 public class Axis : Axis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Axis"/> class.
-    /// </summary>
-    public Axis()
-    {
-        //if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        //_isInternalSet = true;
-        //var initializer = stylesBuilder.GetVisualsInitializer();
-        //_isInternalSet = false;
-
-        //initializer.ApplyStyleToAxis(this);
-    }
+    // lets just let the core know that we are using the SkiaSharp.
 }
