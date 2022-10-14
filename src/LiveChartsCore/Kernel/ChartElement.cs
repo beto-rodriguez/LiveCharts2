@@ -96,7 +96,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
-        if (!CanSetProperty()) return;
+        if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
+        if (!CanSetProperty(propertyName)) return;
 
         if (reference is not null) _deletingTasks.Add(reference);
         reference = value;
@@ -123,7 +124,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         T value,
         [CallerMemberName] string? propertyName = null)
     {
-        if (!CanSetProperty()) return;
+        if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
+        if (!CanSetProperty(propertyName)) return;
 
         reference = value;
         OnPropertyChanged(propertyName);
@@ -139,7 +141,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         // only invoke property change event when a user set the property.
         if (_isInternalSet) return;
 
-        _ = _userSets.Add(propertyName ?? throw new Exception("The property name is required at this point."));
+        _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
@@ -150,7 +152,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// </summary>
     /// <param name="propertyName"></param>
     /// <returns></returns>
-    protected bool CanSetProperty([CallerMemberName] string propertyName = "*")
+    protected bool CanSetProperty(string propertyName)
     {
         return                                  // a property can be set if:
             !_isInternalSet                     // 1. it is an user action (not internal operation).

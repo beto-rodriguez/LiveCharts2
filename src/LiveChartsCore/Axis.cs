@@ -114,16 +114,16 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public string? Name { get; set; } = null;
 
     /// <inheritdoc cref="IPlane.NameTextSize"/>
-    public double NameTextSize { get => _nameTextSize; set { _nameTextSize = value; OnPropertyChanged(); } }
+    public double NameTextSize { get => _nameTextSize; set => SetProperty(ref _nameTextSize, value); }
 
     /// <inheritdoc cref="IPlane.NamePadding"/>
-    public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
+    public Padding NamePadding { get => _namePadding; set => SetProperty(ref _namePadding, value); }
 
     /// <inheritdoc cref="ICartesianAxis.Orientation"/>
     public AxisOrientation Orientation => _orientation;
 
     /// <inheritdoc cref="ICartesianAxis.Padding"/>
-    public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
+    public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
 
     /// <inheritdoc cref="IPlane.Labeler"/>
     public Func<double, string> Labeler
@@ -133,40 +133,40 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="IPlane.MinStep"/>
-    public double MinStep { get => _minStep; set { _minStep = value; OnPropertyChanged(); } }
+    public double MinStep { get => _minStep; set => SetProperty(ref _minStep, value); }
 
     /// <inheritdoc cref="IPlane.ForceStepToMin"/>
-    public bool ForceStepToMin { get => _forceStepToMin; set { _forceStepToMin = value; OnPropertyChanged(); } }
+    public bool ForceStepToMin { get => _forceStepToMin; set => SetProperty(ref _forceStepToMin, value); }
 
     /// <inheritdoc cref="IPlane.MinLimit"/>
-    public double? MinLimit { get => _minLimit; set { _minLimit = value; OnPropertyChanged(); } }
+    public double? MinLimit { get => _minLimit; set => SetProperty(ref _minLimit, value); }
 
     /// <inheritdoc cref="IPlane.MaxLimit"/>
-    public double? MaxLimit { get => _maxLimit; set { _maxLimit = value; OnPropertyChanged(); } }
+    public double? MaxLimit { get => _maxLimit; set => SetProperty(ref _maxLimit, value); }
 
     /// <inheritdoc cref="IPlane.UnitWidth"/>
-    public double UnitWidth { get => _unitWidth; set { _unitWidth = value; OnPropertyChanged(); } }
+    public double UnitWidth { get => _unitWidth; set => SetProperty(ref _unitWidth, value); }
 
     /// <inheritdoc cref="ICartesianAxis.Position"/>
-    public AxisPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
+    public AxisPosition Position { get => _position; set => SetProperty(ref _position, value); }
 
     /// <inheritdoc cref="IPlane.LabelsRotation"/>
-    public double LabelsRotation { get => _labelsRotation; set { _labelsRotation = value; OnPropertyChanged(); } }
+    public double LabelsRotation { get => _labelsRotation; set => SetProperty(ref _labelsRotation, value); }
 
     /// <inheritdoc cref="IPlane.TextSize"/>
-    public double TextSize { get => _textSize; set { _textSize = value; OnPropertyChanged(); } }
+    public double TextSize { get => _textSize; set => SetProperty(ref _textSize, value); }
 
     /// <inheritdoc cref="IPlane.Labels"/>
     public IList<string>? Labels { get; set; }
 
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
-    public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
+    public bool ShowSeparatorLines { get => _showSeparatorLines; set => SetProperty(ref _showSeparatorLines, value); }
 
     /// <inheritdoc cref="IPlane.IsVisible"/>
-    public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
+    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
-    public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
+    public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
     public IPaint<TDrawingContext>? NamePaint
@@ -197,7 +197,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
-    public bool DrawTicksPath { get => _drawTicksPath; set { _drawTicksPath = value; OnPropertyChanged(); } }
+    public bool DrawTicksPath { get => _drawTicksPath; set => SetProperty(ref _drawTicksPath, value); }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
     public IPaint<TDrawingContext>? TicksPaint
@@ -247,10 +247,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public IPaint<TDrawingContext>? TextBrush
     {
         get => LabelsPaint;
-        set
-        {
-            LabelsPaint = value;
-        }
+        set => LabelsPaint = value;
     }
 
     /// <summary>

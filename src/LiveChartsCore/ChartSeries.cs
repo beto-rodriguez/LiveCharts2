@@ -77,7 +77,11 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     public CanvasSchedule<TDrawingContext> CanvasSchedule
     {
         get => _canvasSchedule;
-        protected set { _canvasSchedule = value; OnPropertyChanged(); }
+        protected set
+        {
+            _canvasSchedule = value;
+            //OnPropertyChanged();
+        }
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.IsFirstDraw"/>

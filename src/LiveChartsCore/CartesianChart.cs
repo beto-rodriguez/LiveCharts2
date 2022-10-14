@@ -460,6 +460,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             chartElement._isInternalSet = true;
             axis.IsNotifyingChanges = false;
             axis.Initialize(AxisOrientation.X);
+            theme.GetVisualsInitializer().ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
@@ -467,11 +468,15 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         foreach (var axis in YAxes)
         {
+            var chartElement = (ChartElement<TDrawingContext>)axis;
+            chartElement._isInternalSet = true;
             axis.IsNotifyingChanges = false;
             axis.Initialize(AxisOrientation.Y);
+            theme.GetVisualsInitializer().ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
+            chartElement._isInternalSet = false;
         }
 
         // get seriesBounds

@@ -34,10 +34,12 @@ public class Axis : Axis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry>
     /// </summary>
     public Axis()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
+        //if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+        //_isInternalSet = true;
+        //var initializer = stylesBuilder.GetVisualsInitializer();
+        //_isInternalSet = false;
 
-        initializer.ApplyStyleToAxis(this);
+        //initializer.ApplyStyleToAxis(this);
     }
 }
