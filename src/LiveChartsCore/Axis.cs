@@ -22,9 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
@@ -128,7 +126,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPlane.Labeler"/>
-    public Func<double, string> Labeler { get => _labeler; set { _labeler = value; OnPropertyChanged(); } }
+    public Func<double, string> Labeler
+    {
+        get => _labeler;
+        set => SetProperty(ref _labeler, value);
+    }
 
     /// <inheritdoc cref="IPlane.MinStep"/>
     public double MinStep { get => _minStep; set { _minStep = value; OnPropertyChanged(); } }
@@ -242,7 +244,14 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// 
     /// </summary>
     [Obsolete("Renamed to LabelsPaint")]
-    public IPaint<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
+    public IPaint<TDrawingContext>? TextBrush
+    {
+        get => LabelsPaint;
+        set
+        {
+            LabelsPaint = value;
+        }
+    }
 
     /// <summary>
     /// 
@@ -266,12 +275,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="ICartesianAxis.Initialized"/>
     public event Action<ICartesianAxis>? Initialized;
-
-    /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
-    /// <returns></returns>
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -785,28 +788,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         base.RemoveFromUI(chart);
         _animatableBounds = null!;
         _ = activeSeparators.Remove(chart);
-    }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        if (!((ICartesianAxis)this).IsNotifyingChanges) return;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnPropertyChanged(propertyName);
     }
 
     /// <summary>

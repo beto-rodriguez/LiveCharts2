@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
@@ -482,16 +483,11 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             Name == series.Name && Fill == sfSeries.Fill && Stroke == sfSeries.Stroke;
     }
 
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPropertyChanged(string?)"/>
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        base.OnPaintChanged(propertyName);
         OnSeriesMiniatureChanged();
-        OnPropertyChanged();
+        base.OnPropertyChanged(propertyName);
     }
 
     /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.OnSeriesMiniatureChanged"/>

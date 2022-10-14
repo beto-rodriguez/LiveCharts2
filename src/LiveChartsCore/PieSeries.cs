@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -529,16 +530,11 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         visual.PushOut = (float)Pushout;
     }
 
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPropertyChanged(string?)"/>
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        base.OnPaintChanged(propertyName);
         OnSeriesMiniatureChanged();
-        OnPropertyChanged(propertyName);
+        base.OnPropertyChanged(propertyName);
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

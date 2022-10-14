@@ -456,11 +456,14 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
+            var chartElement = (ChartElement<TDrawingContext>)axis;
+            chartElement._isInternalSet = true;
             axis.IsNotifyingChanges = false;
             axis.Initialize(AxisOrientation.X);
             theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
+            chartElement._isInternalSet = false;
         }
         foreach (var axis in YAxes)
         {

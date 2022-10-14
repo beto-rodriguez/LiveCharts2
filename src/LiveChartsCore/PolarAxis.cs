@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
@@ -191,12 +190,6 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
     /// <inheritdoc cref="IPolarAxis.Initialized"/>
     public event Action<IPolarAxis>? Initialized;
-
-    /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
-    /// <returns></returns>
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -557,7 +550,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     void IPolarAxis.Initialize(PolarAxisOrientation orientation)
     {
         _orientation = orientation;
-        if (_animatableBounds is null) _animatableBounds = new();
+        _animatableBounds ??= new();
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
         Initialized?.Invoke(this);
@@ -590,17 +583,6 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
         base.RemoveFromUI(chart);
         _animatableBounds = null!;
         _ = activeSeparators.Remove(chart);
-    }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        if (!((IPolarAxis)this).IsNotifyingChanges) return;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     /// <summary>
@@ -647,17 +629,6 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
             separator.Label.Opacity = 0;
             separator.Label.RemoveOnCompleted = true;
         }
-    }
-
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnPropertyChanged(propertyName);
     }
 
     /// <summary>

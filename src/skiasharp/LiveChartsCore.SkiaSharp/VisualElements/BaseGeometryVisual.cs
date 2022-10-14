@@ -76,15 +76,4 @@ public abstract class BaseGeometryVisual : VisualElement<SkiaSharpDrawingContext
     {
         return new[] { _fill, _stroke };
     }
-
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnPropertyChanged(propertyName);
-    }
 }

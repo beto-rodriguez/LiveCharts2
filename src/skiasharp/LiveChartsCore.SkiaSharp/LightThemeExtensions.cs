@@ -283,11 +283,16 @@ public static class LightThemeExtensions
                         initializer.ApplyStyleToAxis(plane);
                     }
 
-                    if (plane.NamePaint == LiveChartsSkiaSharp.DefaultPaint)
-                        plane.NamePaint = new SolidColorPaint(new SKColor(35, 35, 35));
+                    var chartElement = (ChartElement<SkiaSharpDrawingContext>)plane;
 
-                    if (plane.LabelsPaint == LiveChartsSkiaSharp.DefaultPaint)
-                        plane.LabelsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
+                    if (plane.NamePaint == LiveChartsSkiaSharp.DefaultPaint)
+                    {
+                        plane.NamePaint = new SolidColorPaint(new SKColor(35, 35, 35));
+                    }
+
+                    //if (plane.LabelsPaint == LiveChartsSkiaSharp.DefaultPaint)
+                    plane.LabelsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
+                    plane.Labeler = value => "mis bolas";
 
                     if (plane is ICartesianAxis cartesian)
                     {

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -72,11 +71,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The index of the axis.
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -143,27 +137,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// </summary>
     /// <returns>The actual size.</returns>
     public abstract LvcSize GetActualSize();
-
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnPropertyChanged(propertyName);
-    }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 
     /// <summary>
     /// Called when the visual is drawn.

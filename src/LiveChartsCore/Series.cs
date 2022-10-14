@@ -200,11 +200,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerDown;
 
-    /// <summary>
-    /// Occurs when a property changes.
-    /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     /// <inheritdoc cref="ISeries.ZIndex" />
     public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
 
@@ -390,18 +385,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
 
     /// <summary>
-    /// Called when a property changed.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        if (!((ISeries)this).IsNotifyingChanges) return;
-        NotifySubscribers();
-    }
-
-    /// <summary>
     /// Called when the visibility changes.
     /// </summary>
     protected virtual void OnVisibilityChanged()
@@ -457,10 +440,12 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.OnPaintChanged(string?)"/>
-    protected override void OnPaintChanged(string? propertyName)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.OnPropertyChanged(string?)"/>
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        base.OnPaintChanged(propertyName);
+        base.OnPropertyChanged(propertyName);
+        if (!((ISeries)this).IsNotifyingChanges) return;
+        NotifySubscribers();
         ((ISeries)this).PaintsChanged = true;
     }
 

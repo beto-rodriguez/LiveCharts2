@@ -33,18 +33,18 @@ public partial class ViewModel
             Name = "Sales amount",
             NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
 
-            LabelsPaint = new SolidColorPaint
-            {
-                Color = SKColors.Blue,
-                FontFamily = "Times New Roman",
-                SKFontStyle = new SKFontStyle(SKFontStyleWeight.ExtraBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Italic)
-            },
+            //LabelsPaint = new SolidColorPaint
+            //{
+            //    Color = SKColors.Blue,
+            //    FontFamily = "Times New Roman",
+            //    SKFontStyle = new SKFontStyle(SKFontStyleWeight.ExtraBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Italic)
+            //},
 
             // Use the Labeler property to give format to the axis values // mark
             // Now the Y axis we will display it as currency
             // LiveCharts provides some common formatters
             // in this case we are using the currency formatter.
-            Labeler = Labelers.Currency // mark
+            //Labeler = Labelers.Currency // mark
 
             // you could also build your own currency formatter
             // for example:

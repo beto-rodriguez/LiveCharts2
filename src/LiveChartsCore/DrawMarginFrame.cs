@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
@@ -62,38 +61,12 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
     }
 
     /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
-    /// <returns></returns>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <summary>
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _stroke, _fill };
-    }
-
-    /// <summary>
-    /// Called when the fill changes.
-    /// </summary>
-    /// <param name="propertyName"></param>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnPropertyChanged(propertyName);
-    }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
 
