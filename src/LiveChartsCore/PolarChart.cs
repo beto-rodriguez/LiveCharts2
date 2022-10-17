@@ -188,7 +188,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
+        if (theme.ColorPalette is null || theme.ColorPalette.Length == 0)
             throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
@@ -224,14 +224,14 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         {
             axis.IsNotifyingChanges = false;
             axis.Initialize(PolarAxisOrientation.Angle);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
+            //theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
         }
         foreach (var axis in RadiusAxes)
         {
             axis.IsNotifyingChanges = false;
             axis.Initialize(PolarAxisOrientation.Radius);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
+            //theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
         }
 
@@ -241,7 +241,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         {
             series.IsNotifyingChanges = false;
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-            theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+            //theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
             var secondaryAxis = AngleAxes[series.ScalesAngleAt];
             var primaryAxis = RadiusAxes[series.ScalesRadiusAt];

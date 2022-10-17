@@ -425,7 +425,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _zoomMode = _chartView.ZoomMode;
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
+        if (theme.ColorPalette is null || theme.ColorPalette.Length == 0)
             throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
@@ -460,8 +460,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             chartElement._isInternalSet = true;
             axis.IsNotifyingChanges = false;
             axis.Initialize(AxisOrientation.X);
-            theme.GetVisualsInitializer().ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
+            theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            //theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
             chartElement._isInternalSet = false;
@@ -472,8 +472,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             chartElement._isInternalSet = true;
             axis.IsNotifyingChanges = false;
             axis.Initialize(AxisOrientation.Y);
-            theme.GetVisualsInitializer().ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
+            theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            //theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
             chartElement._isInternalSet = false;
@@ -485,7 +485,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             series.IsNotifyingChanges = false;
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-            theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+            theme.ApplyStyleToSeries(series);
+            //theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
             var xAxis = XAxes[series.ScalesXAt];
             var yAxis = YAxes[series.ScalesYAt];

@@ -126,7 +126,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public SeriesProperties SeriesProperties { get; }
 
     /// <inheritdoc cref="ISeries.Name"/>
-    public string? Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+    public string? Name { get => _name; set => SetProperty(ref _name, value); }
 
     /// <summary>
     /// Gets or sets the data set to draw in the chart.
@@ -146,7 +146,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     IEnumerable? ISeries.Values { get => Values; set => Values = (IEnumerable<TModel>?)value; }
 
     /// <inheritdoc cref="ISeries.Pivot"/>
-    public double Pivot { get => pivot; set { pivot = (float)value; OnPropertyChanged(); } }
+    public double Pivot { get => pivot; set => SetProperty(ref pivot, (float)value); }
 
     /// <summary>
     /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
@@ -201,7 +201,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerDown;
 
     /// <inheritdoc cref="ISeries.ZIndex" />
-    public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
+    public int ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
     /// <summary>
     /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
@@ -213,7 +213,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string> TooltipLabelFormatter
     {
         get => _tooltipLabelFormatter;
-        set { _tooltipLabelFormatter = value; OnPropertyChanged(); }
+        set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
     /// <summary>
@@ -226,7 +226,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
     {
         get => _dataLabelsFormatter;
-        set { _dataLabelsFormatter = value; OnPropertyChanged(); }
+        set => SetProperty(ref _dataLabelsFormatter, value);
     }
 
     /// <inheritdoc cref="ISeries.IsVisible" />

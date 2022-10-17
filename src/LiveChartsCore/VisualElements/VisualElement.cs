@@ -42,12 +42,12 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <summary>
     /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
     /// </summary>
-    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
+    public double X { get => _x; set => SetProperty(ref _x, value); }
 
     /// <summary>
     /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
     /// </summary>
-    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double Y { get => _y; set => SetProperty(ref _y, value); }
 
     /// <summary>
     /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
@@ -61,7 +61,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }
+    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
@@ -70,7 +70,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
+    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)

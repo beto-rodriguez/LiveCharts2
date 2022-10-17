@@ -58,7 +58,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
                     theme =>
                     {
                         // you can add additional rules to the current theme
-                        theme.Style
+                        theme.ChartStyle
                         .HasRuleForLineSeries(lineSeries =>
                         {
                             // this method will be called in the constructor of a line series instance

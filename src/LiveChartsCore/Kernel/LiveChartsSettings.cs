@@ -37,7 +37,7 @@ public class LiveChartsSettings
 {
     private object? _currentProvider;
     private readonly Dictionary<Type, object> _mappers = new();
-    private readonly Dictionary<Type, object> _seriesStyleBuilder = new();
+    private object? _theme;
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -160,50 +160,6 @@ public class LiveChartsSettings
     }
 
     /// <summary>
-    /// Sets the default animations speed.
-    /// </summary>
-    /// <param name="animationsSpeed">The animations speed.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultAnimationsSpeed(TimeSpan animationsSpeed)
-    {
-        DefaultAnimationsSpeed = animationsSpeed;
-        return this;
-    }
-
-    /// <summary>
-    /// Withes the default easing function.
-    /// </summary>
-    /// <param name="easingFunction">The easing function.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultEasingFunction(Func<float, float> easingFunction)
-    {
-        DefaultEasingFunction = easingFunction;
-        return this;
-    }
-
-    /// <summary>
-    /// Withes the default zoom speed.
-    /// </summary>
-    /// <param name="speed">The speed.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultZoomSpeed(double speed)
-    {
-        DefaultZoomSpeed = speed;
-        return this;
-    }
-
-    /// <summary>
-    /// Withes the default zoom mode.
-    /// </summary>
-    /// <param name="zoomMode">The zoom mode.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultZoomMode(ZoomAndPanMode zoomMode)
-    {
-        DefaultZoomMode = zoomMode;
-        return this;
-    }
-
-    /// <summary>
     /// Removes a map from the settings.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
@@ -223,15 +179,10 @@ public class LiveChartsSettings
     public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
         where TDrawingContext : DrawingContext
     {
-        if (!_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
-        {
-            stylesBuilder = new Theme<TDrawingContext>();
-            _seriesStyleBuilder[typeof(TDrawingContext)] = stylesBuilder;
-        }
-
         ThemeId = new object();
-        var sb = (Theme<TDrawingContext>)stylesBuilder;
-        builder(sb);
+        var theme = new Theme<TDrawingContext>();
+        _theme = theme;
+        builder(theme);
 
         return this;
     }
@@ -245,9 +196,8 @@ public class LiveChartsSettings
     public Theme<TDrawingContext> GetTheme<TDrawingContext>()
         where TDrawingContext : DrawingContext
     {
-        return !_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder)
-            ? throw new Exception($"The type {nameof(TDrawingContext)} is not registered.")
-            : (Theme<TDrawingContext>)stylesBuilder;
+        return _theme as Theme<TDrawingContext> ??
+               throw new Exception($"The type {nameof(TDrawingContext)} is not registered.");
     }
 
     /// <summary>

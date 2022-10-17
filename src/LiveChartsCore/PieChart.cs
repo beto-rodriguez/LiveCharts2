@@ -185,7 +185,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
+        if (theme.ColorPalette is null || theme.ColorPalette.Length == 0)
             throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
@@ -197,7 +197,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             series.IsNotifyingChanges = false;
 
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-            theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+            //theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
             var seriesBounds = series.GetBounds(this);
 

@@ -108,19 +108,4 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     /// <returns></returns>
     protected abstract void OnSeriesMiniatureChanged();
-
-    /// <summary>
-    /// Initializes the series.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="Exception">Default colors are not valid</exception>
-    protected void InitializeSeries()
-    {
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-
-        initializer.ApplyStyleToSeries(this);
-    }
 }
