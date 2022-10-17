@@ -188,8 +188,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.ColorPalette is null || theme.ColorPalette.Length == 0)
-            throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;

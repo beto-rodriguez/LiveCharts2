@@ -56,23 +56,23 @@ public class MainWindowViewModel : INotifyPropertyChanged
                 .AddDefaultMappers()
                 .AddSkiaSharp()
                 .AddDarkTheme(
-                    theme =>
-                    {
-                        // you can add additional rules to the current theme
-                        theme.ChartStyle
-                        .HasRuleForLineSeries(lineSeries =>
-                        {
-                            // this method will be called in the constructor of a line series instance
+                    //theme =>
+                    //{
+                    //    // you can add additional rules to the current theme
+                    //    theme.ChartStyle
+                    //    .HasRuleForLineSeries(lineSeries =>
+                    //    {
+                    //        // this method will be called in the constructor of a line series instance
 
-                            lineSeries.LineSmoothness = 0.65;
-                            // ...
-                            // add more custom styles here ...
-                        }).HasRuleForBarSeries(barSeries =>
-                    {
-                        // this method will be called in the constructor of a column series instance
-                        // ...
-                    });
-                    }));
+                    //        lineSeries.LineSmoothness = 0.65;
+                    //        // ...
+                    //        // add more custom styles here ...
+                    //    }).HasRuleForBarSeries(barSeries =>
+                    //{
+                    //    // this method will be called in the constructor of a column series instance
+                    //    // ...
+                    //});
+                    ));
     }
 
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)

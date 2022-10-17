@@ -425,8 +425,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _zoomMode = _chartView.ZoomMode;
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.ColorPalette is null || theme.ColorPalette.Length == 0)
-            throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;

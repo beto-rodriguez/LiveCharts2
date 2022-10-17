@@ -33,11 +33,6 @@ namespace LiveChartsCore.Themes;
 public class Theme<TDrawingContext> where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets or sets the color palette.
-    /// </summary>
-    public LvcColor[]? ColorPalette { get; private set; }
-
-    /// <summary>
     /// Gets the builders.
     /// </summary>
     public Dictionary<Type, List<object>> Builders { get; } = new();
