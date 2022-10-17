@@ -79,13 +79,4 @@ public class StackedStepAreaSeries<TModel, TVisual, TLabel>
     : StackedStepAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry, StepPoint<TVisual>>
     where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel}"/> class.
-    /// </summary>
-    public StackedStepAreaSeries()
-    {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        InitializeSeries();
-    }
-}
+{ }

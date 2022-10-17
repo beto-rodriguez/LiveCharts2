@@ -54,8 +54,9 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public GeoMap()
     {
-        InitializeComponent();
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+
+        InitializeComponent();
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
 
         canvas.SkCanvasView.EnableTouchEvents = true;

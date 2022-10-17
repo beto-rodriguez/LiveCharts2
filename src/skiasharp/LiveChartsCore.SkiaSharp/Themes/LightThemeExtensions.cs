@@ -20,13 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.Themes;
+using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView;
+namespace LiveChartsCore.SkiaSharpView.Themes;
 
 /// <summary>
-/// Defines a visual frame in the draw margin of the chart.
+/// Defines the light theme extensions.
 /// </summary>
-public class DrawMarginFrame : DrawMarginFrame<RectangleGeometry, SkiaSharpDrawingContext>
-{ }
+public static class LightThemeExtensions
+{
+    /// <summary>
+    /// Adds the light theme.
+    /// </summary>
+    /// <param name="settings">The settings.</param>
+    /// <returns></returns>
+    public static LiveChartsSettings AddLightTheme(this LiveChartsSettings settings)
+    {
+        return settings.AddTheme(
+            ColorPalletes.MaterialDesign500.AsSKColors(),
+            new SKColor(40, 40, 40),
+            new SKColor(250, 250, 250));
+    }
+}

@@ -48,7 +48,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     private double? _backgroundOffsetRadius = null;
     private double? _backgroundCornerRadius = null;
     private double? _cornerRadius = null;
-    private IPaint<SkiaSharpDrawingContext>? _background = LiveChartsSkiaSharp.DefaultPaint;
+    private IPaint<SkiaSharpDrawingContext>? _background = null;
     private double? _labelsSize = null;
     private PolarLabelsPosition? _labelsPosition = null;
     private double? _backgroundMaxRadialColumnWidth = null;
@@ -232,8 +232,8 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     }
 
     /// <summary>
-    /// Gets or sets the background, setting this property to <see cref="LiveChartsSkiaSharp.DefaultPaint"/> will let the theme decide
-    /// the value, default is <see cref="LiveChartsSkiaSharp.DefaultPaint"/>.
+    /// Gets or sets the background, setting this property to  will let the theme decide
+    /// the value, default is .
     /// </summary>
     /// <value>
     /// The background.
@@ -241,8 +241,8 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public IPaint<SkiaSharpDrawingContext>? Background { get => _background; set { _background = value; OnPopertyChanged(); } }
 
     /// <summary>
-    /// Sets the background, setting this property to <see cref="LiveChartsSkiaSharp.DefaultPaint"/> will let the theme decide
-    /// the value, default is <see cref="LiveChartsSkiaSharp.DefaultPaint"/>.
+    /// Sets the background, setting this property to  will let the theme decide
+    /// the value, default is <.
     /// </summary>
     /// <param name="value">the value.</param>
     public GaugeBuilder WithBackground(IPaint<SkiaSharpDrawingContext>? value)
@@ -361,7 +361,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <returns></returns>
     public GaugeBuilder AddValue(ObservableValue value)
     {
-        return AddValue(value, null, LiveChartsSkiaSharp.DefaultPaint, null);
+        return AddValue(value, null, null, null);
     }
 
     /// <summary>
@@ -382,7 +382,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <returns></returns>
     public GaugeBuilder AddValue(ObservableValue value, string? seriesName)
     {
-        return AddValue(value, seriesName, LiveChartsSkiaSharp.DefaultPaint, null);
+        return AddValue(value, seriesName, null, null);
     }
 
     /// <summary>
@@ -477,7 +477,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <returns></returns>
     public void ApplyStylesToFill(PieSeries<ObservableValue> series)
     {
-        if (Background != LiveChartsSkiaSharp.DefaultPaint) series.Fill = Background;
+        if (Background != null) series.Fill = Background;
         if (BackgroundInnerRadius is not null) series.InnerRadius = BackgroundInnerRadius.Value;
         if (BackgroundOffsetRadius is not null)
         {
@@ -498,7 +498,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     {
         if (_keyValuePairs.TryGetValue(series, out var t))
         {
-            if (t.Item3 != LiveChartsSkiaSharp.DefaultPaint) series.Fill = t.Item3;
+            if (t.Item3 != null) series.Fill = t.Item3;
         }
         if (LabelsSize is not null) series.DataLabelsSize = LabelsSize.Value;
         if (LabelsPosition is not null) series.DataLabelsPosition = LabelsPosition.Value;

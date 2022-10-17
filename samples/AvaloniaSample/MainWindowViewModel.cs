@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Avalonia.Media;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Themes;
 using LiveChartsCore.Themes;
 
 namespace AvaloniaSample;

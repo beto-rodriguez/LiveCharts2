@@ -54,8 +54,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public GeoMap()
     {
-        InitializeComponent();
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        InitializeComponent();
+
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),

@@ -78,6 +78,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <exception cref="MotionCanvas"></exception>
     protected Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend<SkiaSharpDrawingContext>? legend)
     {
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+
         if (tooltip is not null) this.tooltip = tooltip;
         if (legend is not null) this.legend = legend;
 
@@ -87,14 +89,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         UpdateLegendLayout();
 
         BackgroundColor = Colors.White;
-
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
 
         InitializeCore();
 

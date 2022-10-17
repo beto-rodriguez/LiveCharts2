@@ -26,10 +26,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Themes;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -39,14 +39,6 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public static class LiveChartsSkiaSharp
 {
-    /// <summary>
-    /// Gets the default paint task.
-    /// </summary>
-    /// <value>
-    /// The default paint.
-    /// </value>
-    public static DefaultPaint<SkiaSharpDrawingContext> DefaultPaint { get; } = new();
-
     /// <summary>
     /// Gets the default platform builder.
     /// </summary>
@@ -66,9 +58,6 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
-        // ToDo: default paint needs to be simplified???
-        LiveCharts.DefaultPaint = DefaultPaint;
-
         return settings.HasProvider(new SkiaSharpProvider());
     }
 
@@ -81,6 +70,16 @@ public static class LiveChartsSkiaSharp
     public static SKColor AsSKColor(this LvcColor color, byte? alphaOverrides = null)
     {
         return new SKColor(color.R, color.G, color.B, alphaOverrides ?? color.A);
+    }
+
+    /// <summary>
+    /// Converts a <see cref="LvcColor"/> to a <see cref="SKColor"/> instance.
+    /// </summary>
+    /// <param name="colors">The color.</param>
+    /// <returns></returns>
+    public static SKColor[] AsSKColors(this LvcColor[] colors)
+    {
+        return colors.Select(x => x.AsSKColor()).ToArray();
     }
 
     /// <summary>
@@ -102,6 +101,48 @@ public static class LiveChartsSkiaSharp
     public static LvcColor AsLvcColor(this SKColor color)
     {
         return new LvcColor(color.Red, color.Green, color.Blue, color.Alpha);
+    }
+
+    /// <summary>
+    /// Shades a color.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    /// <param name="shade">The shade.</param>
+    /// <returns></returns>
+    public static SKColor Shade(this SKColor color, float shade)
+    {
+        return new SKColor(
+            (byte)(color.Red * (1 - shade)),
+            (byte)(color.Green * (1 - shade)),
+            (byte)(color.Blue * (1 - shade)),
+            color.Alpha);
+    }
+
+    /// <summary>
+    /// Tints a color.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    /// <param name="tint">The tint.</param>
+    /// <returns></returns>
+    public static SKColor Tint(this SKColor color, float tint)
+    {
+        return new SKColor(
+            (byte)(color.Red + (255 - color.Red) * tint),
+            (byte)(color.Green + (255 - color.Green) * tint),
+            (byte)(color.Blue + (255 - color.Blue) * tint),
+            color.Alpha);
+    }
+
+    /// <summary>
+    /// Multiplies the current alpha for the given factor.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    /// <param name="factor">The factor.</param>
+    /// <returns></returns>
+    public static SKColor StackAlpha(this SKColor color, float factor)
+    {
+        return new SKColor(
+            color.Red, color.Green, color.Blue, (byte)(color.Alpha * factor));
     }
 
     /// <summary>
@@ -130,7 +171,7 @@ public static class LiveChartsSkiaSharp
         this IEnumerable<T> source,
         Action<T, PieSeries<T>>? buider = null)
     {
-        if (buider is null) buider = (instance, series) => { };
+        buider ??= (instance, series) => { };
 
         return new ObservableCollection<ISeries>(
             source.Select(instance =>

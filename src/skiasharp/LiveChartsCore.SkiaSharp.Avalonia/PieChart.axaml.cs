@@ -73,19 +73,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     /// <exception cref="Exception">Default colors are not valid</exception>
     public PieChart()
     {
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
         InitializeComponent();
 
         // workaround to detect mouse events.
         // Avalonia do not seem to detect events if background is not set.
         Background = new SolidColorBrush(Colors.Transparent);
-
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
 
         InitializeCore();
 

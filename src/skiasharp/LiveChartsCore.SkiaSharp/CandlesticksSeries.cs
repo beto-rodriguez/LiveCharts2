@@ -76,13 +76,4 @@ public class CandlesticksSeries<TModel, TVisual> : CandlesticksSeries<TModel, TV
 public class CandlesticksSeries<TModel, TVisual, TLabel> : FinancialSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
     where TVisual : class, IFinancialVisualChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel}"/> class.
-    /// </summary>
-    public CandlesticksSeries()
-    {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        InitializeSeries();
-    }
-}
+{ }

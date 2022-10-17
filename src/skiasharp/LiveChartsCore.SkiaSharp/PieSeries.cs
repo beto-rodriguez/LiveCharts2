@@ -99,8 +99,5 @@ public class PieSeries<TModel, TVisual, TLabel> : PieSeries<TModel, TVisual, TLa
     /// <param name="isGauge"></param>
     /// <param name="isGaugeFill"></param>
     public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
-    {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        InitializeSeries();
-    }
+    { }
 }
