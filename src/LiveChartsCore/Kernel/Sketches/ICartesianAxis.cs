@@ -112,7 +112,7 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
 /// Defines an Axis in a Cartesian chart.
 /// </summary>
 /// <typeparam name="TDrawingContext"></typeparam>
-public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
+public interface ICartesianAxis<TDrawingContext> : IPlane<TDrawingContext>, ICartesianAxis
     where TDrawingContext : DrawingContext
 {
     /// <summary>

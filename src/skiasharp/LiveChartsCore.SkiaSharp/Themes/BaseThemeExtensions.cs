@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -93,13 +94,14 @@ public static class BaseThemeExtensions
 
                         if (plane is ICartesianAxis<SkiaSharpDrawingContext> cartesianAxis)
                         {
-                            cartesianAxis.SubseparatorsPaint = cartesianAxis.Orientation == Measure.AxisOrientation.X
+                            cartesianAxis.SeparatorsPaint = cartesianAxis.Orientation == Measure.AxisOrientation.X
                                 ? null
-                                : new SolidColorPaint(primaryColor.Shade(0.7f));
+                                : new SolidColorPaint(primaryColor.WithAlpha((byte)(255 * 0.125)));
+                            cartesianAxis.Padding = new Padding(8);
                         }
                         else
                         {
-                            plane.SeparatorsPaint = new SolidColorPaint(primaryColor.Shade(0.7f));
+                            plane.SeparatorsPaint = new SolidColorPaint((byte)(255 * 0.125));
                         }
                     })
                     .SetRuleFor<ISeries<SkiaSharpDrawingContext>>(series =>
