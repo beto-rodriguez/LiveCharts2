@@ -352,17 +352,18 @@ public abstract class Chart<TDrawingContext> : IChart
 
         var strategy = ChartSeries.GetTooltipFindingStrategy();
 
+        // fire the series event.
         foreach (var series in ChartSeries)
         {
             if (!series.RequiresFindClosestOnPointerDown) continue;
 
-            var points = series.FindHoveredPoints(this, point, strategy);
+            var points = series.FindHitPoints(this, point, strategy);
             if (!points.Any()) continue;
 
             series.OnDataPointerDown(View, points, point);
         }
 
-        var iterable = ChartSeries.SelectMany(x => x.FindHoveredPoints(this, point, strategy));
+        var iterable = ChartSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
         if (!iterable.Any()) return;
 
         View.OnDataPointerDown(iterable, point);

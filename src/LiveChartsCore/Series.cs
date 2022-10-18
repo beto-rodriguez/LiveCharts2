@@ -312,7 +312,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         return Fetch(chart);
     }
 
-    IEnumerable<ChartPoint> ISeries.FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
+    IEnumerable<ChartPoint> ISeries.FindHitPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
     {
         var query = Fetch(chart).Where(x =>
             x.Context.HoverArea is not null &&

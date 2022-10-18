@@ -150,7 +150,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         return ChartSeries
             .Where(series => series.IsHoverable)
-            .SelectMany(series => series.FindHoveredPoints(this, pointerPosition, actualStrategy));
+            .SelectMany(series => series.FindHitPoints(this, pointerPosition, actualStrategy));
     }
 
     /// <summary>
