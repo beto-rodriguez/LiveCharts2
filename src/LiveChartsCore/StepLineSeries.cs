@@ -69,10 +69,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.EnableNullSplitting"/>
-    public bool EnableNullSplitting { get => _enableNullSplitting; set { _enableNullSplitting = value; OnPropertyChanged(); } }
+    public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
     /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometrySize"/>
-    public double GeometrySize { get => _geometrySize; set { _geometrySize = (float)value; OnPropertyChanged(); } }
+    public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
     /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometryFill"/>
     public IPaint<TDrawingContext>? GeometryFill

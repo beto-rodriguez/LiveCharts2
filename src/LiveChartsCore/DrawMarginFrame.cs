@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
@@ -30,7 +29,7 @@ namespace LiveChartsCore;
 /// Defines a draw margin frame visual in a chart.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
+public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     private IPaint<TDrawingContext>? _stroke = null;

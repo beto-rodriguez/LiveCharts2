@@ -60,22 +60,22 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
     [Obsolete($"Replace by {nameof(Padding)} property.")]
-    public double GroupPadding { get => _pading; set { _pading = value; OnPropertyChanged(); } }
+    public double GroupPadding { get => _pading; set => SetProperty(ref _pading, value); }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
-    public double Padding { get => _pading; set { _pading = value; OnPropertyChanged(); } }
+    public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
-    public double MaxBarWidth { get => _maxBarWidth; set { _maxBarWidth = value; OnPropertyChanged(); } }
+    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
-    public bool IgnoresBarPosition { get => _ignoresBarPosition; set { _ignoresBarPosition = value; OnPropertyChanged(); } }
+    public bool IgnoresBarPosition { get => _ignoresBarPosition; set => SetProperty(ref _ignoresBarPosition, value); }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Rx"/>
-    public double Rx { get => _rx; set { _rx = value; OnPropertyChanged(); } }
+    public double Rx { get => _rx; set => SetProperty(ref _rx, value); }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
-    public double Ry { get => _ry; set { _ry = value; OnPropertyChanged(); } }
+    public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
     /// <summary>
     /// Called when the paint context changes.

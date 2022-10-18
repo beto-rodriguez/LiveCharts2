@@ -65,13 +65,13 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsSize"/>
-    public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }
+    public double DataLabelsSize { get => _dataLabelsSize; set => SetProperty(ref _dataLabelsSize, value); }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsRotation"/>
-    public double DataLabelsRotation { get => _dataLabelsRotation; set { _dataLabelsRotation = value; OnPropertyChanged(); } }
+    public double DataLabelsRotation { get => _dataLabelsRotation; set => SetProperty(ref _dataLabelsRotation, value); }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
-    public Padding DataLabelsPadding { get => _dataLabelsPadding; set { _dataLabelsPadding = value; OnPropertyChanged(); } }
+    public Padding DataLabelsPadding { get => _dataLabelsPadding; set => SetProperty(ref _dataLabelsPadding, value); }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.CanvasSchedule"/>
     public CanvasSchedule<TDrawingContext> CanvasSchedule
@@ -93,7 +93,7 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The size of the legend shape.
     /// </value>
-    public double LegendShapeSize { get => _legendShapeSize; set { _legendShapeSize = value; OnPropertyChanged(); } }
+    public double LegendShapeSize { get => _legendShapeSize; set => SetProperty(ref _legendShapeSize, value); }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);

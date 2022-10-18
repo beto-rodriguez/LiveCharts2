@@ -95,39 +95,39 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.Pushout"/>
-    public double Pushout { get => _pushout; set { _pushout = value; OnPropertyChanged(); } }
+    public double Pushout { get => _pushout; set => SetProperty(ref _pushout, value); }
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.InnerRadius"/>
-    public double InnerRadius { get => _innerRadius; set { _innerRadius = value; OnPropertyChanged(); } }
+    public double InnerRadius { get => _innerRadius; set => SetProperty(ref _innerRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxOuterRadius"/>
-    public double MaxOuterRadius { get => _maxOuterRadius; set { _maxOuterRadius = value; OnPropertyChanged(); } }
+    public double MaxOuterRadius { get => _maxOuterRadius; set => SetProperty(ref _maxOuterRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
-    public double HoverPushout { get => _hoverPushout; set { _hoverPushout = value; OnPropertyChanged(); } }
+    public double HoverPushout { get => _hoverPushout; set => SetProperty(ref _hoverPushout, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeInnerRadius"/>
-    public double RelativeInnerRadius { get => _innerPadding; set { _innerPadding = value; OnPropertyChanged(); } }
+    public double RelativeInnerRadius { get => _innerPadding; set => SetProperty(ref _innerPadding, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeOuterRadius"/>
-    public double RelativeOuterRadius { get => _outerPadding; set { _outerPadding = value; OnPropertyChanged(); } }
+    public double RelativeOuterRadius { get => _outerPadding; set => SetProperty(ref _outerPadding, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxRadialColumnWidth"/>
-    public double MaxRadialColumnWidth { get => _maxRadialColW; set { _maxRadialColW = value; OnPropertyChanged(); } }
+    public double MaxRadialColumnWidth { get => _maxRadialColW; set => SetProperty(ref _maxRadialColW, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.RadialAlign"/>
-    public RadialAlignment RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPropertyChanged(); } }
+    public RadialAlignment RadialAlign { get => _radialAlign; set => SetProperty(ref _radialAlign, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.CornerRadius"/>
-    public double CornerRadius { get => _cornerRadius; set { _cornerRadius = value; OnPropertyChanged(); } }
+    public double CornerRadius { get => _cornerRadius; set => SetProperty(ref _cornerRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.InvertedCornerRadius"/>
-    public bool InvertedCornerRadius { get => _invertedCornerRadius; set { _invertedCornerRadius = value; OnPropertyChanged(); } }
+    public bool InvertedCornerRadius { get => _invertedCornerRadius; set => SetProperty(ref _invertedCornerRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
-    public bool IsFillSeries { get => _isFillSeries; set { _isFillSeries = value; OnPropertyChanged(); } }
+    public bool IsFillSeries { get => _isFillSeries; set => SetProperty(ref _isFillSeries, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.DataLabelsPosition"/>
-    public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
+    public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)

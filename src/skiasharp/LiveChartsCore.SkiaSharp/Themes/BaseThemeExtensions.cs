@@ -69,7 +69,7 @@ public static class BaseThemeExtensions
         easing ??= EasingFunctions.ExponentialOut;
         baseTextSize ??= 18;
         baseGeometrySize ??= 18;
-        baseStrokeThickness ??= 3;
+        baseStrokeThickness ??= 5;
         financialUpColor ??= new SKColor(139, 195, 74, 255);
         financialDownColor ??= new SKColor(239, 83, 80, 255);
 
@@ -104,7 +104,7 @@ public static class BaseThemeExtensions
                             plane.SeparatorsPaint = new SolidColorPaint((byte)(255 * 0.125));
                         }
                     })
-                    .SetRuleFor<ISeries<SkiaSharpDrawingContext>>(series =>
+                    .SetRuleFor<IChartSeries<SkiaSharpDrawingContext>>(series =>
                     {
                         series.Name ??= $"Series {series.SeriesId + 1}";
                     })

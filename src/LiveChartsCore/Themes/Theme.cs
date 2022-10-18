@@ -101,8 +101,10 @@ public class Theme<TDrawingContext> where TDrawingContext : DrawingContext
             assignableTypes = new List<string>();
 
             foreach (var stylableType in s_stylableTypes)
+            {
                 if (stylableType.IsAssignableFrom(t))
                     assignableTypes.Add(stylableType.Name);
+            }
 
             s_assignableTypes[t.Name] = assignableTypes;
         }

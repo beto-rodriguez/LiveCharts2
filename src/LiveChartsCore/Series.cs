@@ -104,6 +104,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
     private bool _isVisibleAtLegend = true;
+    private bool _isHoverable = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -245,13 +246,13 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ISeries.IsHoverable" />
-    public bool IsHoverable { get; set; } = true;
+    public bool IsHoverable { get => _isHoverable; set => SetProperty(ref _isHoverable, value); }
 
     /// <inheritdoc cref="ISeries.IsVisibleAtLegend" />
-    public bool IsVisibleAtLegend { get => _isVisibleAtLegend; set { _isVisibleAtLegend = value; OnPropertyChanged(); } }
+    public bool IsVisibleAtLegend { get => _isVisibleAtLegend; set => SetProperty(ref _isVisibleAtLegend, value); }
 
     /// <inheritdoc cref="ISeries.DataPadding" />
-    public LvcPoint DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
+    public LvcPoint DataPadding { get => _dataPadding; set => SetProperty(ref _dataPadding, value); }
 
     /// <inheritdoc cref="ISeries.AnimationsSpeed" />
     public TimeSpan? AnimationsSpeed { get; set; }

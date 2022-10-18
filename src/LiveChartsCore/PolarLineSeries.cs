@@ -101,13 +101,13 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
-    public double GeometrySize { get => _geometrySize; set { _geometrySize = (float)value; OnPropertyChanged(); } }
+    public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.ScalesAngleAt"/>
-    public int ScalesAngleAt { get => _scalesAngleAt; set { _scalesAngleAt = value; OnPropertyChanged(); } }
+    public int ScalesAngleAt { get => _scalesAngleAt; set => SetProperty(ref _scalesAngleAt, value); }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.ScalesRadiusAt"/>
-    public int ScalesRadiusAt { get => _scalesRadiusAt; set { _scalesRadiusAt = value; OnPropertyChanged(); } }
+    public int ScalesRadiusAt { get => _scalesRadiusAt; set => SetProperty(ref _scalesRadiusAt, value); }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
     public double LineSmoothness
@@ -118,13 +118,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             var v = value;
             if (value > 1) v = 1;
             if (value < 0) v = 0;
-            _lineSmoothness = (float)v;
-            OnPropertyChanged();
+            SetProperty(ref _lineSmoothness, (float)v);
         }
     }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.EnableNullSplitting"/>
-    public bool EnableNullSplitting { get => _enableNullSplitting; set { _enableNullSplitting = value; OnPropertyChanged(); } }
+    public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
     public IPaint<TDrawingContext>? GeometryFill
@@ -141,10 +140,10 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     }
 
     /// <inheritdoc cref="IPolarLineSeries{TDrawingContext}.IsClosed"/>
-    public bool IsClosed { get => _isClosed; set { _isClosed = value; OnPropertyChanged(); } }
+    public bool IsClosed { get => _isClosed; set => SetProperty(ref _isClosed, value); }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.DataLabelsPosition"/>
-    public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
+    public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)

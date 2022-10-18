@@ -46,6 +46,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TDrawingContext : DrawingContext
 {
     private Bounds _weightBounds = new();
+    private double _geometrySize = 24d;
+    private double _minGeometrySize = 6d;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -65,15 +67,14 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The minimum size of the geometry.
     /// </value>
-    public double MinGeometrySize { get; set; } = 6d;
-
+    public double MinGeometrySize { get => _minGeometrySize; set => SetProperty(ref _minGeometrySize, value); }
     /// <summary>
     /// Gets or sets the size of the geometry.
     /// </summary>
     /// <value>
     /// The size of the geometry.
     /// </value>
-    public double GeometrySize { get; set; } = 24d;
+    public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
