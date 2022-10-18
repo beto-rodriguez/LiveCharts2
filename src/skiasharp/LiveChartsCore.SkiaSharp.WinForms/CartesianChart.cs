@@ -220,13 +220,13 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        if(sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet) return;
         OnPropertyChanged();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        if(sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet) return;
         OnPropertyChanged();
     }
 

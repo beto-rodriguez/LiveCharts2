@@ -900,13 +900,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        if (_core == null ||(sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
         _core.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        if (_core == null ||(sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
         _core.Update();
     }
 
