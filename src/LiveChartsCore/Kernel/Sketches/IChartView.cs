@@ -136,7 +136,7 @@ public interface IChartView
     /// Called when the pointer goes down on a data point or points.
     /// </summary>
     /// <param name="points">The found points.</param>
-    /// <param name="pointer">The ppointer location.</param>
+    /// <param name="pointer">The pointer location.</param>
     void OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer);
 
     /// <summary>
@@ -157,7 +157,6 @@ public interface IChartView
     /// </summary>
     /// <param name="action"></param>
     void InvokeOnUIThread(Action action);
-
 
     /// <summary>
     /// Invalidates the control.
@@ -191,6 +190,11 @@ public interface IChartView<TDrawingContext> : IChartView
     /// Occurs when a chart update finished, just when the drawing loop finished.
     /// </summary>
     event ChartEventHandler<TDrawingContext>? UpdateFinished;
+
+    /// <summary>
+    /// Occurs when the pointer goes down over a visual element.
+    /// </summary>
+    event VisualElementHandler<TDrawingContext> VisualElementsPointerDown;
 
     /// <summary>
     /// Gets or sets a value indicating whether the automatic updates are enabled.
@@ -239,4 +243,11 @@ public interface IChartView<TDrawingContext> : IChartView
     /// Hides the tool tip.
     /// </summary>
     void HideTooltip();
+
+    /// <summary>
+    /// Called when the pointer goes down on a visual element(s).
+    /// </summary>
+    /// <param name="visualElement">The visual elements.</param>
+    /// <param name="pointer">The pointer location.</param>
+    void OnVisualElementPointerDown(IEnumerable<VisualElement<TDrawingContext>> visualElement, LvcPoint pointer);
 }
