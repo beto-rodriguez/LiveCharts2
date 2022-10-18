@@ -91,7 +91,7 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {

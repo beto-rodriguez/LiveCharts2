@@ -443,7 +443,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         set => SetValue(SectionsProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);

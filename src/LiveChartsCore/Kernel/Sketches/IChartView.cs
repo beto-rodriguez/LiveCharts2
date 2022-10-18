@@ -225,6 +225,11 @@ public interface IChartView<TDrawingContext> : IChartView
     IChartTooltip<TDrawingContext>? Tooltip { get; }
 
     /// <summary>
+    /// Gets or sets the visual elements.
+    /// </summary>
+    IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; set; }
+
+    /// <summary>
     /// Shows the tool tip based on the given points.
     /// </summary>
     /// <param name="points">The points.</param>

@@ -143,7 +143,7 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {

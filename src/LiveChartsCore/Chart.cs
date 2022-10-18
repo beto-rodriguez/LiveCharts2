@@ -31,6 +31,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -278,6 +279,14 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
+    /// Gets the visual elements.
+    /// </summary>
+    /// <value>
+    /// The visual elements.
+    /// </value>
+    public ChartElement<TDrawingContext>[] VisualElements { get; protected set; } = Array.Empty<ChartElement<TDrawingContext>>();
+
+    /// <summary>
     /// Gets the previous legend position.
     /// </summary>
     public LegendPosition PreviousLegendPosition { get; protected set; }
@@ -363,10 +372,15 @@ public abstract class Chart<TDrawingContext> : IChart
             series.OnDataPointerDown(View, points, point);
         }
 
+        // fire the chart event.
         var iterable = ChartSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
-        if (!iterable.Any()) return;
+        if (iterable.Any()) View.OnDataPointerDown(iterable, point);
 
-        View.OnDataPointerDown(iterable, point);
+        // ToDo: VisualElements should be of type VisualElement<T>
+        foreach (var visual in VisualElements.Cast<VisualElement<TDrawingContext>>().Where(x => x.IsHitBy(point)))
+        {
+            //.. invoke event
+        }
     }
 
     internal virtual void InvokePointerMove(LvcPoint point)

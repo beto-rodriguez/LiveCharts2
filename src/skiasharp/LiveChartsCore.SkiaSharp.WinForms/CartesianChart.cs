@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -151,7 +150,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {

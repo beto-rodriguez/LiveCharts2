@@ -397,7 +397,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         set => SetValue(SeriesProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);

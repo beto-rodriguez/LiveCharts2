@@ -178,6 +178,15 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// then it is the index Scaler.</param>
     protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
+    internal virtual bool IsHitBy(LvcPoint point)
+    {
+        var size = GetActualSize();
+
+        return
+            point.X >= X && point.X <= X + size.Width &&
+            point.Y >= Y && point.Y <= Y + size.Height;
+    }
+
     internal virtual void AlignToTopLeftCorner()
     {
         // just a workaround to align labels as the rest of the geometries.

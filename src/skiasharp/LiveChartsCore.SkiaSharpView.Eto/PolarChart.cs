@@ -145,7 +145,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => _visuals;

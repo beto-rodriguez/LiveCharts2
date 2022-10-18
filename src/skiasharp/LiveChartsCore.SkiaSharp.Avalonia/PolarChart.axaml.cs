@@ -446,7 +446,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         set => SetValue(RadiusAxesProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);

@@ -145,7 +145,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => _visuals;

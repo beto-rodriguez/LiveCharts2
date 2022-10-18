@@ -87,14 +87,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     public IPolarSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPolarSeries<TDrawingContext>>();
 
     /// <summary>
-    /// Gets the visual elements.
-    /// </summary>
-    /// <value>
-    /// The visual elements.
-    /// </value>
-    public ChartElement<TDrawingContext>[] VisualElements { get; private set; } = Array.Empty<ChartElement<TDrawingContext>>();
-
-    /// <summary>
     /// Gets whether the series fit to bounds or not.
     /// </summary>
     public bool FitToBounds { get; private set; }

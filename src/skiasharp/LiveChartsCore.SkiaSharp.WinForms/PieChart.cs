@@ -107,7 +107,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {

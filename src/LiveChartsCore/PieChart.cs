@@ -71,14 +71,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     public IPieSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPieSeries<TDrawingContext>>();
 
     /// <summary>
-    /// Gets the visual elements.
-    /// </summary>
-    /// <value>
-    /// The visual elements.
-    /// </value>
-    public ChartElement<TDrawingContext>[] VisualElements { get; private set; } = Array.Empty<ChartElement<TDrawingContext>>();
-
-    /// <summary>
     /// Gets the drawable series.
     /// </summary>
     /// <value>
