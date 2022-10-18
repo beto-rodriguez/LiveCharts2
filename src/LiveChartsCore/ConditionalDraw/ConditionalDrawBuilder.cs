@@ -76,7 +76,8 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
 
         var isTriggered = _whenPredicate.Invoke(point);
         var canvas = ((Chart<TDrawingContext>)point.Context.Chart.CoreChart).Canvas;
-        var drawable = (IDrawable<TDrawingContext>)point.Visual; // see note #20221909
+        var drawable = (IDrawable<TDrawingContext>?)point.Visual.HighlightableGeometry; // see note #20221909
+        if (drawable is null) return;
 
         if (!_isPaintInCanvas)
         {

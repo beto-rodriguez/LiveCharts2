@@ -335,7 +335,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             dougnutGeometry.CornerRadius = cornerRadius;
             dougnutGeometry.InvertedCornerRadius = InvertedCornerRadius;
             dougnutGeometry.RemoveOnCompleted = false;
-            if (start == initialRotation && sweep == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.1f;
+
+            if (start + initialRotation == initialRotation && sweep == 360)
+                dougnutGeometry.SweepAngle = 359.99f;
 
             point.Context.HoverArea = new SemicircleHoverArea()
                 .SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);

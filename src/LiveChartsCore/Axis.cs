@@ -460,7 +460,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         for (var i = start; i <= max; i += s)
         {
-            var separatorKey = labeler(i - 1d + 1d);
+            var separatorKey = Labelers.SevenRepresentativeDigits(i - 1d + 1d);
             var labelContent = i < min || i > max ? string.Empty : separatorKey;
 
             float x, y;

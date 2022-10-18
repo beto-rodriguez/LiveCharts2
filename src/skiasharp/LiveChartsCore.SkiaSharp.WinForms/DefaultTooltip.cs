@@ -35,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
 {
     private Panel? _tooltipContainer;
+    private const int BorderThickness = 2;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -42,8 +43,6 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
     public DefaultTooltip()
     {
         InitializeComponent();
-        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-        BackColor = Color.Transparent;
         ShowInTaskbar = false;
         Paint += DefaultTooltip_Paint;
     }
@@ -90,7 +89,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
 
         using var g = CreateGraphics();
 
-        var container = new Panel { Location = new Point(10, 10) };
+        var container = new Panel { Location = new Point(BorderThickness, BorderThickness) };
         _tooltipContainer = container;
         Controls.Add(container);
 
@@ -127,7 +126,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         container.Height = (int)h;
 
         ResumeLayout();
-        return new SizeF(w + 20, h + 20);
+        return new SizeF(container.Width + 2* BorderThickness, container.Height + 2* BorderThickness);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
@@ -144,14 +143,8 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
     private void DefaultTooltip_Paint(object sender, PaintEventArgs e)
     {
         if (_tooltipContainer is null) return;
-
-        using var p1 = new Pen(Color.FromArgb(220, 220, 220));
-
-        e.Graphics.DrawRectangle(
-            p1,
-            new Rectangle(
-                _tooltipContainer.Location.X - 1, _tooltipContainer.Location.Y - 1,
-                _tooltipContainer.Width + 1, _tooltipContainer.Height + 1));
+        using var brush = new SolidBrush(Color.FromArgb(220, 220, 220));
+        e.Graphics.FillRectangle(brush, new Rectangle(0, 0, Width, Height));
     }
 
     /// <summary>
