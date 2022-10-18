@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Themes;
@@ -92,7 +93,7 @@ public class Theme<TDrawingContext> where TDrawingContext : DrawingContext
     /// <typeparam name="T">The type of the target.</typeparam>
     /// <param name="target">The target.</param>
     public void ApplyRuleTo<T>(T target)
-        where T : notnull
+        where T : notnull, ChartElement<TDrawingContext>
     {
         var t = target.GetType();
 
@@ -109,6 +110,8 @@ public class Theme<TDrawingContext> where TDrawingContext : DrawingContext
             s_assignableTypes[t.Name] = assignableTypes;
         }
 
+        target._isInternalSet = true;
+
         foreach (var assignableType in assignableTypes)
         {
             if (Builders.TryGetValue(assignableType, out var list))
@@ -119,5 +122,7 @@ public class Theme<TDrawingContext> where TDrawingContext : DrawingContext
                 }
             }
         }
+
+        target._isInternalSet = false;
     }
 }

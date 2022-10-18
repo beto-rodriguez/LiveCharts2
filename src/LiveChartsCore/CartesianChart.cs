@@ -451,19 +451,19 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
-        theme.ApplyRuleTo(View);
+        //theme.ApplyRuleTo(View);
 
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
             axis.Initialize(AxisOrientation.X);
-            theme.ApplyRuleTo((IPlane<TDrawingContext>)axis);
+            theme.ApplyRuleTo((ChartElement<TDrawingContext>)axis);
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
         foreach (var axis in YAxes)
         {
             axis.Initialize(AxisOrientation.Y);
-            theme.ApplyRuleTo((IPlane<TDrawingContext>)axis);
+            theme.ApplyRuleTo((ChartElement<TDrawingContext>)axis);
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
 
@@ -472,7 +472,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         foreach (var series in Series)
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-            theme.ApplyRuleTo(series);
+            theme.ApplyRuleTo((ChartElement<TDrawingContext>)series);
             //theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
             var xAxis = XAxes[series.ScalesXAt];
