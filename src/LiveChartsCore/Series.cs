@@ -239,7 +239,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             var changed = value != _isVisible;
             _isVisible = value;
             if (!_isVisible) RestartAnimations();
-            if (value && !((ISeries)this).IsNotifyingChanges) ((ISeries)this).IsNotifyingChanges = true;
             OnPropertyChanged();
             if (changed) OnVisibilityChanged();
         }
@@ -259,9 +258,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="ISeries.EasingFunction" />
     public Func<float, float>? EasingFunction { get; set; }
-
-    /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
-    bool IStopNPC.IsNotifyingChanges { get; set; }
 
     /// <summary>
     /// Gets the data factory.
@@ -445,7 +441,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
-        if (!((ISeries)this).IsNotifyingChanges) return;
+        if (_isInternalSet) return;
         NotifySubscribers();
         ((ISeries)this).PaintsChanged = true;
     }

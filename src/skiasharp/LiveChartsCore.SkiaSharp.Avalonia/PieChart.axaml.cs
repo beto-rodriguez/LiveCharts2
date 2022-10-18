@@ -87,23 +87,23 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         _seriesObserver = new CollectionDeepObserver<ISeries>(
            (object? sender, NotifyCollectionChangedEventArgs e) =>
            {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+               if (_core is null || (sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
                _core.Update();
            },
            (object? sender, PropertyChangedEventArgs e) =>
            {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+               if (_core is null || (sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
                _core.Update();
            }, true);
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
           (object? sender, NotifyCollectionChangedEventArgs e) =>
           {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+              if (_core is null || (sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
               _core.Update();
           },
           (object? sender, PropertyChangedEventArgs e) =>
           {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+              if (_core is null || (sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
               _core.Update();
           }, true);
 

@@ -220,24 +220,24 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         // restart axes bounds and meta data
         foreach (var axis in AngleAxes)
         {
-            axis.IsNotifyingChanges = false;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
             //theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
-            axis.IsNotifyingChanges = true;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = false;
         }
         foreach (var axis in RadiusAxes)
         {
-            axis.IsNotifyingChanges = false;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
             //theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
-            axis.IsNotifyingChanges = true;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = false;
         }
 
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
         foreach (var series in Series)
         {
-            series.IsNotifyingChanges = false;
+            ((ChartElement<TDrawingContext>)series)._isInternalSet = true;
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
             //theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
@@ -253,7 +253,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.SecondaryBounds);
             primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.PrimaryBounds);
 
-            series.IsNotifyingChanges = true;
+            ((ChartElement<TDrawingContext>)series)._isInternalSet = false;
         }
 
         #region empty bounds
@@ -262,12 +262,8 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         foreach (var axis in AngleAxes)
         {
-            axis.IsNotifyingChanges = false;
-            if (!axis.DataBounds.IsEmpty)
-            {
-                axis.IsNotifyingChanges = true;
-                continue;
-            }
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = true;
+            if (!axis.DataBounds.IsEmpty) continue;
 
             var min = 0;
             var max = 10d * axis.UnitWidth;
@@ -279,16 +275,12 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
             if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
 
-            axis.IsNotifyingChanges = true;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = false;
         }
         foreach (var axis in RadiusAxes)
         {
-            axis.IsNotifyingChanges = false;
-            if (!axis.DataBounds.IsEmpty)
-            {
-                axis.IsNotifyingChanges = true;
-                continue;
-            }
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = true;
+            if (!axis.DataBounds.IsEmpty) continue;
 
             var min = 0;
             var max = 10d * axis.UnitWidth;
@@ -300,7 +292,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
             if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
 
-            axis.IsNotifyingChanges = true;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = false;
         }
 
         #endregion
@@ -454,10 +446,10 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
                 // correction by geometry size
                 var p = 0d;
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                axis.IsNotifyingChanges = false;
+                ((ChartElement<TDrawingContext>)axis)._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
-                axis.IsNotifyingChanges = true;
+                ((ChartElement<TDrawingContext>)axis)._isInternalSet = false;
             }
 
             // apply padding
@@ -466,10 +458,10 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
                 // correction by geometry size
                 var p = 0d; // Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                axis.IsNotifyingChanges = false;
+                ((ChartElement<TDrawingContext>)axis)._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
-                axis.IsNotifyingChanges = true;
+                ((ChartElement<TDrawingContext>)axis)._isInternalSet = false;
             }
 
             if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
@@ -486,9 +478,9 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         {
             if (!axis.IsVisible) continue;
 
-            axis.IsNotifyingChanges = false;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
-            axis.IsNotifyingChanges = true;
+            ((ChartElement<TDrawingContext>)axis)._isInternalSet = false;
         }
 
         InvokeOnUpdateStarted();

@@ -192,7 +192,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         PushoutBounds = new Bounds();
         foreach (var series in Series)
         {
-            series.IsNotifyingChanges = false;
+            ((ChartElement<TDrawingContext>)series)._isInternalSet = true;
 
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
             //theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
@@ -206,7 +206,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
             PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
 
-            series.IsNotifyingChanges = true;
+            ((ChartElement<TDrawingContext>)series)._isInternalSet = false;
         }
 
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();

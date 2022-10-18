@@ -31,7 +31,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a plane for a dimension.
 /// </summary>
-public interface IPlane : IStopNPC
+public interface IPlane
 {
     /// <summary>
     /// Gets or sets the axis name.

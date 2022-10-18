@@ -801,14 +801,14 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        if (_core is null || (sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
 
         _core.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        if (_core is null || (sender is ChartElement<SkiaSharpDrawingContext> stop && stop._isInternalSet)) return;
 
         _core.Update();
     }
