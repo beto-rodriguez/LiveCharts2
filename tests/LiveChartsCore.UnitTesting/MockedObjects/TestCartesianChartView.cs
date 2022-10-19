@@ -105,6 +105,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
     public event ChartPointsHandler DataPointerDown;
     public event ChartPointHandler ChartPointPointerDown;
+    public event VisualElementHandler<SkiaSharpDrawingContext> VisualElementsPointerDown;
 
     public void DummyRaiseEvents()
     {
@@ -140,6 +141,11 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     }
 
     public void Invalidate()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnVisualElementPointerDown(IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
         throw new NotImplementedException();
     }

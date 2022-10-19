@@ -296,7 +296,7 @@ public static class Extensions
     /// <param name="points">The points to look in to.</param>
     /// <param name="point">The location.</param>
     /// <returns></returns>
-    public static ChartPoint FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
+    public static ChartPoint? FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
     {
         return _findClosestTo(points, point);
     }
@@ -378,10 +378,9 @@ public static class Extensions
         return dictionary.TryGetValue(view, out var point) ? point : null;
     }
 
-    private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
+    private static ChartPoint? _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
     {
         var o = points.Select(p => new { distance = p.DistanceTo(point), point = p }).OrderBy(p => p.distance).ToArray();
-
-        return o.First().point;
+        return o.FirstOrDefault()?.point;
     }
 }
