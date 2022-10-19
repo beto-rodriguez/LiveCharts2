@@ -37,8 +37,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
     private CollectionDeepObserver<ISeries> _seriesObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
-    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
-    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
     private bool _isClockwise = true;
     private double _initialRotation;
     private double _maxAngle = 360;
@@ -69,18 +67,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
                OnPropertyChanged();
            },
            true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-           (object? sender, NotifyCollectionChangedEventArgs e) =>
-           {
-               if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-               OnPropertyChanged();
-           },
-           (object? sender, PropertyChangedEventArgs e) =>
-           {
-               if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-               OnPropertyChanged();
-           },
-           true);
 
         motionCanvas.MouseDown += OnMouseDown;
     }
@@ -97,19 +83,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             _seriesObserver.Dispose(_series);
             _seriesObserver.Initialize(value);
             _series = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
-    {
-        get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
             OnPropertyChanged();
         }
     }
@@ -142,7 +115,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         Series = Array.Empty<ISeries>();
         _seriesObserver = null!;
         VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
-        _visualsObserver = null!;
     }
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
