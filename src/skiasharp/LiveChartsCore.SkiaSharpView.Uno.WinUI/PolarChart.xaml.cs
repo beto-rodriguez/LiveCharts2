@@ -398,6 +398,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         DependencyProperty.Register(
             nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
+    /// <summary>
+    /// The chart point pointer down command property
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsPointerDownCommandProperty =
+        DependencyProperty.Register(
+            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(CartesianChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+
     #endregion
 
     #region events
@@ -416,6 +423,9 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -527,7 +537,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         set => SetValue(RadiusAxesProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
@@ -829,6 +839,15 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         set => SetValue(ChartPointPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on a chart point.
+    /// </summary>
+    public ICommand? VisualElementsPointerDownCommand
+    {
+        get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
+        set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
     #endregion
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -995,6 +1014,14 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest))
             ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        VisualElementsPointerDown?.Invoke(this, visualElements);
+        if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(visualElements))
+            VisualElementsPointerDownCommand.Execute(visualElements);
     }
 
     void IChartView.Invalidate()
