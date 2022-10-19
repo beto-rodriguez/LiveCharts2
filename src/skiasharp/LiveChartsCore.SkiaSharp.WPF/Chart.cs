@@ -320,7 +320,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
             nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(Chart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
-                    var chart = (CartesianChart)o;
+                    var chart = (Chart)o;
                     var observer = chart._visualsObserver;
                     observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
                     observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
