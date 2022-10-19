@@ -346,6 +346,14 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PieChart),
             null, propertyChanged: OnBindablePropertyChanged);
 
+    /// <summary>
+    /// The visual elements pointer down command property
+    /// </summary>
+    public static readonly BindableProperty VisualElementsPointerDownCommandProperty =
+        BindableProperty.Create(
+            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PieChart),
+            null, propertyChanged: OnBindablePropertyChanged);
+
     #endregion
 
     #region events
@@ -364,6 +372,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     /// <summary>
     /// Called when the chart is touched.
@@ -435,7 +446,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(SeriesProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
@@ -687,6 +698,15 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(ChartPointPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on a visual element.
+    /// </summary>
+    public ICommand? VisualElementsPointerDownCommand
+    {
+        get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
+        set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
     #endregion
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
@@ -801,6 +821,14 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        VisualElementsPointerDown?.Invoke(this, visualElements);
+        if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(visualElements))
+            VisualElementsPointerDownCommand.Execute(visualElements);
     }
 
     void IChartView.Invalidate()
