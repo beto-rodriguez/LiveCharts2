@@ -343,6 +343,12 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     public static readonly AvaloniaProperty<ICommand?> ChartPointPointerDownCommandProperty =
         AvaloniaProperty.Register<CartesianChart, ICommand?>(nameof(ChartPointPointerDownCommand), null, inherits: true);
 
+    /// <summary>
+    /// The <see cref="VisualElement{TDrawingContext}"/> pointer down command property
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> VisualElementsPointerDownCommandProperty =
+        AvaloniaProperty.Register<CartesianChart, ICommand?>(nameof(VisualElementsPointerDownCommand), null, inherits: true);
+
     #endregion
 
     #region events
@@ -361,6 +367,9 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -443,7 +452,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         set => SetValue(SectionsProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
@@ -719,6 +728,15 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         set => SetValue(ChartPointPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on a visual element(s).
+    /// </summary>
+    public ICommand? VisualElementsPointerDownCommand
+    {
+        get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
+        set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -933,6 +951,16 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+
+        VisualElementsPointerDown?.Invoke(this, args);
+        if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))
+            VisualElementsPointerDownCommand.Execute(args);
     }
 
     void IChartView.Invalidate()

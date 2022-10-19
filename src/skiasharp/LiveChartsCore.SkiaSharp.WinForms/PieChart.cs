@@ -37,9 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
-    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
     private bool _isClockwise = true;
     private double _initialRotation;
     private double _maxAngle = 360;
@@ -59,18 +57,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         : base(tooltip, legend)
     {
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object? sender, NotifyCollectionChangedEventArgs e) =>
-           {
-               if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-               OnPropertyChanged();
-           },
-           (object? sender, PropertyChangedEventArgs e) =>
-           {
-               if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-               OnPropertyChanged();
-           },
-           true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
            (object? sender, NotifyCollectionChangedEventArgs e) =>
            {
                if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
@@ -103,20 +89,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             _seriesObserver?.Dispose(_series);
             _seriesObserver?.Initialize(value);
             _series = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
-    {
-        get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
             OnPropertyChanged();
         }
     }

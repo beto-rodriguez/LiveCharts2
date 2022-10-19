@@ -33,9 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
     private CollectionDeepObserver<ISeries>? _seriesObserver;
-    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>? _visualsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
-    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
     private double _initialRotation;
     private bool _isClockwise = true;
     private double _maxAngle = 360;
@@ -49,18 +47,6 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         base.OnInitialized();
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-               (object? sender, NotifyCollectionChangedEventArgs e) =>
-               {
-                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-                   OnPropertyChanged();
-               },
-               (object? sender, PropertyChangedEventArgs e) =>
-               {
-                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-                   OnPropertyChanged();
-               },
-               true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
                    if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
@@ -87,20 +73,6 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             _seriesObserver?.Dispose(_series);
             _seriesObserver?.Initialize(value);
             _series = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
-    [Parameter]
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
-    {
-        get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
             OnPropertyChanged();
         }
     }
@@ -142,6 +114,5 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         Series = Array.Empty<ISeries>();
         _seriesObserver = null!;
         VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
-        _visualsObserver = null!;
     }
 }

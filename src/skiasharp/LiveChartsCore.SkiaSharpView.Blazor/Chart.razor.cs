@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Specialized;
+using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -56,10 +58,12 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     private double _canvasWidth;
     private double _canvasHeight;
 
+    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>? _visualsObserver;
     private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
     private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
     /// Called when the control is initialized.
@@ -76,6 +80,9 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
+
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
     }
 
     /// <summary>
@@ -95,7 +102,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         core.UpdateStarted += OnCoreUpdateStarted;
         core.UpdateFinished += OnCoreUpdateFinished;
 
-        if (_dom is null) _dom = new DomJsInterop(JS);
+        _dom ??= new DomJsInterop(JS);
         var canvasBounds = await _dom.GetBoundingClientRect(CanvasContainerElement);
         _canvasWidth = canvasBounds.Width;
         _canvasHeight = canvasBounds.Height;
@@ -120,6 +127,9 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -209,6 +219,20 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         {
             if (core is null) throw new Exception("core not set yet.");
             core.UpdaterThrottler = value;
+        }
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    [Parameter]
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => _visuals;
+        set
+        {
+            _visualsObserver?.Dispose(_visuals);
+            _visualsObserver?.Initialize(value);
+            _visuals = value;
+            OnPropertyChanged();
         }
     }
 
@@ -345,7 +369,10 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <summary>
     /// Called when the control is disposing.
     /// </summary>
-    protected virtual void OnDisposing() { }
+    protected virtual void OnDisposing()
+    {
+        _visualsObserver = null!;
+    }
 
     /// <summary>
     /// Called when the pointer leaves the control.
@@ -368,10 +395,28 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         core?.Update();
     }
 
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+       IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
     }
 
     void IChartView.Invalidate()

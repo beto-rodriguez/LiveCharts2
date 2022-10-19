@@ -33,6 +33,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
@@ -154,7 +155,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>), typeof(PolarChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(PolarChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -373,6 +374,14 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
             nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PolarChart),
             null, propertyChanged: OnBindablePropertyChanged);
 
+    /// <summary>
+    /// The visual elements pointer down command property
+    /// </summary>
+    public static readonly BindableProperty VisualElementsPointerDownCommandProperty =
+        BindableProperty.Create(
+            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PolarChart),
+            null, propertyChanged: OnBindablePropertyChanged);
+
     #endregion
 
     #region events
@@ -391,6 +400,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     /// <summary>
     /// Called when the chart is touched.
@@ -475,9 +487,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
-    public LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>? Title
+    public VisualElement<SkiaSharpDrawingContext>? Title
     {
-        get => (LiveChartsCore.VisualElements.VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -502,7 +514,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(RadiusAxesProperty, value);
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
         get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
@@ -726,6 +738,15 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(ChartPointPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on a chart point.
+    /// </summary>
+    public ICommand? VisualElementsPointerDownCommand
+    {
+        get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
+        set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
     #endregion
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -885,6 +906,16 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+
+        VisualElementsPointerDown?.Invoke(this, args);
+        if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))
+            VisualElementsPointerDownCommand.Execute(args);
     }
 
     void IChartView.Invalidate()

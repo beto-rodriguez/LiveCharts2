@@ -47,6 +47,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     internal double _rotation;
     internal LvcPoint _translate = new();
     private LvcSize _actualSize = new();
+    private LvcPoint _actualLocation = new();
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -123,6 +124,9 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
             y = primaryScaler.ToPixels(y);
         }
 
+        _actualLocation = new(x, y);
+        _ = Measure(chart, primaryScaler, secondaryScaler);
+
         if (_labelGeometry is null)
         {
             _labelGeometry = new LabelGeometry
@@ -184,5 +188,24 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     public override LvcSize GetActualSize()
     {
         return _actualSize;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
+    public override LvcPoint GetActualLocation()
+    {
+        var x = _actualLocation.X;
+        var y = _actualLocation.Y;
+
+        x += Translate.X;
+        y += Translate.Y;
+
+        var size = GetActualSize();
+        if (HorizontalAlignment == Align.Middle) x -= size.Width * 0.5f;
+        if (HorizontalAlignment == Align.End) x -= size.Width;
+
+        if (VerticalAlignment == Align.Middle) y -= size.Height * 0.5f;
+        if (VerticalAlignment == Align.End) y -= size.Height;
+
+        return new(x, y);
     }
 }

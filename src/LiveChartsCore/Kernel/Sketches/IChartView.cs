@@ -136,7 +136,7 @@ public interface IChartView
     /// Called when the pointer goes down on a data point or points.
     /// </summary>
     /// <param name="points">The found points.</param>
-    /// <param name="pointer">The ppointer location.</param>
+    /// <param name="pointer">The pointer location.</param>
     void OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer);
 
     /// <summary>
@@ -157,7 +157,6 @@ public interface IChartView
     /// </summary>
     /// <param name="action"></param>
     void InvokeOnUIThread(Action action);
-
 
     /// <summary>
     /// Invalidates the control.
@@ -193,6 +192,11 @@ public interface IChartView<TDrawingContext> : IChartView
     event ChartEventHandler<TDrawingContext>? UpdateFinished;
 
     /// <summary>
+    /// Occurs when the pointer goes down over a visual element.
+    /// </summary>
+    event VisualElementHandler<TDrawingContext> VisualElementsPointerDown;
+
+    /// <summary>
     /// Gets or sets a value indicating whether the automatic updates are enabled.
     /// </summary>
     /// <value>
@@ -225,6 +229,11 @@ public interface IChartView<TDrawingContext> : IChartView
     IChartTooltip<TDrawingContext>? Tooltip { get; }
 
     /// <summary>
+    /// Gets or sets the visual elements.
+    /// </summary>
+    IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; set; }
+
+    /// <summary>
     /// Shows the tool tip based on the given points.
     /// </summary>
     /// <param name="points">The points.</param>
@@ -234,4 +243,11 @@ public interface IChartView<TDrawingContext> : IChartView
     /// Hides the tool tip.
     /// </summary>
     void HideTooltip();
+
+    /// <summary>
+    /// Called when the pointer goes down on a visual element(s).
+    /// </summary>
+    /// <param name="visualElements">The visual elements.</param>
+    /// <param name="pointer">The pointer location.</param>
+    void OnVisualElementPointerDown(IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointer);
 }

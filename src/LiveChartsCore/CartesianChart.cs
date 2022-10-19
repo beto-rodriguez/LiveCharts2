@@ -105,14 +105,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public Section<TDrawingContext>[] Sections { get; private set; } = Array.Empty<Section<TDrawingContext>>();
 
     /// <summary>
-    /// Gets the visual elements.
-    /// </summary>
-    /// <value>
-    /// The visual elements.
-    /// </value>
-    public ChartElement<TDrawingContext>[] VisualElements { get; private set; } = Array.Empty<ChartElement<TDrawingContext>>();
-
-    /// <summary>
     /// Gets the drawable series.
     /// </summary>
     /// <value>
@@ -150,7 +142,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         return ChartSeries
             .Where(series => series.IsHoverable)
-            .SelectMany(series => series.FindHoveredPoints(this, pointerPosition, actualStrategy));
+            .SelectMany(series => series.FindHitPoints(this, pointerPosition, actualStrategy));
     }
 
     /// <summary>
@@ -808,7 +800,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             Update();
             return;
         }
-
         base.InvokePointerDown(point, isSecondaryAction);
     }
 

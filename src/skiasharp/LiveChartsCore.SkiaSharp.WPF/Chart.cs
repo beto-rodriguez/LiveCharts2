@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -63,6 +64,8 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+
     #endregion
 
     /// <summary>
@@ -78,6 +81,9 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
+
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         MouseMove += OnMouseMove;
         MouseLeave += OnMouseLeave;
@@ -298,6 +304,36 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(Chart),
            new PropertyMetadata(null, OnDependencyPropertyChanged));
 
+    /// <summary>
+    /// The visual elements pointer down command.
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsPointerDownCommandProperty =
+       DependencyProperty.Register(
+           nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(Chart),
+           new PropertyMetadata(null, OnDependencyPropertyChanged));
+
+    /// <summary>
+    /// The visual elements property
+    /// </summary>
+    public static readonly DependencyProperty VisualElementsProperty =
+        DependencyProperty.Register(
+            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(Chart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (Chart)o;
+                    var observer = chart._visualsObserver;
+                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<ChartElement<SkiaSharpDrawingContext>>
+                    ? value
+                    : new List<ChartElement<SkiaSharpDrawingContext>>();
+                }));
+
     #endregion
 
     #region events
@@ -316,6 +352,9 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -664,6 +703,22 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         set => SetValue(ChartPointPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on a visual element.
+    /// </summary>
+    public ICommand? VisualElementsPointerDownCommand
+    {
+        get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
+        set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        set => SetValue(VisualElementsProperty, value);
+    }
+
     #endregion
 
     /// <summary>
@@ -801,6 +856,18 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         OnUnloaded();
     }
 
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        core.Update();
+    }
+
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        core.Update();
+    }
+
     /// <summary>
     /// Called before the chart is unloaded.
     /// </summary>
@@ -814,6 +881,16 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+
+        VisualElementsPointerDown?.Invoke(this, args);
+        if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))
+            VisualElementsPointerDownCommand.Execute(args);
     }
 
     void IChartView.Invalidate()

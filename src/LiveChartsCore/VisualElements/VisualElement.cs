@@ -139,6 +139,12 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     public abstract LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
     /// <summary>
+    /// Gets the actual location of the element.
+    /// </summary>
+    /// <returns></returns>
+    public abstract LvcPoint GetActualLocation();
+
+    /// <summary>
     /// Gets the actual size of the element.
     /// </summary>
     /// <returns>The actual size.</returns>
@@ -177,6 +183,16 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
     /// then it is the index Scaler.</param>
     protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
+
+    internal virtual bool IsHitBy(LvcPoint point)
+    {
+        var location = GetActualLocation();
+        var size = GetActualSize();
+
+        return
+            point.X >= location.X && point.X <= location.X + size.Width &&
+            point.Y >= location.Y && point.Y <= location.Y + size.Height;
+    }
 
     internal virtual void AlignToTopLeftCorner()
     {

@@ -43,11 +43,9 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private IEnumerable<IPolarAxis> _angleAxes = new List<PolarAxis>();
     private IEnumerable<IPolarAxis> _radiusAxes = new List<PolarAxis>();
-    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarChart"/> class.
@@ -65,8 +63,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         AngleAxes = new List<IPolarAxis>()
             {
@@ -175,20 +171,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
             _radiusObserver?.Dispose(_radiusAxes);
             _radiusObserver?.Initialize(value);
             _radiusAxes = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.VisualElements" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
-    {
-        get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
             OnPropertyChanged();
         }
     }

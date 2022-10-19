@@ -32,6 +32,8 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.VisualElements;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -69,6 +71,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private Color _legendTextColor = Color.FromArgb(35, 35, 35);
     private Color _tooltipTextColor = SystemColors.ControlText;
     private VisualElement<SkiaSharpDrawingContext>? _title;
+    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -108,6 +112,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         c.MouseLeave += Chart_MouseLeave;
 
         Load += Chart_Load;
+
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
     }
 
     private void UpdateLegendLayout()
@@ -152,6 +159,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -268,6 +278,19 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         }
     }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => _visuals;
+        set
+        {
+            _visualsObserver?.Dispose(_visuals);
+            _visualsObserver?.Initialize(value);
+            _visuals = value;
+            OnPropertyChanged();
+        }
+    }
+
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
     public VisualElement<SkiaSharpDrawingContext>? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
 
@@ -327,13 +350,14 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     {
         if (tooltip is IDisposable disposableTooltip)
         {
-            //            disposableTooltip.Dispose();
+            // disposableTooltip.Dispose();
 
-            //           tooltip = null;
+            // tooltip = null;
         }
 
         base.OnUnLoad(e);
 
+        _visualsObserver = null!;
         core?.Unload();
         OnUnloading();
     }
@@ -405,10 +429,28 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         core?.Load();
     }
 
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
     }
 
     void IChartView.Invalidate()

@@ -71,14 +71,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     public IPieSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPieSeries<TDrawingContext>>();
 
     /// <summary>
-    /// Gets the visual elements.
-    /// </summary>
-    /// <value>
-    /// The visual elements.
-    /// </value>
-    public ChartElement<TDrawingContext>[] VisualElements { get; private set; } = Array.Empty<ChartElement<TDrawingContext>>();
-
-    /// <summary>
     /// Gets the drawable series.
     /// </summary>
     /// <value>
@@ -129,7 +121,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         return _chartView.Series
             .Where(series => (series is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
             .Where(series => series.IsHoverable)
-            .SelectMany(series => series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
+            .SelectMany(series => series.FindHitPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
     }
 
     /// <summary>

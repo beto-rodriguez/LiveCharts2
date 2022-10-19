@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -70,6 +71,8 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     private Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
     private Color _tooltipTextColor;
     private VisualElement<SkiaSharpDrawingContext>? _title;
+    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -110,6 +113,9 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
         InitializeCore();
 
+        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+
         if (core is null) throw new Exception("Core not found!");
         core.Measuring += OnCoreMeasuring;
         core.UpdateStarted += OnCoreUpdateStarted;
@@ -138,6 +144,9 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -278,6 +287,20 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         }
     }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    {
+        get => _visuals;
+        set
+        {
+            _visualsObserver?.Dispose(_visuals);
+            _visualsObserver?.Initialize(value);
+            _visuals = value;
+            OnPropertyChanged();
+        }
+    }
+
     #endregion
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
@@ -378,6 +401,18 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         Measuring?.Invoke(this);
     }
 
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
     /// <summary>
     /// Called when the mouse goes down.
     /// </summary>
@@ -408,6 +443,12 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     {
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
     }
 
     void IChartView.Invalidate()

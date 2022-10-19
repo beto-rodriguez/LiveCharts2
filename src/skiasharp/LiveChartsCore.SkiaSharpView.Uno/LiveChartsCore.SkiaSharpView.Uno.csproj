@@ -17,7 +17,7 @@
 
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
-    <Version>2.0.0-beta.502</Version>
+    <Version>2.0.0-beta.510</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

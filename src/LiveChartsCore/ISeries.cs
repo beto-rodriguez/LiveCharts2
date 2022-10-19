@@ -174,7 +174,7 @@ public interface ISeries : IStopNPC
     /// <param name="pointerPosition">the pointer position.</param>
     /// <param name="strategy">the strategy.</param>
     /// <returns></returns>
-    IEnumerable<ChartPoint> FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy);
+    IEnumerable<ChartPoint> FindHitPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy);
 
     /// <summary>
     /// Called when the pointer enters a chart point.
