@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>LiveChartsCore.SkiaSharpView.WinUI</id>
-    <version>2.0.0-beta.511</version>
+    <version>2.0.0-beta.512</version>
     <title>LiveChartsCore.SkiaSharpView.WinUI</title>
     <authors>BetoRodriguez</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -20,8 +20,8 @@
         <!--not necessary in net5+-->
         <!--<dependency id="Newtonsoft.Json" version="[13.0.1]" />-->
         <dependency id="SkiaSharp.Views.WinUI" version="2.88.3" />
-        <dependency id="LiveChartsCore" version="2.0.0-beta.511" />
-        <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.511" />
+        <dependency id="LiveChartsCore" version="2.0.0-beta.512" />
+        <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.512" />
       </group>
   </dependencies>
   </metadata>
