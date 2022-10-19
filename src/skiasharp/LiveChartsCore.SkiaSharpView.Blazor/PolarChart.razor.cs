@@ -40,11 +40,9 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
     private CollectionDeepObserver<ISeries>? _seriesObserver;
     private CollectionDeepObserver<IPolarAxis>? _angleObserver;
     private CollectionDeepObserver<IPolarAxis>? _radiusObserver;
-    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>? _visualsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private IEnumerable<IPolarAxis>? _angleAxes;
     private IEnumerable<IPolarAxis>? _radiusAxes;
-    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
     /// Called when the control is initalized.
@@ -56,8 +54,6 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         if (_angleAxes is null)
             AngleAxes = new List<IPolarAxis>()
@@ -171,20 +167,6 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    [Parameter]
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
-    {
-        get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
-            OnPropertyChanged();
-        }
-    }
-
     /// <summary>
     /// Called then the core is initialized.
     /// </summary>
@@ -220,7 +202,6 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
         _seriesObserver = null!;
         _angleObserver = null!;
         _radiusObserver = null!;
-        _visuals = null!;
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
