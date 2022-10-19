@@ -60,7 +60,6 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        
 
         if (_xAxes is null)
             XAxes = new List<ICartesianAxis>()
