@@ -247,7 +247,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Called when the pointer goes down on a visual element(s).
     /// </summary>
-    /// <param name="visualElement">The visual elements.</param>
+    /// <param name="visualElements">The visual elements.</param>
     /// <param name="pointer">The pointer location.</param>
-    void OnVisualElementPointerDown(IEnumerable<VisualElement<TDrawingContext>> visualElement, LvcPoint pointer);
+    void OnVisualElementPointerDown(IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointer);
 }

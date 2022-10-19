@@ -319,6 +319,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     public static readonly AvaloniaProperty<ICommand?> ChartPointPointerDownCommandProperty =
         AvaloniaProperty.Register<PieChart, ICommand?>(nameof(ChartPointPointerDownCommand), null, inherits: true);
 
+    /// <summary>
+    /// The <see cref="VisualElement{TDrawingContext}"/> pointer down command property
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> VisualElementsPointerDownCommandProperty =
+        AvaloniaProperty.Register<PieChart, ICommand?>(nameof(VisualElementsPointerDownCommand), null, inherits: true);
+
     #endregion
 
     #region events
@@ -337,6 +343,9 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
+    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -673,6 +682,15 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         set => SetValue(ChartPointPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on a visual element(s).
+    /// </summary>
+    public ICommand? VisualElementsPointerDownCommand
+    {
+        get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
+        set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
     #endregion
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
@@ -816,6 +834,14 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         var closest = points.FindClosestTo(pointer);
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+    }
+
+    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    {
+        VisualElementsPointerDown?.Invoke(this, visualElements);
+        if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(visualElements))
+            VisualElementsPointerDownCommand.Execute(visualElements);
     }
 
     void IChartView.Invalidate()
