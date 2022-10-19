@@ -461,7 +461,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         for (var i = start; i <= max; i += s)
         {
             var separatorKey = Labelers.SevenRepresentativeDigits(i - 1d + 1d);
-            var labelContent = i < min || i > max ? string.Empty : separatorKey;
+            var labelContent = i < min || i > max ? string.Empty : labeler(i - 1d + 1d);
 
             float x, y;
             if (_orientation == AxisOrientation.X)
