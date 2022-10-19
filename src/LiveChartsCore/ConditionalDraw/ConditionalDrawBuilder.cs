@@ -35,6 +35,7 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private bool _isPaintInCanvas = false;
+    private object _clipFor = new();
     private readonly Series<TModel, TVisual, TLabel, TDrawingContext> _series;
     private readonly IPaint<TDrawingContext> _paint;
     private Func<ChartPoint<TModel, TVisual, TLabel>, bool>? _whenPredicate;
@@ -83,6 +84,17 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
         {
             canvas.AddDrawableTask(_paint);
             _isPaintInCanvas = true;
+        }
+
+        if (point.Context.Chart.CoreChart.MeasureWork != _clipFor)
+        {
+            _clipFor = point.Context.Chart.CoreChart.MeasureWork;
+            if (point.Context.Chart.CoreChart is CartesianChart<TDrawingContext> cartesianChart)
+            {
+                var drawLocation = cartesianChart.DrawMarginLocation;
+                var drawMarginSize = cartesianChart.DrawMarginSize;
+                _paint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            }
         }
 
         if (isTriggered)
