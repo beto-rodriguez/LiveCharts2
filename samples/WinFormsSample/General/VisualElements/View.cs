@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using LiveChartsCore.VisualElements;
 using ViewModelsSamples.General.VisualElements;
 
 namespace WinFormsSample.General.VisualElements;
@@ -36,13 +34,16 @@ public partial class View : UserControl
     }
 
     private void CartesianChart_VisualElementsPointerDown(
-        IChartView chart, IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements)
+        IChartView chart, VisualElementsEventArgs<SkiaSharpDrawingContext> visualElementsArgs)
     {
-        // the visualElements contains all the elements that were clicked.
+        //if (visualElementsArgs.ClosestToPointerVisualElement is null) return;
+        visualElementsArgs.ClosestToPointerVisualElement.X++;
 
-        foreach (var visual in visualElements)
-        {
-            visual.X++;
-        }
+        // alternatively you can use the visual elements collection.
+        //foreach (var visualElement in visualElementsArgs.VisualElements)
+        //{
+        //    visualElement.X++;
+        //}
     }
+
 }

@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.VisualElements;
@@ -32,6 +34,8 @@ namespace LiveChartsCore.Kernel.Events;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <param name="chart">The sender chart.</param>
-/// <param name="visualElements">The visual elements found.</param>
-public delegate void VisualElementHandler<TDrawingContext>(IChartView chart, IEnumerable<VisualElement<TDrawingContext>> visualElements)
-    where TDrawingContext : DrawingContext;
+/// <param name="visualElementsArgs">The visual elements arguments.</param>
+public delegate void VisualElementHandler<TDrawingContext>(
+    IChartView chart,
+    VisualElementsEventArgs<TDrawingContext> visualElementsArgs)
+        where TDrawingContext : DrawingContext;

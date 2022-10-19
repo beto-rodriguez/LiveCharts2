@@ -382,6 +382,6 @@ public static class Extensions
     {
         var o = points.Select(p => new { distance = p.DistanceTo(point), point = p }).OrderBy(p => p.distance).ToArray();
 
-        return o.First().point; //points.OrderBy(p => p.DistanceTo(point)).ToArray().First();
+        return o.First().point;
     }
 }
