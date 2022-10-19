@@ -119,19 +119,26 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
                         Width = (int)s.CanvasSchedule.Width,
                         Height = (int)s.CanvasSchedule.Height
                     });
+
+                    var dh = (int)((s.CanvasSchedule.Height - size.Height) * 0.5f);
+                    if (dh < 0) dh = 0;
+
                     p.Controls.Add(new Label
                     {
                         Text = s.Name,
                         Font = chart.LegendFont,
                         ForeColor = chart.LegendTextColor,
-                        Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 0),
+                        Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, dh),
                         AutoSize = true
                     });
 
                     var thisW = size.Width + 36 + (int)s.CanvasSchedule.Width;
                     p.Width = (int)thisW + 6;
-                    p.Height = (int)size.Height + 6;
-                    h += size.Height + 6;
+
+                    var mh = (int)(s.CanvasSchedule.Height > size.Height ? s.CanvasSchedule.Height : size.Height) + 6;
+
+                    p.Height = mh;
+                    h += mh;
                     w = thisW > w ? thisW : w;
                 }
                 h += 6;
