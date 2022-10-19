@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
@@ -102,6 +101,21 @@ public static class DrawingFluentExtensions
             var paint = new SolidColorPaint(color, strokeWidth.Value) { IsFill = isFill.Value };
 
             return SelectPaint(paint);
+        }
+
+        /// <summary>
+        /// Sets the 
+        /// </summary>
+        /// <returns></returns>
+        public Drawing SetClip(LvcRectangle? clipRectangle)
+        {
+            if (clipRectangle is null) return this;
+            if (_selectedPaint is null)
+                throw new Exception(
+                    "There is no paint selected, please select a paint (By calling a Select method) to add the geometry to.");
+
+            _selectedPaint.SetClipRectangle(Canvas, clipRectangle.Value);
+            return this;
         }
 
         /// <summary>
