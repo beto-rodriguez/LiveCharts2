@@ -373,14 +373,13 @@ public abstract class Chart<TDrawingContext> : IChart
         }
 
         // fire the chart event.
-        var iterable = ChartSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
-        if (iterable.Any()) View.OnDataPointerDown(iterable, point);
+        var iterablePoints = ChartSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
+        View.OnDataPointerDown(iterablePoints, point);
 
+        // fire the visual elements event.
         // ToDo: VisualElements should be of type VisualElement<T>
-        foreach (var visual in VisualElements.Cast<VisualElement<TDrawingContext>>().Where(x => x.IsHitBy(point)))
-        {
-            //.. invoke event
-        }
+        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().Where(x => x.IsHitBy(point));
+        View.OnVisualElementPointerDown(iterableVisualElements, point);
     }
 
     internal virtual void InvokePointerMove(LvcPoint point)

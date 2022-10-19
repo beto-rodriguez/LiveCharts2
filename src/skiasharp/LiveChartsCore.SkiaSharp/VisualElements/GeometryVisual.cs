@@ -37,6 +37,7 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
 {
     internal TGeometry? _geometry;
     private LvcSize _actualSize = new();
+    private LvcPoint _actualLocation = new();
 
     /// <summary>
     /// Occurs when the geometry is initialized.
@@ -82,6 +83,7 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
             y = primaryScaler.ToPixels(y);
         }
 
+        _actualLocation = new(x, y);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
         if (_geometry is null)
@@ -103,5 +105,11 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
         var drawing = chart.Canvas.Draw();
         if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
         if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
+    public override LvcPoint GetActualLocation()
+    {
+        return _actualLocation;
     }
 }

@@ -34,6 +34,8 @@ namespace LiveChartsCore.VisualElements;
 public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
+    private LvcPoint _position;
+
     /// <summary>
     /// Gets the children collection in the <see cref="StackPanel{TDrawingContext}"/>.
     /// </summary>
@@ -53,6 +55,12 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
     /// Gets or sets the horizontal alignment.
     /// </summary>
     public Align HorizontalAlignment { get; set; } = Align.Middle;
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
+    public override LvcPoint GetActualLocation()
+    {
+        return _position;
+    }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
     public override LvcSize GetActualSize()
@@ -86,10 +94,11 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var controlSize = Measure(chart, primaryScaler, secondaryScaler);
-
         var x = X;
         var y = Y;
+
+        _position = new((float)x, (float)y);
+        var controlSize = Measure(chart, primaryScaler, secondaryScaler);
 
         if (Orientation == ContainerOrientation.Horizontal)
         {
