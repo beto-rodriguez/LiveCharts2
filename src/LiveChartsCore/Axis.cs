@@ -683,7 +683,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
 
-        chart.Update();
+        chart.Canvas.Invalidate();
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
