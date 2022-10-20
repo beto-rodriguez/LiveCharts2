@@ -104,7 +104,7 @@ public static class DrawingFluentExtensions
         }
 
         /// <summary>
-        /// Sets the 
+        /// Sets the clip rectangle of the selected paint.
         /// </summary>
         /// <returns></returns>
         public Drawing SetClip(LvcRectangle? clipRectangle)

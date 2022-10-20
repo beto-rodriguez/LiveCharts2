@@ -107,17 +107,21 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
                 Width = (int)drawableSeries.CanvasSchedule.Width,
                 Height = (int)drawableSeries.CanvasSchedule.Height
             });
+
+            var dh = (int)((drawableSeries.CanvasSchedule.Height - size.Height) * 0.5f);
+            if (dh < 0) dh = 0;
+
             container.Controls.Add(new Label
             {
                 Text = text,
                 Font = chart.TooltipFont,
                 ForeColor = chart.TooltipTextColor,
-                Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
+                Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6 + dh),
                 AutoSize = true
             });
 
             var thisW = size.Width + 18 + (int)drawableSeries.CanvasSchedule.Width;
-            h += size.Height + 6;
+            h += (int)(drawableSeries.CanvasSchedule.Height > size.Height ? drawableSeries.CanvasSchedule.Height : size.Height) + 6;
             w = thisW > w ? thisW : w;
         }
 
@@ -126,7 +130,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         container.Height = (int)h;
 
         ResumeLayout();
-        return new SizeF(container.Width + 2* BorderThickness, container.Height + 2* BorderThickness);
+        return new SizeF(container.Width + 2 * BorderThickness, container.Height + 2* BorderThickness);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
