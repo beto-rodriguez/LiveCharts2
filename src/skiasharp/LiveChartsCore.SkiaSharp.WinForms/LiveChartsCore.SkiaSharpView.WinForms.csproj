@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -9,7 +9,7 @@
     <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WinForms</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinForms</RootNamespace>
-    <Version>2.0.0-beta.513</Version>
+    <Version>2.0.0-beta.514</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsForms.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
