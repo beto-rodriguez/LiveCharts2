@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public interface IImageControl
 {
     /// <summary>
-    /// Gets the sized.
+    /// Gets the size.
     /// </summary>
-    public LvcSize Size { get; set; }
+    public LvcSize Size { get; }
 }
