@@ -74,5 +74,4 @@ public partial class ViewModel
             CrosshairSnapEnabled = true
         }
     };
-
 }
