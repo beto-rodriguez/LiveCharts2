@@ -591,6 +591,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var controlSize = cartesianChart.ControlSize;
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
+        double labelValue;
 
         var lyi = drawLocation.Y;
         var lyj = drawLocation.Y + drawMarginSize.Height;
@@ -624,10 +625,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
 
                 crosshairX = scale.ToPixels(closestPoint?.SecondaryValue ?? pointerPosition.X);
+                labelValue = closestPoint?.SecondaryValue ?? scale.ToChartValues(pointerPosition.X);
             }
             else
             {
                 crosshairX = pointerPosition.X;
+                labelValue = scale.ToChartValues(pointerPosition.X);
             }
 
             x = crosshairX;
@@ -644,10 +647,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
 
                 crosshairY = scale.ToPixels(closestPoint?.PrimaryValue ?? pointerPosition.Y);
+                labelValue = closestPoint?.PrimaryValue ?? scale.ToChartValues(pointerPosition.Y);
             }
             else
             {
                 crosshairY = pointerPosition.Y;
+                labelValue = scale.ToChartValues(pointerPosition.Y);
             }
 
             x = xoo;
@@ -693,17 +698,13 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (_crosshairLabel is not null)
         {
-            var t = Orientation == AxisOrientation.X
-                ? scale.ToChartValues(x)
-                : scale.ToChartValues(y);
-
             var labeler = Labeler;
             if (Labels is not null)
             {
                 labeler = Labelers.BuildNamedLabeler(Labels).Function;
             }
 
-            _crosshairLabel.Text = labeler(t);
+            _crosshairLabel.Text = labeler(labelValue);
             _crosshairLabel.TextSize = (float)TextSize;
             _crosshairLabel.Background = CrosshairLabelsBackground ?? LvcColor.Empty;
             _crosshairLabel.Padding = CrosshairPadding ?? _padding;
