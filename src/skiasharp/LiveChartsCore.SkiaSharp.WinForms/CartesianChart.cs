@@ -217,19 +217,16 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
         var p = e.Location;
         c.Zoom(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-        Capture = true;
     }
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
-        base.OnMouseDown(e);
         if (ModifierKeys > 0) return;
         core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), e.Button == MouseButtons.Right);
     }
 
     private void OnMouseUp(object? sender, MouseEventArgs e)
     {
-        base.OnMouseUp(e);
         core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y), e.Button == MouseButtons.Right);
     }
 }

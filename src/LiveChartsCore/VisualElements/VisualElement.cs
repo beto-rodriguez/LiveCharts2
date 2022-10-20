@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
@@ -184,14 +185,15 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// then it is the index Scaler.</param>
     protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
-    internal virtual bool IsHitBy(LvcPoint point)
+    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(LvcPoint point)
     {
         var location = GetActualLocation();
         var size = GetActualSize();
 
-        return
-            point.X >= location.X && point.X <= location.X + size.Width &&
-            point.Y >= location.Y && point.Y <= location.Y + size.Height;
+        // it returns an enumerable because there are more complex types where a visual can contain more than one element
+        if (point.X >= location.X && point.X <= location.X + size.Width &&
+            point.Y >= location.Y && point.Y <= location.Y + size.Height)
+            yield return this;
     }
 
     internal virtual void AlignToTopLeftCorner()

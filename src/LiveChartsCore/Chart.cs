@@ -378,7 +378,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         // fire the visual elements event.
         // ToDo: VisualElements should be of type VisualElement<T>
-        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().Where(x => x.IsHitBy(point));
+        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().SelectMany(x => x.IsHitBy(point));
         View.OnVisualElementPointerDown(iterableVisualElements, point);
     }
 
