@@ -733,7 +733,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var hitpoint = hitpoints.SingleOrDefault();
             if (hitpoint == null) continue;
 
-            if (closestPoint == null ||
+            if (closestPoint is null ||
                 hitpoint.DistanceTo(pointerPosition) < closestPoint.DistanceTo(pointerPosition))
             {
                 closestPoint = hitpoint;
