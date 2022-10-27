@@ -622,7 +622,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var axisIndex = Array.IndexOf(cartesianChart.XAxes, this);
                 if (axisIndex == -1) return;
 
-                var closestPoint = FindClosestPoint(pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
+                var closestPoint = FindClosestPoint(
+                    pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
 
                 crosshairX = scale.ToPixels(closestPoint?.SecondaryValue ?? pointerPosition.X);
                 labelValue = closestPoint?.SecondaryValue ?? scale.ToChartValues(pointerPosition.X);
@@ -644,7 +645,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var axisIndex = Array.IndexOf(cartesianChart.YAxes, this);
                 if (axisIndex == -1) return;
 
-                var closestPoint = FindClosestPoint(pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
+                var closestPoint = FindClosestPoint(
+                    pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
 
                 crosshairY = scale.ToPixels(closestPoint?.PrimaryValue ?? pointerPosition.Y);
                 labelValue = closestPoint?.PrimaryValue ?? scale.ToChartValues(pointerPosition.Y);
