@@ -730,7 +730,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         foreach (var series in allSeries)
         {
             var hitpoints = series.FindHitPoints(cartesianChart, pointerPosition, TooltipFindingStrategy.CompareOnlyXTakeClosest);
-            var hitpoint = hitpoints.SingleOrDefault();
+            var hitpoint = hitpoints.FirstOrDefault();
             if (hitpoint == null) continue;
 
             if (closestPoint is null ||
