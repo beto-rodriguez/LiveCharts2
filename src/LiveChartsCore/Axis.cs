@@ -721,7 +721,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         chart.Update();
     }
 
-    private static ChartPoint? FindClosestPoint(LvcPoint pointerPosition, CartesianChart<TDrawingContext> cartesianChart, IEnumerable<ICartesianSeries<TDrawingContext>> allSeries)
+    private static ChartPoint? FindClosestPoint(
+        LvcPoint pointerPosition,
+        CartesianChart<TDrawingContext> cartesianChart,
+        IEnumerable<ICartesianSeries<TDrawingContext>> allSeries)
     {
         ChartPoint? closestPoint = null;
         foreach (var series in allSeries)
