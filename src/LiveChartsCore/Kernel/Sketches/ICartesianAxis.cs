@@ -182,6 +182,11 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     Padding? CrosshairPadding { get; set; }
 
     /// <summary>
+    /// Gets or sets whether the crosshair snaps to nearest series.
+    /// </summary>
+    bool CrosshairSnapEnabled { get; set; }
+
+    /// <summary>
     /// Invalidates the crosshair visual.
     /// </summary>
     /// <param name="chart">The chart.</param>

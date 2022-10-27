@@ -91,6 +91,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _isVisible = true;
     private bool _isInverted;
     private bool _forceStepToMin;
+    private bool _crosshairSnapEnabled;
     private readonly float _tickLength = 8f;
     private readonly int _subSections = 3;
 
@@ -237,6 +238,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPadding"/>
     public Padding? CrosshairPadding { get; set; }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairSnapEnabled" />
+    public bool CrosshairSnapEnabled { get => _crosshairSnapEnabled; set { _crosshairSnapEnabled = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// 
@@ -587,6 +591,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var controlSize = cartesianChart.ControlSize;
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
+        double labelValue;
 
         var lyi = drawLocation.Y;
         var lyj = drawLocation.Y + drawMarginSize.Height;
@@ -611,13 +616,45 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         float x, y;
         if (_orientation == AxisOrientation.X)
         {
-            x = pointerPosition.X;
+            float crosshairX;
+            if (CrosshairSnapEnabled)
+            {
+                var axisIndex = Array.IndexOf(cartesianChart.XAxes, this);
+                var closestPoint = FindClosestPoint(
+                    pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
+
+                crosshairX = scale.ToPixels(closestPoint?.SecondaryValue ?? pointerPosition.X);
+                labelValue = closestPoint?.SecondaryValue ?? scale.ToChartValues(pointerPosition.X);
+            }
+            else
+            {
+                crosshairX = pointerPosition.X;
+                labelValue = scale.ToChartValues(pointerPosition.X);
+            }
+
+            x = crosshairX;
             y = yoo;
         }
         else
         {
+            float crosshairY;
+            if (CrosshairSnapEnabled)
+            {
+                var axisIndex = Array.IndexOf(cartesianChart.YAxes, this);
+                var closestPoint = FindClosestPoint(
+                    pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
+
+                crosshairY = scale.ToPixels(closestPoint?.PrimaryValue ?? pointerPosition.Y);
+                labelValue = closestPoint?.PrimaryValue ?? scale.ToChartValues(pointerPosition.Y);
+            }
+            else
+            {
+                crosshairY = pointerPosition.Y;
+                labelValue = scale.ToChartValues(pointerPosition.Y);
+            }
+
             x = xoo;
-            y = pointerPosition.Y;
+            y = crosshairY;
         }
 
         if (CrosshairPaint.ZIndex == 0) CrosshairPaint.ZIndex = 1050;
@@ -659,17 +696,13 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (_crosshairLabel is not null)
         {
-            var t = Orientation == AxisOrientation.X
-                ? scale.ToChartValues(x)
-                : scale.ToChartValues(y);
-
             var labeler = Labeler;
             if (Labels is not null)
             {
                 labeler = Labelers.BuildNamedLabeler(Labels).Function;
             }
 
-            _crosshairLabel.Text = labeler(t);
+            _crosshairLabel.Text = labeler(labelValue);
             _crosshairLabel.TextSize = (float)TextSize;
             _crosshairLabel.Background = CrosshairLabelsBackground ?? LvcColor.Empty;
             _crosshairLabel.Padding = CrosshairPadding ?? _padding;
@@ -684,6 +717,28 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
 
         chart.Update();
+    }
+
+    private static ChartPoint? FindClosestPoint(
+        LvcPoint pointerPosition,
+        CartesianChart<TDrawingContext> cartesianChart,
+        IEnumerable<ICartesianSeries<TDrawingContext>> allSeries)
+    {
+        ChartPoint? closestPoint = null;
+        foreach (var series in allSeries)
+        {
+            var hitpoints = series.FindHitPoints(cartesianChart, pointerPosition, allSeries.GetTooltipFindingStrategy());
+            var hitpoint = hitpoints.FirstOrDefault();
+            if (hitpoint == null) continue;
+
+            if (closestPoint is null ||
+                hitpoint.DistanceTo(pointerPosition) < closestPoint.DistanceTo(pointerPosition))
+            {
+                closestPoint = hitpoint;
+            }
+        }
+
+        return closestPoint;
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
