@@ -620,8 +620,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (CrosshairSnapEnabled)
             {
                 var axisIndex = Array.IndexOf(cartesianChart.XAxes, this);
-                if (axisIndex == -1) return;
-
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
 
@@ -643,8 +641,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (CrosshairSnapEnabled)
             {
                 var axisIndex = Array.IndexOf(cartesianChart.YAxes, this);
-                if (axisIndex == -1) return;
-
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
 
