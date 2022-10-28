@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -135,19 +134,4 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// <param name="yAxisIndex">Index of the y axis.</param>
     /// <returns></returns>
     LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0);
-
-    /// <summary>
-    /// Gets all the <see cref="ChartPoint"/> that contain the given point.
-    /// </summary>
-    /// <param name="point">The given point.</param>
-    /// <param name="strategy">The finding strategy, default is <see cref="TooltipFindingStrategy.Automatic"/>.</param>
-    /// <returns>An enumerable of <see cref="ChartPoint"/>.</returns>
-    IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic);
-
-    /// <summary>
-    /// Gets all the <see cref="VisualElement{TDrawingContext}"/> that contain the given point.
-    /// </summary>
-    /// <param name="point">The given point.</param>
-    /// <returns>An enumerable of <see cref="VisualElement{TDrawingContext}"/>.</returns>
-    IEnumerable<VisualElement<TDrawingContext>> GetVisualsAt(LvcPoint point);
 }

@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -186,10 +187,41 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         throw new NotImplementedException();
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)"/>
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
+    public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
     {
-        throw new NotImplementedException();
+        var scaler = new PolarScaler(
+            Core.DrawMarginLocation, Core.DrawMarginSize, Core.AngleAxes[angleAxisIndex], Core.RadiusAxes[radiusAxisIndex],
+            Core.InnerRadius, Core.InitialRotation, Core.TotalAnge);
+
+        return scaler.ToChartValues(point.X, point.Y);
+    }
+
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleDataToPixels(LvcPointD, int, int)"/>
+    public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
+    {
+        var scaler = new PolarScaler(
+            Core.DrawMarginLocation, Core.DrawMarginSize, Core.AngleAxes[angleAxisIndex], Core.RadiusAxes[radiusAxisIndex],
+            Core.InnerRadius, Core.InitialRotation, Core.TotalAnge);
+
+        var r = scaler.ToPixels(point.X, point.Y);
+
+        return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    {
+        if (strategy == TooltipFindingStrategy.Automatic)
+            strategy = Core.Series.GetTooltipFindingStrategy();
+
+        return Core.Series.SelectMany(series => series.FindHitPoints(Core, point, strategy));
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
+    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    {
+        return Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
     }
 
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>

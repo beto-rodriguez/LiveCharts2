@@ -130,7 +130,7 @@ public static class LiveChartsSkiaSharp
         this IEnumerable<T> source,
         Action<T, PieSeries<T>>? buider = null)
     {
-        if (buider is null) buider = (instance, series) => { };
+        buider ??= (instance, series) => { };
 
         return new ObservableCollection<ISeries>(
             source.Select(instance =>
@@ -150,12 +150,12 @@ public static class LiveChartsSkiaSharp
     /// <returns>The distance in pixels.</returns>
     public static double GetDistanceTo(this ChartPoint target, LvcPoint location)
     {
-        double[] dataCoordinates;
+        LvcPointD dataCoordinates;
         double x, y;
 
         if (target.Context is ICartesianChartView<SkiaSharpDrawingContext> cartesianChart)
         {
-            dataCoordinates = cartesianChart.ScaleUIPoint(location);
+            dataCoordinates = cartesianChart.ScalePixelsToData(new LvcPointD(location));
 
             var cartesianSeries = (ICartesianSeries<SkiaSharpDrawingContext>)target.Context.Series;
 
@@ -189,7 +189,7 @@ public static class LiveChartsSkiaSharp
         }
         else if (target.Context is IPolarChartView<SkiaSharpDrawingContext> polarChart)
         {
-            dataCoordinates = polarChart.ScaleUIPoint(location);
+            dataCoordinates = polarChart.ScalePixelsToData(new LvcPointD(location));
 
             var polarSeries = (IPolarSeries<SkiaSharpDrawingContext>)target.Context.Series;
 
@@ -213,8 +213,8 @@ public static class LiveChartsSkiaSharp
         }
 
         // calculate the distance
-        var dx = dataCoordinates[0] - x;
-        var dy = dataCoordinates[1] - y;
+        var dx = dataCoordinates.X - x;
+        var dy = dataCoordinates.Y - y;
 
         var distance = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
