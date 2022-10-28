@@ -22,9 +22,12 @@
 
 using System.Collections.Specialized;
 using System.ComponentModel;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 using Microsoft.AspNetCore.Components;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
@@ -92,6 +95,25 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
     [Parameter]
     public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
+    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    {
+        if (core is not PieChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+
+        if (strategy == TooltipFindingStrategy.Automatic)
+            strategy = cc.Series.GetTooltipFindingStrategy();
+
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
+    public override IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    {
+        return core is not PieChart<SkiaSharpDrawingContext> cc
+            ? throw new Exception("core not found")
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
+    }
 
     /// <summary>
     /// Initializes the core.

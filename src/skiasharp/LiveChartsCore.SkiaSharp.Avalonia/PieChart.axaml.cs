@@ -717,6 +717,25 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
     }
 
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    {
+        if (_core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+
+        if (strategy == TooltipFindingStrategy.Automatic)
+            strategy = cc.Series.GetTooltipFindingStrategy();
+
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
+    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    {
+        return _core is not CartesianChart<SkiaSharpDrawingContext> cc
+            ? throw new Exception("core not found")
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
+    }
+
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {

@@ -769,7 +769,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
     {
         if (_core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
@@ -780,7 +780,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
     public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
     {
         return _core is not CartesianChart<SkiaSharpDrawingContext> cc
