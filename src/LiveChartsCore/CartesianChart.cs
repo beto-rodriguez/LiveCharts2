@@ -89,7 +89,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } = Array.Empty<ICartesianAxis<TDrawingContext>>();
 
     /// <summary>
-    /// Gets the series.
+    /// Gets the visible series.
     /// </summary>
     /// <value>
     /// The series.
