@@ -26,6 +26,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel;
 
@@ -291,26 +292,65 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Finds the closest point to the specified location in UI coordinates.
+    /// Finds the closest point to the specified location [in pixels].
     /// </summary>
     /// <param name="points">The points to look in to.</param>
-    /// <param name="point">The location.</param>
+    /// <param name="point">The location in pixels.</param>
     /// <returns></returns>
-    public static ChartPoint? FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
+    public static ChartPoint<TModel, TVisual, TLabel>? FindClosestTo<TModel, TVisual, TLabel>(
+        this IEnumerable<ChartPoint> points, LvcPoint point)
     {
-        return _findClosestTo(points, point);
+        var closest = FindClosestTo(points, point);
+        return closest is null
+            ? null
+            : new ChartPoint<TModel, TVisual, TLabel>(closest);
     }
 
     /// <summary>
-    /// Finds the closest point to the specified location in UI coordinates.
+    /// Finds the closest point to the specified location [in pixels].
     /// </summary>
-    /// <param name="points">The points to look in to.</param>
-    /// <param name="point">The location.</param>
+    /// <param name="points">The points to look into.</param>
+    /// <param name="point">The location in pixels.</param>
     /// <returns></returns>
-    public static ChartPoint<TModel, TVisual, TLabel> FindClosestTo<TModel, TVisual, TLabel>(
-        this IEnumerable<ChartPoint> points, LvcPoint point)
+    public static ChartPoint? FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
     {
-        return new ChartPoint<TModel, TVisual, TLabel>(_findClosestTo(points, point));
+        var fp = new LvcPoint((float)point.X, (float)point.Y);
+
+        return points
+            .Select(p => new
+            {
+                distance = p.DistanceTo(fp),
+                point = p
+            })
+            .OrderBy(p => p.distance)
+            .FirstOrDefault()?.point;
+    }
+
+    /// <summary>
+    /// Finds the closest visual to the specified location [in pixels].
+    /// </summary>
+    /// <typeparam name="T">The type of the drawing context.</typeparam>
+    /// <param name="source">The visuals to look into.</param>
+    /// <param name="point">The location in pixels.</param>
+    /// <returns></returns>
+    public static VisualElement<T>? FindClosestTo<T>(this IEnumerable<VisualElement<T>> source, LvcPoint point)
+        where T : DrawingContext
+    {
+        return source.Select(visual =>
+        {
+            var location = visual.GetActualLocation();
+            var size = visual.GetActualSize();
+
+            return new
+            {
+                distance = Math.Sqrt(
+                    Math.Pow(point.X - (location.X + size.Width * 0.5), 2) +
+                    Math.Pow(point.Y - (location.Y + size.Height * 0.5), 2)),
+                visual
+            };
+        })
+        .OrderBy(p => p.distance)
+        .FirstOrDefault()?.visual;
     }
 
     /// <summary>
@@ -495,11 +535,5 @@ public static class Extensions
             Next = AfterNext;
             AfterNext = point;
         }
-    }
-
-    private static ChartPoint? _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
-    {
-        var o = points.Select(p => new { distance = p.DistanceTo(point), point = p }).OrderBy(p => p.distance).ToArray();
-        return o.FirstOrDefault()?.point;
     }
 }
