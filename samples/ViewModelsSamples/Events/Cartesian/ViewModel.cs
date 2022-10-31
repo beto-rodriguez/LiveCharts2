@@ -37,7 +37,7 @@ public partial class ViewModel
             Mapping = (fruit, point) =>
             {
                 point.PrimaryValue = fruit.SalesPerDay; // use the SalesPerDay property in this series // mark
-                point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Entity;
             }
         };
 
@@ -52,25 +52,25 @@ public partial class ViewModel
 
     public ISeries[] Series { get; set; }
 
-    private void OnPointerDown(IChartView chart, ChartPoint<Fruit, RoundedRectangleGeometry, LabelGeometry> point)
+    private void OnPointerDown(IChartView chart, ChartPoint<Fruit, RoundedRectangleGeometry, LabelGeometry>? point)
     {
-        if (point.Visual is null) return;
+        if (point?.Visual is null) return;
         point.Visual.Fill = new SolidColorPaint(SKColors.Red);
         chart.Invalidate(); // <- ensures the canvas is redrawn after we set the fill
         Trace.WriteLine($"Clicked on {point.Model?.Name}, {point.Model?.SalesPerDay} items sold per day");
     }
 
-    private void OnPointerHover(IChartView chart, ChartPoint<Fruit, RoundedRectangleGeometry, LabelGeometry> point)
+    private void OnPointerHover(IChartView chart, ChartPoint<Fruit, RoundedRectangleGeometry, LabelGeometry>? point)
     {
-        if (point.Visual is null) return;
+        if (point?.Visual is null) return;
         point.Visual.Fill = new SolidColorPaint(SKColors.Yellow);
         chart.Invalidate();
         Trace.WriteLine($"Pointer entered on {point.Model?.Name}");
     }
 
-    private void OnPointerHoverLost(IChartView chart, ChartPoint<Fruit, RoundedRectangleGeometry, LabelGeometry> point)
+    private void OnPointerHoverLost(IChartView chart, ChartPoint<Fruit, RoundedRectangleGeometry, LabelGeometry>? point)
     {
-        if (point.Visual is null) return;
+        if (point?.Visual is null) return;
         point.Visual.Fill = null;
         chart.Invalidate();
         Trace.WriteLine($"Pointer left {point.Model?.Name}");
