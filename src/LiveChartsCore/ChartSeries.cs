@@ -89,7 +89,16 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The size of the legend shape.
     /// </value>
-    public double LegendShapeSize { get => _legendShapeSize; set { _legendShapeSize = value; OnPropertyChanged(); } }
+    public double LegendShapeSize
+    {
+        get => _legendShapeSize;
+        set
+        {
+            _legendShapeSize = value;
+            OnSeriesMiniatureChanged();
+            OnPropertyChanged();
+        }
+    }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);

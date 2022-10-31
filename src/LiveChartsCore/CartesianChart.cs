@@ -89,7 +89,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } = Array.Empty<ICartesianAxis<TDrawingContext>>();
 
     /// <summary>
-    /// Gets the series.
+    /// Gets the visible series.
     /// </summary>
     /// <value>
     /// The series.
@@ -775,12 +775,22 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
-        if (isSecondaryAction)
+        if (isSecondaryAction && _zoomMode != ZoomAndPanMode.None)
         {
             _sectionZoomingStart = point;
 
-            _zoomingSection.X = point.X;
-            _zoomingSection.Y = point.Y;
+            var x = point.X;
+            var y = point.Y;
+
+            if (x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
+                y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
+            {
+                _sectionZoomingStart = null;
+                return;
+            }
+
+            _zoomingSection.X = x;
+            _zoomingSection.Y = y;
 
             var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
             var yMode = (_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
@@ -815,8 +825,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
             var yMode = (_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
 
-            if (xMode) _zoomingSection.Width = point.X - _sectionZoomingStart.Value.X;
-            if (yMode) _zoomingSection.Height = point.Y - _sectionZoomingStart.Value.Y;
+            var x = point.X;
+            var y = point.Y;
+
+            if (x < DrawMarginLocation.X) x = DrawMarginLocation.X;
+            if (x > DrawMarginLocation.X + DrawMarginSize.Width) x = DrawMarginLocation.X + DrawMarginSize.Width;
+            if (y < DrawMarginLocation.Y) y = DrawMarginLocation.Y;
+            if (y > DrawMarginLocation.Y + DrawMarginSize.Height) y = DrawMarginLocation.Y + DrawMarginSize.Height;
+
+            if (xMode) _zoomingSection.Width = x - _sectionZoomingStart.Value.X;
+            if (yMode) _zoomingSection.Height = y - _sectionZoomingStart.Value.Y;
 
             Update();
             return;

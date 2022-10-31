@@ -26,6 +26,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel;
 
@@ -291,26 +292,65 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Finds the closest point to the specified location in UI coordinates.
+    /// Finds the closest point to the specified location [in pixels].
     /// </summary>
     /// <param name="points">The points to look in to.</param>
-    /// <param name="point">The location.</param>
+    /// <param name="point">The location in pixels.</param>
     /// <returns></returns>
-    public static ChartPoint? FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
+    public static ChartPoint<TModel, TVisual, TLabel>? FindClosestTo<TModel, TVisual, TLabel>(
+        this IEnumerable<ChartPoint> points, LvcPoint point)
     {
-        return _findClosestTo(points, point);
+        var closest = FindClosestTo(points, point);
+        return closest is null
+            ? null
+            : new ChartPoint<TModel, TVisual, TLabel>(closest);
     }
 
     /// <summary>
-    /// Finds the closest point to the specified location in UI coordinates.
+    /// Finds the closest point to the specified location [in pixels].
     /// </summary>
-    /// <param name="points">The points to look in to.</param>
-    /// <param name="point">The location.</param>
+    /// <param name="points">The points to look into.</param>
+    /// <param name="point">The location in pixels.</param>
     /// <returns></returns>
-    public static ChartPoint<TModel, TVisual, TLabel> FindClosestTo<TModel, TVisual, TLabel>(
-        this IEnumerable<ChartPoint> points, LvcPoint point)
+    public static ChartPoint? FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
     {
-        return new ChartPoint<TModel, TVisual, TLabel>(_findClosestTo(points, point));
+        var fp = new LvcPoint((float)point.X, (float)point.Y);
+
+        return points
+            .Select(p => new
+            {
+                distance = p.DistanceTo(fp),
+                point = p
+            })
+            .OrderBy(p => p.distance)
+            .FirstOrDefault()?.point;
+    }
+
+    /// <summary>
+    /// Finds the closest visual to the specified location [in pixels].
+    /// </summary>
+    /// <typeparam name="T">The type of the drawing context.</typeparam>
+    /// <param name="source">The visuals to look into.</param>
+    /// <param name="point">The location in pixels.</param>
+    /// <returns></returns>
+    public static VisualElement<T>? FindClosestTo<T>(this IEnumerable<VisualElement<T>> source, LvcPoint point)
+        where T : DrawingContext
+    {
+        return source.Select(visual =>
+        {
+            var location = visual.GetActualLocation();
+            var size = visual.GetActualSize();
+
+            return new
+            {
+                distance = Math.Sqrt(
+                    Math.Pow(point.X - (location.X + size.Width * 0.5), 2) +
+                    Math.Pow(point.Y - (location.Y + size.Height * 0.5), 2)),
+                visual
+            };
+        })
+        .OrderBy(p => p.distance)
+        .FirstOrDefault()?.visual;
     }
 
     /// <summary>
@@ -378,9 +418,122 @@ public static class Extensions
         return dictionary.TryGetValue(view, out var point) ? point : null;
     }
 
-    private static ChartPoint? _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
+    /// <summary>
+    /// Splits an enumerable of chartpoints by each null gap.
+    /// </summary>
+    /// <param name="points">The points.</param>
+    /// <param name="onDeleteNullPoint">Called when a point was deleted.</param>
+    /// <returns></returns>
+    public static IEnumerable<IEnumerable<ChartPoint>> SplitByNullGaps(
+        this IEnumerable<ChartPoint> points,
+        Action<ChartPoint> onDeleteNullPoint)
     {
-        var o = points.Select(p => new { distance = p.DistanceTo(point), point = p }).OrderBy(p => p.distance).ToArray();
-        return o.FirstOrDefault()?.point;
+        using var builder = new GapsBuilder(points.GetEnumerator());
+        while (!builder.Finished) yield return YieldReturnUntilNextNullChartPoint(builder, onDeleteNullPoint);
+    }
+
+    /// <summary>
+    /// Builds a enumerator with the necessary data to build an Spline.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    internal static IEnumerable<SplineData> AsSplineData(this IEnumerable<ChartPoint> source)
+    {
+        using var e = source.Where(x => !x.IsEmpty).GetEnumerator();
+
+        if (!e.MoveNext()) yield break;
+        var data = new SplineData(e.Current);
+
+        if (!e.MoveNext())
+        {
+            yield return data;
+            yield break;
+        }
+
+        data.GoNext(e.Current);
+
+        while (e.MoveNext())
+        {
+            yield return data;
+            data.IsFirst = false;
+            data.GoNext(e.Current);
+        }
+
+        data.IsFirst = false;
+        yield return data;
+
+        data.GoNext(data.Next);
+        yield return data;
+    }
+
+    private static IEnumerable<ChartPoint> YieldReturnUntilNextNullChartPoint(
+        GapsBuilder builder,
+        Action<ChartPoint> onDeleteNullPoint)
+    {
+        while (builder.Enumerator.MoveNext())
+        {
+            if (builder.Enumerator.Current.IsEmpty)
+            {
+                var wasEmpty = builder.IsEmpty;
+                builder.IsEmpty = true;
+                onDeleteNullPoint(builder.Enumerator.Current);
+                if (!wasEmpty) yield break; // if there are no points then do not return an empty enumerable...
+            }
+            else
+            {
+                yield return builder.Enumerator.Current;
+                builder.IsEmpty = false;
+            }
+        }
+
+        builder.Finished = true;
+    }
+
+    private class GapsBuilder : IDisposable
+    {
+        public GapsBuilder(IEnumerator<ChartPoint> enumerator)
+        {
+            Enumerator = enumerator;
+        }
+
+        public IEnumerator<ChartPoint> Enumerator { get; }
+
+        public bool IsEmpty { get; set; } = true;
+
+        public bool Finished { get; set; } = false;
+
+        public void Dispose()
+        {
+            Enumerator.Dispose();
+        }
+    }
+
+    internal class SplineData
+    {
+        public SplineData(ChartPoint start)
+        {
+            Previous = start;
+            Current = start;
+            Next = start;
+            AfterNext = start;
+        }
+
+        public ChartPoint Previous { get; set; }
+
+        public ChartPoint Current { get; set; }
+
+        public ChartPoint Next { get; set; }
+
+        public ChartPoint AfterNext { get; set; }
+
+        public bool IsFirst { get; set; } = true;
+
+        public void GoNext(ChartPoint point)
+        {
+            Previous = Current;
+            Current = Next;
+            Next = AfterNext;
+            AfterNext = point;
+        }
     }
 }

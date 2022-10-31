@@ -69,7 +69,7 @@ public static class Index
         "Polar/Coordinates",
 
         "Axes/ColorsAndPosition",
-        "Axes/Crosshairs",
+        //"Axes/Crosshairs",
         "Axes/LabelsFormat",
         "Axes/LabelsFormat2",
         "Axes/NamedLabels",

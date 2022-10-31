@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
@@ -96,11 +97,20 @@ public interface IPolarChartView<TDrawingContext> : IChartView<TDrawingContext>
     IEnumerable<ISeries> Series { get; set; }
 
     /// <summary>
-    /// Scales the UI point.
+    /// Scales a point in pixels to the chart data scale.
     /// </summary>
     /// <param name="point">The point.</param>
     /// <param name="angleAxisIndex">Index of the angle axis.</param>
     /// <param name="radiusAxisIndex">Index of the radius axis.</param>
     /// <returns></returns>
-    double[] ScaleUIPoint(LvcPoint point, int angleAxisIndex = 0, int radiusAxisIndex = 0);
+    LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0);
+
+    /// <summary>
+    /// Scales a point in the chart data scale to pixels.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <param name="angleAxisIndex">Index of the x axis.</param>
+    /// <param name="radiusAxisIndex">Index of the radius axis.</param>
+    /// <returns></returns>
+    LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0);
 }

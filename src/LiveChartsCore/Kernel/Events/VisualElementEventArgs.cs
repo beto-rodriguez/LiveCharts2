@@ -64,20 +64,6 @@ public class VisualElementsEventArgs<TDrawingContext>
 
     private VisualElement<TDrawingContext>? FindClosest()
     {
-        return VisualElements.Select(v =>
-        {
-            var location = v.GetActualLocation();
-            var size = v.GetActualSize();
-
-            return new
-            {
-                distance = Math.Sqrt(
-                    Math.Pow(PointerLocation.X - (location.X + size.Width * 0.5), 2) +
-                    Math.Pow(PointerLocation.Y - (location.Y + size.Height * 0.5), 2)),
-                visual = v
-            };
-        })
-        .OrderBy(p => p.distance)
-        .FirstOrDefault()?.visual;
+        return VisualElements.FindClosestTo(PointerLocation);
     }
 }

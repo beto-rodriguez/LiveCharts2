@@ -149,4 +149,24 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     {
         throw new NotImplementedException();
     }
+
+    public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    {
+        throw new NotImplementedException();
+    }
 }

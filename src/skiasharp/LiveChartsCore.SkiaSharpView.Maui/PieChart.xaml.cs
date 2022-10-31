@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -728,6 +729,25 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     LvcPoint IMauiChart.GetCanvasPosition()
     {
         return new LvcPoint((float)canvas.X, (float)canvas.Y);
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    {
+        if (core is not PieChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+
+        if (strategy == TooltipFindingStrategy.Automatic)
+            strategy = cc.Series.GetTooltipFindingStrategy();
+
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
+    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    {
+        return core is not PieChart<SkiaSharpDrawingContext> cc
+            ? throw new Exception("core not found")
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
     }
 
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>

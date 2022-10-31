@@ -179,7 +179,7 @@ public class PolarScaler
     /// <param name="x">The x coordinate in pixels.</param>
     /// <param name="y">The y coordinate in pixels.</param>
     /// <returns></returns>
-    public LvcPoint ToChartValues(double x, double y)
+    public LvcPointD ToChartValues(double x, double y)
     {
         var dx = x - CenterX;
         var dy = y - CenterY;
@@ -196,12 +196,9 @@ public class PolarScaler
         a -= _initialRotation;
         if (a < 0) a = 360 - a;
 
-        unchecked
-        {
-            return new LvcPoint(
-                (float)(MinAngle + _deltaAngleVal * a / _circumference),
-                (float)(MinRadius + r * (MaxRadius - MinRadius)));
-        }
+        return new LvcPointD(
+            MinAngle + _deltaAngleVal * a / _circumference,
+            MinRadius + r * (MaxRadius - MinRadius));
     }
 
     /// <summary>

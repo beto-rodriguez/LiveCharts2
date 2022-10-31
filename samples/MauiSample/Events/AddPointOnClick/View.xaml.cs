@@ -15,18 +15,16 @@ public partial class View : ContentPage
     private void Chart_Touched(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
     {
         var viewModel = (ViewModel)BindingContext;
+        var p = new LvcPointD(e.Location.X, e.Location.Y);
 
         // scales the UI coordinates to the corresponding data in the chart.
-        // ScaleUIPoint returns an array of double
-        var scaledPoint = chart.ScaleUIPoint(new LvcPoint(e.Location.X, e.Location.Y));
-
-        // where the X coordinate is in the first position
-        var x = scaledPoint[0];
-
-        // and the Y coordinate in the second position
-        var y = scaledPoint[1];
+        var dataCoordinates = chart.ScalePixelsToData(p);
 
         // finally add the new point to the data in our chart.
-        viewModel.Data.Add(new ObservablePoint(x, y));
+        viewModel?.Data.Add(new ObservablePoint(dataCoordinates.X, dataCoordinates.Y));
+
+        // You can also get all the points or visual elements in a given location.
+        var points = chart.GetPointsAt(new LvcPoint(p.X, p.Y));
+        var visuals = chart.GetVisualsAt(new LvcPoint(p.X, p.Y));
     }
 }

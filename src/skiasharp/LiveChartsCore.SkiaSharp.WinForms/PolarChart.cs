@@ -25,11 +25,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
 
@@ -186,13 +189,49 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         core.Update();
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
+    public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
     {
-        return new double[0];
-        //if (core is null) throw new Exception("core not found");
-        //var cartesianCore = (PolarChart<SkiaSharpDrawingContext>)core;
-        //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+        if (core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+
+        var scaler = new PolarScaler(
+            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
+            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
+
+        return scaler.ToChartValues(point.X, point.Y);
+    }
+
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleDataToPixels(LvcPointD, int, int)"/>
+    public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
+    {
+        if (core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+
+        var scaler = new PolarScaler(
+            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
+            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
+
+        var r = scaler.ToPixels(point.X, point.Y);
+
+        return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
+    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    {
+        if (core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+
+        if (strategy == TooltipFindingStrategy.Automatic)
+            strategy = cc.Series.GetTooltipFindingStrategy();
+
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
+    }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
+    public override IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    {
+        return core is not PolarChart<SkiaSharpDrawingContext> cc
+            ? throw new Exception("core not found")
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
