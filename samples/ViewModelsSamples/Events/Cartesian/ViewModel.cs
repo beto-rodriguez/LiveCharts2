@@ -37,7 +37,7 @@ public partial class ViewModel
             Mapping = (fruit, point) =>
             {
                 point.PrimaryValue = fruit.SalesPerDay; // use the SalesPerDay property in this series // mark
-                point.SecondaryValue = point.Context.Entity;
+                point.SecondaryValue = point.Context.Entity.EntityIndex;
             }
         };
 
