@@ -270,7 +270,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// Gets the data factory.
     /// </summary>
-    protected DataFactory<TModel, TDrawingContext> DataFactory
+    public DataFactory<TModel, TDrawingContext> DataFactory
     {
         get
         {
