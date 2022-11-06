@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
@@ -92,8 +93,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _isInverted;
     private bool _forceStepToMin;
     private bool _crosshairSnapEnabled;
-    private readonly float _tickLength = 8f;
+    private readonly float _tickLength = 6f;
     private readonly int _subSections = 3;
+    private Align? _labelsAlignment;
 
     #endregion
 
@@ -121,6 +123,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.NamePadding"/>
     public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis.LabelsAlignment"/>
+    public Align? LabelsAlignment { get => _labelsAlignment; set { _labelsAlignment = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="ICartesianAxis.Orientation"/>
     public AxisOrientation Orientation => _orientation;
@@ -703,7 +708,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             }
 
             _crosshairLabel.Text = labeler(labelValue);
-            _crosshairLabel.TextSize = (float)TextSize;
+            _crosshairLabel.TextSize = (float)_textSize;
             _crosshairLabel.Background = CrosshairLabelsBackground ?? LvcColor.Empty;
             _crosshairLabel.Padding = CrosshairPadding ?? _padding;
             _crosshairLabel.X = x;
@@ -749,7 +754,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var textGeometry = new TTextGeometry
         {
             Text = Name ?? string.Empty,
-            TextSize = (float)NameTextSize,
+            TextSize = (float)_nameTextSize,
             RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
             Padding = NamePadding
         };
@@ -763,7 +768,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
 
-        var ts = (float)TextSize;
+        var ts = (float)_textSize;
         var labeler = Labeler;
 
         if (Labels is not null)
@@ -895,7 +900,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var textGeometry = new TTextGeometry
             {
                 Text = labeler(i),
-                TextSize = (float)TextSize,
+                TextSize = (float)_textSize,
                 RotateTransform = (float)LabelsRotation,
                 Padding = _padding
             };
@@ -943,7 +948,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         _nameGeometry.Padding = NamePadding;
         _nameGeometry.Text = Name ?? string.Empty;
-        _nameGeometry.TextSize = (float)NameTextSize;
+        _nameGeometry.TextSize = (float)_nameTextSize;
 
         if (_orientation == AxisOrientation.X)
         {
@@ -1175,11 +1180,119 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         float r,
         UpdateMode mode)
     {
+        var actualRotatation = r;
+        const double toRadians = Math.PI / 180;
+
+        if (_orientation == AxisOrientation.Y)
+        {
+            actualRotatation %= 180;
+            if (actualRotatation < 0) actualRotatation += 360;
+            if (actualRotatation is > 90 and < 180) actualRotatation += 180;
+            if (actualRotatation is > 180 and < 270) actualRotatation += 180;
+
+            var actualAlignment = _labelsAlignment == null
+              ? (_position == AxisPosition.Start ? Align.End : Align.Start)
+              : _labelsAlignment.Value;
+
+            if (actualAlignment == Align.Start)
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    x += (float)Math.Abs(rhx * 0.5f);
+                }
+
+                x -= _labelsDesiredSize.Width * 0.5f;
+                label.HorizontalAlign = Align.Start;
+            }
+            else
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    x -= (float)Math.Abs(rhx * 0.5f);
+                }
+
+                x += _labelsDesiredSize.Width * 0.5f;
+                label.HorizontalAlign = Align.End;
+            }
+        }
+
+        if (_orientation == AxisOrientation.X)
+        {
+            actualRotatation %= 180;
+            if (actualRotatation < 0) actualRotatation += 180;
+            if (actualRotatation >= 90) actualRotatation -= 180;
+            Trace.WriteLine(actualRotatation);
+
+            var actualAlignment = _labelsAlignment == null
+              ? (_position == AxisPosition.Start ? Align.Start : Align.End)
+              : _labelsAlignment.Value;
+
+            if (actualAlignment == Align.Start)
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    y += (float)Math.Abs(rhx * 0.5f);
+                }
+
+                if (hasRotation)
+                {
+                    y -= _labelsDesiredSize.Height * 0.5f;
+                    label.HorizontalAlign = actualRotatation < 0
+                        ? Align.End
+                        : Align.Start;
+                }
+                else
+                {
+                    label.HorizontalAlign = Align.Middle;
+                }
+            }
+            else
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    y -= (float)Math.Abs(rhx * 0.5f);
+                }
+
+                if (hasRotation)
+                {
+                    y += _labelsDesiredSize.Height * 0.5f;
+                    label.HorizontalAlign = actualRotatation < 0
+                        ? Align.Start
+                        : Align.End;
+                }
+                else
+                {
+                    label.HorizontalAlign = Align.Middle;
+                }
+            }
+        }
+
         label.Text = text;
         label.Padding = _padding;
         label.X = x;
         label.Y = y;
-        if (hasRotation) label.RotateTransform = r;
+
+        if (hasRotation) label.RotateTransform = actualRotatation;
 
         SetUpdateMode(label, mode);
     }
