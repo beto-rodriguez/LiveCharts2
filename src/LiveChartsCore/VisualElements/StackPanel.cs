@@ -136,14 +136,23 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
             chart.Canvas.AddDrawableTask(_backgroundPaint);
             if (_backgroundGeometry is null)
             {
-                _backgroundGeometry = new TBackgroundGemetry();
-                _ = _backgroundGeometry.TransitionateProperties().WithAnimation(chart);
+                _backgroundGeometry = new TBackgroundGemetry
+                {
+                    X = _position.X,
+                    Y = _position.Y,
+                    Width = controlSize.Width,
+                    Height = controlSize.Height
+                };
+                _ = _backgroundGeometry
+                    .TransitionateProperties()
+                    .WithAnimation(chart)
+                    .CompleteCurrentTransitions();
             }
-            _backgroundPaint.AddGeometryToPaintTask(chart.Canvas, _backgroundGeometry);
             _backgroundGeometry.X = _position.X;
             _backgroundGeometry.Y = _position.Y;
             _backgroundGeometry.Width = controlSize.Width;
             _backgroundGeometry.Height = controlSize.Height;
+            _backgroundPaint.AddGeometryToPaintTask(chart.Canvas, _backgroundGeometry);
         }
 
         if (Orientation == ContainerOrientation.Horizontal)
