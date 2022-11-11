@@ -39,9 +39,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
 {
     private static readonly int s_zIndex = 10050;
     private Chart<SkiaSharpDrawingContext>? _chart;
-    private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _paints = new();
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
-    private IPaint<SkiaSharpDrawingContext>? _fontPaint;
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
     private readonly Dictionary<IChartSeries<SkiaSharpDrawingContext>, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>> _activeSeries = new();
 
@@ -65,15 +63,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
     /// <summary>
     /// Gets or sets the legend font paint.
     /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? FontPaint
-    {
-        get => _fontPaint;
-        set
-        {
-            _fontPaint = value;
-            if (value is not null) _ = _paints.Add(value);
-        }
-    }
+    public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the background paint.
@@ -87,7 +77,6 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
             if (value is not null)
             {
                 value.IsFill = true;
-                _ = _paints.Add(value);
             }
         }
     }
@@ -117,7 +106,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         var toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);
         foreach (var series in chart.ChartSeries)
         {
-            var seriesMiniatureVisual = GetSeriesVisual(series, _chart);
+            var seriesMiniatureVisual = GetSeriesVisual(series);
             _ = toRemoveSeries.Remove(seriesMiniatureVisual);
         }
 
@@ -158,8 +147,13 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         _chart.RemoveVisual(_stackPanel);
     }
 
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(
-        IChartSeries<SkiaSharpDrawingContext> series, Chart<SkiaSharpDrawingContext>? _chart)
+    /// <inheritdoc cref="IImageControl.Measure(IChart)"/>
+    public void Measure(IChart chart)
+    {
+        throw new NotImplementedException();
+    }
+
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(IChartSeries<SkiaSharpDrawingContext> series)
     {
         if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
 

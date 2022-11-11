@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -33,4 +34,10 @@ public interface IImageControl
     /// Gets the size.
     /// </summary>
     public LvcSize Size { get; }
+
+    /// <summary>
+    /// Measures the control.
+    /// </summary>
+    /// <param name="chart">The chart that holds the control.</param>
+    public void Measure(IChart chart);
 }
