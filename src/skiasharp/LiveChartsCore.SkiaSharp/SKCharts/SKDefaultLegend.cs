@@ -58,15 +58,11 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     /// <summary>
     /// Gets or sets the fonts size.
     /// </summary>
-    public double FontSize { get; set; } = 16;
+    public double FontSize { get; set; } = 13;
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
         if (chart.Legend is null || chart.LegendPosition == LegendPosition.Hidden) return;
-
-        _orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
-            ? ContainerOrientation.Vertical
-            : ContainerOrientation.Horizontal;
 
         Measure(chart);
 
@@ -109,9 +105,13 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
     {
+        _orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
+            ? ContainerOrientation.Vertical
+            : ContainerOrientation.Horizontal;
+
         _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
-            Padding = new Padding(12, 8),
+            Padding = new Padding(0),
             Orientation = _orientation,
             HorizontalAlignment = Align.Start,
             VerticalAlignment = Align.Middle
@@ -167,7 +167,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
-            Padding = new Padding(0, 4),
+            Padding = new Padding(10, 4),
             VerticalAlignment = Align.Middle,
             HorizontalAlignment = Align.Middle,
             Children =
