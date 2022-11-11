@@ -40,7 +40,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     private TBackgroundGemetry? _backgroundGeometry;
 
     /// <summary>
-    /// Gets the children collection in the <see cref="StackPanel{TBackgroundGemetry,TDrawingContext}"/>.
+    /// Gets the children collection.
     /// </summary>
     public HashSet<VisualElement<TDrawingContext>> Children { get; } = new();
 
@@ -110,6 +110,17 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         return GetActualSize();
     }
 
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
+    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    {
+        foreach (var child in Children)
+        {
+            child.RemoveFromUI(chart);
+        }
+
+        base.RemoveFromUI(chart);
+    }
+
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
@@ -170,17 +181,6 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
                 y += childSize.Height;
             }
         }
-    }
-
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
-    {
-        foreach (var child in Children)
-        {
-            child.RemoveFromUI(chart);
-        }
-
-        base.RemoveFromUI(chart);
     }
 
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()

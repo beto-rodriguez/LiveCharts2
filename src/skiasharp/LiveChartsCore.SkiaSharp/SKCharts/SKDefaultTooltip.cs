@@ -402,7 +402,7 @@ public class SKDefaultTooltip2 : IChartTooltip<SkiaSharpDrawingContext>, IImageC
 
         foreach (var series in chart.ChartSeries)
         {
-            var visual = GetSeriesVisual(series);
+            _ = GetSeriesVisual(series);
         }
 
         Size = sp.Measure(chart, null, null);
@@ -433,12 +433,7 @@ public class SKDefaultTooltip2 : IChartTooltip<SkiaSharpDrawingContext>, IImageC
     public void Hide()
     {
         if (_chart is null || _stackPanel is null) return;
-
         _chart.RemoveVisual(_stackPanel);
-        //foreach (var item in _paints)
-        //{
-        //    _chart.Canvas.RemovePaintTask(item);
-        //}
     }
 
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(
@@ -446,18 +441,37 @@ public class SKDefaultTooltip2 : IChartTooltip<SkiaSharpDrawingContext>, IImageC
     {
         if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
 
+        var sketch = series.GetMiniatresSketch();
+
+        var relativePanel = new RelativePanel<SkiaSharpDrawingContext>
+        {
+            Size = new LvcSize((float)sketch.Width, (float)sketch.Height)
+        };
+
+        foreach (var schedule in sketch.PaintSchedules)
+        {
+            foreach (var g in schedule.Geometries)
+            {
+                var sizedGeometry = (ISizedGeometry<SkiaSharpDrawingContext>)g;
+                var vgv = new VariableGeometryVisual(sizedGeometry)
+                {
+                    Width = sizedGeometry.Width,
+                    Height = sizedGeometry.Height,
+                };
+                if (schedule.PaintTask.IsFill) vgv.Fill = schedule.PaintTask;
+                if (schedule.PaintTask.IsStroke) vgv.Stroke = schedule.PaintTask;
+                _ = relativePanel.Children.Add(vgv);
+            }
+        }
+
         var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
+            Padding = new Padding(0, 4),
             VerticalAlignment = Align.Middle,
             HorizontalAlignment = Align.Middle,
             Children =
             {
-                new GeometryVisual<CircleGeometry>
-                {
-                    Fill = new SolidColorPaint(SKColors.Red),
-                    Height = 10,
-                    Width = 10
-                },
+                relativePanel,
                 new LabelVisual
                 {
                     Text = series.Name ?? string.Empty,
