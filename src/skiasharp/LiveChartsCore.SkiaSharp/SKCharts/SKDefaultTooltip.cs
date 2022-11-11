@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -39,8 +38,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageControl
 {
     private static readonly int s_zIndex = 10050;
-    private static readonly float s_controlPadding = 8f;
-    private static readonly float s_geometryPadding = 4f;
     private Chart<SkiaSharpDrawingContext>? _chart;
     private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _paints = new();
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
@@ -105,6 +102,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
     {
         _chart = chart;
 
+        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
+        if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
+
         var sp = _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
             Padding = new Padding(12, 8),
@@ -117,7 +117,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         var toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);
         foreach (var series in chart.ChartSeries)
         {
-            var seriesMiniatureVisual = GetSeriesVisual(series, Get_chart());
+            var seriesMiniatureVisual = GetSeriesVisual(series, _chart);
             _ = toRemoveSeries.Remove(seriesMiniatureVisual);
         }
 
@@ -158,11 +158,6 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         _chart.RemoveVisual(_stackPanel);
     }
 
-    private Chart<SkiaSharpDrawingContext>? Get_chart()
-    {
-        return _chart;
-    }
-
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(
         IChartSeries<SkiaSharpDrawingContext> series, Chart<SkiaSharpDrawingContext>? _chart)
     {
@@ -185,6 +180,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
                     Width = sizedGeometry.Width,
                     Height = sizedGeometry.Height,
                 };
+
+                schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + s_zIndex;
+
                 if (schedule.PaintTask.IsFill) vgv.Fill = schedule.PaintTask;
                 if (schedule.PaintTask.IsStroke) vgv.Stroke = schedule.PaintTask;
                 _ = relativePanel.Children.Add(vgv);
