@@ -22,7 +22,7 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.SKCharts;
+namespace LiveChartsCore.VisualElements;
 
 /// <summary>
 /// An image control

@@ -72,7 +72,7 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <value>
     /// The default paint context.
     /// </value>
-    CanvasSchedule<TDrawingContext> CanvasSchedule { get; }
+    Sketch<TDrawingContext> CanvasSchedule { get; }
 
     /// <summary>
     /// Gets  a value indicating if this is the first time the series is drawn.
@@ -91,6 +91,12 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <param name="instance">The instance to compare.</param>
     /// <returns></returns>
     bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    Sketch<TDrawingContext> GetMiniatresSketch();
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.

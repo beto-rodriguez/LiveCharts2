@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -542,9 +543,23 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
             foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
             _preserveFirstDraw = IsFirstDraw;
-            SetPreviousSize();
-            Measure();
-            return;
+
+            if (Legend is IImageControl imageLegend)
+            {
+                // this is the preferred method (drawn legends)
+
+                if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
+                    ControlSize = new(ControlSize.Width - imageLegend.Size.Width, ControlSize.Height);
+
+                if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
+                    ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
+            }
+            else
+            {
+                SetPreviousSize();
+                Measure();
+                return;
+            }
         }
 
         var title = View.Title;

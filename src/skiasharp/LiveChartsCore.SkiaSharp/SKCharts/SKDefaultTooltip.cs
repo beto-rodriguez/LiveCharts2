@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -30,6 +29,8 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -46,7 +47,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
     private IPaint<SkiaSharpDrawingContext>? _fontPaint;
 
     /// <summary>
-    /// Initializes a new instnace of the <see cref="SKDefaultTooltip"/> class.
+    /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
     /// </summary>
     public SKDefaultTooltip()
     {
@@ -315,5 +316,139 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         if (size2.Height > h) h = size2.Height;
 
         return new LvcSize(w, h);
+    }
+}
+
+
+/// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
+public class SKDefaultTooltip2 : IChartTooltip<SkiaSharpDrawingContext>, IImageControl
+{
+    private static readonly int s_zIndex = 10050;
+    private static readonly float s_controlPadding = 8f;
+    private static readonly float s_geometryPadding = 4f;
+    private Chart<SkiaSharpDrawingContext>? _chart;
+    private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _paints = new();
+    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
+    private IPaint<SkiaSharpDrawingContext>? _fontPaint;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
+    /// </summary>
+    public SKDefaultTooltip2()
+    {
+        FontPaint = new SolidColorPaint(new SKColor(35, 35, 35, 255));
+        BackgroundPaint = new SolidColorPaint(new SKColor(255, 255, 255, 240));
+    }
+
+    /// <summary>
+    /// Gets the location of the tooltip.
+    /// </summary>
+    public LvcPoint Location { get; private set; }
+
+    /// <inheritdoc cref="IImageControl.Size"/>
+    public LvcSize Size { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the legend font paint.
+    /// </summary>
+    public IPaint<SkiaSharpDrawingContext>? FontPaint
+    {
+        get => _fontPaint;
+        set
+        {
+            _fontPaint = value;
+            if (value is not null) _ = _paints.Add(value);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the background paint.
+    /// </summary>
+    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
+    {
+        get => _backgroundPaint;
+        set
+        {
+            _backgroundPaint = value;
+            if (value is not null)
+            {
+                value.IsFill = true;
+                _ = _paints.Add(value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the fonts size.
+    /// </summary>
+    public double FontSize { get; set; } = 12;
+
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
+
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})"/>
+    public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
+    {
+        _chart = chart;
+
+        var sp = _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+        {
+            Orientation = ContainerOrientation.Vertical,
+            HorizontalAlignment = Align.Middle,
+            VerticalAlignment = Align.Middle,
+            BackgroundPaint = new SolidColorPaint(SKColors.Gray),
+        };
+
+        foreach (var series in chart.ChartSeries)
+        {
+            _ = sp.Children.Add(new GeometryVisual<CircleGeometry>
+            {
+                Fill = new SolidColorPaint(SKColors.Red),
+                Height = 50,
+                Width = 50
+            });
+
+            _ = sp.Children.Add(new LabelVisual
+            {
+                Text = series.Name ?? string.Empty,
+                Paint = FontPaint,
+                TextSize = FontSize,
+                Padding = new Padding(4),
+                VerticalAlignment = Align.Start,
+                HorizontalAlignment = Align.Start
+            });
+        }
+
+        Size = sp.Measure(chart, null, null);
+
+        LvcPoint? location = null;
+
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+        {
+            location = foundPoints.GetCartesianTooltipLocation(
+                chart.TooltipPosition, Size, chart.DrawMarginSize);
+        }
+        if (chart is PieChart<SkiaSharpDrawingContext>)
+        {
+            location = foundPoints.GetPieTooltipLocation(
+                chart.TooltipPosition, Size);
+        }
+
+        if (location is null) throw new Exception("location not supported");
+
+        Location = location.Value;
+        sp.X = Location.X;
+        sp.Y = Location.Y;
+        chart.RegisterAndInvalidateVisual(sp);
+    }
+
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Hide"/>
+    public void Hide()
+    {
+        if (_chart is null) return;
+
+        foreach (var item in _paints)
+        {
+            _chart.Canvas.RemovePaintTask(item);
+        }
     }
 }

@@ -19,6 +19,7 @@ public partial class View : UserControl
         {
             Series = viewModel.Series,
             Title = viewModel.Title,
+            LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

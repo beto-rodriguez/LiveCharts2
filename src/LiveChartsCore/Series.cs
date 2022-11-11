@@ -28,6 +28,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
@@ -71,7 +72,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// The max series stroke.
     /// </summary>
-    protected const float MaxSeriesStroke = 5f;
+    protected const float MAX_MINIATURE_STROKE_WIDTH = 3.5f;
 
     /// <summary>
     /// The ever fetched
@@ -104,6 +105,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
     private bool _isVisibleAtLegend = true;
+    private double _miniatureShapeSize = 15;
+    private Sketch<TDrawingContext> _miniatureSketch = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -284,6 +287,43 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         }
     }
 
+    /// <summary>
+    /// Gets or sets the size of the legend shape.
+    /// </summary>
+    /// <value>
+    /// The size of the legend shape.
+    /// </value>
+    [Obsolete($"Renamed to {nameof(MiniatureShapeSize)}")]
+    public double LegendShapeSize
+    {
+        get => MiniatureShapeSize;
+        set => MiniatureShapeSize = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the size of the legend shape.
+    /// </summary>
+    /// <value>
+    /// The size of the legend shape.
+    /// </value>
+    public double MiniatureShapeSize
+    {
+        get => _miniatureShapeSize;
+        set
+        {
+            _miniatureShapeSize = value;
+            OnMiniatureChanged();
+            OnPropertyChanged();
+        }
+    }
+
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.CanvasSchedule"/>
+    public Sketch<TDrawingContext> CanvasSchedule
+    {
+        get => _miniatureSketch;
+        protected set { _miniatureSketch = value; OnPropertyChanged(); }
+    }
+
     /// <inheritdoc cref="ISeries.VisibilityChanged"/>
     public event Action<ISeries>? VisibilityChanged;
 
@@ -360,8 +400,48 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         return DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
+    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    {
+        base.RemoveFromUI(chart);
+        DataFactory?.Dispose(chart);
+        _dataFactory = null;
+        everFetched = new HashSet<ChartPoint>();
+    }
+
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
     public abstract void SoftDeleteOrDispose(IChartView chart);
+
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniatresSketch"/>
+    public abstract Sketch<TDrawingContext> GetMiniatresSketch();
+
+    /// <summary>
+    /// Builds a paint schedule.
+    /// </summary>
+    /// <param name="paint"></param>
+    /// <param name="geometry"></param>
+    /// <returns></returns>
+    protected PaintSchedule<TDrawingContext> BuildMiniatureSchedule(
+        IPaint<TDrawingContext> paint, ISizedGeometry<TDrawingContext> geometry)
+    {
+        var paintClone = paint.CloneTask();
+        var st = paint.IsStroke ? paint.StrokeThickness : 0;
+
+        if (st > MAX_MINIATURE_STROKE_WIDTH)
+        {
+            st = MAX_MINIATURE_STROKE_WIDTH;
+            paintClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
+        }
+
+        geometry.X = 0.5f * st;
+        geometry.Y = 0.5f * st;
+        geometry.Height = (float)MiniatureShapeSize;
+        geometry.Width = (float)MiniatureShapeSize;
+
+        if (paint.IsStroke) paintClone.ZIndex = 1;
+
+        return new PaintSchedule<TDrawingContext>(paintClone, geometry);
+    }
 
     /// <summary>
     /// Called when a point was measured.
@@ -430,9 +510,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         chartView.CoreCanvas.AddDrawableTask(hoverPaint);
 
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.HighlightableGeometry is null) return;
+        if (visual is null || visual.MainGeometry is null) return;
 
-        hoverPaint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.HighlightableGeometry);
+        hoverPaint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.MainGeometry);
 
         DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
@@ -447,11 +527,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         if (hoverPaint is null) return;
 
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.HighlightableGeometry is null) return;
+        if (visual is null || visual.MainGeometry is null) return;
 
         hoverPaint.RemoveGeometryFromPainTask(
             (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
-            visual.HighlightableGeometry);
+            visual.MainGeometry);
 
         DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
@@ -461,16 +541,16 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected override void OnPaintChanged(string? propertyName)
     {
         base.OnPaintChanged(propertyName);
+        OnMiniatureChanged();
         ((ISeries)this).PaintsChanged = true;
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <summary>
+    /// Called when the miniature changes.
+    /// </summary>
+    protected void OnMiniatureChanged()
     {
-        base.RemoveFromUI(chart);
-        DataFactory?.Dispose(chart);
-        _dataFactory = null;
-        everFetched = new HashSet<ChartPoint>();
+        CanvasSchedule = GetMiniatresSketch();
     }
 
     private void NotifySubscribers()

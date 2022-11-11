@@ -21,8 +21,10 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore;
@@ -75,17 +77,6 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnSeriesMiniatureChanged();
-        OnPropertyChanged();
-    }
 
     /// <summary>
     /// Gets the paint tasks.

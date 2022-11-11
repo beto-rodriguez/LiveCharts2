@@ -59,7 +59,7 @@ public static class LiveChartsBlazor
     /// </summary>
     /// <param name="series"></param>
     /// <returns></returns>
-    public static CanvasSchedule<SkiaSharpDrawingContext> GetSeriesMiniatureData(ISeries series)
+    public static Sketch<SkiaSharpDrawingContext> GetSeriesMiniatureData(ISeries series)
     {
         var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
         return skSeries.CanvasSchedule;

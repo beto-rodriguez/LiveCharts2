@@ -546,7 +546,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Registers and tracks the specified element.
     /// </summary>
-    protected void RegisterAndInvalidateVisual(ChartElement<TDrawingContext> element)
+    public void RegisterAndInvalidateVisual(ChartElement<TDrawingContext> element)
     {
         element.Invalidate(this);
         element.RemoveOldPaints(View);

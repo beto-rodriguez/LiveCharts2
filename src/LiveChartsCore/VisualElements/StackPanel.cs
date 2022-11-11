@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
@@ -31,13 +31,16 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the stack panel class.
 /// </summary>
-public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
+public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
+    where TBackgroundGemetry : ISizedGeometry<TDrawingContext>, new()
 {
     private LvcPoint _position;
+    private IPaint<TDrawingContext>? _backgroundPaint;
+    private TBackgroundGemetry? _backgroundGeometry;
 
     /// <summary>
-    /// Gets the children collection in the <see cref="StackPanel{TDrawingContext}"/>.
+    /// Gets the children collection in the <see cref="StackPanel{TBackgroundGemetry,TDrawingContext}"/>.
     /// </summary>
     public HashSet<VisualElement<TDrawingContext>> Children { get; } = new();
 
@@ -55,6 +58,15 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
     /// Gets or sets the horizontal alignment.
     /// </summary>
     public Align HorizontalAlignment { get; set; } = Align.Middle;
+
+    /// <summary>
+    /// Gets or sets the background paint.
+    /// </summary>
+    public IPaint<TDrawingContext>? BackgroundPaint
+    {
+        get => _backgroundPaint;
+        set => SetPaintProperty(ref _backgroundPaint, value);
+    }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
     public override LvcPoint GetActualLocation()
@@ -100,6 +112,21 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
         _position = new((float)x, (float)y);
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
 
+        if (_backgroundPaint is not null)
+        {
+            chart.Canvas.AddDrawableTask(_backgroundPaint);
+            if (_backgroundGeometry is null)
+            {
+                _backgroundGeometry = new TBackgroundGemetry();
+                _ = _backgroundGeometry.TransitionateProperties().WithAnimation(chart);
+            }
+            _backgroundPaint.AddGeometryToPaintTask(chart.Canvas, _backgroundGeometry);
+            _backgroundGeometry.X = _position.X;
+            _backgroundGeometry.Y = _position.Y;
+            _backgroundGeometry.Width = controlSize.Width;
+            _backgroundGeometry.Height = controlSize.Height;
+        }
+
         if (Orientation == ContainerOrientation.Horizontal)
         {
             foreach (var child in Children)
@@ -140,6 +167,6 @@ public class StackPanel<TDrawingContext> : VisualElement<TDrawingContext>
 
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return Array.Empty<IPaint<TDrawingContext>>();
+        return new[] { _backgroundPaint };
     }
 }

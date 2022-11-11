@@ -29,7 +29,7 @@ namespace LiveChartsCore.Kernel.Drawing;
 /// Defines the paint context.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class CanvasSchedule<TDrawingContext>
+public class Sketch<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>

@@ -451,7 +451,6 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     protected override void OnPaintChanged(string? propertyName)
     {
         base.OnPaintChanged(propertyName);
-        OnSeriesMiniatureChanged();
         OnPropertyChanged();
     }
 
@@ -464,47 +463,39 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
             DownFill == financial.DownFill && DownStroke == financial.DownStroke;
     }
 
-    /// <summary>
-    /// Called when the paint context changes.
-    /// </summary>
-    protected override void OnSeriesMiniatureChanged()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
+    public override Sketch<TDrawingContext> GetMiniatresSketch()
     {
-        var context = new CanvasSchedule<TDrawingContext>();
-        var w = LegendShapeSize;
+        var schedules = new List<PaintSchedule<TDrawingContext>>();
 
         if (_upStroke is not null)
         {
             var strokeClone = _upStroke.CloneTask();
             var st = _upStroke.StrokeThickness;
-            if (st > MaxSeriesStroke)
+            if (st > MAX_MINIATURE_STROKE_WIDTH)
             {
-                st = MaxSeriesStroke;
-                strokeClone.StrokeThickness = MaxSeriesStroke;
+                st = MAX_MINIATURE_STROKE_WIDTH;
+                strokeClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
             }
 
             var visual = new TVisual
             {
-                X = st + MaxSeriesStroke - st,
-                Y = st + MaxSeriesStroke - st,
+                X = st * 0.5f,
+                Y = st * 0.5f,
                 Open = 5,
-                Close = (float)LegendShapeSize - 5,
-                Low = (float)LegendShapeSize,
-                Width = (float)LegendShapeSize
+                Close = (float)MiniatureShapeSize - 5,
+                Low = (float)MiniatureShapeSize,
+                Width = (float)MiniatureShapeSize
             };
             strokeClone.ZIndex = 1;
-            context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
+            schedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
         }
 
-        //if (Fill is not null)
-        //{
-        //    var fillClone = Fill.CloneTask();
-        //    var visual = new TVisual { X = sh + o, Y = sh + o, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
-        //    context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
-        //}
-
-        context.Width = w + MaxSeriesStroke * 2;
-        context.Height = w + MaxSeriesStroke * 2;
-
-        CanvasSchedule = context;
+        return new Sketch<TDrawingContext>()
+        {
+            Height = MiniatureShapeSize + MAX_MINIATURE_STROKE_WIDTH,
+            Width = MiniatureShapeSize + MAX_MINIATURE_STROKE_WIDTH,
+            PaintSchedules = schedules
+        };
     }
 }

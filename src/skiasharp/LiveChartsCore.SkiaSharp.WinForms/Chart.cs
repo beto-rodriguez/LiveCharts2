@@ -33,12 +33,15 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
 
 /// <inheritdoc cref="IChartView" />
-public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
+public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>, IDrawnLegend
 {
     /// <summary>
     /// The core
@@ -48,12 +51,12 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The legend
     /// </summary>
-    protected IChartLegend<SkiaSharpDrawingContext> legend = new DefaultLegend();
+    protected IChartLegend<SkiaSharpDrawingContext> legend = new SKDefaultLegend();
 
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new DefaultTooltip();
+    protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new SKDefaultTooltip2();
 
     /// <summary>
     /// The motion canvas
@@ -73,6 +76,8 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
+    private IPaint<SkiaSharpDrawingContext>? _legendFontPaint = new SolidColorPaint(new SKColor(30, 30, 30));
+    private double _legendFontSize = 12;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -96,10 +101,10 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         motionCanvas.Resize += OnResized;
         AutoScaleMode = AutoScaleMode.Font;
         Controls.Add(motionCanvas);
-        var l = (Control)this.legend;
-        l.Visible = false;
-        l.Dock = DockStyle.Right;
-        Controls.Add(l);
+        //var l = (Control)this.legend;
+        //l.Visible = false;
+        //l.Dock = DockStyle.Right;
+        //Controls.Add(l);
         Name = "CartesianChart";
         ResumeLayout(true);
 
@@ -300,6 +305,14 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
             OnPropertyChanged();
         }
     }
+
+    /// <inheritdoc cref="IDrawnLegend.LegendFontPaint" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IPaint<SkiaSharpDrawingContext>? LegendFontPaint { get => _legendFontPaint; set { _legendFontPaint = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IDrawnLegend.LegendFontSize" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public double LegendFontSize { get => _legendFontSize; set { _legendFontSize = value; OnPropertyChanged(); } }
 
     #endregion
 

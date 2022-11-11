@@ -26,6 +26,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
@@ -90,7 +91,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         var miniatureMaxSize = series
             .Aggregate(new LvcSize(), (current, s) =>
             {
-                var maxScheduleSize = s.CanvasSchedule.PaintSchedules
+                var maxScheduleSize = s.GetMiniatresSketch().PaintSchedules //.CanvasSchedule.PaintSchedules
                     .Aggregate(new LvcSize(), (current, schedule) =>
                     {
                         var maxGeometrySize = schedule.Geometries.OfType<IGeometry<SkiaSharpDrawingContext>>()
@@ -133,7 +134,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         {
             var x = xi;
 
-            foreach (var miniatureSchedule in s.CanvasSchedule.PaintSchedules)
+            foreach (var miniatureSchedule in  s.GetMiniatresSketch().PaintSchedules) //s.CanvasSchedule.PaintSchedules)
             {
                 if (draw) _ = drawing!.SelectPaint(miniatureSchedule.PaintTask);
 
@@ -223,7 +224,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         var miniatureMaxSize = series
             .Aggregate(new LvcSize(), (current, s) =>
             {
-                var maxScheduleSize = s.CanvasSchedule.PaintSchedules
+                var maxScheduleSize = s.GetMiniatresSketch().PaintSchedules //.CanvasSchedule.PaintSchedules
                     .Aggregate(new LvcSize(), (current, schedule) =>
                     {
                         var maxGeometrySize = schedule.Geometries.OfType<IGeometry<SkiaSharpDrawingContext>>()
@@ -266,7 +267,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         foreach (var s in series)
         {
-            foreach (var miniatureSchedule in s.CanvasSchedule.PaintSchedules)
+            foreach (var miniatureSchedule in s.GetMiniatresSketch().PaintSchedules) // .CanvasSchedule.PaintSchedules)
             {
                 if (draw) _ = drawing!.SelectPaint(miniatureSchedule.PaintTask);
 
