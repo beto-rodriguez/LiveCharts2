@@ -15,17 +15,20 @@ public partial class ViewModel
         new LineSeries<double>
         {
             Values = new double[] { 2, 1, 5 },
-            Fill = null
+            Fill = null,
+            Name= "line",
         },
         new LineSeries<double>
         {
             Values = new double[] { 5, 3, 4 },
-            Fill = null
+            Fill = null,
+            Name= "lineline",
         },
         new LineSeries<double>
         {
             Values = new double[] { 2, 5, 6 },
-            Fill = null
+            Fill = null,
+            Name= "linelineline",
         }
     };
 

@@ -56,7 +56,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>, 
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new SKDefaultTooltip2();
+    protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new SKDefaultTooltip();
 
     /// <summary>
     /// The motion canvas

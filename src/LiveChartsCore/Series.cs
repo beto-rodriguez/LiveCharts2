@@ -105,7 +105,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
     private bool _isVisibleAtLegend = true;
-    private double _miniatureShapeSize = 15;
+    private double _miniatureShapeSize = 10;
     private Sketch<TDrawingContext> _miniatureSketch = new();
 
     /// <summary>

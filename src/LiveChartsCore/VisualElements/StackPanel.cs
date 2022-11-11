@@ -124,10 +124,11 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
+        _position = new((float)X, (float)Y);
+
         var x = Padding.Left + X;
         var y = Padding.Top + Y;
 
-        _position = new((float)x, (float)y);
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
 
         if (_backgroundPaint is not null)
@@ -149,13 +150,14 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         {
             foreach (var child in Children)
             {
+                _ = child.Measure(chart, primaryScaler, secondaryScaler);
                 var childSize = child.GetActualSize();
 
                 child._x = x;
                 child._y = VerticalAlignment == Align.Middle
-                    ? y + (controlSize.Height - childSize.Height) / 2f
+                    ? y + (controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height) / 2f
                     : VerticalAlignment == Align.End
-                        ? y + controlSize.Height - childSize.Height
+                        ? y + controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height
                         : y;
 
                 child.OnInvalidated(chart, primaryScaler, secondaryScaler);
@@ -167,12 +169,13 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         {
             foreach (var child in Children)
             {
+                _ = child.Measure(chart, primaryScaler, secondaryScaler);
                 var childSize = child.GetActualSize();
 
                 child._x = HorizontalAlignment == Align.Middle
-                    ? x + (controlSize.Width - childSize.Width) / 2f
+                    ? x + (controlSize.Width - Padding.Left - Padding.Right - childSize.Width) / 2f
                     : HorizontalAlignment == Align.End
-                        ? x + controlSize.Width - childSize.Width
+                        ? x + controlSize.Width - Padding.Left - Padding.Right - childSize.Width
                         : x;
                 child._y = y;
 
