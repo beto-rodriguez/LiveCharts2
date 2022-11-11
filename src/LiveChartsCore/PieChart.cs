@@ -225,8 +225,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         InitializeVisualsCollector();
 
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         CollectVisuals();
 

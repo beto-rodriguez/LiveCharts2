@@ -544,13 +544,23 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    /// Registers and tracks the specified element.
+    /// Adds a visual element to the chart.
     /// </summary>
-    public void RegisterAndInvalidateVisual(ChartElement<TDrawingContext> element)
+    public void AddVisual(ChartElement<TDrawingContext> element)
     {
         element.Invalidate(this);
         element.RemoveOldPaints(View);
         _ = _everMeasuredElements.Add(element);
+        _ = _toDeleteElements.Remove(element);
+    }
+
+    /// <summary>
+    /// Removes a visual element from the chart.
+    /// </summary>
+    public void RemoveVisual(ChartElement<TDrawingContext> element)
+    {
+        element.RemoveFromUI(this);
+        _ = _everMeasuredElements.Remove(element);
         _ = _toDeleteElements.Remove(element);
     }
 

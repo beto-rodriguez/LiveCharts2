@@ -60,6 +60,11 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     public Align HorizontalAlignment { get; set; } = Align.Middle;
 
     /// <summary>
+    /// Gets or sets the padding.
+    /// </summary>
+    public Padding Padding { get; set; } = new();
+
+    /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
     public IPaint<TDrawingContext>? BackgroundPaint
@@ -77,7 +82,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
     public override LvcSize GetActualSize()
     {
-        return Orientation == ContainerOrientation.Horizontal
+        var size = Orientation == ContainerOrientation.Horizontal
             ? Children.Aggregate(new LvcSize(), (current, next) =>
             {
                 var size = next.GetActualSize();
@@ -94,6 +99,8 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
                     size.Width > current.Width ? size.Width : current.Width,
                     current.Height + size.Height);
             });
+
+        return new LvcSize(Padding.Left + Padding.Right + size.Width, Padding.Top + Padding.Bottom + size.Height);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
@@ -106,8 +113,8 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var x = X;
-        var y = Y;
+        var x = Padding.Left + X;
+        var y = Padding.Top + Y;
 
         _position = new((float)x, (float)y);
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
@@ -163,6 +170,17 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
                 y += childSize.Height;
             }
         }
+    }
+
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
+    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    {
+        foreach (var child in Children)
+        {
+            child.RemoveFromUI(chart);
+        }
+
+        base.RemoveFromUI(chart);
     }
 
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()

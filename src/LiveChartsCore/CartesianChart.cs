@@ -692,7 +692,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             title.AlignToTopLeftCorner();
             title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
             title.Y = 0;
-            RegisterAndInvalidateVisual(title);
+            AddVisual(title);
         }
 
         var totalAxes = XAxes.Concat(YAxes).ToArray();
@@ -732,14 +732,14 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.IsNotifyingChanges = true;
             }
 
-            if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
+            if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
             ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
-        foreach (var section in Sections) RegisterAndInvalidateVisual(section);
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        foreach (var section in Sections) AddVisual(section);
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
@@ -750,7 +750,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         if (_chartView.DrawMarginFrame is not null)
         {
-            RegisterAndInvalidateVisual(_chartView.DrawMarginFrame);
+            AddVisual(_chartView.DrawMarginFrame);
             _previousDrawMarginFrame = _chartView.DrawMarginFrame;
         }
 

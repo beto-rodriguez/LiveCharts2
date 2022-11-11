@@ -384,6 +384,7 @@ public class SKDefaultTooltip2 : IChartTooltip<SkiaSharpDrawingContext>, IImageC
     public double FontSize { get; set; } = 12;
 
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
+    private readonly Dictionary<IChartSeries<SkiaSharpDrawingContext>, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>> _activeSeries = new();
 
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})"/>
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
@@ -395,27 +396,13 @@ public class SKDefaultTooltip2 : IChartTooltip<SkiaSharpDrawingContext>, IImageC
             Orientation = ContainerOrientation.Vertical,
             HorizontalAlignment = Align.Middle,
             VerticalAlignment = Align.Middle,
-            BackgroundPaint = new SolidColorPaint(SKColors.Gray),
+            BackgroundPaint = new SolidColorPaint(new SKColor(250, 250, 250, 200)),
+            Padding = new Padding(8)
         };
 
         foreach (var series in chart.ChartSeries)
         {
-            _ = sp.Children.Add(new GeometryVisual<CircleGeometry>
-            {
-                Fill = new SolidColorPaint(SKColors.Red),
-                Height = 50,
-                Width = 50
-            });
-
-            _ = sp.Children.Add(new LabelVisual
-            {
-                Text = series.Name ?? string.Empty,
-                Paint = FontPaint,
-                TextSize = FontSize,
-                Padding = new Padding(4),
-                VerticalAlignment = Align.Start,
-                HorizontalAlignment = Align.Start
-            });
+            var visual = GetSeriesVisual(series);
         }
 
         Size = sp.Measure(chart, null, null);
@@ -438,17 +425,53 @@ public class SKDefaultTooltip2 : IChartTooltip<SkiaSharpDrawingContext>, IImageC
         Location = location.Value;
         sp.X = Location.X;
         sp.Y = Location.Y;
-        chart.RegisterAndInvalidateVisual(sp);
+
+        chart.AddVisual(sp);
     }
 
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Hide"/>
     public void Hide()
     {
-        if (_chart is null) return;
+        if (_chart is null || _stackPanel is null) return;
 
-        foreach (var item in _paints)
+        _chart.RemoveVisual(_stackPanel);
+        //foreach (var item in _paints)
+        //{
+        //    _chart.Canvas.RemovePaintTask(item);
+        //}
+    }
+
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(
+        IChartSeries<SkiaSharpDrawingContext> series)
+    {
+        if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
+
+        var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
-            _chart.Canvas.RemovePaintTask(item);
-        }
+            VerticalAlignment = Align.Middle,
+            HorizontalAlignment = Align.Middle,
+            Children =
+            {
+                new GeometryVisual<CircleGeometry>
+                {
+                    Fill = new SolidColorPaint(SKColors.Red),
+                    Height = 10,
+                    Width = 10
+                },
+                new LabelVisual
+                {
+                    Text = series.Name ?? string.Empty,
+                    Paint = FontPaint,
+                    TextSize = FontSize,
+                    Padding = new Padding(4),
+                    VerticalAlignment = Align.Start,
+                    HorizontalAlignment = Align.Start
+                }
+            }
+        };
+
+        _ = _stackPanel?.Children.Add(sp);
+        _activeSeries.Add(series, sp);
+        return sp;
     }
 }

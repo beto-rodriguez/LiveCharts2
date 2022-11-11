@@ -466,13 +466,13 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.IsNotifyingChanges = true;
             }
 
-            if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
+            if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
             ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         CollectVisuals();
 
