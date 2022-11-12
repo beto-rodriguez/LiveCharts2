@@ -132,8 +132,23 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         if (location is null) throw new Exception("location not supported");
 
         Location = location.Value;
-        sp.X = Location.X;
-        sp.Y = Location.Y;
+
+        _stackPanel.X = location.Value.X;
+        _stackPanel.Y = location.Value.Y;
+
+        var x = _stackPanel.X + (chart.Canvas.StartPoint?.X ?? 0);
+        var y = _stackPanel.Y + (chart.Canvas.StartPoint?.Y ?? 0);
+        var s = chart.ControlSize;
+        var w = s.Width;
+        var h = s.Height;
+
+        if (_stackPanel.X + Size.Width > w) x = w - Size.Width;
+        if (_stackPanel.X < 0) x = 0;
+        if (_stackPanel.Y < 0) y = 0;
+        if (_stackPanel.Y + Size.Height > h) x = h - Size.Height;
+
+        _stackPanel.X = x;
+        _stackPanel.Y = y;
 
         chart.AddVisual(sp);
 
