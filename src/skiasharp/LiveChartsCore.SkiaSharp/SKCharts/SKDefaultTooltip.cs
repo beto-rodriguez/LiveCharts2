@@ -136,8 +136,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         _stackPanel.X = location.Value.X;
         _stackPanel.Y = location.Value.Y;
 
-        var x = _stackPanel.X + (chart.Canvas.StartPoint?.X ?? 0);
-        var y = _stackPanel.Y + (chart.Canvas.StartPoint?.Y ?? 0);
+        var x = _stackPanel.X;// + (chart.Canvas.StartPoint?.X ?? 0);
+        var y = _stackPanel.Y;// + (chart.Canvas.StartPoint?.Y ?? 0);
         var s = chart.ControlSize;
         var w = s.Width;
         var h = s.Height;
