@@ -511,8 +511,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             var coreChart = (Chart<TDrawingContext>)chartView.CoreChart;
 
             hoverPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>()
-                .GetSolidColorPaint(new LvcColor(255, 255, 255, 180));
-            hoverPaint.ZIndex = int.MaxValue;
+                .GetSolidColorPaint(new LvcColor(255, 255, 255, 100));
+            hoverPaint.ZIndex = 10049;
             hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
         }
 
