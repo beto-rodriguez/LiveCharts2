@@ -354,9 +354,18 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     IEnumerable<ChartPoint> ISeries.FindHitPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
     {
-        var query = Fetch(chart).Where(x =>
-            x.Context.HoverArea is not null &&
-            x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
+        var motionCanvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        if (motionCanvas.StartPoint is not null)
+        {
+            pointerPosition.X -= motionCanvas.StartPoint.Value.X;
+            pointerPosition.Y -= motionCanvas.StartPoint.Value.Y;
+        }
+
+        var query =
+            Fetch(chart)
+            .Where(x =>
+                x.Context.HoverArea is not null &&
+                x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
 
         var s = (int)strategy;
         if (s is >= 4 and <= 6)

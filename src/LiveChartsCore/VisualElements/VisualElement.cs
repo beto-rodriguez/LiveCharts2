@@ -27,6 +27,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -185,8 +186,15 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// then it is the index Scaler.</param>
     protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
-    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(LvcPoint point)
+    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(IChart chart, LvcPoint point)
     {
+        var motionCanvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        if (motionCanvas.StartPoint is not null)
+        {
+            point.X -= motionCanvas.StartPoint.Value.X;
+            point.Y -= motionCanvas.StartPoint.Value.Y;
+        }
+
         var location = GetActualLocation();
         var size = GetActualSize();
 

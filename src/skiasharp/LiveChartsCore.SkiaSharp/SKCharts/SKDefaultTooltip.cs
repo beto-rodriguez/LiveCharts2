@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -41,15 +42,18 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
     private Chart<SkiaSharpDrawingContext>? _chart;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
-    private readonly Dictionary<IChartSeries<SkiaSharpDrawingContext>, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>> _activeSeries = new();
+    private readonly Dictionary<ISeries, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>> _activeSeries = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
     /// </summary>
     public SKDefaultTooltip()
     {
-        FontPaint = new SolidColorPaint(new SKColor(250, 250, 250, 255));
-        BackgroundPaint = new SolidColorPaint(new SKColor(35, 35, 35, 200));
+        FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
+        BackgroundPaint = new SolidColorPaint(new SKColor(240, 240, 240))
+        {
+            ImageFilter = new DropShadow(2, 2, 2, 2, new SKColor(30, 30, 30, 60))
+        };
     }
 
     /// <summary>
@@ -104,9 +108,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         };
 
         var toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);
-        foreach (var series in chart.ChartSeries)
+        foreach (var point in foundPoints)
         {
-            var seriesMiniatureVisual = GetSeriesVisual(series);
+            var seriesMiniatureVisual = GetSeriesVisual(point);
             _ = toRemoveSeries.Remove(seriesMiniatureVisual);
         }
 
@@ -153,11 +157,12 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         throw new NotImplementedException();
     }
 
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(IChartSeries<SkiaSharpDrawingContext> series)
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(
+        ChartPoint point)
     {
-        if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
+        if (_activeSeries.TryGetValue(point.Context.Series, out var seriesPanel)) return seriesPanel;
 
-        var sketch = series.GetMiniatresSketch();
+        var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniatresSketch();
 
         var relativePanel = new RelativePanel<SkiaSharpDrawingContext>
         {
@@ -193,7 +198,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
                 relativePanel,
                 new LabelVisual
                 {
-                    Text = series.Name ?? string.Empty,
+                    Text = point.AsTooltipString,
                     Paint = FontPaint,
                     TextSize = FontSize,
                     Padding = new Padding(8, 0, 0, 0),
@@ -204,7 +209,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         };
 
         _ = _stackPanel?.Children.Add(sp);
-        _activeSeries.Add(series, sp);
+        _activeSeries.Add(point.Context.Series, sp);
 
         return sp;
     }

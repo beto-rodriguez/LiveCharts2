@@ -378,7 +378,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         // fire the visual elements event.
         // ToDo: VisualElements should be of type VisualElement<T>
-        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().SelectMany(x => x.IsHitBy(point));
+        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().SelectMany(x => x.IsHitBy(this, point));
         View.OnVisualElementPointerDown(iterableVisualElements, point);
     }
 
@@ -607,10 +607,10 @@ public abstract class Chart<TDrawingContext> : IChart
 
                      // TODO:
                      // all this needs a performance review...
-                     // it should not be crital, should not be even close to be the 'bottle neck' in a case where
-                     // we face perfomance issues.
+                     // it should not be critical, should not be even close to be the 'bottle neck' in a case where
+                     // we face performance issues.
 
-                     var points = FindHoveredPointsBy(_pointerPosition).ToArray();
+                     var points = FindHoveredPointsBy(_pointerPosition);
 
                      if (!points.Any())
                      {

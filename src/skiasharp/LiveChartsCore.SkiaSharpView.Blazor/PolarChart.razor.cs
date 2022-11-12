@@ -225,7 +225,7 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
     {
         return core is not PolarChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
     }
 
     /// <inheritdoc cref="Chart.OnDisposing"/>

@@ -94,6 +94,17 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
             _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
         }
 
+        //var x = location.Value.X + canvasLocation.X;
+        //var y = location.Value.Y + canvasLocation.Y;
+        //var s = chart.ControlSize;
+        //var w = s.Width;
+        //var h = s.Height;
+
+        //if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
+        //if (location.Value.X < 0) x = 0;
+        //if (location.Value.Y < 0) y = 0;
+        //if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
+
         chart.AddVisual(_stackPanel);
 
         foreach (var visual in _toRemoveSeries)

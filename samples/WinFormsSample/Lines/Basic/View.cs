@@ -19,8 +19,6 @@ public partial class View : UserControl
         {
             Series = viewModel.Series,
             Title = viewModel.Title,
-            LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom,
-            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Center,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
