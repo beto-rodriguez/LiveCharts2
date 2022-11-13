@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
@@ -80,14 +81,17 @@ public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var x = X;
-        var y = Y;
+        var x = X + _parentX;
+        var y = Y + _parentY;
 
         _position = new((float)x, (float)y);
 
         foreach (var child in Children)
         {
             //var childSize = child.GetActualSize();
+            child._parent = _parent;
+            child._parentPaddingX = _parentPaddingX;
+            child._parentPaddingY = _parentPaddingY;
             child._x = x;
             child._y = y;
             child.OnInvalidated(chart, primaryScaler, secondaryScaler);

@@ -71,8 +71,8 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var x = (float)X;
-        var y = (float)Y;
+        var x = (float)(X + _parentX);
+        var y = (float)(Y + _parentY);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -88,7 +88,13 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
 
         if (_geometry is null)
         {
-            _geometry = new TGeometry { X = x, Y = y, Width = _actualSize.Width, Height = _actualSize.Height };
+            _geometry = new TGeometry
+            {
+                X = (_parent?.X + _parentPaddingX) ?? x,
+                Y = (_parent?.Y + _parentPaddingY) ?? y,
+                Width = _actualSize.Width,
+                Height = _actualSize.Height
+            };
             GeometryIntialized?.Invoke(_geometry);
 
             _ = _geometry

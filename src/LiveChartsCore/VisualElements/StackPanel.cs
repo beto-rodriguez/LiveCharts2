@@ -126,8 +126,8 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     {
         _position = new((float)X, (float)Y);
 
-        var x = Padding.Left + X;
-        var y = Padding.Top + Y;
+        var x = Padding.Left + _parentX;// + X;
+        var y = Padding.Top + _parentY;// + Y;
 
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
 
@@ -162,6 +162,11 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
                 _ = child.Measure(chart, primaryScaler, secondaryScaler);
                 var childSize = child.GetActualSize();
 
+                child._parent = _backgroundGeometry ?? _parent;
+                child._parentPaddingX = Padding.Left + _parentPaddingX;
+                child._parentPaddingY = Padding.Top + _parentPaddingY;
+                child._parentX = _position.X;
+                child._parentY = _position.Y;
                 child._x = x;
                 child._y = VerticalAlignment == Align.Middle
                     ? y + (controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height) / 2f
@@ -181,6 +186,11 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
                 _ = child.Measure(chart, primaryScaler, secondaryScaler);
                 var childSize = child.GetActualSize();
 
+                child._parent = _backgroundGeometry ?? _parent;
+                child._parentPaddingX = Padding.Left + _parentPaddingX;
+                child._parentPaddingY = Padding.Top + _parentPaddingY;
+                child._parentX = _position.X;
+                child._parentY = _position.Y;
                 child._x = HorizontalAlignment == Align.Middle
                     ? x + (controlSize.Width - Padding.Left - Padding.Right - childSize.Width) / 2f
                     : HorizontalAlignment == Align.End

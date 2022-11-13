@@ -39,6 +39,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 {
     internal double _x;
     internal double _y;
+    internal double _parentX;
+    internal double _parentY;
+    internal float _parentPaddingX;
+    internal float _parentPaddingY;
+    internal ISizedGeometry<TDrawingContext>? _parent;
     private int _scalesXAt;
     private int _scalesYAt;
 

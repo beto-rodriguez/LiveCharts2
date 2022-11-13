@@ -95,8 +95,8 @@ public class VariableGeometryVisual : BaseGeometryVisual
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var x = (float)X;
-        var y = (float)Y;
+        var x = (float)(X + _parentX);
+        var y = (float)(Y + _parentY);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -112,8 +112,8 @@ public class VariableGeometryVisual : BaseGeometryVisual
 
         if (!_isInitialized)
         {
-            Geometry.X = x;
-            Geometry.Y = y;
+            Geometry.X = (_parent?.X + _parentPaddingX) ?? x;
+            Geometry.Y = (_parent?.Y + _parentPaddingY) ?? y;
             Geometry.Width = _actualSize.Width;
             Geometry.Height = _actualSize.Height;
 
