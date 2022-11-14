@@ -669,9 +669,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (_crosshairLine is null)
         {
             _crosshairLine = new TLineGeometry();
-            CrosshairPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLine);
             UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
         }
+        CrosshairPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLine);
 
         if (CrosshairLabelsPaint is not null)
         {
@@ -691,16 +691,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                     new LvcSize(controlSize.Width, drawMarginSize.Height)));
             }
             cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint);
-        }
 
-        if (_crosshairLabel is null && CrosshairLabelsPaint is not null)
-        {
-            _crosshairLabel = new TTextGeometry();
-            CrosshairLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLabel);
-        }
-
-        if (_crosshairLabel is not null)
-        {
+            _crosshairLabel ??= new TTextGeometry();
             var labeler = Labeler;
             if (Labels is not null)
             {
@@ -717,6 +709,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var r = (float)_labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
             if (hasRotation) _crosshairLabel.RotateTransform = r;
+            CrosshairLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLabel);
         }
 
         UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
