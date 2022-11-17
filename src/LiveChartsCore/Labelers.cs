@@ -120,16 +120,8 @@ public static class Labelers
 
         if (l > 7)
         {
-            if (value > 0)
-            {
-                value /= Math.Pow(10, 6);
-                u = "M";
-            }
-            else
-            {
-                value *= Math.Pow(10, 6);
-                u = "µ";
-            }
+            value /= Math.Pow(10, 6);
+            u = value > 0 ? "M" : "µ";
         }
 
         return value.ToString($"######0.####### {u}");
