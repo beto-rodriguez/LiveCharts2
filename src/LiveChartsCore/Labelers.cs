@@ -84,23 +84,28 @@ public static class Labelers
         var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
         var u = "";
 
-        if (l > 12)
+        if (l >= 15)
+        {
+            value /= Math.Pow(10, 15);
+            u = "Q";
+        }
+        else if (l >= 12)
         {
             value /= Math.Pow(10, 12);
             u = "T";
         }
-        if (l > 10)
+        else if (l >= 9)
         {
             value /= Math.Pow(10, 9);
-            u = "G";
+            u = "B";
         }
-        else if (l > 7)
+        else if (l >= 6)
         {
             value /= Math.Pow(10, 6);
             u = "M";
         }
 
-        return value.ToString($"{symbol} #{thousands}###{thousands}##0{decimals}## {u}");
+        return value.ToString($"{symbol}#{thousands}###{thousands}##0{decimals}## {u}");
     }
 
     /// <summary>
@@ -116,14 +121,19 @@ public static class Labelers
     private static string Log10_7(double value)
     {
         var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
-        var u = "";
 
-        if (l > 7)
+        if (l >= 6)
         {
             value /= Math.Pow(10, 6);
-            u = value > 0 ? "M" : "µ";
+            return value.ToString($"######0.####### M");
         }
 
-        return value.ToString($"######0.####### {u}");
+        if (l <= -6)
+        {
+            value *= Math.Pow(10, 6);
+            return value.ToString($"######0.####### µ");
+        }
+
+        return value.ToString($"######0.#######");
     }
 }
