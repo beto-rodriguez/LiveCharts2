@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
@@ -129,12 +130,23 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 
         if (_labelGeometry is null)
         {
+            var parentX = x;
+            var parentY = y;
+
+            if (_parent is not null)
+            {
+                var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
+                var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
+                parentX = xProperty.GetCurrentValue((Animatable)_parent) + _parentPaddingX;
+                parentY = yProperty.GetCurrentValue((Animatable)_parent) + _parentPaddingY;
+            }
+
             _labelGeometry = new LabelGeometry
             {
                 Text = Text,
                 TextSize = (float)TextSize,
-                X = (_parent?.X + _parentPaddingX) ?? x,
-                Y = (_parent?.Y + _parentPaddingY) ?? y,
+                X = parentX, //(_parent?.X + _parentPaddingX) ?? x,
+                Y = parentY,///(_parent?.Y + _parentPaddingY) ?? y,
                 RotateTransform = (float)Rotation,
                 TranslateTransform = Translate,
                 VerticalAlign = VerticalAlignment,

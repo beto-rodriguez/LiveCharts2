@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
@@ -112,8 +113,19 @@ public class VariableGeometryVisual : BaseGeometryVisual
 
         if (!_isInitialized)
         {
-            Geometry.X = (_parent?.X + _parentPaddingX) ?? x;
-            Geometry.Y = (_parent?.Y + _parentPaddingY) ?? y;
+            var parentX = x;
+            var parentY = y;
+
+            if (_parent is not null)
+            {
+                var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
+                var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
+                parentX = xProperty.GetCurrentValue((Animatable)_parent) + _parentPaddingX;
+                parentY = yProperty.GetCurrentValue((Animatable)_parent) + _parentPaddingY;
+            }
+
+            Geometry.X = parentX;
+            Geometry.Y = parentY;
             Geometry.Width = _actualSize.Width;
             Geometry.Height = _actualSize.Height;
 
