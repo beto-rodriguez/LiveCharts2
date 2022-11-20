@@ -85,7 +85,6 @@ public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
 
         foreach (var child in Children)
         {
-            //var childSize = child.GetActualSize();
             child._parent = _parent;
             child._xc = _xc;
             child._yc = _yc;
