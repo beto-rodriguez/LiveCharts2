@@ -37,15 +37,17 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
+/// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam> 
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="ICartesianSeries{TDrawingContext}" />
 /// <seealso cref="IHeatSeries{TDrawingContext}" />
-public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
+public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
         where TVisual : class, IFinancialVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _upStroke = null;
     private IPaint<TDrawingContext>? _upFill = null;
@@ -53,7 +55,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     private IPaint<TDrawingContext>? _downFill = null;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
     protected FinancialSeries()
         : base(
@@ -219,17 +221,17 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (open > close)
             {
-                if (UpFill is not null) UpFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                if (UpStroke is not null) UpStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                if (DownFill is not null) DownFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
-                if (DownStroke is not null) DownStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                UpFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                UpStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                DownFill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                DownStroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
             }
             else
             {
-                if (DownFill is not null) DownFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                if (DownStroke is not null) DownStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                if (UpFill is not null) UpFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
-                if (UpStroke is not null) UpStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                DownFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                DownStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                UpFill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                UpStroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
             }
 
             var x = secondary - uwm;
@@ -457,7 +459,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
     {
-        return series is FinancialSeries<TModel, TVisual, TLabel, TDrawingContext> financial &&
+        return series is FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext> financial &&
             Name == series.Name &&
             UpFill == financial.UpFill && UpStroke == financial.UpStroke &&
             DownFill == financial.DownFill && DownStroke == financial.DownStroke;
@@ -468,28 +470,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
-        if (_upStroke is not null)
-        {
-            var strokeClone = _upStroke.CloneTask();
-            var st = _upStroke.StrokeThickness;
-            if (st > MAX_MINIATURE_STROKE_WIDTH)
-            {
-                st = MAX_MINIATURE_STROKE_WIDTH;
-                strokeClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
-            }
-
-            var visual = new TVisual
-            {
-                X = st * 0.5f,
-                Y = st * 0.5f,
-                Open = 5,
-                Close = (float)MiniatureShapeSize - 5,
-                Low = (float)MiniatureShapeSize,
-                Width = (float)MiniatureShapeSize
-            };
-            strokeClone.ZIndex = 1;
-            schedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
-        }
+        if (UpStroke is not null) schedules.Add(BuildMiniatureSchedule(UpStroke, new TMiniatureGeometry()));
 
         return new Sketch<TDrawingContext>()
         {
