@@ -173,10 +173,16 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         foreach (var line in GetLines(Text))
         {
             var bounds = new SKRect();
+            var boundsH = new SKRect();
+
             _ = paint.MeasureText(line, ref bounds);
 
+            // measure "|": hack to force the same max height?
+            // otherwise strings like "___" and "|||" will result in ---||| if the alignment is middle
+            _ = paint.MeasureText("|", ref boundsH);
+
             if (bounds.Width > w) w = bounds.Width;
-            h += bounds.Height;
+            h += boundsH.Height;
         }
 
         return new LvcSize(w, h);

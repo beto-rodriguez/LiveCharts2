@@ -24,7 +24,6 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
@@ -38,7 +37,7 @@ public class VariableGeometryVisual : BaseGeometryVisual
     private ISizedGeometry<SkiaSharpDrawingContext> _geometry;
     private bool _isInitialized;
     private LvcSize _actualSize = new();
-    private LvcPoint _actualLocation = new();
+    private LvcPoint _targetPosition = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VariableGeometryVisual"/> class.
@@ -87,8 +86,8 @@ public class VariableGeometryVisual : BaseGeometryVisual
         return _actualSize = new LvcSize(w, h);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
-    public override LvcSize GetActualSize()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
+    public override LvcSize GetTargetSize()
     {
         return _actualSize;
     }
@@ -96,8 +95,8 @@ public class VariableGeometryVisual : BaseGeometryVisual
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var x = (float)(X + _parentX);
-        var y = (float)(Y + _parentY);
+        var x = (float)X;
+        var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -108,24 +107,15 @@ public class VariableGeometryVisual : BaseGeometryVisual
             y = primaryScaler.ToPixels(y);
         }
 
-        _actualLocation = new(x, y);
+        _targetPosition = new((float)X + _xc, (float)Y + _yc);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
         if (!_isInitialized)
         {
-            var parentX = x;
-            var parentY = y;
+            var cp = GetPositionRelativeToParent();
 
-            if (_parent is not null)
-            {
-                var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
-                var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
-                parentX = xProperty.GetCurrentValue((Animatable)_parent) + _parentPaddingX;
-                parentY = yProperty.GetCurrentValue((Animatable)_parent) + _parentPaddingY;
-            }
-
-            Geometry.X = parentX;
-            Geometry.Y = parentY;
+            Geometry.X = cp.X;
+            Geometry.Y = cp.Y;
             Geometry.Width = _actualSize.Width;
             Geometry.Height = _actualSize.Height;
 
@@ -139,8 +129,8 @@ public class VariableGeometryVisual : BaseGeometryVisual
             _isInitialized = true;
         }
 
-        Geometry.X = x;
-        Geometry.Y = y;
+        Geometry.X = x + _xc;
+        Geometry.Y = y + _yc;
         Geometry.Width = _actualSize.Width;
         Geometry.Height = _actualSize.Height;
 
@@ -149,9 +139,9 @@ public class VariableGeometryVisual : BaseGeometryVisual
         if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(Geometry);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
-    public override LvcPoint GetActualLocation()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
+    public override LvcPoint GetTargetLocation()
     {
-        return _actualLocation;
+        return _targetPosition;
     }
 }

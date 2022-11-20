@@ -36,7 +36,7 @@ namespace LiveChartsCore.VisualElements;
 public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private LvcPoint _position;
+    private LvcPoint _targetPosition;
 
     /// <summary>
     /// Gets or sets the size.
@@ -48,14 +48,14 @@ public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
     /// </summary>
     public HashSet<VisualElement<TDrawingContext>> Children { get; } = new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
-    public override LvcPoint GetActualLocation()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
+    public override LvcPoint GetTargetLocation()
     {
-        return _position;
+        return _targetPosition;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
-    public override LvcSize GetActualSize()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
+    public override LvcSize GetTargetSize()
     {
         return Size;
     }
@@ -64,7 +64,7 @@ public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
     public override LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         foreach (var child in Children) _ = child.Measure(chart, primaryScaler, secondaryScaler);
-        return GetActualSize();
+        return GetTargetSize();
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
@@ -81,19 +81,16 @@ public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        var x = X + _parentX;
-        var y = Y + _parentY;
-
-        _position = new((float)x, (float)y);
+        _targetPosition = new((float)X + _xc, (float)Y + _yc);
 
         foreach (var child in Children)
         {
             //var childSize = child.GetActualSize();
             child._parent = _parent;
-            child._parentPaddingX = _parentPaddingX;
-            child._parentPaddingY = _parentPaddingY;
-            child._x = x;
-            child._y = y;
+            child._xc = _xc;
+            child._yc = _yc;
+            child._x = X;
+            child._y = Y;
             child.OnInvalidated(chart, primaryScaler, secondaryScaler);
         }
     }

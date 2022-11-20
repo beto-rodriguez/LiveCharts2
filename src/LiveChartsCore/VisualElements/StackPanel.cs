@@ -25,6 +25,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -35,7 +36,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     where TDrawingContext : DrawingContext
     where TBackgroundGemetry : ISizedGeometry<TDrawingContext>, new()
 {
-    private LvcPoint _position;
+    private LvcPoint _targetPosition;
     private IPaint<TDrawingContext>? _backgroundPaint;
     private TBackgroundGemetry? _backgroundGeometry;
 
@@ -73,19 +74,19 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         set => SetPaintProperty(ref _backgroundPaint, value);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
-    public override LvcPoint GetActualLocation()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
+    public override LvcPoint GetTargetLocation()
     {
-        return _position;
+        return _targetPosition;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
-    public override LvcSize GetActualSize()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
+    public override LvcSize GetTargetSize()
     {
         var size = Orientation == ContainerOrientation.Horizontal
             ? Children.Aggregate(new LvcSize(), (current, next) =>
             {
-                var size = next.GetActualSize();
+                var size = next.GetTargetSize();
 
                 return new LvcSize(
                     current.Width + size.Width,
@@ -93,7 +94,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
             })
             : Children.Aggregate(new LvcSize(), (current, next) =>
             {
-                var size = next.GetActualSize();
+                var size = next.GetTargetSize();
 
                 return new LvcSize(
                     size.Width > current.Width ? size.Width : current.Width,
@@ -107,7 +108,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     public override LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         foreach (var child in Children) _ = child.Measure(chart, primaryScaler, secondaryScaler);
-        return GetActualSize();
+        return GetTargetSize();
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
@@ -124,59 +125,66 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        _position = new((float)X, (float)Y);
+        var xl = Padding.Left;
+        var yl = Padding.Top;
 
-        var x = Padding.Left + _parentX;// + X;
-        var y = Padding.Top + _parentY;// + Y;
-
+        _targetPosition = new((float)X + _xc, (float)Y + _yc);
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
 
-        if (_backgroundPaint is not null)
+        if (_backgroundGeometry is null)
         {
-            chart.Canvas.AddDrawableTask(_backgroundPaint);
-            if (_backgroundGeometry is null)
+            var cp = GetPositionRelativeToParent();
+
+            _backgroundGeometry = new TBackgroundGemetry
             {
-                _backgroundGeometry = new TBackgroundGemetry
-                {
-                    X = _position.X,
-                    Y = _position.Y,
-                    Width = controlSize.Width,
-                    Height = controlSize.Height
-                };
-                _ = _backgroundGeometry
-                    .TransitionateProperties()
-                    .WithAnimation(chart)
-                    .CompleteCurrentTransitions();
-            }
-            _backgroundGeometry.X = _position.X;
-            _backgroundGeometry.Y = _position.Y;
-            _backgroundGeometry.Width = controlSize.Width;
-            _backgroundGeometry.Height = controlSize.Height;
-            _backgroundPaint.AddGeometryToPaintTask(chart.Canvas, _backgroundGeometry);
+                X = cp.X,
+                Y = cp.Y,
+                Width = controlSize.Width,
+                Height = controlSize.Height
+            };
+
+            _ = _backgroundGeometry
+                .TransitionateProperties()
+                .WithAnimation(chart)
+                .CompleteCurrentTransitions();
         }
+
+        // force the background to have at least an invisible geometry
+        // we use this geometry in the motion canvas to track the position
+        // of the stack panel as the time and animations elapse.
+        BackgroundPaint ??= LiveCharts.CurrentSettings
+                .GetProvider<TDrawingContext>()
+                .GetSolidColorPaint(new LvcColor(50, 50, 50, 250));
+
+        chart.Canvas.AddDrawableTask(BackgroundPaint);
+        _backgroundGeometry.X = _targetPosition.X;
+        _backgroundGeometry.Y = _targetPosition.Y;
+        _backgroundGeometry.Width = controlSize.Width;
+        _backgroundGeometry.Height = controlSize.Height;
+        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, _backgroundGeometry);
 
         if (Orientation == ContainerOrientation.Horizontal)
         {
             foreach (var child in Children)
             {
                 _ = child.Measure(chart, primaryScaler, secondaryScaler);
-                var childSize = child.GetActualSize();
+                var childSize = child.GetTargetSize();
 
-                child._parent = _backgroundGeometry ?? _parent;
-                child._parentPaddingX = Padding.Left + _parentPaddingX;
-                child._parentPaddingY = Padding.Top + _parentPaddingY;
-                child._parentX = _position.X;
-                child._parentY = _position.Y;
-                child._x = x;
+                child._parent = _backgroundGeometry ?? throw new System.Exception("Background is required.");
+
+                child._xc = _targetPosition.X;
+                child._yc = _targetPosition.Y;
+
+                child._x = xl;
                 child._y = VerticalAlignment == Align.Middle
-                    ? y + (controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height) / 2f
+                    ? yl + (controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height) / 2f
                     : VerticalAlignment == Align.End
-                        ? y + controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height
-                        : y;
+                        ? yl + controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height
+                        : yl;
 
                 child.OnInvalidated(chart, primaryScaler, secondaryScaler);
 
-                x += childSize.Width;
+                xl += childSize.Width;
             }
         }
         else
@@ -184,23 +192,23 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
             foreach (var child in Children)
             {
                 _ = child.Measure(chart, primaryScaler, secondaryScaler);
-                var childSize = child.GetActualSize();
+                var childSize = child.GetTargetSize();
 
-                child._parent = _backgroundGeometry ?? _parent;
-                child._parentPaddingX = Padding.Left + _parentPaddingX;
-                child._parentPaddingY = Padding.Top + _parentPaddingY;
-                child._parentX = _position.X;
-                child._parentY = _position.Y;
+                child._parent = _backgroundGeometry ?? throw new System.Exception("Background is required.");
+
+                child._xc = _targetPosition.X;
+                child._yc = _targetPosition.Y;
+
                 child._x = HorizontalAlignment == Align.Middle
-                    ? x + (controlSize.Width - Padding.Left - Padding.Right - childSize.Width) / 2f
+                    ? xl + (controlSize.Width - Padding.Left - Padding.Right - childSize.Width) / 2f
                     : HorizontalAlignment == Align.End
-                        ? x + controlSize.Width - Padding.Left - Padding.Right - childSize.Width
-                        : x;
-                child._y = y;
+                        ? xl + controlSize.Width - Padding.Left - Padding.Right - childSize.Width
+                        : xl;
+                child._y = yl;
 
                 child.OnInvalidated(chart, primaryScaler, secondaryScaler);
 
-                y += childSize.Height;
+                yl += childSize.Height;
             }
         }
     }

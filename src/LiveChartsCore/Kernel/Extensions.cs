@@ -338,8 +338,8 @@ public static class Extensions
     {
         return source.Select(visual =>
         {
-            var location = visual.GetActualLocation();
-            var size = visual.GetActualSize();
+            var location = visual.GetTargetLocation();
+            var size = visual.GetTargetSize();
 
             return new
             {
