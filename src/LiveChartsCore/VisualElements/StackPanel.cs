@@ -25,7 +25,6 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -154,7 +153,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         // of the stack panel as the time and animations elapse.
         BackgroundPaint ??= LiveCharts.CurrentSettings
                 .GetProvider<TDrawingContext>()
-                .GetSolidColorPaint(new LvcColor(50, 50, 50, 250));
+                .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         chart.Canvas.AddDrawableTask(BackgroundPaint);
         _backgroundGeometry.X = _targetPosition.X;

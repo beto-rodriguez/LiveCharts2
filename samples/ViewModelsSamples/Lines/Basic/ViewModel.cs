@@ -14,21 +14,8 @@ public partial class ViewModel
     {
         new LineSeries<double>
         {
-            Values = new double[] { 2, 1, 5 },
-            Fill = null,
-            Name= "line",
-        },
-        new LineSeries<double>
-        {
-            Values = new double[] { 5, 3, 4 },
-            Fill = null,
-            Name= "lineline",
-        },
-        new LineSeries<double>
-        {
-            Values = new double[] { 2, 5, 6 },
-            Fill = null,
-            Name= "linelineline",
+            Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
+            Fill = null
         }
     };
 
