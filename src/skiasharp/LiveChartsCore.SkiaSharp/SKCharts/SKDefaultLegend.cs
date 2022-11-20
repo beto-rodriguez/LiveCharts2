@@ -73,6 +73,8 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         // this seems a constant layout issue...
         // ToDo:
+        // this is a workaround to force the legend to be drawn in the correct position
+        // It seems that this value is constant, it seems to not be affected by the font size or the stack panel properties.
         // is this and SkiaSharp measure issue?
         // is it a LiveCharts issue?
         var iDontKnowWhyThis = 17;
