@@ -139,8 +139,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         var x = _stackPanel.X;
         var y = _stackPanel.Y;
         var s = chart.ControlSize;
-        var w = s.Width;
-        var h = s.Height;
+        var w = chart.DrawMarginLocation.X + chart.DrawMarginSize.Width;
+        var h = chart.DrawMarginLocation.Y + chart.DrawMarginSize.Height;
 
         if (_stackPanel.X + Size.Width > w) x = w - Size.Width;
         if (_stackPanel.X < 0) x = 0;

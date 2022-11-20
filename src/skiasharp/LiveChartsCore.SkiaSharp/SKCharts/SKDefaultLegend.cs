@@ -58,7 +58,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     /// <summary>
     /// Gets or sets the fonts size.
     /// </summary>
-    public double FontSize { get; set; } = 13;
+    public double FontSize { get; set; } = 15;
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
@@ -70,6 +70,12 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
         var actualChartSize = chart.ControlSize;
+
+        // this seems a constant layout issue...
+        // ToDo:
+        // is this and SkiaSharp measure issue?
+        // is it a LiveCharts issue?
+        var iDontKnowWhyThis = 17;
 
         if (chart.LegendPosition == LegendPosition.Top)
         {
@@ -90,20 +96,9 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         }
         if (chart.LegendPosition == LegendPosition.Right)
         {
-            _stackPanel.X = actualChartSize.Width;
+            _stackPanel.X = actualChartSize.Width - iDontKnowWhyThis;
             _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
         }
-
-        //var x = location.Value.X + canvasLocation.X;
-        //var y = location.Value.Y + canvasLocation.Y;
-        //var s = chart.ControlSize;
-        //var w = s.Width;
-        //var h = s.Height;
-
-        //if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
-        //if (location.Value.X < 0) x = 0;
-        //if (location.Value.Y < 0) y = 0;
-        //if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
         chart.AddVisual(_stackPanel);
 
@@ -178,7 +173,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
-            Padding = new Padding(10, 4),
+            Padding = new Padding(15, 4),
             VerticalAlignment = Align.Middle,
             HorizontalAlignment = Align.Middle,
             Children =
