@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;

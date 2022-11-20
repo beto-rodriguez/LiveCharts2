@@ -1231,7 +1231,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             actualRotatation %= 180;
             if (actualRotatation < 0) actualRotatation += 180;
             if (actualRotatation >= 90) actualRotatation -= 180;
-            Trace.WriteLine(actualRotatation);
 
             var actualAlignment = _labelsAlignment == null
               ? (_position == AxisPosition.Start ? Align.Start : Align.End)

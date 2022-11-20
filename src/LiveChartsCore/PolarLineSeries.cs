@@ -488,8 +488,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
         return new Sketch<TDrawingContext>()
         {
-            Height = MiniatureShapeSize + MAX_MINIATURE_STROKE_WIDTH,
-            Width = MiniatureShapeSize + MAX_MINIATURE_STROKE_WIDTH,
+            Height = MiniatureShapeSize,
+            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

@@ -378,8 +378,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         return new Sketch<TDrawingContext>()
         {
-            Height = MiniatureShapeSize + MAX_MINIATURE_STROKE_WIDTH,
-            Width = MiniatureShapeSize + MAX_MINIATURE_STROKE_WIDTH,
+            Height = MiniatureShapeSize,
+            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }
