@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -55,11 +54,6 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
             ImageFilter = new DropShadow(2, 2, 2, 2, new SKColor(30, 30, 30, 60))
         };
     }
-
-    /// <summary>
-    /// Gets the location of the tooltip.
-    /// </summary>
-    public LvcPoint Location { get; private set; }
 
     /// <inheritdoc cref="IImageControl.Size"/>
     public LvcSize Size { get; private set; }
@@ -118,40 +112,12 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
             _ = toRemoveSeries.Remove(seriesMiniatureVisual);
         }
 
-        Size = sp.Measure(chart, null, null);
+        Measure(chart);
 
-        LvcPoint? location = null;
+        var location = foundPoints.GetTooltipLocation(Size, chart);
 
-        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-        {
-            location = foundPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, Size, chart.DrawMarginSize);
-        }
-        if (chart is PieChart<SkiaSharpDrawingContext>)
-        {
-            location = foundPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, Size);
-        }
-
-        if (location is null) throw new Exception("location not supported");
-
-        Location = location.Value;
-
-        _stackPanel.X = location.Value.X;
-        _stackPanel.Y = location.Value.Y;
-
-        var x = _stackPanel.X;
-        var y = _stackPanel.Y;
-        var w = chart.DrawMarginLocation.X + chart.DrawMarginSize.Width;
-        var h = chart.DrawMarginLocation.Y + chart.DrawMarginSize.Height;
-
-        if (_stackPanel.X + Size.Width > w) x = w - Size.Width;
-        if (_stackPanel.X < 0) x = 0;
-        if (_stackPanel.Y < 0) y = 0;
-        if (_stackPanel.Y + Size.Height > h) x = h - Size.Height;
-
-        _stackPanel.X = x;
-        _stackPanel.Y = y;
+        _stackPanel.X = location.X;
+        _stackPanel.Y = location.Y;
 
         foreach (var seriesVisual in toRemoveSeries)
         {
@@ -173,7 +139,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
     /// <inheritdoc cref="IImageControl.Measure(IChart)"/>
     public void Measure(IChart chart)
     {
-        throw new NotImplementedException();
+        if (_stackPanel is null) return;
+        Size = _stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart, null, null);
     }
 
     private SeriesVisual GetSeriesVisual(ChartPoint point)
@@ -181,30 +148,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         if (_seriesVisualsMap.TryGetValue(point.Context.Series, out var seriesPanel)) return seriesPanel;
 
         var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniatresSketch();
-
-        var relativePanel = new RelativePanel<SkiaSharpDrawingContext>
-        {
-            Size = new LvcSize((float)sketch.Width, (float)sketch.Height)
-        };
-
-        foreach (var schedule in sketch.PaintSchedules)
-        {
-            foreach (var g in schedule.Geometries)
-            {
-                var sizedGeometry = (ISizedGeometry<SkiaSharpDrawingContext>)g;
-                var vgv = new VariableGeometryVisual(sizedGeometry)
-                {
-                    Width = sizedGeometry.Width,
-                    Height = sizedGeometry.Height,
-                };
-
-                schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + s_zIndex;
-
-                if (schedule.PaintTask.IsFill) vgv.Fill = schedule.PaintTask;
-                if (schedule.PaintTask.IsStroke) vgv.Stroke = schedule.PaintTask;
-                _ = relativePanel.Children.Add(vgv);
-            }
-        }
+        var relativePanel = sketch.AsDrawnControl();
 
         var label = new LabelVisual
         {

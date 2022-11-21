@@ -185,7 +185,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
-        LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
 
         TooltipPosition = _chartView.TooltipPosition;
@@ -299,15 +298,10 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
-        {
-            Legend.Draw(this);
-            Update();
-            PreviousLegendPosition = LegendPosition;
-            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-            _preserveFirstDraw = IsFirstDraw;
-        }
+        InitializeVisualsCollector();
+
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
+        DrawLegend(seriesInLegend);
 
         // calculate draw margin
 
@@ -429,8 +423,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         // invalid dimensions, probably the chart is too small
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
-
-        InitializeVisualsCollector();
 
         var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
         foreach (var axis in totalAxes)

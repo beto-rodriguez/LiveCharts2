@@ -24,7 +24,7 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
     public void Draw(Chart<SkiaSharpDrawingContext> chart)
     {
         var series = chart.ChartSeries;
-        var legendOrientation = chart.LegendOrientation;
+        var legendOrientation = LegendOrientation.Auto;
 
         Visible = true;
         if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;

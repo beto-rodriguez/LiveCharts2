@@ -83,10 +83,6 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         Measure(chart);
 
-        if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
-        if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
-        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
-
         if (_stackPanel is null) return;
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
@@ -135,6 +131,10 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
     {
+        if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
+        if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
+        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
+
         _orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
             ? ContainerOrientation.Vertical
             : ContainerOrientation.Horizontal;
@@ -144,7 +144,8 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
             Padding = new Padding(0),
             Orientation = _orientation,
             HorizontalAlignment = Align.Start,
-            VerticalAlignment = Align.Middle
+            VerticalAlignment = Align.Middle,
+            BackgroundPaint = BackgroundPaint
         };
 
         _toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);

@@ -124,7 +124,7 @@ public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
         var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
-        var legendOrientation = chart.LegendOrientation;
+        var legendOrientation = LegendOrientation.Auto;
         var legendPosition = chart.LegendPosition;
         Series = series;
 
@@ -164,13 +164,13 @@ public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
 
         var avaloniaChart = (IAvaloniaChart)chart.View;
 
-        CustomTemplate = avaloniaChart.LegendTemplate;
-        FontFamily = avaloniaChart.LegendFontFamily;
-        FontSize = avaloniaChart.LegendFontSize;
-        FontWeight = avaloniaChart.LegendFontWeight;
-        FontStyle = avaloniaChart.LegendFontStyle;
-        TextBrush = avaloniaChart.LegendTextBrush;
-        BackgroundBrush = avaloniaChart.LegendBackground;
+        CustomTemplate = null;
+        FontFamily = new FontFamily("Trebuchet MS");
+        FontSize = 14;
+        FontWeight = FontWeight.Normal;
+        FontStyle = FontStyle.Normal;
+        TextBrush = new SolidColorBrush(new Color(255, 30, 30, 30));
+        BackgroundBrush = new SolidColorBrush(new Color(255, 255, 255, 255));
 
         BuildContent();
         Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));

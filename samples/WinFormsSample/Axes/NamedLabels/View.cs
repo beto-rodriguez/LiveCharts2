@@ -23,12 +23,8 @@ public partial class View : UserControl
             XAxes = viewModel.XAxes,
             YAxes = viewModel.YAxes,
             TooltipTextSize = 25,
-            TooltipTextPaint = new SolidColorPaint
-            {
-                Color = new SKColor(242, 244, 195),
-                SKTypeface = SKTypeface.FromFamilyName("Courier New")
-            },
-            TooltipBackgroundPaint = new SolidColorPaint(new SKColor(72, 0, 50)), // mark
+            TooltipTextPaint = viewModel.TooltipTextPaint,
+            TooltipBackgroundPaint = viewModel.TooltipBackgroundPaint, // mark
             TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left, // mark
 
             // out of livecharts properties...

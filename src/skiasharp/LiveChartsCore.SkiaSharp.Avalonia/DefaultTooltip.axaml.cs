@@ -131,48 +131,20 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        var avaloniaChart = (IAvaloniaChart)chart.View;
-
-        var template = avaloniaChart.TooltipTemplate ?? _defaultTemplate;
+        var template = _defaultTemplate;
         if (TooltipTemplate != template) TooltipTemplate = template;
 
         Points = tooltipPoints;
-        TooltipBackground = avaloniaChart.TooltipBackground;
-        TooltipFontFamily = avaloniaChart.TooltipFontFamily;
-        TooltipFontSize = avaloniaChart.TooltipFontSize;
-        TooltipFontStyle = avaloniaChart.TooltipFontStyle;
-        TooltipFontWeight = avaloniaChart.TooltipFontWeight;
-        TooltipTextBrush = avaloniaChart.TooltipTextBrush;
+        TooltipBackground = new SolidColorBrush(new Color(255, 235, 235, 235));
+        TooltipFontFamily = new FontFamily("Trebuchet MS");
+        TooltipFontSize = 14;
+        TooltipFontStyle = FontStyle.Normal;
+        TooltipFontWeight = FontWeight.Normal;
+        TooltipTextBrush = new SolidColorBrush(new Color(255, 30, 30, 30));
         BuildContent();
         Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-        LvcPoint? location = null;
-
-        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.DrawMarginSize);
-        }
-        if (chart is PieChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height));
-        }
-
-        if (location is null) throw new Exception("location not found");
-
-        var canvasLocation = avaloniaChart.GetCanvasPosition();
-
-        var x = location.Value.X + canvasLocation.X;
-        var y = location.Value.Y + canvasLocation.Y;
-        var s = chart.ControlSize;
-        var w = s.Width;
-        var h = s.Height;
-
-        if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
-        if (location.Value.X < 0) x = 0;
-        if (location.Value.Y < 0) y = 0;
-        if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
+        var location = tooltipPoints.GetTooltipLocation(new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart);
 
         Transitions ??= new Transitions
         {
@@ -180,8 +152,8 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
             new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
         };
 
-        Canvas.SetTop(this, y);
-        Canvas.SetLeft(this, x);
+        Canvas.SetTop(this, location.Y);
+        Canvas.SetLeft(this, location.X);
     }
 
     /// <summary>

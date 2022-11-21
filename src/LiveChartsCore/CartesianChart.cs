@@ -423,7 +423,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
-        LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
 
         TooltipPosition = _chartView.TooltipPosition;
@@ -535,42 +534,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         InitializeVisualsCollector();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
-        {
-            if (Legend is IImageControl imageLegend)
-            {
-                // this is the preferred method (drawn legends)
-                imageLegend.Measure(this);
 
-                if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-                    ControlSize = new(ControlSize.Width - imageLegend.Size.Width, ControlSize.Height);
-
-                if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
-                    ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
-
-                Legend.Draw(this);
-
-                PreviousLegendPosition = LegendPosition;
-                PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-                _preserveFirstDraw = IsFirstDraw;
-            }
-            else
-            {
-                // the legend is drawn by the UI framework... lets return and wait for it to draw/measure it.
-                // maybe we should wait for the legend to draw and then draw the chart?
-                Legend.Draw(this);
-                PreviousLegendPosition = LegendPosition;
-                PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-                _preserveFirstDraw = IsFirstDraw;
-                SetPreviousSize();
-                Measure();
-                return;
-            }
-        }
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
+        DrawLegend(seriesInLegend);
 
         var title = View.Title;
 

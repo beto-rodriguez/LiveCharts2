@@ -1,7 +1,5 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using SkiaSharp;
 using ViewModelsSamples.Axes.Multiple;
 
 namespace WinFormsSample.Axes.Multiple;
@@ -22,12 +20,8 @@ public partial class View : UserControl
             Series = viewModel.Series,
             YAxes = viewModel.YAxes,
             LegendPosition = LiveChartsCore.Measure.LegendPosition.Left,
-            LegendTextPaint = new SolidColorPaint
-            {
-                Color = new SKColor(50, 50, 50),
-                SKTypeface = SKTypeface.FromFamilyName("Courier New")
-            },
-            LegendBackgroundPaint = new SolidColorPaint(new SKColor(240, 240, 240)),
+            LegendTextPaint = viewModel.LegendTextPaint,
+            LegendBackgroundPaint = viewModel.LedgendBackgroundPaint,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

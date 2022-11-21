@@ -211,14 +211,6 @@ public abstract class Chart<TDrawingContext> : IChart
     public LegendPosition LegendPosition { get; protected set; }
 
     /// <summary>
-    /// Gets the legend orientation.
-    /// </summary>
-    /// <value>
-    /// The legend orientation.
-    /// </value>
-    public LegendOrientation LegendOrientation { get; protected set; }
-
-    /// <summary>
     /// Gets the legend.
     /// </summary>
     /// <value>
@@ -585,6 +577,48 @@ public abstract class Chart<TDrawingContext> : IChart
         }
 
         _toDeleteElements = new HashSet<ChartElement<TDrawingContext>>();
+    }
+
+    /// <summary>
+    /// Draws the legend.
+    /// </summary>
+    /// <param name="seriesInLegend"></param>
+    protected void DrawLegend(IChartSeries<TDrawingContext>[] seriesInLegend)
+    {
+        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
+        {
+            if (Legend is IImageControl imageLegend)
+            {
+                // this is the preferred method (drawn legends)
+                imageLegend.Measure(this);
+
+                if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
+                    ControlSize = new(ControlSize.Width - imageLegend.Size.Width, ControlSize.Height);
+
+                if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
+                    ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
+
+                Legend.Draw(this);
+
+                PreviousLegendPosition = LegendPosition;
+                PreviousSeriesAtLegend = seriesInLegend;
+                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
+                _preserveFirstDraw = IsFirstDraw;
+            }
+            else
+            {
+                // the legend is drawn by the UI framework... lets return and wait for it to draw/measure it.
+                // maybe we should wait for the legend to draw and then draw the chart?
+                Legend.Draw(this);
+                PreviousLegendPosition = LegendPosition;
+                PreviousSeriesAtLegend = seriesInLegend;
+                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
+                _preserveFirstDraw = IsFirstDraw;
+                SetPreviousSize();
+                Measure();
+                return;
+            }
+        }
     }
 
     private Task TooltipThrottlerUnlocked()

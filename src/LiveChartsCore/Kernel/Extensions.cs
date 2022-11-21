@@ -38,15 +38,46 @@ public static class Extensions
     private const double Cf = 3d;
 
     /// <summary>
-    /// Returns the left, top coordinate of the tooltip based on the found points, the position and the tooltip size.
+    /// Calculates the tooltip location.
     /// </summary>
-    /// <param name="foundPoints"></param>
-    /// <param name="position"></param>
-    /// <param name="tooltipSize"></param>
-    /// <param name="chartSize"></param>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <param name="foundPoints">The points.</param>
+    /// <param name="tooltipSize">The tooltip size.</param>
+    /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    public static LvcPoint? GetCartesianTooltipLocation(
-        this IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
+    /// <exception cref="Exception"></exception>
+    public static LvcPoint GetTooltipLocation<TDrawingContext>(
+        this IEnumerable<ChartPoint> foundPoints,
+        LvcSize tooltipSize,
+        Chart<TDrawingContext> chart)
+            where TDrawingContext : DrawingContext
+    {
+        LvcPoint? location = null;
+
+        if (chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>)
+            location = _getCartesianTooltipLocation(foundPoints, chart.TooltipPosition, tooltipSize, chart.DrawMarginSize);
+        if (chart is PieChart<TDrawingContext>)
+            location = _getPieTooltipLocation(foundPoints, tooltipSize);
+
+        if (location is null) throw new Exception("location not supported");
+
+        var chartSize = chart.DrawMarginSize;
+
+        var x = location.Value.X;
+        var y = location.Value.Y;
+        var w = chartSize.Width;
+        var h = chartSize.Height;
+
+        if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
+
+        return new LvcPoint(x, y);
+    }
+
+    private static LvcPoint? _getCartesianTooltipLocation(
+        IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
     {
         var count = 0f;
 
@@ -79,16 +110,8 @@ public static class Extensions
             _ => new LvcPoint(),
         };
     }
-
-    /// <summary>
-    ///  Returns the left, top coordinate of the tooltip based on the found points, the position and the tooltip size.
-    /// </summary>
-    /// <param name="foundPoints">The found points.</param>
-    /// <param name="position">The position.</param>
-    /// <param name="tooltipSize">Size of the tooltip.</param>
-    /// <returns></returns>
-    public static LvcPoint? GetPieTooltipLocation(
-        this IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize)
+    private static LvcPoint? _getPieTooltipLocation(
+        IEnumerable<ChartPoint> foundPoints, LvcSize tooltipSize)
     {
         var placementContext = new TooltipPlacementContext();
         var found = false;

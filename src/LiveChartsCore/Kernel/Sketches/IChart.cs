@@ -62,14 +62,6 @@ public interface IChart
     LegendPosition LegendPosition { get; }
 
     /// <summary>
-    /// Gets the legend orientation.
-    /// </summary>
-    /// <value>
-    /// The legend orientation.
-    /// </value>
-    LegendOrientation LegendOrientation { get; }
-
-    /// <summary>
     /// Gets the toolTip position.
     /// </summary>
     /// <value>

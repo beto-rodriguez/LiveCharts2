@@ -118,10 +118,10 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
-    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; } = new SKDefaultLegend();
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; } = new SKDefaultLegend();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; }
 
     LvcColor IChartView.BackColor
     {
@@ -149,9 +149,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
 
     /// <inheritdoc cref="IChartView.LegendPosition"/>
     public LegendPosition LegendPosition { get; set; }
-
-    /// <inheritdoc cref="IChartView.LegendOrientation"/>
-    public LegendOrientation LegendOrientation { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     public TooltipPosition TooltipPosition { get; set; }

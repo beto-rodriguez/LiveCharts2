@@ -53,28 +53,16 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
     {
         var wfChart = (Chart)chart.View;
-
         var size = DrawAndMesure(tooltipPoints);
-        LvcPoint? location = null;
+        var location = tooltipPoints.GetTooltipLocation(new LvcSize((float)size.Width, (float)size.Height), chart);
 
-        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.DrawMarginSize);
-        }
-        if (chart is PieChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
-        }
-        if (location is null) throw new Exception("location not supported");
         Height = (int)size.Height;
         Width = (int)size.Width;
         if (_tooltipContainer is not null) _tooltipContainer.BackColor = _tooltipBackColor;
 
         var l = wfChart.PointToScreen(Point.Empty);
-        var x = l.X + (int)location.Value.X;
-        var y = l.Y + (int)location.Value.Y;
+        var x = l.X + (int)location.X;
+        var y = l.Y + (int)location.Y;
 
         var canvasLocation = wfChart.GetCanvasPosition();
 

@@ -21,8 +21,7 @@
 // SOFTWARE.
 
 using Avalonia;
-using Avalonia.Markup.Xaml.Templates;
-using Avalonia.Media;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -31,118 +30,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 /// </summary>
 public interface IAvaloniaChart
 {
-    /// <summary>
-    /// Gets or sets the tool tip template.
-    /// </summary>
-    /// <value>
-    /// The tool tip template.
-    /// </value>
-    DataTemplate TooltipTemplate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tool tip font family.
-    /// </summary>
-    /// <value>
-    /// The tool tip font family.
-    /// </value>
-    FontFamily TooltipFontFamily { get; set; }
-
-    /// <summary>
-    /// Gets or sets the size of the tool tip font.
-    /// </summary>
-    /// <value>
-    /// The size of the tool tip font.
-    /// </value>
-    double TooltipFontSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tool tip font weight.
-    /// </summary>
-    /// <value>
-    /// The tool tip font weight.
-    /// </value>
-    FontWeight TooltipFontWeight { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tool tip font style.
-    /// </summary>
-    /// <value>
-    /// The tool tip font style.
-    /// </value>
-    FontStyle TooltipFontStyle { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tool tip text brush.
-    /// </summary>
-    /// <value>
-    /// The tool tip text brush.
-    /// </value>
-    SolidColorBrush TooltipTextBrush { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tool tip background.
-    /// </summary>
-    /// <value>
-    /// The tool tip background.
-    /// </value>
-    IBrush TooltipBackground { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend template.
-    /// </summary>
-    /// <value>
-    /// The legend template.
-    /// </value>
-    DataTemplate LegendTemplate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend font family.
-    /// </summary>
-    /// <value>
-    /// The legend font family.
-    /// </value>
-    FontFamily LegendFontFamily { get; set; }
-
-    /// <summary>
-    /// Gets or sets the size of the legend font.
-    /// </summary>
-    /// <value>
-    /// The size of the legend font.
-    /// </value>
-    double LegendFontSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend font weight.
-    /// </summary>
-    /// <value>
-    /// The legend font weight.
-    /// </value>
-    FontWeight LegendFontWeight { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend font style.
-    /// </summary>
-    /// <value>
-    /// The legend font style.
-    /// </value>
-    FontStyle LegendFontStyle { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend text brush.
-    /// </summary>
-    /// <value>
-    /// The legend text brush.
-    /// </value>
-    SolidColorBrush LegendTextBrush { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend background.
-    /// </summary>
-    /// <value>
-    /// The legend background.
-    /// </value>
-    IBrush LegendBackground { get; set; }
-
     /// <summary>
     /// Gets the canvas position relative to the control.
     /// </summary>

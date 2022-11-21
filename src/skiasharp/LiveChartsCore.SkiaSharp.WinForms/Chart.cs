@@ -49,12 +49,12 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The legend
     /// </summary>
-    protected IChartLegend<SkiaSharpDrawingContext> legend = new SKDefaultLegend();
+    protected IChartLegend<SkiaSharpDrawingContext>? legend = new SKDefaultLegend();
 
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new SKDefaultTooltip();
+    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip = new SKDefaultTooltip();
 
     /// <summary>
     /// The motion canvas
@@ -62,7 +62,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     protected MotionCanvas motionCanvas;
 
     private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
-    private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
     private VisualElement<SkiaSharpDrawingContext>? _title;
@@ -205,10 +204,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView.LegendOrientation" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public LegendOrientation LegendOrientation { get => _legendOrientation; set { _legendOrientation = value; OnPropertyChanged(); } }
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
@@ -223,7 +218,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get => legend; set => legend = value; }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -243,7 +238,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

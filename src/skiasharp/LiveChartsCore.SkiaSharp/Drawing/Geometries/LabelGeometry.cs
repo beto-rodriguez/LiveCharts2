@@ -101,13 +101,16 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
     protected override LvcSize OnMeasure(Paint drawable)
     {
+        using var typeface = drawable.GetSKTypeface();
+
         using var p = new SKPaint
         {
             Color = drawable.Color,
             IsAntialias = drawable.IsAntialias,
             IsStroke = drawable.IsStroke,
             StrokeWidth = drawable.StrokeThickness,
-            TextSize = TextSize
+            TextSize = TextSize,
+            Typeface = typeface
         };
 
         var bounds = MeasureLines(p);

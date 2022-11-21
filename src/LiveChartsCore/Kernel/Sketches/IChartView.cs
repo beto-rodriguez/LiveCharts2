@@ -107,14 +107,6 @@ public interface IChartView
     LegendPosition LegendPosition { get; set; }
 
     /// <summary>
-    /// Gets or sets the legend orientation.
-    /// </summary>
-    /// <value>
-    /// The legend orientation.
-    /// </value>
-    LegendOrientation LegendOrientation { get; set; }
-
-    /// <summary>
     /// Gets or sets the tooltip position.
     /// </summary>
     /// <value>
@@ -236,20 +228,20 @@ public interface IChartView<TDrawingContext> : IChartView
     MotionCanvas<TDrawingContext> CoreCanvas { get; }
 
     /// <summary>
-    /// Gets the legend.
+    /// Gets or sets the legend.
     /// </summary>
     /// <value>
     /// The legend.
     /// </value>
-    IChartLegend<TDrawingContext>? Legend { get; }
+    IChartLegend<TDrawingContext>? Legend { get; set; }
 
     /// <summary>
-    /// Gets the tooltip.
+    /// Gets or sets the tooltip.
     /// </summary>
     /// <value>
     /// The tooltip.
     /// </value>
-    IChartTooltip<TDrawingContext>? Tooltip { get; }
+    IChartTooltip<TDrawingContext>? Tooltip { get; set; }
 
     /// <summary>
     /// Gets or sets the visual elements.

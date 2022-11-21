@@ -55,7 +55,7 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
         var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
-        var legendOrientation = chart.LegendOrientation;
+        var legendOrientation = LegendOrientation.Auto;
         var legendPosition = chart.LegendPosition;
 
         switch (legendPosition)

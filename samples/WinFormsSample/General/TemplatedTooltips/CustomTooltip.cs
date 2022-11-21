@@ -14,8 +14,6 @@ namespace WinFormsSample.General.TemplatedTooltips;
 public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
 {
     private readonly Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-    private readonly Color _tooltipTextColor = Color.FromArgb(255, 35, 35, 35);
-    private readonly Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
 
     public CustomTooltip()
     {
@@ -26,34 +24,23 @@ public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext
     {
         var wfChart = (Chart)chart.View;
 
-        var size = DrawAndMesure(tooltipPoints, wfChart);
-        LvcPoint? location = null;
-
-        if (chart is CartesianChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
-        }
-        if (chart is PieChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
-        }
+        var size = DrawAndMesure(tooltipPoints);
+        var location = tooltipPoints.GetTooltipLocation(new LvcSize(size.Width, size.Height), chart);
 
         BackColor = Color.FromArgb(255, 30, 30, 30);
         Height = (int)size.Height;
         Width = (int)size.Width;
 
         var l = wfChart.PointToScreen(Point.Empty);
-        var x = l.X + (int)location.Value.X;
-        var y = l.Y + (int)location.Value.Y;
+        var x = l.X + (int)location.X;
+        var y = l.Y + (int)location.Y;
         Location = new Point(x, y);
         Show();
 
         wfChart.CoreCanvas.Invalidate();
     }
 
-    private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
+    private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints)
     {
         SuspendLayout();
         Controls.Clear();
