@@ -41,6 +41,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
     private readonly Dictionary<IChartSeries<SkiaSharpDrawingContext>, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>> _activeSeries = new();
     private new List<VisualElement<SkiaSharpDrawingContext>> _toRemoveSeries = new();
+    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
     public SKDefaultLegend()
     {
@@ -56,9 +57,25 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
 
     /// <summary>
+    /// Gets or sets the background paint.
+    /// </summary>
+    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
+    {
+        get => _backgroundPaint;
+        set
+        {
+            _backgroundPaint = value;
+            if (value is not null)
+            {
+                value.IsFill = true;
+            }
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the fonts size.
     /// </summary>
-    public double FontSize { get; set; } = 15;
+    public double TextSize { get; set; } = 15;
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
@@ -66,7 +83,12 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         Measure(chart);
 
+        if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
+        if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
+        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
+
         if (_stackPanel is null) return;
+        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
         var actualChartSize = chart.ControlSize;
@@ -185,7 +207,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
                 {
                     Text = series.Name ?? string.Empty,
                     Paint = FontPaint,
-                    TextSize = FontSize,
+                    TextSize = TextSize,
                     Padding = new Padding(8, 0, 0, 0),
                     VerticalAlignment = Align.Start,
                     HorizontalAlignment = Align.Start

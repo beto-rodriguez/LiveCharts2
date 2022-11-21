@@ -36,6 +36,9 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
 {
     private Panel? _tooltipContainer;
     private const int BorderThickness = 2;
+    private readonly Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+    private readonly Color _tooltipTextColor = Color.FromArgb(255, 35, 35, 35);
+    private readonly Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -51,7 +54,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
     {
         var wfChart = (Chart)chart.View;
 
-        var size = DrawAndMesure(tooltipPoints, wfChart);
+        var size = DrawAndMesure(tooltipPoints);
         LvcPoint? location = null;
 
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
@@ -67,7 +70,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         if (location is null) throw new Exception("location not supported");
         Height = (int)size.Height;
         Width = (int)size.Width;
-        if (_tooltipContainer is not null) _tooltipContainer.BackColor = wfChart.TooltipBackColor;
+        if (_tooltipContainer is not null) _tooltipContainer.BackColor = _tooltipBackColor;
 
         var l = wfChart.PointToScreen(Point.Empty);
         var x = l.X + (int)location.Value.X;
@@ -79,7 +82,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         Show();
     }
 
-    private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
+    private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints)
     {
         SuspendLayout();
         Controls.Clear();
@@ -96,7 +99,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         foreach (var point in tooltipPoints)
         {
             var text = point.AsTooltipString;
-            var size = g.MeasureString(text, chart.TooltipFont);
+            var size = g.MeasureString(text, _tooltipFont);
 
             var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
@@ -114,8 +117,8 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
             container.Controls.Add(new Label
             {
                 Text = text,
-                Font = chart.TooltipFont,
-                ForeColor = chart.TooltipTextColor,
+                Font = _tooltipFont,
+                ForeColor = _tooltipTextColor,
                 Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6 + dh),
                 AutoSize = true
             });
@@ -130,7 +133,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         container.Height = (int)h;
 
         ResumeLayout();
-        return new SizeF(container.Width + 2 * BorderThickness, container.Height + 2* BorderThickness);
+        return new SizeF(container.Width + 2 * BorderThickness, container.Height + 2 * BorderThickness);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()

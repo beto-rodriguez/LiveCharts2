@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
@@ -38,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// In-memory chart that is able to generate a chart images.
 /// </summary>
-public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDrawingContext>, IDrawnLegend
+public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDrawingContext>
 {
     private LvcColor _backColor;
 
@@ -103,12 +102,6 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
     public IChartLegend<SkiaSharpDrawingContext>? Legend { get; } = new SKDefaultLegend();
 
-    /// <inheritdoc cref="IDrawnLegend.LegendFontPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendFontPaint { get; set; } = new SolidColorPaint { FontFamily = "Arial", Color = new SKColor(40, 40, 40) };
-
-    /// <inheritdoc cref="IDrawnLegend.LegendFontSize" />
-    public double LegendFontSize { get; set; } = 13;
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
 
@@ -159,6 +152,24 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint"/>
+    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint"/>
+    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize"/>
+    public double? LegendTextSize { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint"/>
+    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint"/>
+    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize"/>
+    public double? TooltipTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
     public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
@@ -223,9 +234,6 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     {
         return Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, point));
     }
-
-    /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
-    public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
     public void ShowTooltip(IEnumerable<ChartPoint> points)

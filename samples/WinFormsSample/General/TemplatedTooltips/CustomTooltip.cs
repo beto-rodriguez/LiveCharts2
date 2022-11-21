@@ -13,6 +13,10 @@ namespace WinFormsSample.General.TemplatedTooltips;
 
 public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
 {
+    private readonly Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+    private readonly Color _tooltipTextColor = Color.FromArgb(255, 35, 35, 35);
+    private readonly Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
+
     public CustomTooltip()
     {
         InitializeComponent();
@@ -60,7 +64,7 @@ public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext
         {
             using var g = CreateGraphics();
             var text = point.AsTooltipString;
-            var size = g.MeasureString(text, chart.TooltipFont);
+            var size = g.MeasureString(text, _tooltipFont);
 
             var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
@@ -75,7 +79,7 @@ public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext
             {
                 Text = text,
                 ForeColor = Color.FromArgb(255, 250, 250, 250),
-                Font = chart.TooltipFont,
+                Font = _tooltipFont,
                 Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
                 AutoSize = true
             });

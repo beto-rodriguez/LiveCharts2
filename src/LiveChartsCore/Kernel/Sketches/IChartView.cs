@@ -146,13 +146,6 @@ public interface IChartView
     object SyncContext { get; set; }
 
     /// <summary>
-    /// Sets the tooltip style.
-    /// </summary>
-    /// <param name="background">The background.</param>
-    /// <param name="textColor">Color of the text.</param>
-    void SetTooltipStyle(LvcColor background, LvcColor textColor);
-
-    /// <summary>
     /// Invokes an action in the UI thread.
     /// </summary>
     /// <param name="action"></param>
@@ -171,6 +164,36 @@ public interface IChartView
 public interface IChartView<TDrawingContext> : IChartView
     where TDrawingContext : DrawingContext
 {
+    /// <summary>
+    /// Gets or sets the legend default text paint, when null the library will use the default text paint.
+    /// </summary>
+    IPaint<TDrawingContext>? LegendTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend background paint, when null the library will use the default background paint.
+    /// </summary>
+    IPaint<TDrawingContext>? LegendBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend text size, when null the library will use the default text size.
+    /// </summary>
+    double? LegendTextSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
+    /// </summary>
+    IPaint<TDrawingContext>? TooltipTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip background paint, when null the library will use the default background paint.
+    /// </summary>
+    IPaint<TDrawingContext>? TooltipBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip text size, when null the library will use the default text size.
+    /// </summary>
+    double? TooltipTextSize { get; set; }
+
     /// <summary>
     /// Gets or sets the chart title.
     /// </summary>

@@ -11,6 +11,9 @@ namespace WinFormsSample.General.TemplatedLegends;
 
 public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
 {
+    private readonly Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+    private readonly Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
+
     public CustomLegend()
     {
         InitializeComponent();
@@ -20,8 +23,6 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
 
     public void Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        var wfChart = (Chart)chart.View;
-
         var series = chart.ChartSeries;
         var legendOrientation = chart.LegendOrientation;
 
@@ -29,12 +30,10 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
         if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;
         Dock = DockStyle.Right;
 
-        DrawAndMesure(series, wfChart);
-
-        BackColor = wfChart.LegendBackColor;
+        DrawAndMesure(series);
     }
 
-    private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
+    private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series)
     {
         SuspendLayout();
         Controls.Clear();
@@ -42,16 +41,14 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
         var h = 0f;
         var w = 0f;
 
-        var parent = new Panel();
-        parent.BackColor = Color.FromArgb(255, 245, 245, 220);
+        var parent = new Panel { BackColor = Color.FromArgb(255, 245, 245, 220) };
         Controls.Add(parent);
         using var g = CreateGraphics();
         foreach (var s in series)
         {
-            var size = g.MeasureString(s.Name, chart.LegendFont);
+            var size = g.MeasureString(s.Name, _legendFont);
 
-            var p = new Panel();
-            p.Location = new Point(0, (int)h);
+            var p = new Panel { Location = new Point(0, (int)h) };
             parent.Controls.Add(p);
 
             p.Controls.Add(new MotionCanvas
@@ -65,7 +62,7 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
             {
                 Text = s.Name,
                 ForeColor = Color.Black,
-                Font = chart.LegendFont,
+                Font = _legendFont,
                 Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 0)
             });
 

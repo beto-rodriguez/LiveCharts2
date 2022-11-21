@@ -33,6 +33,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
 public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
 {
+    private readonly Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+    private readonly Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
     /// </summary>
@@ -51,8 +54,6 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        var wfChart = (Chart)chart.View;
-
         var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
         var legendOrientation = chart.LegendOrientation;
         var legendPosition = chart.LegendPosition;
@@ -86,11 +87,10 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
                 break;
         }
 
-        DrawAndMesure(series, wfChart);
-        BackColor = wfChart.LegendBackColor;
+        DrawAndMesure(series);
     }
 
-    private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
+    private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series)
     {
         SuspendLayout();
         Controls.Clear();
@@ -102,12 +102,12 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
         {
             if (Orientation == LegendOrientation.Vertical)
             {
-                var parent = new Panel { BackColor = chart.LegendBackColor };
+                var parent = new Panel();
                 Controls.Add(parent);
                 using var g = CreateGraphics();
                 foreach (var s in series)
                 {
-                    var size = g.MeasureString(s.Name, chart.LegendFont);
+                    var size = g.MeasureString(s.Name, _legendFont);
 
                     var p = new Panel { Location = new Point(0, (int)h) };
                     parent.Controls.Add(p);
@@ -126,8 +126,8 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
                     p.Controls.Add(new Label
                     {
                         Text = s.Name,
-                        Font = chart.LegendFont,
-                        ForeColor = chart.LegendTextColor,
+                        Font = _legendFont,
+                        ForeColor = _legendTextColor,
                         Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, dh),
                         AutoSize = true
                     });
@@ -154,7 +154,7 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
                 using var g = CreateGraphics();
                 foreach (var s in series)
                 {
-                    var size = g.MeasureString(s.Name, chart.LegendFont);
+                    var size = g.MeasureString(s.Name, _legendFont);
 
                     var p = new Panel { Location = new Point((int)w, 0) };
                     parent.Controls.Add(p);
@@ -169,7 +169,7 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
                     p.Controls.Add(new Label
                     {
                         Text = s.Name,
-                        Font = chart.LegendFont,
+                        Font = _legendFont,
                         Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 6)
                     });
 

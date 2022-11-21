@@ -88,12 +88,16 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
     /// <summary>
     /// Gets or sets the fonts size.
     /// </summary>
-    public double FontSize { get; set; } = 16;
+    public double TextSize { get; set; } = 16;
 
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})"/>
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
         _chart = chart;
+
+        if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
+        if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
+        if (chart.View.TooltipTextSize is not null) TextSize = chart.View.TooltipTextSize.Value;
 
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
@@ -138,7 +142,6 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
 
         var x = _stackPanel.X;
         var y = _stackPanel.Y;
-        var s = chart.ControlSize;
         var w = chart.DrawMarginLocation.X + chart.DrawMarginSize.Width;
         var h = chart.DrawMarginLocation.Y + chart.DrawMarginSize.Height;
 
@@ -207,7 +210,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         {
             Text = point.AsTooltipString,
             Paint = FontPaint,
-            TextSize = FontSize,
+            TextSize = TextSize,
             Padding = new Padding(8, 0, 0, 0),
             VerticalAlignment = Align.Start,
             HorizontalAlignment = Align.Start
