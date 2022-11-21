@@ -171,30 +171,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
 
         var sketch = series.GetMiniatresSketch();
-
-        var relativePanel = new RelativePanel<SkiaSharpDrawingContext>
-        {
-            Size = new LvcSize((float)sketch.Width, (float)sketch.Height)
-        };
-
-        foreach (var schedule in sketch.PaintSchedules)
-        {
-            foreach (var g in schedule.Geometries)
-            {
-                var sizedGeometry = (ISizedGeometry<SkiaSharpDrawingContext>)g;
-                var vgv = new VariableGeometryVisual(sizedGeometry)
-                {
-                    Width = sizedGeometry.Width,
-                    Height = sizedGeometry.Height,
-                };
-
-                schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + s_zIndex;
-
-                if (schedule.PaintTask.IsFill) vgv.Fill = schedule.PaintTask;
-                if (schedule.PaintTask.IsStroke) vgv.Stroke = schedule.PaintTask;
-                _ = relativePanel.Children.Add(vgv);
-            }
-        }
+        var relativePanel = sketch.AsDrawnControl();
 
         var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {

@@ -14,7 +14,7 @@
     <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right">
       <!-- mark -untilCloses lvc:CartesianChart.Legend -->
       <lvc:CartesianChart.Legend>
-          <lvc:DefaultLegend></lvc:DefaultLegend>
+          <vms:CustomLegend/>
       </lvc:CartesianChart.Legend>
     </lvc:CartesianChart>
   </Grid>  

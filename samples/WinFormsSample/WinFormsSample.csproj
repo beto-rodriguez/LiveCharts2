@@ -129,9 +129,6 @@
     <Compile Update="General\Legends\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="General\TemplatedTooltips\CustomTooltip.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="General\TemplatedTooltips\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
