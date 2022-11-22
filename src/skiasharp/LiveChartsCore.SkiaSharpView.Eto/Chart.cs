@@ -34,6 +34,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.VisualElements;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -48,12 +49,12 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The legend
     /// </summary>
-    protected IChartLegend<SkiaSharpDrawingContext> legend = new DefaultLegend();
+    protected IChartLegend<SkiaSharpDrawingContext>? legend = new SKDefaultLegend();
 
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new DefaultTooltip();
+    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip = new SKDefaultTooltip();
 
     /// <summary>
     /// The motion canvas
@@ -61,18 +62,17 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     protected MotionCanvas motionCanvas;
 
     private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
-    private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
-    private Font _tooltipFont = Fonts.Sans(11);
-    private Color _tooltipBackColor = Color.FromArgb(250, 250, 250);
-    private Font _legendFont = Fonts.Sans(11);
-    private Color _legendBackColor = Color.FromArgb(255, 255, 255);
-    private Color _legendTextColor = Color.FromArgb(35, 35, 35);
-    private Color _tooltipTextColor = SystemColors.ControlText;
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
+    private IPaint<SkiaSharpDrawingContext>? _legendTextPaint = null;
+    private IPaint<SkiaSharpDrawingContext>? _legendBackgroundPaint = null;
+    private double? _legendTextSize = null;
+    private IPaint<SkiaSharpDrawingContext>? _tooltipTextPaint = null;
+    private IPaint<SkiaSharpDrawingContext>? _tooltipBackgroundPaint = null;
+    private double? _tooltipTextSize = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -119,26 +119,31 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
     private void UpdateLegendLayout()
     {
-        var legend = (Control)this.legend;
-
         var layout = new DynamicLayout();
 
-        if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-            _ = layout.BeginHorizontal();
+        if (this.legend is Control legend)
+        {
+            if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
+                _ = layout.BeginHorizontal();
+            else
+                _ = layout.BeginVertical();
+
+            if (LegendPosition is LegendPosition.Top)
+                layout.AddCentered(legend, horizontalCenter: true);
+            if (LegendPosition is LegendPosition.Left)
+                layout.AddCentered(legend, verticalCenter: true);
+
+            _ = layout.Add(motionCanvas, xscale: true, yscale: true);
+
+            if (LegendPosition is LegendPosition.Bottom)
+                layout.AddCentered(legend, horizontalCenter: true);
+            if (LegendPosition is LegendPosition.Right)
+                layout.AddCentered(legend, verticalCenter: true);
+        }
         else
-            _ = layout.BeginVertical();
-
-        if (LegendPosition is LegendPosition.Top)
-            layout.AddCentered(legend, horizontalCenter: true);
-        if (LegendPosition is LegendPosition.Left)
-            layout.AddCentered(legend, verticalCenter: true);
-
-        _ = layout.Add(motionCanvas, xscale: true, yscale: true);
-
-        if (LegendPosition is LegendPosition.Bottom)
-            layout.AddCentered(legend, horizontalCenter: true);
-        if (LegendPosition is LegendPosition.Right)
-            layout.AddCentered(legend, verticalCenter: true);
+        {
+            _ = layout.Add(motionCanvas, xscale: true, yscale: true);
+        }
 
         Content = layout;
     }
@@ -204,65 +209,32 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; UpdateLegendLayout(); OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView.LegendOrientation" />
-    public LegendOrientation LegendOrientation { get => _legendOrientation; set { _legendOrientation = value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the default legend font.
-    /// </summary>
-    /// <value>
-    /// The legend font.
-    /// </value>
-    public Font LegendFont { get => _legendFont; set { _legendFont = value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get => _legendBackgroundPaint; set { _legendBackgroundPaint = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the default color of the legend text.
-    /// </summary>
-    /// <value>
-    /// The color of the legend back.
-    /// </value>
-    public Color LegendTextColor { get => _legendTextColor; set { _legendTextColor = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the default color of the legend back.
-    /// </summary>
-    /// <value>
-    /// The color of the legend back.
-    /// </value>
-    public Color LegendBackColor { get => _legendBackColor; set { _legendBackColor = value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    public double? LegendTextSize { get => _legendTextSize; set { _legendTextSize = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get => legend; set { legend = value; UpdateLegendLayout(); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the default tool tip font.
-    /// </summary>
-    /// <value>
-    /// The tool tip font.
-    /// </value>
-    public Font TooltipFont { get => _tooltipFont; set { _tooltipFont = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the color of the tool tip text.
-    /// </summary>
-    /// <value>
-    /// The color of the tool tip text.
-    /// </value>
-    public Color TooltipTextColor { get => _tooltipTextColor; set { _tooltipTextColor = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the color of the default tool tip back.
-    /// </summary>
-    /// <value>
-    /// The color of the tool tip back.
-    /// </value>
-    public Color TooltipBackColor { get => _tooltipBackColor; set { _tooltipBackColor = value; OnPropertyChanged(); } }
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set { tooltip = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get => _tooltipTextPaint; set { _tooltipTextPaint = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get => _tooltipBackgroundPaint; set { _tooltipBackgroundPaint = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    public double? TooltipTextSize { get => _tooltipTextSize; set { _tooltipTextSize = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -322,13 +294,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     internal Point GetCanvasPosition()
     {
         return motionCanvas.Location;
-    }
-
-    /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
-    public void SetTooltipStyle(LvcColor background, LvcColor textColor)
-    {
-        TooltipBackColor = Color.FromArgb(background.R, background.G, background.B, background.A);
-        TooltipTextColor = Color.FromArgb(textColor.R, textColor.G, textColor.B, textColor.A);
     }
 
     void IChartView.InvokeOnUIThread(Action action)
