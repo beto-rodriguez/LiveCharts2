@@ -2,38 +2,12 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.General.TemplatedTooltips
 
-<CartesianChart Series="ViewModel.Series">
-
-	<!--
-		Use TooltipTemplate property to pass your own template.
-
-		GetSeriesMiniatureStyle():
-		returns a css style that sets the width and height css properties
-		based on the series properties.
-
-		GetSeriesAsMiniaturePaints():
-		returns the series as miniature shapes for the MotionCanvas class.
-	-->
-
-	<!-- mark -untilCloses TooltipTemplate -->
-	<TooltipTemplate>
-		<h5>This is a custom tooltip</h5>
-
-		@foreach (var tooltipPoint in @context)
-		{
-			<div class="d-flex">
-				<div>
-					@tooltipPoint.AsTooltipString
-				</div>
-				<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Context.Series)">
-					<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Context.Series)" />
-				</div>
-			</div>
-		}
-	</TooltipTemplate>
-
+<CartesianChart
+    Series="ViewModel.Series"
+    Tooltip="CustomTooltip">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    public ViewModel ViewModel { get; set; } = new();
+    public CustomTooltip CustomTooltip { get; set; } = new();
 }
