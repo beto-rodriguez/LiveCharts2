@@ -89,7 +89,6 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
         Size = _stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart, null, null);
     }
 
-
     public void Hide()
     {
         if (_chart is null || _stackPanel is null) return;

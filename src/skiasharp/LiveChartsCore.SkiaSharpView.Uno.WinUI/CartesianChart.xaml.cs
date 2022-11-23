@@ -537,8 +537,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         set => SetValue(LegendPositionProperty, value);
     }
 
-  
-
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
     {

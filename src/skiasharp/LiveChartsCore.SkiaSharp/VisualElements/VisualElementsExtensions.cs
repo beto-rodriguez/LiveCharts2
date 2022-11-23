@@ -62,7 +62,6 @@ public static class VisualElementsExtensions
             }
         }
 
-
         return relativePanel;
     }
 }

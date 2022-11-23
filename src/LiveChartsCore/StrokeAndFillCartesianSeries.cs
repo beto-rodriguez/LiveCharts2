@@ -21,10 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore;
@@ -76,7 +74,6 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
-
 
     /// <summary>
     /// Gets the paint tasks.
