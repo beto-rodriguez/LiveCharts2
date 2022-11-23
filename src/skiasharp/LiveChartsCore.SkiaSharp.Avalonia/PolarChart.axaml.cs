@@ -47,7 +47,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
-public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>, IAvaloniaChart
+public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -584,13 +584,6 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
 
         _core.ClearTooltipData();
         tooltip.Hide();
-    }
-
-    /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
-    Point IAvaloniaChart.GetCanvasPosition()
-    {
-        var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
-        return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
     }
 
     void IChartView.InvokeOnUIThread(Action action)

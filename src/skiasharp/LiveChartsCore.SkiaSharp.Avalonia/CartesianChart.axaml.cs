@@ -48,7 +48,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
-public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IAvaloniaChart
+public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -613,13 +613,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         _core.ClearTooltipData();
         tooltip.Hide();
-    }
-
-    /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
-    Point IAvaloniaChart.GetCanvasPosition()
-    {
-        var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
-        return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
     }
 
     void IChartView.InvokeOnUIThread(Action action)

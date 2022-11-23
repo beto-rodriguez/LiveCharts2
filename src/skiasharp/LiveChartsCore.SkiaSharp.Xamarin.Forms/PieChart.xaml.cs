@@ -34,7 +34,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.XamarinForms;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
@@ -45,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 
 /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>, IMobileChart
+public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -55,7 +55,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     protected Chart<SkiaSharpDrawingContext>? core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
-    private Grid? _grid;
 
     #endregion
 
@@ -226,57 +225,28 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
-    /// The legend orientation property
+    /// The legend background paint property.
     /// </summary>
-    public static readonly BindableProperty LegendOrientationProperty =
+    public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
-            nameof(LegendOrientation), typeof(LegendOrientation), typeof(PieChart),
-            LiveCharts.CurrentSettings.DefaultLegendOrientation, propertyChanged: OnBindablePropertyChanged);
+            nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            null, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
-    /// The legend template property
+    /// The legend text paint property.
     /// </summary>
-    public static readonly BindableProperty LegendTemplateProperty =
+    public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
-            nameof(LegendTemplate), typeof(DataTemplate), typeof(PieChart), null, propertyChanged: OnBindablePropertyChanged);
+            nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            null, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
-    /// The legend font family property
+    /// The legend text size property.
     /// </summary>
-    public static readonly BindableProperty LegendFontFamilyProperty =
+    public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendFontFamily), typeof(string), typeof(PieChart), null, propertyChanged: OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The legend font size property
-    /// </summary>
-    public static readonly BindableProperty LegendFontSizeProperty =
-        BindableProperty.Create(
-            nameof(LegendFontSize), typeof(double), typeof(PieChart), 13d, propertyChanged: OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The legend text color property
-    /// </summary>
-    public static readonly BindableProperty LegendTextBrushProperty =
-        BindableProperty.Create(
-            nameof(LegendTextBrush), typeof(Color), typeof(PieChart),
-            new Color(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The legend background property
-    /// </summary>
-    public static readonly BindableProperty LegendBackgroundProperty =
-        BindableProperty.Create(
-            nameof(LegendBackground), typeof(Color), typeof(PieChart),
-            new Color(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The legend font attributes property
-    /// </summary>
-    public static readonly BindableProperty LegendFontAttributesProperty =
-        BindableProperty.Create(
-            nameof(LegendFontAttributes), typeof(FontAttributes), typeof(PieChart),
-            FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
+            nameof(LegendTextSize), typeof(double?), typeof(PieChart),
+            null, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip position property;
@@ -287,49 +257,28 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
            LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
-    /// The tool tip template property
+    /// The tooltip background paint property.
     /// </summary>
-    public static readonly BindableProperty TooltipTemplateProperty =
+    public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
-            nameof(TooltipTemplate), typeof(DataTemplate), typeof(PieChart), null, propertyChanged: OnBindablePropertyChanged);
+            nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            null, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
-    /// The tool tip font family property
+    /// The tooltip text paint property.
     /// </summary>
-    public static readonly BindableProperty TooltipFontFamilyProperty =
+    public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
-            nameof(TooltipFontFamily), typeof(string), typeof(PieChart), null, propertyChanged: OnBindablePropertyChanged);
+            nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            null, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
-    /// The tool tip font size property
+    /// The tooltip text size property.
     /// </summary>
-    public static readonly BindableProperty TooltipFontSizeProperty =
+    public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipFontSize), typeof(double), typeof(PieChart), 13d, propertyChanged: OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The tool tip text color property
-    /// </summary>
-    public static readonly BindableProperty TooltipTextColorProperty =
-        BindableProperty.Create(
-            nameof(TooltipTextBrush), typeof(Color), typeof(PieChart),
-            new Color(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The tool tip background property
-    /// </summary>
-    public static readonly BindableProperty TooltipBackgroundProperty =
-        BindableProperty.Create(
-            nameof(TooltipBackground), typeof(Color), typeof(PieChart),
-            new Color(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
-
-    /// <summary>
-    /// The tool tip font attributes property
-    /// </summary>
-    public static readonly BindableProperty TooltipFontAttributesProperty =
-        BindableProperty.Create(
-            nameof(TooltipFontAttributes), typeof(FontAttributes), typeof(PieChart),
-            FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
+            nameof(TooltipTextSize), typeof(double?), typeof(PieChart),
+            null, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The data pointer down command property
@@ -420,12 +369,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
-    BindableObject IMobileChart.Canvas => canvas;
-
-    BindableObject IMobileChart.Legend => legend;
-
-    Grid IMobileChart.LayoutGrid => _grid ??= this.FindByName<Grid>("gridLayout");
-
     /// <inheritdoc cref="IChartView.DrawMargin" />
     public Margin? DrawMargin
     {
@@ -503,87 +446,29 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(LegendPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView.LegendOrientation" />
-    public LegendOrientation LegendOrientation
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint
     {
-        get => (LegendOrientation)GetValue(LegendOrientationProperty);
-        set => SetValue(LegendOrientationProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendBackgroundPaintProperty);
+        set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the legend template.
-    /// </summary>
-    /// <value>
-    /// The legend template.
-    /// </value>
-    public DataTemplate LegendTemplate
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint
     {
-        get => (DataTemplate)GetValue(LegendTemplateProperty);
-        set => SetValue(LegendTemplateProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendTextPaintProperty);
+        set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the legend font family.
-    /// </summary>
-    /// <value>
-    /// The legend font family.
-    /// </value>
-    public string LegendFontFamily
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    public double? LegendTextSize
     {
-        get => (string)GetValue(LegendFontFamilyProperty);
-        set => SetValue(LegendFontFamilyProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the size of the legend font.
-    /// </summary>
-    /// <value>
-    /// The size of the legend font.
-    /// </value>
-    public double LegendFontSize
-    {
-        get => (double)GetValue(LegendFontSizeProperty);
-        set => SetValue(LegendFontSizeProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the color of the legend text.
-    /// </summary>
-    /// <value>
-    /// The color of the legend text.
-    /// </value>
-    public Color LegendTextBrush
-    {
-        get => (Color)GetValue(LegendTextBrushProperty);
-        set => SetValue(LegendTextBrushProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the color of the legend background.
-    /// </summary>
-    /// <value>
-    /// The color of the legend background.
-    /// </value>
-    public Color LegendBackground
-    {
-        get => (Color)GetValue(LegendBackgroundProperty);
-        set => SetValue(LegendBackgroundProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the legend font attributes.
-    /// </summary>
-    /// <value>
-    /// The legend font attributes.
-    /// </value>
-    public FontAttributes LegendFontAttributes
-    {
-        get => (FontAttributes)GetValue(LegendFontAttributesProperty);
-        set => SetValue(LegendFontAttributesProperty, value);
+        get => (double?)GetValue(LegendTextSizeProperty);
+        set => SetValue(LegendTextSizeProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; } = new SKDefaultLegend();
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
@@ -592,80 +477,29 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the tool tip template.
-    /// </summary>
-    /// <value>
-    /// The tool tip template.
-    /// </value>
-    public DataTemplate TooltipTemplate
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint
     {
-        get => (DataTemplate)GetValue(TooltipTemplateProperty);
-        set => SetValue(TooltipTemplateProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipBackgroundPaintProperty);
+        set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the tool tip font family.
-    /// </summary>
-    /// <value>
-    /// The tool tip font family.
-    /// </value>
-    public string TooltipFontFamily
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint
     {
-        get => (string)GetValue(TooltipFontFamilyProperty);
-        set => SetValue(TooltipFontFamilyProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipTextPaintProperty);
+        set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the size of the tool tip font.
-    /// </summary>
-    /// <value>
-    /// The size of the tool tip font.
-    /// </value>
-    public double TooltipFontSize
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    public double? TooltipTextSize
     {
-        get => (double)GetValue(TooltipFontSizeProperty);
-        set => SetValue(TooltipFontSizeProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the color of the tool tip text.
-    /// </summary>
-    /// <value>
-    /// The color of the tool tip text.
-    /// </value>
-    public Color TooltipTextBrush
-    {
-        get => (Color)GetValue(TooltipTextColorProperty);
-        set => SetValue(TooltipTextColorProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the color of the tool tip background.
-    /// </summary>
-    /// <value>
-    /// The color of the tool tip background.
-    /// </value>
-    public Color TooltipBackground
-    {
-        get => (Color)GetValue(TooltipBackgroundProperty);
-        set => SetValue(TooltipBackgroundProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the tool tip font attributes.
-    /// </summary>
-    /// <value>
-    /// The tool tip font attributes.
-    /// </value>
-    public FontAttributes TooltipFontAttributes
-    {
-        get => (FontAttributes)GetValue(TooltipFontAttributesProperty);
-        set => SetValue(TooltipFontAttributesProperty, value);
+        get => (double?)GetValue(TooltipTextSizeProperty);
+        set => SetValue(TooltipTextSizeProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -732,31 +566,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
     public void ShowTooltip(IEnumerable<ChartPoint> points)
     {
-        if (tooltip is null || core is null) return;
-
-        ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
+        if (Tooltip is null || core is null) return;
+        Tooltip.Show(points, core);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
     public void HideTooltip()
     {
-        if (tooltip is null || core is null) return;
-
+        if (Tooltip is null || core is null) return;
         core.ClearTooltipData();
-        ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
-    }
-
-    /// <inheritdoc cref="IMobileChart.GetCanvasPosition" />
-    LvcPoint IMobileChart.GetCanvasPosition()
-    {
-        return new LvcPoint((float)canvas.X, (float)canvas.Y);
-    }
-
-    /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
-    public void SetTooltipStyle(LvcColor background, LvcColor textColor)
-    {
-        TooltipBackground = new Color(background.R, background.G, background.B, background.A);
-        TooltipTextBrush = new Color(textColor.R, textColor.G, textColor.B, textColor.A);
+        Tooltip.Hide();
     }
 
     void IChartView.InvokeOnUIThread(Action action)

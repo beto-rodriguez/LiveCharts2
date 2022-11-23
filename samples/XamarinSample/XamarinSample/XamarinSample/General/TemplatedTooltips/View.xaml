@@ -4,45 +4,20 @@
              x:Class="XamarinSample.General.TemplatedTooltips.View"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.XamarinForms"
              xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedTooltips;assembly=ViewModelsSamples">
-    
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <ContentPage.Resources>
-        <lvc:PaintTasksValueConverter x:Key="paintTaskConverter" />
-        <lvc:WidthConverter x:Key="wConverter" />
-        <lvc:HeightConverter x:Key="hConverter" />
-    </ContentPage.Resources>
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}">
-            <!-- mark -untilCloses CartesianChart.TooltipTemplate -->
-            <lvc:CartesianChart.TooltipTemplate>
-                <DataTemplate>
-                    <Frame Background="#353535" CornerRadius="4" HasShadow="True" Padding="6">
-                        <StackLayout BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                                        <Label Text="{Binding AsTooltipString}"
-                                            TextColor="#fafafa"/>
-                                        <lvc:MotionCanvas 
-                                            VerticalOptions="Center"
-                                            Margin="5, 0, 0, 0"
-                                            WidthRequest="{Binding Context.Series, Converter={StaticResource wConverter}}"
-                                            HeightRequest="{Binding Context.Series, Converter={StaticResource hConverter}}"
-                                            PaintTasks="{Binding Context.Series, Converter={StaticResource paintTaskConverter}}"/>
-                                    </StackLayout>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </lvc:CartesianChart.TooltipTemplate>
+            <!-- mark -untilCloses CartesianChart.Tooltip -->
+            <lvc:CartesianChart.Tooltip>
+                <vms:CustomTooltip></vms:CustomTooltip>
+            </lvc:CartesianChart.Tooltip>
         </lvc:CartesianChart>
     </Grid>
 </ContentPage>

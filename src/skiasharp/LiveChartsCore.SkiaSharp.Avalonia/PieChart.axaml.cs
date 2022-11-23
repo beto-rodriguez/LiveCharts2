@@ -46,7 +46,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
-public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAvaloniaChart
+public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -518,13 +518,6 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
 
         _core.ClearTooltipData();
         tooltip.Hide();
-    }
-
-    /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
-    Point IAvaloniaChart.GetCanvasPosition()
-    {
-        var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
-        return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
