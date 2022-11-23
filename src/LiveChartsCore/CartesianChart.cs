@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -422,7 +423,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
-        LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
 
         TooltipPosition = _chartView.TooltipPosition;
@@ -534,18 +534,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
-        {
-            Legend.Draw(this);
-            PreviousLegendPosition = LegendPosition;
-            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-            foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-            _preserveFirstDraw = IsFirstDraw;
-            SetPreviousSize();
-            Measure();
-            return;
-        }
+        InitializeVisualsCollector();
+
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
+        DrawLegend(seriesInLegend);
 
         var title = View.Title;
 
@@ -669,7 +661,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
         UpdateBounds();
-        InitializeVisualsCollector();
 
         if (title is not null)
         {
@@ -677,7 +668,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             title.AlignToTopLeftCorner();
             title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
             title.Y = 0;
-            RegisterAndInvalidateVisual(title);
+            AddVisual(title);
         }
 
         var totalAxes = XAxes.Concat(YAxes).ToArray();
@@ -717,14 +708,14 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.IsNotifyingChanges = true;
             }
 
-            if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
+            if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
             ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
-        foreach (var section in Sections) RegisterAndInvalidateVisual(section);
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        foreach (var section in Sections) AddVisual(section);
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
@@ -735,7 +726,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         if (_chartView.DrawMarginFrame is not null)
         {
-            RegisterAndInvalidateVisual(_chartView.DrawMarginFrame);
+            AddVisual(_chartView.DrawMarginFrame);
             _previousDrawMarginFrame = _chartView.DrawMarginFrame;
         }
 

@@ -46,8 +46,7 @@ public partial class DefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, ID
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-
-        if (_dom is null) _dom = new DomJsInterop(JS);
+        _dom ??= new DomJsInterop(JS);
     }
 
     /// <summary>
@@ -77,36 +76,13 @@ public partial class DefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, ID
         _chart.TooltipClass = "";
         Points = tooltipPoints.ToArray();
 
-        //TooltipBackground = avaloniaChart.TooltipBackground;
-        //TooltipFontFamily = avaloniaChart.TooltipFontFamily;
-        //TooltipFontSize = avaloniaChart.TooltipFontSize;
-        //TooltipFontStyle = avaloniaChart.TooltipFontStyle;
-        //TooltipFontWeight = avaloniaChart.TooltipFontWeight;
-        //TooltipTextBrush = avaloniaChart.TooltipTextBrush;
-
         await InvokeAsync(StateHasChanged);
         var clientRect = await _dom.GetBoundingClientRect(_wrapper);
         var tooltipSize = new LvcSize((float)clientRect.Width, (float)clientRect.Height);
 
-        LvcPoint? location = null;
-        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-            location = tooltipPoints.GetCartesianTooltipLocation(chart.TooltipPosition, tooltipSize, chart.ControlSize);
-        if (chart is PieChart<SkiaSharpDrawingContext>)
-            location = tooltipPoints.GetPieTooltipLocation(chart.TooltipPosition, tooltipSize);
+        var location = tooltipPoints.GetTooltipLocation(tooltipSize, chart);
 
-        if (location is null) throw new Exception("location not found");
-
-        double x = location.Value.X;
-        double y = location.Value.Y;
-        var s = chart.ControlSize;
-        var w = s.Width;
-        var h = s.Height;
-        if (location.Value.X + tooltipSize.Width > w) x = w - tooltipSize.Width;
-        if (location.Value.X < 0) x = 0;
-        if (location.Value.Y < 0) y = 0;
-        if (location.Value.Y + tooltipSize.Height > h) x = h - tooltipSize.Height;
-
-        await _dom.SetPosition(_wrapper, x, y, blazorChart.CanvasContainerElement);
+        await _dom.SetPosition(_wrapper, location.X, location.Y, blazorChart.CanvasContainerElement);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()

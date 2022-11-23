@@ -102,7 +102,7 @@ public class SolidColorPaint : Paint
         _skiaPaint.StrokeWidth = StrokeThickness;
         _skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
-        if (HasCustomFont) _skiaPaint.Typeface = GetTypeFaceFromFontFamily();
+        if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
 
         if (PathEffect is not null)
         {

@@ -32,17 +32,41 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// <summary>
 /// Defines a visual element in a chart that draws a rectangle geometry in the user interface.
 /// </summary>
-public class GeometryVisual<TGeometry> : BaseGeometryVisual
-    where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
+public class VariableGeometryVisual : BaseGeometryVisual
 {
-    internal TGeometry? _geometry;
+    private ISizedGeometry<SkiaSharpDrawingContext> _geometry;
+    private bool _isInitialized;
     private LvcSize _actualSize = new();
-    private LvcPoint _targetLocation = new();
+    private LvcPoint _targetPosition = new();
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VariableGeometryVisual"/> class.
+    /// </summary>
+    /// <param name="geometry"></param>
+    public VariableGeometryVisual(ISizedGeometry<SkiaSharpDrawingContext> geometry)
+    {
+        _geometry = geometry;
+    }
+
+    /// <summary>
+    /// Gets or sets the geometry.
+    /// </summary>
+    public ISizedGeometry<SkiaSharpDrawingContext> Geometry
+    {
+        get => _geometry;
+        set
+        {
+            if (_geometry == value) return;
+            _geometry = value;
+            _isInitialized = false;
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// Occurs when the geometry is initialized.
     /// </summary>
-    public event Action<TGeometry>? GeometryIntialized;
+    public event Action<ISizedGeometry<SkiaSharpDrawingContext>>? GeometryIntialized;
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
     public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
@@ -83,41 +107,41 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
             y = primaryScaler.ToPixels(y);
         }
 
-        _targetLocation = new((float)X + _xc, (float)Y + _yc);
+        _targetPosition = new((float)X + _xc, (float)Y + _yc);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
-        if (_geometry is null)
+        if (!_isInitialized)
         {
             var cp = GetPositionRelativeToParent();
 
-            _geometry = new TGeometry
-            {
-                X = cp.X,
-                Y = cp.Y,
-                Width = _actualSize.Width,
-                Height = _actualSize.Height
-            };
-            GeometryIntialized?.Invoke(_geometry);
+            Geometry.X = cp.X;
+            Geometry.Y = cp.Y;
+            Geometry.Width = _actualSize.Width;
+            Geometry.Height = _actualSize.Height;
 
-            _ = _geometry
+            GeometryIntialized?.Invoke(Geometry);
+
+            _ = Geometry
                 .TransitionateProperties()
                 .WithAnimation(chart)
                 .CompleteCurrentTransitions();
+
+            _isInitialized = true;
         }
 
-        _geometry.X = x + _xc;
-        _geometry.Y = y + _yc;
-        _geometry.Width = _actualSize.Width;
-        _geometry.Height = _actualSize.Height;
+        Geometry.X = x + _xc;
+        Geometry.Y = y + _yc;
+        Geometry.Width = _actualSize.Width;
+        Geometry.Height = _actualSize.Height;
 
         var drawing = chart.Canvas.Draw();
-        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
-        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
+        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(Geometry);
+        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(Geometry);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
     public override LvcPoint GetTargetLocation()
     {
-        return _targetLocation;
+        return _targetPosition;
     }
 }

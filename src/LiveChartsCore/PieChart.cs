@@ -165,7 +165,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         LegendPosition = _chartView.LegendPosition;
-        LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
 
         TooltipPosition = _chartView.TooltipPosition;
@@ -203,15 +202,10 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             series.IsNotifyingChanges = true;
         }
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
-        {
-            Legend.Draw(this);
-            Update();
-            PreviousLegendPosition = LegendPosition;
-            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-            _preserveFirstDraw = IsFirstDraw;
-        }
+        InitializeVisualsCollector();
+
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
+        DrawLegend(seriesInLegend);
 
         if (viewDrawMargin is null)
         {
@@ -223,10 +217,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        InitializeVisualsCollector();
-
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         CollectVisuals();
 

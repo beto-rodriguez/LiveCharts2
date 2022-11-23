@@ -12,9 +12,7 @@
         Series="{Binding Series}"
         YAxes="{Binding YAxes}"
         LegendPosition="Bottom"
-        LegendFontFamily="Courier New"
-        LegendFontSize="25"
-        LegendTextBrush="#505050"
-        LegendBackground="#fafafa">
+        LegendBackgroundPaint="{Binding LegendTextPaint}"
+        LegendTextPaint="{Binding LegendTextPaint}">
     </lvc:CartesianChart>
 </ContentPage>

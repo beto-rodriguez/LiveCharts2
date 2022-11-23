@@ -36,6 +36,9 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
 {
     private IEnumerable<ChartPoint>? _tooltipPoints;
     private Chart<SkiaSharpDrawingContext>? _chart;
+    private readonly Font _tooltipFont = Fonts.Sans(11);
+    private readonly Color _tooltipTextColor = Color.FromArgb(255, 35, 35, 35);
+    private readonly Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -52,13 +55,8 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
     {
         _chart = chart;
         _tooltipPoints = tooltipPoints;
-
-        var wfChart = (Chart)chart.View;
-
-        DrawAndMeasure(tooltipPoints, wfChart);
-
+        DrawAndMeasure(tooltipPoints);
         SetLocation();
-
         Show();
     }
 
@@ -78,33 +76,20 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
         if (Height < 1 || Width < 1) return;
         if (_chart is null || _tooltipPoints is null) return;
 
-        LvcPoint? location = null;
+        var location = _tooltipPoints.GetTooltipLocation(new LvcSize(Width, Height), _chart);
+        //var wfChart = (Chart)_chart.View;
+        //var canvasPosition = wfChart.GetCanvasPosition();
 
-        if (_chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-        {
-            location = _tooltipPoints.GetCartesianTooltipLocation(
-                _chart.TooltipPosition, new LvcSize(Width, Height), _chart.ControlSize);
-        }
-        if (_chart is PieChart<SkiaSharpDrawingContext>)
-        {
-            location = _tooltipPoints.GetPieTooltipLocation(
-                _chart.TooltipPosition, new LvcSize(Width, Height));
-        }
-        if (location is null) throw new Exception("location not supported");
-
-        var wfChart = (Chart)_chart.View;
-        var l = wfChart.PointToScreen(Point.Empty);
-        var x = l.X + location.Value.X;
-        var y = l.Y + location.Value.Y;
-
-        var canvasPosition = wfChart.GetCanvasPosition();
-
-        Location = new Point((int)(x + canvasPosition.X), (int)(y + canvasPosition.Y));
+        Location = new Point((int)location.X, (int)location.Y);
     }
 
-    private void DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
+    private void DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints)
     {
-        var container = new DynamicLayout() { BackgroundColor = chart.TooltipBackColor, Padding = new global::Eto.Drawing.Padding(4) };
+        var container = new DynamicLayout()
+        {
+            BackgroundColor = _tooltipBackColor,
+            Padding = new global::Eto.Drawing.Padding(4)
+        };
 
         foreach (var point in tooltipPoints)
         {
@@ -119,8 +104,8 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
             var label = new Label
             {
                 Text = point.AsTooltipString,
-                Font = chart.TooltipFont,
-                TextColor = chart.TooltipTextColor,
+                Font = _tooltipFont,
+                TextColor = _tooltipTextColor,
                 VerticalAlignment = VerticalAlignment.Center,
             };
 

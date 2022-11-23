@@ -15,9 +15,10 @@ public partial class View : UserControl
 
         var viewModel = new ViewModel();
 
-        cartesianChart = new CartesianChart(tooltip: new CustomTooltip())
+        cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            Tooltip = new CustomTooltip(),
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

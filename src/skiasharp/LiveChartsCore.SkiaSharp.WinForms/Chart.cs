@@ -33,6 +33,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -48,12 +49,12 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The legend
     /// </summary>
-    protected IChartLegend<SkiaSharpDrawingContext> legend = new DefaultLegend();
+    protected IChartLegend<SkiaSharpDrawingContext>? legend = new SKDefaultLegend();
 
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new DefaultTooltip();
+    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip = new SKDefaultTooltip();
 
     /// <summary>
     /// The motion canvas
@@ -61,18 +62,17 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     protected MotionCanvas motionCanvas;
 
     private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
-    private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
-    private Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-    private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
-    private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-    private Color _legendBackColor = Color.FromArgb(255, 255, 255, 255);
-    private Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
-    private Color _tooltipTextColor;
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
+    private IPaint<SkiaSharpDrawingContext>? _legendTextPaint = null;
+    private IPaint<SkiaSharpDrawingContext>? _legendBackgroundPaint = null;
+    private double? _legendTextSize = null;
+    private IPaint<SkiaSharpDrawingContext>? _tooltipTextPaint = null;
+    private IPaint<SkiaSharpDrawingContext>? _tooltipBackgroundPaint = null;
+    private double? _tooltipTextSize = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -96,10 +96,13 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         motionCanvas.Resize += OnResized;
         AutoScaleMode = AutoScaleMode.Font;
         Controls.Add(motionCanvas);
-        var l = (Control)this.legend;
-        l.Visible = false;
-        l.Dock = DockStyle.Right;
-        Controls.Add(l);
+        if (this.legend is Control controlLegend)
+        {
+            var l = controlLegend;
+            l.Visible = false;
+            l.Dock = DockStyle.Right;
+            Controls.Add(l);
+        }
         Name = "CartesianChart";
         ResumeLayout(true);
 
@@ -201,75 +204,41 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView.LegendOrientation" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public LegendOrientation LegendOrientation { get => _legendOrientation; set { _legendOrientation = value; OnPropertyChanged(); } }
+    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the default legend font.
-    /// </summary>
-    /// <value>
-    /// The legend font.
-    /// </value>
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Font LegendFont { get => _legendFont; set { _legendFont = value; OnPropertyChanged(); } }
+    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get => _legendBackgroundPaint; set { _legendBackgroundPaint = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the default color of the legend text.
-    /// </summary>
-    /// <value>
-    /// The color of the legend back.
-    /// </value>
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Color LegendTextColor { get => _legendTextColor; set { _legendTextColor = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the default color of the legend back.
-    /// </summary>
-    /// <value>
-    /// The color of the legend back.
-    /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Color LegendBackColor { get => _legendBackColor; set { _legendBackColor = value; OnPropertyChanged(); } }
+    public double? LegendTextSize { get => _legendTextSize; set { _legendTextSize = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get => legend; set => legend = value; }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the default tool tip font.
-    /// </summary>
-    /// <value>
-    /// The tool tip font.
-    /// </value>
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Font TooltipFont { get => _tooltipFont; set { _tooltipFont = value; OnPropertyChanged(); } }
+    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get => _tooltipTextPaint; set { _tooltipTextPaint = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the color of the tool tip text.
-    /// </summary>
-    /// <value>
-    /// The color of the tool tip text.
-    /// </value>
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Color TooltipTextColor { get => _tooltipTextColor; set { _tooltipTextColor = value; OnPropertyChanged(); } }
+    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get => _tooltipBackgroundPaint; set { _tooltipBackgroundPaint = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Gets or sets the color of the default tool tip back.
-    /// </summary>
-    /// <value>
-    /// The color of the tool tip back.
-    /// </value>
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Color TooltipBackColor { get => _tooltipBackColor; set { _tooltipBackColor = value; OnPropertyChanged(); } }
+    public double? TooltipTextSize { get => _tooltipTextSize; set { _tooltipTextSize = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -329,13 +298,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     internal Point GetCanvasPosition()
     {
         return motionCanvas.Location;
-    }
-
-    /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
-    public void SetTooltipStyle(LvcColor background, LvcColor textColor)
-    {
-        TooltipBackColor = Color.FromArgb(background.A, background.R, background.G, background.B);
-        TooltipTextColor = Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B);
     }
 
     void IChartView.InvokeOnUIThread(Action action)

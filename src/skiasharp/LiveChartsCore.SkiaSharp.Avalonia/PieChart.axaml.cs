@@ -31,7 +31,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
@@ -41,12 +40,13 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
-public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAvaloniaChart
+public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -195,12 +195,6 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
             nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
 
     /// <summary>
-    /// The tool tip template property
-    /// </summary>
-    public static readonly AvaloniaProperty<DataTemplate?> TooltipTemplateProperty =
-        AvaloniaProperty.Register<PieChart, DataTemplate?>(nameof(TooltipTemplate), null, inherits: true);
-
-    /// <summary>
     /// The tool tip position property
     /// </summary>
     public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
@@ -208,44 +202,25 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
             nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
 
     /// <summary>
-    /// The tool tip font family property
+    /// The tooltip background paint property
     /// </summary>
-    public static readonly AvaloniaProperty<FontFamily> TooltipFontFamilyProperty =
-        AvaloniaProperty.Register<PieChart, FontFamily>(
-            nameof(TooltipFontFamily), new FontFamily("Arial"), inherits: true);
+    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipBackgroundPaintProperty =
+        AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
+            nameof(TooltipBackgroundPaint), null, inherits: true);
 
     /// <summary>
-    /// The tool tip font size property
+    /// The tooltip text paint property
     /// </summary>
-    public static readonly AvaloniaProperty<double> TooltipFontSizeProperty =
-        AvaloniaProperty.Register<PieChart, double>(nameof(TooltipFontSize), 13d, inherits: true);
+    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipTextPaintProperty =
+        AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
+            nameof(TooltipTextPaint), null, inherits: true);
 
     /// <summary>
-    /// The tool tip font weight property
+    /// The tooltip text size property
     /// </summary>
-    public static readonly AvaloniaProperty<FontWeight> TooltipFontWeightProperty =
-        AvaloniaProperty.Register<PieChart, FontWeight>(nameof(TooltipFontWeight), FontWeight.Normal, inherits: true);
-
-    /// <summary>
-    /// The tool tip font style property
-    /// </summary>
-    public static readonly AvaloniaProperty<FontStyle> TooltipFontStyleProperty =
-        AvaloniaProperty.Register<PieChart, FontStyle>(
-            nameof(TooltipFontStyle), FontStyle.Normal, inherits: true);
-
-    /// <summary>
-    /// The tool tip text brush property
-    /// </summary>
-    public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
-        AvaloniaProperty.Register<PieChart, SolidColorBrush>(
-            nameof(TooltipTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
-
-    /// <summary>
-    /// The tool tip background property
-    /// </summary>
-    public static readonly AvaloniaProperty<IBrush> TooltipBackgroundProperty =
-        AvaloniaProperty.Register<PieChart, IBrush>(nameof(TooltipBackground),
-            new SolidColorBrush(new Color(255, 250, 250, 250)), inherits: true);
+    public static readonly AvaloniaProperty<double?> TooltipTextSizeProperty =
+        AvaloniaProperty.Register<PieChart, double?>(
+            nameof(TooltipTextSize), null, inherits: true);
 
     /// <summary>
     /// The legend position property
@@ -255,57 +230,25 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
             nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
 
     /// <summary>
-    /// The legend orientation property
+    /// The legend background paint property
     /// </summary>
-    public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
-        AvaloniaProperty.Register<PieChart, LegendOrientation>(
-            nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
+    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendBackgroundPaintProperty =
+        AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
+            nameof(LegendBackgroundPaint), null, inherits: true);
 
     /// <summary>
-    /// The legend template property
+    /// The legend text paint property
     /// </summary>
-    public static readonly AvaloniaProperty<DataTemplate?> LegendTemplateProperty =
-        AvaloniaProperty.Register<PieChart, DataTemplate?>(nameof(LegendTemplate), null, inherits: true);
+    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendTextPaintProperty =
+        AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
+            nameof(LegendTextPaint), null, inherits: true);
 
     /// <summary>
-    /// The legend font family property
+    /// The legend text size property
     /// </summary>
-    public static readonly AvaloniaProperty<FontFamily> LegendFontFamilyProperty =
-       AvaloniaProperty.Register<PieChart, FontFamily>(
-           nameof(LegendFontFamily), new FontFamily("Arial"), inherits: true);
-
-    /// <summary>
-    /// The legend font size property
-    /// </summary>
-    public static readonly AvaloniaProperty<double> LegendFontSizeProperty =
-        AvaloniaProperty.Register<PieChart, double>(nameof(LegendFontSize), 13d, inherits: true);
-
-    /// <summary>
-    /// The legend font weight property
-    /// </summary>
-    public static readonly AvaloniaProperty<FontWeight> LegendFontWeightProperty =
-        AvaloniaProperty.Register<PieChart, FontWeight>(nameof(LegendFontWeight), FontWeight.Normal, inherits: true);
-
-    /// <summary>
-    /// The legend font style property
-    /// </summary>
-    public static readonly AvaloniaProperty<FontStyle> LegendFontStyleProperty =
-        AvaloniaProperty.Register<PieChart, FontStyle>(
-            nameof(LegendFontStyle), FontStyle.Normal, inherits: true);
-
-    /// <summary>
-    /// The legend text brush property
-    /// </summary>
-    public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
-        AvaloniaProperty.Register<PieChart, SolidColorBrush>(
-            nameof(LegendTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
-
-    /// <summary>
-    /// The legend background property
-    /// </summary>
-    public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
-        AvaloniaProperty.Register<PieChart, IBrush>(nameof(LegendBackground),
-            new SolidColorBrush(new Color(255, 255, 255, 255)), inherits: true);
+    public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
+        AvaloniaProperty.Register<PieChart, double?>(
+            nameof(LegendTextSize), null, inherits: true);
 
     /// <summary>
     /// The data pointer down command property
@@ -462,92 +405,29 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the tool data tip template.
-    /// </summary>
-    /// <value>
-    /// The tool tip template.
-    /// </value>
-    public DataTemplate TooltipTemplate
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint
     {
-        get => (DataTemplate)GetValue(TooltipTemplateProperty);
-        set => SetValue(TooltipTemplateProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipBackgroundPaintProperty);
+        set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the tool tip default font family.
-    /// </summary>
-    /// <value>
-    /// The tool tip font family.
-    /// </value>
-    public FontFamily TooltipFontFamily
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint
     {
-        get => (FontFamily)GetValue(TooltipFontFamilyProperty);
-        set => SetValue(TooltipFontFamilyProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipTextPaintProperty);
+        set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default size of the tool tip font.
-    /// </summary>
-    /// <value>
-    /// The size of the tool tip font.
-    /// </value>
-    public double TooltipFontSize
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    public double? TooltipTextSize
     {
-        get => (double)GetValue(TooltipFontSizeProperty);
-        set => SetValue(TooltipFontSizeProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip font weight.
-    /// </summary>
-    /// <value>
-    /// The tool tip font weight.
-    /// </value>
-    public FontWeight TooltipFontWeight
-    {
-        get => (FontWeight)GetValue(TooltipFontWeightProperty);
-        set => SetValue(TooltipFontWeightProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip font style.
-    /// </summary>
-    /// <value>
-    /// The tool tip font style.
-    /// </value>
-    public FontStyle TooltipFontStyle
-    {
-        get => (FontStyle)GetValue(TooltipFontStyleProperty);
-        set => SetValue(TooltipFontStyleProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip text brush.
-    /// </summary>
-    /// <value>
-    /// The tool tip text brush.
-    /// </value>
-    public SolidColorBrush TooltipTextBrush
-    {
-        get => (SolidColorBrush)GetValue(TooltipTextBrushProperty);
-        set => SetValue(TooltipTextBrushProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip background.
-    /// </summary>
-    /// <value>
-    /// The tool tip background.
-    /// </value>
-    public IBrush TooltipBackground
-    {
-        get => (IBrush)GetValue(TooltipBackgroundProperty);
-        set => SetValue(TooltipBackgroundProperty, value);
+        get => (double?)GetValue(TooltipTextSizeProperty);
+        set => SetValue(TooltipTextSizeProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition
@@ -556,99 +436,29 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         set => SetValue(LegendPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView.LegendOrientation" />
-    public LegendOrientation LegendOrientation
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint
     {
-        get => (LegendOrientation)GetValue(LegendOrientationProperty);
-        set => SetValue(LegendOrientationProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendBackgroundPaintProperty);
+        set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the legend template.
-    /// </summary>
-    /// <value>
-    /// The legend template.
-    /// </value>
-    public DataTemplate LegendTemplate
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint
     {
-        get => (DataTemplate)GetValue(LegendTemplateProperty);
-        set => SetValue(LegendTemplateProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendTextPaintProperty);
+        set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default legend font family.
-    /// </summary>
-    /// <value>
-    /// The legend font family.
-    /// </value>
-    public FontFamily LegendFontFamily
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    public double? LegendTextSize
     {
-        get => (FontFamily)GetValue(LegendFontFamilyProperty);
-        set => SetValue(LegendFontFamilyProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default size of the legend font.
-    /// </summary>
-    /// <value>
-    /// The size of the legend font.
-    /// </value>
-    public double LegendFontSize
-    {
-        get => (double)GetValue(LegendFontSizeProperty);
-        set => SetValue(LegendFontSizeProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default legend font weight.
-    /// </summary>
-    /// <value>
-    /// The legend font weight.
-    /// </value>
-    public FontWeight LegendFontWeight
-    {
-        get => (FontWeight)GetValue(LegendFontWeightProperty);
-        set => SetValue(LegendFontWeightProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default legend font style.
-    /// </summary>
-    /// <value>
-    /// The legend font style.
-    /// </value>
-    public FontStyle LegendFontStyle
-    {
-        get => (FontStyle)GetValue(LegendFontStyleProperty);
-        set => SetValue(LegendFontStyleProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default legend text brush.
-    /// </summary>
-    /// <value>
-    /// The legend text brush.
-    /// </value>
-    public SolidColorBrush LegendTextBrush
-    {
-        get => (SolidColorBrush)GetValue(LegendTextBrushProperty);
-        set => SetValue(LegendTextBrushProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default legend background.
-    /// </summary>
-    /// <value>
-    /// The legend background.
-    /// </value>
-    public IBrush LegendBackground
-    {
-        get => (IBrush)GetValue(LegendBackgroundProperty);
-        set => SetValue(LegendBackgroundProperty, value);
+        get => (double?)GetValue(LegendTextSizeProperty);
+        set => SetValue(LegendTextSizeProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get => legend; set => legend = value; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -710,13 +520,6 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         tooltip.Hide();
     }
 
-    /// <inheritdoc cref="IAvaloniaChart.GetCanvasPosition"/>
-    Point IAvaloniaChart.GetCanvasPosition()
-    {
-        var p = _avaloniaCanvas.TranslatePoint(new Point(0, 0), this);
-        return _avaloniaCanvas is null || p is null ? throw new Exception("Canvas not found") : p.Value;
-    }
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
     {
@@ -733,14 +536,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     {
         return _core is not CartesianChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
-    }
-
-    /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
-    public void SetTooltipStyle(LvcColor background, LvcColor textColor)
-    {
-        TooltipBackground = new SolidColorBrush(new Color(background.A, background.R, background.G, background.B));
-        TooltipTextBrush = new SolidColorBrush(new Color(textColor.A, textColor.R, textColor.G, textColor.B));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(cc, point));
     }
 
     void IChartView.InvokeOnUIThread(Action action)
@@ -763,8 +559,9 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        legend = this.FindControl<DefaultLegend>("legend");
-        tooltip = this.FindControl<DefaultTooltip>("tooltip");
+        legend = new SKDefaultLegend(); // this.FindControl<DefaultLegend>("legend");
+        tooltip = new SKDefaultTooltip(); // this.FindControl<DefaultTooltip>("tooltip");
+
         _core.Update();
     }
 

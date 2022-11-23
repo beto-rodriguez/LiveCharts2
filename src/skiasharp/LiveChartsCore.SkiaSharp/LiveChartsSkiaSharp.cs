@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -107,6 +108,7 @@ public static class LiveChartsSkiaSharp
     /// <summary>
     /// Gets the <see cref="SkiaFontMatchChar"/> key.
     /// </summary>
+    [Obsolete($"Use {nameof(Paint)}.{nameof(Paint.SKTypeface)} instead.")]
     public const string SkiaFontMatchChar = "matchChar";
 
     /// <summary>
@@ -114,6 +116,7 @@ public static class LiveChartsSkiaSharp
     /// </summary>
     /// <param name="char"></param>
     /// <returns></returns>
+    [Obsolete($"Use {nameof(Paint)}.{nameof(Paint.SKTypeface)} instead.")]
     public static string MatchChar(char @char)
     {
         return $"{SkiaFontMatchChar}|{@char}";

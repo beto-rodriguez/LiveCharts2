@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore;
@@ -44,12 +43,10 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private double _legendShapeSize = 15;
     private IPaint<TDrawingContext>? _dataLabelsPaint;
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
-    private CanvasSchedule<TDrawingContext> _canvasSchedule = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -73,32 +70,8 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
     public Padding DataLabelsPadding { get => _dataLabelsPadding; set { _dataLabelsPadding = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.CanvasSchedule"/>
-    public CanvasSchedule<TDrawingContext> CanvasSchedule
-    {
-        get => _canvasSchedule;
-        protected set { _canvasSchedule = value; OnPropertyChanged(); }
-    }
-
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.IsFirstDraw"/>
     public bool IsFirstDraw { get; protected set; } = true;
-
-    /// <summary>
-    /// Gets or sets the size of the legend shape.
-    /// </summary>
-    /// <value>
-    /// The size of the legend shape.
-    /// </value>
-    public double LegendShapeSize
-    {
-        get => _legendShapeSize;
-        set
-        {
-            _legendShapeSize = value;
-            OnSeriesMiniatureChanged();
-            OnPropertyChanged();
-        }
-    }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
@@ -107,12 +80,6 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         OnDataPointerDown(chart, points, pointer);
     }
-
-    /// <summary>
-    /// Called when the paint context changed.
-    /// </summary>
-    /// <returns></returns>
-    protected abstract void OnSeriesMiniatureChanged();
 
     /// <summary>
     /// Initializes the series.

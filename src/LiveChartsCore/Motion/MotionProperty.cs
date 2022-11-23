@@ -87,7 +87,7 @@ public abstract class MotionProperty<T> : IMotionProperty
     }
 
     /// <summary>
-    /// Moves to he specified value.
+    /// Moves to the specified value.
     /// </summary>
     /// <param name="value">The value to move to.</param>
     /// <param name="animatable">The <see cref="IAnimatable"/> instance that is moving.</param>
@@ -150,6 +150,23 @@ public abstract class MotionProperty<T> : IMotionProperty
 
         var fp = Animation.EasingFunction(p);
         return OnGetMovement(fp);
+    }
+
+    /// <summary>
+    /// Gets the current value in the time line.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <returns>The current value.</returns>
+    public T GetCurrentValue(Animatable animatable)
+    {
+        unchecked
+        {
+            var p = (animatable.CurrentTime - _startTime) / (float)(_endTime - _startTime);
+            if (p >= 1) p = 1;
+            if (animatable.CurrentTime == long.MinValue) p = 0;
+            var fp = Animation?.EasingFunction?.Invoke(p) ?? 1;
+            return OnGetMovement(fp);
+        }
     }
 
     /// <summary>

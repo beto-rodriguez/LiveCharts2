@@ -443,54 +443,20 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         return DataFactory.GetPieBounds(chart, this).Bounds;
     }
 
-    /// <summary>
-    /// Called when the paint context changed.
-    /// </summary>
-    protected override void OnSeriesMiniatureChanged()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
+    public override Sketch<TDrawingContext> GetMiniatresSketch()
     {
-        var context = new CanvasSchedule<TDrawingContext>();
-        var w = LegendShapeSize;
-        var sh = 0f;
+        var schedules = new List<PaintSchedule<TDrawingContext>>();
 
-        if (Stroke is not null)
+        if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TMiniatureGeometry()));
+        if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TMiniatureGeometry()));
+
+        return new Sketch<TDrawingContext>()
         {
-            var strokeClone = Stroke.CloneTask();
-            var st = Stroke.StrokeThickness;
-            if (st > MaxSeriesStroke)
-            {
-                st = MaxSeriesStroke;
-                strokeClone.StrokeThickness = MaxSeriesStroke;
-            }
-
-            var visual = new TMiniatureGeometry
-            {
-                X = st + MaxSeriesStroke - st,
-                Y = st + MaxSeriesStroke - st,
-                Height = (float)LegendShapeSize,
-                Width = (float)LegendShapeSize
-            };
-            sh = st;
-            strokeClone.ZIndex = 1;
-            context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
-        }
-
-        if (Fill is not null)
-        {
-            var fillClone = Fill.CloneTask();
-            var visual = new TMiniatureGeometry
-            {
-                X = sh + MaxSeriesStroke - sh,
-                Y = sh + MaxSeriesStroke - sh,
-                Height = (float)LegendShapeSize,
-                Width = (float)LegendShapeSize
-            };
-            context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
-        }
-
-        context.Width = w + MaxSeriesStroke * 2;
-        context.Height = w + MaxSeriesStroke * 2;
-
-        CanvasSchedule = context;
+            Height = MiniatureShapeSize,
+            Width = MiniatureShapeSize,
+            PaintSchedules = schedules
+        };
     }
 
     /// <summary>
@@ -515,7 +481,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         base.WhenPointerEnters(point);
 
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.HighlightableGeometry is null) return;
+        if (visual is null || visual.MainGeometry is null) return;
         visual.PushOut = (float)HoverPushout;
     }
 
@@ -525,20 +491,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         base.WhenPointerLeaves(point);
 
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.HighlightableGeometry is null) return;
+        if (visual is null || visual.MainGeometry is null) return;
         visual.PushOut = (float)Pushout;
-    }
-
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnSeriesMiniatureChanged();
-        OnPropertyChanged(propertyName);
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

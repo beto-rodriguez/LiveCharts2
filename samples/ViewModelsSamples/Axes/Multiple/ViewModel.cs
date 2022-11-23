@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
@@ -106,4 +105,14 @@ public partial class ViewModel
             Position = LiveChartsCore.Measure.AxisPosition.End
         }
     };
+
+    public SolidColorPaint LegendTextPaint { get; set; } =
+        new SolidColorPaint
+        {
+            Color = new SKColor(50, 50, 50),
+            SKTypeface = SKTypeface.FromFamilyName("Courier New")
+        };
+
+    public SolidColorPaint LedgendBackgroundPaint { get; set; } =
+        new SolidColorPaint(new SKColor(240, 240, 240));
 }

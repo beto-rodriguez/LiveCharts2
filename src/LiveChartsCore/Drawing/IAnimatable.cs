@@ -26,7 +26,7 @@ using LiveChartsCore.Motion;
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines an animated object, the properties of this object transitionate softly when a change occurs.
+/// Defines an animated object, the properties of this object move according to the easing and speed when a change occurs.
 /// </summary>
 public interface IAnimatable
 {

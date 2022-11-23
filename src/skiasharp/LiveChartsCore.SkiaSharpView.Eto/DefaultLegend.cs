@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using Eto.Drawing;
 using Eto.Forms;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -31,6 +32,9 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
 public class DefaultLegend : DynamicLayout, IChartLegend<SkiaSharpDrawingContext>
 {
+    private readonly Font _legendFont = Fonts.Sans(11);
+    private readonly Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
     /// </summary>
@@ -49,20 +53,15 @@ public class DefaultLegend : DynamicLayout, IChartLegend<SkiaSharpDrawingContext
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        var wfChart = (Chart)chart.View;
+        Orientation = chart.LegendPosition is LegendPosition.Top or LegendPosition.Bottom
+            ? LegendOrientation.Horizontal
+            : LegendOrientation.Vertical;
 
-        if (chart.LegendOrientation == LegendOrientation.Auto)
-        {
-            Orientation = chart.LegendPosition is LegendPosition.Top or LegendPosition.Bottom
-                ? LegendOrientation.Horizontal
-                : LegendOrientation.Vertical;
-        }
-
-        BackgroundColor = wfChart.LegendBackColor;
-        DrawAndMeasure(chart.ChartSeries, wfChart);
+        BackgroundColor = new Color(255, 255, 255);
+        DrawAndMeasure(chart.ChartSeries);
     }
 
-    private void DrawAndMeasure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
+    private void DrawAndMeasure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series)
     {
         Clear();
 
@@ -79,8 +78,8 @@ public class DefaultLegend : DynamicLayout, IChartLegend<SkiaSharpDrawingContext
             var label = new Label
             {
                 Text = s.Name,
-                Font = chart.LegendFont,
-                TextColor = chart.LegendTextColor,
+                Font = _legendFont,
+                TextColor = _legendTextColor,
                 VerticalAlignment = VerticalAlignment.Center,
             };
 

@@ -43,8 +43,6 @@
 
   <ItemGroup>
     <None Remove="CartesianChart.xaml" />
-    <None Remove="DefaultLegend.xaml" />
-    <None Remove="DefaultTooltip.xaml" />
     <None Remove="GeoMap.xaml" />
     <None Remove="MotionCanvas.xaml" />
     <None Remove="PieChart.xaml" />
@@ -56,9 +54,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="DefaultTooltip.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="PieChart.xaml">
@@ -73,9 +68,6 @@
     </Page>
     <Page Update="PolarChart.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="DefaultLegend.xaml">
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 

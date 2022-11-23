@@ -8,11 +8,11 @@
     xmlns:ctx="using:LiveChartsCore.Kernel"
     mc:Ignorable="d">
 
-    <ToolTipService.ToolTip>
+    <!--<ToolTipService.ToolTip>
         <ToolTip x:Name="tooltipControl" BorderThickness="0" Padding="0" Background="Transparent">
             <local:DefaultTooltip x:Name="tooltip"/>
         </ToolTip>
-    </ToolTipService.ToolTip>
+    </ToolTipService.ToolTip>-->
 
     <Grid x:Name="grid">
         <Grid.ColumnDefinitions>
@@ -26,6 +26,6 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <local:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="motionCanvas"/>
-        <local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <!--<local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
     </Grid>
 </UserControl>

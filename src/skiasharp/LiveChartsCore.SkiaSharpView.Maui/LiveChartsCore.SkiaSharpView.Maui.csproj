@@ -39,12 +39,6 @@
 	  <MauiXaml Update="CartesianChart.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DefaultLegend.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="DefaultTooltip.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="GeoMap.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

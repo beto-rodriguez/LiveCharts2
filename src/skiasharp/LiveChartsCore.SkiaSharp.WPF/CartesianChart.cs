@@ -35,6 +35,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -48,7 +49,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
-    private readonly RectangleGeometry _zoomingSection = new();
 
     #endregion
 
@@ -335,7 +335,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     {
         return core is not CartesianChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
     }
 
     /// <summary>
@@ -358,10 +358,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
         core = new CartesianChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
-        legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-        tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-
-
+        legend = new SKDefaultLegend(); // Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+        tooltip = new SKDefaultTooltip(); // Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 
         core.Update();
     }

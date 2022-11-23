@@ -12,9 +12,10 @@ public class View : Panel
     {
         var viewModel = new ViewModel();
 
-        cartesianChart = new CartesianChart(tooltip: new CustomTooltip())
+        cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            Tooltip = new CustomTooltip()
         };
 
         Content = cartesianChart;

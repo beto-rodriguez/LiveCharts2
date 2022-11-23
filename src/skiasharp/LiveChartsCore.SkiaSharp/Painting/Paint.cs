@@ -264,7 +264,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// Gets a <see cref="SKTypeface"/> from the <see cref="FontFamily"/> property.
     /// </summary>
     /// <returns></returns>
-    protected SKTypeface GetTypeFaceFromFontFamily()
+    protected internal SKTypeface GetSKTypeface()
     {
         return SKTypeface ??
             (_matchesChar is not null

@@ -12,9 +12,11 @@ public class View : Panel
     {
         var viewModel = new ViewModel();
 
-        cartesianChart = new CartesianChart(legend: new CustomLegend())
+        cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
+            Legend = new CustomLegend()
         };
 
         Content = cartesianChart;

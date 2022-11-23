@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.NamedLabels;
 
@@ -48,4 +50,14 @@ public partial class ViewModel
             // the amount is in millions or trillions
         }
     };
+
+    public SolidColorPaint TooltipTextPaint { get; set; } =
+        new SolidColorPaint
+        {
+            Color = new SKColor(242, 244, 195),
+            SKTypeface = SKTypeface.FromFamilyName("Courier New")
+        };
+
+    public SolidColorPaint TooltipBackgroundPaint { get; set; } =
+        new SolidColorPaint(new SKColor(72, 0, 50));
 }
