@@ -75,7 +75,8 @@ public class SemicircleHoverArea : HoverArea
     /// <param name="endAngle">The end angle.</param>
     /// <param name="radius">The radius.</param>
     /// <returns></returns>
-    public SemicircleHoverArea SetDimensions(float centerX, float centerY, float startAngle, float endAngle, float radius)
+    public SemicircleHoverArea SetDimensions(
+        float centerX, float centerY, float startAngle, float endAngle, float radius)
     {
         CenterX = centerX;
         CenterY = centerY;
@@ -103,8 +104,13 @@ public class SemicircleHoverArea : HoverArea
     public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
     {
         var startAngle = StartAngle;
+        startAngle %= 360;
+        if (startAngle < 0) startAngle += 360;
+
         // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
         var endAngle = EndAngle - 0.01;
+        endAngle %= 360;
+        if (endAngle < 0) endAngle += 360;
 
         var dx = CenterX - pointerLocation.X;
         var dy = CenterY - pointerLocation.Y;
@@ -115,7 +121,24 @@ public class SemicircleHoverArea : HoverArea
 
         var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
-        return startAngle <= beta && endAngle >= beta && r < Radius; // previously -> startAngle <= beta && endAngle >= beta && r < Radius ? 0 : float.MaxValue;
+        if (endAngle > startAngle)
+        {
+            return
+                startAngle <= beta &&
+                endAngle >= beta &&
+                r < Radius;
+        }
+
+        // angles are normalized (from 0 to 360)
+        // so in cases where (for example) angles start in 350 and end in 370 (actually 10)
+        // then the precious condition will never be true.
+
+        if (beta < startAngle) beta += 360;
+
+        return
+            startAngle <= beta &&
+            endAngle + 360 >= beta &&
+            r < Radius;
     }
 
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
