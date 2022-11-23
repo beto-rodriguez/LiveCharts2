@@ -35,8 +35,8 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <local:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="motionCanvas" />
-            <local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <!--<local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
         </Grid>
-        <local:DefaultTooltip x:Name="tooltip"/>
+        <!--<local:DefaultTooltip x:Name="tooltip"/>-->
     </Canvas>
 </UserControl>

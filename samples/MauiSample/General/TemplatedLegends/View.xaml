@@ -22,7 +22,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" LegendPosition="Bottom">
+            <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" LegendPosition="Right">
                 <!-- mark -untilCloses CartesianChart.Legend -->
                 <lvc:CartesianChart.Legend>
                     <vms:CustomLegend></vms:CustomLegend>
