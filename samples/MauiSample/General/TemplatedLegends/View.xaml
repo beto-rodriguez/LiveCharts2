@@ -6,16 +6,10 @@
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples"
              >
-    
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-
-    <ContentPage.Resources>
-        <lvc:PaintTasksValueConverter x:Key="paintTaskConverter" />
-        <lvc:WidthConverter x:Key="wConverter" />
-        <lvc:HeightConverter x:Key="hConverter" />
-    </ContentPage.Resources>
 
     <ContentPage.Content>
         <Grid>
