@@ -637,19 +637,16 @@ public abstract class Chart<TDrawingContext> : IChart
                      }
 #endif
 
-                     if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
-
                      // TODO:
                      // all this needs a performance review...
                      // it should not be critical, should not be even close to be the 'bottle neck' in a case where
                      // we face performance issues.
 
                      var points = FindHoveredPointsBy(_pointerPosition);
-
                      if (!points.Any())
                      {
                          ClearTooltipData();
-                         Tooltip.Hide();
+                         Tooltip?.Hide();
                          return;
                      }
 
@@ -669,8 +666,7 @@ public abstract class Chart<TDrawingContext> : IChart
                          _ = _activePoints.Remove(point);
                      }
 
-                     Tooltip.Show(points, this);
-
+                     if (TooltipPosition != TooltipPosition.Hidden) Tooltip?.Show(points, this);
                      Canvas.Invalidate();
                  }
              }));
@@ -715,7 +711,7 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         _pointerPosition = pointerPosition;
         _isPointerIn = true;
-        if (Tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+        _tooltipThrottler.Call();
         if (!_isPanning) return;
         _pointerPanningPosition = pointerPosition;
         _panningThrottler.Call();
