@@ -33,19 +33,19 @@ public class LabelerTesting
     {
         string result;
 
-        result = Labelers.SevenRepresentativeDigits(100000000);
+        result = Labelers.SixRepresentativeDigits(100000000);
         Assert.IsTrue(result == "100 M");
-        result = Labelers.SevenRepresentativeDigits(10000000);
+        result = Labelers.SixRepresentativeDigits(10000000);
         Assert.IsTrue(result == "10 M");
-        result = Labelers.SevenRepresentativeDigits(1000000);
+        result = Labelers.SixRepresentativeDigits(1000000);
         Assert.IsTrue(result == "1 M");
-        result = Labelers.SevenRepresentativeDigits(100000);
+        result = Labelers.SixRepresentativeDigits(100000);
         Assert.IsTrue(result == "100000");
-        result = Labelers.SevenRepresentativeDigits(-1000000);
+        result = Labelers.SixRepresentativeDigits(-1000000);
         Assert.IsTrue(result == "-1 M");
-        result = Labelers.SevenRepresentativeDigits(-10000000);
+        result = Labelers.SixRepresentativeDigits(-10000000);
         Assert.IsTrue(result == "-10 M");
-        result = Labelers.SevenRepresentativeDigits(-100000000);
+        result = Labelers.SixRepresentativeDigits(-100000000);
         Assert.IsTrue(result == "-100 M");
     }
 
@@ -54,19 +54,19 @@ public class LabelerTesting
     {
         string result;
 
-        result = Labelers.SevenRepresentativeDigits(0.00000001);
+        result = Labelers.SixRepresentativeDigits(0.00000001);
         Assert.IsTrue(result == "0.01 µ");
-        result = Labelers.SevenRepresentativeDigits(0.0000001);
+        result = Labelers.SixRepresentativeDigits(0.0000001);
         Assert.IsTrue(result == "0.1 µ");
-        result = Labelers.SevenRepresentativeDigits(0.000001);
+        result = Labelers.SixRepresentativeDigits(0.000001);
         Assert.IsTrue(result == "1 µ");
-        result = Labelers.SevenRepresentativeDigits(0.00001);
+        result = Labelers.SixRepresentativeDigits(0.00001);
         Assert.IsTrue(result == "0.00001");
-        result = Labelers.SevenRepresentativeDigits(-0.000001);
+        result = Labelers.SixRepresentativeDigits(-0.000001);
         Assert.IsTrue(result == "-1 µ");
-        result = Labelers.SevenRepresentativeDigits(-0.00000001);
+        result = Labelers.SixRepresentativeDigits(-0.00000001);
         Assert.IsTrue(result == "-0.01 µ");
-        result = Labelers.SevenRepresentativeDigits(-0.0000001);
+        result = Labelers.SixRepresentativeDigits(-0.0000001);
         Assert.IsTrue(result == "-0.1 µ");
     }
 

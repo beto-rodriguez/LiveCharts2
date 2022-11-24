@@ -469,8 +469,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         for (var i = start; i <= max; i += s)
         {
-            var separatorKey = Labelers.SevenRepresentativeDigits(i - 1d + 1d);
-            var labelContent = i < min || i > max ? string.Empty : labeler(i - 1d + 1d);
+            var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
+            var labelContent = i < min || i > max ? string.Empty : TryGetLabelOrLogError(labeler, i - 1d + 1d);
 
             float x, y;
             if (_orientation == AxisOrientation.X)
@@ -527,7 +527,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (LabelsPaint is not null && visualSeparator.Label is null)
             {
                 IntializeLabel(visualSeparator, cartesianChart, size, hasRotation, r);
-                UpdateLabel(visualSeparator.Label!, xc, yc, labeler(i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
+                UpdateLabel(visualSeparator.Label!, xc, yc, TryGetLabelOrLogError(labeler, i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
             }
 
             #endregion
@@ -581,7 +581,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (separator.Subseparators is not null) UpdateSubseparators(separator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
             if (separator.Tick is not null) UpdateTick(separator.Tick, _tickLength, x, y, UpdateMode.UpdateAndRemove);
             if (separator.Subticks is not null) UpdateSubticks(separator.Subticks, scale, s, x, y, UpdateMode.UpdateAndRemove);
-            if (separator.Label is not null) UpdateLabel(separator.Label, x, y, labeler(separator.Value - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndRemove);
+            if (separator.Label is not null) UpdateLabel(separator.Label, x, y, TryGetLabelOrLogError(labeler, separator.Value - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndRemove);
 
             _ = separators.Remove(separatorValueKey.Key);
         }
@@ -699,7 +699,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 labeler = Labelers.BuildNamedLabeler(Labels).Function;
             }
 
-            _crosshairLabel.Text = labeler(labelValue);
+            _crosshairLabel.Text = TryGetLabelOrLogError(labeler, labelValue);
             _crosshairLabel.TextSize = (float)_textSize;
             _crosshairLabel.Background = CrosshairLabelsBackground ?? LvcColor.Empty;
             _crosshairLabel.Padding = CrosshairPadding ?? _padding;
@@ -791,7 +791,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         {
             var textGeometry = new TTextGeometry
             {
-                Text = labeler(i),
+                Text = TryGetLabelOrLogError(labeler, i),
                 TextSize = ts,
                 RotateTransform = r,
                 Padding = _padding
@@ -1305,6 +1305,21 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             default:
                 geometry.Opacity = 1;
                 break;
+        }
+    }
+
+    private string TryGetLabelOrLogError(Func<double, string> labeler, double value)
+    {
+        try
+        {
+            return labeler(value);
+        }
+        catch (Exception e)
+        {
+#if DEBUG
+            Trace.WriteLine($"[Error] LiveCharts was not able to get a label from axis {_orientation} with value {value}. {e.Message}");
+#endif
+            return string.Empty;
         }
     }
 

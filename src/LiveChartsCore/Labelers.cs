@@ -34,7 +34,7 @@ public static class Labelers
 {
     static Labelers()
     {
-        Default = Log10_7;
+        Default = Log10_6;
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public static class Labelers
     /// <value>
     /// The seven representative digits.
     /// </value>
-    public static Func<double, string> SevenRepresentativeDigits => Log10_7;
+    public static Func<double, string> SixRepresentativeDigits => Log10_6;
 
     /// <summary>
     /// Gets the currency labeler.
@@ -118,7 +118,7 @@ public static class Labelers
         return new NamedLabeler(labels);
     }
 
-    private static string Log10_7(double value)
+    private static string Log10_6(double value)
     {
         var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
 
