@@ -310,8 +310,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 _ = everFetched.Add(point);
             }
 
-            if (Fill is not null) Fill.AddGeometryToPaintTask(pieChart.Canvas, visual);
-            if (Stroke is not null) Stroke.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            Fill?.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            Stroke?.AddGeometryToPaintTask(pieChart.Canvas, visual);
 
             var dougnutGeometry = visual;
 
@@ -324,8 +324,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             dougnutGeometry.CenterX = cx;
             dougnutGeometry.CenterY = cy;
-            dougnutGeometry.X = x;
-            dougnutGeometry.Y = (drawMarginSize.Height - w) * 0.5f;
+            dougnutGeometry.X = drawLocation.X + x;
+            dougnutGeometry.Y = drawLocation.Y + (drawMarginSize.Height - w) * 0.5f;
             dougnutGeometry.Width = w;
             dougnutGeometry.Height = w;
             dougnutGeometry.InnerRadius = stackedInnerRadius;

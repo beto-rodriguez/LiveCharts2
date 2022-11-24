@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -539,9 +538,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
         DrawLegend(seriesInLegend);
 
-        var title = View.Title;
-
         // calculate draw margin
+        var title = View.Title;
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         if (title is not null)
@@ -712,7 +710,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
-
         foreach (var section in Sections) AddVisual(section);
         foreach (var visual in VisualElements) AddVisual(visual);
         foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);

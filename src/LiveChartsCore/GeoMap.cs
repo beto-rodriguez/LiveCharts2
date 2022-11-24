@@ -188,8 +188,8 @@ public class GeoMap<TDrawingContext>
     {
         if (_activeMap is not null && _activeMap != View.ActiveMap)
         {
-            if (_previousStroke is not null) _previousStroke.ClearGeometriesFromPaintTask(View.Canvas);
-            if (_previousFill is not null) _previousFill.ClearGeometriesFromPaintTask(View.Canvas);
+            _previousStroke?.ClearGeometriesFromPaintTask(View.Canvas);
+            _previousFill?.ClearGeometriesFromPaintTask(View.Canvas);
 
             _previousFill = null;
             _previousStroke = null;

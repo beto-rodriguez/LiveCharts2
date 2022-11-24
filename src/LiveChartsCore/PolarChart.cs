@@ -370,9 +370,17 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             var fitMargin = new Margin(-dl, -dt, -dr, -db);
             SetDrawMargin(ControlSize, fitMargin);
         }
-        else if (viewDrawMargin is null)
+        else
         {
-            var m = viewDrawMargin ?? new Margin();
+            // calculate draw margin
+            var m = new Margin();
+            var ts = 0f;
+            if (View.Title is not null)
+            {
+                var titleSize = View.Title.Measure(this, null, null);
+                m.Top = titleSize.Height;
+                ts = titleSize.Height;
+            }
             SetDrawMargin(ControlSize, m);
 
             foreach (var axis in AngleAxes)
@@ -423,6 +431,18 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         // invalid dimensions, probably the chart is too small
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
+
+        UpdateBounds();
+
+        var title = View.Title;
+        if (title is not null)
+        {
+            var titleSize = title.Measure(this, null, null);
+            title.AlignToTopLeftCorner();
+            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            title.Y = 0;
+            AddVisual(title);
+        }
 
         var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
         foreach (var axis in totalAxes)

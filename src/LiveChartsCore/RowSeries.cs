@@ -171,8 +171,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 _ = everFetched.Add(point);
             }
 
-            if (Fill is not null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             var cx = point.PrimaryValue > pivot ? primary - b : primary;
             var y = secondary - helper.uwm + helper.cp;

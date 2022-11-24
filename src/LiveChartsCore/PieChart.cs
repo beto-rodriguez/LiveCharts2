@@ -207,15 +207,39 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
         DrawLegend(seriesInLegend);
 
-        if (viewDrawMargin is null)
+        var title = View.Title;
+        var m = new Margin();
+        var ts = 0f;
+        if (title is not null)
         {
-            var m = viewDrawMargin ?? new Margin();
-            SetDrawMargin(ControlSize, m);
+            var titleSize = title.Measure(this, null, null);
+            m.Top = titleSize.Height;
+            ts = titleSize.Height;
         }
+
+        var rm = viewDrawMargin ?? new Margin(Margin.Auto);
+        var actualMargin = new Margin(
+            Margin.IsAuto(rm.Left) ? m.Left : rm.Left,
+            Margin.IsAuto(rm.Top) ? m.Top : rm.Top,
+            Margin.IsAuto(rm.Right) ? m.Right : rm.Right,
+            Margin.IsAuto(rm.Bottom) ? m.Bottom : rm.Bottom);
+
+        SetDrawMargin(ControlSize, actualMargin);
 
         // invalid dimensions, probably the chart is too small
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
+
+        UpdateBounds();
+
+        if (title is not null)
+        {
+            var titleSize = title.Measure(this, null, null);
+            title.AlignToTopLeftCorner();
+            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            title.Y = 0;
+            AddVisual(title);
+        }
 
         foreach (var visual in VisualElements) AddVisual(visual);
         foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);

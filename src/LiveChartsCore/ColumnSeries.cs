@@ -170,8 +170,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 _ = everFetched.Add(point);
             }
 
-            if (Fill is not null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             var cy = point.PrimaryValue > pivot ? primary : primary - b;
             var x = secondary - helper.uwm + helper.cp;

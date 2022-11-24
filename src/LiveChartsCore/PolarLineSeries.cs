@@ -301,8 +301,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
                 _ = everFetched.Add(data.TargetPoint);
 
-                if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
-                if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
+                GeometryFill?.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
+                GeometryStroke?.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
 
                 visual.Bezier.Xi = (float)data.X0;
                 visual.Bezier.Yi = (float)data.Y0;
@@ -392,12 +392,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         {
             var iFill = fillPathHelperContainer.Count - 1;
             var fillHelper = fillPathHelperContainer[iFill];
-            if (Fill is not null) Fill.RemoveGeometryFromPainTask(polarChart.Canvas, fillHelper);
+            Fill?.RemoveGeometryFromPainTask(polarChart.Canvas, fillHelper);
             fillPathHelperContainer.RemoveAt(iFill);
 
             var iStroke = strokePathHelperContainer.Count - 1;
             var strokeHelper = strokePathHelperContainer[iStroke];
-            if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(polarChart.Canvas, strokeHelper);
+            Stroke?.RemoveGeometryFromPainTask(polarChart.Canvas, strokeHelper);
             strokePathHelperContainer.RemoveAt(iStroke);
         }
 

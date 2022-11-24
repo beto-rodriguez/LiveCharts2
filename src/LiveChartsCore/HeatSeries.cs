@@ -175,7 +175,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 _ = everFetched.Add(point);
             }
 
-            if (_paintTaks is not null) _paintTaks.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            _paintTaks?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             visual.X = secondary - uws * 0.5f + p.Left;
             visual.Y = primary - uwp * 0.5f + p.Top;

@@ -274,8 +274,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 _ = everFetched.Add(data.TargetPoint);
 
-                if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
-                if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                GeometryStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
                 visual.Bezier.Id = data.TargetPoint.Context.Entity.EntityIndex;
 
