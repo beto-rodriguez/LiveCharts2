@@ -246,15 +246,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public TimeSpan UpdaterThrottler
-    {
-        get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
-        set
-        {
-            if (core is null) throw new Exception("core not set yet.");
-            core.UpdaterThrottler = value;
-        }
-    }
+    public TimeSpan UpdaterThrottler { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

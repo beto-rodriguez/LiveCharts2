@@ -82,6 +82,7 @@ public abstract class Chart<TDrawingContext> : IChart
         _updateThrottler = view.DesignerMode
                 ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
                 : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
+        _updateThrottler.ThrottlerTimeSpan = view.UpdaterThrottler;
 
         PointerDown += Chart_PointerDown;
         PointerMove += Chart_PointerMove;
@@ -259,18 +260,6 @@ public abstract class Chart<TDrawingContext> : IChart
     public Func<float, float>? EasingFunction { get; protected set; }
 
     /// <summary>
-    /// Gets or sets the updater throttler.
-    /// </summary>
-    /// <value>
-    /// The updater throttler.
-    /// </value>
-    public TimeSpan UpdaterThrottler
-    {
-        get => _updateThrottler.ThrottlerTimeSpan;
-        set => _updateThrottler.ThrottlerTimeSpan = value;
-    }
-
-    /// <summary>
     /// Gets the visual elements.
     /// </summary>
     /// <value>
@@ -298,6 +287,8 @@ public abstract class Chart<TDrawingContext> : IChart
         chartUpdateParams ??= new ChartUpdateParams();
 
         if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
+
+        _updateThrottler.ThrottlerTimeSpan = View.UpdaterThrottler;
 
         if (!chartUpdateParams.Throttling)
         {

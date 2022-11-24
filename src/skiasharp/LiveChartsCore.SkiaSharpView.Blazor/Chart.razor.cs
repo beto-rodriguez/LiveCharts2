@@ -233,15 +233,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [Parameter]
-    public TimeSpan UpdaterThrottler
-    {
-        get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
-        set
-        {
-            if (core is null) throw new Exception("core not set yet.");
-            core.UpdaterThrottler = value;
-        }
-    }
+    public TimeSpan UpdaterThrottler { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]

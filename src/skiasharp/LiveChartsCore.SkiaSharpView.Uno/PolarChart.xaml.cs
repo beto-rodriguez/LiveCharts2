@@ -546,15 +546,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler
-    {
-        get => _core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
-        set
-        {
-            if (_core == null) throw new Exception("core not set yet.");
-            _core.UpdaterThrottler = value;
-        }
-    }
+    public TimeSpan UpdaterThrottler { get; set; }
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.

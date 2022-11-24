@@ -240,15 +240,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler
-    {
-        get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
-        set
-        {
-            if (core is null) throw new Exception("core not set yet.");
-            core.UpdaterThrottler = value;
-        }
-    }
+    public TimeSpan UpdaterThrottler { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
