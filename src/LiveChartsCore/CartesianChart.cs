@@ -872,10 +872,24 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     if (xMax > (x.MaxLimit ?? double.MaxValue)) xMax = x.MaxLimit ?? double.MaxValue;
                     if (xMin < (x.MinLimit ?? double.MinValue)) xMin = x.MinLimit ?? double.MinValue;
 
-                    if (xMax - xMin > x.DataBounds.MinDelta * 3)
+                    var min = x.MinZoomDelta ?? x.DataBounds.MinDelta * 3;
+
+                    if (xMax - xMin > min)
                     {
                         x.MinLimit = xMin;
                         x.MaxLimit = xMax;
+                    }
+                    else
+                    {
+                        if (x.MaxLimit is not null && x.MinLimit is not null)
+                        {
+                            var d = xMax - xMin;
+                            var ad = x.MaxLimit - x.MinLimit;
+                            var c = (ad - d) * 0.5;
+
+                            x.MinLimit = xMin - c;
+                            x.MaxLimit = xMax + c;
+                        }
                     }
                 }
             }
@@ -905,10 +919,24 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     if (yMax > (y.MaxLimit ?? double.MaxValue)) yMax = y.MaxLimit ?? double.MaxValue;
                     if (yMin < (y.MinLimit ?? double.MinValue)) yMin = y.MinLimit ?? double.MinValue;
 
-                    if (yMax - yMin > y.DataBounds.MinDelta * 3)
+                    var min = y.MinZoomDelta ?? y.DataBounds.MinDelta * 3;
+
+                    if (yMax - yMin > min)
                     {
                         y.MinLimit = yMin;
                         y.MaxLimit = yMax;
+                    }
+                    else
+                    {
+                        if (y.MaxLimit is not null && y.MinLimit is not null)
+                        {
+                            var d = yMax - yMin;
+                            var ad = y.MaxLimit - y.MinLimit;
+                            var c = (ad - d) * 0.5;
+
+                            y.MinLimit = yMin - c;
+                            y.MaxLimit = yMax + c;
+                        }
                     }
                 }
             }
