@@ -795,7 +795,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 _zoomingSection.Height = DrawMarginSize.Height;
             }
 
-            Update();
             return;
         }
         base.InvokePointerDown(point, isSecondaryAction);
@@ -824,7 +823,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             if (xMode) _zoomingSection.Width = x - _sectionZoomingStart.Value.X;
             if (yMode) _zoomingSection.Height = y - _sectionZoomingStart.Value.Y;
 
-            Update();
+            Canvas.Invalidate();
             return;
         }
 
@@ -945,7 +944,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             _zoomingSection.Y = -1;
             _zoomingSection.Width = 0;
             _zoomingSection.Height = 0;
-            Update();
             _sectionZoomingStart = null;
             return;
         }
