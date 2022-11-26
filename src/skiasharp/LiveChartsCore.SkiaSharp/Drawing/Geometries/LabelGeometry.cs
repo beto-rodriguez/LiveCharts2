@@ -101,13 +101,16 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
     protected override LvcSize OnMeasure(Paint drawable)
     {
+        using var typeface = drawable.GetSKTypeface();
+
         using var p = new SKPaint
         {
             Color = drawable.Color,
             IsAntialias = drawable.IsAntialias,
             IsStroke = drawable.IsStroke,
             StrokeWidth = drawable.StrokeThickness,
-            TextSize = TextSize
+            TextSize = TextSize,
+            Typeface = typeface
         };
 
         var bounds = MeasureLines(p);
@@ -173,10 +176,16 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         foreach (var line in GetLines(Text))
         {
             var bounds = new SKRect();
+            var boundsH = new SKRect();
+
             _ = paint.MeasureText(line, ref bounds);
 
+            // measure "|": hack to force the same max height?
+            // otherwise strings like "___" and "|||" will result in ---||| if the alignment is middle
+            _ = paint.MeasureText("|", ref boundsH);
+
             if (bounds.Width > w) w = bounds.Width;
-            h += bounds.Height;
+            h += boundsH.Height;
         }
 
         return new LvcSize(w, h);

@@ -12,34 +12,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" TooltipPosition="Top" >
-            <!-- mark -untilCloses CartesianChart.TooltipTemplate -->
-            <lvc:CartesianChart.TooltipTemplate>
-                <DataTemplate>
-                    <Border Background="#303030">
-                        <ItemsControl ItemsSource="{Binding Points, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type ctx:ChartPoint}">
-                                    <Border Padding="7 5">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding AsTooltipString}" Margin="0 0 8 0" Foreground="AntiqueWhite" />
-                                            <lvc:MotionCanvas Margin="0 0 8 0" 
-                                                PaintTasks="{Binding Context.Series.CanvasSchedule.PaintSchedules}"
-                                                Width="{Binding Context.Series.CanvasSchedule.Width}"
-                                                Height="{Binding Context.Series.CanvasSchedule.Height}"
-                                                VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Border>
-                </DataTemplate>
-            </lvc:CartesianChart.TooltipTemplate>
+            <!-- mark -untilCloses CartesianChart.Tooltip -->
+            <lvc:CartesianChart.Tooltip>
+                <vms:CustomTooltip></vms:CustomTooltip>
+            </lvc:CartesianChart.Tooltip>
         </lvc:CartesianChart>
     </Grid>
 </UserControl>

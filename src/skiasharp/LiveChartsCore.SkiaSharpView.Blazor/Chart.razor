@@ -24,13 +24,11 @@
 
 @*Ideally this component should be abstract, is it posible in Blazor?*@
 
-<!--
-	the first wrapper <div/> is required so blazor is able to the isolate the css, do not remove!
-	blazor bug?
--->
-
 <div class="lvc-content">
-	<DefaultTooltip @ref="Tooltip" Class="@TooltipClass" TooltipTemplate="@TooltipTemplate" />
+	@*
+        This is an old tooltip that uses HTML and css, instead we now handle also this and draw it.
+        <DefaultTooltip @ref="Tooltip" Class="@TooltipClass" />
+    *@
 
 	<JsFlexibleContainer @ref="_jsFlexibleContainer" Class="@ContainerActualClass">
 		<Content>
@@ -44,9 +42,12 @@
 					OnWheelCallback="OnWheel">
 				</MotionCanvas>
 			</div>
-			<div class="lvc-legend-container @LegendClass">
-				<DefaultLegend @ref="Legend" LegendTemplate="@LegendTemplate" />
-			</div>
+			@*
+                This is an old legend that uses HTML and css,,\ instead we now handle also this and draw it.
+                <div class="lvc-legend-container @LegendClass">
+				    <DefaultLegend @ref="Legend" />
+			    </div>
+            *@
 		</Content>
 	</JsFlexibleContainer>
 </div>

@@ -103,8 +103,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                     _ = _usedPathShapes.Add(shape);
                     _ = toRemovePathShapes.Remove(shape);
 
-                    if (stroke is not null) stroke.AddGeometryToPaintTask(context.View.Canvas, shape);
-                    if (fill is not null) fill.AddGeometryToPaintTask(context.View.Canvas, shape);
+                    stroke?.AddGeometryToPaintTask(context.View.Canvas, shape);
+                    fill?.AddGeometryToPaintTask(context.View.Canvas, shape);
 
                     shape.ClearCommands();
 
@@ -131,8 +131,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
             foreach (var shape in toRemovePathShapes)
             {
-                if (stroke is not null) stroke.RemoveGeometryFromPainTask(context.View.Canvas, shape);
-                if (fill is not null) fill.RemoveGeometryFromPainTask(context.View.Canvas, shape);
+                stroke?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
+                fill?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
 
                 shape.ClearCommands();
 
@@ -184,8 +184,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                         var shape = (IDrawable<SkiaSharpDrawingContext>?)landData.Shape;
                         if (shape is null) continue;
 
-                        if (stroke is not null) stroke.RemoveGeometryFromPainTask(_mapView.Canvas, shape);
-                        if (fill is not null) fill.AddGeometryToPaintTask(_mapView.Canvas, shape);
+                        stroke?.RemoveGeometryFromPainTask(_mapView.Canvas, shape);
+                        fill?.AddGeometryToPaintTask(_mapView.Canvas, shape);
 
                         landData.Shape = null;
                     }

@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
@@ -47,7 +48,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     internal double _rotation;
     internal LvcPoint _translate = new();
     private LvcSize _actualSize = new();
-    private LvcPoint _actualLocation = new();
+    private LvcPoint _targetPosition = new();
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -124,17 +125,19 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
             y = primaryScaler.ToPixels(y);
         }
 
-        _actualLocation = new(x, y);
+        _targetPosition = new((float)X + _xc, (float)Y + _yc);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
         if (_labelGeometry is null)
         {
+            var cp = GetPositionRelativeToParent();
+
             _labelGeometry = new LabelGeometry
             {
                 Text = Text,
                 TextSize = (float)TextSize,
-                X = x,
-                Y = y,
+                X = cp.X,
+                Y = cp.Y,
                 RotateTransform = (float)Rotation,
                 TranslateTransform = Translate,
                 VerticalAlign = VerticalAlignment,
@@ -151,8 +154,8 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 
         _labelGeometry.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
-        _labelGeometry.X = x;
-        _labelGeometry.Y = y;
+        _labelGeometry.X = x + _xc;
+        _labelGeometry.Y = y + _yc;
         _labelGeometry.RotateTransform = (float)Rotation;
         _labelGeometry.TranslateTransform = Translate;
         _labelGeometry.VerticalAlign = VerticalAlignment;
@@ -184,22 +187,22 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
             : l.Measure(_paint);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
-    public override LvcSize GetActualSize()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
+    public override LvcSize GetTargetSize()
     {
         return _actualSize;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
-    public override LvcPoint GetActualLocation()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
+    public override LvcPoint GetTargetLocation()
     {
-        var x = _actualLocation.X;
-        var y = _actualLocation.Y;
+        var x = _targetPosition.X;
+        var y = _targetPosition.Y;
 
         x += Translate.X;
         y += Translate.Y;
 
-        var size = GetActualSize();
+        var size = GetTargetSize();
         if (HorizontalAlignment == Align.Middle) x -= size.Width * 0.5f;
         if (HorizontalAlignment == Align.End) x -= size.Width;
 

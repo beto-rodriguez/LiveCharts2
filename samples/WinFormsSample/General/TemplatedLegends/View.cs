@@ -15,9 +15,11 @@ public partial class View : UserControl
 
         var viewModel = new ViewModel();
 
-        cartesianChart = new CartesianChart(legend: new CustomLegend())
+        cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
+            Legend = new CustomLegend(),
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

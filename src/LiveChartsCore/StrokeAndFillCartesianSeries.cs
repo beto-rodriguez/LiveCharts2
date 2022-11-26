@@ -76,18 +76,6 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     }
 
     /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnSeriesMiniatureChanged();
-        OnPropertyChanged();
-    }
-
-    /// <summary>
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>

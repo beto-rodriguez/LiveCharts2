@@ -21,69 +21,38 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
-using Xamarin.Forms;
+using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
+namespace LiveChartsCore.Kernel.Drawing;
 
 /// <summary>
-/// Defines the legend binding context.
+/// Defines the paint context.
 /// </summary>
-public class LegendBindingContext
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class Sketch<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets or sets the series.
+    /// Gets or sets the width.
     /// </summary>
     /// <value>
-    /// The series.
+    /// The width.
     /// </value>
-    public IEnumerable<ISeries>? Series { get; set; } = Enumerable.Empty<ISeries>();
+    public double Width { get; set; }
 
     /// <summary>
-    /// Gets or sets the font family.
+    /// Gets or sets the height.
     /// </summary>
     /// <value>
-    /// The font family.
+    /// The height.
     /// </value>
-    public string? FontFamily { get; set; }
+    public double Height { get; set; }
 
     /// <summary>
-    /// Gets or sets the size of the font.
+    /// Gets or sets the paint schedules.
     /// </summary>
     /// <value>
-    /// The size of the font.
+    /// The paint tasks schedule.
     /// </value>
-    public double FontSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the color of the text.
-    /// </summary>
-    /// <value>
-    /// The color of the text.
-    /// </value>
-    public Color TextColor { get; set; }
-
-    /// <summary>
-    /// Gets or sets the color of the background.
-    /// </summary>
-    /// <value>
-    /// The color of the background.
-    /// </value>
-    public Color BackgroundColor { get; set; }
-
-    /// <summary>
-    /// Gets or sets the font attributes.
-    /// </summary>
-    /// <value>
-    /// The font attributes.
-    /// </value>
-    public FontAttributes FontAttributes { get; set; }
-
-    /// <summary>
-    /// Gets or sets the orientation.
-    /// </summary>
-    /// <value>
-    /// The orientation.
-    /// </value>
-    public StackOrientation Orientation { get; set; }
+    public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new();
 }

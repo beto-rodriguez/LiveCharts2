@@ -150,12 +150,28 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
             new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition, OnDependencyPropertyChanged));
 
     /// <summary>
-    /// The legend orientation property
+    /// The legend background property
     /// </summary>
-    public static readonly DependencyProperty LegendOrientationProperty =
-        DependencyProperty.Register(
-            nameof(LegendOrientation), typeof(LegendOrientation), typeof(Chart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendOrientation, OnDependencyPropertyChanged));
+    public static readonly DependencyProperty LegendBackgroundPaintProperty =
+       DependencyProperty.Register(
+           nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
+           new PropertyMetadata(null, OnDependencyPropertyChanged));
+
+    /// <summary>
+    /// The legend text paint property
+    /// </summary>
+    public static readonly DependencyProperty LegendTextPaintProperty =
+       DependencyProperty.Register(
+           nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
+           new PropertyMetadata(null, OnDependencyPropertyChanged));
+
+    /// <summary>
+    /// The legend text size property
+    /// </summary>
+    public static readonly DependencyProperty LegendTextSizeProperty =
+       DependencyProperty.Register(
+           nameof(LegendTextSize), typeof(double?), typeof(Chart),
+           new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip position property
@@ -168,126 +184,26 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The tool tip background property
     /// </summary>
-    public static readonly DependencyProperty TooltipBackgroundProperty =
+    public static readonly DependencyProperty TooltipBackgroundPaintProperty =
        DependencyProperty.Register(
-           nameof(TooltipBackground), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(250, 250, 250)), OnDependencyPropertyChanged));
+           nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
+           new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
-    /// The tool tip font family property
+    /// The tool tip text paint property
     /// </summary>
-    public static readonly DependencyProperty TooltipFontFamilyProperty =
+    public static readonly DependencyProperty TooltipTextPaintProperty =
        DependencyProperty.Register(
-           nameof(TooltipFontFamily), typeof(FontFamily), typeof(Chart),
-           new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
+           nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
+           new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
-    /// The tool tip text color property
+    /// The tool tip text size property
     /// </summary>
-    public static readonly DependencyProperty TooltipTextBrushProperty =
+    public static readonly DependencyProperty TooltipTextSizeProperty =
        DependencyProperty.Register(
-           nameof(TooltipTextBrush), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The tool tip font size property
-    /// </summary>
-    public static readonly DependencyProperty TooltipFontSizeProperty =
-       DependencyProperty.Register(
-           nameof(TooltipFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The tool tip font weight property
-    /// </summary>
-    public static readonly DependencyProperty TooltipFontWeightProperty =
-       DependencyProperty.Register(
-           nameof(TooltipFontWeight), typeof(FontWeight), typeof(Chart),
-           new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The tool tip font stretch property
-    /// </summary>
-    public static readonly DependencyProperty TooltipFontStretchProperty =
-       DependencyProperty.Register(
-           nameof(TooltipFontStretch), typeof(FontStretch), typeof(Chart),
-           new PropertyMetadata(FontStretches.Normal, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The tool tip font style property
-    /// </summary>
-    public static readonly DependencyProperty TooltipFontStyleProperty =
-       DependencyProperty.Register(
-           nameof(TooltipFontStyle), typeof(FontStyle), typeof(Chart),
-           new PropertyMetadata(FontStyles.Normal, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The tool tip template property
-    /// </summary>
-    public static readonly DependencyProperty TooltipTemplateProperty =
-        DependencyProperty.Register(
-            nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend font family property
-    /// </summary>
-    public static readonly DependencyProperty LegendFontFamilyProperty =
-       DependencyProperty.Register(
-           nameof(LegendFontFamily), typeof(FontFamily), typeof(Chart),
-           new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend text color property
-    /// </summary>
-    public static readonly DependencyProperty LegendTextBrushProperty =
-       DependencyProperty.Register(
-           nameof(LegendTextBrush), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend background property
-    /// </summary>
-    public static readonly DependencyProperty LegendBackgroundProperty =
-       DependencyProperty.Register(
-           nameof(LegendBackground), typeof(SolidColorBrush), typeof(Chart),
-           new PropertyMetadata(new SolidColorBrush(Color.FromRgb(255, 255, 255)), OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend font size property
-    /// </summary>
-    public static readonly DependencyProperty LegendFontSizeProperty =
-       DependencyProperty.Register(
-           nameof(LegendFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend font weight property
-    /// </summary>
-    public static readonly DependencyProperty LegendFontWeightProperty =
-       DependencyProperty.Register(
-           nameof(LegendFontWeight), typeof(FontWeight), typeof(Chart),
-           new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend font stretch property
-    /// </summary>
-    public static readonly DependencyProperty LegendFontStretchProperty =
-       DependencyProperty.Register(
-           nameof(LegendFontStretch), typeof(FontStretch), typeof(Chart),
-           new PropertyMetadata(FontStretches.Normal, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend font style property
-    /// </summary>
-    public static readonly DependencyProperty LegendFontStyleProperty =
-       DependencyProperty.Register(
-           nameof(LegendFontStyle), typeof(FontStyle), typeof(Chart),
-           new PropertyMetadata(FontStyles.Normal, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The legend template property
-    /// </summary>
-    public static readonly DependencyProperty LegendTemplateProperty =
-        DependencyProperty.Register(
-            nameof(LegendTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+           nameof(TooltipTextSize), typeof(double?), typeof(Chart),
+           new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The data pointer down command.
@@ -442,25 +358,6 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         set => SetValue(LegendPositionProperty, value);
     }
 
-    LegendPosition IChartView.LegendPosition
-    {
-        get => LegendPosition;
-        set => SetValueOrCurrentValue(LegendPositionProperty, value);
-    }
-
-    /// <inheritdoc cref="IChartView.LegendOrientation" />
-    public LegendOrientation LegendOrientation
-    {
-        get => (LegendOrientation)GetValue(LegendOrientationProperty);
-        set => SetValue(LegendOrientationProperty, value);
-    }
-
-    LegendOrientation IChartView.LegendOrientation
-    {
-        get => LegendOrientation;
-        set => SetValueOrCurrentValue(LegendOrientationProperty, value);
-    }
-
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
     {
@@ -468,223 +365,59 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    TooltipPosition IChartView.TooltipPosition
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint
     {
-        get => TooltipPosition;
-        set => SetValueOrCurrentValue(TooltipPositionProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipBackgroundPaintProperty);
+        set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the tool tip template.
-    /// </summary>
-    /// <value>
-    /// The tool tip template.
-    /// </value>
-    public DataTemplate? TooltipTemplate
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint
     {
-        get => (DataTemplate?)GetValue(TooltipTemplateProperty);
-        set => SetValue(TooltipTemplateProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipTextPaintProperty);
+        set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default tool tip background.
-    /// </summary>
-    /// <value>
-    /// The tool tip background.
-    /// </value>
-    public Brush TooltipBackground
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    public double? TooltipTextSize
     {
-        get => (Brush)GetValue(TooltipBackgroundProperty);
-        set => SetValue(TooltipBackgroundProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip font family.
-    /// </summary>
-    /// <value>
-    /// The tool tip font family.
-    /// </value>
-    public FontFamily TooltipFontFamily
-    {
-        get => (FontFamily)GetValue(TooltipFontFamilyProperty);
-        set => SetValue(TooltipFontFamilyProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default color of the tool tip text.
-    /// </summary>
-    /// <value>
-    /// The color of the tool tip text.
-    /// </value>
-    public SolidColorBrush TooltipTextBrush
-    {
-        get => (SolidColorBrush)GetValue(TooltipTextBrushProperty);
-        set => SetValue(TooltipTextBrushProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default size of the tool tip font.
-    /// </summary>
-    /// <value>
-    /// The size of the tool tip font.
-    /// </value>
-    public double TooltipFontSize
-    {
-        get => (double)GetValue(TooltipFontSizeProperty);
-        set => SetValue(TooltipFontSizeProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip font weight.
-    /// </summary>
-    /// <value>
-    /// The tool tip font weight.
-    /// </value>
-    public FontWeight TooltipFontWeight
-    {
-        get => (FontWeight)GetValue(TooltipFontWeightProperty);
-        set => SetValue(TooltipFontWeightProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip font stretch.
-    /// </summary>
-    /// <value>
-    /// The tool tip font stretch.
-    /// </value>
-    public FontStretch TooltipFontStretch
-    {
-        get => (FontStretch)GetValue(TooltipFontStretchProperty);
-        set => SetValue(TooltipFontStretchProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default tool tip font style.
-    /// </summary>
-    /// <value>
-    /// The tool tip font style.
-    /// </value>
-    public FontStyle TooltipFontStyle
-    {
-        get => (FontStyle)GetValue(TooltipFontStyleProperty);
-        set => SetValue(TooltipFontStyleProperty, value);
+        get => (double?)GetValue(TooltipTextSizeProperty);
+        set => SetValue(TooltipTextSizeProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
 
-    /// <summary>
-    /// Gets or sets the legend template.
-    /// </summary>
-    /// <value>
-    /// The legend template.
-    /// </value>
-    public DataTemplate? LegendTemplate
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint
     {
-        get => (DataTemplate?)GetValue(LegendTemplateProperty);
-        set => SetValue(LegendTemplateProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendBackgroundPaintProperty);
+        set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default legend font family.
-    /// </summary>
-    /// <value>
-    /// The legend font family.
-    /// </value>
-    public FontFamily LegendFontFamily
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint
     {
-        get => (FontFamily)GetValue(LegendFontFamilyProperty);
-        set => SetValue(LegendFontFamilyProperty, value);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendTextPaintProperty);
+        set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default color of the legend text.
-    /// </summary>
-    /// <value>
-    /// The color of the legend text.
-    /// </value>
-    public SolidColorBrush LegendTextBrush
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    public double? LegendTextSize
     {
-        get => (SolidColorBrush)GetValue(LegendTextBrushProperty);
-        set => SetValue(LegendTextBrushProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the legend background.
-    /// </summary>
-    /// <value>
-    /// The legend t background.
-    /// </value>
-    public SolidColorBrush LegendBackground
-    {
-        get => (SolidColorBrush)GetValue(LegendBackgroundProperty);
-        set => SetValue(LegendBackgroundProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default size of the legend font.
-    /// </summary>
-    /// <value>
-    /// The size of the legend font.
-    /// </value>
-    public double LegendFontSize
-    {
-        get => (double)GetValue(LegendFontSizeProperty);
-        set => SetValue(LegendFontSizeProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default legend font weight.
-    /// </summary>
-    /// <value>
-    /// The legend font weight.
-    /// </value>
-    public FontWeight LegendFontWeight
-    {
-        get => (FontWeight)GetValue(LegendFontWeightProperty);
-        set => SetValue(LegendFontWeightProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default legend font stretch.
-    /// </summary>
-    /// <value>
-    /// The legend font stretch.
-    /// </value>
-    public FontStretch LegendFontStretch
-    {
-        get => (FontStretch)GetValue(LegendFontStretchProperty);
-        set => SetValue(LegendFontStretchProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the default legend font style.
-    /// </summary>
-    /// <value>
-    /// The legend font style.
-    /// </value>
-    public FontStyle LegendFontStyle
-    {
-        get => (FontStyle)GetValue(LegendFontStyleProperty);
-        set => SetValue(LegendFontStyleProperty, value);
+        get => (double?)GetValue(LegendTextSizeProperty);
+        set => SetValue(LegendTextSizeProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get => legend; set => legend = value; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler
-    {
-        get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
-        set
-        {
-            if (core is null) throw new Exception("core not set yet.");
-            core.UpdaterThrottler = value;
-        }
-    }
+    public TimeSpan UpdaterThrottler { get; set; }
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
@@ -772,13 +505,6 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     internal Point GetCanvasPosition()
     {
         return canvas is null ? throw new Exception("Canvas not found") : canvas.TranslatePoint(new Point(0, 0), this);
-    }
-
-    /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
-    public void SetTooltipStyle(LvcColor background, LvcColor textColor)
-    {
-        TooltipBackground = new SolidColorBrush(Color.FromArgb(background.A, background.R, background.G, background.B));
-        TooltipTextBrush = new SolidColorBrush(Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B));
     }
 
     void IChartView.InvokeOnUIThread(Action action)

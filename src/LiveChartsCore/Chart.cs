@@ -82,6 +82,7 @@ public abstract class Chart<TDrawingContext> : IChart
         _updateThrottler = view.DesignerMode
                 ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
                 : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
+        _updateThrottler.ThrottlerTimeSpan = view.UpdaterThrottler;
 
         PointerDown += Chart_PointerDown;
         PointerMove += Chart_PointerMove;
@@ -211,14 +212,6 @@ public abstract class Chart<TDrawingContext> : IChart
     public LegendPosition LegendPosition { get; protected set; }
 
     /// <summary>
-    /// Gets the legend orientation.
-    /// </summary>
-    /// <value>
-    /// The legend orientation.
-    /// </value>
-    public LegendOrientation LegendOrientation { get; protected set; }
-
-    /// <summary>
     /// Gets the legend.
     /// </summary>
     /// <value>
@@ -267,18 +260,6 @@ public abstract class Chart<TDrawingContext> : IChart
     public Func<float, float>? EasingFunction { get; protected set; }
 
     /// <summary>
-    /// Gets or sets the updater throttler.
-    /// </summary>
-    /// <value>
-    /// The updater throttler.
-    /// </value>
-    public TimeSpan UpdaterThrottler
-    {
-        get => _updateThrottler.ThrottlerTimeSpan;
-        set => _updateThrottler.ThrottlerTimeSpan = value;
-    }
-
-    /// <summary>
     /// Gets the visual elements.
     /// </summary>
     /// <value>
@@ -306,6 +287,8 @@ public abstract class Chart<TDrawingContext> : IChart
         chartUpdateParams ??= new ChartUpdateParams();
 
         if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
+
+        _updateThrottler.ThrottlerTimeSpan = View.UpdaterThrottler;
 
         if (!chartUpdateParams.Throttling)
         {
@@ -378,7 +361,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         // fire the visual elements event.
         // ToDo: VisualElements should be of type VisualElement<T>
-        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().SelectMany(x => x.IsHitBy(point));
+        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().SelectMany(x => x.IsHitBy(this, point));
         View.OnVisualElementPointerDown(iterableVisualElements, point);
     }
 
@@ -544,13 +527,23 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    /// Registers and tracks the specified element.
+    /// Adds a visual element to the chart.
     /// </summary>
-    protected void RegisterAndInvalidateVisual(ChartElement<TDrawingContext> element)
+    public void AddVisual(ChartElement<TDrawingContext> element)
     {
         element.Invalidate(this);
         element.RemoveOldPaints(View);
         _ = _everMeasuredElements.Add(element);
+        _ = _toDeleteElements.Remove(element);
+    }
+
+    /// <summary>
+    /// Removes a visual element from the chart.
+    /// </summary>
+    public void RemoveVisual(ChartElement<TDrawingContext> element)
+    {
+        element.RemoveFromUI(this);
+        _ = _everMeasuredElements.Remove(element);
         _ = _toDeleteElements.Remove(element);
     }
 
@@ -577,6 +570,48 @@ public abstract class Chart<TDrawingContext> : IChart
         _toDeleteElements = new HashSet<ChartElement<TDrawingContext>>();
     }
 
+    /// <summary>
+    /// Draws the legend.
+    /// </summary>
+    /// <param name="seriesInLegend"></param>
+    protected void DrawLegend(IChartSeries<TDrawingContext>[] seriesInLegend)
+    {
+        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
+        {
+            if (Legend is IImageControl imageLegend)
+            {
+                // this is the preferred method (drawn legends)
+                imageLegend.Measure(this);
+
+                if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
+                    ControlSize = new(ControlSize.Width - imageLegend.Size.Width, ControlSize.Height);
+
+                if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
+                    ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
+
+                Legend.Draw(this);
+
+                PreviousLegendPosition = LegendPosition;
+                PreviousSeriesAtLegend = seriesInLegend;
+                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
+                _preserveFirstDraw = IsFirstDraw;
+            }
+            else
+            {
+                // the legend is drawn by the UI framework... lets return and wait for it to draw/measure it.
+                // maybe we should wait for the legend to draw and then draw the chart?
+                Legend.Draw(this);
+                PreviousLegendPosition = LegendPosition;
+                PreviousSeriesAtLegend = seriesInLegend;
+                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
+                _preserveFirstDraw = IsFirstDraw;
+                SetPreviousSize();
+                Measure();
+                return;
+            }
+        }
+    }
+
     private Task TooltipThrottlerUnlocked()
     {
         return Task.Run(() =>
@@ -593,19 +628,16 @@ public abstract class Chart<TDrawingContext> : IChart
                      }
 #endif
 
-                     if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
-
                      // TODO:
                      // all this needs a performance review...
-                     // it should not be crital, should not be even close to be the 'bottle neck' in a case where
-                     // we face perfomance issues.
+                     // it should not be critical, should not be even close to be the 'bottle neck' in a case where
+                     // we face performance issues.
 
-                     var points = FindHoveredPointsBy(_pointerPosition).ToArray();
-
+                     var points = FindHoveredPointsBy(_pointerPosition);
                      if (!points.Any())
                      {
                          ClearTooltipData();
-                         Tooltip.Hide();
+                         Tooltip?.Hide();
                          return;
                      }
 
@@ -625,8 +657,7 @@ public abstract class Chart<TDrawingContext> : IChart
                          _ = _activePoints.Remove(point);
                      }
 
-                     Tooltip.Show(points, this);
-
+                     if (TooltipPosition != TooltipPosition.Hidden) Tooltip?.Show(points, this);
                      Canvas.Invalidate();
                  }
              }));
@@ -671,7 +702,7 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         _pointerPosition = pointerPosition;
         _isPointerIn = true;
-        if (Tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+        _tooltipThrottler.Call();
         if (!_isPanning) return;
         _pointerPanningPosition = pointerPosition;
         _panningThrottler.Call();

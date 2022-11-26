@@ -155,8 +155,8 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
     public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
 
-    /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.HighlightableGeometry" />
-    public IGeometry<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
+    /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.MainGeometry" />
+    public IGeometry<SkiaSharpDrawingContext> MainGeometry => GetHighlitableGeometry();
 
     /// <summary>
     /// Draws the geometry in the user interface.

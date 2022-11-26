@@ -422,7 +422,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
-        LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
 
         TooltipPosition = _chartView.TooltipPosition;
@@ -534,22 +533,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
-        {
-            Legend.Draw(this);
-            PreviousLegendPosition = LegendPosition;
-            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-            foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-            _preserveFirstDraw = IsFirstDraw;
-            SetPreviousSize();
-            Measure();
-            return;
-        }
+        InitializeVisualsCollector();
 
-        var title = View.Title;
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
+        DrawLegend(seriesInLegend);
 
         // calculate draw margin
+        var title = View.Title;
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         if (title is not null)
@@ -669,7 +659,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
         UpdateBounds();
-        InitializeVisualsCollector();
 
         if (title is not null)
         {
@@ -677,7 +666,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             title.AlignToTopLeftCorner();
             title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
             title.Y = 0;
-            RegisterAndInvalidateVisual(title);
+            AddVisual(title);
         }
 
         var totalAxes = XAxes.Concat(YAxes).ToArray();
@@ -717,14 +706,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.IsNotifyingChanges = true;
             }
 
-            if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
+            if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
             ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
-
-        foreach (var section in Sections) RegisterAndInvalidateVisual(section);
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        foreach (var section in Sections) AddVisual(section);
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
@@ -735,7 +723,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         if (_chartView.DrawMarginFrame is not null)
         {
-            RegisterAndInvalidateVisual(_chartView.DrawMarginFrame);
+            AddVisual(_chartView.DrawMarginFrame);
             _previousDrawMarginFrame = _chartView.DrawMarginFrame;
         }
 
@@ -884,10 +872,24 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     if (xMax > (x.MaxLimit ?? double.MaxValue)) xMax = x.MaxLimit ?? double.MaxValue;
                     if (xMin < (x.MinLimit ?? double.MinValue)) xMin = x.MinLimit ?? double.MinValue;
 
-                    if (xMax - xMin > x.DataBounds.MinDelta * 3)
+                    var min = x.MinZoomDelta ?? x.DataBounds.MinDelta * 3;
+
+                    if (xMax - xMin > min)
                     {
                         x.MinLimit = xMin;
                         x.MaxLimit = xMax;
+                    }
+                    else
+                    {
+                        if (x.MaxLimit is not null && x.MinLimit is not null)
+                        {
+                            var d = xMax - xMin;
+                            var ad = x.MaxLimit - x.MinLimit;
+                            var c = (ad - d) * 0.5;
+
+                            x.MinLimit = xMin - c;
+                            x.MaxLimit = xMax + c;
+                        }
                     }
                 }
             }
@@ -917,10 +919,24 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     if (yMax > (y.MaxLimit ?? double.MaxValue)) yMax = y.MaxLimit ?? double.MaxValue;
                     if (yMin < (y.MinLimit ?? double.MinValue)) yMin = y.MinLimit ?? double.MinValue;
 
-                    if (yMax - yMin > y.DataBounds.MinDelta * 3)
+                    var min = y.MinZoomDelta ?? y.DataBounds.MinDelta * 3;
+
+                    if (yMax - yMin > min)
                     {
                         y.MinLimit = yMin;
                         y.MaxLimit = yMax;
+                    }
+                    else
+                    {
+                        if (y.MaxLimit is not null && y.MinLimit is not null)
+                        {
+                            var d = yMax - yMin;
+                            var ad = y.MaxLimit - y.MinLimit;
+                            var c = (ad - d) * 0.5;
+
+                            y.MinLimit = yMin - c;
+                            y.MaxLimit = yMax + c;
+                        }
                     }
                 }
             }

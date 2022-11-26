@@ -17,12 +17,12 @@
                 </lvc:MotionCanvas.GestureRecognizers>
             </lvc:MotionCanvas>
 
-            <lvc:DefaultLegend Grid.Column="1" x:Name="legend"/>
+            <!--<lvc:DefaultLegend Grid.Column="1" x:Name="legend"/>-->
         </Grid>
         
-        <lvc:DefaultTooltip x:Name="tooltip"
+        <!--<lvc:DefaultTooltip x:Name="tooltip"
                             AbsoluteLayout.LayoutFlags="PositionProportional"
                             AbsoluteLayout.LayoutBounds=".05,.05,AutoSize,AutoSize">
-        </lvc:DefaultTooltip>
+        </lvc:DefaultTooltip>-->
     </AbsoluteLayout>
 </ContentView>

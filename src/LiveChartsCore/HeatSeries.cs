@@ -67,7 +67,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); OnSeriesMiniatureChanged(); } }
+    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnMiniatureChanged(); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
     public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
@@ -175,7 +175,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 _ = everFetched.Add(point);
             }
 
-            if (_paintTaks is not null) _paintTaks.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            _paintTaks?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             visual.X = secondary - uws * 0.5f + p.Left;
             visual.Y = primary - uwp * 0.5f + p.Top;
@@ -298,37 +298,37 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         label.RemoveOnCompleted = true;
     }
 
-    /// <summary>
-    /// Called when the paint context changes.
-    /// </summary>
-    protected override void OnSeriesMiniatureChanged()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
+    public override Sketch<TDrawingContext> GetMiniatresSketch()
     {
-        var context = new CanvasSchedule<TDrawingContext>();
-        var w = LegendShapeSize;
+        var schedules = new List<PaintSchedule<TDrawingContext>>();
 
         var strokeClone = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
         var st = strokeClone.StrokeThickness;
-        if (st > MaxSeriesStroke)
+
+        if (st > MAX_MINIATURE_STROKE_WIDTH)
         {
-            st = MaxSeriesStroke;
-            strokeClone.StrokeThickness = MaxSeriesStroke;
+            st = MAX_MINIATURE_STROKE_WIDTH;
+            strokeClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
         }
 
         var visual = new TVisual
         {
-            X = st + MaxSeriesStroke - st,
-            Y = st + MaxSeriesStroke - st,
-            Height = (float)LegendShapeSize,
-            Width = (float)LegendShapeSize,
+            X = st * 0.5f,
+            Y = st * 0.5f,
+            Height = (float)MiniatureShapeSize,
+            Width = (float)MiniatureShapeSize,
             Color = HeatMap[0] // ToDo <- draw the gradient?
         };
         strokeClone.ZIndex = 1;
-        context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
+        schedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
 
-        context.Width = w + MaxSeriesStroke * 2;
-        context.Height = w + MaxSeriesStroke * 2;
-
-        CanvasSchedule = context;
+        return new Sketch<TDrawingContext>()
+        {
+            Height = MiniatureShapeSize,
+            Width = MiniatureShapeSize,
+            PaintSchedules = schedules
+        };
     }
 
     /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

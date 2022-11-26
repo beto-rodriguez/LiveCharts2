@@ -296,8 +296,7 @@ public static class LightThemeExtensions
                                 ? null
                                 : new SolidColorPaint(new SKColor(235, 235, 235));
 
-                        if (cartesian.Padding == Padding.Default)
-                            cartesian.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
+                        if (cartesian.Padding == Padding.Default) cartesian.Padding = new Padding(12);
                     }
                     else
                     {

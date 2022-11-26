@@ -20,313 +20,182 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Linq;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.VisualElements;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
 {
+    private static readonly int s_zIndex = 10050;
+    private ContainerOrientation _orientation = ContainerOrientation.Vertical;
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
+    private readonly Dictionary<IChartSeries<SkiaSharpDrawingContext>, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>> _activeSeries = new();
+    private new List<VisualElement<SkiaSharpDrawingContext>> _toRemoveSeries = new();
+    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
+
+    public SKDefaultLegend()
+    {
+        FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
+    }
+
     /// <inheritdoc cref="IImageControl.Size"/>
     public LvcSize Size { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend font paint.
+    /// </summary>
+    public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the background paint.
+    /// </summary>
+    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
+    {
+        get => _backgroundPaint;
+        set
+        {
+            _backgroundPaint = value;
+            if (value is not null)
+            {
+                value.IsFill = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the fonts size.
+    /// </summary>
+    public double TextSize { get; set; } = 15;
 
     void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
         if (chart.Legend is null || chart.LegendPosition == LegendPosition.Hidden) return;
 
-        if (chart.LegendPosition is LegendPosition.Left or LegendPosition.Right)
+        Measure(chart);
+
+        if (_stackPanel is null) return;
+        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
+        if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
+
+        var actualChartSize = chart.ControlSize;
+
+        // this seems a constant layout issue...
+        // ToDo:
+        // this is a workaround to force the legend to be drawn in the correct position
+        // It seems that this value is constant, it seems to not be affected by the font size or the stack panel properties.
+        // is this and SkiaSharp measure issue?
+        // is it a LiveCharts issue?
+        var iDontKnowWhyThis = 17;
+
+        if (chart.LegendPosition == LegendPosition.Top)
         {
-            DrawOrMeasureVertical(chart, false);
-            DrawOrMeasureVertical(chart, true);
+            chart.Canvas.StartPoint = new LvcPoint(0, Size.Height);
+            _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
+            _stackPanel.Y = -Size.Height;
         }
-        else
+        if (chart.LegendPosition == LegendPosition.Bottom)
         {
-            DrawOrMeasureHorizontal(chart, false);
-            DrawOrMeasureHorizontal(chart, true);
+            _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
+            _stackPanel.Y = actualChartSize.Height;
+        }
+        if (chart.LegendPosition == LegendPosition.Left)
+        {
+            chart.Canvas.StartPoint = new LvcPoint(Size.Width, 0);
+            _stackPanel.X = -Size.Width;
+            _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+        }
+        if (chart.LegendPosition == LegendPosition.Right)
+        {
+            _stackPanel.X = actualChartSize.Width - iDontKnowWhyThis;
+            _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+        }
+
+        chart.AddVisual(_stackPanel);
+
+        foreach (var visual in _toRemoveSeries)
+        {
+            _ = _stackPanel.Children.Remove(visual);
+            chart.RemoveVisual(visual);
         }
     }
 
-    private void DrawOrMeasureVertical(Chart<SkiaSharpDrawingContext> chart, bool draw)
+    private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
     {
-        float xi = 0f, yi = 0f;
-        var p = 8f;
+        if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
+        if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
+        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
 
-        if (draw)
+        _orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
+            ? ContainerOrientation.Vertical
+            : ContainerOrientation.Horizontal;
+
+        _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
-            var actualChartSize = chart.View.ControlSize;
+            Padding = new Padding(0),
+            Orientation = _orientation,
+            HorizontalAlignment = Align.Start,
+            VerticalAlignment = Align.Middle,
+            BackgroundPaint = BackgroundPaint
+        };
 
-            if (chart.LegendPosition == LegendPosition.Left)
-            {
-                chart.Canvas.StartPoint = new LvcPoint(Size.Width, 0);
-                xi = -Size.Width + p;
-                yi = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
-            }
-            if (chart.LegendPosition == LegendPosition.Right)
-            {
-                xi = actualChartSize.Width;
-                yi = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
-            }
+        _toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);
+
+        foreach (var series in chart.ChartSeries)
+        {
+            var seriesMiniatureVisual = GetSeriesVisual(series);
+            _ = _toRemoveSeries.Remove(seriesMiniatureVisual);
         }
-        else
+    }
+
+    /// <inheritdoc cref="IImageControl.Measure(IChart)"/>
+    public void Measure(IChart chart)
+    {
+        var skiaChart = (Chart<SkiaSharpDrawingContext>)chart;
+        BuildLayout(skiaChart);
+        if (_stackPanel is null) return;
+        Size = _stackPanel.Measure(skiaChart, null, null);
+    }
+
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(IChartSeries<SkiaSharpDrawingContext> series)
+    {
+        if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
+
+        var sketch = series.GetMiniatresSketch();
+        var relativePanel = sketch.AsDrawnControl();
+
+        var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
-            xi = 0f;
-            yi = 0f;
-        }
-
-        var drawnLegendChart = (IDrawnLegend)chart.View;
-        if (drawnLegendChart.LegendFontPaint is null) return;
-
-        var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
-        var legendOrientation = chart.LegendOrientation;
-        var legendPosition = chart.LegendPosition;
-
-        var drawing = draw ? chart.Canvas.Draw() : null;
-
-        var miniatureMaxSize = series
-            .Aggregate(new LvcSize(), (current, s) =>
+            Padding = new Padding(15, 4),
+            VerticalAlignment = Align.Middle,
+            HorizontalAlignment = Align.Middle,
+            Children =
             {
-                var maxScheduleSize = s.CanvasSchedule.PaintSchedules
-                    .Aggregate(new LvcSize(), (current, schedule) =>
-                    {
-                        var maxGeometrySize = schedule.Geometries.OfType<IGeometry<SkiaSharpDrawingContext>>()
-                            .Aggregate(new LvcSize(), (current, geometry) =>
-                            {
-                                var size = geometry.Measure(schedule.PaintTask);
-                                var t = schedule.PaintTask.StrokeThickness;
-
-                                return GetMaxSize(current, new LvcSize(size.Width + t, size.Height + t));
-                            });
-
-                        return GetMaxSize(current, maxGeometrySize);
-                    });
-
-                return GetMaxSize(current, maxScheduleSize);
-            });
-
-        var labelMaxSize = series
-            .Aggregate(new LvcSize(), (current, s) =>
-            {
-                var label = new LabelGeometry
+                relativePanel,
+                new LabelVisual
                 {
-                    HorizontalAlign = Align.Start,
-                    VerticalAlign = Align.Start,
-                    Text = s.Name ?? string.Empty,
-                    TextSize = (float)drawnLegendChart.LegendFontSize
-                };
-
-                return GetMaxSize(current, label.Measure(drawnLegendChart.LegendFontPaint));
-            });
-
-        // set a padding
-        miniatureMaxSize = new LvcSize(miniatureMaxSize.Width, miniatureMaxSize.Height);
-        labelMaxSize = new LvcSize(labelMaxSize.Width + p, labelMaxSize.Height + p);
-
-        var maxY = miniatureMaxSize.Height > labelMaxSize.Height ? miniatureMaxSize.Height : labelMaxSize.Height;
-
-        var y = yi;
-        foreach (var s in series)
-        {
-            var x = xi;
-
-            foreach (var miniatureSchedule in s.CanvasSchedule.PaintSchedules)
-            {
-                if (draw) _ = drawing!.SelectPaint(miniatureSchedule.PaintTask);
-
-                foreach (var geometry in miniatureSchedule.Geometries.Cast<IGeometry<SkiaSharpDrawingContext>>())
-                {
-                    var size = geometry.Measure(miniatureSchedule.PaintTask);
-                    var t = miniatureSchedule.PaintTask.StrokeThickness;
-
-                    // distance to center (in miniatureMaxSize) in the x and y axis
-                    //var cx = 0;// (miniatureMaxSize.Width - (size.Width + t)) * 0.5f;
-                    var cy = (maxY - (size.Height + t)) * 0.5f;
-
-                    geometry.X = x; // + cx; // this is already centered by the LiveCharts API
-                    geometry.Y = y + cy;
-
-                    if (draw) _ = drawing!.Draw(geometry);
+                    Text = series.Name ?? string.Empty,
+                    Paint = FontPaint,
+                    TextSize = TextSize,
+                    Padding = new Padding(8, 0, 0, 0),
+                    VerticalAlignment = Align.Start,
+                    HorizontalAlignment = Align.Start
                 }
             }
+        };
 
-            x += miniatureMaxSize.Width + p;
+        _ = _stackPanel?.Children.Add(sp);
+        _activeSeries.Add(series, sp);
 
-            if (drawnLegendChart.LegendFontPaint is not null)
-            {
-                var label = new LabelGeometry
-                {
-                    X = x,
-                    Y = y,
-                    HorizontalAlign = Align.Start,
-                    VerticalAlign = Align.Start,
-                    Text = s.Name ?? string.Empty,
-                    TextSize = (float)drawnLegendChart.LegendFontSize
-                };
-                var size = label.Measure(drawnLegendChart.LegendFontPaint);
-
-                var cy = (maxY - size.Height) * 0.5f;
-                label.Y = y + cy;
-
-                if (draw)
-                    _ = drawing!
-                        .SelectPaint(drawnLegendChart.LegendFontPaint)
-                        .Draw(label);
-
-                x += labelMaxSize.Width + p;
-            }
-
-            y += maxY;
-            if (!draw) Size = GetMaxSize(Size, new LvcSize(x - xi, y - yi));
-        }
-    }
-
-    private void DrawOrMeasureHorizontal(Chart<SkiaSharpDrawingContext> chart, bool draw)
-    {
-        float xi = 0f, yi = 0f;
-        var p = 8f;
-
-        if (draw)
-        {
-            var actualChartSize = chart.View.ControlSize;
-
-            if (chart.LegendPosition == LegendPosition.Top)
-            {
-                chart.Canvas.StartPoint = new LvcPoint(0, Size.Height);
-                xi = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
-                yi = -Size.Height + p;
-            }
-            if (chart.LegendPosition == LegendPosition.Bottom)
-            {
-                xi = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
-                yi = actualChartSize.Height + p;
-            }
-        }
-        else
-        {
-            xi = 0f;
-            yi = 0f;
-        }
-
-        var drawnLegendChart = (IDrawnLegend)chart.View;
-        if (drawnLegendChart.LegendFontPaint is null) return;
-
-        var series = chart.ChartSeries.Where(x => x.IsVisibleAtLegend);
-        var legendOrientation = chart.LegendOrientation;
-        var legendPosition = chart.LegendPosition;
-
-        var drawing = draw ? chart.Canvas.Draw() : null;
-
-        var miniatureMaxSize = series
-            .Aggregate(new LvcSize(), (current, s) =>
-            {
-                var maxScheduleSize = s.CanvasSchedule.PaintSchedules
-                    .Aggregate(new LvcSize(), (current, schedule) =>
-                    {
-                        var maxGeometrySize = schedule.Geometries.OfType<IGeometry<SkiaSharpDrawingContext>>()
-                            .Aggregate(new LvcSize(), (current, geometry) =>
-                            {
-                                var size = geometry.Measure(schedule.PaintTask);
-                                var t = schedule.PaintTask.StrokeThickness;
-
-                                return GetMaxSize(current, new LvcSize(size.Width + t, size.Height + t));
-                            });
-
-                        return GetMaxSize(current, maxGeometrySize);
-                    });
-
-                return GetMaxSize(current, maxScheduleSize);
-            });
-
-        var labelMaxSize = series
-            .Aggregate(new LvcSize(), (current, s) =>
-            {
-                var label = new LabelGeometry
-                {
-                    HorizontalAlign = Align.Start,
-                    VerticalAlign = Align.Start,
-                    Text = s.Name ?? string.Empty,
-                    TextSize = (float)drawnLegendChart.LegendFontSize
-                };
-
-                return GetMaxSize(current, label.Measure(drawnLegendChart.LegendFontPaint));
-            });
-
-        // set a padding
-        miniatureMaxSize = new LvcSize(miniatureMaxSize.Width, miniatureMaxSize.Height);
-        labelMaxSize = new LvcSize(labelMaxSize.Width + p, labelMaxSize.Height + p);
-
-        var maxY = miniatureMaxSize.Height > labelMaxSize.Height ? miniatureMaxSize.Height : labelMaxSize.Height;
-
-        var y = yi;
-        var x = xi;
-
-        foreach (var s in series)
-        {
-            foreach (var miniatureSchedule in s.CanvasSchedule.PaintSchedules)
-            {
-                if (draw) _ = drawing!.SelectPaint(miniatureSchedule.PaintTask);
-
-                foreach (var geometry in miniatureSchedule.Geometries.Cast<IGeometry<SkiaSharpDrawingContext>>())
-                {
-                    var size = geometry.Measure(miniatureSchedule.PaintTask);
-                    var t = miniatureSchedule.PaintTask.StrokeThickness;
-
-                    // distance to center (in miniatureMaxSize) in the x and y axis
-                    //var cx = 0;// (miniatureMaxSize.Width - (size.Width + t)) * 0.5f;
-                    var cy = (maxY - (size.Height + t)) * 0.5f;
-
-                    geometry.X = x; // + cx; // this is already centered by the LiveCharts API
-                    geometry.Y = y + cy;
-
-                    if (draw) _ = drawing!.Draw(geometry);
-                }
-            }
-
-            x += miniatureMaxSize.Width + p;
-
-            if (drawnLegendChart.LegendFontPaint is not null)
-            {
-                var label = new LabelGeometry
-                {
-                    X = x,
-                    Y = y,
-                    HorizontalAlign = Align.Start,
-                    VerticalAlign = Align.Start,
-                    Text = s.Name ?? string.Empty,
-                    TextSize = (float)drawnLegendChart.LegendFontSize
-                };
-                var size = label.Measure(drawnLegendChart.LegendFontPaint);
-
-                var cy = (maxY - size.Height) * 0.5f;
-                label.Y = y + cy;
-
-                if (draw)
-                    _ = drawing!
-                        .SelectPaint(drawnLegendChart.LegendFontPaint)
-                        .Draw(label);
-
-                x += labelMaxSize.Width + p;
-            }
-
-            x += p;
-        }
-
-        y += maxY + 2 * p;
-        if (!draw) Size = GetMaxSize(Size, new LvcSize(x - xi, y - yi));
-    }
-
-    private LvcSize GetMaxSize(LvcSize size1, LvcSize size2)
-    {
-        var w = size1.Width;
-        var h = size1.Height;
-
-        if (size2.Width > w) w = size2.Width;
-        if (size2.Height > h) h = size2.Height;
-
-        return new LvcSize(w, h);
+        return sp;
     }
 }

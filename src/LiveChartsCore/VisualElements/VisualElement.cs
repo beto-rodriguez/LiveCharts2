@@ -27,6 +27,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -38,6 +39,9 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 {
     internal double _x;
     internal double _y;
+    internal float _xc;
+    internal float _yc;
+    internal ISizedGeometry<TDrawingContext>? _parent;
     private int _scalesXAt;
     private int _scalesYAt;
 
@@ -143,13 +147,13 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Gets the actual location of the element.
     /// </summary>
     /// <returns></returns>
-    public abstract LvcPoint GetActualLocation();
+    public abstract LvcPoint GetTargetLocation();
 
     /// <summary>
     /// Gets the actual size of the element.
     /// </summary>
     /// <returns>The actual size.</returns>
-    public abstract LvcSize GetActualSize();
+    public abstract LvcSize GetTargetSize();
 
     /// <summary>
     /// Called when [paint changed].
@@ -185,10 +189,37 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// then it is the index Scaler.</param>
     protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
-    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(LvcPoint point)
+    /// <summary>
+    /// Gets the position of the element considering the parent current state.
+    /// </summary>
+    /// <returns></returns>
+    protected LvcPoint GetPositionRelativeToParent()
     {
-        var location = GetActualLocation();
-        var size = GetActualSize();
+        var parentX = 0f;
+        var parentY = 0f;
+
+        if (_parent is not null)
+        {
+            var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
+            var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
+            parentX = xProperty.GetCurrentValue((Animatable)_parent);
+            parentY = yProperty.GetCurrentValue((Animatable)_parent);
+        }
+
+        return new LvcPoint(parentX + X, parentY + Y);
+    }
+
+    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(IChart chart, LvcPoint point)
+    {
+        var motionCanvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        if (motionCanvas.StartPoint is not null)
+        {
+            point.X -= motionCanvas.StartPoint.Value.X;
+            point.Y -= motionCanvas.StartPoint.Value.Y;
+        }
+
+        var location = GetTargetLocation();
+        var size = GetTargetSize();
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element
         if (point.X >= location.X && point.X <= location.X + size.Width &&

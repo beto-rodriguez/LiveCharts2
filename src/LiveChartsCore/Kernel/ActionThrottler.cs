@@ -89,7 +89,7 @@ public class ActionThrottler
             _isWaiting = false;
         }
 
-        await _action();
+        await Task.WhenAny(_action());
     }
 
     /// <summary>

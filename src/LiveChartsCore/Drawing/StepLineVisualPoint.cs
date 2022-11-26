@@ -69,7 +69,7 @@ public class StepLineVisualPoint<TDrawingContext, TVisual> : IStepLineVisualChar
     /// <summary>
     /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
     /// </summary>
-    public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
+    public IGeometry<TDrawingContext>? MainGeometry => Geometry?.MainGeometry;
 
     ISizedGeometry<TDrawingContext> IStepLineVisualChartPoint<TDrawingContext>.Geometry => Geometry;
 }

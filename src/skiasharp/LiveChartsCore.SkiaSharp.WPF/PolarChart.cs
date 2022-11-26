@@ -33,6 +33,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -278,7 +279,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     {
         return core is not PolarChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
     }
 
     /// <summary>
@@ -290,8 +291,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         if (canvas is null) throw new Exception("canvas not found");
 
         core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-        legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-        tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+        legend = new SKDefaultLegend(); // Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+        tooltip = new SKDefaultTooltip(); // Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
         core.Update();
     }
 

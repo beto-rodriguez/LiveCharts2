@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
@@ -92,8 +93,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _isInverted;
     private bool _forceStepToMin;
     private bool _crosshairSnapEnabled;
-    private readonly float _tickLength = 8f;
+    private readonly float _tickLength = 6f;
     private readonly int _subSections = 3;
+    private Align? _labelsAlignment;
 
     #endregion
 
@@ -121,6 +123,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.NamePadding"/>
     public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianAxis.LabelsAlignment"/>
+    public Align? LabelsAlignment { get => _labelsAlignment; set { _labelsAlignment = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="ICartesianAxis.Orientation"/>
     public AxisOrientation Orientation => _orientation;
@@ -464,8 +469,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         for (var i = start; i <= max; i += s)
         {
-            var separatorKey = Labelers.SevenRepresentativeDigits(i - 1d + 1d);
-            var labelContent = i < min || i > max ? string.Empty : labeler(i - 1d + 1d);
+            var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
+            var labelContent = i < min || i > max ? string.Empty : TryGetLabelOrLogError(labeler, i - 1d + 1d);
 
             float x, y;
             if (_orientation == AxisOrientation.X)
@@ -522,7 +527,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (LabelsPaint is not null && visualSeparator.Label is null)
             {
                 IntializeLabel(visualSeparator, cartesianChart, size, hasRotation, r);
-                UpdateLabel(visualSeparator.Label!, xc, yc, labeler(i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
+                UpdateLabel(visualSeparator.Label!, xc, yc, TryGetLabelOrLogError(labeler, i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
             }
 
             #endregion
@@ -576,7 +581,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (separator.Subseparators is not null) UpdateSubseparators(separator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
             if (separator.Tick is not null) UpdateTick(separator.Tick, _tickLength, x, y, UpdateMode.UpdateAndRemove);
             if (separator.Subticks is not null) UpdateSubticks(separator.Subticks, scale, s, x, y, UpdateMode.UpdateAndRemove);
-            if (separator.Label is not null) UpdateLabel(separator.Label, x, y, labeler(separator.Value - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndRemove);
+            if (separator.Label is not null) UpdateLabel(separator.Label, x, y, TryGetLabelOrLogError(labeler, separator.Value - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndRemove);
 
             _ = separators.Remove(separatorValueKey.Key);
         }
@@ -664,9 +669,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (_crosshairLine is null)
         {
             _crosshairLine = new TLineGeometry();
-            CrosshairPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLine);
             UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
         }
+        CrosshairPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLine);
 
         if (CrosshairLabelsPaint is not null)
         {
@@ -686,24 +691,16 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                     new LvcSize(controlSize.Width, drawMarginSize.Height)));
             }
             cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint);
-        }
 
-        if (_crosshairLabel is null && CrosshairLabelsPaint is not null)
-        {
-            _crosshairLabel = new TTextGeometry();
-            CrosshairLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLabel);
-        }
-
-        if (_crosshairLabel is not null)
-        {
+            _crosshairLabel ??= new TTextGeometry();
             var labeler = Labeler;
             if (Labels is not null)
             {
                 labeler = Labelers.BuildNamedLabeler(Labels).Function;
             }
 
-            _crosshairLabel.Text = labeler(labelValue);
-            _crosshairLabel.TextSize = (float)TextSize;
+            _crosshairLabel.Text = TryGetLabelOrLogError(labeler, labelValue);
+            _crosshairLabel.TextSize = (float)_textSize;
             _crosshairLabel.Background = CrosshairLabelsBackground ?? LvcColor.Empty;
             _crosshairLabel.Padding = CrosshairPadding ?? _padding;
             _crosshairLabel.X = x;
@@ -712,6 +709,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var r = (float)_labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
             if (hasRotation) _crosshairLabel.RotateTransform = r;
+            CrosshairLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _crosshairLabel);
         }
 
         UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
@@ -749,7 +747,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var textGeometry = new TTextGeometry
         {
             Text = Name ?? string.Empty,
-            TextSize = (float)NameTextSize,
+            TextSize = (float)_nameTextSize,
             RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
             Padding = NamePadding
         };
@@ -763,7 +761,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
 
-        var ts = (float)TextSize;
+        var ts = (float)_textSize;
         var labeler = Labeler;
 
         if (Labels is not null)
@@ -793,7 +791,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         {
             var textGeometry = new TTextGeometry
             {
-                Text = labeler(i),
+                Text = TryGetLabelOrLogError(labeler, i),
                 TextSize = ts,
                 RotateTransform = r,
                 Padding = _padding
@@ -895,7 +893,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var textGeometry = new TTextGeometry
             {
                 Text = labeler(i),
-                TextSize = (float)TextSize,
+                TextSize = (float)_textSize,
                 RotateTransform = (float)LabelsRotation,
                 Padding = _padding
             };
@@ -943,7 +941,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         _nameGeometry.Padding = NamePadding;
         _nameGeometry.Text = Name ?? string.Empty;
-        _nameGeometry.TextSize = (float)NameTextSize;
+        _nameGeometry.TextSize = (float)_nameTextSize;
 
         if (_orientation == AxisOrientation.X)
         {
@@ -1175,11 +1173,118 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         float r,
         UpdateMode mode)
     {
+        var actualRotatation = r;
+        const double toRadians = Math.PI / 180;
+
+        if (_orientation == AxisOrientation.Y)
+        {
+            actualRotatation %= 180;
+            if (actualRotatation < 0) actualRotatation += 360;
+            if (actualRotatation is > 90 and < 180) actualRotatation += 180;
+            if (actualRotatation is > 180 and < 270) actualRotatation += 180;
+
+            var actualAlignment = _labelsAlignment == null
+              ? (_position == AxisPosition.Start ? Align.End : Align.Start)
+              : _labelsAlignment.Value;
+
+            if (actualAlignment == Align.Start)
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    x += (float)Math.Abs(rhx * 0.5f);
+                }
+
+                x -= _labelsDesiredSize.Width * 0.5f;
+                label.HorizontalAlign = Align.Start;
+            }
+            else
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    x -= (float)Math.Abs(rhx * 0.5f);
+                }
+
+                x += _labelsDesiredSize.Width * 0.5f;
+                label.HorizontalAlign = Align.End;
+            }
+        }
+
+        if (_orientation == AxisOrientation.X)
+        {
+            actualRotatation %= 180;
+            if (actualRotatation < 0) actualRotatation += 180;
+            if (actualRotatation >= 90) actualRotatation -= 180;
+
+            var actualAlignment = _labelsAlignment == null
+              ? (_position == AxisPosition.Start ? Align.Start : Align.End)
+              : _labelsAlignment.Value;
+
+            if (actualAlignment == Align.Start)
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    y += (float)Math.Abs(rhx * 0.5f);
+                }
+
+                if (hasRotation)
+                {
+                    y -= _labelsDesiredSize.Height * 0.5f;
+                    label.HorizontalAlign = actualRotatation < 0
+                        ? Align.End
+                        : Align.Start;
+                }
+                else
+                {
+                    label.HorizontalAlign = Align.Middle;
+                }
+            }
+            else
+            {
+                if (hasRotation && _labelsPaint is not null)
+                {
+                    var notRotatedSize =
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
+                        .Measure(_labelsPaint);
+
+                    var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
+                    y -= (float)Math.Abs(rhx * 0.5f);
+                }
+
+                if (hasRotation)
+                {
+                    y += _labelsDesiredSize.Height * 0.5f;
+                    label.HorizontalAlign = actualRotatation < 0
+                        ? Align.Start
+                        : Align.End;
+                }
+                else
+                {
+                    label.HorizontalAlign = Align.Middle;
+                }
+            }
+        }
+
         label.Text = text;
         label.Padding = _padding;
         label.X = x;
         label.Y = y;
-        if (hasRotation) label.RotateTransform = r;
+
+        if (hasRotation) label.RotateTransform = actualRotatation;
 
         SetUpdateMode(label, mode);
     }
@@ -1200,6 +1305,21 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             default:
                 geometry.Opacity = 1;
                 break;
+        }
+    }
+
+    private string TryGetLabelOrLogError(Func<double, string> labeler, double value)
+    {
+        try
+        {
+            return labeler(value);
+        }
+        catch (Exception e)
+        {
+#if DEBUG
+            Trace.WriteLine($"[Error] LiveCharts was not able to get a label from axis {_orientation} with value {value}. {e.Message}");
+#endif
+            return string.Empty;
         }
     }
 

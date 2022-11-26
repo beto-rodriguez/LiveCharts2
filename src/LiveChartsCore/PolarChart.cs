@@ -185,7 +185,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
-        LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
 
         TooltipPosition = _chartView.TooltipPosition;
@@ -299,15 +298,10 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
-        {
-            Legend.Draw(this);
-            Update();
-            PreviousLegendPosition = LegendPosition;
-            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-            _preserveFirstDraw = IsFirstDraw;
-        }
+        InitializeVisualsCollector();
+
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
+        DrawLegend(seriesInLegend);
 
         // calculate draw margin
 
@@ -376,9 +370,17 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             var fitMargin = new Margin(-dl, -dt, -dr, -db);
             SetDrawMargin(ControlSize, fitMargin);
         }
-        else if (viewDrawMargin is null)
+        else
         {
-            var m = viewDrawMargin ?? new Margin();
+            // calculate draw margin
+            var m = new Margin();
+            var ts = 0f;
+            if (View.Title is not null)
+            {
+                var titleSize = View.Title.Measure(this, null, null);
+                m.Top = titleSize.Height;
+                ts = titleSize.Height;
+            }
             SetDrawMargin(ControlSize, m);
 
             foreach (var axis in AngleAxes)
@@ -430,7 +432,17 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        InitializeVisualsCollector();
+        UpdateBounds();
+
+        var title = View.Title;
+        if (title is not null)
+        {
+            var titleSize = title.Measure(this, null, null);
+            title.AlignToTopLeftCorner();
+            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            title.Y = 0;
+            AddVisual(title);
+        }
 
         var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
         foreach (var axis in totalAxes)
@@ -466,13 +478,13 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.IsNotifyingChanges = true;
             }
 
-            if (axis.IsVisible) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)axis);
+            if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
             ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         CollectVisuals();
 

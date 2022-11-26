@@ -12,7 +12,10 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <lvc:PieChart Series="{Binding Series}" ></lvc:PieChart>
+        <lvc:PieChart
+            Series="{Binding Series}"
+            Title="{Binding Title}">
+        </lvc:PieChart>
     </Grid>
 
 </UserControl>

@@ -18,9 +18,8 @@ public class View : Panel
             XAxes = viewModel.XAxes,
             YAxes = viewModel.YAxes,
             TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left, // mark
-            TooltipFont = Eto.Drawing.Fonts.Monospace(25), // mark
-            TooltipTextColor = Eto.Drawing.Color.FromArgb(242, 244, 195), // mark
-            TooltipBackColor = Eto.Drawing.Color.FromArgb(72, 0, 50), // mark
+            TooltipTextPaint = viewModel.TooltipTextPaint, // mark
+            TooltipBackgroundPaint = viewModel.TooltipBackgroundPaint // mark
         };
 
         Content = cartesianChart;

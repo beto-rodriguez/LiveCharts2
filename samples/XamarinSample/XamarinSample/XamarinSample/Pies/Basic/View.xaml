@@ -7,5 +7,9 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:PieChart Series="{Binding Series}" LegendPosition="Right"/>
+    <lvc:PieChart
+        Series="{Binding Series}"
+        LegendPosition="Right"
+        Title="{Binding Title}">
+    </lvc:PieChart>
 </ContentPage>

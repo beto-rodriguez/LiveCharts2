@@ -20,49 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel;
-using Microsoft.UI.Xaml.Media;
-using Windows.UI.Text;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI;
+namespace LiveChartsCore.VisualElements;
 
 /// <summary>
-/// The Uwp poing class, just used to bind the tooltips.
+/// An image control
 /// </summary>
-public class BindingPoint
+public interface IImageControl
 {
     /// <summary>
-    /// Ges the chart point.
+    /// Gets the size.
     /// </summary>
-    public ChartPoint ChartPoint { get; init; } = null!; // <- how to force the init.. so the nullables do not complain?
+    public LvcSize Size { get; }
 
     /// <summary>
-    /// Gets the font family.
+    /// Measures the control.
     /// </summary>
-    public FontFamily FontFamily { get; init; } = null!;
-
-    /// <summary>
-    /// Gets the foreground.
-    /// </summary>
-    public Brush Foreground { get; init; } = null!;
-
-    /// <summary>
-    /// Gets the font size.
-    /// </summary>
-    public double FontSize { get; init; }
-
-    /// <summary>
-    /// Gets the font weight.
-    /// </summary>
-    public FontWeight FontWeight { get; init; }
-
-    /// <summary>
-    /// Gets the font style.
-    /// </summary>
-    public FontStyle FontStyle { get; init; }
-
-    /// <summary>
-    /// Gets the font stretch.
-    /// </summary>
-    public FontStretch FontStretch { get; init; }
+    /// <param name="chart">The chart that holds the control.</param>
+    public void Measure(IChart chart);
 }

@@ -20,10 +20,8 @@
             XAxes="{Binding XAxes}"
             YAxes="{Binding YAxes}"
             TooltipPosition="Left"
-            TooltipFontFamily="Courier New"
-            TooltipFontSize="25"
-            TooltipTextBrush="#f2f4c3"
-            TooltipBackground="#480032">
+            TooltipTextPaint="{Binding TooltipTextPaint}"
+            TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}">
         </lvc:CartesianChart>
     </Grid>
 

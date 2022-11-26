@@ -89,6 +89,12 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     LvcRectangle NameDesiredSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the labels alignment, default is null and means that the library will set it based on the
+    /// <see cref="Orientation"/> and <see cref="Position"/> properties.
+    /// </summary>
+    Align? LabelsAlignment { get; set; }
+
+    /// <summary>
     /// Gets or sets the axis position.
     /// </summary>
     /// <value>

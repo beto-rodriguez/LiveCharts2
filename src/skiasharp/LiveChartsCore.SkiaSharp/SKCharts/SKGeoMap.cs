@@ -127,7 +127,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
         Canvas.DrawFrame(
             new SkiaSharpDrawingContext(
                 Canvas,
-                new SKImageInfo(Height, Width),
+                new SKImageInfo(Width, Height),
                 surface!,
                 canvas,
                 Background,

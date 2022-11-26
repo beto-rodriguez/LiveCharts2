@@ -223,7 +223,7 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
 
         Canvas.Dispose();
 
-        if (_core is not null) _core.Unload();
+        _core?.Unload();
         if (_dom is not null) await ((IAsyncDisposable)_dom).DisposeAsync();
     }
 }

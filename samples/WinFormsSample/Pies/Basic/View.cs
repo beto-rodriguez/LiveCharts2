@@ -18,6 +18,7 @@ public partial class View : UserControl
         pieChart = new PieChart
         {
             Series = viewModel.Series,
+            Title= viewModel.Title,
             LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
 
             // out of livecharts properties...

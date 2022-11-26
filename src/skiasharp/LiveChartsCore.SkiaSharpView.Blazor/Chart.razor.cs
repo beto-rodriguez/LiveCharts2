@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -60,7 +61,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>? _visualsObserver;
     private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
-    private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
@@ -191,20 +191,41 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     [Parameter]
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView.LegendOrientation" />
-    [Parameter]
-    public LegendOrientation LegendOrientation { get => _legendOrientation; set { _legendOrientation = value; OnPropertyChanged(); } }
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    //[Parameter]
-    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; private set; } = null!;
+    [Parameter]
+    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; } = new SKDefaultLegend();
 
-    /// <inheritdoc cref="IChartView.LegendPosition" />
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    [Parameter]
+    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    [Parameter]
+    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    [Parameter]
+    public double? LegendTextSize { get; set; }
+
+    /// <inheritdoc cref="IChartView.TooltipPosition" />
     [Parameter]
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; private set; } = null!;
+    [Parameter]
+    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    [Parameter]
+    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    [Parameter]
+    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get; set; }
+
+    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    [Parameter]
+    public double? TooltipTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     [Parameter]
@@ -212,15 +233,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [Parameter]
-    public TimeSpan UpdaterThrottler
-    {
-        get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
-        set
-        {
-            if (core is null) throw new Exception("core not set yet.");
-            core.UpdaterThrottler = value;
-        }
-    }
+    public TimeSpan UpdaterThrottler { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]
@@ -235,18 +248,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
             OnPropertyChanged();
         }
     }
-
-    /// <summary>
-    /// Gets or sets the legend template.
-    /// </summary>
-    [Parameter]
-    public RenderFragment<ISeries[]>? LegendTemplate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip legend.
-    /// </summary>
-    [Parameter]
-    public RenderFragment<ChartPoint[]>? TooltipTemplate { get; set; }
 
     /// <summary>
     /// Gets or sets the pointer down callback.
@@ -295,13 +296,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
         core.ClearTooltipData();
         Tooltip.Hide();
-    }
-
-    /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
-    public void SetTooltipStyle(LvcColor background, LvcColor textColor)
-    {
-        //TooltipBackColor = Color.FromArgb(background.A, background.R, background.G, background.B);
-        //TooltipTextColor = Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B);
     }
 
     void IChartView.InvokeOnUIThread(Action action)

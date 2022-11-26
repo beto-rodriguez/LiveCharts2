@@ -129,7 +129,7 @@ public class RadialGradientPaint : Paint
         _skiaPaint.StrokeMiter = StrokeMiter;
         _skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
-        if (HasCustomFont) _skiaPaint.Typeface = GetTypeFaceFromFontFamily();
+        if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
 
         if (PathEffect is not null)
         {
@@ -173,8 +173,8 @@ public class RadialGradientPaint : Paint
     public override void Dispose()
     {
         if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
-        if (PathEffect is not null) PathEffect.Dispose();
-        if (ImageFilter is not null) ImageFilter.Dispose();
+        PathEffect?.Dispose();
+        ImageFilter?.Dispose();
 
         if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
         {

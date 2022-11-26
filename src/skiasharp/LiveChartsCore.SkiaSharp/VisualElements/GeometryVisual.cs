@@ -37,7 +37,7 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
 {
     internal TGeometry? _geometry;
     private LvcSize _actualSize = new();
-    private LvcPoint _actualLocation = new();
+    private LvcPoint _targetLocation = new();
 
     /// <summary>
     /// Occurs when the geometry is initialized.
@@ -62,8 +62,8 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
         return _actualSize = new LvcSize(w, h);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualSize"/>
-    public override LvcSize GetActualSize()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
+    public override LvcSize GetTargetSize()
     {
         return _actualSize;
     }
@@ -83,12 +83,20 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
             y = primaryScaler.ToPixels(y);
         }
 
-        _actualLocation = new(x, y);
+        _targetLocation = new((float)X + _xc, (float)Y + _yc);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
         if (_geometry is null)
         {
-            _geometry = new TGeometry { X = x, Y = y, Width = _actualSize.Width, Height = _actualSize.Height };
+            var cp = GetPositionRelativeToParent();
+
+            _geometry = new TGeometry
+            {
+                X = cp.X,
+                Y = cp.Y,
+                Width = _actualSize.Width,
+                Height = _actualSize.Height
+            };
             GeometryIntialized?.Invoke(_geometry);
 
             _ = _geometry
@@ -97,8 +105,8 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
                 .CompleteCurrentTransitions();
         }
 
-        _geometry.X = x;
-        _geometry.Y = y;
+        _geometry.X = x + _xc;
+        _geometry.Y = y + _yc;
         _geometry.Width = _actualSize.Width;
         _geometry.Height = _actualSize.Height;
 
@@ -107,9 +115,9 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
         if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetActualLocation"/>
-    public override LvcPoint GetActualLocation()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
+    public override LvcPoint GetTargetLocation()
     {
-        return _actualLocation;
+        return _targetLocation;
     }
 }

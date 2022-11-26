@@ -165,7 +165,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         LegendPosition = _chartView.LegendPosition;
-        LegendOrientation = _chartView.LegendOrientation;
         Legend = _chartView.Legend;
 
         TooltipPosition = _chartView.TooltipPosition;
@@ -203,30 +202,47 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             series.IsNotifyingChanges = true;
         }
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
+        InitializeVisualsCollector();
+
+        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
+        DrawLegend(seriesInLegend);
+
+        var title = View.Title;
+        var m = new Margin();
+        var ts = 0f;
+        if (title is not null)
         {
-            Legend.Draw(this);
-            Update();
-            PreviousLegendPosition = LegendPosition;
-            PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-            _preserveFirstDraw = IsFirstDraw;
+            var titleSize = title.Measure(this, null, null);
+            m.Top = titleSize.Height;
+            ts = titleSize.Height;
         }
 
-        if (viewDrawMargin is null)
-        {
-            var m = viewDrawMargin ?? new Margin();
-            SetDrawMargin(ControlSize, m);
-        }
+        var rm = viewDrawMargin ?? new Margin(Margin.Auto);
+        var actualMargin = new Margin(
+            Margin.IsAuto(rm.Left) ? m.Left : rm.Left,
+            Margin.IsAuto(rm.Top) ? m.Top : rm.Top,
+            Margin.IsAuto(rm.Right) ? m.Right : rm.Right,
+            Margin.IsAuto(rm.Bottom) ? m.Bottom : rm.Bottom);
+
+        SetDrawMargin(ControlSize, actualMargin);
 
         // invalid dimensions, probably the chart is too small
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        InitializeVisualsCollector();
+        UpdateBounds();
 
-        foreach (var visual in VisualElements) RegisterAndInvalidateVisual(visual);
-        foreach (var series in Series) RegisterAndInvalidateVisual((ChartElement<TDrawingContext>)series);
+        if (title is not null)
+        {
+            var titleSize = title.Measure(this, null, null);
+            title.AlignToTopLeftCorner();
+            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            title.Y = 0;
+            AddVisual(title);
+        }
+
+        foreach (var visual in VisualElements) AddVisual(visual);
+        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
 
         CollectVisuals();
 

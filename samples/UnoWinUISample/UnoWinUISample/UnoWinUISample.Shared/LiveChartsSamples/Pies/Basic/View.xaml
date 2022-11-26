@@ -9,5 +9,9 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:PieChart Series="{Binding Series}" LegendPosition="Right"/>
+    <lvc:PieChart
+        Series="{Binding Series}"
+        Title="{Binding Title}"
+        LegendPosition="Right">
+    <lvc:PieChart>
 </UserControl>

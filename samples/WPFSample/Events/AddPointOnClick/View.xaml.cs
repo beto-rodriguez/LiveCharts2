@@ -29,5 +29,9 @@ public partial class View : UserControl
 
         // finally add the new point to the data in our chart.
         viewModel.Data.Add(new ObservablePoint(scaledPoint.X, scaledPoint.Y));
+
+        // You can also get all the points or visual elements in a given location.
+        var points = chart.GetPointsAt(new LvcPoint((float)p.X, (float)p.Y));
+        var visuals = chart.GetVisualsAt(new LvcPoint((float)p.X, (float)p.Y));
     }
 }
