@@ -35,7 +35,7 @@ public partial class ViewModel
         new Axis
         {
             Labeler = value => new DateTime((long) value).ToString("MMMM dd"),
-            LabelsRotation = 15,
+            LabelsRotation = 80,
 
             // when using a date time type, let the library know your unit // mark
             UnitWidth = TimeSpan.FromDays(1).Ticks, // mark
