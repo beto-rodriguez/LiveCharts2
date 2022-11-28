@@ -145,7 +145,13 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
 
     private SeriesVisual GetSeriesVisual(ChartPoint point)
     {
-        if (_seriesVisualsMap.TryGetValue(point.Context.Series, out var seriesPanel)) return seriesPanel;
+        if (_seriesVisualsMap.TryGetValue(point.Context.Series, out var visual))
+        {
+            if (_chart is null) return visual;
+            visual.LabelVisual.Text = point.AsTooltipString;
+            visual.LabelVisual.Invalidate(_chart);
+            return visual;
+        }
 
         var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniatresSketch();
         var relativePanel = sketch.AsDrawnControl();
@@ -173,7 +179,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         };
 
         _ = _stackPanel?.Children.Add(sp);
-        var seriesVisual = new SeriesVisual(point.Context.Series, sp);
+        var seriesVisual = new SeriesVisual(point.Context.Series, sp, label);
         _seriesVisualsMap.Add(point.Context.Series, seriesVisual);
 
         return seriesVisual;
@@ -181,14 +187,20 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
 
     private class SeriesVisual
     {
-        public SeriesVisual(ISeries series, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> stackPanel)
+        public SeriesVisual(
+            ISeries series,
+            StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> stackPanel,
+            LabelVisual label)
         {
             Series = series;
             Visual = stackPanel;
+            LabelVisual = label;
         }
 
         public ISeries Series { get; }
 
         public StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> Visual { get; }
+
+        public LabelVisual LabelVisual { get; set; }
     }
 }
