@@ -120,6 +120,14 @@ public class LiveChartsSettings
     public object ThemeId { get; private set; } = new();
 
     /// <summary>
+    /// Gets or sets the default update throttling timeout
+    /// </summary>
+    /// <value>
+    /// The default update throttling timeout
+    /// </value>
+    public TimeSpan DefaultUpdateThrottlingTimeout { get; set; } = TimeSpan.FromMilliseconds(50);
+
+    /// <summary>
     /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
     /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
     /// </summary>
@@ -200,6 +208,17 @@ public class LiveChartsSettings
     public LiveChartsSettings WithDefaultZoomMode(ZoomAndPanMode zoomMode)
     {
         DefaultZoomMode = zoomMode;
+        return this;
+    }
+
+    /// <summary>
+    /// Withes the default update throttling timeout
+    /// </summary>
+    /// <param name="timeout">The update throttling timeout.</param>
+    /// <returns>the current settings</returns>
+    public LiveChartsSettings WithDefaultUpdateThrottlingTimeout(TimeSpan timeout)
+    {
+        DefaultUpdateThrottlingTimeout = timeout;
         return this;
     }
 
