@@ -17,7 +17,7 @@
 
     <AssemblyName>LiveChartsCore.SkiaSharpView</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView</RootNamespace>
-    <Version>2.0.0-beta.602</Version>
+    <Version>2.0.0-beta.603</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for .Net, this package contains the SkiaSharp backend.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
