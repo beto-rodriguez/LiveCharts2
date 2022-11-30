@@ -120,7 +120,10 @@ public abstract class MotionProperty<T> : IMotionProperty
     /// <returns></returns>
     public T GetMovement(Animatable animatable)
     {
-        if (Animation is null || Animation.EasingFunction is null || fromValue is null || IsCompleted) return OnGetMovement(1);
+        // For some reason JITter can't remove value type boxing when this statement is used inside composite if statement
+        // Emitted IL has boxing originally, but JITter should be able to optimize it to 'false' or 'Nullable<T>.HasValue'
+        var fromValueIsNull = fromValue is null;
+        if (Animation is null || Animation.EasingFunction is null || fromValueIsNull || IsCompleted) return OnGetMovement(1);
 
         if (_requiresToInitialize || _startTime == long.MinValue)
         {
