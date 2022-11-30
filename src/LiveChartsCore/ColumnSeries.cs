@@ -209,7 +209,9 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             }
             visual.RemoveOnCompleted = false;
 
-            point.Context.HoverArea = new RectangleHoverArea(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b);
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b);
 
             _ = toDeletePoints.Remove(point);
 

@@ -178,7 +178,9 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             sizedGeometry.RemoveOnCompleted = false;
 
-            point.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy);
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy);
 
             _ = toDeletePoints.Remove(point);
 

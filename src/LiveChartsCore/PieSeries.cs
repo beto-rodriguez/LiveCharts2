@@ -339,8 +339,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             if (start + initialRotation == initialRotation && sweep == 360)
                 dougnutGeometry.SweepAngle = 359.99f;
 
-            point.Context.HoverArea = new SemicircleHoverArea()
-                .SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
+            if (point.Context.HoverArea is not SemicircleHoverArea ha)
+                point.Context.HoverArea = ha = new SemicircleHoverArea();
+            _ = ha.SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
 
             _ = toDeletePoints.Remove(point);
 

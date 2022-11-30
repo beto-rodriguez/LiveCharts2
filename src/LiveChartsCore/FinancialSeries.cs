@@ -244,8 +244,9 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             visual.Low = low;
             visual.RemoveOnCompleted = false;
 
-            var ha = new RectangleHoverArea().SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
-            point.Context.HoverArea = ha;
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
 
             _ = toDeletePoints.Remove(point);
 

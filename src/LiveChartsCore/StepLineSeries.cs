@@ -268,7 +268,9 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 var hags = gs < 8 ? 8 : gs;
 
-                point.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - hgs, uwx, gs);
+                if (point.Context.HoverArea is not RectangleHoverArea ha)
+                    point.Context.HoverArea = ha = new RectangleHoverArea();
+                _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
 
                 _ = toDeletePoints.Remove(point);
 
