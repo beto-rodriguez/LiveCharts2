@@ -233,7 +233,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [Parameter]
-    public TimeSpan UpdaterThrottler { get; set; }
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]

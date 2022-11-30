@@ -246,7 +246,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public TimeSpan UpdaterThrottler { get; set; }
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

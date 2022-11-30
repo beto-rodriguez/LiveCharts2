@@ -485,7 +485,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; }
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
