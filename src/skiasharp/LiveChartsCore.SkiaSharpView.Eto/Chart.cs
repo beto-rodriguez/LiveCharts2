@@ -240,7 +240,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; }
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
