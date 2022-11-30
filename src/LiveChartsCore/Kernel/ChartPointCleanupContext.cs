@@ -32,7 +32,6 @@ internal struct ChartPointCleanupContext
 {
     public int ToDeleteCnt { get; private set; }
 
-
     public void RemovePoint(ChartPoint point)
     {
         if (point.RemoveOnCompleted) // protect against deleting same point again
@@ -41,7 +40,6 @@ internal struct ChartPointCleanupContext
             point.RemoveOnCompleted = false;
         }
     }
-
 
     public static ChartPointCleanupContext For(HashSet<ChartPoint> points)
     {

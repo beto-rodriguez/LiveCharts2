@@ -32,7 +32,6 @@ public abstract class MotionProperty<T> : IMotionProperty
 {
     private static readonly bool s_canBeNull = Kernel.Extensions.CanBeNull(typeof(T));
 
-
     /// <summary>
     /// From value
     /// </summary>
