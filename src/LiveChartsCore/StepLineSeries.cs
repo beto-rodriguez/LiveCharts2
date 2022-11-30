@@ -129,7 +129,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var dls = (float)DataLabelsSize;
 
         var segmentI = 0;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var toDeletePointsCnt = everFetched.Count;
+        InvalidateAllPoints(everFetched);
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
@@ -272,7 +273,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     point.Context.HoverArea = ha = new RectangleHoverArea();
                 _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
 
-                _ = toDeletePoints.Remove(point);
+                toDeletePointsCnt--;
+                point.RemoveOnCompleted = false;
 
                 if (DataLabelsPaint is not null)
                 {
@@ -351,12 +353,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != cartesianChart.View) continue;
-            SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
-            _ = everFetched.Remove(point);
-        }
+        if (toDeletePointsCnt != 0)
+            RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
     }

@@ -189,7 +189,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         var dls = unchecked((float)DataLabelsSize);
 
         var segmentI = 0;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var toDeletePointsCnt = everFetched.Count;
+        InvalidateAllPoints(everFetched);
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
@@ -328,7 +329,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
                 _ = ha.SetDimensions(x - hags * 0.5f, y - hags * 0.5f, hags, hags);
 
-                _ = toDeletePoints.Remove(data.TargetPoint);
+                toDeletePointsCnt--;
+                data.TargetPoint.RemoveOnCompleted = false;
 
                 if (DataLabelsPaint is not null)
                 {
@@ -410,12 +412,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != polarChart.View) continue;
-            SoftDeleteOrDisposePoint(point, scaler);
-            _ = everFetched.Remove(point);
-        }
+        if (toDeletePointsCnt != 0)
+            RemoveInvalidPoints(everFetched, polarChart.View, scaler, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.GetBounds(PolarChart{TDrawingContext}, IPolarAxis, IPolarAxis)"/>
