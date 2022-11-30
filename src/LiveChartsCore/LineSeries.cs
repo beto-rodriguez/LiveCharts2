@@ -150,8 +150,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePointsCnt = everFetched.Count;
-        InvalidateAllPoints(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
@@ -312,8 +311,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
                 _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
 
-                toDeletePointsCnt--;
-                data.TargetPoint.RemoveOnCompleted = false;
+                pointsCleanup.RemovePoint(data.TargetPoint);
 
                 if (DataLabelsPaint is not null)
                 {
@@ -401,8 +399,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 
-        if (toDeletePointsCnt != 0)
-            RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        if (pointsCleanup.ToDeleteCnt != 0)
+            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
     }

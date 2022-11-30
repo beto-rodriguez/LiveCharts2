@@ -109,8 +109,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePointsCnt = everFetched.Count;
-        InvalidateAllPoints(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var p = PointPadding;
 
@@ -189,8 +188,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 point.Context.HoverArea = ha = new RectangleHoverArea();
             _ = ha.SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
 
-            toDeletePointsCnt--;
-            point.RemoveOnCompleted = false;
+            pointsCleanup.RemovePoint(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -226,8 +224,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             OnPointMeasured(point);
         }
 
-        if (toDeletePointsCnt != 0)
-            RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        if (pointsCleanup.ToDeleteCnt != 0)
+            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>

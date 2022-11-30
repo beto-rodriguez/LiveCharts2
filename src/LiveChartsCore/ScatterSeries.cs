@@ -108,8 +108,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePointsCnt = everFetched.Count;
-        InvalidateAllPoints(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var gs = (float)GeometrySize;
         var hgs = gs / 2f;
@@ -183,8 +182,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 point.Context.HoverArea = ha = new RectangleHoverArea();
             _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy);
 
-            toDeletePointsCnt--;
-            point.RemoveOnCompleted = false;
+            pointsCleanup.RemovePoint(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -220,8 +218,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             OnPointMeasured(point);
         }
 
-        if (toDeletePointsCnt != 0)
-            RemoveInvalidPoints(everFetched, cartesianChart.View, yScale, xScale, SoftDeleteOrDisposePoint);
+        if (pointsCleanup.ToDeleteCnt != 0)
+            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, yScale, xScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>

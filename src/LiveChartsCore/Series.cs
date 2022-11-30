@@ -566,40 +566,4 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     {
         foreach (var chart in subscribedTo) chart.Update();
     }
-
-    internal static void InvalidateAllPoints(HashSet<ChartPoint> points)
-    {
-        foreach (var point in points)
-            point.RemoveOnCompleted = true;
-    }
-
-    internal static void RemoveInvalidPoints(HashSet<ChartPoint> points, IChartView chartView, Scaler primaryScale, Scaler secondaryScale, Action<ChartPoint, Scaler, Scaler> disposeAction)
-    {
-        // It would be nice to have System.Buffers installed to use rented buffer
-        // Or we can probably use single cached buffer since all calculations are running on GUI thread
-        // At least we don't allocate when there is nothing to remove
-        // And allocate only as much as we need to remove
-        var toDeletePoints = points.Where(p => p.RemoveOnCompleted).ToArray();
-        foreach (var p in toDeletePoints)
-        {
-            if (p.Context.Chart != chartView) continue;
-            disposeAction(p, primaryScale, secondaryScale);
-            _ = points.Remove(p);
-        }
-    }
-
-    internal static void RemoveInvalidPoints(HashSet<ChartPoint> points, IChartView chartView, PolarScaler scale, Action<ChartPoint, PolarScaler> disposeAction)
-    {
-        // It would be nice to have System.Buffers installed to use rented buffer
-        // Or we can probably use single cached buffer since all calculations are running on GUI thread
-        // At least we don't allocate when there is nothing to remove
-        // And allocate only as much as we need to remove
-        var toDeletePoints = points.Where(p => p.RemoveOnCompleted).ToArray();
-        foreach (var p in toDeletePoints)
-        {
-            if (p.Context.Chart != chartView) continue;
-            disposeAction(p, scale);
-            _ = points.Remove(p);
-        }
-    }
 }

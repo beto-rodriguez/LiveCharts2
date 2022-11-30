@@ -177,8 +177,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup());
         if (stacker is null) throw new NullReferenceException("Unexpected null stacker");
 
-        var toDeletePointsCnt = everFetched.Count;
-        InvalidateAllPoints(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var fetched = Fetch(pieChart).ToArray();
 
@@ -344,8 +343,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 point.Context.HoverArea = ha = new SemicircleHoverArea();
             _ = ha.SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
 
-            toDeletePointsCnt--;
-            point.RemoveOnCompleted = false;
+            pointsCleanup.RemovePoint(point);
 
             if (DataLabelsPaint is not null && point.PrimaryValue >= 0)
             {
@@ -431,10 +429,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             i++;
         }
 
-        if (toDeletePointsCnt != 0)
+        if (pointsCleanup.ToDeleteCnt != 0)
         {
             var u = new Scaler();
-            RemoveInvalidPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
+            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
         }
     }
 
