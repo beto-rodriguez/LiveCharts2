@@ -74,7 +74,6 @@ internal class ChartPointCleanupContext
         PolarScaler scale,
         Action<ChartPoint, PolarScaler> disposeAction)
     {
-
         if (_toDeleteCount == 0) return;
 
         // It would be nice to have System.Buffers installed to use rented buffer
