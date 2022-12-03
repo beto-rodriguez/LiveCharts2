@@ -343,7 +343,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 point.Context.HoverArea = ha = new SemicircleHoverArea();
             _ = ha.SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
 
-            pointsCleanup.RemovePoint(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null && point.PrimaryValue >= 0)
             {
@@ -429,11 +429,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             i++;
         }
 
-        if (pointsCleanup.ToDeleteCnt != 0)
-        {
-            var u = new Scaler();
-            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
-        }
+        var u = new Scaler(); // dummy scaler, this is not used in the SoftDeleteOrDisposePoint method.
+        pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>

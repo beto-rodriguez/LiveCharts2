@@ -248,7 +248,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
                 point.Context.HoverArea = ha = new RectangleHoverArea();
             _ = ha.SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
 
-            pointsCleanup.RemovePoint(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -288,8 +288,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             OnPointMeasured(point);
         }
 
-        if (pointsCleanup.ToDeleteCnt != 0)
-            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>

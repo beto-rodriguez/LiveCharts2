@@ -328,7 +328,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
                 _ = ha.SetDimensions(x - hags * 0.5f, y - hags * 0.5f, hags, hags);
 
-                pointsCleanup.RemovePoint(data.TargetPoint);
+                pointsCleanup.Clean(data.TargetPoint);
 
                 if (DataLabelsPaint is not null)
                 {
@@ -410,8 +410,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 
-        if (pointsCleanup.ToDeleteCnt != 0)
-            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, polarChart.View, scaler, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(everFetched, polarChart.View, scaler, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.GetBounds(PolarChart{TDrawingContext}, IPolarAxis, IPolarAxis)"/>

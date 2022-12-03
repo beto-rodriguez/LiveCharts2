@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -213,7 +212,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 point.Context.HoverArea = ha = new RectangleHoverArea();
             _ = ha.SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b);
 
-            pointsCleanup.RemovePoint(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -253,8 +252,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             OnPointMeasured(point);
         }
 
-        if (pointsCleanup.ToDeleteCnt != 0)
-            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>

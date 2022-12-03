@@ -28,38 +28,38 @@ using System.Linq;
 
 namespace LiveChartsCore.Kernel;
 
-internal struct ChartPointCleanupContext
+internal class ChartPointCleanupContext
 {
-    public int ToDeleteCnt { get; private set; }
-
-    public void RemovePoint(ChartPoint point)
-    {
-        if (point.RemoveOnCompleted) // protect against deleting same point again
-        {
-            ToDeleteCnt--;
-            point.RemoveOnCompleted = false;
-        }
-    }
+    private int _toDeleteCount;
 
     public static ChartPointCleanupContext For(HashSet<ChartPoint> points)
     {
-        InvalidateAllPoints(points);
-        return new ChartPointCleanupContext() { ToDeleteCnt = points.Count };
+        foreach (var point in points) point.RemoveOnCompleted = true;
+        return new ChartPointCleanupContext() { _toDeleteCount = points.Count };
     }
 
-    internal static void InvalidateAllPoints(HashSet<ChartPoint> points)
+    public void Clean(ChartPoint point)
     {
-        foreach (var point in points)
-            point.RemoveOnCompleted = true;
+        if (!point.RemoveOnCompleted) return;
+
+        _toDeleteCount--;
+        point.RemoveOnCompleted = false;
     }
 
-    internal static void RemoveInvalidPoints(HashSet<ChartPoint> points, IChartView chartView, Scaler primaryScale, Scaler secondaryScale, Action<ChartPoint, Scaler, Scaler> disposeAction)
+    public void CollectPoints(
+        HashSet<ChartPoint> points,
+        IChartView chartView,
+        Scaler primaryScale,
+        Scaler secondaryScale,
+        Action<ChartPoint, Scaler, Scaler> disposeAction)
     {
+        if (_toDeleteCount == 0) return;
+
         // It would be nice to have System.Buffers installed to use rented buffer
         // Or we can probably use single cached buffer since all calculations are running on GUI thread
         // At least we don't allocate when there is nothing to remove
         // And allocate only as much as we need to remove
-        var toDeletePoints = points.Where(p => p.RemoveOnCompleted).ToArray();
+        var toDeletePoints = points.Where(p => p.RemoveOnCompleted);
         foreach (var p in toDeletePoints)
         {
             if (p.Context.Chart != chartView) continue;
@@ -68,13 +68,20 @@ internal struct ChartPointCleanupContext
         }
     }
 
-    internal static void RemoveInvalidPoints(HashSet<ChartPoint> points, IChartView chartView, PolarScaler scale, Action<ChartPoint, PolarScaler> disposeAction)
+    public void CollectPoints(
+        HashSet<ChartPoint> points,
+        IChartView chartView,
+        PolarScaler scale,
+        Action<ChartPoint, PolarScaler> disposeAction)
     {
+
+        if (_toDeleteCount == 0) return;
+
         // It would be nice to have System.Buffers installed to use rented buffer
         // Or we can probably use single cached buffer since all calculations are running on GUI thread
         // At least we don't allocate when there is nothing to remove
         // And allocate only as much as we need to remove
-        var toDeletePoints = points.Where(p => p.RemoveOnCompleted).ToArray();
+        var toDeletePoints = points.Where(p => p.RemoveOnCompleted);
         foreach (var p in toDeletePoints)
         {
             if (p.Context.Chart != chartView) continue;

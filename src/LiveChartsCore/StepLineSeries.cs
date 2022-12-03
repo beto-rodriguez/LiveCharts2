@@ -272,7 +272,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     point.Context.HoverArea = ha = new RectangleHoverArea();
                 _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
 
-                pointsCleanup.RemovePoint(point);
+                pointsCleanup.Clean(point);
 
                 if (DataLabelsPaint is not null)
                 {
@@ -351,8 +351,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 
-        if (pointsCleanup.ToDeleteCnt != 0)
-            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
     }

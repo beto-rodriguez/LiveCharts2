@@ -311,7 +311,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
                 _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
 
-                pointsCleanup.RemovePoint(data.TargetPoint);
+                pointsCleanup.Clean(data.TargetPoint);
 
                 if (DataLabelsPaint is not null)
                 {
@@ -399,8 +399,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 
-        if (pointsCleanup.ToDeleteCnt != 0)
-            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
     }

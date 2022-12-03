@@ -182,7 +182,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 point.Context.HoverArea = ha = new RectangleHoverArea();
             _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy);
 
-            pointsCleanup.RemovePoint(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -218,8 +218,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             OnPointMeasured(point);
         }
 
-        if (pointsCleanup.ToDeleteCnt != 0)
-            ChartPointCleanupContext.RemoveInvalidPoints(everFetched, cartesianChart.View, yScale, xScale, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(everFetched, cartesianChart.View, yScale, xScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
