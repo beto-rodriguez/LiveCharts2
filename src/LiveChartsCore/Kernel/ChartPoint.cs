@@ -184,6 +184,8 @@ public class ChartPoint
     /// </value>
     public ChartPointContext Context { get; }
 
+    internal bool RemoveOnCompleted { get; set; }
+
     /// <summary>
     /// Gets the distance to a given point.
     /// </summary>

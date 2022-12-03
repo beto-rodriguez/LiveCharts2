@@ -177,7 +177,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup());
         if (stacker is null) throw new NullReferenceException("Unexpected null stacker");
 
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var fetched = Fetch(pieChart).ToArray();
 
@@ -339,10 +339,11 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             if (start + initialRotation == initialRotation && sweep == 360)
                 dougnutGeometry.SweepAngle = 359.99f;
 
-            point.Context.HoverArea = new SemicircleHoverArea()
-                .SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
+            if (point.Context.HoverArea is not SemicircleHoverArea ha)
+                point.Context.HoverArea = ha = new SemicircleHoverArea();
+            _ = ha.SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
 
-            _ = toDeletePoints.Remove(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null && point.PrimaryValue >= 0)
             {
@@ -428,13 +429,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             i++;
         }
 
-        var u = new Scaler();
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != pieChart.View) continue;
-            SoftDeleteOrDisposePoint(point, u, u);
-            _ = everFetched.Remove(point);
-        }
+        var u = new Scaler(); // dummy scaler, this is not used in the SoftDeleteOrDisposePoint method.
+        pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>

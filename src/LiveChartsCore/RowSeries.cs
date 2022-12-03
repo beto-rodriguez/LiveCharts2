@@ -102,7 +102,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var rx = (float)Rx;
         var ry = (float)Ry;
@@ -210,9 +210,11 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             }
             visual.RemoveOnCompleted = false;
 
-            point.Context.HoverArea = new RectangleHoverArea(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw);
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw);
 
-            _ = toDeletePoints.Remove(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -252,12 +254,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             OnPointMeasured(point);
         }
 
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != cartesianChart.View) continue;
-            SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
-            _ = everFetched.Remove(point);
-        }
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>

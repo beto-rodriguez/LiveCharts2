@@ -109,7 +109,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var p = PointPadding;
 
@@ -184,10 +184,11 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             visual.Color = LvcColor.FromArgb(baseColor.A, baseColor.R, baseColor.G, baseColor.B);
             visual.RemoveOnCompleted = false;
 
-            var ha = new RectangleHoverArea().SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
-            point.Context.HoverArea = ha;
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
 
-            _ = toDeletePoints.Remove(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -223,12 +224,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             OnPointMeasured(point);
         }
 
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != cartesianChart.View) continue;
-            SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
-            _ = everFetched.Remove(point);
-        }
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
