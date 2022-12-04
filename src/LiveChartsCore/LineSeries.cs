@@ -72,7 +72,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
-    public double GeometrySize { get => _geometrySize; set { _geometrySize = (float)value; OnPropertyChanged(); } }
+    public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
     public double LineSmoothness
@@ -83,13 +83,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             var v = value;
             if (value > 1) v = 1;
             if (value < 0) v = 0;
-            _lineSmoothness = (float)v;
-            OnPropertyChanged();
+            SetProperty(ref _geometrySize, (float)v);
         }
     }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.EnableNullSplitting"/>
-    public bool EnableNullSplitting { get => _enableNullSplitting; set { _enableNullSplitting = value; OnPropertyChanged(); } }
+    public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
     public IPaint<TDrawingContext>? GeometryFill

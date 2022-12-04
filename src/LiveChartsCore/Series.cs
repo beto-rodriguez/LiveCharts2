@@ -25,7 +25,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -107,6 +106,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private bool _isVisibleAtLegend = true;
     private double _miniatureShapeSize = 12;
     private Sketch<TDrawingContext> _miniatureSketch = new();
+    private Func<float, float>? _easingFunction;
+    private TimeSpan? _animationsSpeed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -129,7 +130,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public SeriesProperties SeriesProperties { get; }
 
     /// <inheritdoc cref="ISeries.Name"/>
-    public string? Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+    public string? Name { get => _name; set => SetProperty(ref _name, value); }
 
     /// <summary>
     /// Gets or sets the data set to draw in the chart.
@@ -149,13 +150,13 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     IEnumerable? ISeries.Values { get => Values; set => Values = (IEnumerable<TModel>?)value; }
 
     /// <inheritdoc cref="ISeries.Pivot"/>
-    public double Pivot { get => pivot; set { pivot = (float)value; OnPropertyChanged(); } }
+    public double Pivot { get => pivot; set => SetProperty(ref pivot, (float)value); }
 
     /// <summary>
     /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
     /// then the <see cref="ChartPoint"/> will be drawn as a point in the chart.
     /// </summary>
-    public Action<TModel, ChartPoint>? Mapping { get => _mapping; set { _mapping = value; OnPropertyChanged(); } }
+    public Action<TModel, ChartPoint>? Mapping { get => _mapping; set => SetProperty(ref _mapping, value); }
 
     int ISeries.SeriesId { get; set; } = -1;
 
@@ -203,13 +204,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerDown;
 
-    /// <summary>
-    /// Occurs when a property changes.
-    /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     /// <inheritdoc cref="ISeries.ZIndex" />
-    public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
+    public int ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
     /// <summary>
     /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
@@ -221,7 +217,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string> TooltipLabelFormatter
     {
         get => _tooltipLabelFormatter;
-        set { _tooltipLabelFormatter = value; OnPropertyChanged(); }
+        set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
     /// <summary>
@@ -234,7 +230,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
     {
         get => _dataLabelsFormatter;
-        set { _dataLabelsFormatter = value; OnPropertyChanged(); }
+        set => SetProperty(ref _dataLabelsFormatter, value);
     }
 
     /// <inheritdoc cref="ISeries.IsVisible" />
@@ -242,30 +238,23 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     {
         get => _isVisible;
         set
-        {
-            var changed = value != _isVisible;
-            _isVisible = value;
-            if (!_isVisible) RestartAnimations();
-            if (value && !((ISeries)this).IsNotifyingChanges) ((ISeries)this).IsNotifyingChanges = true;
-            OnPropertyChanged();
-            if (changed) OnVisibilityChanged();
-        }
+        => SetProperty(ref _isVisible, value);
     }
 
     /// <inheritdoc cref="ISeries.IsHoverable" />
     public bool IsHoverable { get; set; } = true;
 
     /// <inheritdoc cref="ISeries.IsVisibleAtLegend" />
-    public bool IsVisibleAtLegend { get => _isVisibleAtLegend; set { _isVisibleAtLegend = value; OnPropertyChanged(); } }
+    public bool IsVisibleAtLegend { get => _isVisibleAtLegend; set => SetProperty(ref _isVisibleAtLegend, value); }
 
     /// <inheritdoc cref="ISeries.DataPadding" />
-    public LvcPoint DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
+    public LvcPoint DataPadding { get => _dataPadding; set => SetProperty(ref _dataPadding, value); }
 
     /// <inheritdoc cref="ISeries.AnimationsSpeed" />
-    public TimeSpan? AnimationsSpeed { get; set; }
+    public TimeSpan? AnimationsSpeed { get => _animationsSpeed; set => SetProperty(ref _animationsSpeed, value); }
 
     /// <inheritdoc cref="ISeries.EasingFunction" />
-    public Func<float, float>? EasingFunction { get; set; }
+    public Func<float, float>? EasingFunction { get => _easingFunction; set => SetProperty(ref _easingFunction, value); }
 
     /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
     bool IStopNPC.IsNotifyingChanges { get; set; }
@@ -313,7 +302,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         {
             _miniatureShapeSize = value;
             OnMiniatureChanged();
-            OnPropertyChanged();
+            SetProperty(ref _miniatureShapeSize, value);
         }
     }
 
@@ -321,7 +310,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public Sketch<TDrawingContext> CanvasSchedule
     {
         get => _miniatureSketch;
-        protected set { _miniatureSketch = value; OnPropertyChanged(); }
+        protected set => SetProperty(ref _miniatureSketch, value);
     }
 
     /// <inheritdoc cref="ISeries.VisibilityChanged"/>
@@ -477,18 +466,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="chartPoint">The chart point.</param>
     /// <returns></returns>
     protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
-
-    /// <summary>
-    /// Called when a property changed.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        if (!((ISeries)this).IsNotifyingChanges) return;
-        NotifySubscribers();
-    }
 
     /// <summary>
     /// Called when the visibility changes.

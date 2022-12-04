@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -28,7 +29,7 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a visual element in a chart.
 /// </summary>
-public interface IChartElement<TDrawingContext>
+public interface IChartElement<TDrawingContext> : INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
     /// <summary>
