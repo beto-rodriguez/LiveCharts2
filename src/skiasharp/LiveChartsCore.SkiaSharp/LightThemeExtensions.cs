@@ -64,9 +64,9 @@ public static class LightThemeExtensions
                            {
                                axis.TextSize = 16;
                                axis.ShowSeparatorLines = true;
-                               axis.NamePaint = LiveChartsSkiaSharp.DefaultPaint;
-                               axis.LabelsPaint = LiveChartsSkiaSharp.DefaultPaint;
-                               axis.SeparatorsPaint = LiveChartsSkiaSharp.DefaultPaint;
+                               axis.NamePaint = new SolidColorPaint(SKColors.Black); //LiveChartsSkiaSharp.DefaultPaint;
+                               axis.LabelsPaint = new SolidColorPaint(SKColors.Black); //LiveChartsSkiaSharp.DefaultPaint;
+                               axis.SeparatorsPaint = new SolidColorPaint(SKColors.Black); //LiveChartsSkiaSharp.DefaultPaint;
                            })
                            // ForAnySeries() will be called for all the series
                            .HasRuleForAnySeries(series =>

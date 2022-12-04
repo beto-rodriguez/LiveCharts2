@@ -444,21 +444,33 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
+        //if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        var initializer = stylesBuilder.GetVisualsInitializer();
+
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
-            axis.IsNotifyingChanges = false;
+            //axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isThemeSet = true;
             axis.Initialize(AxisOrientation.X);
             theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
-            axis.IsNotifyingChanges = true;
+            initializer.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            ce._isThemeSet = false;
+            //axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
         foreach (var axis in YAxes)
         {
-            axis.IsNotifyingChanges = false;
+            //axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isThemeSet = true;
             axis.Initialize(AxisOrientation.Y);
             theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
-            axis.IsNotifyingChanges = true;
+            initializer.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            ce._isThemeSet = false;
+            //axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
 
