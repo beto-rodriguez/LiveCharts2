@@ -417,8 +417,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _zoomMode = _chartView.ZoomMode;
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
+        if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
@@ -455,7 +454,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isThemeSet = true;
             axis.Initialize(AxisOrientation.X);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             initializer.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isThemeSet = false;
             //axis.IsNotifyingChanges = true;
@@ -467,7 +465,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isThemeSet = true;
             axis.Initialize(AxisOrientation.Y);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
             initializer.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isThemeSet = false;
             //axis.IsNotifyingChanges = true;
@@ -478,9 +475,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         SetDrawMargin(ControlSize, new Margin());
         foreach (var series in Series)
         {
-            series.IsNotifyingChanges = false;
+            //series.IsNotifyingChanges = false;
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-            theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+
+            var ce = (ChartElement<TDrawingContext>)series;
+            ce._isThemeSet = true;
+            initializer.ApplyStyleToSeries(series);
 
             var xAxis = XAxes[series.ScalesXAt];
             var yAxis = YAxes[series.ScalesYAt];
@@ -493,7 +493,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             xAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds);
             yAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
 
-            series.IsNotifyingChanges = true;
+            ce._isThemeSet = false;
+            //series.IsNotifyingChanges = true;
         }
 
         #region empty bounds

@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -79,8 +78,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
+        if (stylesBuilder.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(

@@ -83,7 +83,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             var v = value;
             if (value > 1) v = 1;
             if (value < 0) v = 0;
-            SetProperty(ref _geometrySize, (float)v);
+            SetProperty(ref _lineSmoothness, (float)v);
         }
     }
 
