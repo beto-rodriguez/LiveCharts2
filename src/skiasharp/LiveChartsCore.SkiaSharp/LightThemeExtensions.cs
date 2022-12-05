@@ -131,14 +131,6 @@ public static class LightThemeExtensions
                                stackedBarSeries.Rx = 0;
                                stackedBarSeries.Ry = 0;
                            })
-                           .HasRuleForPieSeries(pieSeries =>
-                           {
-                               var color = theme.GetSeriesColor(pieSeries);
-
-                               pieSeries.Name = $"Series #{pieSeries.SeriesId + 1}";
-                               pieSeries.Stroke = null;
-                               pieSeries.Fill = new SolidColorPaint(color);
-                           })
                            .HasRuleForStackedStepLineSeries(stackedStep =>
                            {
                                var color = theme.GetSeriesColor(stackedStep);
@@ -162,6 +154,22 @@ public static class LightThemeExtensions
                                financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
                                financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
                                financialSeries.DownStroke = new SolidColorPaint(new SKColor(239, 83, 80, 255), 3);
+                           })
+                           .HasRuleForScatterSeries(scatterSeries =>
+                           {
+                               var color = theme.GetSeriesColor(scatterSeries);
+
+                               scatterSeries.Name = $"Series #{scatterSeries.SeriesId + 1}";
+                               scatterSeries.Stroke = null;
+                               scatterSeries.Fill = new SolidColorPaint(color.WithAlpha(200));
+                           })
+                           .HasRuleForPieSeries(pieSeries =>
+                           {
+                               var color = theme.GetSeriesColor(pieSeries);
+
+                               pieSeries.Name = $"Series #{pieSeries.SeriesId + 1}";
+                               pieSeries.Stroke = null;
+                               pieSeries.Fill = new SolidColorPaint(color);
                            })
                            .HasRuleForPolarLineSeries(polarLine =>
                            {

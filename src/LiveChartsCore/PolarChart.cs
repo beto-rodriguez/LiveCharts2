@@ -180,6 +180,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        var style = theme.GetVisualsInitializer();
         if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
@@ -212,23 +213,30 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         // restart axes bounds and meta data
         foreach (var axis in AngleAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isThemeSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
-            axis.IsNotifyingChanges = true;
+            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            ce._isThemeSet = false;
         }
         foreach (var axis in RadiusAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isThemeSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
-            axis.IsNotifyingChanges = true;
+            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            ce._isThemeSet = false;
         }
 
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
         foreach (var series in Series)
         {
-            series.IsNotifyingChanges = false;
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+
+            var ce = (ChartElement<TDrawingContext>)series;
+            ce._isThemeSet = true;
+            style.ApplyStyleToSeries(series);
 
             var secondaryAxis = AngleAxes[series.ScalesAngleAt];
             var primaryAxis = RadiusAxes[series.ScalesRadiusAt];
@@ -241,8 +249,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
             secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.SecondaryBounds);
             primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.PrimaryBounds);
-
-            series.IsNotifyingChanges = true;
         }
 
         #region empty bounds
