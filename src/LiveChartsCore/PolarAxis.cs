@@ -183,9 +183,6 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     /// <inheritdoc cref="IPlane.EasingFunction"/>
     public Func<float, float>? EasingFunction { get; set; }
 
-    /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
-    bool IStopNPC.IsNotifyingChanges { get; set; }
-
     #endregion
 
     /// <inheritdoc cref="IPolarAxis.Initialized"/>

@@ -256,9 +256,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ISeries.EasingFunction" />
     public Func<float, float>? EasingFunction { get => _easingFunction; set => SetProperty(ref _easingFunction, value); }
 
-    /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
-    bool IStopNPC.IsNotifyingChanges { get; set; }
-
     /// <summary>
     /// Gets the data factory.
     /// </summary>

@@ -448,19 +448,19 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         foreach (var axis in XAxes)
         {
             var ce = (ChartElement<TDrawingContext>)axis;
-            ce._isThemeSet = true;
+            ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.X);
             style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-            ce._isThemeSet = false;
+            ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
         foreach (var axis in YAxes)
         {
             var ce = (ChartElement<TDrawingContext>)axis;
-            ce._isThemeSet = true;
+            ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.Y);
             style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-            ce._isThemeSet = false;
+            ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
 
@@ -471,7 +471,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
             var ce = (ChartElement<TDrawingContext>)series;
-            ce._isThemeSet = true;
+            ce._isInternalSet = true;
             style.ApplyStyleToSeries(series);
 
             var xAxis = XAxes[series.ScalesXAt];
@@ -485,7 +485,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             xAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds);
             yAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
 
-            ce._isThemeSet = false;
+            ce._isInternalSet = false;
         }
 
         #region empty bounds
@@ -494,10 +494,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         foreach (var axis in XAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
+
             if (!axis.DataBounds.IsEmpty)
             {
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
                 continue;
             }
 
@@ -510,15 +512,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.VisibleDataBounds.AppendValue(min);
 
             if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
-
-            axis.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
         foreach (var axis in YAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
+
             if (!axis.DataBounds.IsEmpty)
             {
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
                 continue;
             }
 
@@ -531,8 +534,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.VisibleDataBounds.AppendValue(min);
 
             if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
-
-            axis.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
 
         #endregion
@@ -691,10 +693,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                axis.IsNotifyingChanges = false;
+                var ce = (ChartElement<TDrawingContext>)axis;
+                ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
             }
 
             // apply padding
@@ -704,10 +707,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                axis.IsNotifyingChanges = false;
+                var ce = (ChartElement<TDrawingContext>)axis;
+                ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
             }
 
             if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
@@ -737,9 +741,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             if (!axis.IsVisible) continue;
 
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
-            axis.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
 
         ActualBounds.HasPreviousState = true;

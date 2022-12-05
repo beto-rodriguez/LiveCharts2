@@ -666,7 +666,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
     public void ShowTooltip(IEnumerable<ChartPoint> points)
-    { 
+    {
         if (_tooltip is null || _core is null) return;
         _tooltip.Show(points, _core);
     }
@@ -735,20 +735,17 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnSizeChanged(object? sender, EventArgs e)
     {
-        if (_core is null) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)

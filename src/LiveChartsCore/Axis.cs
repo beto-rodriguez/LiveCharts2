@@ -22,10 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
@@ -264,9 +262,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.EasingFunction"/>
     public Func<float, float>? EasingFunction { get; set; }
-
-    /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
-    bool IStopNPC.IsNotifyingChanges { get; set; }
 
     /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
     public double? MinZoomDelta { get; set; }

@@ -78,27 +78,11 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         SizeChanged += OnSizeChanged;
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object sender, NotifyCollectionChangedEventArgs e) =>
-           {
-               if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               core.Update();
-           },
-           (object sender, PropertyChangedEventArgs e) =>
-           {
-               if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               core.Update();
-           });
+           (object sender, NotifyCollectionChangedEventArgs e) => core?.Update(),
+           (object sender, PropertyChangedEventArgs e) => core?.Update());
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-           (object sender, NotifyCollectionChangedEventArgs e) =>
-           {
-               if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               core.Update();
-           },
-           (object sender, PropertyChangedEventArgs e) =>
-           {
-               if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               core.Update();
-           });
+           (object sender, NotifyCollectionChangedEventArgs e) => core?.Update(),
+           (object sender, PropertyChangedEventArgs e) => core?.Update());
 
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();

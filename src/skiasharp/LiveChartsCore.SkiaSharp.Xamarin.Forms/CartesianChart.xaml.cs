@@ -731,20 +731,17 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        core.Update();
+        core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        core.Update();
+        core?.Update();
     }
 
     private void OnSizeChanged(object? sender, EventArgs e)
     {
-        if (core is null) return;
-        core.Update();
+        core?.Update();
     }
 
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)

@@ -277,13 +277,11 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 }

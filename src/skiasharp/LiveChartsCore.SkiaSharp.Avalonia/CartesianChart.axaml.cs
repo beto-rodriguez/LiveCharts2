@@ -696,16 +696,12 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)

@@ -188,7 +188,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
             var ce = (ChartElement<TDrawingContext>)series;
-            ce._isThemeSet = true;
+            ce._isInternalSet = true;
             style.ApplyStyleToSeries(series);
 
             var seriesBounds = series.GetBounds(this);
@@ -200,8 +200,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
             PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
 
-            ce._isThemeSet = false;
-            series.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
 
         InitializeVisualsCollector();

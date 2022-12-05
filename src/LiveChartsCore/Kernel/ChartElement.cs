@@ -35,7 +35,7 @@ namespace LiveChartsCore.Kernel;
 public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
-    internal bool _isThemeSet = false;
+    internal bool _isInternalSet = false;
     internal readonly HashSet<string> _userSets = new();
     private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
 
@@ -141,7 +141,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     protected bool CanSetProperty(string propertyName)
     {
         return                                  // a property can be set if:
-            !_isThemeSet                        // 1. it is an user action (not set by a theme).
+            !_isInternalSet                        // 1. it is an user action (not set by a theme).
             ||                                  // or
             !_userSets.Contains(propertyName);  // 2. the user has not set the property.
     }
@@ -169,7 +169,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         // only invoke property change event when the user set the property.
-        if (_isThemeSet) return;
+        if (_isInternalSet) return;
 
         _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

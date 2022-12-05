@@ -682,14 +682,12 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnSizeChanged(object? sender, EventArgs e)

@@ -92,27 +92,11 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         AttachedToVisualTree += OnAttachedToVisualTree;
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object? sender, NotifyCollectionChangedEventArgs e) =>
-           {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               _core.Update();
-           },
-           (object? sender, PropertyChangedEventArgs e) =>
-           {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               _core.Update();
-           }, true);
+           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+           (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-          (object? sender, NotifyCollectionChangedEventArgs e) =>
-          {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-              _core.Update();
-          },
-          (object? sender, PropertyChangedEventArgs e) =>
-          {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-              _core.Update();
-          }, true);
+          (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+          (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
 
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
