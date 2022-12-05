@@ -88,7 +88,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        if (stylesBuilder.ColorPallete.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
