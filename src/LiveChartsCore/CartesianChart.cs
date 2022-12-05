@@ -417,6 +417,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _zoomMode = _chartView.ZoomMode;
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        var style = theme.GetVisualsInitializer();
         if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
@@ -443,31 +444,23 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
-        //if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
-            //axis.IsNotifyingChanges = false;
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isThemeSet = true;
             axis.Initialize(AxisOrientation.X);
-            initializer.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isThemeSet = false;
-            //axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
         foreach (var axis in YAxes)
         {
-            //axis.IsNotifyingChanges = false;
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isThemeSet = true;
             axis.Initialize(AxisOrientation.Y);
-            initializer.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isThemeSet = false;
-            //axis.IsNotifyingChanges = true;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
 
@@ -475,12 +468,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         SetDrawMargin(ControlSize, new Margin());
         foreach (var series in Series)
         {
-            //series.IsNotifyingChanges = false;
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isThemeSet = true;
-            initializer.ApplyStyleToSeries(series);
+            style.ApplyStyleToSeries(series);
 
             var xAxis = XAxes[series.ScalesXAt];
             var yAxis = YAxes[series.ScalesYAt];
@@ -494,7 +486,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             yAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
 
             ce._isThemeSet = false;
-            //series.IsNotifyingChanges = true;
         }
 
         #region empty bounds
