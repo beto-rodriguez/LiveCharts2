@@ -80,7 +80,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        if (stylesBuilder.ColorPallete.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
@@ -731,20 +731,17 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        core.Update();
+        core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        core.Update();
+        core?.Update();
     }
 
     private void OnSizeChanged(object? sender, EventArgs e)
     {
-        if (core is null) return;
-        core.Update();
+        core?.Update();
     }
 
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)

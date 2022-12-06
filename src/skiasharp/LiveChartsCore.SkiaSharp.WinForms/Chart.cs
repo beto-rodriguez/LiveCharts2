@@ -110,7 +110,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        if (stylesBuilder.ColorPallete.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
@@ -363,13 +363,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 

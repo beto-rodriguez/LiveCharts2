@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -30,10 +32,18 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a visual element in a chart.
 /// </summary>
-public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>
+public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
+    internal bool _isInternalSet = false;
+    internal readonly HashSet<string> _userSets = new();
     private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
+
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
+    /// <returns></returns>
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="IChartElement{TDrawingContext}.Tag" />
     public object? Tag { get; set; }
@@ -73,7 +83,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     internal abstract IPaint<TDrawingContext>?[] GetPaintTasks();
 
     /// <summary>
-    /// Sets the property value.
+    /// Sets a property value and handles the paints in the canvas.
     /// </summary>
     /// <param name="reference">The referenced paint task.</param>
     /// <param name="value">The value</param>
@@ -86,8 +96,12 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
-        if (reference is not null) ScheduleDeleteFor(reference);
+        if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
+        if (!CanSetProperty(propertyName)) return;
+
+        if (reference is not null) _deletingTasks.Add(reference);
         reference = value;
+
         if (reference is not null)
         {
             reference.IsStroke = isStroke;
@@ -95,7 +109,41 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
             if (!isStroke) reference.StrokeThickness = 0;
         }
 
-        OnPaintChanged(propertyName);
+        OnPropertyChanged(propertyName);
+    }
+
+    /// <summary>
+    /// Sets a property value.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="reference"></param>
+    /// <param name="value"></param>
+    /// <param name="propertyName"></param>
+    protected virtual void SetProperty<T>(
+        ref T reference,
+        T value,
+        [CallerMemberName] string? propertyName = null)
+    {
+        if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
+        if (!CanSetProperty(propertyName)) return;
+
+        reference = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    /// <summary>
+    /// Determines whether the property can be set.
+    /// 1. The user always can.
+    /// 2. A style can set it only if the user did not.
+    /// </summary>
+    /// <param name="propertyName"></param>
+    /// <returns></returns>
+    protected bool CanSetProperty(string propertyName)
+    {
+        return                                  // a property can be set if:
+            !_isInternalSet                        // 1. it is an user action (not set by a theme).
+            ||                                  // or
+            !_userSets.Contains(propertyName);  // 2. the user has not set the property.
     }
 
     /// <summary>
@@ -112,4 +160,18 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// </summary>
     /// <returns></returns>
     protected virtual void OnPaintChanged(string? propertyName) { }
+
+    /// <summary>
+    /// Called when a property changes.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <returns></returns>
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        // only invoke property change event when the user set the property.
+        if (_isInternalSet) return;
+
+        _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

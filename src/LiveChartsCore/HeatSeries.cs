@@ -47,10 +47,11 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = new();
-    private LvcColor[] _heatMap = {
-            LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
-            LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
-        };
+    private LvcColor[] _heatMap =
+    {
+        LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
+        LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
+    };
     private double[]? _colorStops;
     private Padding _pointPadding = new(4);
 
@@ -67,13 +68,21 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnMiniatureChanged(); OnPropertyChanged(); } }
+    public LvcColor[] HeatMap
+    {
+        get => _heatMap;
+        set
+        {
+            OnMiniatureChanged();
+            SetProperty(ref _heatMap, value);
+        }
+    }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
-    public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
+    public double[]? ColorStops { get => _colorStops; set => SetProperty(ref _colorStops, value); }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
-    public Padding PointPadding { get => _pointPadding; set { _pointPadding = value; OnPropertyChanged(); } }
+    public Padding PointPadding { get => _pointPadding; set => SetProperty(ref _pointPadding, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)

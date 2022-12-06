@@ -68,7 +68,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        if (stylesBuilder.ColorPallete.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
@@ -691,7 +691,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        if (stylesBuilder.ColorPallete.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
@@ -736,14 +736,12 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)

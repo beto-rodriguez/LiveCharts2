@@ -83,7 +83,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        if (stylesBuilder.ColorPallete.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
@@ -92,27 +92,11 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         AttachedToVisualTree += OnAttachedToVisualTree;
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object? sender, NotifyCollectionChangedEventArgs e) =>
-           {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               _core.Update();
-           },
-           (object? sender, PropertyChangedEventArgs e) =>
-           {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               _core.Update();
-           }, true);
+           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+           (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-          (object? sender, NotifyCollectionChangedEventArgs e) =>
-          {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-              _core.Update();
-          },
-          (object? sender, PropertyChangedEventArgs e) =>
-          {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-              _core.Update();
-          }, true);
+          (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+          (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
 
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();

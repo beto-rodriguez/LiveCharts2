@@ -176,8 +176,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
+        var style = theme.GetVisualsInitializer();
+        if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         ValueBounds = new Bounds();
@@ -185,10 +185,11 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         PushoutBounds = new Bounds();
         foreach (var series in Series)
         {
-            series.IsNotifyingChanges = false;
-
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-            theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+
+            var ce = (ChartElement<TDrawingContext>)series;
+            ce._isInternalSet = true;
+            style.ApplyStyleToSeries(series);
 
             var seriesBounds = series.GetBounds(this);
 
@@ -199,7 +200,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
             PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
             PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
 
-            series.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
 
         InitializeVisualsCollector();

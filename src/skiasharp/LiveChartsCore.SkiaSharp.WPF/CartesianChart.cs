@@ -372,14 +372,12 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        core.Update();
+        core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        core.Update();
+        core?.Update();
     }
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)

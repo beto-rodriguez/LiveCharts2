@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
@@ -98,64 +97,64 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     public string? Name { get; set; } = null;
 
     /// <inheritdoc cref="IPlane.NameTextSize"/>
-    public double NameTextSize { get => _nameTextSize; set { _nameTextSize = value; OnPropertyChanged(); } }
+    public double NameTextSize { get => _nameTextSize; set => SetProperty(ref _nameTextSize, value); }
 
     /// <inheritdoc cref="IPlane.NamePadding"/>
-    public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
+    public Padding NamePadding { get => _namePadding; set => SetProperty(ref _namePadding, value); }
 
     /// <inheritdoc cref="IPolarAxis.Orientation"/>
     public PolarAxisOrientation Orientation => _orientation;
 
     /// <inheritdoc cref="IPolarAxis.LabelsAngle"/>
-    public double LabelsAngle { get => _labelsAngle; set { _labelsAngle = value; OnPropertyChanged(); } }
+    public double LabelsAngle { get => _labelsAngle; set => SetProperty(ref _labelsAngle, value); }
 
     /// <inheritdoc cref="IPlane.Labeler"/>
-    public Func<double, string> Labeler { get => _labeler; set { _labeler = value; OnPropertyChanged(); } }
+    public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
     /// <inheritdoc cref="IPlane.MinStep"/>
-    public double MinStep { get => _minStep; set { _minStep = value; OnPropertyChanged(); } }
+    public double MinStep { get => _minStep; set => SetProperty(ref _minStep, value); }
 
     /// <inheritdoc cref="IPlane.ForceStepToMin"/>
-    public bool ForceStepToMin { get => _forceStepToMin; set { _forceStepToMin = value; OnPropertyChanged(); } }
+    public bool ForceStepToMin { get => _forceStepToMin; set => SetProperty(ref _forceStepToMin, value); }
 
     /// <inheritdoc cref="IPlane.MinLimit"/>
-    public double? MinLimit { get => _minLimit; set { _minLimit = value; OnPropertyChanged(); } }
+    public double? MinLimit { get => _minLimit; set => SetProperty(ref _minLimit, value); }
 
     /// <inheritdoc cref="IPlane.MaxLimit"/>
-    public double? MaxLimit { get => _maxLimit; set { _maxLimit = value; OnPropertyChanged(); } }
+    public double? MaxLimit { get => _maxLimit; set => SetProperty(ref _maxLimit, value); }
 
     /// <inheritdoc cref="IPlane.UnitWidth"/>
-    public double UnitWidth { get => _unitWidth; set { _unitWidth = value; OnPropertyChanged(); } }
+    public double UnitWidth { get => _unitWidth; set => SetProperty(ref _unitWidth, value); }
 
     /// <inheritdoc cref="IPlane.LabelsRotation"/>
-    public double LabelsRotation { get => _labelsRotation; set { _labelsRotation = value; OnPropertyChanged(); } }
+    public double LabelsRotation { get => _labelsRotation; set => SetProperty(ref _labelsRotation, value); }
 
     /// <inheritdoc cref="IPlane.TextSize"/>
-    public double TextSize { get => _textSize; set { _textSize = value; OnPropertyChanged(); } }
+    public double TextSize { get => _textSize; set => SetProperty(ref _textSize, value); }
 
     /// <inheritdoc cref="IPlane.Labels"/>
     public IList<string>? Labels { get; set; }
 
     /// <inheritdoc cref="IPolarAxis.LabelsPadding"/>
-    public Padding LabelsPadding { get => _labelsPadding; set { _labelsPadding = value; OnPropertyChanged(); } }
+    public Padding LabelsPadding { get => _labelsPadding; set => SetProperty(ref _labelsPadding, value); }
 
     /// <inheritdoc cref="IPolarAxis.LabelsVerticalAlignment"/>
-    public Align LabelsVerticalAlignment { get => _labelsVerticalAlign; set { _labelsVerticalAlign = value; OnPropertyChanged(); } }
+    public Align LabelsVerticalAlignment { get => _labelsVerticalAlign; set => SetProperty(ref _labelsVerticalAlign, value); }
 
     /// <inheritdoc cref="IPolarAxis.LabelsHorizontalAlignment"/>
-    public Align LabelsHorizontalAlignment { get => _labelsHorizontalAlign; set { _labelsHorizontalAlign = value; OnPropertyChanged(); } }
+    public Align LabelsHorizontalAlignment { get => _labelsHorizontalAlign; set => SetProperty(ref _labelsHorizontalAlign, value); }
 
     /// <inheritdoc cref="IPolarAxis.LabelsBackground"/>
-    public LvcColor LabelsBackground { get => _labelsBackground; set { _labelsBackground = value; OnPropertyChanged(); } }
+    public LvcColor LabelsBackground { get => _labelsBackground; set => SetProperty(ref _labelsBackground, value); }
 
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
-    public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
+    public bool ShowSeparatorLines { get => _showSeparatorLines; set => SetProperty(ref _showSeparatorLines, value); }
 
     /// <inheritdoc cref="IPlane.IsVisible"/>
-    public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
+    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
-    public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
+    public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
     public IPaint<TDrawingContext>? NamePaint
@@ -184,19 +183,10 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     /// <inheritdoc cref="IPlane.EasingFunction"/>
     public Func<float, float>? EasingFunction { get; set; }
 
-    /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
-    bool IStopNPC.IsNotifyingChanges { get; set; }
-
     #endregion
 
     /// <inheritdoc cref="IPolarAxis.Initialized"/>
     public event Action<IPolarAxis>? Initialized;
-
-    /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
-    /// <returns></returns>
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -557,7 +547,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     void IPolarAxis.Initialize(PolarAxisOrientation orientation)
     {
         _orientation = orientation;
-        if (_animatableBounds is null) _animatableBounds = new();
+        _animatableBounds ??= new();
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
         Initialized?.Invoke(this);
@@ -590,17 +580,6 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
         base.RemoveFromUI(chart);
         _animatableBounds = null!;
         _ = activeSeparators.Remove(chart);
-    }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        if (!((IPolarAxis)this).IsNotifyingChanges) return;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     /// <summary>

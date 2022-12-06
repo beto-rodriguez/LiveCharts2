@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
@@ -62,12 +61,6 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
     }
 
     /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
-    /// <returns></returns>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <summary>
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
@@ -84,16 +77,6 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
     {
         base.OnPaintChanged(propertyName);
         OnPropertyChanged(propertyName);
-    }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
 

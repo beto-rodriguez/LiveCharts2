@@ -75,7 +75,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <summary>
     /// Gets or sets whether the section is visible or not.
     /// </summary>
-    public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
+    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <summary>
     /// Gets or sets the xi, the value where the section starts at the X axis,
@@ -84,7 +84,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The xi.
     /// </value>
-    public double? Xi { get => _xi; set { _xi = value; OnPropertyChanged(); } }
+    public double? Xi { get => _xi; set => SetProperty(ref _xi, value); }
 
     /// <summary>
     /// Gets or sets the xj, the value where the section ends and the X axis.
@@ -93,7 +93,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The xj.
     /// </value>
-    public double? Xj { get => _xj; set { _xj = value; OnPropertyChanged(); } }
+    public double? Xj { get => _xj; set => SetProperty(ref _xj, value); }
 
     /// <summary>
     /// Gets or sets the yi, the value where the section starts and the Y axis.
@@ -102,7 +102,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The yi.
     /// </value>
-    public double? Yi { get => _yi; set { _yi = value; OnPropertyChanged(); } }
+    public double? Yi { get => _yi; set => SetProperty(ref _yi, value); }
 
     /// <summary>
     /// Gets or sets the yj, the value where the section ends and the Y axis.
@@ -111,7 +111,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The yj.
     /// </value>
-    public double? Yj { get => _yj; set { _yj = value; OnPropertyChanged(); } }
+    public double? Yj { get => _yj; set => SetProperty(ref _yj, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the X plane, the index must exist 
@@ -120,7 +120,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }
+    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the Y plane, the index must exist 
@@ -129,7 +129,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
+    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
 
     /// <summary>
     /// Gets or sets the index of the z axis.
@@ -137,7 +137,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The index of the z.
     /// </value>
-    public int? ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
+    public int? ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
     /// <summary>
     /// Occurs when a property value changes.

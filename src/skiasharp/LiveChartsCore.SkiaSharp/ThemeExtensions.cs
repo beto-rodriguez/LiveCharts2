@@ -20,22 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.ComponentModel;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Themes;
+using SkiaSharp;
 
-namespace LiveChartsCore;
+namespace LiveChartsCore.SkiaSharpView;
 
-/// <summary>
-/// Defines an object that helps the library to stop listening to <see cref="INotifyPropertyChanged"/>, this is used internally
-/// to apply themes and avoid the chart to update as we apply it.
-/// </summary>
-public interface IStopNPC
+public static class ThemeExtensions
 {
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is notifying changes, this property is used internally to turn off
-    /// notifications while the theme is being applied, this property is not designed to be used by the user.
+    /// Gets a color based on the theme and the series position.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is notifying changes; otherwise, <c>false</c>.
-    /// </value>
-    bool IsNotifyingChanges { get; set; }
+    /// <param name="theme">The theme.</param>
+    /// <param name="series">The series.</param>
+    /// <returns></returns>
+    public static SKColor GetSeriesColor(this Theme<SkiaSharpDrawingContext> theme, ISeries series)
+    {
+        return theme.ColorPallete[series.SeriesId % theme.ColorPallete.Length].AsSKColor();
+    }
 }

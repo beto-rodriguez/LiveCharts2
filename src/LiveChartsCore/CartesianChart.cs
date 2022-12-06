@@ -417,8 +417,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _zoomMode = _chartView.ZoomMode;
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
+        var style = theme.GetVisualsInitializer();
+        if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
@@ -447,18 +447,20 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.X);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
-            axis.IsNotifyingChanges = true;
+            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
         foreach (var axis in YAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.Y);
-            theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
-            axis.IsNotifyingChanges = true;
+            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
 
@@ -466,9 +468,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         SetDrawMargin(ControlSize, new Margin());
         foreach (var series in Series)
         {
-            series.IsNotifyingChanges = false;
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-            theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+
+            var ce = (ChartElement<TDrawingContext>)series;
+            ce._isInternalSet = true;
+            style.ApplyStyleToSeries(series);
 
             var xAxis = XAxes[series.ScalesXAt];
             var yAxis = YAxes[series.ScalesYAt];
@@ -481,7 +485,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             xAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds);
             yAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
 
-            series.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
 
         #region empty bounds
@@ -490,10 +494,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         foreach (var axis in XAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
+
             if (!axis.DataBounds.IsEmpty)
             {
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
                 continue;
             }
 
@@ -506,15 +512,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.VisibleDataBounds.AppendValue(min);
 
             if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
-
-            axis.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
         foreach (var axis in YAxes)
         {
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
+
             if (!axis.DataBounds.IsEmpty)
             {
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
                 continue;
             }
 
@@ -527,8 +534,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.VisibleDataBounds.AppendValue(min);
 
             if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
-
-            axis.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
 
         #endregion
@@ -687,10 +693,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                axis.IsNotifyingChanges = false;
+                var ce = (ChartElement<TDrawingContext>)axis;
+                ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
             }
 
             // apply padding
@@ -700,10 +707,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                axis.IsNotifyingChanges = false;
+                var ce = (ChartElement<TDrawingContext>)axis;
+                ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
-                axis.IsNotifyingChanges = true;
+                ce._isInternalSet = false;
             }
 
             if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
@@ -733,9 +741,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             if (!axis.IsVisible) continue;
 
-            axis.IsNotifyingChanges = false;
+            var ce = (ChartElement<TDrawingContext>)axis;
+            ce._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
-            axis.IsNotifyingChanges = true;
+            ce._isInternalSet = false;
         }
 
         ActualBounds.HasPreviousState = true;

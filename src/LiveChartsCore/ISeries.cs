@@ -33,7 +33,7 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a chart series.
 /// </summary>
-public interface ISeries : IStopNPC
+public interface ISeries
 {
     /// <summary>
     /// Gets or sets a series unique identifier, the library handles this id automatically.
@@ -43,7 +43,7 @@ public interface ISeries : IStopNPC
     /// <summary>
     /// Gets the properties of the series.
     /// </summary>
-    SeriesProperties SeriesProperties { get;  }
+    SeriesProperties SeriesProperties { get; }
 
     /// <summary>
     /// Gets a value indicating whether any paint changed.
@@ -83,17 +83,17 @@ public interface ISeries : IStopNPC
     bool IsVisible { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance will show up in tooltips when the pointer is over a point.
-    /// defualt value is <c>true</c>.
+    /// Gets or sets a value indicating whether this instance will show up in tool tips when the pointer is over a point.
+    /// default value is <c>true</c>.
     /// </summary>
     /// <value>
-    ///   <c>true</c> if this instance is hoverable; otherwise, <c>false</c>.
+    ///   <c>true</c> if this instance is hover-able; otherwise, <c>false</c>.
     /// </value>
     bool IsHoverable { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance will show up in legends.
-    /// defualt value is <c>true</c>.
+    /// default value is <c>true</c>.
     /// </summary>
     /// <value>
     ///   <c>true</c> if this instance is visible at legends; otherwise, <c>false</c>.
@@ -146,7 +146,7 @@ public interface ISeries : IStopNPC
     event Action<ISeries>? VisibilityChanged;
 
     /// <summary>
-    /// Gets the tooltip text for a give chart point.
+    /// Gets the tool tip text for a give chart point.
     /// </summary>
     /// <param name="point">The chart point.</param>
     /// <returns></returns>

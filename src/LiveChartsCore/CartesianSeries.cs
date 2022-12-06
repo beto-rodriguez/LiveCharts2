@@ -57,16 +57,16 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     protected CartesianSeries(SeriesProperties properties) : base(properties) { }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
-    public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }
+    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesYAt"/>
-    public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
+    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsPosition"/>
-    public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
+    public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsTranslate"/>
-    public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set { _labelsTranslate = value; OnPropertyChanged(); } }
+    public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set => SetProperty(ref _labelsTranslate, value); }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(

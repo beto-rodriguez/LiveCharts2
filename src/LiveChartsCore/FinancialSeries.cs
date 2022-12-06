@@ -53,6 +53,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     private IPaint<TDrawingContext>? _upFill = null;
     private IPaint<TDrawingContext>? _downStroke = null;
     private IPaint<TDrawingContext>? _downFill = null;
+    private double _maxBarWidth = 25;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
@@ -66,7 +67,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
-    public double MaxBarWidth { get; set; } = 25;
+    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpStroke"/>
     public IPaint<TDrawingContext>? UpStroke

@@ -46,13 +46,11 @@ public static class DarkThemeExtensions
     public static LiveChartsSettings AddDarkTheme(
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
-        GaugeBuilder.DefaultLabelsPaint = new SolidColorPaint(new SKColor(250, 250, 250));
-
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
                 _ = theme
-                   .WithColors(ColorPalletes.MaterialDesign200)
+                   .WithColors(ColorPalletes.MaterialDesign500)
                    .WithStyle(style =>
                        style
                            .HasRuleForCharts(chart =>
@@ -62,69 +60,93 @@ public static class DarkThemeExtensions
                            })
                            .HasRuleForAxes(axis =>
                            {
-                               axis.TextSize = 18;
+                               axis.TextSize = 16;
                                axis.ShowSeparatorLines = true;
-                               axis.NamePaint = LiveChartsSkiaSharp.DefaultPaint;
-                               axis.LabelsPaint = LiveChartsSkiaSharp.DefaultPaint;
-                               axis.SeparatorsPaint = LiveChartsSkiaSharp.DefaultPaint;
-                           })
-                           // ForAnySeries() will be called for all the series
-                           .HasRuleForAnySeries(series =>
-                           {
-                               if (series is not IStrokedAndFilled<SkiaSharpDrawingContext> strokedAndFilled) return;
-                               strokedAndFilled.Fill = LiveChartsSkiaSharp.DefaultPaint;
-                               strokedAndFilled.Stroke = LiveChartsSkiaSharp.DefaultPaint;
+                               axis.NamePaint = new SolidColorPaint(new SKColor(235, 235, 235));
+                               axis.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
+                               if (axis is ICartesianAxis cartesian)
+                               {
+                                   axis.SeparatorsPaint = cartesian.Orientation == AxisOrientation.X
+                                        ? null
+                                        : new SolidColorPaint(new SKColor(90, 90, 90));
+                                   cartesian.Padding = new Padding(12);
+                               }
+                               else
+                               {
+                                   axis.SeparatorsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
+                               }
                            })
                            .HasRuleForLineSeries(lineSeries =>
                            {
-                               lineSeries.GeometrySize = 18;
-                               lineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 40, 40, 40).AsSKColor());
-                               lineSeries.GeometryStroke = LiveChartsSkiaSharp.DefaultPaint;
+                               var color = theme.GetSeriesColor(lineSeries);
+
+                               lineSeries.Name = $"Series #{lineSeries.SeriesId + 1}";
+                               lineSeries.GeometrySize = 14;
+                               lineSeries.GeometryStroke = new SolidColorPaint(color, 4);
+                               lineSeries.GeometryFill = new SolidColorPaint(new SKColor(30, 30, 30));
+                               lineSeries.Stroke = new SolidColorPaint(color, 4);
+                               lineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
                            })
                            .HasRuleForStepLineSeries(steplineSeries =>
                            {
-                               // at this point ForAnySeries() was already called
-                               // we are configuring the missing properties
-                               steplineSeries.GeometrySize = 18;
-                               steplineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 40, 40, 40).AsSKColor());
-                               steplineSeries.GeometryStroke = LiveChartsSkiaSharp.DefaultPaint;
+                               var color = theme.GetSeriesColor(steplineSeries);
+
+                               steplineSeries.Name = $"Series #{steplineSeries.SeriesId + 1}";
+                               steplineSeries.GeometrySize = 14;
+                               steplineSeries.GeometryStroke = new SolidColorPaint(color, 4);
+                               steplineSeries.GeometryFill = new SolidColorPaint(new SKColor(30, 30, 30));
+                               steplineSeries.Stroke = new SolidColorPaint(color, 4);
+                               steplineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
                            })
                            .HasRuleForStackedLineSeries(stackedLine =>
                            {
-                               // at this point both ForAnySeries() and ForLineSeries() were already called
-                               // again we are correcting the previous settings
+                               var color = theme.GetSeriesColor(stackedLine);
+
+                               stackedLine.Name = $"Series #{stackedLine.SeriesId + 1}";
                                stackedLine.GeometrySize = 0;
-                               stackedLine.GeometryFill = null;
                                stackedLine.GeometryStroke = null;
+                               stackedLine.GeometryFill = null;
                                stackedLine.Stroke = null;
-                               stackedLine.Fill = LiveChartsSkiaSharp.DefaultPaint;
+                               stackedLine.Fill = new SolidColorPaint(color);
                            })
                            .HasRuleForBarSeries(barSeries =>
                            {
-                               // only ForAnySeries() has run, a bar series is not
-                               // any of the previous types.
+                               var color = theme.GetSeriesColor(barSeries);
+
+                               barSeries.Name = $"Series #{barSeries.SeriesId + 1}";
                                barSeries.Stroke = null;
+                               barSeries.Fill = new SolidColorPaint(color);
                                barSeries.Rx = 4;
                                barSeries.Ry = 4;
                            })
                            .HasRuleForStackedBarSeries(stackedBarSeries =>
                            {
+                               var color = theme.GetSeriesColor(stackedBarSeries);
+
+                               stackedBarSeries.Name = $"Series #{stackedBarSeries.SeriesId + 1}";
+                               stackedBarSeries.Stroke = null;
+                               stackedBarSeries.Fill = new SolidColorPaint(color);
                                stackedBarSeries.Rx = 0;
                                stackedBarSeries.Ry = 0;
                            })
                            .HasRuleForPieSeries(pieSeries =>
                            {
-                               pieSeries.Fill = LiveChartsSkiaSharp.DefaultPaint;
+                               var color = theme.GetSeriesColor(pieSeries);
+
+                               pieSeries.Name = $"Series #{pieSeries.SeriesId + 1}";
                                pieSeries.Stroke = null;
-                               pieSeries.Pushout = 0;
+                               pieSeries.Fill = new SolidColorPaint(color);
                            })
                            .HasRuleForStackedStepLineSeries(stackedStep =>
                            {
+                               var color = theme.GetSeriesColor(stackedStep);
+
+                               stackedStep.Name = $"Series #{stackedStep.SeriesId + 1}";
                                stackedStep.GeometrySize = 0;
-                               stackedStep.GeometryFill = null;
                                stackedStep.GeometryStroke = null;
+                               stackedStep.GeometryFill = null;
                                stackedStep.Stroke = null;
-                               stackedStep.Fill = LiveChartsSkiaSharp.DefaultPaint;
+                               stackedStep.Fill = new SolidColorPaint(color);
                            })
                            .HasRuleForHeatSeries(heatSeries =>
                            {
@@ -132,171 +154,38 @@ public static class DarkThemeExtensions
                            })
                            .HasRuleForFinancialSeries(financialSeries =>
                            {
-                               financialSeries.UpFill = LiveChartsSkiaSharp.DefaultPaint;
-                               financialSeries.DownFill = LiveChartsSkiaSharp.DefaultPaint;
-                               financialSeries.UpStroke = LiveChartsSkiaSharp.DefaultPaint;
-                               financialSeries.DownStroke = LiveChartsSkiaSharp.DefaultPaint;
+                               financialSeries.Name = $"Series #{financialSeries.SeriesId + 1}";
+                               financialSeries.UpFill = new SolidColorPaint(new SKColor(139, 195, 74, 255));
+                               financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
+                               financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
+                               financialSeries.DownStroke = new SolidColorPaint(new SKColor(239, 83, 80, 255), 3);
                            })
                            .HasRuleForPolarLineSeries(polarLine =>
                            {
-                               polarLine.GeometrySize = 18;
-                               polarLine.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 40, 40, 40).AsSKColor());
-                               polarLine.GeometryStroke = LiveChartsSkiaSharp.DefaultPaint;
-                           }))
-                   // finally add a resolver for the DefaultPaintTask
-                   // the library already provides the AddDefaultResolvers() method
-                   // this method only translates 'DefaultPaintTask' to a valid stroke/fill based on
-                   // the series context
-                   .AddDefaultDarkResolvers();
+                               var color = theme.GetSeriesColor(polarLine);
+
+                               polarLine.Name = $"Series #{polarLine.SeriesId + 1}";
+                               polarLine.GeometrySize = 14;
+                               polarLine.GeometryStroke = new SolidColorPaint(color, 4);
+                               polarLine.GeometryFill = new SolidColorPaint(new SKColor());
+                               polarLine.Stroke = new SolidColorPaint(color, 4);
+                               polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
+                           })
+                           .HasRuleForGaugeSeries(gaugeSeries =>
+                           {
+                               var color = theme.GetSeriesColor(gaugeSeries);
+
+                               gaugeSeries.Name = $"Series #{gaugeSeries.SeriesId + 1}";
+                               gaugeSeries.Stroke = null;
+                               gaugeSeries.Fill = new SolidColorPaint(color);
+                               gaugeSeries.DataLabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
+                           })
+                           .HasRuleForGaugeFillSeries(gaugeFill =>
+                           {
+                               gaugeFill.Fill = new SolidColorPaint(new SKColor(255, 255, 255, 30));
+                           }));
 
                 additionalStyles?.Invoke(theme);
-            });
-    }
-
-    /// <summary>
-    /// Adds the default resolvers.
-    /// </summary>
-    /// <param name="theme">The theme.</param>
-    /// <returns></returns>
-    public static Theme<SkiaSharpDrawingContext> AddDefaultDarkResolvers(
-        this Theme<SkiaSharpDrawingContext> theme)
-    {
-        return theme
-            .WithSeriesDefaultsResolver(
-                (LvcColor[] colors, IChartSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
-                {
-                    if (forceApply)
-                    {
-                        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-                        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-                        var initializer = stylesBuilder.GetVisualsInitializer();
-
-                        initializer.ApplyStyleToSeries(series);
-                    }
-
-                    if (series.DataLabelsPaint == LiveChartsSkiaSharp.DefaultPaint)
-                    {
-                        series.DataLabelsPaint = new SolidColorPaint(new SKColor(230, 230, 230));
-                    }
-
-                    if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
-                    {
-                        var gaugeSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
-                        if (gaugeSeries.Stroke == LiveChartsSkiaSharp.DefaultPaint)
-                            gaugeSeries.Stroke = null;
-
-                        if (gaugeSeries.Fill == LiveChartsSkiaSharp.DefaultPaint)
-                            gaugeSeries.Fill = new SolidColorPaint(new SKColor(255, 255, 255, 15));
-
-                        return;
-                    }
-
-                    var color = colors[series.SeriesId % colors.Length];
-                    series.Name ??= $"Series {series.SeriesId + 1}";
-
-                    if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries ||
-                        (series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
-                    {
-                        var sf = (IStrokedAndFilled<SkiaSharpDrawingContext>)series;
-                        if (sf.Fill == LiveChartsSkiaSharp.DefaultPaint) sf.Fill = new SolidColorPaint(color.AsSKColor());
-                        if (sf.Stroke == LiveChartsSkiaSharp.DefaultPaint) sf.Stroke = null;
-
-                        return;
-                    }
-
-                    if (series is IStrokedAndFilled<SkiaSharpDrawingContext> strokedAndFilled)
-                    {
-                        if (strokedAndFilled.Fill == LiveChartsSkiaSharp.DefaultPaint)
-                        {
-                            var opacity = 0.2;
-                            var mask1 = SeriesProperties.Line | SeriesProperties.Stacked;
-                            var mask2 = SeriesProperties.StepLine | SeriesProperties.Stacked;
-                            if ((series.SeriesProperties & mask1) == mask1 || (series.SeriesProperties & mask2) == mask2)
-                                opacity = 1;
-
-                            strokedAndFilled.Fill = new SolidColorPaint(color.AsSKColor((byte)(opacity * 255)));
-                        }
-                        if (strokedAndFilled.Stroke == LiveChartsSkiaSharp.DefaultPaint)
-                            strokedAndFilled.Stroke = new SolidColorPaint(color.AsSKColor(), 5);
-                    }
-
-                    if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
-                    {
-                        var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
-
-                        if (lineSeries.GeometryFill == LiveChartsSkiaSharp.DefaultPaint)
-                            lineSeries.GeometryFill = new SolidColorPaint(color.AsSKColor());
-                        if (lineSeries.GeometryStroke == LiveChartsSkiaSharp.DefaultPaint)
-                            lineSeries.GeometryStroke =
-                                new SolidColorPaint(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
-                    }
-
-                    if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.PolarLine)
-                    {
-                        var polarLine = (IPolarLineSeries<SkiaSharpDrawingContext>)series;
-
-                        if (polarLine.GeometryFill == LiveChartsSkiaSharp.DefaultPaint)
-                            polarLine.GeometryFill = new SolidColorPaint(color.AsSKColor());
-                        if (polarLine.GeometryStroke == LiveChartsSkiaSharp.DefaultPaint)
-                            polarLine.GeometryStroke =
-                                new SolidColorPaint(color.AsSKColor(), polarLine.Stroke?.StrokeThickness ?? 5);
-                    }
-
-                    if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
-                    {
-                        var steplineSeries = (IStepLineSeries<SkiaSharpDrawingContext>)series;
-
-                        if (steplineSeries.GeometryFill == LiveChartsSkiaSharp.DefaultPaint)
-                            steplineSeries.GeometryFill = new SolidColorPaint(color.AsSKColor());
-                        if (steplineSeries.GeometryStroke == LiveChartsSkiaSharp.DefaultPaint)
-                            steplineSeries.GeometryStroke =
-                                new SolidColorPaint(color.AsSKColor(), steplineSeries.Stroke?.StrokeThickness ?? 5);
-                    }
-
-                    if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
-                    {
-                        var financialSeries = (IFinancialSeries<SkiaSharpDrawingContext>)series;
-
-                        if (financialSeries.UpFill == LiveChartsSkiaSharp.DefaultPaint)
-                            financialSeries.UpFill = new SolidColorPaint(new SKColor(139, 195, 74, 255));
-                        if (financialSeries.UpStroke == LiveChartsSkiaSharp.DefaultPaint)
-                            financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
-                        if (financialSeries.DownFill == LiveChartsSkiaSharp.DefaultPaint)
-                            financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
-                        if (financialSeries.DownStroke == LiveChartsSkiaSharp.DefaultPaint)
-                            financialSeries.DownStroke = new SolidColorPaint(new SKColor(239, 83, 80, 255), 3);
-                    }
-                })
-            .WithAxisDefaultsResolver((IPlane<SkiaSharpDrawingContext> plane, bool forceApply) =>
-            {
-                if (forceApply)
-                {
-                    if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-                    var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-                    var initializer = stylesBuilder.GetVisualsInitializer();
-
-                    initializer.ApplyStyleToAxis(plane);
-                }
-
-                if (plane.NamePaint == LiveChartsSkiaSharp.DefaultPaint)
-                    plane.NamePaint = new SolidColorPaint(new SKColor(235, 235, 235));
-
-                if (plane.LabelsPaint == LiveChartsSkiaSharp.DefaultPaint)
-                    plane.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
-
-                if (plane is ICartesianAxis cartesian)
-                {
-                    plane.SeparatorsPaint = cartesian.Orientation == AxisOrientation.X
-                        ? null
-                        : new SolidColorPaint(new SKColor(90, 90, 90));
-
-                    if (cartesian.Padding == Padding.Default) cartesian.Padding = new Padding(12);
-                }
-                else
-                {
-                    if (plane.SeparatorsPaint == LiveChartsSkiaSharp.DefaultPaint)
-                        plane.SeparatorsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
-                }
             });
     }
 }

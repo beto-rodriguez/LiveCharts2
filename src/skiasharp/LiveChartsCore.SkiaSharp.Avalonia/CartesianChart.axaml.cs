@@ -88,7 +88,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
         var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        if (stylesBuilder.ColorPallete.Length == 0)
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
@@ -696,16 +696,12 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
