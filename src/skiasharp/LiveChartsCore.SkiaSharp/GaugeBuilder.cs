@@ -48,15 +48,12 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     private double? _backgroundOffsetRadius = null;
     private double? _backgroundCornerRadius = null;
     private double? _cornerRadius = null;
-    private IPaint<SkiaSharpDrawingContext>? _background = DefaultBackground;
+    private IPaint<SkiaSharpDrawingContext>? _background = null;
     private double? _labelsSize = null;
     private PolarLabelsPosition? _labelsPosition = null;
     private double? _backgroundMaxRadialColumnWidth = null;
     private double? _maxColumnWidth = null;
     private Func<ChartPoint, string> _labelFormatter = point => point.PrimaryValue.ToString();
-
-    internal static IPaint<SkiaSharpDrawingContext> DefaultLabelsPaint { get; set; } = new SolidColorPaint(new SKColor(40, 40, 40));
-    internal static IPaint<SkiaSharpDrawingContext> DefaultBackground { get; set; } = new SolidColorPaint(new SKColor(40, 40, 40, 40));
 
     /// <summary>
     /// Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.
@@ -360,7 +357,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <returns></returns>
     public GaugeBuilder AddValue(ObservableValue value)
     {
-        return AddValue(value, null, DefaultBackground, null);
+        return AddValue(value, null, null, null);
     }
 
     /// <summary>
@@ -403,8 +400,6 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     {
         var series = new List<PieSeries<ObservableValue>>();
 
-        var defaultLabelsPaint = _labelsPosition is null ? null : DefaultLabelsPaint;
-
         var i = 0;
         foreach (var item in _tuples)
         {
@@ -420,12 +415,13 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
                 ZIndex = i + 1,
                 Values = list,
                 Name = item.Item2,
-                DataLabelsPaint = item.Item4 ?? defaultLabelsPaint,
-                DataLabelsFormatter = LabelFormatter,
-                Fill = item.Item3,
                 HoverPushout = 0,
-                DataLabelsPosition = PolarLabelsPosition.ChartCenter
+                //DataLabelsPosition = PolarLabelsPosition.ChartCenter
             };
+
+            if (item.Item3 is not null) sf.Fill = item.Item3;
+            if (item.Item4 is not null) sf.DataLabelsPaint = item.Item4;
+            if (LabelFormatter is not null) sf.DataLabelsFormatter = LabelFormatter;
 
             var a = sf.Stroke;
 
@@ -476,15 +472,15 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <returns></returns>
     public void ApplyStylesToFill(PieSeries<ObservableValue> series)
     {
-        //if (Background != LiveChartsSkiaSharp.DefaultPaint) series.Fill = Background;
-        //if (BackgroundInnerRadius is not null) series.InnerRadius = BackgroundInnerRadius.Value;
-        //if (BackgroundOffsetRadius is not null)
-        //{
-        //    series.RelativeOuterRadius = BackgroundOffsetRadius.Value;
-        //    series.RelativeInnerRadius = BackgroundOffsetRadius.Value;
-        //}
-        //if (BackgroundMaxRadialColumnWidth is not null) series.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth.Value;
-        //if (RadialAlign is not null) series.RadialAlign = RadialAlign.Value;
+        if (Background is not null) series.Fill = Background;
+        if (BackgroundInnerRadius is not null) series.InnerRadius = BackgroundInnerRadius.Value;
+        if (BackgroundOffsetRadius is not null)
+        {
+            series.RelativeOuterRadius = BackgroundOffsetRadius.Value;
+            series.RelativeInnerRadius = BackgroundOffsetRadius.Value;
+        }
+        if (BackgroundMaxRadialColumnWidth is not null) series.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth.Value;
+        if (RadialAlign is not null) series.RadialAlign = RadialAlign.Value;
     }
 
     /// <summary>
@@ -495,10 +491,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <exception cref="NotImplementedException"></exception>
     public void ApplyStylesToSeries(PieSeries<ObservableValue> series)
     {
-        //if (_keyValuePairs.TryGetValue(series, out var t))
-        //{
-        //    if (t.Item3 != LiveChartsSkiaSharp.DefaultPaint) series.Fill = t.Item3;
-        //}
+        if (_keyValuePairs.TryGetValue(series, out var t)) if (t.Item3 is not null) series.Fill = t.Item3;
         if (LabelsSize is not null) series.DataLabelsSize = LabelsSize.Value;
         if (LabelsPosition is not null) series.DataLabelsPosition = LabelsPosition.Value;
         if (InnerRadius is not null) series.InnerRadius = InnerRadius.Value;

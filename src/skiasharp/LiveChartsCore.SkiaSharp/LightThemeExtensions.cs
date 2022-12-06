@@ -46,8 +46,6 @@ public static class LightThemeExtensions
     public static LiveChartsSettings AddLightTheme(
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
-        GaugeBuilder.DefaultLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40));
-
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
@@ -181,6 +179,20 @@ public static class LightThemeExtensions
                                polarLine.GeometryFill = new SolidColorPaint(new SKColor(250, 250, 250));
                                polarLine.Stroke = new SolidColorPaint(color, 4);
                                polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
+                           })
+                           .HasRuleForGaugeSeries(gaugeSeries =>
+                           {
+                               var color = theme.GetSeriesColor(gaugeSeries);
+
+                               gaugeSeries.Name = $"Series #{gaugeSeries.SeriesId + 1}";
+                               gaugeSeries.Stroke = null;
+                               gaugeSeries.Fill = new SolidColorPaint(color);
+                               gaugeSeries.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
+                               gaugeSeries.DataLabelsPaint = new SolidColorPaint(new SKColor(70, 70, 70));
+                           })
+                           .HasRuleForGaugeFillSeries(gaugeFill =>
+                           {
+                               gaugeFill.Fill = new SolidColorPaint(new SKColor(30, 30, 30, 10));
                            }));
 
                 additionalStyles?.Invoke(theme);
