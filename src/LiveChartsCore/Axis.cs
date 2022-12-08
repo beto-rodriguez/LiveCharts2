@@ -591,7 +591,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             float x, y;
             if (_orientation == AxisOrientation.X)
             {
-                x = scale.ToPixels(separator.Value) * 0.5f;
+                x = scale.ToPixels(separator.Value);
                 y = yoo;
             }
             else
