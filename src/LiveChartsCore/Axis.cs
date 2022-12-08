@@ -578,7 +578,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (visualSeparator.Subticks is not null)
                 UpdateSubticks(visualSeparator.Subticks, scale, s, x + txco, y + tyco, UpdateMode.Update);
             if (visualSeparator.Label is not null)
-                UpdateLabel(visualSeparator.Label, x, y, labelContent, hasRotation, r, UpdateMode.Update);
+                UpdateLabel(visualSeparator.Label, x, y + tyco, labelContent, hasRotation, r, UpdateMode.Update);
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
         }
@@ -600,11 +600,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 y = scale.ToPixels(separator.Value);
             }
 
-            if (separator.Separator is not null) UpdateSeparator(separator.Separator, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
-            if (separator.Subseparators is not null) UpdateSubseparators(separator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
-            if (separator.Tick is not null) UpdateTick(separator.Tick, _tickLength, x, y, UpdateMode.UpdateAndRemove);
-            if (separator.Subticks is not null) UpdateSubticks(separator.Subticks, scale, s, x, y, UpdateMode.UpdateAndRemove);
-            if (separator.Label is not null) UpdateLabel(separator.Label, x, y, TryGetLabelOrLogError(labeler, separator.Value - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndRemove);
+            if (separator.Separator is not null)
+                UpdateSeparator(separator.Separator, x + sxco, y + syco, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Subseparators is not null)
+                UpdateSubseparators(
+                    separator.Subseparators, scale, s, x + sxco, y + syco, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Tick is not null)
+                UpdateTick(separator.Tick, _tickLength, x + txco, y + tyco, UpdateMode.UpdateAndRemove);
+            if (separator.Subticks is not null)
+                UpdateSubticks(separator.Subticks, scale, s, x + txco, y + tyco, UpdateMode.UpdateAndRemove);
+            if (separator.Label is not null)
+                UpdateLabel(
+                    separator.Label, x, y + tyco, TryGetLabelOrLogError(labeler, separator.Value - 1d + 1d), hasRotation, r,
+                    UpdateMode.UpdateAndRemove);
 
             _ = separators.Remove(separatorValueKey.Key);
         }
