@@ -89,6 +89,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _showSeparatorLines = true;
     private bool _isVisible = true;
     private bool _isInverted;
+    private bool _separatorsAtCenter = true;
+    private bool _ticksAtCenter = true;
     private bool _forceStepToMin;
     private bool _crosshairSnapEnabled;
     private readonly float _tickLength = 6f;
@@ -169,6 +171,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
+
+    /// <inheritdoc cref="ICartesianAxis.SeparatorsAtCenter"/>
+    public bool SeparatorsAtCenter { get => _separatorsAtCenter; set => SetProperty(ref _separatorsAtCenter, value); }
+
+    /// <inheritdoc cref="ICartesianAxis.TicksAtCenter"/>
+    public bool TicksAtCenter { get => _ticksAtCenter; set => SetProperty(ref _ticksAtCenter, value); }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
     public IPaint<TDrawingContext>? NamePaint
@@ -456,7 +464,15 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (TicksPaint is not null && _ticksPath is not null && !_drawTicksPath)
             TicksPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, _ticksPath);
 
-        for (var i = start; i <= max; i += s)
+        float txco = 0f, tyco = 0f, sxco = 0f, syco = 0f;
+
+        var uw = scale.MeasureInPixels(_unitWidth);
+        if (!_ticksAtCenter && _orientation == AxisOrientation.X) txco = uw * 0.5f;
+        if (!_ticksAtCenter && _orientation == AxisOrientation.Y) tyco = uw * 0.5f;
+        if (!_separatorsAtCenter && _orientation == AxisOrientation.X) sxco = uw * 0.5f;
+        if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) sxco = uw * 0.5f;
+
+        for (var i = start - s; i <= max + s; i += s)
         {
             var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
             var labelContent = i < min || i > max ? string.Empty : TryGetLabelOrLogError(labeler, i - 1d + 1d);
@@ -496,27 +512,35 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Separator is null)
             {
                 InitializeSeparator(visualSeparator, cartesianChart);
-                UpdateSeparator(visualSeparator.Separator!, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                UpdateSeparator(
+                    visualSeparator.Separator!, xc + sxco, yc + syco, lxi, lxj, lyi, lyj,
+                    UpdateMode.UpdateAndComplete);
             }
-            if (SubseparatorsPaint is not null && ShowSeparatorLines && (visualSeparator.Subseparators is null || visualSeparator.Subseparators.Length == 0))
+            if (SubseparatorsPaint is not null && ShowSeparatorLines &&
+                (visualSeparator.Subseparators is null || visualSeparator.Subseparators.Length == 0))
             {
                 InitializeSubseparators(visualSeparator, cartesianChart);
-                UpdateSubseparators(visualSeparator.Subseparators!, actualScale, s, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                UpdateSubseparators(
+                    visualSeparator.Subseparators!, actualScale, s, xc + sxco, yc + syco, lxi, lxj, lyi, lyj,
+                    UpdateMode.UpdateAndComplete);
             }
             if (TicksPaint is not null && visualSeparator.Tick is null)
             {
                 InitializeTick(visualSeparator, cartesianChart);
-                UpdateTick(visualSeparator.Tick!, _tickLength, xc, yc, UpdateMode.UpdateAndComplete);
+                UpdateTick(visualSeparator.Tick!, _tickLength, xc + txco, yc + tyco, UpdateMode.UpdateAndComplete);
             }
-            if (SubticksPaint is not null && _subSections > 0 && (visualSeparator.Subticks is null || visualSeparator.Subticks.Length == 0))
+            if (SubticksPaint is not null && _subSections > 0 &&
+                (visualSeparator.Subticks is null || visualSeparator.Subticks.Length == 0))
             {
                 InitializeSubticks(visualSeparator, cartesianChart);
-                UpdateSubticks(visualSeparator.Subticks!, actualScale, s, xc, yc, UpdateMode.UpdateAndComplete);
+                UpdateSubticks(visualSeparator.Subticks!, actualScale, s, xc + txco, yc + tyco, UpdateMode.UpdateAndComplete);
             }
             if (LabelsPaint is not null && visualSeparator.Label is null)
             {
                 IntializeLabel(visualSeparator, cartesianChart, size, hasRotation, r);
-                UpdateLabel(visualSeparator.Label!, xc, yc, TryGetLabelOrLogError(labeler, i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
+                UpdateLabel(
+                    visualSeparator.Label!, xc, yc, TryGetLabelOrLogError(labeler, i - 1d + 1d), hasRotation, r,
+                    UpdateMode.UpdateAndComplete);
             }
 
             #endregion
@@ -528,23 +552,33 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 else
                     SeparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, visualSeparator.Separator);
             }
+
             if (SubseparatorsPaint is not null && visualSeparator.Subseparators is not null)
                 if (ShowSeparatorLines)
-                    foreach (var subtick in visualSeparator.Subseparators) SubseparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
+                    foreach (var subtick in visualSeparator.Subseparators)
+                        SubseparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
                 else
-                    foreach (var subtick in visualSeparator.Subseparators) SubseparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, subtick);
+                    foreach (var subtick in visualSeparator.Subseparators)
+                        SubseparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, subtick);
+
             if (LabelsPaint is not null && visualSeparator.Label is not null)
                 LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Label);
             if (TicksPaint is not null && visualSeparator.Tick is not null)
                 TicksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Tick);
             if (SubticksPaint is not null && visualSeparator.Subticks is not null)
-                foreach (var subtick in visualSeparator.Subticks) SubticksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
+                foreach (var subtick in visualSeparator.Subticks)
+                    SubticksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
 
-            if (visualSeparator.Separator is not null) UpdateSeparator(visualSeparator.Separator, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
-            if (visualSeparator.Subseparators is not null) UpdateSubseparators(visualSeparator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
-            if (visualSeparator.Tick is not null) UpdateTick(visualSeparator.Tick, _tickLength, x, y, UpdateMode.Update);
-            if (visualSeparator.Subticks is not null) UpdateSubticks(visualSeparator.Subticks, scale, s, x, y, UpdateMode.Update);
-            if (visualSeparator.Label is not null) UpdateLabel(visualSeparator.Label, x, y, labelContent, hasRotation, r, UpdateMode.Update);
+            if (visualSeparator.Separator is not null)
+                UpdateSeparator(visualSeparator.Separator, x + sxco, y + syco, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Subseparators is not null)
+                UpdateSubseparators(visualSeparator.Subseparators, scale, s, x + sxco, y + tyco, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Tick is not null)
+                UpdateTick(visualSeparator.Tick, _tickLength, x + txco, y + tyco, UpdateMode.Update);
+            if (visualSeparator.Subticks is not null)
+                UpdateSubticks(visualSeparator.Subticks, scale, s, x + txco, y + tyco, UpdateMode.Update);
+            if (visualSeparator.Label is not null)
+                UpdateLabel(visualSeparator.Label, x, y, labelContent, hasRotation, r, UpdateMode.Update);
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
         }
@@ -557,7 +591,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             float x, y;
             if (_orientation == AxisOrientation.X)
             {
-                x = scale.ToPixels(separator.Value);
+                x = scale.ToPixels(separator.Value) * 0.5f;
                 y = yoo;
             }
             else
