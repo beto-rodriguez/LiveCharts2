@@ -40,6 +40,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     private readonly List<double> _fpsStack = new();
     private long _previousFrameTime;
     private long _previousLogTime;
+    private object _sync = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
@@ -80,7 +81,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     /// <value>
     /// The synchronize.
     /// </value>
-    public object Sync { get; internal set; } = new();
+    public object Sync { get => _sync; internal set => _sync = value ?? new object(); }
 
     /// <summary>
     /// Gets the animatables collection.
