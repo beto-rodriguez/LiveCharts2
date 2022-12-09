@@ -189,153 +189,64 @@ new ColumnSeries&lt;ObservablePoint>
         (chartPoint) => $"Sales at this moment: {chartPoint.PrimaryValue:C2}"
 }</code></pre>
 
-## Styling tooltips
+# Customize default tooltips
+
+You can quickly change the position, the font, the text size or the background color:
+
+## View
 
 {{~ if xaml ~}}
-A chart exposes many properties to quickly style a tooltip:
-
-<pre><code>&lt;lvc:CartesianChart
-    Series="{Binding Series}"
-    TooltipPosition="Left"
-    TooltipFontFamily="Courier New"
-    TooltipFontSize="25"
-    TooltipTextBrush="#f2f4c3"
-    TooltipBackground="#480032">
-&lt;/lvc:CartesianChart></code></pre>
+{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/NamedLabels/$PlatformViewFile" ~}}
 {{~ end ~}}
 
 {{~ if winforms ~}}
-A chart exposes many properties to quickly style a tooltip:
+{{~ render_params_file_as_code this "~/../samples/WinFormsSample/Axes/NamedLabels/View.cs" ~}}
+{{~ end ~}}
 
-<pre><code>cartesianChart1.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left;
-cartesianChart1.TooltipFont = new System.Drawing.Font("Courier New", 25);
-cartesianChart1.TooltipTextColor = System.Drawing.Color.FromArgb(255, 242, 244, 195);
-cartesianChart1.TooltipBackColor = System.Drawing.Color.FromArgb(255, 72, 0, 50);</code></pre>
+{{~ if eto ~}}
+{{~ render_params_file_as_code this "~/../samples/EtoFormsSample/Axes/NamedLabels/View.cs" ~}}
 {{~ end ~}}
 
 {{~ if blazor ~}}
-You can use css to override the style of the tooltip.
-
-<pre><code>&lt;style>
-	.lvc-tooltip {
-		background-color: #480032 !important;
-	}
-
-	.lvc-tooltip-item {
-		font-family: SFMono-Regular, Menlo, Monaco, Consolas !important;
-		color: #F2F4C3 !important;
-	}
-&lt;/style></code></pre>
+{{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/NamedLabels.razor" ~}}
 {{~ end ~}}
 
-The code above would result in the following tooltip:
+## View model
 
-![zooming]({{ assets_url }}/docs/_assets/tooltip-custom-style.png)
-
-## Custom template
-
-{{~ if xaml || blazor ~}}
-If you need to customize more, you can also pass your own template:
-{{~ end ~}}
-
-{{~ if avalonia ~}}
-{{~ "~/../samples/AvaloniaSample/General/TemplatedTooltips/View.axaml" | render_file_as_code ~}}
-
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml.cs)).
-:::
-
-{{~ end ~}}
-
-{{~ if blazor ~}}
-{{~ "~/../samples/BlazorSample/Pages/General/TemplatedTooltips.razor" | render_file_as_code ~}}
-
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([view](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/DefaultTooltip.razor), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/DefaultTooltip.razor.cs)).
-:::
-
-{{~ end ~}}
-
-{{~ if maui ~}}
-{{~ "~/../samples/MauiSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
-
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/DefaultTooltip.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/DefaultTooltip.xaml.cs)).
-:::
-
-{{~ end ~}}
-
-{{~ if uno || unowinui ~}}
-{{~ "~/../samples/UnoSample/UnoSample.Shared/LiveChartsSamples/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
-
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/DefaultTooltip.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/DefaultTooltip.xaml.cs)).
-:::
-
-{{~ end ~}}
-
-{{~ if winforms ~}}
-You can create your own tooltip control, the key is that your control must implement `IChartTooltip<SkiaSharpDrawingContext>` and then
-you have to create a new instance of that control when your chart initializes.
-
-Add a new form to your app named `CustomTooltip`, then change the code behind as follows:
-
-{{~ "~/../samples/WinFormsSample/General/TemplatedTooltips/CustomTooltip.cs" | render_file_as_code ~}}
-
-Your tooltip is ready to be used, now when you create a chart, we have to pass a new instance of the tooltip we just created.
-
-<pre><code>var cartesianChart = new CartesianChart(tooltip: new CustomTooltip())
+```c#
+[ObservableObject]
+public partial class ViewModel
 {
-    Series = viewModel.Series
-};</code></pre>
+    public ISeries[] Series { get; set; } = { ... };
+    public Axis[] XAxes { get; set; } = { ... };
+    public Axis[] YAxes { get; set; } = { ... };
 
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml.cs), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml.cs)).
-:::
+    public SolidColorPaint TooltipTextPaint { get; set; } = // mark
+        new SolidColorPaint // mark
+        { // mark
+            Color = new SKColor(242, 244, 195), // mark
+            SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
+        }; // mark
 
-{{~ end ~}}
+    public SolidColorPaint TooltipBackgroundPaint { get; set; } = // mark
+        new SolidColorPaint(new SKColor(72, 0, 50)); // mark
+}
+```
 
-{{~ if winui ~}}
-{{~ "~/../samples/WinUISample/WinUISample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+![image]({{ assets_url }}/docs/samples/general/customTooltips/styling-tooltips.png)
 
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/DefaultTooltip.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/DefaultTooltip.xaml.cs)).
-:::
+## Custom tooltip control
 
-{{~ end ~}}
+You can also create your own tooltip, the recommended way is to use the LiveCharts API (example bellow) but you can
+use anything as tooltip as soon as it implements the `IChartTooltip<T>` interface. In the following example we build
+a custom control to render tooltips in out charts using the LiveCharts API.
 
-{{~ if wpf ~}}
-{{~ "~/../samples/WPFSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+## CustomTooltip.cs
 
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.WPF/DefaultTooltip.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.WPF/DefaultTooltip.xaml.cs)).
-:::
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
 
-{{~ end ~}}
+## View
 
-{{~ if xamarin ~}}
-{{~ "~/../samples/XamarinSample/XamarinSample/XamarinSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
-
-:::tip
-You can find a another example at the source code of the `DefaultTooltip` class 
-([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/DefaultTooltip.xaml), 
-[code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/DefaultTooltip.xaml.cs)).
-:::
-
-{{~ end ~}}
+{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.png)

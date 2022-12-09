@@ -22,8 +22,8 @@ public partial class View : UserControl
             Series = viewModel.Series,
             XAxes = viewModel.XAxes,
             YAxes = viewModel.YAxes,
-            TooltipTextSize = 25,
-            TooltipTextPaint = viewModel.TooltipTextPaint,
+            TooltipTextSize = 16, // mark
+            TooltipTextPaint = viewModel.TooltipTextPaint, // mark
             TooltipBackgroundPaint = viewModel.TooltipBackgroundPaint, // mark
             TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left, // mark
 

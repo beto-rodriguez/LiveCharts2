@@ -17,7 +17,8 @@
             YAxes="{Binding YAxes}"
             TooltipPosition="Left"
             TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}"
-            TooltipTextPaint="{Binding TooltipTextPaint}">
+            TooltipTextPaint="{Binding TooltipTextPaint}"
+            TooltipTextSize="16">
         </lvc:CartesianChart>
     </Grid>
 </ContentPage>

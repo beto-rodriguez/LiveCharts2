@@ -18,7 +18,8 @@ public class View : Panel
             YAxes = viewModel.YAxes,
             LegendPosition = LiveChartsCore.Measure.LegendPosition.Left,
             LegendTextPaint = viewModel.LegendTextPaint,
-            LegendBackgroundPaint = viewModel.LedgendBackgroundPaint
+            LegendBackgroundPaint = viewModel.LedgendBackgroundPaint,
+            LegendTextSize = 16
         };
 
         Content = cartesianChart;

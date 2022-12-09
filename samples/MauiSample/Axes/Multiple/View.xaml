@@ -13,6 +13,7 @@
         YAxes="{Binding YAxes}"
         LegendPosition="Bottom"
         LegendBackgroundPaint="{Binding LegendTextPaint}"
-        LegendTextPaint="{Binding LegendTextPaint}">
+        LegendTextPaint="{Binding LegendTextPaint}"
+        LegendTextSize="16">
     </lvc:CartesianChart>
 </ContentPage>

@@ -22,6 +22,7 @@ public partial class View : UserControl
             LegendPosition = LiveChartsCore.Measure.LegendPosition.Left,
             LegendTextPaint = viewModel.LegendTextPaint,
             LegendBackgroundPaint = viewModel.LedgendBackgroundPaint,
+            LegendTextSize = 16,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
