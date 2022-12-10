@@ -72,12 +72,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     {
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.ColorPallete.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeComponent();
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);

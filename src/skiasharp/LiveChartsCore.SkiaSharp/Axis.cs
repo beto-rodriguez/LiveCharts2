@@ -28,16 +28,4 @@ namespace LiveChartsCore.SkiaSharpView;
 
 /// <inheritdoc cref="ICartesianAxis" />
 public class Axis : Axis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry>
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Axis"/> class.
-    /// </summary>
-    public Axis()
-    {
-        //if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        //var initializer = stylesBuilder.GetVisualsInitializer();
-
-        //initializer.ApplyStyleToAxis(this);
-    }
-}
+{ }

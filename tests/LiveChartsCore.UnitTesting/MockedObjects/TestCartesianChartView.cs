@@ -41,12 +41,6 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     {
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.ColorPallete.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         Core = new CartesianChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas, new RectangleGeometry());
     }
@@ -96,9 +90,17 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     public TimeSpan UpdaterThrottler { get; set; }
     public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
     public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; }
-    public object SyncContext { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public object SyncContext { get; set; }
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
     public VisualElement<SkiaSharpDrawingContext> Title { get; set; }
+    public IPaint<SkiaSharpDrawingContext> LegendTextPaint { get; set; }
+    public IPaint<SkiaSharpDrawingContext> LegendBackgroundPaint { get; set; }
+    public double? LegendTextSize { get; set; }
+    public IPaint<SkiaSharpDrawingContext> TooltipTextPaint { get; set; }
+    public IPaint<SkiaSharpDrawingContext> TooltipBackgroundPaint { get; set; }
+    public double? TooltipTextSize { get; set; }
+    IChartLegend<SkiaSharpDrawingContext> IChartView<SkiaSharpDrawingContext>.Legend { get; set; }
+    IChartTooltip<SkiaSharpDrawingContext> IChartView<SkiaSharpDrawingContext>.Tooltip { get; set; }
 
     public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
     public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;

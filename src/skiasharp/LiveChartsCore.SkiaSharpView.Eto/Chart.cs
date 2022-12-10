@@ -94,12 +94,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.ColorPallete.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeCore();
 
         if (core is null) throw new Exception("Core not found!");

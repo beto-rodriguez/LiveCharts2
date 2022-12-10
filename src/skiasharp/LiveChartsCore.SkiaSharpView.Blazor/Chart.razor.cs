@@ -75,12 +75,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.ColorPallete.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
     }
