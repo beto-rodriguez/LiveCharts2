@@ -440,6 +440,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         #endregion
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
+        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
@@ -447,7 +448,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.X);
-            theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
@@ -456,7 +457,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.Y);
-            theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
@@ -469,7 +470,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            theme.ApplyStyleToSeries(series);
+            if (isNewTheme) theme.ApplyStyleToSeries(series);
 
             var xAxis = XAxes[series.ScalesXAt];
             var yAxis = YAxes[series.ScalesYAt];

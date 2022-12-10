@@ -174,6 +174,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         EasingFunction = _chartView.EasingFunction;
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
+        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
@@ -187,7 +188,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            theme.ApplyStyleToSeries(series);
+            if (isNewTheme) theme.ApplyStyleToSeries(series);
 
             var seriesBounds = series.GetBounds(this);
 
