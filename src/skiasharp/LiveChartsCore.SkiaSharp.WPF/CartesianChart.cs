@@ -70,11 +70,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
         SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
             {
-               LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+               LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             });
         SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
@@ -130,7 +130,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                         ? value
                         : new List<ICartesianAxis>()
                         {
-                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
                         };
                 }));
 
@@ -155,7 +155,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                         ? value
                         : new List<ICartesianAxis>()
                         {
-                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
                         };
                 }));
 
@@ -194,7 +194,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     public static readonly DependencyProperty ZoomModeProperty =
         DependencyProperty.Register(
             nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomMode));
+            new PropertyMetadata(LiveCharts.DefaultSettings.ZoomMode));
 
     /// <summary>
     /// The zooming speed property
@@ -202,7 +202,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     public static readonly DependencyProperty ZoomingSpeedProperty =
         DependencyProperty.Register(
             nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
+            new PropertyMetadata(LiveCharts.DefaultSettings.ZoomSpeed));
 
     /// <summary>
     /// The tool tip finding strategy property
@@ -210,7 +210,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     public static readonly DependencyProperty TooltipFindingStrategyProperty =
         DependencyProperty.Register(
             nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipFindingStrategy, OnDependencyPropertyChanged));
 
     #endregion
 

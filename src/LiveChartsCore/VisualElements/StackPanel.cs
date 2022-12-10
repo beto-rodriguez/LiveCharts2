@@ -151,7 +151,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         // force the background to have at least an invisible geometry
         // we use this geometry in the motion canvas to track the position
         // of the stack panel as the time and animations elapse.
-        BackgroundPaint ??= LiveCharts.CurrentSettings
+        BackgroundPaint ??= LiveCharts.DefaultSettings
                 .GetProvider<TDrawingContext>()
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 

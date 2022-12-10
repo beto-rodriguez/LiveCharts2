@@ -265,7 +265,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         {
             if (_dataFactory is null)
             {
-                var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
+                var factory = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
                 _dataFactory = factory.GetDefaultDataFactory<TModel>();
             }
 
@@ -484,7 +484,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         {
             var coreChart = (Chart<TDrawingContext>)chartView.CoreChart;
 
-            hoverPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>()
+            hoverPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>()
                 .GetSolidColorPaint(new LvcColor(255, 255, 255, 100));
             hoverPaint.ZIndex = 10049;
             hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));

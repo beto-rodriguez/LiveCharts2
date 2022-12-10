@@ -96,11 +96,11 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
         AngleAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         RadiusAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
@@ -163,7 +163,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<double> InitialRotationProperty =
         AvaloniaProperty.Register<PolarChart, double>(
-            nameof(InitialRotation), LiveCharts.CurrentSettings.PolarInitialRotation, inherits: true);
+            nameof(InitialRotation), LiveCharts.DefaultSettings.PolarInitialRotation, inherits: true);
 
     /// <summary>
     /// The x axes property.
@@ -182,28 +182,28 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
         AvaloniaProperty.Register<PolarChart, TimeSpan>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.AnimationsSpeed, inherits: true);
 
     /// <summary>
     /// The easing function property.
     /// </summary>
     public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
         AvaloniaProperty.Register<PolarChart, Func<float, float>>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.EasingFunction, inherits: true);
 
     /// <summary>
     /// The tool tip position property.
     /// </summary>
     public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
         AvaloniaProperty.Register<PolarChart, TooltipPosition>(
-            nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
+            nameof(TooltipPosition), LiveCharts.DefaultSettings.TooltipPosition, inherits: true);
 
     /// <summary>
     /// The tool tip finding strategy property.
     /// </summary>
     public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
         AvaloniaProperty.Register<PolarChart, TooltipFindingStrategy>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.TooltipFindingStrategy, inherits: true);
 
     /// <summary>
     /// The tooltip background paint property
@@ -231,7 +231,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
         AvaloniaProperty.Register<PolarChart, LegendPosition>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.LegendPosition, inherits: true);
 
     /// <summary>
     /// The legend background paint property
@@ -479,7 +479,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.

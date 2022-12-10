@@ -40,12 +40,20 @@ public class LiveChartsSettings
     private object _theme = new();
 
     /// <summary>
+    /// Gets the theme identifier.
+    /// </summary>
+    /// <value>
+    /// The theme identifier.
+    /// </value>
+    public object CurrentThemeId { get; private set; } = new();
+
+    /// <summary>
     /// Gets or sets the default easing function.
     /// </summary>
     /// <value>
     /// The default easing function.
     /// </value>
-    public Func<float, float> DefaultEasingFunction { get; set; } = EasingFunctions.ExponentialOut;
+    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.ExponentialOut;
 
     /// <summary>
     /// Gets or sets the default animations speed.
@@ -53,7 +61,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default animations speed.
     /// </value>
-    public TimeSpan DefaultAnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(800);
+    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(800);
 
     /// <summary>
     /// Gets or sets the default zoom speed.
@@ -61,7 +69,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default zoom speed.
     /// </value>
-    public double DefaultZoomSpeed { get; set; } = 0.2;
+    public double ZoomSpeed { get; set; } = 0.2;
 
     /// <summary>
     /// Gets or sets the default zoom mode.
@@ -69,7 +77,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default zoom mode.
     /// </value>
-    public ZoomAndPanMode DefaultZoomMode { get; set; } = ZoomAndPanMode.None;
+    public ZoomAndPanMode ZoomMode { get; set; } = ZoomAndPanMode.None;
 
     /// <summary>
     /// Gets or sets the default legend position.
@@ -77,15 +85,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default legend position.
     /// </value>
-    public LegendPosition DefaultLegendPosition { get; set; } = LegendPosition.Hidden;
-
-    /// <summary>
-    /// Gets or sets the default legend orientation.
-    /// </summary>
-    /// <value>
-    /// The default legend orientation.
-    /// </value>
-    public LegendOrientation DefaultLegendOrientation { get; set; } = LegendOrientation.Auto;
+    public LegendPosition LegendPosition { get; set; } = LegendPosition.Hidden;
 
     /// <summary>
     /// Gets or sets the default tooltip position.
@@ -93,7 +93,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default tooltip position.
     /// </value>
-    public TooltipPosition DefaultTooltipPosition { get; set; } = TooltipPosition.Top;
+    public TooltipPosition TooltipPosition { get; set; } = TooltipPosition.Top;
 
     /// <summary>
     /// Gets or sets the default tooltip finding strategy.
@@ -101,7 +101,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default tooltip finding strategy.
     /// </value>
-    public TooltipFindingStrategy DefaultTooltipFindingStrategy { get; set; } = TooltipFindingStrategy.Automatic;
+    public TooltipFindingStrategy TooltipFindingStrategy { get; set; } = TooltipFindingStrategy.Automatic;
 
     /// <summary>
     /// Gets or sets the default polar initial rotation.
@@ -112,20 +112,12 @@ public class LiveChartsSettings
     public double PolarInitialRotation { get; set; } = -90;
 
     /// <summary>
-    /// Gets the theme identifier.
-    /// </summary>
-    /// <value>
-    /// The theme identifier.
-    /// </value>
-    public object ThemeId { get; private set; } = new();
-
-    /// <summary>
     /// Gets or sets the default update throttling timeout
     /// </summary>
     /// <value>
     /// The default update throttling timeout
     /// </value>
-    public TimeSpan DefaultUpdateThrottlingTimeout { get; set; } = TimeSpan.FromMilliseconds(50);
+    public TimeSpan UpdateThrottlingTimeout { get; set; } = TimeSpan.FromMilliseconds(50);
 
     /// <summary>
     /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
@@ -174,7 +166,7 @@ public class LiveChartsSettings
     /// <returns>the current settings</returns>
     public LiveChartsSettings WithDefaultAnimationsSpeed(TimeSpan animationsSpeed)
     {
-        DefaultAnimationsSpeed = animationsSpeed;
+        AnimationsSpeed = animationsSpeed;
         return this;
     }
 
@@ -185,7 +177,7 @@ public class LiveChartsSettings
     /// <returns>the current settings</returns>
     public LiveChartsSettings WithDefaultEasingFunction(Func<float, float> easingFunction)
     {
-        DefaultEasingFunction = easingFunction;
+        EasingFunction = easingFunction;
         return this;
     }
 
@@ -196,7 +188,7 @@ public class LiveChartsSettings
     /// <returns>the current settings</returns>
     public LiveChartsSettings WithDefaultZoomSpeed(double speed)
     {
-        DefaultZoomSpeed = speed;
+        ZoomSpeed = speed;
         return this;
     }
 
@@ -207,7 +199,7 @@ public class LiveChartsSettings
     /// <returns>the current settings</returns>
     public LiveChartsSettings WithDefaultZoomMode(ZoomAndPanMode zoomMode)
     {
-        DefaultZoomMode = zoomMode;
+        ZoomMode = zoomMode;
         return this;
     }
 
@@ -218,7 +210,7 @@ public class LiveChartsSettings
     /// <returns>the current settings</returns>
     public LiveChartsSettings WithDefaultUpdateThrottlingTimeout(TimeSpan timeout)
     {
-        DefaultUpdateThrottlingTimeout = timeout;
+        UpdateThrottlingTimeout = timeout;
         return this;
     }
 
@@ -242,7 +234,7 @@ public class LiveChartsSettings
     public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
         where TDrawingContext : DrawingContext
     {
-        ThemeId = new object();
+        CurrentThemeId = new object();
         Theme<TDrawingContext> t;
         _theme = t = new Theme<TDrawingContext>();
         builder(t);

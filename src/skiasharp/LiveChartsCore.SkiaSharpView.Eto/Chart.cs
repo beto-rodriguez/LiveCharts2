@@ -61,9 +61,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     protected MotionCanvas motionCanvas;
 
-    private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
+    private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
-    private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+    private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
@@ -195,10 +195,10 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public object SyncContext { get => CoreCanvas.Sync; set { CoreCanvas.Sync = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
-    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
+    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.DefaultSettings.AnimationsSpeed;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
-    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
+    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.DefaultSettings.EasingFunction;
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; UpdateLegendLayout(); OnPropertyChanged(); } }
@@ -234,7 +234,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements

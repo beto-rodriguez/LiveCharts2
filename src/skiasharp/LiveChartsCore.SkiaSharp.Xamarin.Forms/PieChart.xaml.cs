@@ -185,14 +185,14 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty AnimationsSpeedProperty =
       BindableProperty.Create(
-          nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
+          nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart), LiveCharts.DefaultSettings.AnimationsSpeed);
 
     /// <summary>
     /// The easing function property
     /// </summary>
     public static readonly BindableProperty EasingFunctionProperty =
         BindableProperty.Create(
-            nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart), LiveCharts.CurrentSettings.DefaultEasingFunction);
+            nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart), LiveCharts.DefaultSettings.EasingFunction);
 
     /// <summary>
     /// The legend position property
@@ -200,7 +200,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty LegendPositionProperty =
         BindableProperty.Create(
             nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart),
-            LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend background paint property.
@@ -232,7 +232,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty TooltipPositionProperty =
        BindableProperty.Create(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart),
-           LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
+           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip background paint property.
@@ -483,7 +483,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.

@@ -175,7 +175,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
-        var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
         ValueBounds = new Bounds();
         IndexBounds = new Bounds();
@@ -247,7 +247,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         InvokeOnUpdateStarted();
         IsFirstDraw = false;
-        ThemeId = LiveCharts.CurrentSettings.ThemeId;
+        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
         PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         PreviousLegendPosition = LegendPosition;
 

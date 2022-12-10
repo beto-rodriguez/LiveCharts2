@@ -65,11 +65,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 
         SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             });
         SetCurrentValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
@@ -107,7 +107,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly DependencyProperty InitialRotationProperty =
         DependencyProperty.Register(nameof(InitialRotation), typeof(double), typeof(PolarChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.PolarInitialRotation, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.PolarInitialRotation, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The series property.
@@ -150,7 +150,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                         ? value
                         : new List<IPolarAxis>()
                         {
-                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
                         };
                 }));
 
@@ -175,7 +175,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                         ? value
                         : new List<IPolarAxis>()
                         {
-                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
                         };
                 }));
 

@@ -49,7 +49,7 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     private IEnumerable<ICartesianAxis>? _yAxes;
     private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
-    private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
+    private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.DefaultSettings.TooltipFindingStrategy;
 
     /// <inheritdoc cref="Chart.OnInitialized"/>
     protected override void OnInitialized()
@@ -65,13 +65,13 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         if (_xAxes is null)
             XAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
 
         if (_yAxes is null)
             YAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
 
         // ToDo: pointer events
@@ -155,11 +155,11 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
     [Parameter]
-    public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.CurrentSettings.DefaultZoomMode;
+    public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.DefaultSettings.ZoomMode;
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
     [Parameter]
-    public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
+    public double ZoomingSpeed { get; set; } = LiveCharts.DefaultSettings.ZoomSpeed;
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
     [Parameter]

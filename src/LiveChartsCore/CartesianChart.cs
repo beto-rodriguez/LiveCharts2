@@ -416,7 +416,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
 
-        var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
         LegendPosition = _chartView.LegendPosition;
         Legend = _chartView.Legend;
@@ -750,7 +750,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         InvokeOnUpdateStarted();
 
         IsFirstDraw = false;
-        ThemeId = LiveCharts.CurrentSettings.ThemeId;
+        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
         PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         PreviousLegendPosition = LegendPosition;
 

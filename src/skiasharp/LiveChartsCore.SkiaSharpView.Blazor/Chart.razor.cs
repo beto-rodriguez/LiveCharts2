@@ -60,9 +60,9 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     private double _canvasHeight;
 
     private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>? _visualsObserver;
-    private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
+    private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
-    private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+    private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
@@ -175,11 +175,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     [Parameter]
-    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
+    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.DefaultSettings.AnimationsSpeed;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     [Parameter]
-    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
+    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.DefaultSettings.EasingFunction;
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     [Parameter]
@@ -227,7 +227,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [Parameter]
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]

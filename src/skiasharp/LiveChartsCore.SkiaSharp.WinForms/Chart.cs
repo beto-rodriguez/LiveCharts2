@@ -61,9 +61,9 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     protected MotionCanvas motionCanvas;
 
-    private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
+    private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
-    private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+    private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
@@ -188,11 +188,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
+    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.DefaultSettings.AnimationsSpeed;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
+    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.DefaultSettings.EasingFunction;
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -240,7 +240,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

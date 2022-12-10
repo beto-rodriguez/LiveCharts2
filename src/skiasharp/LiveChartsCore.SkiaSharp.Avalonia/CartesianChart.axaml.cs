@@ -100,11 +100,11 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         XAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         YAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
@@ -182,42 +182,42 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly AvaloniaProperty<ZoomAndPanMode> ZoomModeProperty =
         AvaloniaProperty.Register<CartesianChart, ZoomAndPanMode>(
-            nameof(ZoomMode), LiveCharts.CurrentSettings.DefaultZoomMode, inherits: true);
+            nameof(ZoomMode), LiveCharts.DefaultSettings.ZoomMode, inherits: true);
 
     /// <summary>
     /// The zooming speed property
     /// </summary>
     public static readonly AvaloniaProperty<double> ZoomingSpeedProperty =
         AvaloniaProperty.Register<CartesianChart, double>(
-            nameof(ZoomingSpeed), LiveCharts.CurrentSettings.DefaultZoomSpeed, inherits: true);
+            nameof(ZoomingSpeed), LiveCharts.DefaultSettings.ZoomSpeed, inherits: true);
 
     /// <summary>
     /// The animations speed property
     /// </summary>
     public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
         AvaloniaProperty.Register<CartesianChart, TimeSpan>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.AnimationsSpeed, inherits: true);
 
     /// <summary>
     /// The easing function property
     /// </summary>
     public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
         AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.EasingFunction, inherits: true);
 
     /// <summary>
     /// The tool tip position property
     /// </summary>
     public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
         AvaloniaProperty.Register<CartesianChart, TooltipPosition>(
-            nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
+            nameof(TooltipPosition), LiveCharts.DefaultSettings.TooltipPosition, inherits: true);
 
     /// <summary>
     /// The tool tip finding strategy property
     /// </summary>
     public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
         AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.TooltipFindingStrategy, inherits: true);
 
     /// <summary>
     /// The tooltip background paint property
@@ -245,7 +245,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
         AvaloniaProperty.Register<CartesianChart, LegendPosition>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.LegendPosition, inherits: true);
 
     /// <summary>
     /// The legend background paint property
@@ -504,7 +504,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.

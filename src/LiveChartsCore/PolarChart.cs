@@ -179,7 +179,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         AngleAxes = _chartView.AngleAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
         RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
 
-        var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
         LegendPosition = _chartView.LegendPosition;
         Legend = _chartView.Legend;
@@ -506,7 +506,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         InvokeOnUpdateStarted();
 
         IsFirstDraw = false;
-        ThemeId = LiveCharts.CurrentSettings.ThemeId;
+        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
         PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         PreviousLegendPosition = LegendPosition;
 

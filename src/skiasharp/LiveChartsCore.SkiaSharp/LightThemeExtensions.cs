@@ -50,8 +50,8 @@ public static class LightThemeExtensions
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
-                LiveCharts.CurrentSettings.DefaultAnimationsSpeed = TimeSpan.FromMilliseconds(800);
-                LiveCharts.CurrentSettings.DefaultEasingFunction = EasingFunctions.ExponentialOut;
+                LiveCharts.DefaultSettings.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
+                LiveCharts.DefaultSettings.EasingFunction = EasingFunctions.ExponentialOut;
 
                 var colors = ColorPalletes.MaterialDesign500;
 

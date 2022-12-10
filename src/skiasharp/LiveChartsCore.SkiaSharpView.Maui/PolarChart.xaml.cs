@@ -82,11 +82,11 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
         AngleAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         RadiusAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
@@ -141,7 +141,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// The Initial rotation property.
     /// </summary>
     public static readonly BindableProperty InitialRotationProperty =
-       BindableProperty.Create(nameof(InitialRotation), typeof(double), typeof(PolarChart), LiveCharts.CurrentSettings.PolarInitialRotation,
+       BindableProperty.Create(nameof(InitialRotation), typeof(double), typeof(PolarChart), LiveCharts.DefaultSettings.PolarInitialRotation,
            propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -220,7 +220,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty AnimationsSpeedProperty =
        BindableProperty.Create(
-           nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PolarChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
+           nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PolarChart), LiveCharts.DefaultSettings.AnimationsSpeed);
 
     /// <summary>
     /// The easing function property.
@@ -228,7 +228,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     public static readonly BindableProperty EasingFunctionProperty =
         BindableProperty.Create(
             nameof(EasingFunction), typeof(Func<float, float>), typeof(PolarChart),
-            LiveCharts.CurrentSettings.DefaultEasingFunction);
+            LiveCharts.DefaultSettings.EasingFunction);
 
     /// <summary>
     /// The legend position property.
@@ -236,7 +236,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     public static readonly BindableProperty LegendPositionProperty =
         BindableProperty.Create(
             nameof(LegendPosition), typeof(LegendPosition), typeof(PolarChart),
-            LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend background property.
@@ -268,7 +268,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     public static readonly BindableProperty TooltipPositionProperty =
        BindableProperty.Create(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(PolarChart),
-           LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
+           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The too ltip finding strategy property.
@@ -276,7 +276,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     public static readonly BindableProperty TooltipFindingStrategyProperty =
         BindableProperty.Create(
             nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PolarChart),
-            LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
+            LiveCharts.DefaultSettings.TooltipFindingStrategy);
 
     /// <summary>
     /// The tooltip background property.
@@ -541,7 +541,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
