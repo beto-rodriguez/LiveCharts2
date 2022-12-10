@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -79,20 +78,5 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         OnDataPointerDown(chart, points, pointer);
-    }
-
-    /// <summary>
-    /// Initializes the series.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="Exception">Default colors are not valid</exception>
-    protected void InitializeSeries()
-    {
-        //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        //var initializer = stylesBuilder.GetVisualsInitializer();
-        //if (stylesBuilder.ColorPallete.Length == 0)
-        //    throw new Exception("Default colors are not valid");
-
-        //initializer.ApplyStyleToSeries(this);
     }
 }
