@@ -29,16 +29,4 @@ namespace LiveChartsCore.SkiaSharpView;
 /// Defines a visual frame in the draw margin of the chart.
 /// </summary>
 public class DrawMarginFrame : DrawMarginFrame<RectangleGeometry, SkiaSharpDrawingContext>
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DrawMarginFrame"/> class.
-    /// </summary>
-    public DrawMarginFrame()
-    {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-
-        foreach (var rule in initializer.DrawMarginFrameBuilder) rule(this);
-    }
-}
+{ }

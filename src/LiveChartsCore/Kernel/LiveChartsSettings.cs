@@ -37,7 +37,7 @@ public class LiveChartsSettings
 {
     private object? _currentProvider;
     private readonly Dictionary<Type, object> _mappers = new();
-    private readonly Dictionary<Type, object> _seriesStyleBuilder = new();
+    private object _theme = new();
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -242,15 +242,10 @@ public class LiveChartsSettings
     public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
         where TDrawingContext : DrawingContext
     {
-        if (!_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
-        {
-            stylesBuilder = new Theme<TDrawingContext>();
-            _seriesStyleBuilder[typeof(TDrawingContext)] = stylesBuilder;
-        }
-
         ThemeId = new object();
-        var sb = (Theme<TDrawingContext>)stylesBuilder;
-        builder(sb);
+        Theme<TDrawingContext> t;
+        _theme = t = new Theme<TDrawingContext>();
+        builder(t);
 
         return this;
     }
@@ -264,9 +259,7 @@ public class LiveChartsSettings
     public Theme<TDrawingContext> GetTheme<TDrawingContext>()
         where TDrawingContext : DrawingContext
     {
-        return !_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder)
-            ? throw new Exception($"The type {nameof(TDrawingContext)} is not registered.")
-            : (Theme<TDrawingContext>)stylesBuilder;
+        return (Theme<TDrawingContext>?)_theme ?? throw new Exception("A theme is required.");
     }
 
     /// <summary>

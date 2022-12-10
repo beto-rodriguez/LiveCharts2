@@ -180,8 +180,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
 
         var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        var style = theme.GetVisualsInitializer();
-        if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
         var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
         LegendPosition = _chartView.LegendPosition;
@@ -216,7 +214,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
-            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isInternalSet = false;
         }
         foreach (var axis in RadiusAxes)
@@ -224,7 +222,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
-            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isInternalSet = false;
         }
 
@@ -236,7 +234,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            style.ApplyStyleToSeries(series);
+            theme.ApplyStyleToSeries(series);
 
             var secondaryAxis = AngleAxes[series.ScalesAngleAt];
             var primaryAxis = RadiusAxes[series.ScalesRadiusAt];
