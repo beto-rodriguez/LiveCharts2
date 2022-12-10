@@ -81,7 +81,7 @@ public static class DarkThemeExtensions
                         var color = lineSeries.GetThemedColor(colors);
 
                         lineSeries.Name = $"Series #{lineSeries.SeriesId + 1}";
-                        lineSeries.GeometrySize = 14;
+                        lineSeries.GeometrySize = 12;
                         lineSeries.GeometryStroke = new SolidColorPaint(color, 4);
                         lineSeries.GeometryFill = new SolidColorPaint(new SKColor(30, 30, 30));
                         lineSeries.Stroke = new SolidColorPaint(color, 4);
@@ -92,7 +92,7 @@ public static class DarkThemeExtensions
                         var color = steplineSeries.GetThemedColor(colors);
 
                         steplineSeries.Name = $"Series #{steplineSeries.SeriesId + 1}";
-                        steplineSeries.GeometrySize = 14;
+                        steplineSeries.GeometrySize = 12;
                         steplineSeries.GeometryStroke = new SolidColorPaint(color, 4);
                         steplineSeries.GeometryFill = new SolidColorPaint(new SKColor(30, 30, 30));
                         steplineSeries.Stroke = new SolidColorPaint(color, 4);
@@ -165,7 +165,7 @@ public static class DarkThemeExtensions
                         var color = polarLine.GetThemedColor(colors);
 
                         polarLine.Name = $"Series #{polarLine.SeriesId + 1}";
-                        polarLine.GeometrySize = 14;
+                        polarLine.GeometrySize = 12;
                         polarLine.GeometryStroke = new SolidColorPaint(color, 4);
                         polarLine.GeometryFill = new SolidColorPaint(new SKColor());
                         polarLine.Stroke = new SolidColorPaint(color, 4);
