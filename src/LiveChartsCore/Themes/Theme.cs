@@ -36,14 +36,6 @@ public class Theme<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets or sets the chart builder.
-    /// </summary>
-    /// <value>
-    /// The chart builder.
-    /// </value>
-    public List<Action<IChartView<TDrawingContext>>> ChartBuilder { get; set; } = new();
-
-    /// <summary>
     /// Gets or sets the axis builder.
     /// </summary>
     /// <value>
@@ -226,15 +218,6 @@ public class Theme<TDrawingContext>
     /// The pie series builder.
     /// </value>
     public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new();
-
-    /// <summary>
-    /// Constructs a chart.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    public void ApplyStyleToChart(IChartView<TDrawingContext> chart)
-    {
-        foreach (var rule in ChartBuilder) rule(chart);
-    }
 
     /// <summary>
     /// Constructs an axis.

@@ -49,14 +49,12 @@ public static class DarkThemeExtensions
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
+                LiveCharts.CurrentSettings.DefaultAnimationsSpeed = TimeSpan.FromMilliseconds(800);
+                LiveCharts.CurrentSettings.DefaultEasingFunction = EasingFunctions.ExponentialOut;
+
                 var colors = ColorPalletes.MaterialDesign200;
 
                 _ = theme
-                    .HasRuleForCharts(chart =>
-                    {
-                        chart.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
-                        chart.EasingFunction = EasingFunctions.ExponentialOut;
-                    })
                     .HasRuleForAxes(axis =>
                     {
                         axis.TextSize = 16;

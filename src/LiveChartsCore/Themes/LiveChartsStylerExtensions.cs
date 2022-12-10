@@ -38,22 +38,6 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForCharts<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IChartView<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
-    {
-        styler.ChartBuilder.Add(predicate);
-        return styler;
-    }
-
-    /// <summary>
-    ///  Defines a style builder for <see cref="IChartView{TDrawingContext}"/> objects.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <param name="styler">The styler.</param>
-    /// <param name="predicate">The predicate.</param>
-    /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForAxes<TDrawingContext>(
         this Theme<TDrawingContext> styler,
         Action<IPlane<TDrawingContext>> predicate)
