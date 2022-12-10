@@ -76,13 +76,4 @@ public class HeatSeries<TModel, TVisual> : HeatSeries<TModel, TVisual, LabelGeom
 public class HeatSeries<TModel, TVisual, TLabel> : HeatSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
     where TVisual : class, ISolidColorChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HeatSeries{TModel, TVisual, TLabel}"/> class.
-    /// </summary>
-    public HeatSeries()
-    {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        InitializeSeries();
-    }
-}
+{ }

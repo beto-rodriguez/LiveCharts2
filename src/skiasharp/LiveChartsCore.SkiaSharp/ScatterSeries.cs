@@ -76,13 +76,4 @@ public class ScatterSeries<TModel, TVisual> : ScatterSeries<TModel, TVisual, Lab
 public class ScatterSeries<TModel, TVisual, TLabel> : ScatterSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
     where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class.
-    /// </summary>
-    public ScatterSeries()
-    {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        InitializeSeries();
-    }
-}
+{ }

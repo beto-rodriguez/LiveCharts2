@@ -174,22 +174,21 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         EasingFunction = _chartView.EasingFunction;
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
+        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
-        var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        var style = theme.GetVisualsInitializer();
-        if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
-        var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
+        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
         ValueBounds = new Bounds();
         IndexBounds = new Bounds();
         PushoutBounds = new Bounds();
+
         foreach (var series in Series)
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            style.ApplyStyleToSeries(series);
+            if (isNewTheme) theme.ApplyStyleToSeries(series);
 
             var seriesBounds = series.GetBounds(this);
 
@@ -249,7 +248,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         InvokeOnUpdateStarted();
         IsFirstDraw = false;
-        ThemeId = LiveCharts.CurrentSettings.ThemeId;
+        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
         PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         PreviousLegendPosition = LegendPosition;
 

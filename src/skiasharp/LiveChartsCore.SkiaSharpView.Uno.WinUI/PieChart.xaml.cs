@@ -60,12 +60,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     {
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.ColorPallete.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeComponent();
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(
@@ -178,7 +172,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty AnimationsSpeedProperty =
         DependencyProperty.Register(
             nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.AnimationsSpeed, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The easing function property
@@ -186,7 +180,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty EasingFunctionProperty =
         DependencyProperty.Register(
             nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultEasingFunction, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.EasingFunction, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend position property
@@ -194,7 +188,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty LegendPositionProperty =
         DependencyProperty.Register(
             nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendPosition, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend background paint property
@@ -202,7 +196,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty LegendBackgroundPaintProperty =
         DependencyProperty.Register(
             nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text paint property
@@ -210,7 +204,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty LegendTextPaintProperty =
         DependencyProperty.Register(
             nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text size property
@@ -218,7 +212,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty LegendTextSizeProperty =
         DependencyProperty.Register(
             nameof(LegendTextSize), typeof(double?), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip position property
@@ -226,7 +220,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty TooltipPositionProperty =
        DependencyProperty.Register(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart),
-           new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.TooltipPosition, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip background paint property
@@ -234,7 +228,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty TooltipBackgroundPaintProperty =
         DependencyProperty.Register(
             nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip text paint property
@@ -242,7 +236,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty TooltipTextPaintProperty =
         DependencyProperty.Register(
             nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip text size property
@@ -250,7 +244,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty TooltipTextSizeProperty =
         DependencyProperty.Register(
             nameof(TooltipTextSize), typeof(double?), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The data pointer down command property
@@ -484,7 +478,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.

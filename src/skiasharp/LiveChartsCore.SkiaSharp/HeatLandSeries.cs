@@ -29,26 +29,15 @@ namespace LiveChartsCore.SkiaSharpView;
 public class HeatLandSeries : HeatLandSeries<SkiaSharpDrawingContext>
 {
     /// <summary>
-    /// Initialices a new instance of the <see cref="HeatLandSeries"/> class.
+    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
     /// </summary>
     public HeatLandSeries()
     {
         HeatMap = new[]
         {
-                LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-                LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-            };
-
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        IntitializeSeries(LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
-
-        // ToDo: Themeit!
-
-        //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        //var initializer = stylesBuilder.GetVisualsInitializer();
-        //if (stylesBuilder.ColorPallete.Length == 0)
-        //    throw new Exception("Default colors are not valid");
-
-        //initializer.ApplyStyleToSeries(this);
+            LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
+            LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
+        };
+        IntitializeSeries(LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
     }
 }

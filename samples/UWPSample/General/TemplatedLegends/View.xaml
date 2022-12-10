@@ -13,44 +13,10 @@
     </UserControl.DataContext>
     <Grid>
         <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right" >
-            <!-- mark -untilCloses CartesianChart.LegendTemplate -->
-            <lvc:CartesianChart.LegendTemplate>
-                <DataTemplate>
-                    <ItemsControl ItemsSource="{Binding SeriesCollection}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel
-                                    Background="{Binding Background}"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Orientation="{Binding Orientation}" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Padding="15 4">
-                                    <StackPanel Orientation="Horizontal" Background="#F5F5DC">
-                                        <TextBlock
-                                            Text="{Binding Series.Name}"
-                                            FontFamily="{Binding FontFamily}"
-                                            Foreground="{Binding Foreground}"
-                                            FontSize="{Binding FontSize}"
-                                            FontStyle="{Binding FontStyle}"
-                                            FontStretch="{Binding FontStretch}"
-                                            VerticalAlignment="Center"/>
-                                        <lvc:MotionCanvas
-                                            Margin="0 0 8 0"
-                                            PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
-                                            Width="{Binding Series.CanvasSchedule.Width}"
-                                            Height="{Binding Series.CanvasSchedule.Height}"
-                                            VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </DataTemplate>
-            </lvc:CartesianChart.LegendTemplate>
+            <!-- mark -untilCloses CartesianChart.Legend -->
+            <lvc:CartesianChart.Legend>
+                <vms:CustomLegend></vms:CustomLegend>
+            </lvc:CartesianChart.Legend>
         </lvc:CartesianChart>
     </Grid>
 

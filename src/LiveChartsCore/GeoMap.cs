@@ -62,8 +62,8 @@ public class GeoMap<TDrawingContext>
         _updateThrottler = mapView.DesignerMode
                 ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
                 : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(100));
-        _heatPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
-        _mapFactory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetDefaultMapFactory();
+        _heatPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+        _mapFactory = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetDefaultMapFactory();
 
         PointerDown += Chart_PointerDown;
         PointerMove += Chart_PointerMove;

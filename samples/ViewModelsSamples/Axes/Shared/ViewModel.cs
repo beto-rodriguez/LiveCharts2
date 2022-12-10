@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.SKCharts;
 
 namespace ViewModelsSamples.Axes.Shared;
 

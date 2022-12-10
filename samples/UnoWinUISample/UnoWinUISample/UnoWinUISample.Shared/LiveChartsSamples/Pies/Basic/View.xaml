@@ -13,5 +13,5 @@
         Series="{Binding Series}"
         Title="{Binding Title}"
         LegendPosition="Right">
-    <lvc:PieChart>
+    </lvc:PieChart>
 </UserControl>

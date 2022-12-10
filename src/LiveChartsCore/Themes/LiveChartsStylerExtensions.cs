@@ -38,24 +38,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForCharts<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
-        Action<IChartView<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
-    {
-        styler.ChartBuilder.Add(predicate);
-        return styler;
-    }
-
-    /// <summary>
-    ///  Defines a style builder for <see cref="IChartView{TDrawingContext}"/> objects.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <param name="styler">The styler.</param>
-    /// <param name="predicate">The predicate.</param>
-    /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForAxes<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForAxes<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IPlane<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -70,8 +54,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForDrawMargin<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForDrawMargin<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<DrawMarginFrame<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -86,8 +70,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForAnySeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForAnySeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IChartSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -102,8 +86,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForPieSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForPieSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IPieSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -118,8 +102,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForGaugeSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForGaugeSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IPieSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -134,8 +118,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForGaugeFillSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForGaugeFillSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IPieSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -150,8 +134,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForLineSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForLineSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<ILineSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -166,8 +150,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForStepLineSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForStepLineSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IStepLineSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -182,8 +166,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForStackedStepLineSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForStackedStepLineSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IStepLineSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -198,8 +182,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForStackedLineSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForStackedLineSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<ILineSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -214,8 +198,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForBarSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForBarSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IBarSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -230,8 +214,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForColumnSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForColumnSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IBarSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -246,8 +230,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForRowSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForRowSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IBarSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -262,8 +246,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForStackedBarSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForStackedBarSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IStackedBarSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -278,8 +262,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForStackedColumnSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForStackedColumnSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IStackedBarSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -294,8 +278,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForStackedRowSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForStackedRowSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IStackedBarSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -310,8 +294,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForScatterSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForScatterSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IScatterSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -326,8 +310,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForHeatSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForHeatSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IHeatSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -342,8 +326,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForFinancialSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForFinancialSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IFinancialSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -358,8 +342,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForPolaSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForPolaSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IPolarSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {
@@ -374,8 +358,8 @@ public static class LiveChartsStylerExtensions
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static VisualsStyle<TDrawingContext> HasRuleForPolarLineSeries<TDrawingContext>(
-        this VisualsStyle<TDrawingContext> styler,
+    public static Theme<TDrawingContext> HasRuleForPolarLineSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
         Action<IPolarLineSeries<TDrawingContext>> predicate)
         where TDrawingContext : DrawingContext
     {

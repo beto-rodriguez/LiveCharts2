@@ -68,12 +68,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.ColorPallete.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeCore();
         SizeChanged += OnSizeChanged;
 
@@ -191,14 +185,14 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty AnimationsSpeedProperty =
       BindableProperty.Create(
-          nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
+          nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart), LiveCharts.DefaultSettings.AnimationsSpeed);
 
     /// <summary>
     /// The easing function property
     /// </summary>
     public static readonly BindableProperty EasingFunctionProperty =
         BindableProperty.Create(
-            nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart), LiveCharts.CurrentSettings.DefaultEasingFunction);
+            nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart), LiveCharts.DefaultSettings.EasingFunction);
 
     /// <summary>
     /// The legend position property
@@ -206,7 +200,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty LegendPositionProperty =
         BindableProperty.Create(
             nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart),
-            LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend background paint property.
@@ -214,7 +208,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend text paint property.
@@ -222,7 +216,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
             nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend text size property.
@@ -230,7 +224,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
             nameof(LegendTextSize), typeof(double?), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip position property;
@@ -238,7 +232,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty TooltipPositionProperty =
        BindableProperty.Create(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart),
-           LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
+           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip background paint property.
@@ -246,7 +240,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip text paint property.
@@ -254,7 +248,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
             nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip text size property.
@@ -262,7 +256,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
             nameof(TooltipTextSize), typeof(double?), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The data pointer down command property
@@ -489,7 +483,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.

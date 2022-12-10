@@ -416,10 +416,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
 
-        var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        var style = theme.GetVisualsInitializer();
-        if (theme.ColorPallete.Length == 0) throw new Exception("Default colors are not valid");
-        var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
+        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
         LegendPosition = _chartView.LegendPosition;
         Legend = _chartView.Legend;
@@ -443,6 +440,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         #endregion
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
+        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
@@ -450,7 +448,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.X);
-            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
@@ -459,7 +457,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.Y);
-            style.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
@@ -472,7 +470,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            style.ApplyStyleToSeries(series);
+            if (isNewTheme) theme.ApplyStyleToSeries(series);
 
             var xAxis = XAxes[series.ScalesXAt];
             var yAxis = YAxes[series.ScalesYAt];
@@ -753,7 +751,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         InvokeOnUpdateStarted();
 
         IsFirstDraw = false;
-        ThemeId = LiveCharts.CurrentSettings.ThemeId;
+        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
         PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
         PreviousLegendPosition = LegendPosition;
 

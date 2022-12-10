@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Themes;
@@ -33,77 +35,324 @@ namespace LiveChartsCore.Themes;
 public class Theme<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private VisualsStyle<TDrawingContext>? _style;
-
     /// <summary>
-    /// Gets the current colo9r pallete.
+    /// Gets or sets the axis builder.
     /// </summary>
     /// <value>
-    /// The current colors.
+    /// The axis builder.
     /// </value>
-    public LvcColor[] ColorPallete { get; private set; } = Array.Empty<LvcColor>();
+    public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = new();
 
     /// <summary>
-    /// Gets the style.
+    /// Gets or sets the draw margin frame builder.
     /// </summary>
     /// <value>
-    /// The style.
+    /// The draw margin frame builder.
     /// </value>
-    public VisualsStyle<TDrawingContext> Style
-    {
-        get => _style ?? throw new Exception("There is no style defined yet.");
-        private set => _style = value;
-    }
+    public List<Action<DrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the series default resolver.
+    /// Gets or sets the series builder.
     /// </summary>
     /// <value>
-    /// The series default resolver.
+    /// The pie series builder.
     /// </value>
-    public Action<LvcColor[], IChartSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
+    public List<Action<IChartSeries<TDrawingContext>>> SeriesBuilder { get; set; } = new();
 
     /// <summary>
-    /// Uses the colors.
+    /// Gets or sets the pie series builder.
     /// </summary>
-    /// <param name="colors">The colors.</param>
-    /// <returns>The current theme instance</returns>
-    public Theme<TDrawingContext> WithColors(params LvcColor[] colors)
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the gauge series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the gauge fill series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the Cartesian series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the stepline series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the  stacked stepline series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the line series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the line series builder.
+    /// </summary>
+    /// <value>
+    /// The polar series builder.
+    /// </value>
+    public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the line series builder.
+    /// </summary>
+    /// <value>
+    /// The polar series builder.
+    /// </value>
+    public List<Action<IPolarLineSeries<TDrawingContext>>> PolarLineSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the line series builder.
+    /// </summary>
+    /// <value>
+    /// The polar series builder.
+    /// </value>
+    public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the line series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the financial series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the stacked line series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the bar series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the column series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the row series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the stacked bar series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the stacked column series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the stacked row series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the scatter series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new();
+
+    /// <summary>
+    /// Constructs an axis.
+    /// </summary>
+    /// <param name="axis">The axis.</param>
+    public void ApplyStyleToAxis(IPlane<TDrawingContext> axis)
     {
-        ColorPallete = colors;
-        return this;
+        foreach (var rule in AxisBuilder) rule(axis);
     }
 
     /// <summary>
-    /// Creates a new styles builder and configures it using the given predicate.
+    /// Constructs a series.
     /// </summary>
-    /// <param name="predicate">The predicate.</param>
-    /// <returns>The current theme instance</returns>
-    public Theme<TDrawingContext> WithStyle(Action<VisualsStyle<TDrawingContext>> predicate)
+    /// <param name="series">The series.</param>
+    public virtual void ApplyStyleToSeries(IChartSeries<TDrawingContext> series)
     {
-        predicate(Style = new VisualsStyle<TDrawingContext>());
-        return this;
-    }
+        foreach (var rule in SeriesBuilder) rule(series);
 
-    /// <summary>
-    /// Sets the series defaults resolver.
-    /// </summary>
-    /// <param name="resolver">The resolver.</param>
-    /// <returns></returns>
-    public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<LvcColor[], IChartSeries<TDrawingContext>, bool> resolver)
-    {
-        SeriesDefaultsResolver = resolver;
-        return this;
-    }
+        if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
+        {
+            if ((series.SeriesProperties & SeriesProperties.Gauge) != 0)
+            {
+                if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
+                {
+                    foreach (var rule in GaugeFillSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                }
+                else
+                {
+                    foreach (var rule in GaugeSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                }
+            }
+            else
+            {
+                foreach (var rule in PieSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+            }
+        }
 
-    /// <summary>
-    /// Gets the objects builder.
-    /// </summary>
-    /// <returns>The current theme instance</returns>
-    public VisualsStyle<TDrawingContext> GetVisualsInitializer()
-    {
-        return Style ?? throw new NullReferenceException(
-                $"An instance of {nameof(VisualsStyle<TDrawingContext>)} is no configured yet, " +
-                $"please register an instance using {nameof(WithStyle)}() method.");
+        if ((series.SeriesProperties & SeriesProperties.CartesianSeries) == SeriesProperties.CartesianSeries)
+        {
+            foreach (var rule in CartesianSeriesBuilder) rule((ICartesianSeries<TDrawingContext>)series);
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar &&
+            (series.SeriesProperties & SeriesProperties.Stacked) != SeriesProperties.Stacked)
+        {
+            var barSeries = (IBarSeries<TDrawingContext>)series;
+            foreach (var rule in BarSeriesBuilder) rule(barSeries);
+
+            if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)
+            {
+                foreach (var rule in ColumnSeriesBuilder) rule(barSeries);
+            }
+
+            if ((series.SeriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation)
+            {
+                foreach (var rule in RowSeriesBuilder) rule(barSeries);
+            }
+        }
+
+        var stackedBarMask = SeriesProperties.Bar | SeriesProperties.Stacked;
+        if ((series.SeriesProperties & stackedBarMask) == stackedBarMask)
+        {
+            var stackedBarSeries = (IStackedBarSeries<TDrawingContext>)series;
+            foreach (var rule in StackedBarSeriesBuilder) rule(stackedBarSeries);
+
+            if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)
+            {
+                foreach (var rule in StackedColumnSeriesBuilder) rule(stackedBarSeries);
+            }
+
+            if ((series.SeriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation)
+            {
+                foreach (var rule in StackedRowSeriesBuilder) rule(stackedBarSeries);
+            }
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.Scatter) == SeriesProperties.Scatter)
+        {
+            foreach (var rule in ScatterSeriesBuilder) rule((IScatterSeries<TDrawingContext>)series);
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
+        {
+            var stepSeries = (IStepLineSeries<TDrawingContext>)series;
+            foreach (var rule in StepLineSeriesBuilder) rule(stepSeries);
+
+            if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
+            {
+                foreach (var rule in StackedStepLineSeriesBuilder) rule(stepSeries);
+            }
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
+        {
+            var lineSeries = (ILineSeries<TDrawingContext>)series;
+            foreach (var rule in LineSeriesBuilder) rule(lineSeries);
+
+            if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
+            {
+                foreach (var rule in StackedLineSeriesBuilder) rule(lineSeries);
+            }
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.Polar) == SeriesProperties.Polar)
+        {
+            var polarSeries = (IPolarSeries<TDrawingContext>)series;
+            foreach (var rule in PolarSeriesBuilder) rule(polarSeries);
+
+            if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
+            {
+                foreach (var rule in StackedPolarSeriesBuilder) rule(polarSeries);
+            }
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.PolarLine)
+        {
+            var polarSeries = (IPolarLineSeries<TDrawingContext>)series;
+            foreach (var rule in PolarLineSeriesBuilder) rule(polarSeries);
+
+            if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
+            {
+                foreach (var rule in StackedPolarSeriesBuilder) rule(polarSeries);
+            }
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.Heat) == SeriesProperties.Heat)
+        {
+            var heatSeries = (IHeatSeries<TDrawingContext>)series;
+            foreach (var rule in HeatSeriesBuilder) rule(heatSeries);
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
+        {
+            var financialSeries = (IFinancialSeries<TDrawingContext>)series;
+            foreach (var rule in FinancialSeriesBuilder) rule(financialSeries);
+        }
     }
 }

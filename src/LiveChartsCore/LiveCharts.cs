@@ -51,7 +51,7 @@ public static class LiveCharts
     /// <value>
     /// The current settings.
     /// </value>
-    public static LiveChartsSettings CurrentSettings { get; } = new();
+    public static LiveChartsSettings DefaultSettings { get; } = new();
 
     /// <summary>
     /// Gets the default paint.
@@ -92,7 +92,7 @@ public static class LiveCharts
         if (configuration is null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
 
         IsConfigured = true;
-        configuration(CurrentSettings);
+        configuration(DefaultSettings);
     }
 
     /// <summary>
@@ -103,6 +103,6 @@ public static class LiveCharts
     /// <returns></returns>
     public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
     {
-        return CurrentSettings.HasMap(mapper);
+        return DefaultSettings.HasMap(mapper);
     }
 }

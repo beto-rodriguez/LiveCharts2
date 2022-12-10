@@ -76,13 +76,4 @@ public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, 
 public class StackedColumnSeries<TModel, TVisual, TLabel> : StackedColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
     where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StackedColumnSeries{TModel, TVisual, TLabel}"/> class.
-    /// </summary>
-    public StackedColumnSeries()
-    {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-        InitializeSeries();
-    }
-}
+{ }
