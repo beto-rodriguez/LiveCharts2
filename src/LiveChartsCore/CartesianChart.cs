@@ -442,6 +442,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
+        // Note #221012
+        // To maximize code re-usability, for now themes in charts override the current value set in the view.
+        // This means that if the user sets a property, the theme will override the value set by the user.
+        // Since there is not a standard on how dependency properties work in all the supported platforms,
+        // I can not find a way to fix this easily.
+        // The library has custom logic to style/theme ChartElement<T> instances (Axes, Series),
+        // but the XAML controls (CartesianChart, PieChart, PolarChart) have a different logic to style them.
+        // and all the supported platforms use different logic...
+        theme.ApplyStyleToChart(View);
+
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
