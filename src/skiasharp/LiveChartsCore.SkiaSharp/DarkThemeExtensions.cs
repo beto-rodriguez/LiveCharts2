@@ -49,8 +49,11 @@ public static class DarkThemeExtensions
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
-                LiveCharts.DefaultSettings.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
-                LiveCharts.DefaultSettings.EasingFunction = EasingFunctions.ExponentialOut;
+                _ = LiveCharts.DefaultSettings
+                    .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
+                    .WithEasingFunction(EasingFunctions.ExponentialOut)
+                    .WithTooltipBackgroundPaint(new SolidColorPaint(new SKColor(45, 45, 45)))
+                    .WithTooltipTextPaint(new SolidColorPaint(new SKColor(245, 245, 245)));
 
                 var colors = ColorPalletes.MaterialDesign200;
 

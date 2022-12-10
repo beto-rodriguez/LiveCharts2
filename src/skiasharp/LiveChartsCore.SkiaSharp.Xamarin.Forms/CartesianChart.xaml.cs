@@ -272,7 +272,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend text paint property.
@@ -280,7 +280,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
             nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend text size property.
@@ -288,7 +288,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
             nameof(LegendTextSize), typeof(double?), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip position property.
@@ -312,7 +312,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip text paint property.
@@ -320,7 +320,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
             nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip text size property.
@@ -328,7 +328,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
             nameof(TooltipTextSize), typeof(double?), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The data pointer down command property

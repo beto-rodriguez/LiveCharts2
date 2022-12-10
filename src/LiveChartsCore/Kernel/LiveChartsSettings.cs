@@ -88,12 +88,42 @@ public class LiveChartsSettings
     public LegendPosition LegendPosition { get; set; } = LegendPosition.Hidden;
 
     /// <summary>
+    /// Gets or sets the default legend background paint.
+    /// </summary>
+    public object? LegendBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend text paint.
+    /// </summary>
+    public object? LegendTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend text size.
+    /// </summary>
+    public double? LegendTextSize { get; set; }
+
+    /// <summary>
     /// Gets or sets the default tooltip position.
     /// </summary>
     /// <value>
     /// The default tooltip position.
     /// </value>
     public TooltipPosition TooltipPosition { get; set; } = TooltipPosition.Top;
+
+    /// <summary>
+    /// Gets or sets the default tooltip background paint.
+    /// </summary>
+    public object? TooltipBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default tooltip text paint.
+    /// </summary>
+    public object? TooltipTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default tooltip text size.
+    /// </summary>
+    public double? TooltipTextSize { get; set; }
 
     /// <summary>
     /// Gets or sets the default tooltip finding strategy.
@@ -163,54 +193,128 @@ public class LiveChartsSettings
     /// Sets the default animations speed.
     /// </summary>
     /// <param name="animationsSpeed">The animations speed.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultAnimationsSpeed(TimeSpan animationsSpeed)
+    /// <returns>The current settings</returns>
+    public LiveChartsSettings WithAnimationsSpeed(TimeSpan animationsSpeed)
     {
         AnimationsSpeed = animationsSpeed;
         return this;
     }
 
     /// <summary>
-    /// Withes the default easing function.
+    /// Sets the default the default easing function.
     /// </summary>
     /// <param name="easingFunction">The easing function.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultEasingFunction(Func<float, float> easingFunction)
+    /// <returns>The current settings</returns>
+    public LiveChartsSettings WithEasingFunction(Func<float, float> easingFunction)
     {
         EasingFunction = easingFunction;
         return this;
     }
 
     /// <summary>
-    /// Withes the default zoom speed.
+    /// Sets the default the default zoom speed.
     /// </summary>
     /// <param name="speed">The speed.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultZoomSpeed(double speed)
+    /// <returns>The current settings</returns>
+    public LiveChartsSettings WithZoomSpeed(double speed)
     {
         ZoomSpeed = speed;
         return this;
     }
 
     /// <summary>
-    /// Withes the default zoom mode.
+    /// Sets the default the default zoom mode.
     /// </summary>
     /// <param name="zoomMode">The zoom mode.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultZoomMode(ZoomAndPanMode zoomMode)
+    /// <returns>The current settings</returns>
+    public LiveChartsSettings WithZoomMode(ZoomAndPanMode zoomMode)
     {
         ZoomMode = zoomMode;
         return this;
     }
 
     /// <summary>
-    /// Withes the default update throttling timeout
+    /// Sets the default the default update throttling timeout
     /// </summary>
     /// <param name="timeout">The update throttling timeout.</param>
-    /// <returns>the current settings</returns>
-    public LiveChartsSettings WithDefaultUpdateThrottlingTimeout(TimeSpan timeout)
+    /// <returns>The current settings</returns>
+    public LiveChartsSettings WithUpdateThrottlingTimeout(TimeSpan timeout)
     {
         UpdateThrottlingTimeout = timeout;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the default legend background paint.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="paint">The paint.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings WithLegendBackgroundPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+        where TDrawingContext : DrawingContext
+    {
+        LegendBackgroundPaint = paint;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the default legend text paint.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="paint">The paint.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings WithLegendTextPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+        where TDrawingContext : DrawingContext
+    {
+        LegendTextPaint = paint;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the default legend text size.
+    /// </summary>
+    /// <param name="size">The size.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings WithLegendTextSize<TDrawingContext>(double? size)
+    {
+        LegendTextSize = size;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the default tooltip background paint.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="paint">The paint.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings WithTooltipBackgroundPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+        where TDrawingContext : DrawingContext
+    {
+        TooltipBackgroundPaint = paint;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the default tooltip text paint.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="paint">The paint.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings WithTooltipTextPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+        where TDrawingContext : DrawingContext
+    {
+        TooltipTextPaint = paint;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the default tooltip text size.
+    /// </summary>
+    /// <param name="size">The size.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings WithTooltipTextSize<TDrawingContext>(double? size)
+    {
+        TooltipTextSize = size;
         return this;
     }
 

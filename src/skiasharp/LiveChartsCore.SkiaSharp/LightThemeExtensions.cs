@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -50,8 +49,9 @@ public static class LightThemeExtensions
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
-                LiveCharts.DefaultSettings.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
-                LiveCharts.DefaultSettings.EasingFunction = EasingFunctions.ExponentialOut;
+                _ = LiveCharts.DefaultSettings
+                    .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
+                    .WithEasingFunction(EasingFunctions.ExponentialOut);
 
                 var colors = ColorPalletes.MaterialDesign500;
 

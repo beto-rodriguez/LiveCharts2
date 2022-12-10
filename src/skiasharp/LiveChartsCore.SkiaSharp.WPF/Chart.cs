@@ -148,7 +148,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty LegendBackgroundPaintProperty =
        DependencyProperty.Register(
            nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.LegendBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text paint property
@@ -156,7 +156,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty LegendTextPaintProperty =
        DependencyProperty.Register(
            nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text size property
@@ -164,7 +164,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty LegendTextSizeProperty =
        DependencyProperty.Register(
            nameof(LegendTextSize), typeof(double?), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip position property
@@ -180,7 +180,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty TooltipBackgroundPaintProperty =
        DependencyProperty.Register(
            nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.TooltipBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip text paint property
@@ -188,7 +188,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty TooltipTextPaintProperty =
        DependencyProperty.Register(
            nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip text size property
@@ -196,7 +196,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty TooltipTextSizeProperty =
        DependencyProperty.Register(
            nameof(TooltipTextSize), typeof(double?), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The data pointer down command.

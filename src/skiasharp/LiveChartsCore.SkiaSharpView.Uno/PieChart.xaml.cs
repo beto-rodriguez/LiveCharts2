@@ -196,7 +196,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty LegendBackgroundPaintProperty =
         DependencyProperty.Register(
             nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text paint property
@@ -204,7 +204,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty LegendTextPaintProperty =
         DependencyProperty.Register(
             nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text size property
@@ -212,7 +212,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty LegendTextSizeProperty =
         DependencyProperty.Register(
             nameof(LegendTextSize), typeof(double?), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip position property
@@ -228,7 +228,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty TooltipBackgroundPaintProperty =
         DependencyProperty.Register(
             nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip text paint property
@@ -236,7 +236,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty TooltipTextPaintProperty =
         DependencyProperty.Register(
             nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip text size property
@@ -244,7 +244,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public static readonly DependencyProperty TooltipTextSizeProperty =
         DependencyProperty.Register(
             nameof(TooltipTextSize), typeof(double?), typeof(PieChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The data pointer down command property

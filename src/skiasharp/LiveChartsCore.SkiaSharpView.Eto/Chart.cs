@@ -67,12 +67,12 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
-    private IPaint<SkiaSharpDrawingContext>? _legendTextPaint = null;
-    private IPaint<SkiaSharpDrawingContext>? _legendBackgroundPaint = null;
-    private double? _legendTextSize = null;
-    private IPaint<SkiaSharpDrawingContext>? _tooltipTextPaint = null;
-    private IPaint<SkiaSharpDrawingContext>? _tooltipBackgroundPaint = null;
-    private double? _tooltipTextSize = null;
+    private IPaint<SkiaSharpDrawingContext>? _legendTextPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint;
+    private IPaint<SkiaSharpDrawingContext>? _legendBackgroundPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
+    private double? _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
+    private IPaint<SkiaSharpDrawingContext>? _tooltipTextPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint;
+    private IPaint<SkiaSharpDrawingContext>? _tooltipBackgroundPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
+    private double? _tooltipTextSize = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.

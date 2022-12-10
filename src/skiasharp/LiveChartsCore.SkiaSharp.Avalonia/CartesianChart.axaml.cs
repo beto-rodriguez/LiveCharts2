@@ -224,21 +224,23 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipBackgroundPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipBackgroundPaint), null, inherits: true);
+            nameof(TooltipBackgroundPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipTextPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipTextPaint), null, inherits: true);
+            nameof(TooltipTextPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> TooltipTextSizeProperty =
         AvaloniaProperty.Register<CartesianChart, double?>(
-            nameof(TooltipTextSize), null, inherits: true);
+            nameof(TooltipTextSize), LiveCharts.DefaultSettings.TooltipTextSize, inherits: true);
 
     /// <summary>
     /// The legend position property
@@ -252,21 +254,23 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendBackgroundPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendBackgroundPaint), null, inherits: true);
+            nameof(LegendBackgroundPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The legend text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendTextPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendTextPaint), null, inherits: true);
+            nameof(LegendTextPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint, inherits: true);
 
     /// <summary>
     /// The legend text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
         AvaloniaProperty.Register<CartesianChart, double?>(
-            nameof(LegendTextSize), null, inherits: true);
+            nameof(LegendTextSize), LiveCharts.DefaultSettings.LegendTextSize, inherits: true);
 
     /// <summary>
     /// The data pointer down command property
