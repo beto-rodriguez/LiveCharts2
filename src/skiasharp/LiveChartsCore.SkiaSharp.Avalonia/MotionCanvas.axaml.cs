@@ -29,6 +29,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
@@ -74,17 +75,9 @@ public class MotionCanvas : UserControl
     /// </value>
     public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
     {
-        get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+        get => (List<PaintSchedule<SkiaSharpDrawingContext>>?)GetValue(PaintTasksProperty) ?? throw new Exception($"{nameof(PaintTasks)} must not be null.");
         set => SetValue(PaintTasksProperty, value);
     }
-
-    /// <summary>
-    /// Gets or sets the frames per second.
-    /// </summary>
-    /// <value>
-    /// The frames per second.
-    /// </value>
-    public double MaxFps { get; set; }
 
     /// <summary>
     /// Gets the canvas core.
@@ -103,11 +96,16 @@ public class MotionCanvas : UserControl
         if (_isDeatached) return;
         var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height));
         context.Custom(drawOperation);
+
+        if (CanvasCore.IsValid) return;
+        _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
     }
 
-    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
-    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
+        base.OnPropertyChanged(change);
+
         if (change.Property.Name == nameof(PaintTasks))
         {
             var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
@@ -120,8 +118,6 @@ public class MotionCanvas : UserControl
 
             CanvasCore.SetPaintTasks(tasks);
         }
-
-        base.OnPropertyChanged(change);
     }
 
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
@@ -143,7 +139,7 @@ public class MotionCanvas : UserControl
     }
 
     // based on:
-    // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
+    // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0-preview1/samples/RenderDemo/Pages/CustomSkiaPage.cs
     private class CustomDrawOp : ICustomDrawOperation
     {
         private readonly MotionCanvas _avaloniaControl;
@@ -173,8 +169,12 @@ public class MotionCanvas : UserControl
 
         public void Render(IDrawingContextImpl context)
         {
-            if (context is not ISkiaDrawingContextImpl skiaContext)
+            var leaseFeature = context.GetFeature<ISkiaSharpApiLeaseFeature>();
+
+            if (leaseFeature is null)
                 throw new Exception("SkiaSharp is not supported.");
+
+            using var lease = leaseFeature.Lease();
 
 #if DEBUG
             if (LiveCharts.EnableLogging)
@@ -184,27 +184,13 @@ public class MotionCanvas : UserControl
                 $"tread: {Environment.CurrentManagedThreadId}");
             }
 #endif
-
-            // why isn't the render method called on the UI thread always?
-            // as a workaround we lock the canvas to draw the frame.
-
-            // UPDATE
-            // the lock seems to cause deadlocks
-
-            //lock (_motionCanvas.Sync)
-            //{
             _motionCanvas.DrawFrame(
                 new SkiaSharpDrawingContext(
                     _motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
-                    skiaContext.SkSurface,
-                    skiaContext.SkCanvas,
+                    lease.SkSurface,
+                    lease.SkCanvas,
                     false));
-            //}
-
-            if (_motionCanvas.IsValid) return;
-
-            _avaloniaControl.InvalidateVisual();
         }
     }
 }

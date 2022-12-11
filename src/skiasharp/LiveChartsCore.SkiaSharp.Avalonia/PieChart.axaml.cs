@@ -94,7 +94,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
-        PointerLeave += Chart_PointerLeave;
+        PointerExited += Chart_PointerLeave;
 
         PointerMoved += Chart_PointerMoved;
         PointerPressed += Chart_PointerPressed;
@@ -297,7 +297,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
     {
-        get => GetValue(SyncContextProperty);
+        get => GetValue(SyncContextProperty)!;
         set => SetValue(SyncContextProperty, value);
     }
 
@@ -316,42 +316,42 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
     public VisualElement<SkiaSharpDrawingContext>? Title
     {
-        get => (VisualElement<SkiaSharpDrawingContext>)GetValue(TitleProperty);
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (IEnumerable<ISeries>)GetValue(SeriesProperty)!;
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
     public bool IsClockwise
     {
-        get => (bool)GetValue(IsClockwiseProperty);
+        get => (bool)GetValue(IsClockwiseProperty)!;
         set => SetValue(IsClockwiseProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
     public double InitialRotation
     {
-        get => (double)GetValue(InitialRotationProperty);
+        get => (double)GetValue(InitialRotationProperty)!;
         set => SetValue(InitialRotationProperty, value);
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
     public double MaxAngle
     {
-        get => (double)GetValue(MaxAngleProperty);
+        get => (double)GetValue(MaxAngleProperty)!;
         set => SetValue(MaxAngleProperty, value);
     }
 
@@ -365,21 +365,21 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     public TimeSpan AnimationsSpeed
     {
-        get => (TimeSpan)GetValue(AnimationsSpeedProperty);
+        get => (TimeSpan)GetValue(AnimationsSpeedProperty)!;
         set => SetValue(AnimationsSpeedProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.EasingFunction" />
     public Func<float, float>? EasingFunction
     {
-        get => (Func<float, float>)GetValue(EasingFunctionProperty);
+        get => (Func<float, float>?)GetValue(EasingFunctionProperty);
         set => SetValue(EasingFunctionProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
     {
-        get => (TooltipPosition)GetValue(TooltipPositionProperty);
+        get => (TooltipPosition)GetValue(TooltipPositionProperty)!;
         set => SetValue(TooltipPositionProperty, value);
     }
 
@@ -410,7 +410,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition
     {
-        get => (LegendPosition)GetValue(LegendPositionProperty);
+        get => (LegendPosition)GetValue(LegendPositionProperty)!;
         set => SetValue(LegendPositionProperty, value);
     }
 
@@ -523,7 +523,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
         _core = new PieChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas!.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
@@ -535,8 +535,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         _core.Update();
     }
 
-    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
-    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
 
@@ -544,20 +544,20 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
         if (change.Property.Name == nameof(SyncContext))
         {
-            CoreCanvas.Sync = change.NewValue;
+            CoreCanvas.Sync = change.NewValue ?? new object();
         }
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-            _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<ISeries>?)change.OldValue);
+            _seriesObserver?.Initialize((IEnumerable<ISeries>?)change.NewValue);
             return;
         }
 
         if (change.Property.Name == nameof(VisualElements))
         {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.OldValue.Value);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.NewValue.Value);
+            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.OldValue);
+            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.NewValue);
             return;
         }
 

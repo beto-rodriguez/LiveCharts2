@@ -46,7 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 /// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
 public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
     /// <summary>
@@ -67,7 +67,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         PointerWheelChanged += OnPointerWheelChanged;
         PointerPressed += OnPointerPressed;
         PointerMoved += OnPointerMoved;
-        PointerLeave += OnPointerLeave;
+        PointerExited += OnPointerLeave;
 
         //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
         ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
@@ -136,7 +136,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
     public object SyncContext
     {
-        get => GetValue(SyncContextProperty);
+        get => GetValue(SyncContextProperty)!;
         set => SetValue(SyncContextProperty, value);
     }
 
@@ -153,14 +153,14 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         get
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
-            return canvas.CanvasCore;
+            return canvas!.CanvasCore;
         }
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
     public CoreMap<SkiaSharpDrawingContext> ActiveMap
     {
-        get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
+        get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty)!;
         set => SetValue(ActiveMapProperty, value);
     }
 
@@ -173,36 +173,36 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
     public MapProjection MapProjection
     {
-        get => (MapProjection)GetValue(MapProjectionProperty);
+        get => (MapProjection)GetValue(MapProjectionProperty)!;
         set => SetValue(MapProjectionProperty, value);
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     public IPaint<SkiaSharpDrawingContext>? Stroke
     {
-        get => (IPaint<SkiaSharpDrawingContext>)GetValue(StrokeProperty);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(StrokeProperty);
         set
         {
             if (value is not null) value.IsStroke = true;
-            SetValue(StrokeProperty, value);
+            _ = SetValue(StrokeProperty, value);
         }
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
     public IPaint<SkiaSharpDrawingContext>? Fill
     {
-        get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
+        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(FillProperty);
         set
         {
             if (value is not null) value.IsFill = true;
-            SetValue(FillProperty, value);
+            _ = SetValue(FillProperty, value);
         }
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
-        get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);
+        get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty)!;
         set => SetValue(SeriesProperty, value);
     }
 
@@ -213,8 +213,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         Dispatcher.UIThread.Post(action);
     }
 
-    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})"/>
-    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
 
@@ -222,8 +222,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver?.Dispose((IEnumerable<IGeoSeries>)change.OldValue.Value);
-            _seriesObserver?.Initialize((IEnumerable<IGeoSeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<IGeoSeries>?)change.OldValue);
+            _seriesObserver?.Initialize((IEnumerable<IGeoSeries>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(ViewCommand))
@@ -249,7 +249,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         var p = e.GetPosition(this);
         foreach (var w in desktop.Windows) w.PointerReleased += OnWindowPointerReleased;
         _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
@@ -263,7 +263,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     private void OnWindowPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         foreach (var w in desktop.Windows) w.PointerReleased -= OnWindowPointerReleased;
         var p = e.GetPosition(this);
         _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
