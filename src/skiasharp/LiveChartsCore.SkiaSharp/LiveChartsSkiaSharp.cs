@@ -40,6 +40,14 @@ namespace LiveChartsCore.SkiaSharpView;
 public static class LiveChartsSkiaSharp
 {
     /// <summary>
+    /// Gets the default paint task.
+    /// </summary>
+    /// <value>
+    /// The default paint.
+    /// </value>
+    public static DefaultPaint DefaultPaint { get; } = new();
+
+    /// <summary>
     /// Gets the default platform builder.
     /// </summary>
     /// <value>
@@ -58,6 +66,9 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
+        // this is obsolete, currently only used in the GeoMap control and will be removed a future version.
+        LiveCharts.DefaultPaint = DefaultPaint;
+
         return settings.HasProvider(new SkiaSharpProvider());
     }
 
