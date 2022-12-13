@@ -35,6 +35,16 @@
         </div>
         <div class="col-xl-7">
             <div class="bg-white shadow chart-sample rounded mx-auto mt-5">
+                <div class="w-50">
+                    <GeoMap @ref="GeoMap" />
+                </div>
+                <div class="w-50">
+                    <PieChart @ref="PieChart" />
+                    <PolarChart @ref="PolarChart" />
+                </div>
+            </div>
+
+            <div class="d-none bg-white shadow chart-sample rounded mx-auto mt-5">
                 <CartesianChart @ref="Chart" />
             </div>
         </div>
@@ -45,17 +55,20 @@
 
 @code {
     public CartesianChart? Chart;
+    public PieChart? PieChart;
+    public PolarChart? PolarChart;
+    public GeoMap? GeoMap;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (Chart is null) return;
 
-        await Sample1();
-        await Task.Delay(5000);
-        await Sample2();
-        await Task.Delay(5000);
-        await Sample3();
+        //await Sample1();
+        //await Task.Delay(5000);
+        //await Sample2();
+        //await Task.Delay(5000);
+        //await Sample3();
     }
 
     public async Task Sample1()
