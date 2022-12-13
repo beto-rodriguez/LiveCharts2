@@ -36,6 +36,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     where TDrawingContext : DrawingContext
 {
     internal bool _isInternalSet = false;
+    internal bool _isThemeSet = false;
     internal readonly HashSet<string> _userSets = new();
     private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
 

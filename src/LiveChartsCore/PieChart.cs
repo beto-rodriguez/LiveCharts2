@@ -188,7 +188,11 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (isNewTheme) theme.ApplyStyleToSeries(series);
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                theme.ApplyStyleToSeries(series);
+                ce._isThemeSet = true;
+            }
 
             var seriesBounds = series.GetBounds(this);
 

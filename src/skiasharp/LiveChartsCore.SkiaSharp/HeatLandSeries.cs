@@ -38,6 +38,8 @@ public class HeatLandSeries : HeatLandSeries<SkiaSharpDrawingContext>
             LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
             LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };
+
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
         IntitializeSeries(LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
     }
 }

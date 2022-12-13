@@ -1,0 +1,329 @@
+﻿@page "/"
+@page "/Hello"
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
+@using System.Collections.ObjectModel;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using LiveChartsCore.SkiaSharpView.Painting.Effects;
+@using LiveChartsCore.SkiaSharpView.VisualElements;
+@using SkiaSharp;
+@inject IJSRuntime JS;
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 mb-5">
+            <h1 id="lvc-hello" class="font-display text-center bold-600">
+                <span class="text-live">Live</span><span class="text-charts">Charts2</span>
+            </h1>
+            <p class="text-muted text-center mb-3">
+                Open source data visualization library for dotnet completely written in C#.<br />
+                This site is a Blazor app (net 7), the code is available 
+                <a href="https://github.com/beto-rodriguez/LiveCharts2/tree/master/samples/BlazorSample">here</a>.
+            </p>
+        </div>
+
+        <div class="col-xl-5">
+            <div class="d-flex justify-content-end">
+                <div class="present-livecharts-container">
+                    <h1 id="hello-title" class="mb-4 text-charts fw-bolder"></h1>
+                    <p id="hello-description" class="text-muted"></p>
+                    <pre><code id="hello-code" class="language-cs"></code></pre>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-7">
+            <div class="bg-white shadow chart-sample rounded mx-auto mt-5">
+                <CartesianChart @ref="Chart" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<a href="/Browse" class="text-decoration-none btn btn-light text-primary shadow">Browse samples</a>*@
+
+@code {
+    public CartesianChart? Chart;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (Chart is null) return;
+
+        await Sample1();
+        await Task.Delay(5000);
+        await Sample2();
+        await Task.Delay(5000);
+        await Sample3();
+    }
+
+    public async Task Sample1()
+    {
+        Chart.EasingFunction = EasingFunctions.ExponentialOut;
+        Chart.AnimationsSpeed = TimeSpan.FromSeconds(1.5);
+
+        Chart.Series = new ISeries[]
+        {
+            new LineSeries<int> { Values = new[] { 6, 7, 2, 4, 2 } },
+            new ColumnSeries<int> { Values = new[] { 1, 5, 4, 5, 7 } }
+        };
+
+        await JS.InvokeVoidAsync("hlElements",
+            "Simple, intuitive",
+            "A few lines of code can build stunning, animated and interactive charts.",
+            @"Series = new ISeries[]
+{
+    new LineSeries&lt;int>
+    {
+        Values = new[] { 6, 7, 2, 4, 2 }
+    },
+    new ColumnSeries&lt;int>
+    {
+        Values = new[] { 1, 5, 4, 5, 7 }
+    }
+};");
+    }
+
+    public async Task Sample2()
+    {
+        await JS.InvokeVoidAsync("hlElements",
+            "Animate everything",
+            "Any change is animated and automatically updated in the UI.",
+            @"var values = new ObservableCollection<ObservableValue>
+{
+    new(2), new(4), new(2), new(6)
+};
+
+Series = new ISeries[]
+{
+    new LineSeries&lt;ObservableValue>
+    {
+        Values = values
+    }
+};
+
+values[2].Value = -5;
+values[2].Value = 5;
+values[2].Value = 10;
+
+values.Add(new(5));");
+
+        Chart.AnimationsSpeed = TimeSpan.FromSeconds(1.5);
+        Chart.EasingFunction = EasingFunctions.BounceOut;
+
+        var values = new ObservableCollection<ObservableValue>
+        {
+            new(2), new(4), new(2), new(6)
+        };
+
+        var lineSeries = new LineSeries<ObservableValue>
+        {
+            Values = values,
+            GeometrySize = 0,
+            GeometryFill = null,
+            GeometryStroke = null,
+            LineSmoothness = 1,
+            Fill = null,
+            Stroke = new LinearGradientPaint(
+                new[] { new SKColor(45, 64, 89), new SKColor(255, 212, 96) }) { StrokeThickness = 20 }
+        };
+
+        Chart.Series = new ISeries[]
+        {
+            lineSeries
+        };
+
+        await Task.Delay(2500);
+
+        values[2].Value = -5;
+        await Task.Delay(2500);
+
+        values[2].Value = 5;
+        await Task.Delay(2500);
+
+        values[2].Value = 10;
+        await Task.Delay(2500);
+
+        values.Add(new(5));
+        values.Add(new(8));
+        values.Add(new(7));
+        values.Add(new(12));
+        values.Add(new(10));
+        values.Add(new(10));
+        values.Add(new(9));
+        values.Add(new(12));
+        values.Add(new(13));
+        values.Add(new(12));
+        values.Add(new(9));
+        values.Add(new(14));
+        lineSeries.LineSmoothness = 0;
+    }
+
+    public async Task Sample3()
+    {
+        Chart.EasingFunction = EasingFunctions.PolinominalInOut;
+        Chart.AnimationsSpeed = TimeSpan.FromSeconds(1);
+
+        await JS.InvokeVoidAsync("hlElements",
+            "Flexible",
+            "Charts look as your app needs, everything is customizable, the library also provides multiple ready-to-go themes (WIP).",
+            @"// nothing to show here :(");
+
+        var blue = new SKColor(25, 118, 210);
+        var yellow = new SKColor(198, 167, 0);
+        var gray = new SKColor(207, 216, 220);
+        var dark = new SKColor(28, 49, 58);
+
+        //Chart.LegendPosition = LiveChartsCore.Measure.LegendPosition.Right;
+
+        Chart.Series = new ISeries[]
+        {
+            new LineSeries<double>
+            {
+                Name = "Sales",
+                LineSmoothness = 1,
+                Values = new double[] { 14, 13, 14, 15, 17 },
+                ScalesYAt = 0
+            },
+            new LineSeries<double>
+            {
+                Name = "Requests",
+                LineSmoothness = 1,
+                Values = new double[] { 11, 12, 13, 10, 13 },
+                ScalesYAt = 0
+            },
+            new LineSeries<double>
+            {
+                Name = "Also this!",
+                LineSmoothness = 1,
+                Values = new double[] { 533, 586, 425, 579, 518 },
+                ScalesYAt = 1
+            },
+        };
+        Chart.YAxes = new Axis[]
+        {
+            new Axis
+            {
+                TicksPaint = new SolidColorPaint(dark, 1),
+                SubticksPaint = new SolidColorPaint(dark, 1),
+                DrawTicksPath = true
+            },
+            new Axis
+            {
+                TicksPaint = new SolidColorPaint(dark, 1),
+                SubticksPaint = new SolidColorPaint(dark, 1),
+                DrawTicksPath = true
+            }
+        };
+        Chart.XAxes = new Axis[]
+        {
+            new Axis // the "units" and "tens" series will be scaled on this axis
+            {
+                TicksPaint = new SolidColorPaint(dark, 1),
+                SubticksPaint = new SolidColorPaint(dark, 1),
+                DrawTicksPath = true
+            }
+        };
+
+        await Task.Delay(2000);
+
+        var seriesCollection = Chart.Series.ToArray();
+
+        var s1 = (LineSeries<double>)seriesCollection[0];
+
+        s1.Stroke = null;
+        s1.GeometryFill = null;
+        s1.GeometryStroke = null;
+        s1.Fill = new SolidColorPaint(blue.WithAlpha(50));
+        await Task.Delay(200);
+
+        var s2 = (LineSeries<double>)seriesCollection[1];
+        s2.Stroke = null;
+        s2.GeometryFill = null;
+        s2.GeometryStroke = null;
+        s2.Fill = new SolidColorPaint(blue.WithAlpha(150));
+        await Task.Delay(200);
+
+        var s3 = (LineSeries<double>)seriesCollection[2];
+        s3.Stroke = null;
+        s3.GeometryFill = null;
+        s3.GeometryStroke = null;
+        s3.Fill = new SolidColorPaint(yellow.WithAlpha(150));
+        await Task.Delay(800);
+
+        s1.LineSmoothness = 0.1;
+        s2.LineSmoothness = 0.1;
+        s3.LineSmoothness = 0.1;
+        await Task.Delay(800);
+
+        s1.DataPadding = new LiveChartsCore.Drawing.LvcPoint(0, 0);
+        s2.DataPadding = new LiveChartsCore.Drawing.LvcPoint(0, 0);
+        s3.DataPadding = new LiveChartsCore.Drawing.LvcPoint(0, 0);
+        await Task.Delay(800);
+
+        Chart.Title = new LabelVisual
+        {
+            Padding = new LiveChartsCore.Drawing.Padding(12),
+            TextSize = 20,
+            Paint = new SolidColorPaint(dark),
+            Text = "Nice chart you have there!"
+        };
+        await Task.Delay(800);
+
+        var y1 = (Axis)Chart.YAxes.ToArray()[0];
+        //y1.TextSize = 15;
+        y1.LabelsPaint = new SolidColorPaint(blue);
+        y1.SeparatorsPaint = new SolidColorPaint(gray);
+        y1.SubseparatorsPaint = new SolidColorPaint(gray.WithAlpha(100));
+        y1.TicksPaint = new SolidColorPaint(blue, 3);
+        y1.SubticksPaint = new SolidColorPaint(blue, 3);
+
+        var y2 = (Axis)Chart.YAxes.ToArray()[1];
+        //y2.TextSize = 15;
+        y2.LabelsPaint = new SolidColorPaint(yellow);
+        y2.TicksPaint = new SolidColorPaint(yellow, 3);
+        y2.SubticksPaint = new SolidColorPaint(yellow, 3);
+        y2.Position = LiveChartsCore.Measure.AxisPosition.End;
+        y2.ShowSeparatorLines = false;
+
+        await Task.Delay(2000);
+
+        var x = (Axis)Chart.XAxes.ToArray()[0];
+
+        x.MinStep = 1;
+        x.ForceStepToMin = true;
+        x.SubticksPaint = null;
+        x.SeparatorsPaint = new SolidColorPaint(dark);
+        x.SubseparatorsPaint = new SolidColorPaint(dark);
+        await Task.Delay(800);
+
+        x.SeparatorsAtCenter = false;
+        await Task.Delay(800);
+
+        x.SeparatorsPaint = new SolidColorPaint
+        {
+            Color = gray,
+            StrokeThickness = 2,
+            PathEffect = new DashEffect(new float[] { 6, 6 })
+        };
+        x.SubseparatorsPaint = new SolidColorPaint(gray.WithAlpha(100));
+        await Task.Delay(800);
+
+        Chart.DrawMarginFrame = new DrawMarginFrame
+        {
+            Fill = new SolidColorPaint(gray.WithAlpha(50)) { ZIndex = -1 }
+        };
+    }
+
+    public async Task Sample4()
+    {
+        Chart.EasingFunction = EasingFunctions.PolinominalInOut;
+        Chart.AnimationsSpeed = TimeSpan.FromSeconds(1);
+
+        await JS.InvokeVoidAsync("hlElements",
+            "A complete solution",
+            "LiveCharts provies Cartesian, Pie, Polar and GeoMap charts.",
+            @"// nothing to show here :(");
+    }
+}
