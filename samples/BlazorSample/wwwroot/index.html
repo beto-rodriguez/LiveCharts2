@@ -70,11 +70,55 @@
             descriptionElement.innerHTML = description;
             codeElement.innerHTML = code;
             hljs.highlightElement(codeElement);
+            codeElement.classList.remove('d-none');
 
-            //var e = document.querySelectorAll('pre code');
-            //for (var i = 0; i < e.length; i++) {
-            //    hljs.highlightElement(e[i]);
-            //}
+            if (title == "Pie Charts") {
+                document.getElementById('cartesian-chart').classList.add('d-none');
+                document.getElementById('pie-chart').classList.remove('d-none');
+                document.getElementById('gauge-chart').classList.add('d-none');
+                document.getElementById('polar-chart').classList.add('d-none');
+                document.getElementById('geo-chart').classList.add('d-none');
+                document.getElementById('ba-bye').classList.add('d-none');
+            }
+            else if (title == "Gauges") {
+                document.getElementById('cartesian-chart').classList.add('d-none');
+                document.getElementById('pie-chart').classList.add('d-none');
+                document.getElementById('gauge-chart').classList.remove('d-none');
+                document.getElementById('polar-chart').classList.add('d-none');
+                document.getElementById('geo-chart').classList.add('d-none');
+                document.getElementById('ba-bye').classList.add('d-none');
+            }
+            else if (title == "Polar Charts") {
+                document.getElementById('cartesian-chart').classList.add('d-none');
+                document.getElementById('pie-chart').classList.add('d-none');
+                document.getElementById('gauge-chart').classList.add('d-none');
+                document.getElementById('polar-chart').classList.remove('d-none');
+                document.getElementById('geo-chart').classList.add('d-none');
+                document.getElementById('ba-bye').classList.add('d-none');
+            } else if (title == "Geo Maps") {
+                document.getElementById('cartesian-chart').classList.add('d-none');
+                document.getElementById('pie-chart').classList.add('d-none');
+                document.getElementById('gauge-chart').classList.add('d-none');
+                document.getElementById('polar-chart').classList.add('d-none');
+                document.getElementById('geo-chart').classList.remove('d-none');
+                document.getElementById('ba-bye').classList.add('d-none');
+            }
+            else if (title == "Charts everywhere!") {
+                document.getElementById('cartesian-chart').classList.add('d-none');
+                document.getElementById('pie-chart').classList.add('d-none');
+                document.getElementById('gauge-chart').classList.add('d-none');
+                document.getElementById('polar-chart').classList.add('d-none');
+                document.getElementById('geo-chart').classList.add('d-none');
+                document.getElementById('ba-bye').classList.remove('d-none');
+                codeElement.classList.add('d-none');
+            } else {
+                document.getElementById('cartesian-chart').classList.remove('d-none');
+                document.getElementById('pie-chart').classList.add('d-none');
+                document.getElementById('gauge-chart').classList.add('d-none');
+                document.getElementById('polar-chart').classList.add('d-none');
+                document.getElementById('geo-chart').classList.add('d-none');
+                document.getElementById('ba-bye').classList.add('d-none');
+            }
         }
     </script>
 </body>

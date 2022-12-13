@@ -25,6 +25,43 @@ html, body {
     max-height: 50px;
 }
 
+.left-panel {
+    display: inline-block;
+    width: 35%;
+    margin-right: 4%;
+}
+
+.right-panel {
+    display: inline-block;
+    width: 60%;
+}
+
+.uno-img-sm {
+    width: 30px;
+}
+
+.platform-image {
+    width: 30px;
+    height: 30px;
+}
+
+.mw-100 {
+    max-width: 100% !important;
+}
+
+.gallery-title {
+    text-align: center;
+    margin-top: 0.8rem;
+    margin-bottom: 0.25rem;
+    text-decoration: none !important;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.gallery-card img {
+    max-width: 100%;
+}
+
 .font-display {
     font-family: 'Quicksand', sans-serif;
 }
