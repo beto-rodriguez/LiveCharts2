@@ -906,6 +906,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
         var s = (max - min) / 20d;
+        if (s == 0) s = 1;
+        if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var maxLabelSize = new LvcSize();
         for (var i = min; i <= max; i += s)
