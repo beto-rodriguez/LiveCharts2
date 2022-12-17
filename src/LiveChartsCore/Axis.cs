@@ -97,6 +97,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private readonly int _subSections = 3;
     private Align? _labelsAlignment;
 
+#if DEBUG
+    private int _stepCount;
+#endif
+
     #endregion
 
     #region properties
@@ -282,6 +286,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
+#if DEBUG
+        _stepCount = 0;
+#endif
+
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
         var controlSize = cartesianChart.ControlSize;
@@ -581,6 +589,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 UpdateLabel(visualSeparator.Label, x, y + tyco, labelContent, hasRotation, r, UpdateMode.Update);
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         foreach (var separatorValueKey in separators.ToArray())
@@ -802,7 +814,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
-
         var s = axisTick.Value;
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
@@ -829,6 +840,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var m = textGeometry.Measure(LabelsPaint);
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         return new LvcSize(w, h);
@@ -903,12 +918,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
-
         var s = axisTick.Value;
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
+        if (s == 0) s = 1;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
@@ -931,6 +946,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             maxLabelSize = new LvcSize(
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
                 maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         return maxLabelSize;
