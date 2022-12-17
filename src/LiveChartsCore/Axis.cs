@@ -805,12 +805,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var s = axisTick.Value;
 
-        if (s == 0) s = 1;
-        if (s < _minStep) s = _minStep;
-        if (_forceStepToMin) s = _minStep;
-
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+
+        if (s == 0) s = min * 0.1;
+        if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var start = Math.Truncate(min / s) * s;
 
@@ -906,7 +906,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
         var s = (max - min) / 20d;
-        if (s == 0) s = 1;
+        if (s == 0) s = min * 0.1;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
