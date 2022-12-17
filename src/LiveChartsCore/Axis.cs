@@ -310,7 +310,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var scale = this.GetNextScaler(cartesianChart);
         var actualScale = this.GetActualScaler(cartesianChart) ?? scale;
 
-        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize());
+        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
 
         var labeler = Labeler;
         if (Labels is not null)
@@ -808,7 +808,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
-        if (s == 0) s = min * 0.1;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
@@ -891,7 +890,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
     }
 
-    private LvcSize GetPossibleMaxLabelSize()
+    private LvcSize GetPossibleMaxLabelSize(Chart<TDrawingContext> chart)
     {
         if (LabelsPaint is null) return new LvcSize();
 
@@ -903,14 +902,20 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             _minStep = 1;
         }
 
+        var axisTick = this.GetTick(chart.DrawMarginSize);
+
+        var s = axisTick.Value;
+
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
-        var s = (max - min) / 20d;
-        if (s == 0) s = min * 0.1;
+
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
         var maxLabelSize = new LvcSize();
+
+        if (max - min == 0) return maxLabelSize;
+
         for (var i = min; i <= max; i += s)
         {
             var textGeometry = new TTextGeometry
