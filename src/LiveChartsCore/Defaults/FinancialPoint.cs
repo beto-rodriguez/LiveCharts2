@@ -142,6 +142,6 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
         Coordinate = _open is null || _high is null || _low is null || _close is null
             ? Coordinate.Empty
             : new(_high.Value, _date.Ticks, _open.Value, _close.Value, _low.Value);
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
