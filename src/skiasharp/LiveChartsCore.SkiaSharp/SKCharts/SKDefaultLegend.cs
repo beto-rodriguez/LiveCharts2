@@ -142,16 +142,19 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
             Padding = new Padding(0),
-            Orientation = _orientation,
             HorizontalAlignment = Align.Start,
             VerticalAlignment = Align.Middle,
-            BackgroundPaint = BackgroundPaint
         };
+
+        _stackPanel.Orientation = _orientation;
+        _stackPanel.BackgroundPaint = BackgroundPaint;
 
         _toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);
 
         foreach (var series in chart.ChartSeries)
         {
+            if (!series.IsVisibleAtLegend) continue;
+
             var seriesMiniatureVisual = GetSeriesVisual(series);
             _ = _toRemoveSeries.Remove(seriesMiniatureVisual);
         }
