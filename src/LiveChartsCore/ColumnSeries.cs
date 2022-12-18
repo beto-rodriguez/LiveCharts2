@@ -172,7 +172,9 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
-            var cy = point.PrimaryValue > pivot ? primary : primary - b;
+            var cy = primaryAxis.IsInverted
+                ? (point.PrimaryValue > pivot ? primary - b : primary)
+                : (point.PrimaryValue > pivot ? primary : primary - b);
             var x = secondary - helper.uwm + helper.cp;
 
             if (stacker is not null)
