@@ -589,6 +589,9 @@ public abstract class Chart<TDrawingContext> : IChart
                 if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
                     ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
 
+                // reset for cases when legend is hidden or changes postion
+                Canvas.StartPoint = new LvcPoint(0, 0);
+
                 Legend.Draw(this);
 
                 PreviousLegendPosition = LegendPosition;
