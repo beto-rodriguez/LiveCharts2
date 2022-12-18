@@ -417,7 +417,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 var labelPosition = GetLabelPolarPosition(
                     cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
-                    (float)(start + initialRotation), (float)sweep,
+                    stackedInnerRadius, (float)(start + initialRotation), (float)sweep,
                     label.Measure(DataLabelsPaint), DataLabelsPosition);
 
                 label.X = labelPosition.X;
@@ -574,6 +574,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// <param name="centerX">The center x.</param>
     /// <param name="centerY">The center y.</param>
     /// <param name="radius">The radius.</param>
+    /// <param name="innerRadius">The iner radius.</param>
     /// <param name="startAngle">The start angle.</param>
     /// <param name="sweepAngle">The sweep angle.</param>
     /// <param name="labelSize">Size of the label.</param>
@@ -583,6 +584,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         float centerX,
         float centerY,
         float radius,
+        float innerRadius,
         float startAngle,
         float sweepAngle,
         LvcSize labelSize,
@@ -601,7 +603,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 break;
             case PolarLabelsPosition.Outer:
                 angle = startAngle + sweepAngle * 0.5f;
-                radius *= 2;
+                radius += radius - innerRadius;
                 break;
             case PolarLabelsPosition.Middle:
                 angle = startAngle + sweepAngle * 0.5f;
