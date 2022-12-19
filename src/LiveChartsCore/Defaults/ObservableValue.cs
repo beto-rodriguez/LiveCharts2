@@ -108,7 +108,7 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         OnCoordinateChanged();
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     /// <summary>

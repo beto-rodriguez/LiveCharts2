@@ -28,7 +28,7 @@ using System.Linq;
 
 namespace LiveChartsCore.Kernel;
 
-internal class ChartPointCleanupContext
+internal struct ChartPointCleanupContext
 {
     private int _toDeleteCount;
 
@@ -55,11 +55,18 @@ internal class ChartPointCleanupContext
     {
         if (_toDeleteCount == 0) return;
 
+        // Based on https://github.com/beto-rodriguez/LiveCharts2/pull/792#discussion_r1039650806
         // It would be nice to have System.Buffers installed to use rented buffer
         // Or we can probably use single cached buffer since all calculations are running on GUI thread
         // At least we don't allocate when there is nothing to remove
         // And allocate only as much as we need to remove
+
+#if NET5_0_OR_GREATER
         var toDeletePoints = points.Where(p => p.RemoveOnCompleted);
+#else
+        var toDeletePoints = points.Where(p => p.RemoveOnCompleted).ToArray();
+#endif
+
         foreach (var p in toDeletePoints)
         {
             if (p.Context.Chart != chartView) continue;
@@ -76,11 +83,17 @@ internal class ChartPointCleanupContext
     {
         if (_toDeleteCount == 0) return;
 
+        // Based on https://github.com/beto-rodriguez/LiveCharts2/pull/792#discussion_r1039650806
         // It would be nice to have System.Buffers installed to use rented buffer
         // Or we can probably use single cached buffer since all calculations are running on GUI thread
         // At least we don't allocate when there is nothing to remove
         // And allocate only as much as we need to remove
+#if NET5_0_OR_GREATER
         var toDeletePoints = points.Where(p => p.RemoveOnCompleted);
+#else
+        var toDeletePoints = points.Where(p => p.RemoveOnCompleted).ToArray();
+#endif
+
         foreach (var p in toDeletePoints)
         {
             if (p.Context.Chart != chartView) continue;

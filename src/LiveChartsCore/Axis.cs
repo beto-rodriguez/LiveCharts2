@@ -97,6 +97,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private readonly int _subSections = 3;
     private Align? _labelsAlignment;
 
+#if DEBUG
+    private int _stepCount;
+#endif
+
     #endregion
 
     #region properties
@@ -282,6 +286,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
+#if DEBUG
+        _stepCount = 0;
+#endif
+
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
         var controlSize = cartesianChart.ControlSize;
@@ -310,7 +318,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var scale = this.GetNextScaler(cartesianChart);
         var actualScale = this.GetActualScaler(cartesianChart) ?? scale;
 
-        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize());
+        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
 
         var labeler = Labeler;
         if (Labels is not null)
@@ -581,6 +589,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 UpdateLabel(visualSeparator.Label, x, y + tyco, labelContent, hasRotation, r, UpdateMode.Update);
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         foreach (var separatorValueKey in separators.ToArray())
@@ -802,15 +814,13 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
-
         var s = axisTick.Value;
-
-        if (s == 0) s = 1;
-        if (s < _minStep) s = _minStep;
-        if (_forceStepToMin) s = _minStep;
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+
+        if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var start = Math.Truncate(min / s) * s;
 
@@ -830,6 +840,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var m = textGeometry.Measure(LabelsPaint);
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         return new LvcSize(w, h);
@@ -891,7 +905,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
     }
 
-    private LvcSize GetPossibleMaxLabelSize()
+    private LvcSize GetPossibleMaxLabelSize(Chart<TDrawingContext> chart)
     {
         if (LabelsPaint is null) return new LvcSize();
 
@@ -903,11 +917,20 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             _minStep = 1;
         }
 
+        var axisTick = this.GetTick(chart.DrawMarginSize);
+        var s = axisTick.Value;
+
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
-        var s = (max - min) / 20d;
+
+        if (s == 0) s = 1;
+        if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var maxLabelSize = new LvcSize();
+
+        if (max - min == 0) return maxLabelSize;
+
         for (var i = min; i <= max; i += s)
         {
             var textGeometry = new TTextGeometry
@@ -923,6 +946,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             maxLabelSize = new LvcSize(
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
                 maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         return maxLabelSize;

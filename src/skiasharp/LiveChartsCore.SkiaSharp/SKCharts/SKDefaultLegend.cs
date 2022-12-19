@@ -27,6 +27,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts.Helpers;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -39,10 +40,13 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     private static readonly int s_zIndex = 10050;
     private ContainerOrientation _orientation = ContainerOrientation.Vertical;
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
-    private readonly Dictionary<IChartSeries<SkiaSharpDrawingContext>, StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>> _activeSeries = new();
-    private new List<VisualElement<SkiaSharpDrawingContext>> _toRemoveSeries = new();
+    private readonly DoubleDict<IChartSeries<SkiaSharpDrawingContext>, VisualElement<SkiaSharpDrawingContext>> _activeSeries = new();
+    private List<VisualElement<SkiaSharpDrawingContext>> _toRemoveSeries = new();
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SKDefaultLegend"/> class.
+    /// </summary>
     public SKDefaultLegend()
     {
         FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
@@ -126,6 +130,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         {
             _ = _stackPanel.Children.Remove(visual);
             chart.RemoveVisual(visual);
+            if (_activeSeries.TryGetValue(visual, out var series)) _ = _activeSeries.Remove(series);
         }
     }
 
@@ -142,16 +147,19 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
             Padding = new Padding(0),
-            Orientation = _orientation,
             HorizontalAlignment = Align.Start,
             VerticalAlignment = Align.Middle,
-            BackgroundPaint = BackgroundPaint
         };
+
+        _stackPanel.Orientation = _orientation;
+        _stackPanel.BackgroundPaint = BackgroundPaint;
 
         _toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);
 
         foreach (var series in chart.ChartSeries)
         {
+            if (!series.IsVisibleAtLegend) continue;
+
             var seriesMiniatureVisual = GetSeriesVisual(series);
             _ = _toRemoveSeries.Remove(seriesMiniatureVisual);
         }
@@ -166,7 +174,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         Size = _stackPanel.Measure(skiaChart, null, null);
     }
 
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> GetSeriesVisual(IChartSeries<SkiaSharpDrawingContext> series)
+    private VisualElement<SkiaSharpDrawingContext> GetSeriesVisual(IChartSeries<SkiaSharpDrawingContext> series)
     {
         if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
 

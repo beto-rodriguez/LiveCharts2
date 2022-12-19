@@ -448,7 +448,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.X);
-            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                ce._isThemeSet = true;
+            }
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
@@ -457,7 +461,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(AxisOrientation.Y);
-            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                ce._isThemeSet = true;
+            }
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
         }
@@ -470,7 +478,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (isNewTheme) theme.ApplyStyleToSeries(series);
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                theme.ApplyStyleToSeries(series);
+                ce._isThemeSet = true;
+            }
 
             var xAxis = XAxes[series.ScalesXAt];
             var yAxis = YAxes[series.ScalesYAt];

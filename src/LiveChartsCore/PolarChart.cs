@@ -214,7 +214,11 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
-            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                ce._isThemeSet = true;
+            }
             ce._isInternalSet = false;
         }
         foreach (var axis in RadiusAxes)
@@ -222,7 +226,11 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
-            if (isNewTheme) theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                ce._isThemeSet = true;
+            }
             ce._isInternalSet = false;
         }
 
@@ -234,7 +242,11 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (isNewTheme) theme.ApplyStyleToSeries(series);
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                theme.ApplyStyleToSeries(series);
+                ce._isThemeSet = true;
+            }
 
             var secondaryAxis = AngleAxes[series.ScalesAngleAt];
             var primaryAxis = RadiusAxes[series.ScalesRadiusAt];

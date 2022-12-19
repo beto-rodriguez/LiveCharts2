@@ -70,6 +70,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
         Sections = view.Sections;
         DrawMarginFrame = view.DrawMarginFrame;
         LegendPosition = view.LegendPosition;
+        Title = view.Title;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />

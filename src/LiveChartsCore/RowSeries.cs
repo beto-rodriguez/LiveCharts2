@@ -173,7 +173,9 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
-            var cx = point.PrimaryValue > pivot ? primary - b : primary;
+            var cx = secondaryAxis.IsInverted
+                ? (point.PrimaryValue > pivot ? primary : primary - b)
+                : (point.PrimaryValue > pivot ? primary - b : primary);
             var y = secondary - helper.uwm + helper.cp;
 
             if (stacker is not null)

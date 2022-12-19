@@ -70,6 +70,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         InnerRadius = view.InnerRadius;
         InitialRotation = view.InitialRotation;
         LegendPosition = view.LegendPosition;
+        Title = view.Title;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />

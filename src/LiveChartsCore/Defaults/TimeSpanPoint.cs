@@ -109,6 +109,6 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
         Coordinate = _value is null
             ? Coordinate.Empty
             : new(_timeSpan.Ticks, _value ?? 0d);
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

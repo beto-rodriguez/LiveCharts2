@@ -1,32 +1,51 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="">Blazor wasm sample</a>
-		<button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-	</div>
+﻿@inject IJSRuntime JS
+
+<div class="position-fixed nav-branf-f w-100 navbar navbar-light">
+    <a class="navbar-brand" href="">
+        <div class="d-flex align-items-center justify-content-center px-3">
+            <img alt="." src="./lvc-fav-55x55.png" class="lvc-icon-nav me-3" />
+            <h3 id="lvc-hello" class="font-display text-center bold-600 mb-0">
+                <span class="text-live">Live</span><span class="text-charts">Charts2</span>
+            </h3>
+        </div>
+    </a>
+    <div></div>
+    <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </div>
 
-<div class="@NavMenuCssClass scroll-y" @onclick="ToggleNavMenu">
-	<nav class="flex-column">
-		@foreach (var item in Index)
-		{
-			<div class="nav-item px-3">
-				<NavLink class="nav-link" href="@item">@item</NavLink>
-			</div>
-		}
-	</nav>
+<div class="h-100">
+    <div class="h-100 @NavMenuCssClass" @onclick="ToggleNavMenu">
+        <nav class="h-100">
+            <div id="perfect-scroll" class="h-100" style="position:relative; width: 100%">
+                <div class="h-nav"></div>
+                @foreach (var item in Index)
+                {
+                    <div class="nav-item px-2">
+                        <NavLink class="nav-link" href="@item">@item</NavLink>
+                    </div>
+                }
+            </div>
+        </nav>
+    </div>
 </div>
 
 @code {
-	private bool collapseNavMenu = true;
+    private bool collapseNavMenu = true;
 
-	private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-	public string[] Index { get; set; } = ViewModelsSamples.Index.Samples;
+    public string[] Index { get; set; } = ViewModelsSamples.Index.Samples;
 
-	private void ToggleNavMenu()
-	{
-		collapseNavMenu = !collapseNavMenu;
-	}
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        await JS.InvokeVoidAsync("initializePerfectScroll");
+    }
 }

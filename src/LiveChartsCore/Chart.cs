@@ -57,7 +57,7 @@ public abstract class Chart<TDrawingContext> : IChart
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private bool _isPointerIn = false;
+    private bool _isPointerIn;
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
 
@@ -589,6 +589,9 @@ public abstract class Chart<TDrawingContext> : IChart
                 if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
                     ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
 
+                // reset for cases when legend is hidden or changes postion
+                Canvas.StartPoint = new LvcPoint(0, 0);
+
                 Legend.Draw(this);
 
                 PreviousLegendPosition = LegendPosition;
@@ -619,6 +622,13 @@ public abstract class Chart<TDrawingContext> : IChart
              {
                  lock (Canvas.Sync)
                  {
+                     if (_pointerPosition.X < DrawMarginLocation.X || _pointerPosition.X > DrawMarginLocation.X + DrawMarginSize.Width ||
+                         _pointerPosition.Y < DrawMarginLocation.Y || _pointerPosition.Y > DrawMarginLocation.Y + DrawMarginSize.Height)
+                     {
+                         // reject tooltip logic when the pointer is outside the draw margin
+                         return;
+                     }
+
 #if DEBUG
                      if (LiveCharts.EnableLogging)
                      {

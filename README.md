@@ -3,6 +3,8 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/beto-rodriguez/livecharts2/badge)](https://www.codefactor.io/repository/github/beto-rodriguez/livecharts2)
 ![Build and tests](https://github.com/beto-rodriguez/LiveCharts2/actions/workflows/build-and-test.yml/badge.svg)
 
+[Watch Blazor WASM demo](https://blazor-livecharts.controli.app/) (only designed for desktop devices for now)
+
 LiveCharts2 (v2) is the evolution of [LiveCharts](https://github.com/Live-Charts/Live-Charts) (v0), it fixes the main design issues of its predecessor, it's focused to run everywhere, improves flexibility without losing what we already had in v0.
 
 ### Extremely flexible data visualization library
