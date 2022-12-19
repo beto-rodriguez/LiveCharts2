@@ -27,6 +27,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts.Helpers;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -40,9 +41,12 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     private ContainerOrientation _orientation = ContainerOrientation.Vertical;
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
     private readonly DoubleDict<IChartSeries<SkiaSharpDrawingContext>, VisualElement<SkiaSharpDrawingContext>> _activeSeries = new();
-    private new List<VisualElement<SkiaSharpDrawingContext>> _toRemoveSeries = new();
+    private List<VisualElement<SkiaSharpDrawingContext>> _toRemoveSeries = new();
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SKDefaultLegend"/> class.
+    /// </summary>
     public SKDefaultLegend()
     {
         FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
@@ -201,41 +205,5 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         _activeSeries.Add(series, sp);
 
         return sp;
-    }
-
-    private class DoubleDict<T1, T2>
-    {
-        private readonly Dictionary<T1, T2> _keys = new();
-        private readonly Dictionary<T2, T1> _values = new();
-
-        public void Add(T1 key, T2 value)
-        {
-            _keys.Add(key, value);
-            _values.Add(value, key);
-        }
-
-        public bool Remove(T1 key)
-        {
-            var r2 = _values.Remove(_keys[key]);
-            var r1 = _keys.Remove(key);
-            return r1 & r2;
-        }
-
-        public bool Remove(T2 value)
-        {
-            var r1 = _keys.Remove(_values[value]);
-            var r2 = _values.Remove(value);
-            return r1 & r2;
-        }
-
-        public bool TryGetValue(T1 key, out T2 value)
-        {
-            return _keys.TryGetValue(key, out value);
-        }
-
-        public bool TryGetValue(T2 key, out T1 value)
-        {
-            return _values.TryGetValue(key, out value);
-        }
     }
 }
