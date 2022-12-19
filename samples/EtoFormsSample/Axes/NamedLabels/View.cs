@@ -19,7 +19,8 @@ public class View : Panel
             YAxes = viewModel.YAxes,
             TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left, // mark
             TooltipTextPaint = viewModel.TooltipTextPaint, // mark
-            TooltipBackgroundPaint = viewModel.TooltipBackgroundPaint // mark
+            TooltipBackgroundPaint = viewModel.TooltipBackgroundPaint, // mark
+            TooltipTextSize = 16
         };
 
         Content = cartesianChart;

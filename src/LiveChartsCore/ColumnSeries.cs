@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -101,7 +100,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var rx = (float)Rx;
         var ry = (float)Ry;
@@ -173,7 +172,9 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
-            var cy = point.PrimaryValue > pivot ? primary : primary - b;
+            var cy = primaryAxis.IsInverted
+                ? (point.PrimaryValue > pivot ? primary - b : primary)
+                : (point.PrimaryValue > pivot ? primary : primary - b);
             var x = secondary - helper.uwm + helper.cp;
 
             if (stacker is not null)
@@ -209,9 +210,11 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             }
             visual.RemoveOnCompleted = false;
 
-            point.Context.HoverArea = new RectangleHoverArea(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b);
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b);
 
-            _ = toDeletePoints.Remove(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -251,12 +254,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             OnPointMeasured(point);
         }
 
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != cartesianChart.View) continue;
-            SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
-            _ = everFetched.Remove(point);
-        }
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>

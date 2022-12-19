@@ -13,46 +13,10 @@
     </UserControl.DataContext>
     <Grid>
         <lvc:CartesianChart Series="{Binding Series}" TooltipPosition="Top" >
-            <!-- mark -untilCloses CartesianChart.TooltipTemplate -->
-            <lvc:CartesianChart.TooltipTemplate>
-                <DataTemplate>
-                    <Border Background="#303030">
-                        <ItemsControl ItemsSource="{Binding Points}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Vertical"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Padding="7 5">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock
-                                                Text="{Binding ChartPoint.AsTooltipString}"
-                                                FontFamily="{Binding FontFamily}"
-                                                Foreground="AntiqueWhite"
-                                                FontSize="{Binding FontSize}"
-                                                FontStyle="{Binding FontStyle}"
-                                                FontStretch="{Binding FontStretch}"
-                                                Margin="0 0 8 0"
-                                                VerticalAlignment="Center"/>
-                                            <lvc:MotionCanvas
-                                                Margin="0 0 8 0" 
-                                                PaintTasks="{Binding ChartPoint.Context.Series.CanvasSchedule.PaintSchedules}"
-                                                Width="{Binding ChartPoint.Context.Series.CanvasSchedule.Width}"
-                                                Height="{Binding ChartPoint.Context.Series.CanvasSchedule.Height}"
-                                                VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Border>
-                </DataTemplate>
-            </lvc:CartesianChart.TooltipTemplate>
+            <!-- mark -untilCloses CartesianChart.Tooltip -->
+            <lvc:CartesianChart.Tooltip>
+                <vms:CustomTooltip></vms:CustomTooltip>
+            </lvc:CartesianChart.Tooltip>
         </lvc:CartesianChart>
     </Grid>
 

@@ -53,6 +53,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     private IPaint<TDrawingContext>? _upFill = null;
     private IPaint<TDrawingContext>? _downStroke = null;
     private IPaint<TDrawingContext>? _downFill = null;
+    private double _maxBarWidth = 25;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
@@ -66,7 +67,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
-    public double MaxBarWidth { get; set; } = 25;
+    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpStroke"/>
     public IPaint<TDrawingContext>? UpStroke
@@ -155,7 +156,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -244,10 +245,11 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             visual.Low = low;
             visual.RemoveOnCompleted = false;
 
-            var ha = new RectangleHoverArea().SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
-            point.Context.HoverArea = ha;
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
 
-            _ = toDeletePoints.Remove(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -287,12 +289,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             OnPointMeasured(point);
         }
 
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != cartesianChart.View) continue;
-            SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
-            _ = everFetched.Remove(point);
-        }
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>

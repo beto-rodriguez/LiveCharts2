@@ -47,10 +47,11 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = new();
-    private LvcColor[] _heatMap = {
-            LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
-            LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
-        };
+    private LvcColor[] _heatMap =
+    {
+        LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
+        LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
+    };
     private double[]? _colorStops;
     private Padding _pointPadding = new(4);
 
@@ -67,18 +68,26 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnMiniatureChanged(); OnPropertyChanged(); } }
+    public LvcColor[] HeatMap
+    {
+        get => _heatMap;
+        set
+        {
+            OnMiniatureChanged();
+            SetProperty(ref _heatMap, value);
+        }
+    }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
-    public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
+    public double[]? ColorStops { get => _colorStops; set => SetProperty(ref _colorStops, value); }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
-    public Padding PointPadding { get => _pointPadding; set { _pointPadding = value; OnPropertyChanged(); } }
+    public Padding PointPadding { get => _pointPadding; set => SetProperty(ref _pointPadding, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
-        _paintTaks ??= LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+        _paintTaks ??= LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
 
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -109,7 +118,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
 
         var dls = (float)DataLabelsSize;
-        var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+        var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var p = PointPadding;
 
@@ -184,10 +193,11 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             visual.Color = LvcColor.FromArgb(baseColor.A, baseColor.R, baseColor.G, baseColor.B);
             visual.RemoveOnCompleted = false;
 
-            var ha = new RectangleHoverArea().SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
-            point.Context.HoverArea = ha;
+            if (point.Context.HoverArea is not RectangleHoverArea ha)
+                point.Context.HoverArea = ha = new RectangleHoverArea();
+            _ = ha.SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
 
-            _ = toDeletePoints.Remove(point);
+            pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
@@ -223,12 +233,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             OnPointMeasured(point);
         }
 
-        foreach (var point in toDeletePoints)
-        {
-            if (point.Context.Chart != cartesianChart.View) continue;
-            SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
-            _ = everFetched.Remove(point);
-        }
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
@@ -303,7 +309,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
-        var strokeClone = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+        var strokeClone = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
         var st = strokeClone.StrokeThickness;
 
         if (st > MAX_MINIATURE_STROKE_WIDTH)

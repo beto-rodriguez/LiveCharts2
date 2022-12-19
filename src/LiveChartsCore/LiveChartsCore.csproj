@@ -17,7 +17,7 @@
 
     <AssemblyName>LiveChartsCore</AssemblyName>
     <RootNamespace>LiveChartsCore</RootNamespace>
-    <Version>2.0.0-beta.603</Version>
+    <Version>2.0.0-beta.700</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for .Net, this is the core package probably you need another package also unless you are building your own backed.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -52,7 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'" Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'" Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 
 </Project>

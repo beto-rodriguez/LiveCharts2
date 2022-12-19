@@ -108,6 +108,6 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         Coordinate = _value is null ? Coordinate.Empty : new(_dateTime.Ticks, _value.Value);
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

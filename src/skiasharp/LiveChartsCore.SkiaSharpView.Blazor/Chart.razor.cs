@@ -60,9 +60,9 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     private double _canvasHeight;
 
     private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>? _visualsObserver;
-    private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
+    private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
-    private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+    private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
 
     /// <summary>
@@ -74,12 +74,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         base.OnInitialized();
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
 
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -181,11 +175,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     [Parameter]
-    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
+    public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.DefaultSettings.AnimationsSpeed;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     [Parameter]
-    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
+    public Func<float, float>? EasingFunction { get; set; } = LiveCharts.DefaultSettings.EasingFunction;
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     [Parameter]
@@ -198,14 +192,16 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
     [Parameter]
     public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get; set; }
+        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
     [Parameter]
     public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get; set; }
+        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
     [Parameter]
-    public double? LegendTextSize { get; set; }
+    public double? LegendTextSize { get; set; } = LiveCharts.DefaultSettings.LegendTextSize;
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     [Parameter]
@@ -218,14 +214,17 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
     [Parameter]
     public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get; set; }
+        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
     [Parameter]
     public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get; set; }
+        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
     [Parameter]
     public double? TooltipTextSize { get; set; }
+        = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     [Parameter]
@@ -233,7 +232,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     [Parameter]
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]
@@ -403,13 +402,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 

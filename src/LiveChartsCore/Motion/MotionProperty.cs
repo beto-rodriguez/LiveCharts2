@@ -30,6 +30,8 @@ namespace LiveChartsCore.Motion;
 /// <typeparam name="T"></typeparam>
 public abstract class MotionProperty<T> : IMotionProperty
 {
+    private static readonly bool s_canBeNull = Kernel.Extensions.CanBeNull(typeof(T));
+
     /// <summary>
     /// From value
     /// </summary>
@@ -120,7 +122,11 @@ public abstract class MotionProperty<T> : IMotionProperty
     /// <returns></returns>
     public T GetMovement(Animatable animatable)
     {
-        if (Animation is null || Animation.EasingFunction is null || fromValue is null || IsCompleted) return OnGetMovement(1);
+        // For some reason JITter can't remove value type boxing when started under PerfView Run command
+        // Emitted IL has boxing originally, but JITter should be able to optimize it to 'false' or 'Nullable<T>.HasValue'
+        // When s_canBeNull is false JITter should remove second check from generated code
+        var fromValueIsNull = s_canBeNull && fromValue is null;
+        if (Animation is null || Animation.EasingFunction is null || fromValueIsNull || IsCompleted) return OnGetMovement(1);
 
         if (_requiresToInitialize || _startTime == long.MinValue)
         {

@@ -80,12 +80,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeCore();
         SizeChanged += OnSizeChanged;
 
@@ -99,11 +93,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
         XAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         YAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
@@ -241,7 +235,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty ZoomModeProperty =
         BindableProperty.Create(
             nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
-            LiveCharts.CurrentSettings.DefaultZoomMode, BindingMode.Default, null);
+            LiveCharts.DefaultSettings.ZoomMode, BindingMode.Default, null);
 
     /// <summary>
     /// The zooming speed property.
@@ -249,14 +243,14 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty ZoomingSpeedProperty =
         BindableProperty.Create(
             nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
-            LiveCharts.CurrentSettings.DefaultZoomSpeed, BindingMode.Default, null);
+            LiveCharts.DefaultSettings.ZoomSpeed, BindingMode.Default, null);
 
     /// <summary>
     /// The animations speed property.
     /// </summary>
     public static readonly BindableProperty AnimationsSpeedProperty =
        BindableProperty.Create(
-           nameof(AnimationsSpeed), typeof(TimeSpan), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
+           nameof(AnimationsSpeed), typeof(TimeSpan), typeof(CartesianChart), LiveCharts.DefaultSettings.AnimationsSpeed);
 
     /// <summary>
     /// The easing function property.
@@ -264,7 +258,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty EasingFunctionProperty =
         BindableProperty.Create(
             nameof(EasingFunction), typeof(Func<float, float>), typeof(CartesianChart),
-            LiveCharts.CurrentSettings.DefaultEasingFunction);
+            LiveCharts.DefaultSettings.EasingFunction);
 
     /// <summary>
     /// The legend position property.
@@ -272,7 +266,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty LegendPositionProperty =
         BindableProperty.Create(
             nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart),
-            LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend background property.
@@ -280,7 +274,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend text paint property.
@@ -288,7 +282,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
             nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The legend text size property.
@@ -296,7 +290,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
             nameof(LegendTextSize), typeof(double?), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip position property.
@@ -304,7 +298,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipPositionProperty =
        BindableProperty.Create(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart),
-           LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
+           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tool tip finding strategy property.
@@ -312,7 +306,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipFindingStrategyProperty =
         BindableProperty.Create(
             nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart),
-            LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
+            LiveCharts.DefaultSettings.TooltipFindingStrategy);
 
     /// <summary>
     /// The tooltip background property.
@@ -320,7 +314,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip text paint property.
@@ -328,7 +322,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
             nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The tooltip text size property.
@@ -336,7 +330,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
             nameof(TooltipTextSize), typeof(double?), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The data pointer down command property
@@ -584,7 +578,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
@@ -666,7 +660,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
     public void ShowTooltip(IEnumerable<ChartPoint> points)
-    { 
+    {
         if (_tooltip is null || _core is null) return;
         _tooltip.Show(points, _core);
     }
@@ -735,20 +729,17 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnSizeChanged(object? sender, EventArgs e)
     {
-        if (_core is null) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)

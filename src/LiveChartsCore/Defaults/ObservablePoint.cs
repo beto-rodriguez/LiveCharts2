@@ -109,6 +109,6 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
         Coordinate = _x is null || _y is null
             ? Coordinate.Empty
             : new Coordinate(_x.Value, _y.Value);
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

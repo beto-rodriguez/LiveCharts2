@@ -81,38 +81,16 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeCore();
 
         AttachedToVisualTree += OnAttachedToVisualTree;
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object? sender, NotifyCollectionChangedEventArgs e) =>
-           {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               _core.Update();
-           },
-           (object? sender, PropertyChangedEventArgs e) =>
-           {
-               if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-               _core.Update();
-           }, true);
+           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+           (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-          (object? sender, NotifyCollectionChangedEventArgs e) =>
-          {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-              _core.Update();
-          },
-          (object? sender, PropertyChangedEventArgs e) =>
-          {
-              if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-              _core.Update();
-          }, true);
+          (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+          (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
 
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
@@ -185,70 +163,70 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
         AvaloniaProperty.Register<PieChart, TimeSpan>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.AnimationsSpeed, inherits: true);
 
     /// <summary>
     /// The easing function property
     /// </summary>
     public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
         AvaloniaProperty.Register<PieChart, Func<float, float>>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.EasingFunction, inherits: true);
 
     /// <summary>
     /// The tool tip position property
     /// </summary>
     public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
         AvaloniaProperty.Register<PieChart, TooltipPosition>(
-            nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
+            nameof(TooltipPosition), LiveCharts.DefaultSettings.TooltipPosition, inherits: true);
 
     /// <summary>
     /// The tooltip background paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipBackgroundPaintProperty =
         AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipBackgroundPaint), null, inherits: true);
+            nameof(TooltipBackgroundPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipTextPaintProperty =
         AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipTextPaint), null, inherits: true);
+            nameof(TooltipTextPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> TooltipTextSizeProperty =
         AvaloniaProperty.Register<PieChart, double?>(
-            nameof(TooltipTextSize), null, inherits: true);
+            nameof(TooltipTextSize), LiveCharts.DefaultSettings.TooltipTextSize, inherits: true);
 
     /// <summary>
     /// The legend position property
     /// </summary>
     public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
         AvaloniaProperty.Register<PieChart, LegendPosition>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.LegendPosition, inherits: true);
 
     /// <summary>
     /// The legend background paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendBackgroundPaintProperty =
         AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendBackgroundPaint), null, inherits: true);
+            nameof(LegendBackgroundPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The legend text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendTextPaintProperty =
         AvaloniaProperty.Register<PieChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendTextPaint), null, inherits: true);
+            nameof(LegendTextPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint, inherits: true);
 
     /// <summary>
     /// The legend text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
         AvaloniaProperty.Register<PieChart, double?>(
-            nameof(LegendTextSize), null, inherits: true);
+            nameof(LegendTextSize), LiveCharts.DefaultSettings.LegendTextSize, inherits: true);
 
     /// <summary>
     /// The data pointer down command property
@@ -464,7 +442,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.

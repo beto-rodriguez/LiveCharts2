@@ -42,7 +42,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     private bool _fitToBounds = false;
     private double _totalAngle = 360;
     private double _innerRadius;
-    private double _initialRotation = LiveCharts.CurrentSettings.PolarInitialRotation;
+    private double _initialRotation = LiveCharts.DefaultSettings.PolarInitialRotation;
     private CollectionDeepObserver<ISeries> _seriesObserver;
     private CollectionDeepObserver<IPolarAxis> _angleObserver;
     private CollectionDeepObserver<IPolarAxis> _radiusObserver;
@@ -69,11 +69,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 
         AngleAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         RadiusAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         Series = new ObservableCollection<ISeries>();
 
@@ -239,13 +239,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
         OnPropertyChanged();
     }
 

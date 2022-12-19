@@ -25,7 +25,7 @@ namespace LiveChartsCore.Kernel.Drawing;
 /// <summary>
 /// Defines the bezier data class.
 /// </summary>
-public class BezierData
+public struct BezierData
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BezierData"/> class.
@@ -34,6 +34,7 @@ public class BezierData
     public BezierData(ChartPoint chartPoint)
     {
         TargetPoint = chartPoint;
+        X0 = Y0 = X1 = Y1 = X2 = Y2 = 0;
     }
 
     /// <summary>

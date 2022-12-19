@@ -120,6 +120,6 @@ public class WeightedPoint : IChartEntity, INotifyPropertyChanged
         Coordinate = _x is null || _y is null
             ? Coordinate.Empty
             : new(_x ?? 0, _y ?? 0, _weight ?? 0);
-        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

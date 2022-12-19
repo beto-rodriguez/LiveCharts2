@@ -188,9 +188,10 @@ public class Scaler
     {
         unchecked
         {
-            return _orientation == AxisOrientation.X
-                ? (float)(_minPx + (value - MinVal) * _m - (_minPx + (0 - MinVal) * _m))
-                : (float)(_minPx + (0 - MinVal) * _m - (_minPx + (value - MinVal) * _m));
+            return Math.Abs(
+                _orientation == AxisOrientation.X
+                    ? (float)(_minPx + (value - MinVal) * _m - (_minPx + (0 - MinVal) * _m))
+                    : (float)(_minPx + (0 - MinVal) * _m - (_minPx + (value - MinVal) * _m)));
         }
     }
 

@@ -49,12 +49,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     {
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         Core = new CartesianChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas, new RectangleGeometry());
         Core.Measuring += OnCoreMeasuring;
@@ -76,6 +70,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
         Sections = view.Sections;
         DrawMarginFrame = view.DrawMarginFrame;
         LegendPosition = view.LegendPosition;
+        Title = view.Title;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />

@@ -86,12 +86,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeCore();
 
         AttachedToVisualTree += CartesianChart_AttachedToVisualTree;
@@ -106,11 +100,11 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         XAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         YAxes = new List<ICartesianAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
@@ -188,91 +182,95 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly AvaloniaProperty<ZoomAndPanMode> ZoomModeProperty =
         AvaloniaProperty.Register<CartesianChart, ZoomAndPanMode>(
-            nameof(ZoomMode), LiveCharts.CurrentSettings.DefaultZoomMode, inherits: true);
+            nameof(ZoomMode), LiveCharts.DefaultSettings.ZoomMode, inherits: true);
 
     /// <summary>
     /// The zooming speed property
     /// </summary>
     public static readonly AvaloniaProperty<double> ZoomingSpeedProperty =
         AvaloniaProperty.Register<CartesianChart, double>(
-            nameof(ZoomingSpeed), LiveCharts.CurrentSettings.DefaultZoomSpeed, inherits: true);
+            nameof(ZoomingSpeed), LiveCharts.DefaultSettings.ZoomSpeed, inherits: true);
 
     /// <summary>
     /// The animations speed property
     /// </summary>
     public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
         AvaloniaProperty.Register<CartesianChart, TimeSpan>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.AnimationsSpeed, inherits: true);
 
     /// <summary>
     /// The easing function property
     /// </summary>
     public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
         AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.EasingFunction, inherits: true);
 
     /// <summary>
     /// The tool tip position property
     /// </summary>
     public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
         AvaloniaProperty.Register<CartesianChart, TooltipPosition>(
-            nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
+            nameof(TooltipPosition), LiveCharts.DefaultSettings.TooltipPosition, inherits: true);
 
     /// <summary>
     /// The tool tip finding strategy property
     /// </summary>
     public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
         AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.TooltipFindingStrategy, inherits: true);
 
     /// <summary>
     /// The tooltip background paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipBackgroundPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipBackgroundPaint), null, inherits: true);
+            nameof(TooltipBackgroundPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipTextPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipTextPaint), null, inherits: true);
+            nameof(TooltipTextPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> TooltipTextSizeProperty =
         AvaloniaProperty.Register<CartesianChart, double?>(
-            nameof(TooltipTextSize), null, inherits: true);
+            nameof(TooltipTextSize), LiveCharts.DefaultSettings.TooltipTextSize, inherits: true);
 
     /// <summary>
     /// The legend position property
     /// </summary>
     public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
         AvaloniaProperty.Register<CartesianChart, LegendPosition>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.LegendPosition, inherits: true);
 
     /// <summary>
     /// The legend background paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendBackgroundPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendBackgroundPaint), null, inherits: true);
+            nameof(LegendBackgroundPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The legend text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendTextPaintProperty =
         AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendTextPaint), null, inherits: true);
+            nameof(LegendTextPaint),
+            (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint, inherits: true);
 
     /// <summary>
     /// The legend text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
         AvaloniaProperty.Register<CartesianChart, double?>(
-            nameof(LegendTextSize), null, inherits: true);
+            nameof(LegendTextSize), LiveCharts.DefaultSettings.LegendTextSize, inherits: true);
 
     /// <summary>
     /// The data pointer down command property
@@ -510,7 +508,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
@@ -696,16 +694,12 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)

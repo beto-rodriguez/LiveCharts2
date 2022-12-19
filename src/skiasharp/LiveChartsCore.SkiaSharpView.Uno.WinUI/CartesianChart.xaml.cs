@@ -72,12 +72,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     {
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeComponent();
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -93,11 +87,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
         {
-            LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
         });
         SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
         {
-            LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
         });
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
@@ -220,7 +214,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty ZoomModeProperty =
         DependencyProperty.Register(
             nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomMode));
+            new PropertyMetadata(LiveCharts.DefaultSettings.ZoomMode));
 
     /// <summary>
     /// The zooming speed property
@@ -228,7 +222,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty ZoomingSpeedProperty =
         DependencyProperty.Register(
             nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
+            new PropertyMetadata(LiveCharts.DefaultSettings.ZoomSpeed));
 
     /// <summary>
     /// The tool tip finding strategy property
@@ -236,7 +230,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty TooltipFindingStrategyProperty =
         DependencyProperty.Register(
             nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipFindingStrategy, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The draw margin property
@@ -251,7 +245,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty AnimationsSpeedProperty =
         DependencyProperty.Register(
             nameof(AnimationsSpeed), typeof(TimeSpan), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.AnimationsSpeed, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The easing function property
@@ -259,7 +253,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty EasingFunctionProperty =
         DependencyProperty.Register(
             nameof(EasingFunction), typeof(Func<float, float>), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultEasingFunction, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.EasingFunction, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend position property
@@ -267,7 +261,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty LegendPositionProperty =
         DependencyProperty.Register(
             nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendPosition, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend background paint property
@@ -275,7 +269,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty LegendBackgroundPaintProperty =
         DependencyProperty.Register(
             nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text paint property
@@ -283,7 +277,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty LegendTextPaintProperty =
         DependencyProperty.Register(
             nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The legend text size property
@@ -291,7 +285,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty LegendTextSizeProperty =
         DependencyProperty.Register(
             nameof(LegendTextSize), typeof(double?), typeof(CartesianChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tool tip position property
@@ -299,7 +293,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty TooltipPositionProperty =
        DependencyProperty.Register(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart),
-           new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition, OnDependencyPropertyChanged));
+           new PropertyMetadata(LiveCharts.DefaultSettings.TooltipPosition, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip background paint property
@@ -307,7 +301,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty TooltipBackgroundPaintProperty =
         DependencyProperty.Register(
             nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip text paint property
@@ -315,7 +309,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty TooltipTextPaintProperty =
         DependencyProperty.Register(
             nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(CartesianChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The tooltip text size property
@@ -323,7 +317,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public static readonly DependencyProperty TooltipTextSizeProperty =
         DependencyProperty.Register(
             nameof(TooltipTextSize), typeof(double?), typeof(CartesianChart),
-            new PropertyMetadata(null, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The data pointer down command property
@@ -596,7 +590,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
@@ -745,14 +739,12 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)

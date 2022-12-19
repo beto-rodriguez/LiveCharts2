@@ -26,7 +26,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -46,7 +45,7 @@ public static class LiveChartsSkiaSharp
     /// <value>
     /// The default paint.
     /// </value>
-    public static DefaultPaint<SkiaSharpDrawingContext> DefaultPaint { get; } = new();
+    public static DefaultPaint DefaultPaint { get; } = new();
 
     /// <summary>
     /// Gets the default platform builder.
@@ -67,7 +66,7 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
-        // ToDo: default paint needs to be simplified???
+        // this is obsolete, currently only used in the GeoMap control and will be removed a future version.
         LiveCharts.DefaultPaint = DefaultPaint;
 
         return settings.HasProvider(new SkiaSharpProvider());

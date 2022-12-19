@@ -54,16 +54,9 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     public PieChart()
     {
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) =>
-            {
-                if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-                core.Update();
-            },
-            (object? sender, PropertyChangedEventArgs e) =>
-            {
-                if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-                core.Update();
-            }, true);
+            (object? sender, NotifyCollectionChangedEventArgs e) => core?.Update(),
+            (object? sender, PropertyChangedEventArgs e) => core?.Update(),
+            true);
 
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());

@@ -389,7 +389,7 @@ public class DataFactory<TModel, TDrawingContext>
         if (series.Values is null) yield break;
 
         var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-        var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
+        var mapper = series.Mapping ?? LiveCharts.DefaultSettings.GetMap<TModel>();
         var index = 0;
 
         _ = _chartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
@@ -438,7 +438,7 @@ public class DataFactory<TModel, TDrawingContext>
         if (series.Values is null) yield break;
 
         var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-        var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
+        var mapper = series.Mapping ?? LiveCharts.DefaultSettings.GetMap<TModel>();
         var index = 0;
 
         _ = _chartRefEntityMap.TryGetValue(canvas.Sync, out var d);

@@ -22,10 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
@@ -91,11 +89,17 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _showSeparatorLines = true;
     private bool _isVisible = true;
     private bool _isInverted;
+    private bool _separatorsAtCenter = true;
+    private bool _ticksAtCenter = true;
     private bool _forceStepToMin;
     private bool _crosshairSnapEnabled;
     private readonly float _tickLength = 6f;
     private readonly int _subSections = 3;
     private Align? _labelsAlignment;
+
+#if DEBUG
+    private int _stepCount;
+#endif
 
     #endregion
 
@@ -119,58 +123,64 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public string? Name { get; set; } = null;
 
     /// <inheritdoc cref="IPlane.NameTextSize"/>
-    public double NameTextSize { get => _nameTextSize; set { _nameTextSize = value; OnPropertyChanged(); } }
+    public double NameTextSize { get => _nameTextSize; set => SetProperty(ref _nameTextSize, value); }
 
     /// <inheritdoc cref="IPlane.NamePadding"/>
-    public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
+    public Padding NamePadding { get => _namePadding; set => SetProperty(ref _namePadding, value); }
 
     /// <inheritdoc cref="ICartesianAxis.LabelsAlignment"/>
-    public Align? LabelsAlignment { get => _labelsAlignment; set { _labelsAlignment = value; OnPropertyChanged(); } }
+    public Align? LabelsAlignment { get => _labelsAlignment; set => SetProperty(ref _labelsAlignment, value); }
 
     /// <inheritdoc cref="ICartesianAxis.Orientation"/>
     public AxisOrientation Orientation => _orientation;
 
     /// <inheritdoc cref="ICartesianAxis.Padding"/>
-    public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
+    public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
 
     /// <inheritdoc cref="IPlane.Labeler"/>
-    public Func<double, string> Labeler { get => _labeler; set { _labeler = value; OnPropertyChanged(); } }
+    public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
     /// <inheritdoc cref="IPlane.MinStep"/>
-    public double MinStep { get => _minStep; set { _minStep = value; OnPropertyChanged(); } }
+    public double MinStep { get => _minStep; set => SetProperty(ref _minStep, value); }
 
     /// <inheritdoc cref="IPlane.ForceStepToMin"/>
-    public bool ForceStepToMin { get => _forceStepToMin; set { _forceStepToMin = value; OnPropertyChanged(); } }
+    public bool ForceStepToMin { get => _forceStepToMin; set => SetProperty(ref _forceStepToMin, value); }
 
     /// <inheritdoc cref="IPlane.MinLimit"/>
-    public double? MinLimit { get => _minLimit; set { _minLimit = value; OnPropertyChanged(); } }
+    public double? MinLimit { get => _minLimit; set => SetProperty(ref _minLimit, value); }
 
     /// <inheritdoc cref="IPlane.MaxLimit"/>
-    public double? MaxLimit { get => _maxLimit; set { _maxLimit = value; OnPropertyChanged(); } }
+    public double? MaxLimit { get => _maxLimit; set => SetProperty(ref _maxLimit, value); }
 
     /// <inheritdoc cref="IPlane.UnitWidth"/>
-    public double UnitWidth { get => _unitWidth; set { _unitWidth = value; OnPropertyChanged(); } }
+    public double UnitWidth { get => _unitWidth; set => SetProperty(ref _unitWidth, value); }
 
     /// <inheritdoc cref="ICartesianAxis.Position"/>
-    public AxisPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
+    public AxisPosition Position { get => _position; set => SetProperty(ref _position, value); }
 
     /// <inheritdoc cref="IPlane.LabelsRotation"/>
-    public double LabelsRotation { get => _labelsRotation; set { _labelsRotation = value; OnPropertyChanged(); } }
+    public double LabelsRotation { get => _labelsRotation; set => SetProperty(ref _labelsRotation, value); }
 
     /// <inheritdoc cref="IPlane.TextSize"/>
-    public double TextSize { get => _textSize; set { _textSize = value; OnPropertyChanged(); } }
+    public double TextSize { get => _textSize; set => SetProperty(ref _textSize, value); }
 
     /// <inheritdoc cref="IPlane.Labels"/>
     public IList<string>? Labels { get; set; }
 
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
-    public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
+    public bool ShowSeparatorLines { get => _showSeparatorLines; set => SetProperty(ref _showSeparatorLines, value); }
 
     /// <inheritdoc cref="IPlane.IsVisible"/>
-    public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
+    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
-    public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
+    public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
+
+    /// <inheritdoc cref="ICartesianAxis.SeparatorsAtCenter"/>
+    public bool SeparatorsAtCenter { get => _separatorsAtCenter; set => SetProperty(ref _separatorsAtCenter, value); }
+
+    /// <inheritdoc cref="ICartesianAxis.TicksAtCenter"/>
+    public bool TicksAtCenter { get => _ticksAtCenter; set => SetProperty(ref _ticksAtCenter, value); }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
     public IPaint<TDrawingContext>? NamePaint
@@ -201,7 +211,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
-    public bool DrawTicksPath { get => _drawTicksPath; set { _drawTicksPath = value; OnPropertyChanged(); } }
+    public bool DrawTicksPath { get => _drawTicksPath; set => SetProperty(ref _drawTicksPath, value); }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
     public IPaint<TDrawingContext>? TicksPaint
@@ -245,7 +255,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public Padding? CrosshairPadding { get; set; }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairSnapEnabled" />
-    public bool CrosshairSnapEnabled { get => _crosshairSnapEnabled; set { _crosshairSnapEnabled = value; OnPropertyChanged(); } }
+    public bool CrosshairSnapEnabled { get => _crosshairSnapEnabled; set => SetProperty(ref _crosshairSnapEnabled, value); }
 
     /// <summary>
     /// 
@@ -265,9 +275,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="IPlane.EasingFunction"/>
     public Func<float, float>? EasingFunction { get; set; }
 
-    /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
-    bool IStopNPC.IsNotifyingChanges { get; set; }
-
     /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
     public double? MinZoomDelta { get; set; }
 
@@ -276,15 +283,13 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.Initialized"/>
     public event Action<ICartesianAxis>? Initialized;
 
-    /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
-    /// <returns></returns>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
+#if DEBUG
+        _stepCount = 0;
+#endif
+
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
         var controlSize = cartesianChart.ControlSize;
@@ -313,7 +318,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var scale = this.GetNextScaler(cartesianChart);
         var actualScale = this.GetActualScaler(cartesianChart) ?? scale;
 
-        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize());
+        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
 
         var labeler = Labeler;
         if (Labels is not null)
@@ -467,7 +472,15 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (TicksPaint is not null && _ticksPath is not null && !_drawTicksPath)
             TicksPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, _ticksPath);
 
-        for (var i = start; i <= max; i += s)
+        float txco = 0f, tyco = 0f, sxco = 0f, syco = 0f;
+
+        var uw = scale.MeasureInPixels(_unitWidth);
+        if (!_ticksAtCenter && _orientation == AxisOrientation.X) txco = uw * 0.5f;
+        if (!_ticksAtCenter && _orientation == AxisOrientation.Y) tyco = uw * 0.5f;
+        if (!_separatorsAtCenter && _orientation == AxisOrientation.X) sxco = uw * 0.5f;
+        if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) sxco = uw * 0.5f;
+
+        for (var i = start - s; i <= max + s; i += s)
         {
             var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
             var labelContent = i < min || i > max ? string.Empty : TryGetLabelOrLogError(labeler, i - 1d + 1d);
@@ -507,27 +520,35 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Separator is null)
             {
                 InitializeSeparator(visualSeparator, cartesianChart);
-                UpdateSeparator(visualSeparator.Separator!, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                UpdateSeparator(
+                    visualSeparator.Separator!, xc + sxco, yc + syco, lxi, lxj, lyi, lyj,
+                    UpdateMode.UpdateAndComplete);
             }
-            if (SubseparatorsPaint is not null && ShowSeparatorLines && (visualSeparator.Subseparators is null || visualSeparator.Subseparators.Length == 0))
+            if (SubseparatorsPaint is not null && ShowSeparatorLines &&
+                (visualSeparator.Subseparators is null || visualSeparator.Subseparators.Length == 0))
             {
                 InitializeSubseparators(visualSeparator, cartesianChart);
-                UpdateSubseparators(visualSeparator.Subseparators!, actualScale, s, xc, yc, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
+                UpdateSubseparators(
+                    visualSeparator.Subseparators!, actualScale, s, xc + sxco, yc + syco, lxi, lxj, lyi, lyj,
+                    UpdateMode.UpdateAndComplete);
             }
             if (TicksPaint is not null && visualSeparator.Tick is null)
             {
                 InitializeTick(visualSeparator, cartesianChart);
-                UpdateTick(visualSeparator.Tick!, _tickLength, xc, yc, UpdateMode.UpdateAndComplete);
+                UpdateTick(visualSeparator.Tick!, _tickLength, xc + txco, yc + tyco, UpdateMode.UpdateAndComplete);
             }
-            if (SubticksPaint is not null && _subSections > 0 && (visualSeparator.Subticks is null || visualSeparator.Subticks.Length == 0))
+            if (SubticksPaint is not null && _subSections > 0 &&
+                (visualSeparator.Subticks is null || visualSeparator.Subticks.Length == 0))
             {
                 InitializeSubticks(visualSeparator, cartesianChart);
-                UpdateSubticks(visualSeparator.Subticks!, actualScale, s, xc, yc, UpdateMode.UpdateAndComplete);
+                UpdateSubticks(visualSeparator.Subticks!, actualScale, s, xc + txco, yc + tyco, UpdateMode.UpdateAndComplete);
             }
             if (LabelsPaint is not null && visualSeparator.Label is null)
             {
                 IntializeLabel(visualSeparator, cartesianChart, size, hasRotation, r);
-                UpdateLabel(visualSeparator.Label!, xc, yc, TryGetLabelOrLogError(labeler, i - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndComplete);
+                UpdateLabel(
+                    visualSeparator.Label!, xc, yc, TryGetLabelOrLogError(labeler, i - 1d + 1d), hasRotation, r,
+                    UpdateMode.UpdateAndComplete);
             }
 
             #endregion
@@ -539,25 +560,39 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 else
                     SeparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, visualSeparator.Separator);
             }
+
             if (SubseparatorsPaint is not null && visualSeparator.Subseparators is not null)
                 if (ShowSeparatorLines)
-                    foreach (var subtick in visualSeparator.Subseparators) SubseparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
+                    foreach (var subtick in visualSeparator.Subseparators)
+                        SubseparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
                 else
-                    foreach (var subtick in visualSeparator.Subseparators) SubseparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, subtick);
+                    foreach (var subtick in visualSeparator.Subseparators)
+                        SubseparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, subtick);
+
             if (LabelsPaint is not null && visualSeparator.Label is not null)
                 LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Label);
             if (TicksPaint is not null && visualSeparator.Tick is not null)
                 TicksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Tick);
             if (SubticksPaint is not null && visualSeparator.Subticks is not null)
-                foreach (var subtick in visualSeparator.Subticks) SubticksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
+                foreach (var subtick in visualSeparator.Subticks)
+                    SubticksPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
 
-            if (visualSeparator.Separator is not null) UpdateSeparator(visualSeparator.Separator, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
-            if (visualSeparator.Subseparators is not null) UpdateSubseparators(visualSeparator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
-            if (visualSeparator.Tick is not null) UpdateTick(visualSeparator.Tick, _tickLength, x, y, UpdateMode.Update);
-            if (visualSeparator.Subticks is not null) UpdateSubticks(visualSeparator.Subticks, scale, s, x, y, UpdateMode.Update);
-            if (visualSeparator.Label is not null) UpdateLabel(visualSeparator.Label, x, y, labelContent, hasRotation, r, UpdateMode.Update);
+            if (visualSeparator.Separator is not null)
+                UpdateSeparator(visualSeparator.Separator, x + sxco, y + syco, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Subseparators is not null)
+                UpdateSubseparators(visualSeparator.Subseparators, scale, s, x + sxco, y + tyco, lxi, lxj, lyi, lyj, UpdateMode.Update);
+            if (visualSeparator.Tick is not null)
+                UpdateTick(visualSeparator.Tick, _tickLength, x + txco, y + tyco, UpdateMode.Update);
+            if (visualSeparator.Subticks is not null)
+                UpdateSubticks(visualSeparator.Subticks, scale, s, x + txco, y + tyco, UpdateMode.Update);
+            if (visualSeparator.Label is not null)
+                UpdateLabel(visualSeparator.Label, x, y + tyco, labelContent, hasRotation, r, UpdateMode.Update);
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         foreach (var separatorValueKey in separators.ToArray())
@@ -577,11 +612,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 y = scale.ToPixels(separator.Value);
             }
 
-            if (separator.Separator is not null) UpdateSeparator(separator.Separator, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
-            if (separator.Subseparators is not null) UpdateSubseparators(separator.Subseparators, scale, s, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
-            if (separator.Tick is not null) UpdateTick(separator.Tick, _tickLength, x, y, UpdateMode.UpdateAndRemove);
-            if (separator.Subticks is not null) UpdateSubticks(separator.Subticks, scale, s, x, y, UpdateMode.UpdateAndRemove);
-            if (separator.Label is not null) UpdateLabel(separator.Label, x, y, TryGetLabelOrLogError(labeler, separator.Value - 1d + 1d), hasRotation, r, UpdateMode.UpdateAndRemove);
+            if (separator.Separator is not null)
+                UpdateSeparator(separator.Separator, x + sxco, y + syco, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Subseparators is not null)
+                UpdateSubseparators(
+                    separator.Subseparators, scale, s, x + sxco, y + syco, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndRemove);
+            if (separator.Tick is not null)
+                UpdateTick(separator.Tick, _tickLength, x + txco, y + tyco, UpdateMode.UpdateAndRemove);
+            if (separator.Subticks is not null)
+                UpdateSubticks(separator.Subticks, scale, s, x + txco, y + tyco, UpdateMode.UpdateAndRemove);
+            if (separator.Label is not null)
+                UpdateLabel(
+                    separator.Label, x, y + tyco, TryGetLabelOrLogError(labeler, separator.Value - 1d + 1d), hasRotation, r,
+                    UpdateMode.UpdateAndRemove);
 
             _ = separators.Remove(separatorValueKey.Key);
         }
@@ -771,15 +814,13 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
-
         var s = axisTick.Value;
-
-        if (s == 0) s = 1;
-        if (s < _minStep) s = _minStep;
-        if (_forceStepToMin) s = _minStep;
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+
+        if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var start = Math.Truncate(min / s) * s;
 
@@ -799,6 +840,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var m = textGeometry.Measure(LabelsPaint);
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         return new LvcSize(w, h);
@@ -841,17 +886,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        if (!((ICartesianAxis)this).IsNotifyingChanges) return;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    /// <summary>
     /// Called when [paint changed].
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
@@ -871,7 +905,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
     }
 
-    private LvcSize GetPossibleMaxLabelSize()
+    private LvcSize GetPossibleMaxLabelSize(Chart<TDrawingContext> chart)
     {
         if (LabelsPaint is null) return new LvcSize();
 
@@ -883,11 +917,20 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             _minStep = 1;
         }
 
+        var axisTick = this.GetTick(chart.DrawMarginSize);
+        var s = axisTick.Value;
+
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
-        var s = (max - min) / 20d;
+
+        if (s == 0) s = 1;
+        if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
 
         var maxLabelSize = new LvcSize();
+
+        if (max - min == 0) return maxLabelSize;
+
         for (var i = min; i <= max; i += s)
         {
             var textGeometry = new TTextGeometry
@@ -903,6 +946,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             maxLabelSize = new LvcSize(
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
                 maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
+
+#if DEBUG
+            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
+#endif
         }
 
         return maxLabelSize;

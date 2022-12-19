@@ -84,12 +84,6 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-        initializer.ApplyStyleToChart(this);
-
         InitializeCore();
 
         AttachedToVisualTree += OnAttachedToVisualTree;
@@ -102,11 +96,11 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
         AngleAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         RadiusAxes = new List<IPolarAxis>()
             {
-                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
@@ -169,7 +163,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<double> InitialRotationProperty =
         AvaloniaProperty.Register<PolarChart, double>(
-            nameof(InitialRotation), LiveCharts.CurrentSettings.PolarInitialRotation, inherits: true);
+            nameof(InitialRotation), LiveCharts.DefaultSettings.PolarInitialRotation, inherits: true);
 
     /// <summary>
     /// The x axes property.
@@ -188,77 +182,77 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
         AvaloniaProperty.Register<PolarChart, TimeSpan>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.AnimationsSpeed, inherits: true);
 
     /// <summary>
     /// The easing function property.
     /// </summary>
     public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
         AvaloniaProperty.Register<PolarChart, Func<float, float>>(
-            nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
+            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.EasingFunction, inherits: true);
 
     /// <summary>
     /// The tool tip position property.
     /// </summary>
     public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
         AvaloniaProperty.Register<PolarChart, TooltipPosition>(
-            nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
+            nameof(TooltipPosition), LiveCharts.DefaultSettings.TooltipPosition, inherits: true);
 
     /// <summary>
     /// The tool tip finding strategy property.
     /// </summary>
     public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
         AvaloniaProperty.Register<PolarChart, TooltipFindingStrategy>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.TooltipFindingStrategy, inherits: true);
 
     /// <summary>
     /// The tooltip background paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipBackgroundPaintProperty =
         AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipBackgroundPaint), null, inherits: true);
+            nameof(TooltipBackgroundPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipTextPaintProperty =
         AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipTextPaint), null, inherits: true);
+            nameof(TooltipTextPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> TooltipTextSizeProperty =
         AvaloniaProperty.Register<PolarChart, double?>(
-            nameof(TooltipTextSize), null, inherits: true);
+            nameof(TooltipTextSize), LiveCharts.DefaultSettings.TooltipTextSize, inherits: true);
 
     /// <summary>
     /// The legend position property.
     /// </summary>
     public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
         AvaloniaProperty.Register<PolarChart, LegendPosition>(
-            nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
+            nameof(LegendPosition), LiveCharts.DefaultSettings.LegendPosition, inherits: true);
 
     /// <summary>
     /// The legend background paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendBackgroundPaintProperty =
         AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendBackgroundPaint), null, inherits: true);
+            nameof(LegendBackgroundPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The legend text paint property
     /// </summary>
     public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendTextPaintProperty =
         AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendTextPaint), null, inherits: true);
+            nameof(LegendTextPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint, inherits: true);
 
     /// <summary>
     /// The legend text size property
     /// </summary>
     public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
         AvaloniaProperty.Register<PolarChart, double?>(
-            nameof(LegendTextSize), null, inherits: true);
+            nameof(LegendTextSize), LiveCharts.DefaultSettings.LegendTextSize, inherits: true);
 
     /// <summary>
     /// The data pointer down command property
@@ -485,7 +479,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.CurrentSettings.DefaultUpdateThrottlingTimeout;
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
@@ -650,16 +644,12 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-
-        _core.Update();
+        _core?.Update();
     }
 
     private void PolarChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)

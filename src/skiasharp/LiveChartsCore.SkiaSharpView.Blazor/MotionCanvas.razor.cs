@@ -56,7 +56,7 @@ public partial class MotionCanvas : IDisposable
     /// Gets or sets whether the web GL view should be used.
     /// </summary>
     [Parameter]
-    public bool UseGLView { get; set; } = false;
+    public bool UseGLView { get; set; } = true;
 
     /// <summary>
     /// Gets or sets the FPS.

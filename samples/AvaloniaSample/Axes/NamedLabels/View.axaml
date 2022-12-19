@@ -15,9 +15,9 @@
         XAxes="{Binding XAxes}"
         YAxes="{Binding YAxes}"
         TooltipPosition="Left"
-        TooltipTextSize="25"
         TooltipTextPaint="{Binding TooltipTextPaint}"
-        TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}">
+        TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}"
+        TooltipTextSize="16">
     </lvc:CartesianChart>
   </Grid> 
 </UserControl>

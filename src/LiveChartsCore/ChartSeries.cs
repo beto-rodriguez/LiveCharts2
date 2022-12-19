@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -62,13 +61,13 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsSize"/>
-    public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }
+    public double DataLabelsSize { get => _dataLabelsSize; set => SetProperty(ref _dataLabelsSize, value); }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsRotation"/>
-    public double DataLabelsRotation { get => _dataLabelsRotation; set { _dataLabelsRotation = value; OnPropertyChanged(); } }
+    public double DataLabelsRotation { get => _dataLabelsRotation; set => SetProperty(ref _dataLabelsRotation, value); }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
-    public Padding DataLabelsPadding { get => _dataLabelsPadding; set { _dataLabelsPadding = value; OnPropertyChanged(); } }
+    public Padding DataLabelsPadding { get => _dataLabelsPadding; set => SetProperty(ref _dataLabelsPadding, value); }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.IsFirstDraw"/>
     public bool IsFirstDraw { get; protected set; } = true;
@@ -79,20 +78,5 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         OnDataPointerDown(chart, points, pointer);
-    }
-
-    /// <summary>
-    /// Initializes the series.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="Exception">Default colors are not valid</exception>
-    protected void InitializeSeries()
-    {
-        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-        var initializer = stylesBuilder.GetVisualsInitializer();
-        if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            throw new Exception("Default colors are not valid");
-
-        initializer.ApplyStyleToSeries(this);
     }
 }

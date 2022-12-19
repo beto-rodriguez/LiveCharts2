@@ -79,6 +79,16 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     double? MinZoomDelta { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the ticks are centered to the <see cref="IPlane.UnitWidth"/>, default is true.
+    /// </summary>
+    bool TicksAtCenter { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the separators are centered to the <see cref="IPlane.UnitWidth"/>, default is true.
+    /// </summary>
+    bool SeparatorsAtCenter { get; set; }
+
+    /// <summary>
     /// Gets or sets the reserved area for the labels.
     /// </summary>
     LvcRectangle LabelsDesiredSize { get; set; }

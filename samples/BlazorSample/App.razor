@@ -1,12 +1,42 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using LiveChartsCore.SkiaSharpView.Blazor
+@using LiveChartsCore.SkiaSharpView;
+@using System.Collections.ObjectModel;
+@using LiveChartsCore;
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
+        <LayoutView Layout="@typeof(MainLayout)"></LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        RenderSidebar(NavigationManager.ToBaseRelativePath(NavigationManager.Uri));
+        NavigationManager.LocationChanged += (object? sender, LocationChangedEventArgs e) =>
+        {
+            RenderSidebar(NavigationManager.ToBaseRelativePath(e.Location));
+        };
+    }
+
+    private void RenderSidebar(string uri)
+    {
+         if (uri.ToLower().Contains("hello") || uri.Length == 0)
+        {
+            JS.InvokeVoidAsync("hideSideBar");
+        }
+        else
+        {
+            JS.InvokeVoidAsync("showSideBar");
+        }
+    }
+}
