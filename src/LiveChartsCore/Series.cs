@@ -404,6 +404,16 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         everFetched = new HashSet<ChartPoint>();
     }
 
+    /// <summary>
+    /// Converts a chart to a strong-typed version of it.
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    public ChartPoint<TModel, TVisual, TLabel> ConvertToTypedChartPoint(ChartPoint point)
+    {
+        return new ChartPoint<TModel, TVisual, TLabel>(point);
+    }
+
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
