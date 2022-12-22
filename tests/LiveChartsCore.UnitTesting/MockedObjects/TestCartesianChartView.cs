@@ -31,10 +31,12 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects;
 
+[Obsolete($"We now support in-memory charts, please use {nameof(SKCartesianChart)} instead.")]
 public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContext>
 {
     public TestCartesianChartView()

@@ -29,14 +29,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LiveChartsCore.UnitTesting;
 
 [TestClass]
-public class SeriesTest
+public class ColumnSeriesTest
 {
     [TestMethod]
-    public void ColumnSeriesScale()
+    public void ShouldScaleProperly()
     {
         var sutSeries = new ColumnSeries<double>
         {
-            Values = new double[] { 1, 2, 4, 8 }
+            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 }
         };
 
         var chart = new SKCartesianChart
@@ -44,10 +44,12 @@ public class SeriesTest
             Width = 1000,
             Height = 1000,
             Series = new[] { sutSeries },
-            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 10 } }
+            XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
+            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
         };
 
         _ = chart.GetImage();
+        // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
@@ -57,19 +59,39 @@ public class SeriesTest
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
+        // ensure the unit has valid dimensions
+        Assert.IsTrue(typedUnit.Visual.Width > 1 && typedUnit.Visual.Height > 1);
+
+        var previous = typedUnit;
+        float? previousX = null;
+
         foreach (var sutPoint in toCompareGuys)
         {
-            var normalizedH = sutPoint.Visual.Height / (float)sutPoint.Model;
+            // test height
             Assert.IsTrue(
                 // the idea is, the second bar should be 2 times bigger than the first one
                 // and the third bar should be 4 times bigger than the first one and so on
-                Math.Abs(typedUnit.Visual.Height - normalizedH) < 0.001
-                &&
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height / (float)sutPoint.Model) < 0.001);
+
+            // test width
+            Assert.IsTrue(
                 // and also the width should be the same.
-                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001
-                &&
-                typedUnit.Visual.Width > 1
-                );
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
+
+            // test x
+            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
+            Assert.IsTrue(
+                previousX is null
+                ||
+                Math.Abs(previousX.Value - currentDeltaX) < 0.001);
+
+            // test y
+            var p = 1f - sutPoint.PrimaryValue / 512f;
+            Assert.IsTrue(
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+
+            previousX = previous.Visual.X - sutPoint.Visual.X;
+            previous = sutPoint;
         }
     }
 }
