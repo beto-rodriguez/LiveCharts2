@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
