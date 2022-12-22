@@ -78,7 +78,7 @@ public class PieSeriesTest
             Assert.IsTrue(Math.Abs(sutPoint.Visual.Height - (chart.Height - series.HoverPushout * 2)) < 0.001);
 
             // test the center
-            Assert.IsTrue(Math.Abs(sutPoint.Visual.CenterX - chart.Width * 0.5f) < 0.001);            
+            Assert.IsTrue(Math.Abs(sutPoint.Visual.CenterX - chart.Width * 0.5f) < 0.001);
             Assert.IsTrue(Math.Abs(sutPoint.Visual.CenterY - chart.Width * 0.5f) < 0.001);
 
             startAngle += sutPoint.Visual.SweepAngle;
