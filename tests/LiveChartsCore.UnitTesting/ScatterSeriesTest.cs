@@ -67,8 +67,8 @@ public class ScatterSeriesTest
             YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
         };
 
-        //_ = chart.GetImage();
-        chart.SaveImage("test.png"); // use this method to see the actual tested image
+        _ = chart.GetImage();
+        // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
