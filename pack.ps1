@@ -1,5 +1,5 @@
-[string]$configuration = "Release"
-[string]$nupkgOutputPath = "./nupkg"
+param([string]$configuration = "Release", [string]$nupkgOutputPath = "./nupkg")
+
 [Project[]]$projects = @(
     [Project]::new("./src/LiveChartsCore/LiveChartsCore.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp/LiveChartsCore.SkiaSharpView.csproj")

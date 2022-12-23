@@ -27,4 +27,4 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Run unit tests
-      run: ./pack.ps1
+      run: ./pack.ps1 -configuration "Debug"
