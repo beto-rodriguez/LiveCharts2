@@ -128,13 +128,13 @@ public static class LiveChartsSkiaSharp
     /// <param name="source">The data source.</param>
     /// <param name="buider">An optional builder.</param>
     /// <returns></returns>
-    public static ObservableCollection<ISeries> AsLiveChartsPieSeries<T>(
+    public static ObservableCollection<PieSeries<T>> AsLiveChartsPieSeries<T>(
         this IEnumerable<T> source,
         Action<T, PieSeries<T>>? buider = null)
     {
         buider ??= (instance, series) => { };
 
-        return new ObservableCollection<ISeries>(
+        return new ObservableCollection<PieSeries<T>>(
             source.Select(instance =>
             {
                 var series = new PieSeries<T> { Values = new ObservableCollection<T> { instance } };
