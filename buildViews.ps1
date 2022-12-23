@@ -112,12 +112,6 @@ function Write-ColorOutput($foregroundColor)
     $host.UI.RawUI.ForegroundColor = $fc
 }
 
-if (Test-Path $nupkgOutputPath) {
-    Get-ChildItem $nupkgOutputPath -Include *.* -File -Recurse | ForEach-Object { $_.Delete() }
-} else {
-    New-Item $nupkgOutputPath -ItemType "directory"
-}
-
 foreach ($p in $projects) {
     Add-Build $p
 }
