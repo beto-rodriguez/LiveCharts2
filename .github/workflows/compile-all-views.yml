@@ -31,4 +31,4 @@ jobs:
         dotnet workload restore
 
     - name: Compile Debug
-      run: ./buildViews.ps1 -configuration "Debug"
+      run: ./build/buildViews.ps1 -configuration "Debug"
