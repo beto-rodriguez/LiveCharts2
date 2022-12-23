@@ -22,13 +22,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
-
-    - name: Install workloads
-      run: |
-        dotnet workload restore
-
+      
     - name: Compile Debug
       run: ./build/buildViews.ps1 -configuration "Debug"
