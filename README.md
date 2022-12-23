@@ -1,7 +1,8 @@
 # LiveCharts2
 
 [![CodeFactor](https://www.codefactor.io/repository/github/beto-rodriguez/livecharts2/badge)](https://www.codefactor.io/repository/github/beto-rodriguez/livecharts2)
-![Build and tests](https://github.com/beto-rodriguez/LiveCharts2/actions/workflows/build-and-test.yml/badge.svg)
+![Unit tests](https://github.com/beto-rodriguez/LiveCharts2/actions/workflows/run-unit-tests.yml/badge.svg)
+![SkiaSharp Views](https://github.com/beto-rodriguez/LiveCharts2/actions/workflows/compile-all-views.yml/badge.svg)
 
 [Watch Blazor WASM demo](https://blazor-livecharts.controli.app/) (only designed for desktop devices for now)
 
