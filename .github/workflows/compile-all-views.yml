@@ -28,7 +28,7 @@ jobs:
 
     - name: Install workloads
       run: |
-        dotnet workload install macos
+        dotnet workload restore
 
     - name: Compile Debug
       run: ./buildViews.ps1 -configuration "Debug"
