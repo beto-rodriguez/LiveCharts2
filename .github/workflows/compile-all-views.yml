@@ -1,4 +1,4 @@
-name: "Buid all views"
+name: "Compile all views"
 
 on:
   push:
@@ -26,5 +26,5 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
-    - name: Run unit tests
-      run: ./pack.ps1 -configuration "Debug"
+    - name: Compile Debug
+      run: ./buildViews.ps1 -configuration "Debug"
