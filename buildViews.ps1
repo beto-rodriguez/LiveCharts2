@@ -78,10 +78,7 @@ function Add-Build {
     }
 
     if ($project.useMsbuild) {
-        # skip the build, it will be built in the pack method.
-        if ($project.packingMethod -ne "msbuild") {            
-            & $msbuild $project.src /p:configuration=$configuration /restore
-        }
+        & $msbuild $project.src /p:configuration=$configuration /restore
     }
     else {
         dotnet build $project.src -c $configuration
