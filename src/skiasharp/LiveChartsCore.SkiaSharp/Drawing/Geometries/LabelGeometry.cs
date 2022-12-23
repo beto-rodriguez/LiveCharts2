@@ -193,6 +193,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
     private string[] GetLines(string multiLineText)
     {
-        return multiLineText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+        return string.IsNullOrEmpty(multiLineText)
+            ? Array.Empty<string>()
+            : multiLineText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
     }
 }
