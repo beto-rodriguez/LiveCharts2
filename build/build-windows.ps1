@@ -16,6 +16,7 @@ $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.
 #     /restore
 
 dotnet workload install macos
+dotnet workload install ios
 
 & $msbuild `
     ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj `
