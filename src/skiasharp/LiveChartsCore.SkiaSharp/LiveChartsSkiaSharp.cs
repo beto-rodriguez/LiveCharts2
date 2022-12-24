@@ -48,6 +48,11 @@ public static class LiveChartsSkiaSharp
     public static DefaultPaint DefaultPaint { get; } = new();
 
     /// <summary>
+    /// Gets or sets an SKTypeface instance to use globally on any paint that does not specify any.
+    /// </summary>
+    public static SKTypeface? DefaultSKTypeface { get; set; }
+
+    /// <summary>
     /// Gets the default platform builder.
     /// </summary>
     /// <value>
@@ -70,6 +75,13 @@ public static class LiveChartsSkiaSharp
         LiveCharts.DefaultPaint = DefaultPaint;
 
         return settings.HasProvider(new SkiaSharpProvider());
+    }
+
+    public static LiveChartsSettings WithDefaultSKTypeface(this LiveChartsSettings settings, SKTypeface typeface)
+    {
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(DefaultPlatformBuilder);
+        DefaultSKTypeface = typeface;
+        return settings;
     }
 
     /// <summary>
