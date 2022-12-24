@@ -10,11 +10,12 @@ dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/LiveChartsCore.Sk
 
 $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
 
-& $msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj /p:configuration=$configuration /restore
+& $msbuild `
+    ./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj `
+    /p:configuration=$configuration `
+    /restore
 
-Set-Location ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI
-& dotnet tool install -g uno.check 
-& uno-check --ci
-
-Set-Location ./../../../
-& $msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj /p:configuration=$configuration /restore
+# & $msbuild `
+#     ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj `
+#     /p:configuration=$configuration `
+#     /restore

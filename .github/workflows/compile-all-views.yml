@@ -22,6 +22,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
+
     - name: Compile Debug
-      run: ./build/buildViews.ps1 -configuration "Debug"
+      run: ./build/build-windows.ps1 -configuration "Debug"
