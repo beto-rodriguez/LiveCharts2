@@ -17,6 +17,8 @@ $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.
 
 dotnet workload install macos
 dotnet workload install ios
+dotnet workload install net6.0-maccatalyst
+dotnet workload install net6.0-android
 
 & $msbuild `
     ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj `
