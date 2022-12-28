@@ -272,10 +272,10 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
         if (SKTypeface is not null) return SKTypeface;
 
         // Obsolete method used in older versions of LiveCahrts...
-        if (_matchesChar is not null) SKFontManager.Default.MatchCharacter(_matchesChar.Value);
+        if (_matchesChar is not null) return SKFontManager.Default.MatchCharacter(_matchesChar.Value);
 
         // create one from the font family.
-        if (FontFamily is not null) SKTypeface.FromFamilyName(_fontFamily, SKFontStyle ?? new SKFontStyle());
+        if (FontFamily is not null) return SKTypeface.FromFamilyName(_fontFamily, SKFontStyle ?? new SKFontStyle());
 
         // other wise ose the globally defined typeface.
         return LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
