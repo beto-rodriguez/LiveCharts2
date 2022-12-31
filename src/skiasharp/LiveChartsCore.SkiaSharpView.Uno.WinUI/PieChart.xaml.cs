@@ -58,7 +58,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public PieChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -555,7 +555,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
         if (_core is null)
         {
-            _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;

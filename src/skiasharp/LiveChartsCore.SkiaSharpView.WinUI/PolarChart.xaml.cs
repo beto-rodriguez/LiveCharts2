@@ -61,7 +61,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// </summary>
     public PolarChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -637,14 +637,14 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         var canvas = (MotionCanvas)FindName("motionCanvas");
         _canvas = canvas;
 
         if (_core is null)
         {
-            _core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new PolarChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
             //_legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //_tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 

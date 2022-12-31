@@ -65,7 +65,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// </summary>
     public PolarChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -649,7 +649,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
         if (_core is null)
         {
-            _core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new PolarChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;

@@ -55,7 +55,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public PieChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -561,14 +561,14 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         var canvas = (MotionCanvas)FindName("motionCanvas");
         _canvas = canvas;
 
         if (_core is null)
         {
-            _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 

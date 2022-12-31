@@ -357,7 +357,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
 
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
         legend = new SKDefaultLegend(); // Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
         tooltip = new SKDefaultTooltip(); // Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 

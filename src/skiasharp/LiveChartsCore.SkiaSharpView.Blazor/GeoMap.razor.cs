@@ -62,7 +62,7 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
     {
         base.OnInitialized();
 
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
         _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
     }
 

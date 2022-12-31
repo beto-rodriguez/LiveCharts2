@@ -172,7 +172,11 @@ public class RadialGradientPaint : Paint
     /// </summary>
     public override void Dispose()
     {
-        if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
+        // Note #301222
+        // Disposing typefaces could cause render issues.
+        // Does this causes memory leaks?
+        // Should the user dispose typefaces manually?
+        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
         PathEffect?.Dispose();
         ImageFilter?.Dispose();
 

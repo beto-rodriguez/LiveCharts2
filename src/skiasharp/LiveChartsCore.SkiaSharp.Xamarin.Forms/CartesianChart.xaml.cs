@@ -76,7 +76,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         InitializeComponent();
 
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
         SizeChanged += OnSizeChanged;
@@ -692,7 +692,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
 
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
         core.Update();
     }
 

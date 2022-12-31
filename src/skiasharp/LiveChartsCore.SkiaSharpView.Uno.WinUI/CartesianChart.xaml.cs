@@ -70,7 +70,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public CartesianChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -708,7 +708,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
 
             _core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
+                this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
 
             if (SyncContext != null)
                 _motionCanvas.CanvasCore.Sync = SyncContext;
