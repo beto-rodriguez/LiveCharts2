@@ -39,7 +39,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     private readonly Dictionary<object, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = new();
     private char? _matchesChar = null;
-    internal SKPaint? _skiaPaint;
+    public SKPaint? _skiaPaint;
     internal FloatMotionProperty _strokeWidthTransition;
     private string? _fontFamily;
 

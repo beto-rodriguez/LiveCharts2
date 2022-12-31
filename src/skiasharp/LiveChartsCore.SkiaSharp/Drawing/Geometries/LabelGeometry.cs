@@ -101,7 +101,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
     protected override LvcSize OnMeasure(Paint drawable)
     {
-        using var typeface = drawable.GetSKTypeface();
+        var typeface = drawable.GetSKTypeface();
 
         using var p = new SKPaint
         {
@@ -114,6 +114,12 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         };
 
         var bounds = MeasureLines(p);
+
+        // Note #301222
+        // Disposing typefaces could cause render issues.
+        // Does this causes memory leaks?
+        // Should the user dispose typefaces manually?
+        //typeface.Dispose();
 
         return new LvcSize(bounds.Width + Padding.Left + Padding.Right, bounds.Height + Padding.Top + Padding.Bottom);
     }
