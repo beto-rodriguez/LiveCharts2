@@ -27,8 +27,9 @@
         using var stream = await Http.GetStreamAsync("NotoSansSC-Regular.otf");
         var typeface = SKTypeface.FromStream(stream);
 
-        LiveCharts.Configure(config =>
-            config.UseDefaults()
-            .WithGlobalSKTypeface(typeface));
+        LiveCharts.Configure(config => // mark
+            config // mark
+                .UseDefaults() // mark
+                .WithGlobalSKTypeface(typeface)); // mark
     }
 }
