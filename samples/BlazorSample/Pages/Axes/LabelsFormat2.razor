@@ -24,7 +24,7 @@
         // In this case, the font was added to the wwwroot folder, then we load it using the HTTPClient
         // This is only necessary once, ideally when the app starts.
 
-        using var stream = await Http.GetStreamAsync("NotoSansTC-Regular.otf");
+        using var stream = await Http.GetStreamAsync("NotoSansSC-Regular.otf");
         var typeface = SKTypeface.FromStream(stream);
 
         LiveCharts.Configure(config =>
