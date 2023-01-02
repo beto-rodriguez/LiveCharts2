@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -17,6 +18,10 @@ public partial class ViewModel
         new LineSeries<double>
         {
             Values = new ObservableCollection<double> { 200, 558, 458, 249, 457, 339, 587 },
+            TooltipLabelFormatter = (point) =>
+                $"This is {Environment.NewLine}" +
+                $"A multi-line label {Environment.NewLine}" +
+                $"With a value of {Environment.NewLine}" + point.PrimaryValue,
         }
     };
 
@@ -26,7 +31,10 @@ public partial class ViewModel
         {
             // Use the Label property to indicate the format of the labels in the axis
             // The Labeler takes the value of the label as parameter and must return it as string
-            Labeler = (value) => "Day " + value,
+            Labeler = (value) =>
+                $"This is {Environment.NewLine}" +
+                $"A multi-line label {Environment.NewLine}" +
+                $"With a value of {Environment.NewLine}" +value * 100,
 
             // The MinStep property lets you define the minimum separation (in chart values scale)
             // between every axis separator, in this case we don't want decimals,
@@ -34,7 +42,7 @@ public partial class ViewModel
             MinStep = 1,
 
             // labels rotations is in degrees (0 - 360)
-            LabelsRotation = 0,
+            LabelsRotation = 45,
 
             SeparatorsPaint = new SolidColorPaint(SKColors.LightGray, 2)
         }
