@@ -24,7 +24,6 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
@@ -46,6 +45,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     internal LvcColor _backgroundColor;
     internal Padding _padding = new(0);
     internal double _rotation;
+    internal float _lineHeight = 1.75f;
     internal LvcPoint _translate = new();
     private LvcSize _actualSize = new();
     private LvcPoint _targetPosition = new();
@@ -98,6 +98,11 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// Gets or sets the padding.
     /// </summary>
     public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the line height [times the text measured height].
+    /// </summary>
+    public float LineHeight { get => _lineHeight; set { _lineHeight = value; OnPropertyChanged(); } }
 
     internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {
@@ -162,6 +167,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         _labelGeometry.HorizontalAlign = HorizontalAlignment;
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
+        _labelGeometry.LineHeight = LineHeight;
 
         var drawing = chart.Canvas.Draw();
         if (Paint is not null) _ = drawing.SelectPaint(Paint).Draw(_labelGeometry);

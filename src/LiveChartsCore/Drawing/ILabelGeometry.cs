@@ -39,6 +39,14 @@ public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
     Padding Padding { get; set; }
 
     /// <summary>
+    /// Gets or sets the line height [in times the text height].
+    /// </summary>
+    /// <value>
+    /// The padding.
+    /// </value>
+    float LineHeight { get; set; }
+
+    /// <summary>
     /// Gets or sets the vertical align.
     /// </summary>
     /// <value>
