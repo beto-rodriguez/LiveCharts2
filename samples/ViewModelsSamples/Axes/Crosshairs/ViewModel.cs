@@ -46,8 +46,6 @@ public partial class ViewModel
         },
     };
 
-    public IEnumerable<Axis> AllAxes => XAxes.Concat(YAxes);
-
     public Axis[] XAxes { get; set; } =
     {
         new Axis
