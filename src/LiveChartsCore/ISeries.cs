@@ -99,6 +99,14 @@ public interface ISeries
     ///   <c>true</c> if this instance is visible at legends; otherwise, <c>false</c>.
     /// </value>
     bool IsVisibleAtLegend { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the size of the legend shape.
+    /// </summary>
+    /// <value>
+    /// The size of the legend shape.
+    /// </value>
+    double MiniatureShapeSize { get; set; }
 
     /// <summary>
     /// Gets or sets the data padding, both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick
