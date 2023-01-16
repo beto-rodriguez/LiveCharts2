@@ -57,7 +57,7 @@ public partial class ViewModel
         }
     }
 
-    [ICommand]
+    [RelayCommand]
     public void DataPointerDown(IEnumerable<ChartPoint>? points)
     {
         if (points is null) return;

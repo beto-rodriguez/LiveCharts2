@@ -43,7 +43,7 @@ public partial class ViewModel
 
     public ISeries[] Series { get; set; }
 
-    [ICommand]
+    [RelayCommand]
     public void DataPointerDown(IEnumerable<ChartPoint>? points)
     {
         if (points is null) return;

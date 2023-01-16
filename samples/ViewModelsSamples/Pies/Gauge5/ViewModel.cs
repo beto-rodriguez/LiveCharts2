@@ -31,7 +31,7 @@ public partial class ViewModel
     public ObservableValue ObservableValue2 { get; set; }
     public IEnumerable<ISeries> Series { get; set; }
 
-    [ICommand]
+    [RelayCommand]
     public void DoRandomChange()
     {
         // modifying the Value property updates and animates the chart automatically
