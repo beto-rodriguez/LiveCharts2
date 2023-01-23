@@ -178,7 +178,7 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
         if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
 
         core = new PolarChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+            this, config => config.UseDefaults(), motionCanvas.CanvasCore);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

@@ -92,7 +92,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
         BackgroundColor = Colors.White;
 
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
 

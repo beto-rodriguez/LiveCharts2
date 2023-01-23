@@ -107,7 +107,9 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// <summary>
     /// Gets a value indication whether the paint has a custom font.
     /// </summary>
-    public bool HasCustomFont => FontFamily is not null || SKTypeface is not null || SKFontStyle is not null;
+    public bool HasCustomFont =>
+        LiveChartsSkiaSharp.DefaultSKTypeface is not null ||
+        FontFamily is not null || SKTypeface is not null || SKFontStyle is not null;
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is antialias.
@@ -266,10 +268,17 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// <returns></returns>
     protected internal SKTypeface GetSKTypeface()
     {
-        return SKTypeface ??
-            (_matchesChar is not null
-                ? SKFontManager.Default.MatchCharacter(_matchesChar.Value)
-                : SKTypeface.FromFamilyName(_fontFamily, SKFontStyle ?? new SKFontStyle()));
+        // return the defined typeface.
+        if (SKTypeface is not null) return SKTypeface;
+
+        // Obsolete method used in older versions of LiveCahrts...
+        if (_matchesChar is not null) return SKFontManager.Default.MatchCharacter(_matchesChar.Value);
+
+        // create one from the font family.
+        if (FontFamily is not null) return SKTypeface.FromFamilyName(_fontFamily, SKFontStyle ?? new SKFontStyle());
+
+        // other wise ose the globally defined typeface.
+        return LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
     }
 
     private HashSet<IDrawable<SkiaSharpDrawingContext>>? GetGeometriesByCanvas(MotionCanvas<SkiaSharpDrawingContext> canvas)

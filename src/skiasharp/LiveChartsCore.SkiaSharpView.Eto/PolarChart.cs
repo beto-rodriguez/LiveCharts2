@@ -176,7 +176,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     protected override void InitializeCore()
     {
         core = new PolarChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
+            this, config => config.UseDefaults(), motionCanvas.CanvasCore, true);
         core.Update();
     }
 

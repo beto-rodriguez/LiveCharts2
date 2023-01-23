@@ -41,10 +41,10 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
 {
     public TestCartesianChartView()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         Core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas, new RectangleGeometry());
+            this, config => config.UseDefaults(), CoreCanvas, new RectangleGeometry());
     }
 
     public bool DesignerMode => false;

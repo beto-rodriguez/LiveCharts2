@@ -82,7 +82,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         // Avalonia do not seem to detect pointer events if background is not set.
         ((IChartView)this).BackColor = LvcColor.FromArgb(0, 0, 0, 0);
 
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
 
@@ -586,7 +586,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
         _core = new PolarChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            this, config => config.UseDefaults(), canvas.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;

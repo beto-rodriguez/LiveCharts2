@@ -17,4 +17,8 @@
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <NativeFileReference Include="$(HarfBuzzSharpStaticLibraryPath)\2.0.23\*.a" />
+  </ItemGroup>
+
 </Project>

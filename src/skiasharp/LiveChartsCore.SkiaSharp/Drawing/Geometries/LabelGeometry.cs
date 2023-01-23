@@ -74,6 +74,9 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Padding" />
     public Padding Padding { get; set; } = new();
 
+    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
+    public float LineHeight { get; set; } = 1.75f;
+
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
@@ -92,16 +95,20 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         var lines = GetLines(Text);
         double linesCount = lines.Length;
         var lineNumber = 0;
+        var lhd = (GetActualLineHeight(paint) - GetRawLineHeight(paint)) * 0.5f;
+
         foreach (var line in lines)
         {
-            DrawLine(line, -size.Height + (float)(++lineNumber / linesCount * size.Height), context, paint);
+            var ph = (float)(++lineNumber / linesCount) * size.Height;
+            var yLine = ph - size.Height;
+            DrawLine(line, yLine - lhd, context, paint);
         }
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
     protected override LvcSize OnMeasure(Paint drawable)
     {
-        using var typeface = drawable.GetSKTypeface();
+        var typeface = drawable.GetSKTypeface();
 
         using var p = new SKPaint
         {
@@ -114,6 +121,12 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         };
 
         var bounds = MeasureLines(p);
+
+        // Note #301222
+        // Disposing typefaces could cause render issues.
+        // Does this causes memory leaks?
+        // Should the user dispose typefaces manually?
+        //typeface.Dispose();
 
         return new LvcSize(bounds.Width + Padding.Left + Padding.Right, bounds.Height + Padding.Top + Padding.Bottom);
     }
@@ -172,23 +185,33 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     private LvcSize MeasureLines(SKPaint paint)
     {
         float w = 0f, h = 0f;
+        var lineHeight = GetActualLineHeight(paint);
 
         foreach (var line in GetLines(Text))
         {
             var bounds = new SKRect();
-            var boundsH = new SKRect();
 
             _ = paint.MeasureText(line, ref bounds);
 
-            // measure "|": hack to force the same max height?
-            // otherwise strings like "___" and "|||" will result in ---||| if the alignment is middle
-            _ = paint.MeasureText("|", ref boundsH);
-
             if (bounds.Width > w) w = bounds.Width;
-            h += boundsH.Height;
+            h += lineHeight;
         }
 
         return new LvcSize(w, h);
+    }
+
+    private float GetActualLineHeight(SKPaint paint)
+    {
+        var boundsH = new SKRect();
+        _ = paint.MeasureText("█", ref boundsH);
+        return LineHeight * boundsH.Height;
+    }
+
+    private float GetRawLineHeight(SKPaint paint)
+    {
+        var boundsH = new SKRect();
+        _ = paint.MeasureText("█", ref boundsH);
+        return boundsH.Height;
     }
 
     private string[] GetLines(string multiLineText)

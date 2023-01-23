@@ -66,7 +66,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         InitializeComponent();
 
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
         SizeChanged += OnSizeChanged;
@@ -559,7 +559,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <returns></returns>
     protected void InitializeCore()
     {
-        core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+        core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
         core.Update();
     }
 

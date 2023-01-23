@@ -84,7 +84,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         // Avalonia do not seem to detect pointer events if background is not set.
         ((IChartView)this).BackColor = LvcColor.FromArgb(0, 0, 0, 0);
 
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
 
@@ -630,7 +630,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         _avaloniaCanvas = canvas;
         _core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
