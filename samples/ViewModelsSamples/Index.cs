@@ -70,11 +70,11 @@ public static class Index
 
         //"Axes/ColorsAndPosition",
         ////"Axes/Crosshairs",
-        "Axes/LabelsFormat",
+        //"Axes/LabelsFormat",
         //"Axes/LabelsFormat2",
         //"Axes/NamedLabels",
         //"Axes/LabelsRotation",
-        //"Axes/Multiple",
+        "Axes/Multiple",
         //"Axes/Shared",
         //"Axes/DateTimeScaled",
         //"Axes/TimeSpanScaled",

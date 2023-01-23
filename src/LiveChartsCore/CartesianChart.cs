@@ -597,11 +597,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                         new LvcPoint(0, axis.NameDesiredSize.Y - h), new LvcSize(ControlSize.Width, s.Height));
 
                     axis.Yo = m.Bottom + h * 0.5f;
-                    bs += h;
+                    bs = h;
                     m.Bottom = bs;
                     m.Left = ns.Width;
-                    if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
-                    if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
                 }
                 else
                 {
@@ -631,11 +629,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                         new LvcPoint(0, axis.NameDesiredSize.Y - h), new LvcSize(ControlSize.Width, s.Height));
 
                     axis.Yo = m.Top + h * 0.5f;
-                    ts += h;
+                    ts = h;
                     m.Top = ts;
                     m.Left = ns.Width;
-                    if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
-                    if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
                 }
                 else
                 {
@@ -684,10 +680,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                     axis.Xo = ls + w * 0.5f;
                     ls += w;
-                    m.Top += ns.Height;
+                    m.Top = ns.Height;
                     m.Left = ls;
-                    if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
-                    if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
                 }
                 else
                 {
@@ -717,11 +711,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                         new LvcPoint(axis.NameDesiredSize.X - s.Width, 0), new LvcSize(s.Width, ControlSize.Height));
 
                     axis.Xo = rs + w * 0.5f;
-                    rs += w; //+ ns.Width;
-                    m.Top += ns.Height;
+                    rs += w;
+                    m.Top = ns.Height;
                     m.Right = rs;
-                    if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
-                    if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
                 }
                 else
                 {
