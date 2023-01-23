@@ -99,6 +99,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
 #if DEBUG
     private int _stepCount;
+    private bool _inLineNamePlacement;
 #endif
 
     #endregion
@@ -277,6 +278,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
     public double? MinZoomDelta { get; set; }
+
+    /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
+    public bool InLineNamePlacement { get => _inLineNamePlacement; set => SetProperty(ref _inLineNamePlacement, value); }
 
     #endregion
 
@@ -791,7 +795,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         {
             Text = Name ?? string.Empty,
             TextSize = (float)_nameTextSize,
-            RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
+            RotateTransform = Orientation == AxisOrientation.X
+                ? 0
+                : InLineNamePlacement ? 0 : -90,
             Padding = NamePadding
         };
 
@@ -997,9 +1003,17 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
         else
         {
-            _nameGeometry.RotateTransform = -90;
-            _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
-            _nameGeometry.Y = (lyi + lyj) * 0.5f;
+            if (InLineNamePlacement)
+            {
+                _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
+                _nameGeometry.Y = _nameDesiredSize.Height * 0.5f;
+            }
+            else
+            {
+                _nameGeometry.RotateTransform = -90;
+                _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
+                _nameGeometry.Y = (lyi + lyj) * 0.5f;
+            }
         }
 
         if (isNew) _nameGeometry.CompleteTransition(null);

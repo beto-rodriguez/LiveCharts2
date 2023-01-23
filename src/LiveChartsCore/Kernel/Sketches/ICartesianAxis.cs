@@ -99,6 +99,11 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     LvcRectangle NameDesiredSize { get; set; }
 
     /// <summary>
+    /// Places the title in the same direction as the axis, default is false.
+    /// </summary>
+    bool InLineNamePlacement { get; set; }
+
+    /// <summary>
     /// Gets or sets the labels alignment, default is null and means that the library will set it based on the
     /// <see cref="Orientation"/> and <see cref="Position"/> properties.
     /// </summary>

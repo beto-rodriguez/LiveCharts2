@@ -634,29 +634,69 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             if (axis.Position == AxisPosition.Start)
             {
-                // Y Left
-                axis.NameDesiredSize = new LvcRectangle(new LvcPoint(ls, 0), new LvcSize(ns.Width, ControlSize.Height));
-                axis.LabelsDesiredSize = new LvcRectangle(new LvcPoint(ls + ns.Width, 0), new LvcSize(s.Width, ControlSize.Height));
+                if (axis.InLineNamePlacement)
+                {
+                    if (w < ns.Width) w = ns.Width;
 
-                axis.Xo = ls + w * 0.5f + ns.Width;
-                ls += w + ns.Width;
-                m.Left = ls;
-                if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
-                if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                    // Y Left
+                    axis.NameDesiredSize = new LvcRectangle(new LvcPoint(ls, 0), new LvcSize(ns.Width, ns.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(new LvcPoint(ls, 0), new LvcSize(s.Width, ControlSize.Height));
+
+                    axis.Xo = ls + w * 0.5f;
+                    ls += w;
+                    m.Top += ns.Height;
+                    m.Left = ls;
+                    if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
+                    if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                }
+                else
+                {
+                    // Y Left
+                    axis.NameDesiredSize = new LvcRectangle(
+                        new LvcPoint(ls, 0), new LvcSize(ns.Width, ControlSize.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(
+                        new LvcPoint(ls + ns.Width, 0), new LvcSize(s.Width, ControlSize.Height));
+
+                    axis.Xo = ls + w * 0.5f + ns.Width;
+                    ls += w + ns.Width;
+                    m.Left = ls;
+                    if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
+                    if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                }
             }
             else
             {
-                // Y Right
-                axis.NameDesiredSize = new LvcRectangle(
-                    new LvcPoint(ControlSize.Width - rs - ns.Width, 0), new LvcSize(ns.Width, ControlSize.Height));
-                axis.LabelsDesiredSize = new LvcRectangle(
-                    new LvcPoint(axis.NameDesiredSize.X - s.Width, 0), new LvcSize(s.Width, ControlSize.Height));
+                if (axis.InLineNamePlacement)
+                {
+                    if (w < ns.Width) w = ns.Width;
 
-                axis.Xo = rs + w * 0.5f + ns.Width;
-                rs += w + ns.Width;
-                m.Right = rs;
-                if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
-                if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
+                    // Y Left
+                    axis.NameDesiredSize = new LvcRectangle(
+                        new LvcPoint(ControlSize.Width - rs - ns.Width, 0), new LvcSize(ns.Width, ns.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(
+                        new LvcPoint(axis.NameDesiredSize.X - s.Width, 0), new LvcSize(s.Width, ControlSize.Height));
+
+                    axis.Xo = rs + w * 0.5f;
+                    rs += w; //+ ns.Width;
+                    m.Top += ns.Height;
+                    m.Right = rs;
+                    if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
+                    if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                }
+                else
+                {
+                    // Y Right
+                    axis.NameDesiredSize = new LvcRectangle(
+                        new LvcPoint(ControlSize.Width - rs - ns.Width, 0), new LvcSize(ns.Width, ControlSize.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(
+                        new LvcPoint(axis.NameDesiredSize.X - s.Width, 0), new LvcSize(s.Width, ControlSize.Height));
+
+                    axis.Xo = rs + w * 0.5f + ns.Width;
+                    rs += w + ns.Width;
+                    m.Right = rs;
+                    if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
+                    if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
+                }
             }
         }
 
