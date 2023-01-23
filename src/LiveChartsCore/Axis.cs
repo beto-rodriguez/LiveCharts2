@@ -998,8 +998,16 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (_orientation == AxisOrientation.X)
         {
-            _nameGeometry.X = (lxi + lxj) * 0.5f;
-            _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
+            if (InLineNamePlacement)
+            {
+                _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
+                _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
+            }
+            else
+            {
+                _nameGeometry.X = (lxi + lxj) * 0.5f;
+                _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
+            }
         }
         else
         {

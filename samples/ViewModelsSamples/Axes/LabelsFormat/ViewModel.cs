@@ -19,10 +19,12 @@ public partial class ViewModel
     {
         new Axis
         {
-            Name = "Salesman/woman",
+            Name = "Salesman",
             // Use the labels property for named or static labels // mark
             Labels = new string[] { "Sergio", "Lando", "Lewis" }, // mark
             LabelsRotation = 15,
+            InLineNamePlacement = true,
+            Position = LiveChartsCore.Measure.AxisPosition.End,
         }
     };
 
