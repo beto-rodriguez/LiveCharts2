@@ -19,12 +19,10 @@ public partial class ViewModel
     {
         new Axis
         {
-            Name = "Salesman",
+            Name = "Salesman/woman",
             // Use the labels property for named or static labels // mark
             Labels = new string[] { "Sergio", "Lando", "Lewis" }, // mark
             LabelsRotation = 15,
-            InLineNamePlacement = true,
-            Position = LiveChartsCore.Measure.AxisPosition.End,
         }
     };
 
@@ -33,7 +31,7 @@ public partial class ViewModel
         new Axis
         {
             Name = "Salome",
-            //NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
+            NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
 
             LabelsPaint = new SolidColorPaint
             {
@@ -46,10 +44,7 @@ public partial class ViewModel
             // Now the Y axis we will display it as currency
             // LiveCharts provides some common formatters
             // in this case we are using the currency formatter.
-            Labeler = Labelers.Currency, // mark
-
-            Position = LiveChartsCore.Measure.AxisPosition.End,
-            InLineNamePlacement = true,
+            Labeler = Labelers.Currency // mark
 
             // you could also build your own currency formatter
             // for example:
@@ -58,10 +53,5 @@ public partial class ViewModel
             // But the one that LiveCharts provides creates shorter labels when
             // the amount is in millions or trillions
         }
-    };
-
-    public DrawMarginFrame DrawMarginFrame => new()
-    {
-        Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 1)
     };
 }
