@@ -56,7 +56,7 @@ public partial class ViewModel
 
     public ObservableCollection<ISeries> Series { get; set; }
 
-    [ICommand]
+    [RelayCommand]
     public void AddItem()
     {
         var randomValue = _random.Next(1, 10);
@@ -64,20 +64,20 @@ public partial class ViewModel
             new ObservablePoint { X = _index++, Y = randomValue });
     }
 
-    [ICommand]
+    [RelayCommand]
     public void RemoveItem()
     {
         _observableValues.RemoveAt(0);
     }
 
-    [ICommand]
+    [RelayCommand]
     public void UpdateItem()
     {
         var randomValue = _random.Next(1, 10);
         _observableValues[_observableValues.Count - 1].Y = randomValue;
     }
 
-    [ICommand]
+    [RelayCommand]
     public void ReplaceItem()
     {
         var randomValue = _random.Next(1, 10);
@@ -86,7 +86,7 @@ public partial class ViewModel
             new ObservablePoint { X = _observableValues[randomIndex].X, Y = randomValue };
     }
 
-    [ICommand]
+    [RelayCommand]
     public void AddSeries()
     {
         //  for this sample only 5 series are supported.
@@ -104,7 +104,7 @@ public partial class ViewModel
             });
     }
 
-    [ICommand]
+    [RelayCommand]
     public void RemoveSeries()
     {
         if (Series.Count == 1) return;

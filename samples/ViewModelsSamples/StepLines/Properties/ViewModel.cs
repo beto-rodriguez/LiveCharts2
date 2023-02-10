@@ -32,7 +32,7 @@ public partial class ViewModel
     [ObservableProperty]
     private ISeries[] _series;
 
-    [ICommand]
+    [RelayCommand]
     public void ChangeValuesInstance()
     {
         var t = 0;
@@ -56,7 +56,7 @@ public partial class ViewModel
         Series = new ISeries[] { _lineSeries };
     }
 
-    [ICommand]
+    [RelayCommand]
     public void NewStroke()
     {
         var nextColorIndex = _currentColor++ % _colors.Length;
@@ -64,7 +64,7 @@ public partial class ViewModel
         _lineSeries.Stroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
     }
 
-    [ICommand]
+    [RelayCommand]
     public void NewFill()
     {
         var nextColorIndex = _currentColor++ % _colors.Length;
@@ -73,7 +73,7 @@ public partial class ViewModel
         _lineSeries.Fill = new SolidColorPaint(new SKColor(color.R, color.G, color.B, 90));
     }
 
-    [ICommand]
+    [RelayCommand]
     public void NewGeometryFill()
     {
         var nextColorIndex = _currentColor++ % _colors.Length;
@@ -82,7 +82,7 @@ public partial class ViewModel
         _lineSeries.GeometryFill = new SolidColorPaint(new SKColor(color.R, color.G, color.B));
     }
 
-    [ICommand]
+    [RelayCommand]
     public void NewGeometryStroke()
     {
         var nextColorIndex = _currentColor++ % _colors.Length;
@@ -91,7 +91,7 @@ public partial class ViewModel
         _lineSeries.GeometryStroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
     }
 
-    [ICommand]
+    [RelayCommand]
     public void IncreaseGeometrySize()
     {
         if (_lineSeries.GeometrySize == 60) return;
@@ -99,7 +99,7 @@ public partial class ViewModel
         _lineSeries.GeometrySize += 10;
     }
 
-    [ICommand]
+    [RelayCommand]
     public void DecreaseGeometrySize()
     {
         if (_lineSeries.GeometrySize == 0) return;

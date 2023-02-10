@@ -28,19 +28,19 @@ public partial class ViewModel
         }
     };
 
-    [ICommand]
+    [RelayCommand]
     public void ToggleSeries0()
     {
         Series[0].IsVisible = !Series[0].IsVisible;
     }
 
-    [ICommand]
+    [RelayCommand]
     public void ToggleSeries1()
     {
         Series[1].IsVisible = !Series[1].IsVisible;
     }
 
-    [ICommand]
+    [RelayCommand]
     public void ToggleSeries2()
     {
         Series[2].IsVisible = !Series[2].IsVisible;

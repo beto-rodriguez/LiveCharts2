@@ -48,7 +48,7 @@ public  partial class ViewModel
 
     public HeatLandSeries[] Series { get; set; }
 
-    [ICommand]
+    [RelayCommand]
     public void ToggleBrazil()
     {
         var lands = Series[0].Lands;

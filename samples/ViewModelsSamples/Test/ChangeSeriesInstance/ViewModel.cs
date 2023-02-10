@@ -32,7 +32,7 @@ public partial class ViewModel
     [ObservableProperty]
     private IGeoSeries[]? _geoSeries;
 
-    [ICommand]
+    [RelayCommand]
     public void GenerateData()
     {
         var data = new double[] { _r.Next(0, 10), _r.Next(0, 10), _r.Next(0, 10) };
