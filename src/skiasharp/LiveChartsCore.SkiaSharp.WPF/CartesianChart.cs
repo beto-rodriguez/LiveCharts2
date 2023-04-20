@@ -85,6 +85,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         MouseUp += OnMouseUp;
         ManipulationDelta += OnManipulationDelta;
         ManipulationStarting += OnManipulationStarting;
+
+        tooltip = new SKDefaultTooltip();
     }
 
     #region dependency properties
@@ -359,7 +361,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         core = new CartesianChart<SkiaSharpDrawingContext>(
             this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
         legend = new SKDefaultLegend(); // Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-        tooltip = new SKDefaultTooltip(); // Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 
         core.Update();
     }
