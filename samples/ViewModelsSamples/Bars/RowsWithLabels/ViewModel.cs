@@ -8,8 +8,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.RowsWithLabels;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {

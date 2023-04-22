@@ -7,8 +7,7 @@ using LiveChartsCore.SkiaSharpView;
 namespace ViewModelsSamples.VisualTest.DataTemplate;
 
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public IEnumerable<IEnumerable<ISeries>> Models { get; set; } = new List<IEnumerable<ISeries>>
     {

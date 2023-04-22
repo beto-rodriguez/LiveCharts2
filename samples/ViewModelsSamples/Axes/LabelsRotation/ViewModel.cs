@@ -8,8 +8,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.LabelsRotation;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private double _sliderValue = 15;
 

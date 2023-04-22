@@ -9,8 +9,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Bars.AutoUpdate;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private int _index = 0;
     private readonly Random _random = new();
@@ -55,7 +54,7 @@ public partial class ViewModel
 
     public ObservableCollection<ISeries> Series { get; set; }
 
-    [ICommand]
+    [RelayCommand]
     public void AddItem()
     {
         // for this sample only 50 items are supported.
@@ -65,7 +64,7 @@ public partial class ViewModel
         _observableValues.Add(new ObservablePoint(_index++, randomValue));
     }
 
-    [ICommand]
+    [RelayCommand]
     public void RemoveItem()
     {
         if (_observableValues.Count < 2) return;
@@ -73,7 +72,7 @@ public partial class ViewModel
         _observableValues.RemoveAt(0);
     }
 
-    [ICommand]
+    [RelayCommand]
     public void ReplaceItem()
     {
         var randomValue = _random.Next(1, 10);
@@ -82,7 +81,7 @@ public partial class ViewModel
     }
 
 
-    [ICommand]
+    [RelayCommand]
     public void AddSeries()
     {
         //  for this sample only 5 series are supported.
@@ -100,7 +99,7 @@ public partial class ViewModel
             });
     }
 
-    [ICommand]
+    [RelayCommand]
     public void RemoveSeries()
     {
         if (Series.Count == 1) return;

@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Gauge4;
 
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public IEnumerable<ISeries> Series { get; set; }
         = new GaugeBuilder()

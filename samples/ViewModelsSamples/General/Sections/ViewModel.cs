@@ -71,7 +71,7 @@ public partial class ViewModel
         }
     };
 
-    [ICommand]
+    [RelayCommand]
     public void ToggleFirst()
     {
         Sections[0].IsVisible = !Sections[0].IsVisible;

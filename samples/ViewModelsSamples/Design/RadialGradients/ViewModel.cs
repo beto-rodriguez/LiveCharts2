@@ -6,8 +6,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Design.RadialGradients;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     // radial gradients are based on SkiaSharp circular gradients
     // for more info please see:

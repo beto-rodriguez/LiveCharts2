@@ -6,8 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Polar.RadialArea;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {

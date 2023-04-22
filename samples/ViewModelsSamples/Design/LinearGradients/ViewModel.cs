@@ -6,8 +6,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Design.LinearGradients;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     // linear gradients are based on SkiaSharp linear gradients
     // for more info please see:

@@ -10,8 +10,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Test.MotionCanvasDispose;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public static void Generate(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {

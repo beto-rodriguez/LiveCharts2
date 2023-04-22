@@ -9,8 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Gauges;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {

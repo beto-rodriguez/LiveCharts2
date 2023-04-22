@@ -10,8 +10,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Scatter.Custom;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {
