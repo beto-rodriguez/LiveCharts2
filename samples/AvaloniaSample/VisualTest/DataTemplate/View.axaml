@@ -11,7 +11,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ItemsControl Items="{Binding Models}">
+        <ItemsControl ItemsSource="{Binding Models}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <lvc:CartesianChart Series="{Binding .}" />

@@ -15,7 +15,7 @@
 
         <lvc:PieChart Series="{Binding Series}"/>
 
-        <ItemsControl Grid.Column="1" Items="{Binding Series}" Margin="0 10">
+        <ItemsControl Grid.Column="1" ItemsSource="{Binding Series}" Margin="0 10">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
