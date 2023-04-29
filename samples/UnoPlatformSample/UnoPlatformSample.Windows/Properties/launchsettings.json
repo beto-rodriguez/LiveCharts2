@@ -1,0 +1,10 @@
+{
+  "profiles": {
+	"UnoPlatformSample.Windows (Package)": {
+	  "commandName": "MsixPackage"
+	},
+	"UnoPlatformSample.Windows (Unpackaged)": {
+	  "commandName": "Project"
+	}
+  }
+}

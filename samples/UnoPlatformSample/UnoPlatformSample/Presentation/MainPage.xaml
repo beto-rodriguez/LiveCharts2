@@ -1,0 +1,32 @@
+﻿<Page x:Class="UnoPlatformSample.Presentation.MainPage"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:local="using:UnoPlatformSample.Presentation"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  mc:Ignorable="d"
+	  xmlns:uen="using:Uno.Extensions.Navigation.UI"
+	  xmlns:utu="using:Uno.Toolkit.UI"
+	  xmlns:not_skia="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  NavigationCacheMode="Required"
+	  Background="{ThemeResource BackgroundBrush}">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<utu:NavigationBar Content="{Binding Title}" />
+
+		<StackPanel Grid.Row="1"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center">
+			<TextBox Text="{Binding Name, Mode=TwoWay}"
+					 PlaceholderText="Enter your name:"
+					 Margin="8" />
+			<Button Content="Go to Second Page"
+					not_skia:AutomationProperties.AutomationId="SecondPageButton"
+					Command="{Binding GoToSecond}" />
+		</StackPanel>
+	</Grid>
+</Page>
