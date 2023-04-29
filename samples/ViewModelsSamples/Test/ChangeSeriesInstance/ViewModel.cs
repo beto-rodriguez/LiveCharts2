@@ -10,8 +10,7 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Test.ChangeSeriesInstance;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _r = new();
 

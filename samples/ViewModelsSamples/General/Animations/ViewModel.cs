@@ -5,8 +5,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Animations;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private (string, Func<float, float>) _selectedCurve;
     private (string, TimeSpan) _selectedSpeed;

@@ -8,8 +8,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.Sections2;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public RectangularSection[] Sections { get; set; } =
     {

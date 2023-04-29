@@ -10,8 +10,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.AutoUpdate;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _random = new();
     private readonly ObservableCollection<ObservableValue> _observableValues;

@@ -9,8 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ViewModelsSamples.Pies.Gauge5;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _random = new();
 

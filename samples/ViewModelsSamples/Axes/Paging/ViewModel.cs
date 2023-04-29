@@ -7,8 +7,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Paging;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _random = new();
 

@@ -11,8 +11,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.ColorsAndPosition;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private AxisPosition _selectedPosition = AxisPosition.End;
     private int _selectedColor = 0;

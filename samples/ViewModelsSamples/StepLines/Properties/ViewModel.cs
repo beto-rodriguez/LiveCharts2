@@ -11,8 +11,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.StepLines.Properties;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly LvcColor[] _colors = ColorPalletes.FluentDesign;
     private readonly Random _random = new();

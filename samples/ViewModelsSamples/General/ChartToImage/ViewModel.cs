@@ -6,8 +6,7 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.General.ChartToImage;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] CatesianSeries { get; set; } =
     {

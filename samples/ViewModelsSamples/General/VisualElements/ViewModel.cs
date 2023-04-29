@@ -15,8 +15,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.VisualElements;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = new List<ChartElement<SkiaSharpDrawingContext>>
     {

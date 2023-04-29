@@ -9,8 +9,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.StepLines.AutoUpdate;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private int _index = 0;
     private readonly Random _random = new();

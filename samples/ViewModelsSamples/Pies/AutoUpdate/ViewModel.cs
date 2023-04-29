@@ -8,8 +8,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Pies.AutoUpdate;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _random = new();
 

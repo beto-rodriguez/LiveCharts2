@@ -29,8 +29,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Crosshairs;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {

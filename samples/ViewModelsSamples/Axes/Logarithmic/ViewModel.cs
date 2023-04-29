@@ -5,8 +5,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Logarithmic;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     // base 10 log, change the base if you require it.
     // or use any custom scale the logic is the same.

@@ -8,8 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Scatter.Bubbles;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {

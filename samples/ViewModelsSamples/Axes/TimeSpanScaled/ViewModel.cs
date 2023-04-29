@@ -7,8 +7,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.TimeSpanScaled;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {
