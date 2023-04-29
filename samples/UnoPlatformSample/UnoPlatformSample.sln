@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpVie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Uno.WinUI", "..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", "{278A4841-66D1-41BD-A92B-D9E114227FBE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModelsSamples", "..\ViewModelsSamples\ViewModelsSamples.csproj", "{545C171D-3E5E-454B-9F8A-4D507FF4449C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -255,6 +257,22 @@ Global
 		{278A4841-66D1-41BD-A92B-D9E114227FBE}.Release|x64.Build.0 = Release|Any CPU
 		{278A4841-66D1-41BD-A92B-D9E114227FBE}.Release|x86.ActiveCfg = Release|Any CPU
 		{278A4841-66D1-41BD-A92B-D9E114227FBE}.Release|x86.Build.0 = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|arm64.Build.0 = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|x64.Build.0 = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Debug|x86.Build.0 = Debug|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|arm64.ActiveCfg = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|arm64.Build.0 = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|x64.ActiveCfg = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|x64.Build.0 = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|x86.ActiveCfg = Release|Any CPU
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -270,6 +288,7 @@ Global
 		{BA7C8629-718F-4E3B-AC89-B442DD5F4F2C} = {9EF18573-A2AA-4F5B-9F56-52C40072721D}
 		{EE9A269D-572E-4060-8147-9D6FFFBD3764} = {9EF18573-A2AA-4F5B-9F56-52C40072721D}
 		{278A4841-66D1-41BD-A92B-D9E114227FBE} = {9EF18573-A2AA-4F5B-9F56-52C40072721D}
+		{545C171D-3E5E-454B-9F8A-4D507FF4449C} = {9EF18573-A2AA-4F5B-9F56-52C40072721D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08AAE7D4-A9D9-4066-ABAC-6EB3A2B1CABF}
