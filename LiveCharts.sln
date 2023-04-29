@@ -118,7 +118,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoWinUISample.Wasm", "samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoWinUISample.Windows", "samples\UnoWinUISample\UnoWinUISample\UnoWinUISample.Windows\UnoWinUISample.Windows.csproj", "{DFE5666E-BD29-442F-A93D-9A6464E38D1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuestPDFSample", "samples\QuestPDFSample\QuestPDFSample.csproj", "{763F1951-D833-4579-A592-1FFD960FD634}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuestPDFSample", "samples\QuestPDFSample\QuestPDFSample.csproj", "{763F1951-D833-4579-A592-1FFD960FD634}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
