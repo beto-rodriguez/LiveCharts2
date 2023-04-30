@@ -36,9 +36,9 @@ using SkiaSharp;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI;
+namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <summary>
 /// Defines a geographic map.
