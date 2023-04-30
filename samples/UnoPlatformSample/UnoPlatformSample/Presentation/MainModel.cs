@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using Uno.Extensions.Reactive;
 
 namespace UnoPlatformSample.Presentation;
@@ -28,6 +30,8 @@ public partial record MainModel
     public string? Title { get; }
 
     public IState<string> Name { get; }
+
+    public IEnumerable<ISeries> Series { get; set; } = new[] { 10, 8, 4 }.AsPieSeries();
 
     public MainModel(
         INavigator navigator,
