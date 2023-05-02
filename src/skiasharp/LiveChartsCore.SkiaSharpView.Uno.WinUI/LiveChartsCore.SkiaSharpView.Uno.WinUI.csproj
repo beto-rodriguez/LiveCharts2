@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
-    <AssemblyName>LiveChartsCore.SkiaSharpView.WinUI</AssemblyName>
+    <AssemblyName>LiveChartsCore.SkiaSharpView.Uno.WinUI</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
