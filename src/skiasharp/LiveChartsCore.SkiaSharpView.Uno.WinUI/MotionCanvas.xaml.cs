@@ -30,7 +30,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 using SkiaSharp.Views.Windows;
 using Windows.Graphics.Display;
 
@@ -38,7 +38,7 @@ using Windows.Graphics.Display;
 using Android.Views;
 #endif
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI;
+namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
 public sealed partial class MotionCanvas : UserControl

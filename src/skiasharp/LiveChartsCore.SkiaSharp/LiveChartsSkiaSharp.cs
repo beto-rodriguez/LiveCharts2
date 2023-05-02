@@ -153,6 +153,20 @@ public static class LiveChartsSkiaSharp
     /// <param name="source">The data source.</param>
     /// <param name="buider">An optional builder.</param>
     /// <returns></returns>
+    public static ObservableCollection<PieSeries<T>> AsPieSeries<T>(
+        this IEnumerable<T> source,
+        Action<T, PieSeries<T>>? buider = null)
+    {
+        return AsLiveChartsPieSeries(source, buider);
+    }
+
+    /// <summary>
+    /// Converts an IEnumerable to an ObservableCollection of pie series.
+    /// </summary>
+    /// <typeparam name="T">The type.</typeparam>
+    /// <param name="source">The data source.</param>
+    /// <param name="buider">An optional builder.</param>
+    /// <returns></returns>
     public static ObservableCollection<PieSeries<T>> AsLiveChartsPieSeries<T>(
         this IEnumerable<T> source,
         Action<T, PieSeries<T>>? buider = null)
