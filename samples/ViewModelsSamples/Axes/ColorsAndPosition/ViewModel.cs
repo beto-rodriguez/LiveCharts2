@@ -11,8 +11,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.ColorsAndPosition;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private AxisPosition _selectedPosition = AxisPosition.End;
     private int _selectedColor = 0;
@@ -57,7 +56,7 @@ public partial class ViewModel
         }
     };
 
-    [ICommand]
+    [RelayCommand]
     public void SetNewColor()
     {
         var nextColor = _colors[_selectedColor++ % _colors.Length];
@@ -65,7 +64,7 @@ public partial class ViewModel
         XAxes[0].SeparatorsPaint = new SolidColorPaint(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
     }
 
-    [ICommand]
+    [RelayCommand]
     public void TogglePosition()
     {
         _selectedPosition = _selectedPosition == AxisPosition.End ? AxisPosition.Start : AxisPosition.End;

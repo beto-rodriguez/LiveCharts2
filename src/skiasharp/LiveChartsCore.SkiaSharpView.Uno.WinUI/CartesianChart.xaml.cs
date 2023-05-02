@@ -38,7 +38,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI.Input;
 using LiveChartsCore.VisualElements;
@@ -47,7 +47,7 @@ using LiveChartsCore.SkiaSharpView.SKCharts;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI;
+namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <inheritdoc cref="CartesianChart{TDrawingContext}"/>
 public sealed partial class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>

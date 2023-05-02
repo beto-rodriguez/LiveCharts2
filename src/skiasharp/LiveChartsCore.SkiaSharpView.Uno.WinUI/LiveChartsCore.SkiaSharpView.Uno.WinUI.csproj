@@ -6,7 +6,7 @@
 
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
-    <Version>2.0.0-beta.701</Version>
+    <Version>2.0.0-beta.703</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -15,20 +15,20 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LiveChartsCore.SkiaSharpView.Uno.WinUI</RootNamespace>
-    <AssemblyName>LiveChartsCore.SkiaSharpView.Uno.WinUI</AssemblyName>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
+    <AssemblyName>LiveChartsCore.SkiaSharpView.WinUI</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.2" />
-    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.2" />
-    <PackageReference Include="Uno.WinUI" Version="4.5.12" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
+    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.3" />
+    <PackageReference Include="Uno.WinUI" Version="4.8.24" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
-    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22000.24" />
-    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22000.24" />
+    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
+    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.18362'">
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

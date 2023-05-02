@@ -96,10 +96,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private readonly float _tickLength = 6f;
     private readonly int _subSections = 3;
     private Align? _labelsAlignment;
+    private bool _inLineNamePlacement;
 
 #if DEBUG
     private int _stepCount;
-    private bool _inLineNamePlacement;
 #endif
 
     #endregion

@@ -12,8 +12,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.Race;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _r = new();
     private static readonly (string, double)[] s_initialData =

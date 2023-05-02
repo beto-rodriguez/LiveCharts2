@@ -8,8 +8,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Pies.Gauge2;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public IEnumerable<ISeries> Series { get; set; }
         = new GaugeBuilder()

@@ -8,8 +8,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Financial.BasicCandlesticks;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     // we have to let the chart know that the X axis in days.
     public Axis[] XAxes { get; set; } =

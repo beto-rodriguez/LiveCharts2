@@ -10,8 +10,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Style;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private static readonly SKColor s_gray = new(195, 195, 195);
     private static readonly SKColor s_gray1 = new(160, 160, 160);

@@ -4,8 +4,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.UserDefinedTypes;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {

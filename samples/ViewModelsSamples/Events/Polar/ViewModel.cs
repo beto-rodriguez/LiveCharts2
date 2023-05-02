@@ -8,8 +8,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Events.Polar;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {
@@ -43,7 +42,7 @@ public partial class ViewModel
 
     public ISeries[] Series { get; set; }
 
-    [ICommand]
+    [RelayCommand]
     public void DataPointerDown(IEnumerable<ChartPoint>? points)
     {
         if (points is null) return;

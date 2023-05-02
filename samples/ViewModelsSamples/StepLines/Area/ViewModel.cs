@@ -6,8 +6,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.StepLines.Area;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {

@@ -7,8 +7,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.Custom;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {

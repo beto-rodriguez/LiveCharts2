@@ -7,8 +7,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Multiple;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private static readonly SKColor s_blue = new(25, 118, 210);
     private static readonly SKColor s_red = new(229, 57, 53);

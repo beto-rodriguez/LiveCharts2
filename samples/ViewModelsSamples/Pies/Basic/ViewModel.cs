@@ -8,8 +8,7 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 
 namespace ViewModelsSamples.Pies.Basic;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {
