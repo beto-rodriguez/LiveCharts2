@@ -5,10 +5,10 @@
     xmlns:local="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:skia="using:SkiaSharp.Views.Windows"
+    xmlns:sk="using:SkiaSharp.Views.Windows"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <skia:SKXamlCanvas x:Name="canvas"></skia:SKXamlCanvas>
+    <sk:SKXamlCanvas x:Name="canvas"></sk:SKXamlCanvas>
 </UserControl>
