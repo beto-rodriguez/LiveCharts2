@@ -35,7 +35,10 @@ public partial class ViewModel
         {
             // creates a section from 8 to the end in the X axis
             Xi = 8,
-            Fill = new SolidColorPaint(new SKColor(249, 251, 231))
+            Fill = new SolidColorPaint(new SKColor(249, 251, 231)),
+            Label = "A section here!",
+            LabelSize = 14,
+            LabelPaint = new SolidColorPaint(new SKColor(255, 111, 0))
         }
     };
 
