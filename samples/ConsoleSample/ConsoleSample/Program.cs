@@ -37,7 +37,7 @@ cartesianChart.SaveImage("cartesianChart.png");
 using var stream = new MemoryStream();
 var svgCanvas = SKSvgCanvas.Create(SKRect.Create(cartesianChart.Width, cartesianChart.Height), stream);
 cartesianChart.DrawOnCanvas(svgCanvas);
-svgCanvas.Dispose(); // <- disposing it before using the stream, otherwise the svg could not be completed.
+svgCanvas.Dispose(); // <- dispose it before using the stream, otherwise the svg could not be completed.
 
 stream.Position = 0;
 using var fs = new FileStream("cartesianChart.svg", FileMode.OpenOrCreate);
