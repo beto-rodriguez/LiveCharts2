@@ -32,6 +32,18 @@ var cartesianChart = new SKCartesianChart
 // or use the second argument to specify another format.
 cartesianChart.SaveImage("cartesianChart.png");
 
+// additionally you can save a chart as svg:
+// for more info see: https://github.com/mono/SkiaSharp/blob/main/tests/Tests/SKCanvasTest.cs#L396
+using var stream = new MemoryStream();
+var svgCanvas = SKSvgCanvas.Create(SKRect.Create(cartesianChart.Width, cartesianChart.Height), stream);
+cartesianChart.DrawOnCanvas(svgCanvas);
+svgCanvas.Dispose(); // <- disposing it before using the stream, otherwise the svg could not be completed.
+
+stream.Position = 0;
+using var fs = new FileStream("cartesianChart.svg", FileMode.OpenOrCreate);
+stream.CopyTo(fs);
+
+// you can also save the image of any other charts:
 var pieChart = new SKPieChart
 {
     Width = 900,
