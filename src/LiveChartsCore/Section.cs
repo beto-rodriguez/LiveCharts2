@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -39,6 +38,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
 {
     private IPaint<TDrawingContext>? _stroke = null;
     private IPaint<TDrawingContext>? _fill = null;
+    private IPaint<TDrawingContext>? _labelPaint = null;
     private double? _xi;
     private double? _xj;
     private double? _yi;
@@ -70,6 +70,18 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the label paint.
+    /// </summary>
+    /// <value>
+    /// The fill.
+    /// </value>
+    public IPaint<TDrawingContext>? LabelPaint
+    {
+        get => _labelPaint;
+        set => SetPaintProperty(ref _labelPaint, value);
     }
 
     /// <summary>
@@ -140,18 +152,12 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     public int? ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
     /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
-    /// <returns></returns>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    /// <summary>
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _stroke, _fill };
+        return new[] { _stroke, _fill, _labelPaint };
     }
 
     /// <summary>
@@ -163,28 +169,33 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
         base.OnPaintChanged(propertyName);
         OnPropertyChanged(propertyName);
     }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }
 
 /// <summary>
 /// Defines a visual section in a chart.
 /// </summary>
 /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
+/// <typeparam name="TLabelGeometry">The type of the label geometry.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ChartElement{TDrawingContext}" />
-public abstract class Section<TSizedGeometry, TDrawingContext> : Section<TDrawingContext>
+public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> : Section<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TSizedGeometry : ISizedGeometry<TDrawingContext>, new()
+    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
+    private string _label = string.Empty;
+    private float _labelSize = 12;
+
+    /// <summary>
+    /// Gets or sets the label, a string to be displayed within the section.
+    /// </summary>
+    public string Label { get => _label; set => SetProperty(ref _label, value); }
+
+    /// <summary>
+    /// Gets or sets the label size.
+    /// </summary>
+    public double LabelSize { get => _labelSize; set => SetProperty(ref _labelSize, (float)value); }
+
     /// <summary>
     /// The fill sized geometry
     /// </summary>
@@ -194,6 +205,11 @@ public abstract class Section<TSizedGeometry, TDrawingContext> : Section<TDrawin
     /// The stroke sized geometry
     /// </summary>
     protected internal TSizedGeometry? _strokeSizedGeometry;
+
+    /// <summary>
+    /// The label geometry.
+    /// </summary>
+    protected internal TLabelGeometry? _labelGeometry;
 
     /// <summary>
     /// Measures the specified chart.
@@ -291,6 +307,46 @@ public abstract class Section<TSizedGeometry, TDrawingContext> : Section<TDrawin
             Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
             chart.Canvas.AddDrawableTask(Stroke);
+        }
+
+        if (LabelPaint is not null)
+        {
+            LabelPaint.ZIndex = ZIndex ?? 0.01;
+
+            var xil = Xi is null ? drawLocation.X : secondaryScale.ToPixels(Xi.Value);
+            var yil = Yi is null ? drawLocation.Y : primaryScale.ToPixels(Yi.Value);
+
+            if (_labelGeometry is null)
+            {
+                _labelGeometry = new TLabelGeometry
+                {
+                    X = xi,
+                    Y = yi,
+                    Padding = new Padding(6)
+                };
+
+                _ = _labelGeometry
+                    .TransitionateProperties(
+                       nameof(_labelGeometry.X),
+                       nameof(_labelGeometry.Y))
+                   .WithAnimation(animation =>
+                       animation
+                           .WithDuration(chart.AnimationsSpeed)
+                           .WithEasingFunction(chart.EasingFunction));
+
+                _labelGeometry.CompleteTransition(null);
+                _labelGeometry.VerticalAlign = Align.Start;
+                _labelGeometry.HorizontalAlign = Align.Start;
+            }
+
+            _labelGeometry.X = xi;
+            _labelGeometry.Y = yi;
+            _labelGeometry.Text = _label;
+            _labelGeometry.TextSize = _labelSize;
+
+            LabelPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
+            chart.Canvas.AddDrawableTask(LabelPaint);
         }
     }
 }
