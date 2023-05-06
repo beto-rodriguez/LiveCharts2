@@ -73,7 +73,7 @@ public abstract class InMemorySkiaSharpChart
         using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
         using var canvas = surface.Canvas;
 
-        DrawChart(canvas, surface);
+        DrawOnCanvas(canvas, surface);
 
         return surface.Snapshot();
     }
@@ -100,7 +100,7 @@ public abstract class InMemorySkiaSharpChart
     /// <param name="clearCanvasOnBeginDraw">Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
     public virtual void SaveImage(SKCanvas canvas, bool clearCanvasOnBeginDraw = false)
     {
-        DrawChart(canvas, null, clearCanvasOnBeginDraw);
+        DrawOnCanvas(canvas, null, clearCanvasOnBeginDraw);
     }
 
     /// <summary>
@@ -108,9 +108,9 @@ public abstract class InMemorySkiaSharpChart
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="surface">The surface.</param>
-    /// <param name="clearCanvasOnBeginDraw"></param>
-    /// <exception cref="Exception">Indicates whether the canvas should be cleared when the draw starts, default is false.</exception>
-    protected virtual void DrawChart(SKCanvas canvas, SKSurface? surface, bool clearCanvasOnBeginDraw = false)
+    /// <param name="clearCanvasOnBeginDraw">[probably an obsolete param] Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
+    /// <exception cref="Exception"></exception>
+    public virtual void DrawOnCanvas(SKCanvas canvas, SKSurface? surface = null, bool clearCanvasOnBeginDraw = false)
     {
         if (CoreChart is null || CoreChart is not Chart<SkiaSharpDrawingContext> skiaChart)
             throw new Exception("Something is missing :(");
