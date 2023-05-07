@@ -854,6 +854,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
+        var caretesianView = (ICartesianChartView<TDrawingContext>)View;
+        if ((caretesianView.ZoomMode & ZoomAndPanMode.InvertPanningPointerTrigger) != 0)
+            isSecondaryAction = !isSecondaryAction;
+
         if (isSecondaryAction && _zoomMode != ZoomAndPanMode.None)
         {
             _sectionZoomingStart = point;
@@ -888,6 +892,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             return;
         }
+
         base.InvokePointerDown(point, isSecondaryAction);
     }
 

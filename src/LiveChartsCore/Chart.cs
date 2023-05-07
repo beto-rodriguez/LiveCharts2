@@ -338,6 +338,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         Canvas.Invalidate();
     }
+
     internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         PointerDown?.Invoke(point);
