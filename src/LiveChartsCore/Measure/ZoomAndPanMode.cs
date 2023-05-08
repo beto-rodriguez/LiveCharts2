@@ -36,17 +36,23 @@ public enum ZoomAndPanMode
     None = 0,
 
     /// <summary>
-    /// Zooms only in the X axis.
+    /// Enables zooming and panning on the X axis.
     /// </summary>
     X = 1 << 0,
 
     /// <summary>
-    /// Zooms only in the Y axis.
+    /// Enables zooming and panning on the Y axis.
     /// </summary>
     Y = 1 << 1,
 
     /// <summary>
-    /// Zooms on both axes.
+    /// Enables zooming and panning on both axes.
     /// </summary>
-    Both = X | Y
+    Both = X | Y,
+
+    /// <summary>
+    /// When this flag is present the panning will be triggered using the right click on desktop devices and the touch-and-hold gesture on touch devices.
+    /// The "Zoom by section" feature will be triggered to the left click on desktop devices and the touch-and-hold gesture on touch devices.
+    /// </summary>
+    InvertPanningPointerTrigger
 }

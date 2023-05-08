@@ -117,8 +117,8 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
         }
     }
 
-    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawChart(SKCanvas, SKSurface?, bool)"/>
-    protected override void DrawChart(SKCanvas canvas, SKSurface? surface, bool clearCanvasOnBeginDraw = false)
+    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawOnCanvas(SKCanvas, SKSurface?, bool)"/>
+    public override void DrawOnCanvas(SKCanvas canvas, SKSurface? surface, bool clearCanvasOnBeginDraw = false)
     {
         Canvas.DisableAnimations = true;
 

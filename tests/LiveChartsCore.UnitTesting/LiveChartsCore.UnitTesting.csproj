@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>10.0</LangVersion>
-    <TargetFrameworks>net462;net5.0;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net462;net6.0;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
