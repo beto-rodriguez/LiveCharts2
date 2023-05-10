@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.WPF"
     xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF">
 
-    <ControlTemplate x:Key="DefaultChartTempalte" TargetType="{x:Type local:Chart}">
+    <ControlTemplate x:Key="DefaultChartTemplate" TargetType="{x:Type local:Chart}">
         <DockPanel LastChildFill="true" Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:Chart}}">
             <!--<local:DefaultTooltip x:Name="tooltip" />-->
             <!--<local:DefaultLegend x:Name="legend"
@@ -16,15 +16,15 @@
     </ControlTemplate>
 
     <Style TargetType="{x:Type local:CartesianChart}">
-        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
+        <Setter Property="Template" Value="{StaticResource DefaultChartTemplate}" />
     </Style>
 
     <Style TargetType="{x:Type local:PieChart}">
-        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
+        <Setter Property="Template" Value="{StaticResource DefaultChartTemplate}" />
     </Style>
 
     <Style TargetType="{x:Type local:PolarChart}">
-        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
+        <Setter Property="Template" Value="{StaticResource DefaultChartTemplate}" />
     </Style>
 
     <Style TargetType="{x:Type local:GeoMap}">
