@@ -167,11 +167,9 @@ public class MotionCanvas : UserControl
             return false;
         }
 
-        public void Render(IDrawingContextImpl context)
+        public void Render(a.ImmediateDrawingContext context)
         {
-            var leaseFeature = context.GetFeature<ISkiaSharpApiLeaseFeature>();
-
-            if (leaseFeature is null)
+            if (!context.TryGetFeature<ISkiaSharpApiLeaseFeature>(out var leaseFeature))
                 throw new Exception("SkiaSharp is not supported.");
 
             using var lease = leaseFeature.Lease();

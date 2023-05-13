@@ -6,7 +6,7 @@
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net462;</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Avalonia</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Avalonia</RootNamespace>
-    <Version>2.0.0-beta.700-11.0.0-preview7</Version>
+    <Version>2.0.0-beta.700-11.0.0-preview8</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for AvaloniaUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -30,8 +30,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.0-preview7" />
-    <PackageReference Include="Avalonia.Skia" Version="11.0.0-preview7" />
+    <PackageReference Include="Avalonia" Version="11.0.0-preview8" />
+    <PackageReference Include="Avalonia.Skia" Version="11.0.0-preview8" />
   </ItemGroup>
 
   <ItemGroup>

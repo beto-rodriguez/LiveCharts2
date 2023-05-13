@@ -11,7 +11,8 @@
         ExtendClientAreaTitleBarHeightHint="50"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaSample.MainWindow"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        RenderOptions.BitmapInterpolationMode="MediumQuality">
 
   <Border BorderBrush="#eeeeee" BorderThickness="1">
     <Grid Margin="25 0 0 0" >
