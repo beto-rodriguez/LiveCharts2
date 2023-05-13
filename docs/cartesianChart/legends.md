@@ -58,7 +58,7 @@ disable legends in a chart, default value is `Hidden`.
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.TooltipPosition = LiveChartsCore.Measure.LegendPosition.Bottom; // mark
+<pre><code>cartesianChart1.LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom; // mark
 // or use Top, Left, Right or Hidden
 </code></pre>
 {{~ end ~}}
