@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: animatable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -212,6 +214,20 @@ public static class Extensions
     public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[]? properties)
     {
         return new TransitionBuilder(animatable, properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the <paramref name="animation"/>.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="animation">The animation.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate(this IAnimatable animatable, Animation animation, params string[]? properties)
+    {
+        animatable.SetTransition(animation, properties);
+        animatable.CompleteTransition(properties);
     }
 
     /// <summary>
