@@ -31,13 +31,13 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the stack panel class.
 /// </summary>
-public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDrawingContext>
+public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TBackgroundGemetry : ISizedGeometry<TDrawingContext>, new()
+    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private LvcPoint _targetPosition;
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private TBackgroundGemetry? _backgroundGeometry;
+    private TBackgroundGeometry? _backgroundGeometry;
 
     /// <summary>
     /// Gets the children collection.
@@ -134,7 +134,7 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         {
             var cp = GetPositionRelativeToParent();
 
-            _backgroundGeometry = new TBackgroundGemetry
+            _backgroundGeometry = new TBackgroundGeometry
             {
                 X = cp.X,
                 Y = cp.Y,
@@ -142,10 +142,10 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
                 Height = controlSize.Height
             };
 
-            _ = _backgroundGeometry
-                .TransitionateProperties()
-                .WithAnimation(chart)
-                .CompleteCurrentTransitions();
+            //_ = _backgroundGeometry
+            //    .TransitionateProperties()
+            //    .WithAnimation(chart)
+            //    .CompleteCurrentTransitions();
         }
 
         // force the background to have at least an invisible geometry
