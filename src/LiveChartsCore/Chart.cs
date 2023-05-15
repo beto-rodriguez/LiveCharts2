@@ -507,14 +507,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         if (IsFirstDraw)
         {
-            _ = ActualBounds
-                .TransitionateProperties(null)
-                .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction))
-                .CompleteCurrentTransitions();
-
+            ActualBounds.Animate(EasingFunction, AnimationsSpeed);
             _ = Canvas.Trackers.Add(ActualBounds);
         }
     }

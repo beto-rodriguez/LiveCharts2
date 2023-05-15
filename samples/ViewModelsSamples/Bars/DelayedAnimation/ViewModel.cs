@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Easing;
@@ -50,16 +51,18 @@ public partial class ViewModel : ObservableObject
         var visual = point.Visual;
         if (visual is null) return;
 
-        var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point, 30f);
+        var baseFunction = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
 
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.Y),
-                nameof(visual.Height))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(delayedFunction.Speed)
-                    .WithEasingFunction(delayedFunction.Function));
+        visual.Animate(
+            normalizedTime =>
+            {
+                var d = (float)(point.Context.Entity.EntityIndex / point.Context.Chart.AnimationsSpeed.TotalMilliseconds);
+                if (normalizedTime <= d) return 0;
+
+                var delayedProgress = (normalizedTime - d) / (1 - d);
+                return baseFunction(delayedProgress);
+            },
+            point.Context.Chart.AnimationsSpeed);
     }
 
     public List<ISeries> Series { get; set; }

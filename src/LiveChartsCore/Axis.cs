@@ -308,14 +308,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (!_animatableBounds.HasPreviousState)
         {
-            _ = _animatableBounds
-                .TransitionateProperties(null)
-                .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                .CompleteCurrentTransitions();
-
+            _animatableBounds.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
             _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
         }
 
@@ -980,15 +973,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 VerticalAlign = Align.Middle
             };
 
-            _ = _nameGeometry
-                 .TransitionateProperties(
-                         nameof(_nameGeometry.X),
-                         nameof(_nameGeometry.Y))
-                 .WithAnimation(animation =>
-                     animation
-                         .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                         .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
+            _nameGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
             isNew = true;
         }
 
@@ -1061,15 +1046,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     private void InitializeLine(ILineGeometry<TDrawingContext> lineGeometry, CartesianChart<TDrawingContext> cartesianChart)
     {
-        _ = lineGeometry
-            .TransitionateProperties(
-                nameof(lineGeometry.X), nameof(lineGeometry.X1),
-                nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
-                nameof(lineGeometry.Opacity))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+        lineGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
     }
 
     private void InitializeTick(
@@ -1087,15 +1064,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             visualSeparator.Tick = tickGeometry;
         }
 
-        _ = tickGeometry
-            .TransitionateProperties(
-                nameof(tickGeometry.X), nameof(tickGeometry.X1),
-                nameof(tickGeometry.Y), nameof(tickGeometry.Y1),
-                nameof(tickGeometry.Opacity))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+        tickGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
     }
 
     private void InitializeSubticks(
@@ -1122,15 +1091,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         visualSeparator.Label = textGeometry;
         if (hasRotation) textGeometry.RotateTransform = r;
 
-        _ = textGeometry
-            .TransitionateProperties(
-                nameof(textGeometry.X),
-                nameof(textGeometry.Y),
-                nameof(textGeometry.Opacity))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+        textGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
     }
 
     private void UpdateSeparator(

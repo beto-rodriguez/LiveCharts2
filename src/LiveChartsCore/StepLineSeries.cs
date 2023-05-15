@@ -178,12 +178,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 fillPath.Pivot = p;
                 if (isNew)
                 {
-                    _ = fillPath.TransitionateProperties(nameof(fillPath.Pivot))
-                        .WithAnimation(animation =>
-                                    animation
-                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                        .CompleteCurrentTransitions();
+                    fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                 }
             }
             if (Stroke is not null)
@@ -195,12 +190,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 strokePath.Pivot = p;
                 if (isNew)
                 {
-                    _ = strokePath.TransitionateProperties(nameof(strokePath.Pivot))
-                        .WithAnimation(animation =>
-                                    animation
-                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                        .CompleteCurrentTransitions();
+                    strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                 }
             }
 
@@ -281,14 +271,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation };
-
-                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                        l.CompleteTransition(null);
+                        l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                         label = l;
                         point.Context.Label = l;
                     }
@@ -304,7 +287,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
 
-                    label.X = labelPosition.X;
+                    label.X = labelPosition.X; 
                     label.Y = labelPosition.Y;
                 }
 
@@ -400,30 +383,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         if (chartPoint.Context.Visual is not TVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
-        _ = visual.Geometry
-            .TransitionateProperties(
-                nameof(visual.Geometry.X),
-                nameof(visual.Geometry.Y),
-                nameof(visual.Geometry.Width),
-                nameof(visual.Geometry.Height),
-                nameof(visual.Geometry.TranslateTransform))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-
-        _ = visual.StepSegment
-            .TransitionateProperties(
-                nameof(visual.StepSegment.Xi),
-                nameof(visual.StepSegment.Yi),
-                nameof(visual.StepSegment.Xj),
-                nameof(visual.StepSegment.Yj))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
+        visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.StepSegment.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>

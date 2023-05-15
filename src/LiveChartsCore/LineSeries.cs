@@ -208,12 +208,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 fillPath.Pivot = p;
                 if (isNew)
                 {
-                    _ = fillPath.TransitionateProperties(nameof(fillPath.Pivot))
-                        .WithAnimation(animation =>
-                                    animation
-                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                        .CompleteCurrentTransitions();
+                    fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                 }
             }
             if (Stroke is not null)
@@ -225,12 +220,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 strokePath.Pivot = p;
                 if (isNew)
                 {
-                    _ = strokePath.TransitionateProperties(nameof(strokePath.Pivot))
-                        .WithAnimation(animation =>
-                                    animation
-                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                        .CompleteCurrentTransitions();
+                    strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                 }
             }
 
@@ -319,14 +309,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation };
-
-                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                        l.CompleteTransition(null);
+                        l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }
@@ -583,32 +566,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         if (chartPoint.Context.Visual is not TVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
-        _ = visual.Geometry
-            .TransitionateProperties(
-                nameof(visual.Geometry.X),
-                nameof(visual.Geometry.Y),
-                nameof(visual.Geometry.Width),
-                nameof(visual.Geometry.Height),
-                nameof(visual.Geometry.TranslateTransform))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-
-        _ = visual.Bezier
-            .TransitionateProperties(
-                nameof(visual.Bezier.Xi),
-                nameof(visual.Bezier.Yi),
-                nameof(visual.Bezier.Xm),
-                nameof(visual.Bezier.Ym),
-                nameof(visual.Bezier.Xj),
-                nameof(visual.Bezier.Yj))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
+        visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Bezier.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>

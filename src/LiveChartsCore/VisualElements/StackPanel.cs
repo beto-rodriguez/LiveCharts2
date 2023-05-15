@@ -142,10 +142,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                 Height = controlSize.Height
             };
 
-            _ = _backgroundGeometry
-                .TransitionateProperties()
-                .WithAnimation(chart)
-                .CompleteCurrentTransitions();
+            _backgroundGeometry.Animate(chart);
         }
 
         // force the background to have at least an invisible geometry

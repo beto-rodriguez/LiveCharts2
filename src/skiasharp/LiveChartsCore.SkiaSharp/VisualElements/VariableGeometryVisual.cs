@@ -121,11 +121,7 @@ public class VariableGeometryVisual : BaseGeometryVisual
 
             GeometryIntialized?.Invoke(Geometry);
 
-            _ = Geometry
-                .TransitionateProperties()
-                .WithAnimation(chart)
-                .CompleteCurrentTransitions();
-
+            Geometry.Animate(chart);
             _isInitialized = true;
         }
 

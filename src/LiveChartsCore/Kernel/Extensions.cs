@@ -206,17 +206,6 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Creates a transition builder for the specified properties.
-    /// </summary>
-    /// <param name="animatable">The animatable.</param>
-    /// <param name="properties">The properties, use null to apply the transition to all the properties.</param>
-    /// <returns>The builder</returns>
-    public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[]? properties)
-    {
-        return new TransitionBuilder(animatable, properties);
-    }
-
-    /// <summary>
     /// Sets the transition of the given <paramref name="properties"/> to the <paramref name="animation"/>.
     /// </summary>
     /// <param name="animatable">The animatable object.</param>
@@ -228,6 +217,38 @@ public static class Extensions
     {
         animatable.SetTransition(animation, properties);
         animatable.CompleteTransition(properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the specified <paramref name="easingFunction"/> and <paramref name="speed"/>.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="easingFunction">The animation's easing function.</param>
+    /// <param name="speed">The animation's speed.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate(this IAnimatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
+    {
+        Animate(animatable, new Animation(easingFunction, speed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
+    /// if the properties are not set, then all the animatable properties in the object will use the given animation.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="chart">
+    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
+    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// </param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this IAnimatable animatable, Chart<TDrawingContext> chart, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(animatable, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
     }
 
     /// <summary>

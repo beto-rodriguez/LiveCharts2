@@ -214,13 +214,8 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
         if (!_animatableBounds.HasPreviousState)
         {
-            _ = _animatableBounds
-                .TransitionateProperties(nameof(_animatableBounds.MinLimit), nameof(_animatableBounds.MaxLimit))
-                .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
-
+            _animatableBounds
+                .Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
             _ = polarChart.Canvas.Trackers.Add(_animatableBounds);
         }
 
@@ -321,16 +316,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                     visualSeparator.Label = textGeometry;
                     if (hasRotation) textGeometry.RotateTransform = r;
 
-                    _ = textGeometry
-                        .TransitionateProperties(
-                            nameof(textGeometry.X),
-                            nameof(textGeometry.Y),
-                            nameof(textGeometry.RotateTransform),
-                            nameof(textGeometry.Opacity))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
+                    textGeometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
 
                     textGeometry.X = l.X;
                     textGeometry.Y = l.Y;
@@ -346,15 +332,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
                         linearSeparator.Separator = lineGeometry;
 
-                        _ = lineGeometry
-                            .TransitionateProperties(
-                                nameof(lineGeometry.X), nameof(lineGeometry.X1),
-                                nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
-                                nameof(lineGeometry.Opacity))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
+                        lineGeometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
 
                         lineGeometry.Opacity = 0;
                         lineGeometry.CompleteTransition(null);
@@ -366,15 +344,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
                         polarSeparator.Circle = circleGeometry;
 
-                        _ = circleGeometry
-                            .TransitionateProperties(
-                                nameof(circleGeometry.X), nameof(circleGeometry.Y),
-                                nameof(circleGeometry.Width), nameof(circleGeometry.Height),
-                                nameof(circleGeometry.Opacity))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
+                        circleGeometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
 
                         var h = Math.Sqrt(Math.Pow(l.X - scaler.CenterX, 2) + Math.Pow(l.Y - scaler.CenterY, 2));
                         var radius = (float)h;
@@ -427,16 +397,16 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
             if (visualSeparator.Geometry is not null)
             {
-                if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSepartator && lineSepartator.Separator is not null)
+                if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSeparator && lineSeparator.Separator is not null)
                 {
                     var innerPos = scaler.ToPixels(visualSeparator.Value, scaler.MinRadius);
 
-                    lineSepartator.Separator.X = innerPos.X;
-                    lineSepartator.Separator.X1 = location.X;
-                    lineSepartator.Separator.Y = innerPos.Y;
-                    lineSepartator.Separator.Y1 = location.Y;
+                    lineSeparator.Separator.X = innerPos.X;
+                    lineSeparator.Separator.X1 = location.X;
+                    lineSeparator.Separator.Y = innerPos.Y;
+                    lineSeparator.Separator.Y1 = location.Y;
 
-                    if (!_animatableBounds.HasPreviousState) lineSepartator.Separator.CompleteTransition(null);
+                    if (!_animatableBounds.HasPreviousState) lineSeparator.Separator.CompleteTransition(null);
                 }
 
                 if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)

@@ -363,14 +363,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 if (label is null)
                 {
                     var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? pieChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? pieChart.EasingFunction));
-
-                    l.CompleteTransition(null);
+                    l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -507,39 +500,26 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         if (IsFillSeries) return;
-
-        var isGauge = SeriesProperties.HasFlag(SeriesProperties.Gauge);
-
         var chart = chartPoint.Context.Chart;
-
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
+        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
 
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.StartAngle),
-                nameof(visual.SweepAngle),
-                nameof(visual.PushOut))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-
-        if ((SeriesProperties & SeriesProperties.Gauge) == 0)
-            _ = visual
-                .TransitionateProperties(
-                    nameof(visual.CenterX),
-                    nameof(visual.CenterY),
-                    nameof(visual.X),
-                    nameof(visual.Y),
-                    nameof(visual.InnerRadius),
-                    nameof(visual.Width),
-                    nameof(visual.Height))
-                .WithAnimation(animation =>
-                    animation
-                        .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-                .CompleteCurrentTransitions();
+        // Remove this if you see it again!
+        //if ((SeriesProperties & SeriesProperties.Gauge) == 0)
+        //    _ = visual
+        //        .TransitionateProperties(
+        //            nameof(visual.CenterX),
+        //            nameof(visual.CenterY),
+        //            nameof(visual.X),
+        //            nameof(visual.Y),
+        //            nameof(visual.InnerRadius),
+        //            nameof(visual.Width),
+        //            nameof(visual.Height))
+        //        .WithAnimation(animation =>
+        //            animation
+        //                .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+        //                .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+        //        .CompleteCurrentTransitions();
     }
 
     /// <summary>

@@ -99,10 +99,7 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
             };
             GeometryIntialized?.Invoke(_geometry);
 
-            _ = _geometry
-                .TransitionateProperties()
-                .WithAnimation(chart)
-                .CompleteCurrentTransitions();
+            _geometry.Animate(chart);
         }
 
         _geometry.X = x + _xc;

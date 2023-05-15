@@ -151,10 +151,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
                 Padding = Padding
             };
 
-            _ = _labelGeometry
-                .TransitionateProperties()
-                .WithAnimation(chart)
-                .CompleteCurrentTransitions();
+            _labelGeometry.Animate(chart);
         }
 
         _labelGeometry.Text = Text;
