@@ -135,7 +135,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 
         if (_labelGeometry is null)
         {
-            var cp = GetPositionRelativeToParent();
+            var cp = GetLayoutPosition();
 
             _labelGeometry = new LabelGeometry
             {
@@ -168,6 +168,13 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 
         var drawing = chart.Canvas.Draw();
         if (Paint is not null) _ = drawing.SelectPaint(Paint).Draw(_labelGeometry);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
+    protected internal override void SetParent(IGeometry<SkiaSharpDrawingContext> parent)
+    {
+        if (_labelGeometry is null) return;
+        _labelGeometry.Parent = parent;
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>

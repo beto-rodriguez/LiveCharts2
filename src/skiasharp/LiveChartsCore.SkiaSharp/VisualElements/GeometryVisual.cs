@@ -42,7 +42,58 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
     /// <summary>
     /// Occurs when the geometry is initialized.
     /// </summary>
-    public event Action<TGeometry>? GeometryIntialized;
+    public event Action<TGeometry>? GeometryInitialized;
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    {
+        var x = (float)X;
+        var y = (float)Y;
+
+        if (LocationUnit == MeasureUnit.ChartValues)
+        {
+            if (primaryScaler is null || secondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
+            x = secondaryScaler.ToPixels(x);
+            y = primaryScaler.ToPixels(y);
+        }
+
+        _targetLocation = new((float)X + _xc, (float)Y + _yc);
+        _ = Measure(chart, primaryScaler, secondaryScaler);
+
+        if (_geometry is null)
+        {
+            var cp = GetLayoutPosition();
+
+            _geometry = new TGeometry
+            {
+                X = cp.X,
+                Y = cp.Y,
+                Width = _actualSize.Width,
+                Height = _actualSize.Height
+            };
+            GeometryInitialized?.Invoke(_geometry);
+
+            _geometry.Animate(chart);
+        }
+
+        _geometry.X = x + _xc;
+        _geometry.Y = y + _yc;
+        _geometry.Width = _actualSize.Width;
+        _geometry.Height = _actualSize.Height;
+
+        var drawing = chart.Canvas.Draw();
+        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
+        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
+    protected internal override void SetParent(IGeometry<SkiaSharpDrawingContext> parent)
+    {
+        if (_geometry is null) return;
+        _geometry.Parent = parent;
+    }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
     public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
@@ -66,50 +117,6 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
     public override LvcSize GetTargetSize()
     {
         return _actualSize;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
-    {
-        var x = (float)X;
-        var y = (float)Y;
-
-        if (LocationUnit == MeasureUnit.ChartValues)
-        {
-            if (primaryScaler is null || secondaryScaler is null)
-                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
-
-            x = secondaryScaler.ToPixels(x);
-            y = primaryScaler.ToPixels(y);
-        }
-
-        _targetLocation = new((float)X + _xc, (float)Y + _yc);
-        _ = Measure(chart, primaryScaler, secondaryScaler);
-
-        if (_geometry is null)
-        {
-            var cp = GetPositionRelativeToParent();
-
-            _geometry = new TGeometry
-            {
-                X = cp.X,
-                Y = cp.Y,
-                Width = _actualSize.Width,
-                Height = _actualSize.Height
-            };
-            GeometryIntialized?.Invoke(_geometry);
-
-            _geometry.Animate(chart);
-        }
-
-        _geometry.X = x + _xc;
-        _geometry.Y = y + _yc;
-        _geometry.Width = _actualSize.Width;
-        _geometry.Height = _actualSize.Height;
-
-        var drawing = chart.Canvas.Draw();
-        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
-        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>

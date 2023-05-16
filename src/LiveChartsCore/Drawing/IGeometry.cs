@@ -31,6 +31,11 @@ public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaint
     where TDrawingContext : DrawingContext
 {
     /// <summary>
+    /// Gets or sets the parent shape, if any the X and Y properties will be relative to the parent.
+    /// </summary>
+    IGeometry<TDrawingContext>? Parent { get; set; }
+
+    /// <summary>
     /// Gets or sets the transform origin.
     /// </summary>
     LvcPoint TransformOrigin { get; set; }
@@ -69,7 +74,7 @@ public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaint
     LvcPoint SkewTransform { get; set; }
 
     /// <summary>
-    /// Gets or sets the x.
+    /// Gets or sets the x coordinate.
     /// </summary>
     /// <value>
     /// The x.
@@ -77,7 +82,7 @@ public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaint
     float X { get; set; }
 
     /// <summary>
-    /// Gets or sets the y.
+    /// Gets or sets the y coordinate.
     /// </summary>
     /// <value>
     /// The y.

@@ -66,31 +66,7 @@ public class VariableGeometryVisual : BaseGeometryVisual
     /// <summary>
     /// Occurs when the geometry is initialized.
     /// </summary>
-    public event Action<ISizedGeometry<SkiaSharpDrawingContext>>? GeometryIntialized;
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
-    {
-        var w = (float)Width;
-        var h = (float)Height;
-
-        if (SizeUnit == MeasureUnit.ChartValues)
-        {
-            if (primaryScaler is null || secondaryScaler is null)
-                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
-
-            w = secondaryScaler.MeasureInPixels(w);
-            h = primaryScaler.MeasureInPixels(h);
-        }
-
-        return _actualSize = new LvcSize(w, h);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
-    public override LvcSize GetTargetSize()
-    {
-        return _actualSize;
-    }
+    public event Action<ISizedGeometry<SkiaSharpDrawingContext>>? GeometryInitialized;
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
@@ -112,14 +88,14 @@ public class VariableGeometryVisual : BaseGeometryVisual
 
         if (!_isInitialized)
         {
-            var cp = GetPositionRelativeToParent();
+            var cp = GetLayoutPosition();
 
             Geometry.X = cp.X;
             Geometry.Y = cp.Y;
             Geometry.Width = _actualSize.Width;
             Geometry.Height = _actualSize.Height;
 
-            GeometryIntialized?.Invoke(Geometry);
+            GeometryInitialized?.Invoke(Geometry);
 
             Geometry.Animate(chart);
             _isInitialized = true;
@@ -135,9 +111,40 @@ public class VariableGeometryVisual : BaseGeometryVisual
         if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(Geometry);
     }
 
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
+    protected internal override void SetParent(IGeometry<SkiaSharpDrawingContext> parent)
+    {
+        if (_geometry is null) return;
+        _geometry.Parent = parent;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    {
+        var w = (float)Width;
+        var h = (float)Height;
+
+        if (SizeUnit == MeasureUnit.ChartValues)
+        {
+            if (primaryScaler is null || secondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
+            w = secondaryScaler.MeasureInPixels(w);
+            h = primaryScaler.MeasureInPixels(h);
+        }
+
+        return _actualSize = new LvcSize(w, h);
+    }
+
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
     public override LvcPoint GetTargetLocation()
     {
         return _targetPosition;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
+    public override LvcSize GetTargetSize()
+    {
+        return _actualSize;
     }
 }

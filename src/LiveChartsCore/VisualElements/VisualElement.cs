@@ -22,7 +22,6 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -41,7 +40,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     internal double _y;
     internal float _xc;
     internal float _yc;
-    internal ISizedGeometry<TDrawingContext>? _parent;
     private int _scalesXAt;
     private int _scalesYAt;
 
@@ -77,11 +75,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The index of the axis.
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -167,16 +160,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     }
 
     /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    /// <summary>
     /// Called when the visual is drawn.
     /// </summary>
     /// <param name="chart">The chart.</param>
@@ -190,21 +173,27 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
 
     /// <summary>
+    /// Sets the parent to all the geometries in the visual.
+    /// </summary>
+    protected internal abstract void SetParent(IGeometry<TDrawingContext> parent);
+
+    /// <summary>
     /// Gets the position of the element considering the parent current state.
     /// </summary>
     /// <returns></returns>
-    protected LvcPoint GetPositionRelativeToParent()
+    protected LvcPoint GetLayoutPosition()
     {
         var parentX = 0f;
         var parentY = 0f;
 
-        if (_parent is not null)
-        {
-            var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
-            var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
-            parentX = xProperty.GetCurrentValue((Animatable)_parent);
-            parentY = yProperty.GetCurrentValue((Animatable)_parent);
-        }
+        //DELETEME
+        //if (_parent is not null)
+        //{
+        //    var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
+        //    var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
+        //    parentX = xProperty.GetCurrentValue((Animatable)_parent);
+        //    parentY = yProperty.GetCurrentValue((Animatable)_parent);
+        //}
 
         return new LvcPoint(parentX + X, parentY + Y);
     }
