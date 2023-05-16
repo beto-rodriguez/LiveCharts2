@@ -83,15 +83,13 @@ public class VariableGeometryVisual : BaseGeometryVisual
             y = primaryScaler.ToPixels(y);
         }
 
-        _targetPosition = new((float)X + _xc, (float)Y + _yc);
+        _targetPosition = new((float)X, (float)Y);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
         if (!_isInitialized)
         {
-            var cp = GetLayoutPosition();
-
-            Geometry.X = cp.X;
-            Geometry.Y = cp.Y;
+            Geometry.X = (float)X;
+            Geometry.Y = (float)Y;
             Geometry.Width = _actualSize.Width;
             Geometry.Height = _actualSize.Height;
 
@@ -101,8 +99,8 @@ public class VariableGeometryVisual : BaseGeometryVisual
             _isInitialized = true;
         }
 
-        Geometry.X = x + _xc;
-        Geometry.Y = y + _yc;
+        Geometry.X = x;
+        Geometry.Y = y;
         Geometry.Width = _actualSize.Width;
         Geometry.Height = _actualSize.Height;
 

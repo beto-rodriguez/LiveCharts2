@@ -66,22 +66,15 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-        _targetPosition = new((float)X + _xc, (float)Y + _yc);
+        _targetPosition = new((float)X, (float)Y);
 
-        if (_boundsGeometry is null)
+        _boundsGeometry ??= new TBackgroundGeometry
         {
-            var cp = GetLayoutPosition();
-
-            _boundsGeometry = new TBackgroundGeometry
-            {
-                X = cp.X,
-                Y = cp.Y,
-                Width = Size.Width,
-                Height = Size.Height
-            };
-
-            //_backgroundGeometry.Animate(chart);
-        }
+            X = (float)X,
+            Y = (float)Y,
+            Width = Size.Width,
+            Height = Size.Height
+        };
 
         // NOTE #20231605
         // force the background to have at least an invisible geometry
@@ -100,11 +93,10 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
 
         foreach (var child in Children)
         {
-            child._xc = _xc;
-            child._yc = _yc;
             child._x = X;
             child._y = Y;
             child.OnInvalidated(chart, primaryScaler, secondaryScaler);
+            child.SetParent(_boundsGeometry);
         }
     }
 

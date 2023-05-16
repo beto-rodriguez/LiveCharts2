@@ -59,17 +59,15 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
             y = primaryScaler.ToPixels(y);
         }
 
-        _targetLocation = new((float)X + _xc, (float)Y + _yc);
+        _targetLocation = new((float)X, (float)Y);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
         if (_geometry is null)
         {
-            var cp = GetLayoutPosition();
-
             _geometry = new TGeometry
             {
-                X = cp.X,
-                Y = cp.Y,
+                X = (float)X,
+                Y = (float)Y,
                 Width = _actualSize.Width,
                 Height = _actualSize.Height
             };
@@ -78,8 +76,8 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
             _geometry.Animate(chart);
         }
 
-        _geometry.X = x + _xc;
-        _geometry.Y = y + _yc;
+        _geometry.X = x;
+        _geometry.Y = y;
         _geometry.Width = _actualSize.Width;
         _geometry.Height = _actualSize.Height;
 

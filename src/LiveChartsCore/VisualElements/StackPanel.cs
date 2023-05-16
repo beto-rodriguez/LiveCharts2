@@ -84,22 +84,20 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         var xl = Padding.Left;
         var yl = Padding.Top;
 
-        _targetPosition = new((float)X + _xc, (float)Y + _yc);
+        _targetPosition = new((float)X, (float)Y);
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
 
         if (_boundsGeometry is null)
         {
-            var cp = GetLayoutPosition();
-
             _boundsGeometry = new TBackgroundGeometry
             {
-                X = cp.X,
-                Y = cp.Y,
+                X = (float)X,
+                Y = (float)Y,
                 Width = controlSize.Width,
                 Height = controlSize.Height
             };
 
-            //_backgroundGeometry.Animate(chart);
+            _boundsGeometry.Animate(chart);
         }
 
         // NOTE #20231605
@@ -122,11 +120,6 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
             _ = child.Measure(chart, primaryScaler, secondaryScaler);
             var childSize = child.GetTargetSize();
 
-            child.SetParent(_boundsGeometry);
-
-            child._xc = _targetPosition.X;
-            child._yc = _targetPosition.Y;
-
             if (Orientation == ContainerOrientation.Horizontal)
             {
                 child._x = xl;
@@ -135,6 +128,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                     : VerticalAlignment == Align.End
                         ? yl + controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height
                         : yl;
+
+                xl += childSize.Width;
             }
             else
             {
@@ -144,12 +139,12 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                         ? xl + controlSize.Width - Padding.Left - Padding.Right - childSize.Width
                         : xl;
                 child._y = yl;
+
+                yl += childSize.Height;
             }
 
             child.OnInvalidated(chart, primaryScaler, secondaryScaler);
-
-            xl += childSize.Width;
-            yl += childSize.Height;
+            child.SetParent(_boundsGeometry);
         }
     }
 

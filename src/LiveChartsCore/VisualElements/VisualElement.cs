@@ -38,8 +38,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 {
     internal double _x;
     internal double _y;
-    internal float _xc;
-    internal float _yc;
     private int _scalesXAt;
     private int _scalesYAt;
 
@@ -176,27 +174,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Sets the parent to all the geometries in the visual.
     /// </summary>
     protected internal abstract void SetParent(IGeometry<TDrawingContext> parent);
-
-    /// <summary>
-    /// Gets the position of the element considering the parent current state.
-    /// </summary>
-    /// <returns></returns>
-    protected LvcPoint GetLayoutPosition()
-    {
-        var parentX = 0f;
-        var parentY = 0f;
-
-        //DELETEME
-        //if (_parent is not null)
-        //{
-        //    var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
-        //    var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
-        //    parentX = xProperty.GetCurrentValue((Animatable)_parent);
-        //    parentY = yProperty.GetCurrentValue((Animatable)_parent);
-        //}
-
-        return new LvcPoint(parentX + X, parentY + Y);
-    }
 
     internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(IChart chart, LvcPoint point)
     {

@@ -130,19 +130,17 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
             y = primaryScaler.ToPixels(y);
         }
 
-        _targetPosition = new((float)X + _xc, (float)Y + _yc);
+        _targetPosition = new((float)X, (float)Y);
         _ = Measure(chart, primaryScaler, secondaryScaler);
 
         if (_labelGeometry is null)
         {
-            var cp = GetLayoutPosition();
-
             _labelGeometry = new LabelGeometry
             {
                 Text = Text,
                 TextSize = (float)TextSize,
-                X = cp.X,
-                Y = cp.Y,
+                X = (float)x,
+                Y = (float)y,
                 RotateTransform = (float)Rotation,
                 TranslateTransform = Translate,
                 VerticalAlign = VerticalAlignment,
@@ -156,8 +154,8 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 
         _labelGeometry.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
-        _labelGeometry.X = x + _xc;
-        _labelGeometry.Y = y + _yc;
+        _labelGeometry.X = x;
+        _labelGeometry.Y = y;
         _labelGeometry.RotateTransform = (float)Rotation;
         _labelGeometry.TranslateTransform = Translate;
         _labelGeometry.VerticalAlign = VerticalAlignment;
