@@ -75,17 +75,27 @@ public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaint
 
     /// <summary>
     /// Gets or sets the x coordinate.
+    /// When the parent is null the coordinates are relative to the canvas.
+    /// When the parent is not null
+    /// the setter coordinates are relative to the parent
+    /// but
+    /// the getter is relative to the canvas.
     /// </summary>
     /// <value>
-    /// The x.
+    /// The x coordinate.
     /// </value>
     float X { get; set; }
 
     /// <summary>
     /// Gets or sets the y coordinate.
+    /// When the parent is null the coordinates are relative to the canvas.
+    /// When the parent is not null
+    /// the setter coordinates are relative to the parent
+    /// but
+    /// the getter is relative to the canvas.
     /// </summary>
     /// <value>
-    /// The y.
+    /// The y coordinate.
     /// </value>
     float Y { get; set; }
 
