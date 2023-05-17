@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -35,7 +34,6 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     where TDrawingContext : DrawingContext
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private LvcPoint _targetPosition;
     private IPaint<TDrawingContext>? _backgroundPaint;
     private readonly TBackgroundGeometry _boundsGeometry = new();
 
@@ -83,14 +81,13 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         return new IAnimatable?[] { _boundsGeometry };
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
+    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
         var xl = Padding.Left;
         var yl = Padding.Top;
 
-        _targetPosition = new((float)X, (float)Y);
-        var controlSize = Measure(chart, primaryScaler, secondaryScaler);
+        var controlSize = Measure(chart);
 
         // NOTE #20231605
         // force the background to have at least an invisible geometry
@@ -101,16 +98,15 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         chart.Canvas.AddDrawableTask(BackgroundPaint);
-        _boundsGeometry.X = _targetPosition.X;
-        _boundsGeometry.Y = _targetPosition.Y;
+        _boundsGeometry.X = (float)X;
+        _boundsGeometry.Y = (float)Y;
         _boundsGeometry.Width = controlSize.Width;
         _boundsGeometry.Height = controlSize.Height;
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, _boundsGeometry);
 
         foreach (var child in Children)
         {
-            _ = child.Measure(chart, primaryScaler, secondaryScaler);
-            var childSize = child.GetTargetSize();
+            var childSize = child.Measure(chart);
 
             if (Orientation == ContainerOrientation.Horizontal)
             {
@@ -135,7 +131,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                 yl += childSize.Height;
             }
 
-            child.OnInvalidated(chart, primaryScaler, secondaryScaler);
+            child.OnInvalidated(chart);
             child.SetParent(_boundsGeometry);
         }
     }
@@ -147,11 +143,30 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         _boundsGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public override LvcSize Measure(Chart<TDrawingContext> chart)
     {
-        foreach (var child in Children) _ = child.Measure(chart, primaryScaler, secondaryScaler);
-        return GetTargetSize();
+        foreach (var child in Children) _ = child.Measure(chart);
+
+        var size = Orientation == ContainerOrientation.Horizontal
+            ? Children.Aggregate(new LvcSize(), (current, next) =>
+            {
+                var size = next.Measure(chart);
+
+                return new LvcSize(
+                    current.Width + size.Width,
+                    size.Height > current.Height ? size.Height : current.Height);
+            })
+            : Children.Aggregate(new LvcSize(), (current, next) =>
+            {
+                var size = next.Measure(chart);
+
+                return new LvcSize(
+                    size.Width > current.Width ? size.Width : current.Width,
+                    current.Height + size.Height);
+            });
+
+        return new LvcSize(Padding.Left + Padding.Right + size.Width, Padding.Top + Padding.Bottom + size.Height);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
@@ -163,35 +178,5 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         }
 
         base.RemoveFromUI(chart);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
-    public override LvcPoint GetTargetLocation()
-    {
-        return _targetPosition;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
-    public override LvcSize GetTargetSize()
-    {
-        var size = Orientation == ContainerOrientation.Horizontal
-            ? Children.Aggregate(new LvcSize(), (current, next) =>
-            {
-                var size = next.GetTargetSize();
-
-                return new LvcSize(
-                    current.Width + size.Width,
-                    size.Height > current.Height ? size.Height : current.Height);
-            })
-            : Children.Aggregate(new LvcSize(), (current, next) =>
-            {
-                var size = next.GetTargetSize();
-
-                return new LvcSize(
-                    size.Width > current.Width ? size.Width : current.Width,
-                    current.Height + size.Height);
-            });
-
-        return new LvcSize(Padding.Left + Padding.Right + size.Width, Padding.Top + Padding.Bottom + size.Height);
     }
 }

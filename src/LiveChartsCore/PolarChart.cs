@@ -393,7 +393,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             var ts = 0f;
             if (View.Title is not null)
             {
-                var titleSize = View.Title.Measure(this, null, null);
+                var titleSize = View.Title.Measure(this);
                 m.Top = titleSize.Height;
                 ts = titleSize.Height;
             }
@@ -453,7 +453,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         var title = View.Title;
         if (title is not null)
         {
-            var titleSize = title.Measure(this, null, null);
+            var titleSize = title.Measure(this);
             title.AlignToTopLeftCorner();
             title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
             title.Y = 0;

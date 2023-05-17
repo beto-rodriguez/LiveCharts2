@@ -35,36 +35,33 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
     where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
 {
     internal readonly TGeometry _geometry = new();
-    private LvcSize _actualSize = new();
-    private LvcPoint _targetLocation = new();
 
     internal override IAnimatable?[] GetDrawnGeometries()
     {
         return new IAnimatable?[] { _geometry };
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
+    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
     {
         var x = (float)X;
         var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
-            if (primaryScaler is null || secondaryScaler is null)
+            if (PrimaryScaler is null || SecondaryScaler is null)
                 throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
 
-            x = secondaryScaler.ToPixels(x);
-            y = primaryScaler.ToPixels(y);
+            x = SecondaryScaler.ToPixels(x);
+            y = PrimaryScaler.ToPixels(y);
         }
 
-        _targetLocation = new((float)X, (float)Y);
-        _ = Measure(chart, primaryScaler, secondaryScaler);
+        var size = Measure(chart);
 
         _geometry.X = x;
         _geometry.Y = y;
-        _geometry.Width = _actualSize.Width;
-        _geometry.Height = _actualSize.Height;
+        _geometry.Width = size.Width;
+        _geometry.Height = size.Height;
 
         var drawing = chart.Canvas.Draw();
         if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
@@ -78,33 +75,21 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
         _geometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
     {
         var w = (float)Width;
         var h = (float)Height;
 
         if (SizeUnit == MeasureUnit.ChartValues)
         {
-            if (primaryScaler is null || secondaryScaler is null)
+            if (PrimaryScaler is null || SecondaryScaler is null)
                 throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
 
-            w = secondaryScaler.MeasureInPixels(w);
-            h = primaryScaler.MeasureInPixels(h);
+            w = SecondaryScaler.MeasureInPixels(w);
+            h = PrimaryScaler.MeasureInPixels(h);
         }
 
-        return _actualSize = new LvcSize(w, h);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
-    public override LvcSize GetTargetSize()
-    {
-        return _actualSize;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
-    public override LvcPoint GetTargetLocation()
-    {
-        return _targetLocation;
+        return new LvcSize(w, h);
     }
 }

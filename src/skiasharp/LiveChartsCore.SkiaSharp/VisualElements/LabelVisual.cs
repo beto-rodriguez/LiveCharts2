@@ -119,23 +119,23 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         HorizontalAlignment = Align.Start;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
+    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
     {
         var x = (float)X;
         var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
-            if (primaryScaler is null || secondaryScaler is null)
+            if (PrimaryScaler is null || SecondaryScaler is null)
                 throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
 
-            x = secondaryScaler.ToPixels(x);
-            y = primaryScaler.ToPixels(y);
+            x = SecondaryScaler.ToPixels(x);
+            y = PrimaryScaler.ToPixels(y);
         }
 
         _targetPosition = new((float)X, (float)Y);
-        _ = Measure(chart, primaryScaler, secondaryScaler);
+        _ = Measure(chart);
 
         _labelGeometry.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
@@ -160,8 +160,8 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         _labelGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
     {
         _labelGeometry.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
@@ -175,30 +175,5 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         return _actualSize = _paint is null
             ? new LvcSize()
             : _labelGeometry.Measure(_paint);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
-    public override LvcSize GetTargetSize()
-    {
-        return _actualSize;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
-    public override LvcPoint GetTargetLocation()
-    {
-        var x = _targetPosition.X;
-        var y = _targetPosition.Y;
-
-        x += Translate.X;
-        y += Translate.Y;
-
-        var size = GetTargetSize();
-        if (HorizontalAlignment == Align.Middle) x -= size.Width * 0.5f;
-        if (HorizontalAlignment == Align.End) x -= size.Width;
-
-        if (VerticalAlignment == Align.Middle) y -= size.Height * 0.5f;
-        if (VerticalAlignment == Align.End) y -= size.Height;
-
-        return new(x, y);
     }
 }

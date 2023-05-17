@@ -443,33 +443,6 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Finds the closest visual to the specified location [in pixels].
-    /// </summary>
-    /// <typeparam name="T">The type of the drawing context.</typeparam>
-    /// <param name="source">The visuals to look into.</param>
-    /// <param name="point">The location in pixels.</param>
-    /// <returns></returns>
-    public static VisualElement<T>? FindClosestTo<T>(this IEnumerable<VisualElement<T>> source, LvcPoint point)
-        where T : DrawingContext
-    {
-        return source.Select(visual =>
-        {
-            var location = visual.GetTargetLocation();
-            var size = visual.GetTargetSize();
-
-            return new
-            {
-                distance = Math.Sqrt(
-                    Math.Pow(point.X - (location.X + size.Width * 0.5), 2) +
-                    Math.Pow(point.Y - (location.Y + size.Height * 0.5), 2)),
-                visual
-            };
-        })
-        .OrderBy(p => p.distance)
-        .FirstOrDefault()?.visual;
-    }
-
-    /// <summary>
     /// Gets a scaler for the given axis with the measured bounds (the target, the final dimension of the chart).
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>

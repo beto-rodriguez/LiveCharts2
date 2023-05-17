@@ -250,7 +250,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
     }
 
     void IChartView.Invalidate()

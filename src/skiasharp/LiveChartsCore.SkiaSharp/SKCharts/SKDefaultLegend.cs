@@ -171,7 +171,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         var skiaChart = (Chart<SkiaSharpDrawingContext>)chart;
         BuildLayout(skiaChart);
         if (_stackPanel is null) return;
-        Size = _stackPanel.Measure(skiaChart, null, null);
+        Size = _stackPanel.Measure(skiaChart);
     }
 
     private VisualElement<SkiaSharpDrawingContext> GetSeriesVisual(IChartSeries<SkiaSharpDrawingContext> series)
