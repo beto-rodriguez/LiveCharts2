@@ -60,7 +60,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
         var skiaChart = (Chart<SkiaSharpDrawingContext>)chart;
         BuildLayout(skiaChart);
         if (_stackPanel is null) return;
-        Size = _stackPanel.Measure(skiaChart, null, null);
+        Size = _stackPanel.Measure(skiaChart);
     }
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
