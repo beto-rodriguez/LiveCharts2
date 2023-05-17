@@ -163,7 +163,6 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
     public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
-
         _labelGeometry.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
         _labelGeometry.RotateTransform = (float)Rotation;

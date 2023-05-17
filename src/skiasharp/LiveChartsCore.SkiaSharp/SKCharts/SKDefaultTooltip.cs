@@ -129,7 +129,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
 
         foreach (var seriesVisual in toRemoveSeries)
         {
-            _ = _stackPanel.Children.Remove(seriesVisual.LabelVisual);
+            _ = _stackPanel.Children.Remove(seriesVisual.Visual);
             chart.RemoveVisual(seriesVisual.Visual);
             _ = _seriesVisualsMap.Remove(seriesVisual.Series);
         }
@@ -186,7 +186,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
             }
         };
 
-        _ = _stackPanel?.Children.Add(label);
+        _ = _stackPanel?.Children.Add(sp);
         var seriesVisual = new SeriesVisual(point.Context.Series, sp, label);
         _seriesVisualsMap.Add(point.Context.Series, seriesVisual);
 
