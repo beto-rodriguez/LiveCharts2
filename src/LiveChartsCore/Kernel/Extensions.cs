@@ -252,6 +252,59 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart
+    /// for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <param name="visual">The visual.</param>
+    /// <param name="animation">The animation.</param>
+    /// <param name="properties">The properties.</param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Animation animation, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        foreach (var animatable in visual.GetDrawnGeometries())
+        {
+            if (animatable is null) continue;
+            Animate(animatable, animation, properties);
+        }
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the specified <paramref name="easingFunction"/> and <paramref name="speed"/>
+    /// for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <param name="visual">The visual object.</param>
+    /// <param name="easingFunction">The animation's easing function.</param>
+    /// <param name="speed">The animation's speed.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(visual, new Animation(easingFunction, speed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
+    /// if the properties are not set, then all the animatable properties in the object will use the given animation.
+    /// The transition will be set for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <param name="visual">The visual`` object.</param>
+    /// <param name="chart">
+    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
+    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// </param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Chart<TDrawingContext> chart, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(visual, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
+    }
+
+    /// <summary>
     /// Determines whether is bar series.
     /// </summary>
     /// <param name="series">The series.</param>

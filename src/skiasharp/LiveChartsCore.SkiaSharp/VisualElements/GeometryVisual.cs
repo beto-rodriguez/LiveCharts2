@@ -22,7 +22,6 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
@@ -35,14 +34,14 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 public class GeometryVisual<TGeometry> : BaseGeometryVisual
     where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
 {
-    internal TGeometry? _geometry;
+    internal readonly TGeometry _geometry = new();
     private LvcSize _actualSize = new();
     private LvcPoint _targetLocation = new();
 
-    /// <summary>
-    /// Occurs when the geometry is initialized.
-    /// </summary>
-    public event Action<TGeometry>? GeometryInitialized;
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { _geometry };
+    }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
@@ -61,20 +60,6 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
 
         _targetLocation = new((float)X, (float)Y);
         _ = Measure(chart, primaryScaler, secondaryScaler);
-
-        if (_geometry is null)
-        {
-            _geometry = new TGeometry
-            {
-                X = (float)X,
-                Y = (float)Y,
-                Width = _actualSize.Width,
-                Height = _actualSize.Height
-            };
-            GeometryInitialized?.Invoke(_geometry);
-
-            _geometry.Animate(chart);
-        }
 
         _geometry.X = x;
         _geometry.Y = y;

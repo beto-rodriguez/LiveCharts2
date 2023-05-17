@@ -96,14 +96,22 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
-        var sp = _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+        if (_stackPanel is null)
         {
-            Padding = new Padding(12, 8),
-            Orientation = ContainerOrientation.Vertical,
-            HorizontalAlignment = Align.Start,
-            VerticalAlignment = Align.Middle,
-            BackgroundPaint = BackgroundPaint
-        };
+            _stackPanel = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+            {
+                Padding = new Padding(12, 8),
+                Orientation = ContainerOrientation.Vertical,
+                HorizontalAlignment = Align.Start,
+                VerticalAlignment = Align.Middle,
+                BackgroundPaint = BackgroundPaint
+            };
+
+            _stackPanel
+                .Animate(chart,
+                    nameof(ISizedGeometry<SkiaSharpDrawingContext>.X),
+                    nameof(ISizedGeometry<SkiaSharpDrawingContext>.Y));
+        }
 
         var toRemoveSeries = new List<SeriesVisual>(_seriesVisualsMap.Values);
         foreach (var point in foundPoints)
@@ -121,12 +129,12 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
 
         foreach (var seriesVisual in toRemoveSeries)
         {
-            _ = _stackPanel.Children.Remove(seriesVisual.Visual);
+            _ = _stackPanel.Children.Remove(seriesVisual.LabelVisual);
             chart.RemoveVisual(seriesVisual.Visual);
             _ = _seriesVisualsMap.Remove(seriesVisual.Series);
         }
 
-        chart.AddVisual(sp);
+        chart.AddVisual(_stackPanel);
     }
 
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Hide"/>
@@ -178,7 +186,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageCo
             }
         };
 
-        _ = _stackPanel?.Children.Add(sp);
+        _ = _stackPanel?.Children.Add(label);
         var seriesVisual = new SeriesVisual(point.Context.Series, sp, label);
         _seriesVisualsMap.Add(point.Context.Series, seriesVisual);
 

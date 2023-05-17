@@ -193,6 +193,8 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
             yield return this;
     }
 
+    internal abstract IAnimatable?[] GetDrawnGeometries();
+
     internal virtual void AlignToTopLeftCorner()
     {
         // just a workaround to align labels as the rest of the geometries.

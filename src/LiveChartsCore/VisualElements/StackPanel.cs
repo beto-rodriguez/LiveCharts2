@@ -37,7 +37,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
 {
     private LvcPoint _targetPosition;
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private TBackgroundGeometry? _boundsGeometry;
+    private readonly TBackgroundGeometry _boundsGeometry = new();
 
     /// <summary>
     /// Gets the children collection.
@@ -78,6 +78,11 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         return new[] { _backgroundPaint };
     }
 
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { _boundsGeometry };
+    }
+
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
@@ -86,19 +91,6 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
 
         _targetPosition = new((float)X, (float)Y);
         var controlSize = Measure(chart, primaryScaler, secondaryScaler);
-
-        if (_boundsGeometry is null)
-        {
-            _boundsGeometry = new TBackgroundGeometry
-            {
-                X = (float)X,
-                Y = (float)Y,
-                Width = controlSize.Width,
-                Height = controlSize.Height
-            };
-
-            _boundsGeometry.Animate(chart);
-        }
 
         // NOTE #20231605
         // force the background to have at least an invisible geometry

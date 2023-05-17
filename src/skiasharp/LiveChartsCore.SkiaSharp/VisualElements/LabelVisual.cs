@@ -22,7 +22,6 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -35,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// </summary>
 public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 {
-    internal LabelGeometry? _labelGeometry;
+    internal readonly LabelGeometry _labelGeometry = new();
     internal IPaint<SkiaSharpDrawingContext>? _paint;
     internal bool _isVirtual = false;
     internal string _text = string.Empty;
@@ -109,6 +108,11 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         return new[] { _paint };
     }
 
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { _labelGeometry };
+    }
+
     internal override void AlignToTopLeftCorner()
     {
         VerticalAlignment = Align.Start;
@@ -132,25 +136,6 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 
         _targetPosition = new((float)X, (float)Y);
         _ = Measure(chart, primaryScaler, secondaryScaler);
-
-        if (_labelGeometry is null)
-        {
-            _labelGeometry = new LabelGeometry
-            {
-                Text = Text,
-                TextSize = (float)TextSize,
-                X = (float)x,
-                Y = (float)y,
-                RotateTransform = (float)Rotation,
-                TranslateTransform = Translate,
-                VerticalAlign = VerticalAlignment,
-                HorizontalAlign = HorizontalAlignment,
-                Background = BackgroundColor,
-                Padding = Padding
-            };
-
-            _labelGeometry.Animate(chart);
-        }
 
         _labelGeometry.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;

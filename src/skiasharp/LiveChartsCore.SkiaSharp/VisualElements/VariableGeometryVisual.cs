@@ -68,6 +68,11 @@ public class VariableGeometryVisual : BaseGeometryVisual
     /// </summary>
     public event Action<ISizedGeometry<SkiaSharpDrawingContext>>? GeometryInitialized;
 
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { _geometry };
+    }
+
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {

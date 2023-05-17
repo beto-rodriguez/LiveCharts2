@@ -37,7 +37,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
 {
     private LvcPoint _targetPosition;
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private TBackgroundGeometry? _boundsGeometry;
+    private readonly TBackgroundGeometry _boundsGeometry = new();
 
     /// <summary>
     /// Gets or sets the size.
@@ -63,18 +63,15 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         return Array.Empty<IPaint<TDrawingContext>>();
     }
 
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { _boundsGeometry };
+    }
+
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
     {
         _targetPosition = new((float)X, (float)Y);
-
-        _boundsGeometry ??= new TBackgroundGeometry
-        {
-            X = (float)X,
-            Y = (float)Y,
-            Width = Size.Width,
-            Height = Size.Height
-        };
 
         // NOTE #20231605
         // force the background to have at least an invisible geometry
