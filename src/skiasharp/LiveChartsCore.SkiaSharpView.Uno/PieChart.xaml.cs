@@ -642,7 +642,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

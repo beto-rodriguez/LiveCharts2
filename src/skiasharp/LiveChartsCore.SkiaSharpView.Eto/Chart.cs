@@ -405,7 +405,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
     }
 
     void IChartView.Invalidate()
