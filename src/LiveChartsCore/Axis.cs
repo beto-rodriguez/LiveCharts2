@@ -50,7 +50,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <summary>
     /// The active separators
     /// </summary>
-    protected readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
 
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
