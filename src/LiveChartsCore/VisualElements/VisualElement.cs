@@ -90,11 +90,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 
         if (chart is CartesianChart<TDrawingContext> cc)
         {
-            //var primaryAxis = cc.YAxes[ScalesYAt];
-            //var secondaryAxis = cc.XAxes[ScalesXAt];
+            var primaryAxis = cc.YAxes[ScalesYAt];
+            var secondaryAxis = cc.XAxes[ScalesXAt];
 
-            //SecondaryScaler = secondaryAxis.GetNextScaler(cc);
-            //PrimaryScaler = primaryAxis.GetNextScaler(cc);
+            SecondaryScaler = secondaryAxis.GetNextScaler(cc);
+            PrimaryScaler = primaryAxis.GetNextScaler(cc);
         }
 
         // Todo: polar and pie
