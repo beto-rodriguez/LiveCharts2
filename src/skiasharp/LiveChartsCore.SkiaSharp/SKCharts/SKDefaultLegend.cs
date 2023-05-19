@@ -20,40 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.SKCharts.Helpers;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
-/// <inheritdoc cref="IChartLegend{TDrawingContext}" />
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
 {
     private static readonly int s_zIndex = 10050;
-    private ContainerOrientation _orientation = ContainerOrientation.Vertical;
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
-    private readonly DoubleDict<IChartSeries<SkiaSharpDrawingContext>, VisualElement<SkiaSharpDrawingContext>> _activeSeries = new();
-    private List<VisualElement<SkiaSharpDrawingContext>> _toRemoveSeries = new();
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKDefaultLegend"/> class.
-    /// </summary>
-    public SKDefaultLegend()
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
     {
-        FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
-    }
-
-    /// <inheritdoc cref="IImageControl.Size"/>
-    public LvcSize Size { get; set; }
+        Padding = new Padding(15, 4),
+        HorizontalAlignment = Align.Start,
+        VerticalAlignment = Align.Middle
+    };
 
     /// <summary>
     /// Gets or sets the legend font paint.
@@ -81,25 +69,18 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     /// </summary>
     public double TextSize { get; set; } = 15;
 
-    void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
-    {
-        if (chart.Legend is null || chart.LegendPosition == LegendPosition.Hidden) return;
+    public LvcSize Size { get; private set; }
 
+    public SKDefaultLegend()
+    {
+        FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
+    }
+
+    public void Draw(Chart<SkiaSharpDrawingContext> chart)
+    {
         Measure(chart);
 
-        if (_stackPanel is null) return;
-        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
-        if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
-
         var actualChartSize = chart.ControlSize;
-
-        // this seems a constant layout issue...
-        // ToDo:
-        // this is a workaround to force the legend to be drawn in the correct position
-        // It seems that this value is constant, it seems to not be affected by the font size or the stack panel properties.
-        // is this and SkiaSharp measure issue?
-        // is it a LiveCharts issue?
-        var iDontKnowWhyThis = 17;
 
         if (chart.LegendPosition == LegendPosition.Top)
         {
@@ -120,18 +101,18 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         }
         if (chart.LegendPosition == LegendPosition.Right)
         {
-            _stackPanel.X = actualChartSize.Width - iDontKnowWhyThis;
+            _stackPanel.X = actualChartSize.Width; //- iDontKnowWhyThis;
             _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
         }
 
         chart.AddVisual(_stackPanel);
+    }
 
-        foreach (var visual in _toRemoveSeries)
-        {
-            _ = _stackPanel.Children.Remove(visual);
-            chart.RemoveVisual(visual);
-            if (_activeSeries.TryGetValue(visual, out var series)) _ = _activeSeries.Remove(series);
-        }
+    public void Measure(IChart chart)
+    {
+        var c = (Chart<SkiaSharpDrawingContext>)chart;
+        BuildLayout(c);
+        Size = _stackPanel.Measure(c);
     }
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
@@ -140,70 +121,40 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
         if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
 
-        _orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
+        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
+        if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
+
+        _stackPanel.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
             ? ContainerOrientation.Vertical
             : ContainerOrientation.Horizontal;
 
-        _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+        foreach (var visual in _stackPanel.Children)
         {
-            Padding = new Padding(0),
-            HorizontalAlignment = Align.Start,
-            VerticalAlignment = Align.Middle,
-        };
-
-        _stackPanel.Orientation = _orientation;
-        _stackPanel.BackgroundPaint = BackgroundPaint;
-
-        _toRemoveSeries = new List<VisualElement<SkiaSharpDrawingContext>>(_stackPanel.Children);
+            _ = _stackPanel.Children.Remove(visual);
+            chart.RemoveVisual(visual);
+        }
 
         foreach (var series in chart.ChartSeries)
         {
-            if (!series.IsVisibleAtLegend) continue;
-
-            var seriesMiniatureVisual = GetSeriesVisual(series);
-            _ = _toRemoveSeries.Remove(seriesMiniatureVisual);
-        }
-    }
-
-    /// <inheritdoc cref="IImageControl.Measure(IChart)"/>
-    public void Measure(IChart chart)
-    {
-        var skiaChart = (Chart<SkiaSharpDrawingContext>)chart;
-        BuildLayout(skiaChart);
-        if (_stackPanel is null) return;
-        Size = _stackPanel.Measure(skiaChart);
-    }
-
-    private VisualElement<SkiaSharpDrawingContext> GetSeriesVisual(IChartSeries<SkiaSharpDrawingContext> series)
-    {
-        if (_activeSeries.TryGetValue(series, out var seriesPanel)) return seriesPanel;
-
-        var sketch = series.GetMiniatresSketch();
-        var relativePanel = sketch.AsDrawnControl();
-
-        var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
-        {
-            Padding = new Padding(15, 4),
-            VerticalAlignment = Align.Middle,
-            HorizontalAlignment = Align.Middle,
-            Children =
+            _ = _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
-                relativePanel,
-                new LabelVisual
+                Padding = new Padding(0, 4),
+                VerticalAlignment = Align.Middle,
+                HorizontalAlignment = Align.Middle,
+                Children =
                 {
-                    Text = series.Name ?? string.Empty,
-                    Paint = FontPaint,
-                    TextSize = TextSize,
-                    Padding = new Padding(8, 0, 0, 0),
-                    VerticalAlignment = Align.Start,
-                    HorizontalAlignment = Align.Start
+                    series.GetMiniatresSketch().AsDrawnControl(),
+                    new LabelVisual
+                    {
+                        Text = series.Name ?? string.Empty,
+                        Paint = FontPaint,
+                        TextSize = TextSize,
+                        Padding = new Padding(8, 0, 0, 0),
+                        VerticalAlignment = Align.Start,
+                        HorizontalAlignment = Align.Start
+                    }
                 }
-            }
-        };
-
-        _ = _stackPanel?.Children.Add(sp);
-        _activeSeries.Add(series, sp);
-
-        return sp;
+            });
+        }
     }
 }
