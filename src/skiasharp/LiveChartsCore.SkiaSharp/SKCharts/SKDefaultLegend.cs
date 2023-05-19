@@ -106,6 +106,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         }
 
         chart.AddVisual(_stackPanel);
+        if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
     }
 
     public void Measure(IChart chart)
@@ -138,7 +139,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         {
             _ = _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
-                Padding = new Padding(0, 4),
+                Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
                 Children =
