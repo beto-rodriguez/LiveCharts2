@@ -90,14 +90,8 @@ public class RelativePanelTest
 
         Assert.IsTrue(
             g1Geometry.X == 110 &&
-
-            // 200 top + 20 padding
             g1Geometry.Y == 215 &&
-
-            // 100 left + 10 padding + 15 previous width
             g2Geometry.X == 120 &&
-
-            // preserve the previous y...
             g2Geometry.Y == 230);
     }
 }
