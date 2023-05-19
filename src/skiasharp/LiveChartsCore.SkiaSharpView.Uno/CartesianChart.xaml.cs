@@ -721,10 +721,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             SizeChanged += OnSizeChanged;
 
             _motionCanvas.Pinched += OnCanvasPinched;
-
-            var canvasContainer = (Canvas)FindName("canvasContainer");
-            grid.Width = canvasContainer.ActualWidth;
-            grid.Height = canvasContainer.ActualHeight;
         }
 
         _core.Load();
@@ -744,11 +740,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         if (_core == null) throw new Exception("Core not found!");
-
-        var canvasContainer = (Canvas)FindName("canvasContainer");
-        grid.Width = canvasContainer.ActualWidth;
-        grid.Height = canvasContainer.ActualHeight;
-
         _core.Update();
     }
 

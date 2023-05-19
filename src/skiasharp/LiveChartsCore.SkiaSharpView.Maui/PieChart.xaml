@@ -3,22 +3,7 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui">
-	<ContentView.Content>
-        <AbsoluteLayout>
-            <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <lvc:MotionCanvas Grid.Column="0" x:Name="canvas" />
-                <!--<lvc:DefaultLegend Grid.Column="1" x:Name="legend"/>-->
-            </Grid>
-
-            <!--<lvc:DefaultTooltip x:Name="tooltip"
-                            AbsoluteLayout.LayoutFlags="PositionProportional"
-                            AbsoluteLayout.LayoutBounds=".05,.05,-1,-1">
-            </lvc:DefaultTooltip>-->
-        </AbsoluteLayout>
+    <ContentView.Content>
+        <lvc:MotionCanvas Grid.Column="0" x:Name="canvas" />
     </ContentView.Content>
 </ContentView>

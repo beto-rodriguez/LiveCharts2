@@ -9,8 +9,6 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid>
-        <local:MotionCanvas x:Name="canvas" >
-        </local:MotionCanvas>
-    </Grid>
+    <local:MotionCanvas x:Name="canvas" />
+
 </UserControl>

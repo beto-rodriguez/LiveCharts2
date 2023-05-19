@@ -9,34 +9,6 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <!--
+    <local:MotionCanvas x:Name="motionCanvas" />
 
-    Probably not implemented in Uno.Mobile?
-    As a workaround we use a Cavas container and move the things manually.
-    
-    <ToolTipService.ToolTip>
-        <ToolTip x:Name="tooltipControl" BorderThickness="0" Padding="0" Background="Transparent">
-            <local:DefaultTooltip x:Name="tooltip"/>
-        </ToolTip>
-    </ToolTipService.ToolTip>
-
-    -->
-
-    <Canvas x:Name="canvasContainer">
-        <Grid x:Name="grid">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-            </Grid.RowDefinitions>
-            <local:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="motionCanvas" />
-            <!--<local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
-        </Grid>
-        <!--<local:DefaultTooltip x:Name="tooltip"/>-->
-    </Canvas>
 </UserControl>

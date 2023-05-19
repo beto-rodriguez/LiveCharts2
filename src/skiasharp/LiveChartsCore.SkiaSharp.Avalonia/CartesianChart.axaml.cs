@@ -636,8 +636,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        legend = new SKDefaultLegend(); // this.FindControl<DefaultLegend>("legend");
-        tooltip = new SKDefaultTooltip(); // this.FindControl<DefaultTooltip>("tooltip");
+        legend = new SKDefaultLegend();
+        tooltip = new SKDefaultTooltip();
 
         _core.Update();
     }
