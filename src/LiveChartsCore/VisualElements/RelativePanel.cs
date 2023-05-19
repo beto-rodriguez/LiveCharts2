@@ -86,8 +86,8 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
 
         foreach (var child in Children)
         {
-            child._x = X;
-            child._y = Y;
+            child._x = 0;
+            child._y = 0;
             child.OnInvalidated(chart);
             child.SetParent(_boundsGeometry);
         }
