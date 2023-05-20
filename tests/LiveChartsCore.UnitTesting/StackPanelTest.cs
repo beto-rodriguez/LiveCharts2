@@ -873,4 +873,445 @@ public class StackPanelTest
             panelSize.Width == 36 &&
             panelSize.Height == 50);
     }
+
+    [TestMethod]
+    public void StackPanelVerticalStartWrap()
+    {
+        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        {
+            Padding = new Drawing.Padding(0),
+            X = 200,
+            Y = 100,
+            MaxHeight = 12 * 3,
+            HorizontalAlignment = Drawing.Align.Start,
+            Orientation = Drawing.ContainerOrientation.Vertical
+        };
+
+        GeometryVisual<RectangleGeometry> g0, g1, g2;
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            g0 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            g1 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 20,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 20,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            g2 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        var chart = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = new ISeries[]
+            {
+                new LineSeries<double>
+                {
+                    Values = new double[] { 1, 2, 3 }
+                }
+            },
+            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            {
+                stackPanel
+            }
+        };
+
+        _ = chart.GetImage();
+
+        var g0Geometry = (RectangleGeometry)g0.GetDrawnGeometries()[0];
+        var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
+        var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
+
+        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+
+        Assert.IsTrue(
+            g0Geometry.X == 200 &&
+            g0Geometry.Y == 125 &&
+            g1Geometry.X == 215 &&
+            g1Geometry.Y == 120 &&
+            g2Geometry.X == 230 &&
+            g2Geometry.Y == 124 &&
+            panelSize.Width == 50 &&
+            panelSize.Height == 36);
+    }
+
+    [TestMethod]
+    public void StackPanelVerticalMiddleWrap()
+    {
+        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        {
+            Padding = new Drawing.Padding(0),
+            X = 200,
+            Y = 100,
+            MaxHeight = 12 * 3,
+            HorizontalAlignment = Drawing.Align.Middle,
+            Orientation = Drawing.ContainerOrientation.Vertical
+        };
+
+        GeometryVisual<RectangleGeometry> g0, g1, g2;
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            g0 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            g1 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 20,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 20,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            g2 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        var chart = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = new ISeries[]
+            {
+                new LineSeries<double>
+                {
+                    Values = new double[] { 1, 2, 3 }
+                }
+            },
+            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            {
+                stackPanel
+            }
+        };
+
+        _ = chart.GetImage();
+
+        var g0Geometry = (RectangleGeometry)g0.GetDrawnGeometries()[0];
+        var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
+        var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
+
+        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+
+        Assert.IsTrue(
+            g0Geometry.X == 205 &&
+            g0Geometry.Y == 125 &&
+            g1Geometry.X == 220 &&
+            g1Geometry.Y == 120 &&
+            g2Geometry.X == 237.5 &&
+            g2Geometry.Y == 124 &&
+            panelSize.Width == 50 &&
+            panelSize.Height == 36);
+    }
+
+    [TestMethod]
+    public void StackPanelVerticalEndWrap()
+    {
+        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        {
+            Padding = new Drawing.Padding(0),
+            X = 200,
+            Y = 100,
+            MaxHeight = 12 * 3,
+            HorizontalAlignment = Drawing.Align.End,
+            Orientation = Drawing.ContainerOrientation.Vertical
+        };
+
+        GeometryVisual<RectangleGeometry> g0, g1, g2;
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            g0 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 5,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 15,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            g1 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 10,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 20,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Green)
+            });
+
+        _ = stackPanel.Children.Add(
+            new GeometryVisual<RectangleGeometry>
+            {
+                Width = 20,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Blue)
+            });
+
+        _ = stackPanel.Children.Add(
+            g2 = new GeometryVisual<RectangleGeometry>
+            {
+                Width = 5,
+                Height = 12,
+                Fill = new SolidColorPaint(SKColors.Yellow)
+            });
+
+        var chart = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = new ISeries[]
+            {
+                new LineSeries<double>
+                {
+                    Values = new double[] { 1, 2, 3 }
+                }
+            },
+            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            {
+                stackPanel
+            }
+        };
+
+        chart.SaveImage("eee.png");
+
+        var g0Geometry = (RectangleGeometry)g0.GetDrawnGeometries()[0];
+        var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
+        var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
+
+        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+
+        Assert.IsTrue(
+            g0Geometry.X == 210 &&
+            g0Geometry.Y == 125 &&
+            g1Geometry.X == 225 &&
+            g1Geometry.Y == 120 &&
+            g2Geometry.X == 245 &&
+            g2Geometry.Y == 124 &&
+            panelSize.Width == 50 &&
+            panelSize.Height == 36);
+    }
 }
