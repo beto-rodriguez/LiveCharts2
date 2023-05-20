@@ -225,9 +225,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
             if (yl > my) my = yl;
         }
 
-        return new LvcSize(
-            Padding.Left + Padding.Right + mx,
-            Padding.Top + Padding.Bottom + my);
+        return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>

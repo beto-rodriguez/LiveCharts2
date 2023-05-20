@@ -87,6 +87,8 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
+        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+
         Assert.IsTrue(
             // 100 left + 10 padding
             g1Geometry.X == 100 + 10 &&
@@ -98,7 +100,11 @@ public class StackPanelTest
             g2Geometry.X == 100 + 10 + 15 &&
 
             // preserve the previous y...
-            g2Geometry.Y == 200 + 20);
+            g2Geometry.Y == 200 + 20 &&
+
+            // 10 padding + 15 first shape + 15 second shape + 10 padding
+            panelSize.Width == 10 + 15 + 15 + 10 &&
+            panelSize.Height == 20 + 25 + 20);
     }
 
     [TestMethod]
@@ -286,6 +292,8 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
+        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+
         Assert.IsTrue(
             // 100 left + 10 padding 
             g1Geometry.X == 100 + 10 &&
@@ -297,7 +305,10 @@ public class StackPanelTest
             g2Geometry.X == 110 &&
 
             // 200 top + 20 padding + 25 previous height
-            g2Geometry.Y == 200 + 20 + 25);
+            g2Geometry.Y == 200 + 20 + 25 &&
+
+            panelSize.Width == 10 + 25 + 10 &&
+            panelSize.Height == 20 + 25 + 25 + 20);
     }
 
     [TestMethod]
