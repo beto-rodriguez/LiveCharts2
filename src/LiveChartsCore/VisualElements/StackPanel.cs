@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
@@ -71,6 +70,16 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         set => SetPaintProperty(ref _backgroundPaint, value);
     }
 
+    /// <summary>
+    /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
+    /// </summary>
+    public double MaxWidth { get; set; } = double.MaxValue;
+
+    /// <summary>
+    /// Gets or sets the maximum height. When the maximum height is reached, a new column is created.
+    /// </summary>
+    public double MaxHeight { get; set; } = double.MaxValue;
+
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _backgroundPaint };
@@ -84,9 +93,6 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
-        var xl = Padding.Left;
-        var yl = Padding.Top;
-
         var controlSize = Measure(chart);
 
         // NOTE #20231605
@@ -103,37 +109,6 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         _boundsGeometry.Width = controlSize.Width;
         _boundsGeometry.Height = controlSize.Height;
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, _boundsGeometry);
-
-        foreach (var child in Children)
-        {
-            var childSize = child.Measure(chart);
-
-            if (Orientation == ContainerOrientation.Horizontal)
-            {
-                child._x = xl;
-                child._y = VerticalAlignment == Align.Middle
-                    ? yl + (controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height) / 2f
-                    : VerticalAlignment == Align.End
-                        ? yl + controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height
-                        : yl;
-
-                xl += childSize.Width;
-            }
-            else
-            {
-                child._x = HorizontalAlignment == Align.Middle
-                    ? xl + (controlSize.Width - Padding.Left - Padding.Right - childSize.Width) / 2f
-                    : HorizontalAlignment == Align.End
-                        ? xl + controlSize.Width - Padding.Left - Padding.Right - childSize.Width
-                        : xl;
-                child._y = yl;
-
-                yl += childSize.Height;
-            }
-
-            child.OnInvalidated(chart);
-            child.SetParent(_boundsGeometry);
-        }
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
@@ -146,27 +121,118 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override LvcSize Measure(Chart<TDrawingContext> chart)
     {
-        foreach (var child in Children) _ = child.Measure(chart);
+        var xl = Padding.Left;
+        var yl = Padding.Top;
+        var rowHeight = -1f;
+        var columnWidth = -1f;
+        var mx = 0f;
+        var my = 0f;
 
-        var size = Orientation == ContainerOrientation.Horizontal
-            ? Children.Aggregate(new LvcSize(), (current, next) =>
+        List<MeasureResult> line = new();
+
+        LvcSize alignCurrentLine()
+        {
+            var mx = -1f;
+            var my = -1f;
+
+            foreach (var child in line)
             {
-                var size = next.Measure(chart);
+                if (Orientation == ContainerOrientation.Horizontal)
+                {
+                    child.Visual._y = VerticalAlignment switch
+                    {
+                        Align.Start => yl,
+                        Align.Middle => yl + (rowHeight - child.Size.Height) / 2f,
+                        Align.End => yl + rowHeight - child.Size.Height,
+                        _ => throw new System.NotImplementedException()
+                    };
+                }
+                else
+                {
+                    child.Visual._x = HorizontalAlignment switch
+                    {
+                        Align.Start => xl,
+                        Align.Middle => xl + (columnWidth - child.Size.Width) / 2f,
+                        Align.End => xl + columnWidth - child.Size.Width,
+                        _ => throw new System.NotImplementedException()
+                    };
+                }
 
-                return new LvcSize(
-                    current.Width + size.Width,
-                    size.Height > current.Height ? size.Height : current.Height);
-            })
-            : Children.Aggregate(new LvcSize(), (current, next) =>
+                child.Visual.OnInvalidated(chart);
+                child.Visual.SetParent(_boundsGeometry);
+                if (child.Size.Width > mx) mx = child.Size.Width;
+                if (child.Size.Height > my) my = child.Size.Height;
+            }
+
+            line = new();
+            return new LvcSize(mx, my);
+        }
+
+        if (Children.Count == 12)
+        {
+            var a = 1;
+        }
+
+        foreach (var child in Children)
+        {
+            var childSize = child.Measure(chart);
+
+            if (Orientation == ContainerOrientation.Horizontal)
             {
-                var size = next.Measure(chart);
+                if (xl + childSize.Width > MaxWidth)
+                {
+                    var lineSize = alignCurrentLine();
+                    xl = Padding.Left;
+                    yl += lineSize.Height;
+                    rowHeight = -1f;
+                }
 
-                return new LvcSize(
-                    size.Width > current.Width ? size.Width : current.Width,
-                    current.Height + size.Height);
-            });
+                if (rowHeight < childSize.Height) rowHeight = childSize.Height;
+                child._x = xl;
 
-        return new LvcSize(Padding.Left + Padding.Right + size.Width, Padding.Top + Padding.Bottom + size.Height);
+                xl += childSize.Width;
+            }
+            else
+            {
+                if (yl + childSize.Height > MaxHeight)
+                {
+                    var lineSize = alignCurrentLine();
+                    yl = Padding.Top;
+                    xl += lineSize.Width;
+                    columnWidth = -1f;
+                }
+
+                if (columnWidth < childSize.Width) columnWidth = childSize.Width;
+                child._y = yl;
+
+                yl += childSize.Height;
+            }
+
+            if (xl > mx) mx = xl;
+            if (yl > my) my = yl;
+            line.Add(new MeasureResult(child, childSize));
+        }
+
+        if (line.Count > 0)
+        {
+            var lineSize = alignCurrentLine();
+
+            if (Orientation == ContainerOrientation.Horizontal)
+            {
+                yl += lineSize.Height;
+            }
+            else
+            {
+                xl += lineSize.Width;
+            }
+
+            if (xl > mx) mx = xl;
+            if (yl > my) my = yl;
+        }
+
+        return new LvcSize(
+            Padding.Left + Padding.Right + mx,
+            Padding.Top + Padding.Bottom + my);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
@@ -178,5 +244,17 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         }
 
         base.RemoveFromUI(chart);
+    }
+
+    private class MeasureResult
+    {
+        public MeasureResult(VisualElement<TDrawingContext> visual, LvcSize size)
+        {
+            Visual = visual;
+            Size = size;
+        }
+
+        public VisualElement<TDrawingContext> Visual { get; set; }
+        public LvcSize Size { get; set; }
     }
 }
