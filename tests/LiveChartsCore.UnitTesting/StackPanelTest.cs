@@ -1296,7 +1296,7 @@ public class StackPanelTest
             }
         };
 
-        chart.SaveImage("eee.png");
+        _ = chart.GetImage();
 
         var g0Geometry = (RectangleGeometry)g0.GetDrawnGeometries()[0];
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
