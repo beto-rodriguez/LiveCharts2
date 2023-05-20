@@ -168,11 +168,6 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
             return new LvcSize(mx, my);
         }
 
-        if (Children.Count == 12)
-        {
-            var a = 1;
-        }
-
         foreach (var child in Children)
         {
             var childSize = child.Measure(chart);

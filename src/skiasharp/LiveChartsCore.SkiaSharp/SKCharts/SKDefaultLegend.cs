@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -140,7 +141,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
             _stackPanel.MaxHeight = chart.ControlSize.Height;
         }
 
-        foreach (var visual in _stackPanel.Children)
+        foreach (var visual in _stackPanel.Children.ToArray())
         {
             _ = _stackPanel.Children.Remove(visual);
             chart.RemoveVisual(visual);

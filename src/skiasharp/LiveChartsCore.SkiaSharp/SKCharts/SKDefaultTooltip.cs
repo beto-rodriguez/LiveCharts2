@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -103,7 +104,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
-        foreach (var visual in _stackPanel.Children)
+        foreach (var visual in _stackPanel.Children.ToArray())
         {
             _ = _stackPanel.Children.Remove(visual);
             chart.RemoveVisual(visual);
