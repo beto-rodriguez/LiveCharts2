@@ -82,28 +82,28 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         var actualChartSize = chart.ControlSize;
 
-        //if (chart.LegendPosition == LegendPosition.Top)
-        //{
-        //    chart.Canvas.StartPoint = new LvcPoint(0, Size.Height);
-        //    _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
-        //    _stackPanel.Y = -Size.Height;
-        //}
-        //if (chart.LegendPosition == LegendPosition.Bottom)
-        //{
-        //    _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
-        //    _stackPanel.Y = actualChartSize.Height;
-        //}
-        //if (chart.LegendPosition == LegendPosition.Left)
-        //{
-        //    chart.Canvas.StartPoint = new LvcPoint(Size.Width, 0);
-        //    _stackPanel.X = -Size.Width;
-        //    _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
-        //}
-        //if (chart.LegendPosition == LegendPosition.Right)
-        //{
-        //    _stackPanel.X = actualChartSize.Width; //- iDontKnowWhyThis;
-        //    _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
-        //}
+        if (chart.LegendPosition == LegendPosition.Top)
+        {
+            chart.Canvas.StartPoint = new LvcPoint(0, Size.Height);
+            _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
+            _stackPanel.Y = -Size.Height;
+        }
+        if (chart.LegendPosition == LegendPosition.Bottom)
+        {
+            _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
+            _stackPanel.Y = actualChartSize.Height;
+        }
+        if (chart.LegendPosition == LegendPosition.Left)
+        {
+            chart.Canvas.StartPoint = new LvcPoint(Size.Width, 0);
+            _stackPanel.X = -Size.Width;
+            _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+        }
+        if (chart.LegendPosition == LegendPosition.Right)
+        {
+            _stackPanel.X = actualChartSize.Width; //- iDontKnowWhyThis;
+            _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
+        }
 
         chart.AddVisual(_stackPanel);
         if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
