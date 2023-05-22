@@ -61,6 +61,8 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
         MouseDown += OnMouseDown;
+
+        tooltip = new SKDefaultTooltip();
     }
 
     /// <summary>
@@ -176,7 +178,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         if (canvas is null) throw new Exception("canvas not found");
         core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
         legend = new SKDefaultLegend(); // Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-        tooltip = new SKDefaultTooltip(); // Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
         core.Update();
     }
 
