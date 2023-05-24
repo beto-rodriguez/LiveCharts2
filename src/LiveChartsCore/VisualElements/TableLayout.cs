@@ -160,14 +160,25 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
             foreach (var c in row.Keys)
             {
                 if (!row.TryGetValue(c, out var visualElement) || visualElement is null) continue;
+                var columnWidth = _measuredSizes[_maxRow + 1, c].Width;
 
-                visualElement._x = w;
-                visualElement._y = h;
+                visualElement._x = HorizontalAlignment switch
+                {
+                    Align.Start => w,
+                    Align.Middle => w + (columnWidth - _measuredSizes[r, c].Width) * 0.5f,
+                    Align.End => w + columnWidth - _measuredSizes[r, c].Width,
+                    _ => throw new System.NotImplementedException(),
+                };
+                visualElement._y = VerticalAlignment switch
+                {
+                    Align.Start => h,
+                    Align.Middle => h + (rowHeight - _measuredSizes[r, c].Height) * 0.5f,
+                    Align.End => h + rowHeight - _measuredSizes[r, c].Height,
+                    _ => throw new System.NotImplementedException(),
+                };
 
                 visualElement.OnInvalidated(chart);
                 visualElement.SetParent(_boundsGeometry);
-
-                var columnWidth = _measuredSizes[_maxRow + 1, c].Width;
                 w += columnWidth;
             }
 

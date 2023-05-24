@@ -36,7 +36,7 @@ namespace LiveChartsCore.UnitTesting;
 public class TableLayoutTest
 {
     [TestMethod]
-    public void StackPanelHorizontalStart()
+    public void TableStart()
     {
         var px = 10;
         var py = 20;
@@ -46,8 +46,8 @@ public class TableLayoutTest
             Padding = new Drawing.Padding(px, py),
             X = 100,
             Y = 200,
-            //VerticalAlignment = Drawing.Align.Start,
-            //Orientation = Drawing.ContainerOrientation.Horizontal
+            VerticalAlignment = Drawing.Align.Start,
+            HorizontalAlignment = Drawing.Align.Start
         };
 
         GeometryVisual<RectangleGeometry> g1, g2;
@@ -98,7 +98,7 @@ public class TableLayoutTest
             }
         };
 
-        chart.SaveImage("holdda.png");
+        _ = chart.GetImage();
 
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
@@ -117,6 +117,182 @@ public class TableLayoutTest
 
             // 200 top + 20 padding + 20 previous row height
             g2Geometry.Y == 200 + py + 20 &&
+
+            // 10 padding + columns width + 10 padding
+            tableSize.Width == px + 20 + 25 + px &&
+            // 10 padding + rows width + 10 padding
+            tableSize.Height == py + 20 + 30 + py);
+    }
+
+    [TestMethod]
+    public void TableMiddle()
+    {
+        var px = 10;
+        var py = 20;
+
+        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        {
+            Padding = new Drawing.Padding(px, py),
+            X = 100,
+            Y = 200,
+            VerticalAlignment = Drawing.Align.Middle,
+            HorizontalAlignment = Drawing.Align.Middle
+        };
+
+        GeometryVisual<RectangleGeometry> g1, g2;
+
+        table.AddChild(new GeometryVisual<RectangleGeometry>
+        {
+            Width = 10,
+            Height = 20,
+            Fill = new SolidColorPaint(SKColors.Red)
+        }, 0, 0);
+
+        table.AddChild(g1 = new GeometryVisual<RectangleGeometry>
+        {
+            Width = 15,
+            Height = 10,
+            Fill = new SolidColorPaint(SKColors.Green)
+        }, 0, 1);
+
+        table.AddChild(new GeometryVisual<RectangleGeometry>
+        {
+            Width = 20,
+            Height = 30,
+            Fill = new SolidColorPaint(SKColors.Yellow)
+        }, 1, 0);
+
+        table.AddChild(
+        g2 = new GeometryVisual<RectangleGeometry>
+        {
+            Width = 25,
+            Height = 20,
+            Fill = new SolidColorPaint(SKColors.Blue)
+        }, 1, 1);
+
+        var chart = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = new ISeries[]
+            {
+                new LineSeries<double>
+                {
+                    Values = new double[] { 1, 2, 3 }
+                }
+            },
+            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            {
+                table
+            }
+        };
+
+        _ = chart.GetImage();
+
+        var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
+        var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
+
+        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+
+        Assert.IsTrue(
+            g1Geometry.X == 135 &&
+
+            // 200 top + 20 padding
+            g1Geometry.Y == 225 &&
+
+            // 100 left + 10 padding + 20 column width
+            g2Geometry.X == 130 &&
+
+            // 200 top + 20 padding + 20 previous row height
+            g2Geometry.Y == 245 &&
+
+            // 10 padding + columns width + 10 padding
+            tableSize.Width == px + 20 + 25 + px &&
+            // 10 padding + rows width + 10 padding
+            tableSize.Height == py + 20 + 30 + py);
+    }
+
+    [TestMethod]
+    public void TableEnd()
+    {
+        var px = 10;
+        var py = 20;
+
+        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        {
+            Padding = new Drawing.Padding(px, py),
+            X = 100,
+            Y = 200,
+            VerticalAlignment = Drawing.Align.End,
+            HorizontalAlignment = Drawing.Align.End
+        };
+
+        GeometryVisual<RectangleGeometry> g1, g2;
+
+        table.AddChild(new GeometryVisual<RectangleGeometry>
+        {
+            Width = 10,
+            Height = 20,
+            Fill = new SolidColorPaint(SKColors.Red)
+        }, 0, 0);
+
+        table.AddChild(g1 = new GeometryVisual<RectangleGeometry>
+        {
+            Width = 15,
+            Height = 10,
+            Fill = new SolidColorPaint(SKColors.Green)
+        }, 0, 1);
+
+        table.AddChild(new GeometryVisual<RectangleGeometry>
+        {
+            Width = 20,
+            Height = 30,
+            Fill = new SolidColorPaint(SKColors.Yellow)
+        }, 1, 0);
+
+        table.AddChild(
+        g2 = new GeometryVisual<RectangleGeometry>
+        {
+            Width = 25,
+            Height = 20,
+            Fill = new SolidColorPaint(SKColors.Blue)
+        }, 1, 1);
+
+        var chart = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = new ISeries[]
+            {
+                new LineSeries<double>
+                {
+                    Values = new double[] { 1, 2, 3 }
+                }
+            },
+            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            {
+                table
+            }
+        };
+
+        _ = chart.GetImage();
+
+        var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
+        var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
+
+        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+
+        Assert.IsTrue(
+            g1Geometry.X == 140 &&
+
+            // 200 top + 20 padding
+            g1Geometry.Y == 230 &&
+
+            // 100 left + 10 padding + 20 column width
+            g2Geometry.X == 130 &&
+
+            // 200 top + 20 padding + 20 previous row height
+            g2Geometry.Y == 250 &&
 
             // 10 padding + columns width + 10 padding
             tableSize.Width == px + 20 + 25 + px &&
