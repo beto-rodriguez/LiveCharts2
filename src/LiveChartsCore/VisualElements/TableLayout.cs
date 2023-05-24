@@ -70,36 +70,51 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override LvcSize Measure(Chart<TDrawingContext> chart)
     {
-        float maxW = 0f, maxH = Padding.Top;
+        var maxH = Padding.Top;
         _measuredSizes = new LvcSize[_maxRow + 2, _maxColumn + 2];
 
-        foreach (var r in _positions.Keys)
+        var mr = _maxRow + 1;
+        var mc = _maxColumn + 1;
+
+        for (var r = 0; r <= _maxRow; r++)
         {
             if (!_positions.TryGetValue(r, out var row)) continue;
 
             var w = Padding.Left;
-            foreach (var c in row.Keys)
+            for (var c = 0; c <= _maxColumn; c++)
             {
-                if (!row.TryGetValue(c, out var visualElement) || visualElement is null) continue;
+                var cellSize = _measuredSizes[r, c];
+                var rowSize = _measuredSizes[r, mc];
+                var tableSize = _measuredSizes[mr, mc];
+                var columnSize = _measuredSizes[mr, c];
+
+                if (!row.TryGetValue(c, out var visualElement) || visualElement is null)
+                {
+                    w += columnSize.Width;
+                    continue;
+                }
 
                 var childSize = visualElement.Measure(chart);
-                var cellSize = _measuredSizes[r, c];
-                var rowSize = _measuredSizes[r, _maxColumn + 1];
-                var columnSize = _measuredSizes[_maxRow + 1, c];
 
-                if (cellSize.Width < childSize.Width) _measuredSizes[r, c] = new(childSize.Width, _measuredSizes[r, c].Height);
-                if (cellSize.Height < childSize.Height) _measuredSizes[r, c] = new(_measuredSizes[r, c].Width, childSize.Height);
-                if (rowSize.Height < childSize.Height) _measuredSizes[r, _maxColumn + 1] = new(0, childSize.Height);
-                if (columnSize.Width < childSize.Width) _measuredSizes[_maxRow + 1, c] = new(childSize.Width, 0);
+                if (cellSize.Width < childSize.Width)
+                    _measuredSizes[r, c] = new(childSize.Width, _measuredSizes[r, c].Height);
+                if (cellSize.Height < childSize.Height)
+                    _measuredSizes[r, c] = new(_measuredSizes[r, c].Width, childSize.Height);
+                if (rowSize.Height < childSize.Height)
+                    _measuredSizes[r, mc] = new(0, childSize.Height);
+                if (columnSize.Width < childSize.Width)
+                    _measuredSizes[mr, c] = new(childSize.Width, 0);
 
                 w += _measuredSizes[r, c].Width;
-                if (maxW < w) maxW = w;
+
+                if (tableSize.Width < w)
+                    _measuredSizes[mr, mc] = new(w, _measuredSizes[mr, mc].Height);
             }
 
             maxH += _measuredSizes[r, _maxColumn + 1].Height;
         }
 
-        return new(maxW + Padding.Right, maxH + Padding.Bottom);
+        return new(_measuredSizes[mr, mc].Width + Padding.Right, maxH + Padding.Bottom);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
@@ -160,16 +175,21 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         var controlSize = Measure(chart);
         float w, h = Padding.Top;
 
-        foreach (var r in _positions.Keys)
+        for (var r = 0; r <= _maxRow; r++)
         {
             if (!_positions.TryGetValue(r, out var row)) continue;
 
             var rowHeight = _measuredSizes[r, _maxColumn + 1].Height;
             w = Padding.Left;
-            foreach (var c in row.Keys)
+
+            for (var c = 0; c <= _maxColumn; c++)
             {
-                if (!row.TryGetValue(c, out var visualElement) || visualElement is null) continue;
                 var columnWidth = _measuredSizes[_maxRow + 1, c].Width;
+                if (!row.TryGetValue(c, out var visualElement) || visualElement is null)
+                {
+                    w += columnWidth;
+                    continue;
+                }
 
                 visualElement._x = HorizontalAlignment switch
                 {
