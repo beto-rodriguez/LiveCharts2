@@ -55,8 +55,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         DataPadding = new LvcPoint(1, 1);
 
-        DataLabelsFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
-        TooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.SecondaryValue}, {point.PrimaryValue}";
+        DataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+        TooltipLabelFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
     }
 
     /// <summary>

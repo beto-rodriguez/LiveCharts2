@@ -175,9 +175,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
 
         var dls = (float)DataLabelsSize;
-        var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup());
-        if (stacker is null) throw new NullReferenceException("Unexpected null stacker");
-
+        var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup())
+            ?? throw new NullReferenceException("Unexpected null stacker");
         var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var fetched = Fetch(pieChart).ToArray();

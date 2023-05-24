@@ -41,7 +41,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public HashSet<VisualElement<TDrawingContext>> Children { get; } = new();
+    public List<VisualElement<TDrawingContext>> Children { get; } = new();
 
     /// <summary>
     /// Gets or sets the panel orientation.

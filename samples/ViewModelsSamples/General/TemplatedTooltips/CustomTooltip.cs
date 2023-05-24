@@ -50,7 +50,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
 
             var label = new LabelVisual
             {
-                Text = point.AsTooltipString,
+                //Text = point.AsTooltipString,
                 Paint = _fontPaint,
                 TextSize = 15,
                 Padding = new Padding(8, 0, 0, 0),
@@ -70,7 +70,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
                 }
             };
 
-            _ = _stackPanel?.Children.Add(sp);
+            _stackPanel?.Children.Add(sp);
         }
 
         Measure(chart);

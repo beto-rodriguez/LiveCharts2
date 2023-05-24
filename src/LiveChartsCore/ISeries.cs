@@ -158,14 +158,14 @@ public interface ISeries
     /// </summary>
     /// <param name="point">The chart point.</param>
     /// <returns></returns>
-    string GetTooltipText(ChartPoint point);
+    string? GetTooltipText(ChartPoint point);
 
     /// <summary>
     /// Gets the data label content for a given chart point.
     /// </summary>
     /// <param name="point">The chart point.</param>
     /// <returns></returns>
-    string GetDataLabelText(ChartPoint point);
+    string? GetDataLabelText(ChartPoint point);
 
     /// <summary>
     /// Gets a <see cref="ChartPoint"/> array with the points used to generate the plot.

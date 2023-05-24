@@ -108,7 +108,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
                 }
             };
 
-            _ = _stackPanel?.Children.Add(sp);
+            _stackPanel?.Children.Add(sp);
         }
     }
 }

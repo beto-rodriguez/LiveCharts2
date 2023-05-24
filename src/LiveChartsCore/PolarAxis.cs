@@ -201,12 +201,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
         var axisTick = this.GetTick(polarChart);
 
-        var labeler = Labeler;
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
+        var labeler = GetActualLabeler();
 
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
@@ -458,7 +453,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
 
         var ts = (float)TextSize;
-        var labeler = Labeler;
+        var labeler = GetActualLabeler();
         var polarChart = (PolarChart<TDrawingContext>)chart;
         IPolarAxis a, b;
 
@@ -504,13 +499,27 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                 RotateTransform = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0),
                 Padding = _labelsPadding
             };
-            var m = textGeometry.Measure(LabelsPaint); // TextBrush.MeasureText(labeler(i, axisTick));
+            var m = textGeometry.Measure(LabelsPaint);
 
             var h = (float)Math.Sqrt(Math.Pow(m.Width * 0.5, 2) + Math.Pow(m.Height * 0.5, 2));
             if (h > totalH) totalH = h;
         }
 
         return new LvcSize(0, totalH);
+    }
+
+    /// <inheritdoc cref="IPlane.GetActualLabeler"/>
+    public Func<double, string> GetActualLabeler()
+    {
+        var labeler = Labeler;
+
+        if (Labels is not null)
+        {
+            labeler = Labelers.BuildNamedLabeler(Labels).Function;
+            _minStep = 1;
+        }
+
+        return labeler;
     }
 
     /// <inheritdoc cref="IPolarAxis.Initialize(PolarAxisOrientation)"/>

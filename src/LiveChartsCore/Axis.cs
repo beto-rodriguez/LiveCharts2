@@ -317,12 +317,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
 
-        var labeler = Labeler;
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
+        var labeler = GetActualLabeler();
 
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
@@ -733,11 +728,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint);
 
             _crosshairLabel ??= new TTextGeometry();
-            var labeler = Labeler;
-            if (Labels is not null)
-            {
-                labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            }
+            var labeler = GetActualLabeler();
 
             _crosshairLabel.Text = TryGetLabelOrLogError(labeler, labelValue);
             _crosshairLabel.TextSize = (float)_textSize;
@@ -804,13 +795,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
 
         var ts = (float)_textSize;
-        var labeler = Labeler;
-
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
+        var labeler = GetActualLabeler();
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
         var s = axisTick.Value;
@@ -846,6 +831,20 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         return new LvcSize(w, h);
+    }
+
+    /// <inheritdoc cref="IPlane.GetActualLabeler"/>
+    public Func<double, string> GetActualLabeler()
+    {
+        var labeler = Labeler;
+
+        if (Labels is not null)
+        {
+            labeler = Labelers.BuildNamedLabeler(Labels).Function;
+            _minStep = 1;
+        }
+
+        return labeler;
     }
 
     /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>
@@ -908,13 +907,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         if (LabelsPaint is null) return new LvcSize();
 
-        var labeler = Labeler;
-
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
+        var labeler = GetActualLabeler();
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
         var s = axisTick.Value;

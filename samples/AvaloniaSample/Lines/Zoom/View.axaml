@@ -17,7 +17,6 @@
     <lvc:CartesianChart
         Grid.Row="1"
         Series="{Binding SeriesCollection}"
-        TooltipPosition="Hidden"
         ZoomMode="X"> <!-- mark -->
     </lvc:CartesianChart>
   </Grid>

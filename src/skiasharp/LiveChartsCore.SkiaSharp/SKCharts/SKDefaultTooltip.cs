@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     private Chart<SkiaSharpDrawingContext>? _chart;
-    private TableLayout<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _tableLayout;
+    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
@@ -79,21 +79,23 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// </summary>
     public double TextSize { get; set; } = 16;
 
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
         _chart = chart;
 
-        if (_tableLayout is null)
+        if (_panel is null)
         {
-            _tableLayout = new TableLayout<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+            _panel = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 8),
-                HorizontalAlignment = Align.Start,
+                Orientation = ContainerOrientation.Vertical,
+                HorizontalAlignment = Align.Middle,
                 VerticalAlignment = Align.Middle,
                 BackgroundPaint = BackgroundPaint
             };
 
-            _tableLayout
+            _panel
                 .Animate(chart,
                     nameof(ISizedGeometry<SkiaSharpDrawingContext>.X),
                     nameof(ISizedGeometry<SkiaSharpDrawingContext>.Y));
@@ -102,19 +104,41 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
-        foreach (var child in _tableLayout.EnumerateChildren())
+        foreach (var child in _panel.Children.ToArray())
         {
-            _tableLayout.RemoveChildAt(child.Row, child.Column);
-            chart.RemoveVisual(child.VisualElement);
+            _ = _panel.Children.Remove(child);
+            chart.RemoveVisual(child);
         }
+
+        var tableLayout = new TableLayout<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+        {
+            HorizontalAlignment = Align.Middle,
+            VerticalAlignment = Align.Middle
+        };
 
         var i = 0;
         foreach (var point in foundPoints)
         {
             var series = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
-            _tableLayout.AddChild(series.GetMiniatresSketch().AsDrawnControl(), i, 0);
-            _tableLayout.AddChild(
+            if (i == 0)
+            {
+                _panel.Children.Add(
+                    new LabelVisual
+                    {
+                        Text = point.GetFormattedSecondaryValueForToolTip(chart),
+                        Paint = FontPaint,
+                        TextSize = TextSize,
+                        Padding = new Padding(0, 0, 0, 0),
+                        VerticalAlignment = Align.Start,
+                        HorizontalAlignment = Align.Start
+                    });
+
+                _panel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
+            }
+
+            tableLayout.AddChild(series.GetMiniatresSketch().AsDrawnControl(), i, 0);
+            tableLayout.AddChild(
                 new LabelVisual
                 {
                     Text = point.Context.Series.Name ?? string.Empty,
@@ -123,33 +147,36 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                     Padding = new Padding(8, 0, 0, 0),
                     VerticalAlignment = Align.Start,
                     HorizontalAlignment = Align.Start
-                }, i, 1);
-            _tableLayout.AddChild(
+                }, i, 1, horizontalAlign: Align.Start);
+            tableLayout.AddChild(
                 new LabelVisual
                 {
-                    Text = point.AsTooltipString,
+                    Text = point.GetFormattedPrimaryValueForToolTip(chart),
                     Paint = FontPaint,
                     TextSize = TextSize,
                     Padding = new Padding(16, 0, 0, 0),
                     VerticalAlignment = Align.Start,
                     HorizontalAlignment = Align.Start
-                }, i, 2);
+                }, i, 2, horizontalAlign: Align.End);
 
             i++;
         }
 
-        var size = _tableLayout.Measure(chart);
+        _panel.Children.Add(tableLayout);
+
+        var size = _panel.Measure(chart);
         var location = foundPoints.GetTooltipLocation(size, chart);
 
-        _tableLayout.X = location.X;
-        _tableLayout.Y = location.Y;
+        _panel.X = location.X;
+        _panel.Y = location.Y;
 
-        _chart.AddVisual(_tableLayout);
+        _chart.AddVisual(_panel);
     }
 
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Hide"/>
     public void Hide()
     {
-        if (_chart is null || _tableLayout is null) return;
-        _chart.RemoveVisual(_tableLayout);
+        if (_chart is null || _panel is null) return;
+        _chart.RemoveVisual(_panel);
     }
 }

@@ -128,14 +128,20 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <summary>
     /// Adds a child to the layout.
     /// </summary>
-    /// <param name="child">The child.</param>
-    /// <param name="row">The row.</param>
-    /// <param name="column">The column.</param>
-    public void AddChild(VisualElement<TDrawingContext> child, int row, int column)
+    /// <param name="row">The row index.</param>
+    /// <param name="column">The column index.</param>
+    /// <param name="child">The visual to add.</param>
+    /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
+    /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
+    public void AddChild(
+        VisualElement<TDrawingContext> child,
+        int row, int column,
+        Align? horizontalAlign = null,
+        Align? verticalAlign = null)
     {
         if (!_positions.TryGetValue(row, out var r))
             _positions.Add(row, r = new Dictionary<int, TableCell>());
-        r[column] = new(row, column, child);
+        r[column] = new(row, column, child, verticalAlign, horizontalAlign);
 
         if (row > _maxRow) _maxRow = row;
         if (column > _maxColumn) _maxColumn = column;

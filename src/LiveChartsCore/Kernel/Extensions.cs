@@ -497,6 +497,64 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Gets the primary value and adds format to it based on the  <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.TooltipLabelFormatter"/> or the axis formatter.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="point">The point.</param>
+    /// <param name="chart">The chart.</param>
+    /// <returns></returns>
+    public static string GetFormattedPrimaryValueForToolTip<TDrawingContext>(this ChartPoint point, Chart<TDrawingContext> chart)
+        where TDrawingContext : DrawingContext
+    {
+        if (chart is CartesianChart<TDrawingContext> cartesianChart)
+        {
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                cartesianChart.YAxes[cs.ScalesYAt].GetActualLabeler()(point.PrimaryValue);
+        }
+
+        if (chart is PolarChart<TDrawingContext> polarChart)
+        {
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                polarChart.RadiusAxes[cs.ScalesRadiusAt].GetActualLabeler()(point.PrimaryValue);
+        }
+
+        return point.Context.Series.GetTooltipText(point) ?? point.PrimaryValue.ToString();
+    }
+
+    /// <summary>
+    /// Gets the secondary value and adds format to it based on the  <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.TooltipLabelFormatter"/> or the axis formatter.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="point">The point.</param>
+    /// <param name="chart">The chart.</param>
+    /// <returns></returns>
+    public static string GetFormattedSecondaryValueForToolTip<TDrawingContext>(this ChartPoint point, Chart<TDrawingContext> chart)
+        where TDrawingContext : DrawingContext
+    {
+        if (chart is CartesianChart<TDrawingContext> cartesianChart)
+        {
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                cartesianChart.XAxes[cs.ScalesXAt].GetActualLabeler()(point.SecondaryValue);
+        }
+
+        if (chart is PolarChart<TDrawingContext> polarChart)
+        {
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                polarChart.AngleAxes[cs.ScalesAngleAt].GetActualLabeler()(point.SecondaryValue);
+        }
+
+        return point.Context.Series.GetTooltipText(point) ?? point.SecondaryValue.ToString();
+    }
+
+    /// <summary>
     /// Gets the point for the given view.
     /// </summary>
     /// <param name="dictionary">The points dictionary.</param>

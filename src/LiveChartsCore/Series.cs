@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Hoverable Tooltip
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -98,8 +100,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private string? _name;
     private Action<TModel, ChartPoint>? _mapping;
     private int _zIndex;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _tooltipLabelFormatter = (point) => $"{point.PrimaryValue}";
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _dataLabelsFormatter;
     private bool _isVisible = true;
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
@@ -214,7 +216,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The tool tip label formatter.
     /// </value>
-    public Func<ChartPoint<TModel, TVisual, TLabel>, string> TooltipLabelFormatter
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? TooltipLabelFormatter
     {
         get => _tooltipLabelFormatter;
         set => SetProperty(ref _tooltipLabelFormatter, value);
@@ -227,7 +229,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The data label formatter.
     /// </value>
-    public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? DataLabelsFormatter
     {
         get => _dataLabelsFormatter;
         set => SetProperty(ref _dataLabelsFormatter, value);
@@ -384,15 +386,15 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
-    public string GetTooltipText(ChartPoint point)
+    public string? GetTooltipText(ChartPoint point)
     {
-        return TooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+        return TooltipLabelFormatter is null ? null : TooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
     /// <inheritdoc cref="ISeries.GetDataLabelText(ChartPoint)"/>
-    public string GetDataLabelText(ChartPoint point)
+    public string? GetDataLabelText(ChartPoint point)
     {
-        return DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+        return DataLabelsFormatter is null ? null : DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>

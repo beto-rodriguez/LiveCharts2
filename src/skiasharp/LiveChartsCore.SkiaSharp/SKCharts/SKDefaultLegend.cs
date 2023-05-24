@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -37,7 +36,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 {
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
+    private readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
     {
         Padding = new Padding(15, 4),
         HorizontalAlignment = Align.Start,
@@ -102,7 +101,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         }
         if (chart.LegendPosition == LegendPosition.Right)
         {
-            _stackPanel.X = actualChartSize.Width; //- iDontKnowWhyThis;
+            _stackPanel.X = actualChartSize.Width;
             _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
         }
 
@@ -149,7 +148,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         foreach (var series in chart.ChartSeries)
         {
-            _ = _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+            _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,
