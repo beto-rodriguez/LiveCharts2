@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -38,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     private Chart<SkiaSharpDrawingContext>? _chart;
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
+    private TableLayout<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _tableLayout;
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
@@ -84,18 +83,17 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     {
         _chart = chart;
 
-        if (_stackPanel is null)
+        if (_tableLayout is null)
         {
-            _stackPanel = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+            _tableLayout = new TableLayout<RoundedRectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 8),
-                Orientation = ContainerOrientation.Vertical,
                 HorizontalAlignment = Align.Start,
                 VerticalAlignment = Align.Middle,
                 BackgroundPaint = BackgroundPaint
             };
 
-            _stackPanel
+            _tableLayout
                 .Animate(chart,
                     nameof(ISizedGeometry<SkiaSharpDrawingContext>.X),
                     nameof(ISizedGeometry<SkiaSharpDrawingContext>.Y));
@@ -104,49 +102,74 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
-        foreach (var visual in _stackPanel.Children.ToArray())
+        foreach (var child in _tableLayout.EnumerateChildren())
         {
-            _ = _stackPanel.Children.Remove(visual);
-            chart.RemoveVisual(visual);
+            _tableLayout.RemoveChildAt(child.Row, child.Column);
+            chart.RemoveVisual(child.VisualElement);
         }
 
+        var i = 0;
         foreach (var point in foundPoints)
         {
             var series = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
-            _ = _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
-            {
-                Padding = new Padding(0, 4),
-                VerticalAlignment = Align.Middle,
-                HorizontalAlignment = Align.Middle,
-                Children =
+            _tableLayout.AddChild(series.GetMiniatresSketch().AsDrawnControl(), i, 0);
+            _tableLayout.AddChild(
+                new LabelVisual
                 {
-                    series.GetMiniatresSketch().AsDrawnControl(),
-                    new LabelVisual
-                    {
-                        Text = point.AsTooltipString,
-                        Paint = FontPaint,
-                        TextSize = TextSize,
-                        Padding = new Padding(8, 0, 0, 0),
-                        VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start
-                    }
-                }
-            });
+                    Text = point.Context.Series.Name ?? string.Empty,
+                    Paint = FontPaint,
+                    TextSize = TextSize,
+                    Padding = new Padding(8, 0, 0, 0),
+                    VerticalAlignment = Align.Start,
+                    HorizontalAlignment = Align.Start
+                }, i, 1);
+            _tableLayout.AddChild(
+                new LabelVisual
+                {
+                    Text = point.AsTooltipString,
+                    Paint = FontPaint,
+                    TextSize = TextSize,
+                    Padding = new Padding(16, 0, 0, 0),
+                    VerticalAlignment = Align.Start,
+                    HorizontalAlignment = Align.Start
+                }, i, 2);
+
+            i++;
+
+            //_ = _tableLayout.AddChild(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+            //{
+            //    Padding = new Padding(0, 4),
+            //    VerticalAlignment = Align.Middle,
+            //    HorizontalAlignment = Align.Middle,
+            //    Children =
+            //    {
+            //        series.GetMiniatresSketch().AsDrawnControl(),
+            //        new LabelVisual
+            //        {
+            //            Text = point.AsTooltipString,
+            //            Paint = FontPaint,
+            //            TextSize = TextSize,
+            //            Padding = new Padding(8, 0, 0, 0),
+            //            VerticalAlignment = Align.Start,
+            //            HorizontalAlignment = Align.Start
+            //        }
+            //    }
+            //});
         }
 
-        var size = _stackPanel.Measure(chart);
+        var size = _tableLayout.Measure(chart);
         var location = foundPoints.GetTooltipLocation(size, chart);
 
-        _stackPanel.X = location.X;
-        _stackPanel.Y = location.Y;
+        _tableLayout.X = location.X;
+        _tableLayout.Y = location.Y;
 
-        _chart.AddVisual(_stackPanel);
+        _chart.AddVisual(_tableLayout);
     }
 
     public void Hide()
     {
-        if (_chart is null || _stackPanel is null) return;
-        _chart.RemoveVisual(_stackPanel);
+        if (_chart is null || _tableLayout is null) return;
+        _chart.RemoveVisual(_tableLayout);
     }
 }

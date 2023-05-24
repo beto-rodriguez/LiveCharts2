@@ -63,7 +63,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
              SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
     {
-        TooltipLabelFormatter = p => $"{Name}, H: {p.PrimaryValue:N2}, O: {p.TertiaryValue:N2}, C: {p.QuaternaryValue:N2}, L: {p.QuinaryValue:N2}";
+        TooltipLabelFormatter = p => $"H: {p.PrimaryValue:N2}, O: {p.TertiaryValue:N2}, C: {p.QuaternaryValue:N2}, L: {p.QuinaryValue:N2}";
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>

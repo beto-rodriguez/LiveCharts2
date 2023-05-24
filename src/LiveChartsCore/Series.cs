@@ -98,7 +98,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private string? _name;
     private Action<TModel, ChartPoint>? _mapping;
     private int _zIndex;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _tooltipLabelFormatter = (point) => $"{point.PrimaryValue}";
     private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
     private bool _isVisible = true;
     private LvcPoint _dataPadding = new(0.5f, 0.5f);

@@ -38,7 +38,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
 {
     private IPaint<TDrawingContext>? _backgroundPaint;
     private readonly TBackgroundGeometry _boundsGeometry = new();
-    internal readonly Dictionary<int, Dictionary<int, VisualElement<TDrawingContext>?>> _positions = new();
+    private readonly Dictionary<int, Dictionary<int, VisualElement<TDrawingContext>?>> _positions = new();
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
     private int _maxColumn = 0;
@@ -105,15 +105,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
     public override void RemoveFromUI(Chart<TDrawingContext> chart)
     {
-        foreach (var r in _positions.Keys.ToArray())
-        {
-            if (!_positions.TryGetValue(r, out var row)) continue;
-            foreach (var c in row.Keys)
-            {
-                if (!row.TryGetValue(c, out var child) || child is null) continue;
-                RemoveChildAt(r, c);
-            }
-        }
+        foreach (var child in EnumerateChildren())
+            chart.RemoveVisual(child.VisualElement);
 
         base.RemoveFromUI(chart);
     }
@@ -140,9 +133,25 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <param name="column">The column.</param>
     public void RemoveChildAt(int row, int column)
     {
-        var col = _positions[column];
-        _ = col.Remove(row);
-        if (col.Count == 0) _ = _positions.Remove(column);
+        var r = _positions[row];
+        _ = r.Remove(column);
+        if (r.Count == 0) _ = _positions.Remove(row);
+    }
+
+    /// <summary>
+    /// Enumerates the children in the layout.
+    /// </summary>
+    public IEnumerable<TablePosition> EnumerateChildren()
+    {
+        foreach (var r in _positions.Keys.ToArray())
+        {
+            if (!_positions.TryGetValue(r, out var row)) continue;
+            foreach (var c in row.Keys.ToArray())
+            {
+                if (!row.TryGetValue(c, out var visualElement) || visualElement is null) continue;
+                yield return new(r, c, visualElement);
+            }
+        }
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
@@ -219,16 +228,38 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         return new[] { _backgroundPaint };
     }
 
-    private class TablePosition
+    /// <summary>
+    /// A helper class to enumerate the children in the layout.
+    /// </summary>
+    public class TablePosition
     {
-        public TablePosition(int row, int column)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TablePosition"/> class.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="visualElement"></param>
+        public TablePosition(int row, int column, VisualElement<TDrawingContext> visualElement)
         {
             Row = row;
             Column = column;
+            VisualElement = visualElement;
         }
 
-        public int Row { get; set; }
-        public int Column { get; set; }
+        /// <summary>
+        /// Gets the row.
+        /// </summary>
+        public int Row { get; }
+
+        /// <summary>
+        /// Gets the column.
+        /// </summary>
+        public int Column { get; }
+
+        /// <summary>
+        /// Gets the visual element.
+        /// </summary>
+        public VisualElement<TDrawingContext> VisualElement { get; }
     }
 }
 
