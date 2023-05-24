@@ -22,35 +22,22 @@
 
 using System;
 using System.Linq;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class FinancialSeriesTest
+public class LineSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var down = new SolidColorPaint();
-        var up = new SolidColorPaint();
-
-        var sutSeries = new CandlesticksSeries<FinancialPoint>
+        var sutSeries = new LineSeries<double>
         {
-            Values = new FinancialPoint[]
-            {
-                new (new(2022, 1, 1), 1, 0.75, 0.25, 0),
-                new (new(2022, 1, 2), 64, 32, 64, 32),
-                new (new(2022, 1, 3), 512, 511.75, 511.25, 511),
-            },
-            DownFill = down,
-            UpFill = up
+            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 },
+            GeometrySize = 10
         };
 
         var chart = new SKCartesianChart
@@ -58,7 +45,7 @@ public class FinancialSeriesTest
             Width = 1000,
             Height = 1000,
             Series = new[] { sutSeries },
-            XAxes = new[] { new Axis { UnitWidth = TimeSpan.FromDays(1).Ticks } },
+            XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
             YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
         };
 
@@ -73,55 +60,36 @@ public class FinancialSeriesTest
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
-        bool IsInCorrectPaint(ChartPoint<FinancialPoint, CandlestickGeometry, LabelGeometry> point)
-        {
-            var paint = point.Model.Open > point.Model.Close
-                ? down
-                : up;
-
-            foreach (var geometry in paint.GetGeometries(chart.CoreCanvas))
-            {
-                if (point.Visual == geometry) return true;
-            }
-
-            return false;
-        }
-
         // ensure the unit has valid dimensions
-        var unitH = typedUnit.Visual.Low - typedUnit.Visual.Y;
-        Assert.IsTrue(typedUnit.Visual.Width > 1 && unitH > 1);
-        Assert.IsTrue(IsInCorrectPaint(typedUnit));
+        Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
 
         var previous = typedUnit;
         float? previousX = null;
+        float? previousXArea = null;
 
         foreach (var sutPoint in toCompareGuys)
         {
-            // test paint
-            Assert.IsTrue(IsInCorrectPaint(sutPoint));
-
-            // test height
-            var h = sutPoint.Visual.Low - sutPoint.Visual.Y;
-            var sutH = sutPoint.Visual.Low - sutPoint.Visual.Y;
-            var sutDH = sutPoint.Model.High - sutPoint.Model.Low;
-            Assert.IsTrue(Math.Abs(unitH - sutH / (float)sutDH) < 0.001);
-
-            // test width
-            Assert.IsTrue(Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
-
             // test x
-            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
+            var currentDeltaX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
+            var currentDeltaAreaX = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
             Assert.IsTrue(
                 previousX is null
                 ||
                 Math.Abs(previousX.Value - currentDeltaX) < 0.001);
+            Assert.IsTrue(
+                previousXArea is null
+                ||
+                Math.Abs(previousXArea.Value - currentDeltaX) < 0.001);
 
             // test y
             var p = 1f - sutPoint.PrimaryValue / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+            Assert.IsTrue(
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Bezier.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
 
-            previousX = previous.Visual.X - sutPoint.Visual.X;
+            previousX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
+            previousXArea = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
             previous = sutPoint;
         }
     }

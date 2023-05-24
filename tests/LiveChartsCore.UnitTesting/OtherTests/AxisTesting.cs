@@ -30,7 +30,7 @@ using SkiaSharp;
 using LiveChartsCore.Defaults;
 using System.Diagnostics;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.OtherTests;
 
 [TestClass]
 public class AxisTesting

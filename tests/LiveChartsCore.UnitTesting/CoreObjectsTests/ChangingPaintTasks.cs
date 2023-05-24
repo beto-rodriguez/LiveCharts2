@@ -29,7 +29,7 @@ using LiveChartsCore.UnitTesting.MockedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.CoreObjectsTests;
 
 [TestClass]
 public class ChangingPaintTasks
@@ -54,14 +54,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -101,14 +99,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -147,14 +143,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -193,14 +187,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -241,14 +233,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -290,14 +280,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -336,14 +324,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -380,14 +366,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -430,14 +414,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });
@@ -475,14 +457,12 @@ public class ChangingPaintTasks
         void DrawChart()
         {
             while (!canvas.IsValid)
-            {
                 canvas.DrawFrame(
                     new SkiaSharpDrawingContext(
                         canvas,
                         new SKImageInfo(100, 100),
                         SKSurface.CreateNull(100, 100),
                         new SKCanvas(new SKBitmap())));
-            }
         }
 
         chart.Core.Update(new ChartUpdateParams { Throttling = false });

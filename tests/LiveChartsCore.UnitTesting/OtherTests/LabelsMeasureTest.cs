@@ -31,7 +31,7 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.OtherTests;
 
 [TestClass]
 public class LabelsMeasureTest
@@ -90,9 +90,7 @@ public class LabelsMeasureTest
         {
             var t = "";
             for (var j = 0; j < lines; j++)
-            {
                 t += $"{(j % 2 == 0 ? "-" : "")}█-{lineHeight:N2}-█{(j != lines - 1 ? Environment.NewLine : "")}";
-            }
 
             var th = h * lines;
 

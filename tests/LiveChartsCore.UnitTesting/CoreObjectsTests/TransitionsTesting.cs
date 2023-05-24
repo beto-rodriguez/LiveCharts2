@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.CoreObjectsTests;
 
 [TestClass]
 public class TransitionsTesting

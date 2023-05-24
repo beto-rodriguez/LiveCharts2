@@ -20,33 +20,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Linq;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class LineSeriesTest
+public class PolarLineSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var sutSeries = new LineSeries<double>
+        var sutSeries = new PolarLineSeries<ObservablePolarPoint>
         {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 },
-            GeometrySize = 10
+            Values = new[]
+            {
+                new ObservablePolarPoint(0, 10),
+                new ObservablePolarPoint(45, 15),
+                new ObservablePolarPoint(90, 20),
+                new ObservablePolarPoint(135, 25),
+                new ObservablePolarPoint(180, 30),
+                new ObservablePolarPoint(225, 35),
+                new ObservablePolarPoint(270, 40),
+                new ObservablePolarPoint(315, 45),
+                new ObservablePolarPoint(360, 50),
+            },
+            GeometrySize = 10,
+            IsClosed = false,
+            Fill = null
         };
 
-        var chart = new SKCartesianChart
+        var chart = new SKPolarChart
         {
             Width = 1000,
             Height = 1000,
             Series = new[] { sutSeries },
-            XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
-            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
+            AngleAxes = new[] { new PolarAxis { MinLimit = 0, MaxLimit = 360 } }
         };
 
         _ = chart.GetImage();
@@ -55,7 +67,7 @@ public class LineSeriesTest
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
 
-        var unit = points.First(x => x.PrimaryValue == 1);
+        var unit = points.First();
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
@@ -63,34 +75,9 @@ public class LineSeriesTest
         // ensure the unit has valid dimensions
         Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
 
-        var previous = typedUnit;
-        float? previousX = null;
-        float? previousXArea = null;
-
         foreach (var sutPoint in toCompareGuys)
         {
-            // test x
-            var currentDeltaX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            var currentDeltaAreaX = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
-            Assert.IsTrue(
-                previousX is null
-                ||
-                Math.Abs(previousX.Value - currentDeltaX) < 0.001);
-            Assert.IsTrue(
-                previousXArea is null
-                ||
-                Math.Abs(previousXArea.Value - currentDeltaX) < 0.001);
-
-            // test y
-            var p = 1f - sutPoint.PrimaryValue / 512f;
-            Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
-            Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Bezier.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
-
-            previousX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            previousXArea = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
-            previous = sutPoint;
+            // ToDo
         }
     }
 }

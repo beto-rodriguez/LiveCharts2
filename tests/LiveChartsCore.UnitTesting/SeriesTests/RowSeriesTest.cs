@@ -26,15 +26,15 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class ColumnSeriesTest
+public class RowSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var sutSeries = new ColumnSeries<double>
+        var sutSeries = new RowSeries<double>
         {
             Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 }
         };
@@ -44,8 +44,8 @@ public class ColumnSeriesTest
             Width = 1000,
             Height = 1000,
             Series = new[] { sutSeries },
-            XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
-            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
+            XAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } },
+            YAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } }
         };
 
         _ = chart.GetImage();
@@ -63,34 +63,33 @@ public class ColumnSeriesTest
         Assert.IsTrue(typedUnit.Visual.Width > 1 && typedUnit.Visual.Height > 1);
 
         var previous = typedUnit;
-        float? previousX = null;
+        float? previousY = null;
 
         foreach (var sutPoint in toCompareGuys)
         {
-            // test height
+            // test width
             Assert.IsTrue(
                 // the idea is, the second bar should be 2 times bigger than the first one
                 // and the third bar should be 4 times bigger than the first one and so on
-                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height / (float)sutPoint.Model) < 0.001);
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width / (float)sutPoint.Model) < 0.001);
 
-            // test width
+            // test height
             Assert.IsTrue(
                 // and also the width should be the same.
-                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
-
-            // test x
-            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
-            Assert.IsTrue(
-                previousX is null
-                ||
-                Math.Abs(previousX.Value - currentDeltaX) < 0.001);
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height) < 0.001);
 
             // test y
-            var p = 1f - sutPoint.PrimaryValue / 512f;
+            var currentDeltaY = previous.Visual.Y - sutPoint.Visual.Y;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                previousY is null
+                ||
+                Math.Abs(previousY.Value - currentDeltaY) < 0.001);
 
-            previousX = previous.Visual.X - sutPoint.Visual.X;
+            // test x
+            Assert.IsTrue(
+                Math.Abs(sutPoint.Visual.X - chart.Core.DrawMarginLocation.X) < 0.001);
+
+            previousY = previous.Visual.Y - sutPoint.Visual.Y;
             previous = sutPoint;
         }
     }

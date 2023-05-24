@@ -30,7 +30,7 @@ using LiveChartsCore.VisualElements;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.LayoutTests;
 
 [TestClass]
 public class StackPanelTest

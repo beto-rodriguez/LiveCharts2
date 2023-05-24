@@ -20,45 +20,64 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Linq;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class PolarLineSeriesTest
+public class HeatSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var sutSeries = new PolarLineSeries<ObservablePolarPoint>
+        var sutSeries = new HeatSeries<WeightedPoint>
         {
-            Values = new[]
+            Values = new WeightedPoint[]
             {
-                new ObservablePolarPoint(0, 10),
-                new ObservablePolarPoint(45, 15),
-                new ObservablePolarPoint(90, 20),
-                new ObservablePolarPoint(135, 25),
-                new ObservablePolarPoint(180, 30),
-                new ObservablePolarPoint(225, 35),
-                new ObservablePolarPoint(270, 40),
-                new ObservablePolarPoint(315, 45),
-                new ObservablePolarPoint(360, 50),
+                new(0, 0, 0),
+                new(0, 1, 1),
+                new(0, 2, 2),
+                new(0, 3, 3),
+                new(0, 4, 4),
+                new(0, 5, 5),
+                new(0, 5, 6),
+                new(0, 5, 7),
+                new(0, 5, 8),
+                new(0, 5, 9),
+                new(0, 5, 10),
+
+                new(1, 0, 0),
+                new(1, 1, 1),
+                new(1, 2, 2),
+                new(1, 3, 3),
+                new(1, 4, 4),
+                new(1, 5, 5),
+                new(1, 5, 6),
+                new(1, 5, 7),
+                new(1, 5, 8),
+                new(1, 5, 9),
+                new(1, 5, 10)
             },
-            GeometrySize = 10,
-            IsClosed = false,
-            Fill = null
+            HeatMap = new[]
+            {
+                new LvcColor(0, 0, 0, 0), // the first element is the "coldest"
+                new LvcColor(255, 255, 255, 255) // the last element is the "hottest"
+            }
         };
 
-        var chart = new SKPolarChart
+        var chart = new SKCartesianChart
         {
             Width = 1000,
             Height = 1000,
             Series = new[] { sutSeries },
-            AngleAxes = new[] { new PolarAxis { MinLimit = 0, MaxLimit = 360 } }
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() }
         };
 
         _ = chart.GetImage();
@@ -67,17 +86,37 @@ public class PolarLineSeriesTest
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
 
-        var unit = points.First();
+        var unit = points.First(x => x.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
         // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
+        Assert.IsTrue(typedUnit.Visual.Width > 1 && typedUnit.Visual.Height > 1);
+
+        var previous = typedUnit;
+        float? previousX = null;
 
         foreach (var sutPoint in toCompareGuys)
         {
-            // ToDo
+            // test height
+            Assert.IsTrue(
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height) < 0.001);
+
+            // test width
+            Assert.IsTrue(
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
+
+            // test gradient
+            var p = (byte)(255 * sutPoint.Model.Weight / 10f);
+            Assert.IsTrue(
+                sutPoint.Visual.Color.R == p &&
+                sutPoint.Visual.Color.G == p &&
+                sutPoint.Visual.Color.B == p &&
+                sutPoint.Visual.Color.A == p);
+
+            previousX = previous.Visual.X - sutPoint.Visual.X;
+            previous = sutPoint;
         }
     }
 }

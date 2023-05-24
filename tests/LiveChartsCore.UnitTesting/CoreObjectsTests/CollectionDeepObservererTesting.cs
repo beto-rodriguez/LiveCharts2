@@ -25,7 +25,7 @@ using System.Collections.ObjectModel;
 using LiveChartsCore.UnitTesting.MockedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.CoreObjectsTests;
 
 [TestClass]
 public class CollectionDeepObservererTesting
