@@ -29,6 +29,8 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the stack panel class.
 /// </summary>
+/// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
