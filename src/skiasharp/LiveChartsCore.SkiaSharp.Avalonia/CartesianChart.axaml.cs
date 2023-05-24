@@ -588,23 +588,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(cc, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (tooltip is null || _core is null) return;
-
-        tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (tooltip is null || _core is null) return;
-
-        _core.ClearTooltipData();
-        tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         Dispatcher.UIThread.Post(action);
@@ -727,7 +710,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
     {
-        _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
+        tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

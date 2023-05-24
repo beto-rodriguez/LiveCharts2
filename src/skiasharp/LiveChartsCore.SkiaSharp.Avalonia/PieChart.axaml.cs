@@ -473,23 +473,6 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
     #endregion
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (tooltip is null || _core is null) return;
-
-        tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (tooltip is null || _core is null) return;
-
-        _core.ClearTooltipData();
-        tooltip.Hide();
-    }
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
     {
@@ -598,7 +581,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
     private void Chart_PointerLeave(object? sender, PointerEventArgs e)
     {
-        _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
+        tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

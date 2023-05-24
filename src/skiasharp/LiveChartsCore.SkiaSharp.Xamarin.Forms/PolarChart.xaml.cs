@@ -617,21 +617,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (Tooltip is null || core is null) return;
-        Tooltip.Show(points, core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (Tooltip is null || core is null) return;
-        core.ClearTooltipData();
-        Tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         MainThread.BeginInvokeOnMainThread(action);

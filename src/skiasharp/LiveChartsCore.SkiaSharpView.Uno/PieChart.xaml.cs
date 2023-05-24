@@ -528,21 +528,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (Tooltip == null || _core == null) return;
-        Tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (Tooltip == null || _core == null) return;
-        _core.ClearTooltipData();
-        Tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         UnoPlatformHelpers.InvokeOnUIThread(action);
@@ -612,7 +597,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
     private void OnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        HideTooltip();
+        Tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

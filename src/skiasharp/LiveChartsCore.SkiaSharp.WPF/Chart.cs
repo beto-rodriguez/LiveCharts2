@@ -479,22 +479,6 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
     public abstract IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point);
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (tooltip is null || core is null) return;
-
-        tooltip.Show(points, core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (tooltip is null || core is null) return;
-        core.ClearTooltipData();
-        tooltip.Hide();
-    }
-
     internal Point GetCanvasPosition()
     {
         return canvas is null ? throw new Exception("Canvas not found") : canvas.TranslatePoint(new Point(0, 0), this);
@@ -567,7 +551,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     private void OnMouseLeave(object sender, MouseEventArgs e)
     {
-        HideTooltip();
+        Tooltip?.Hide();
         core?.InvokePointerLeft();
     }
 

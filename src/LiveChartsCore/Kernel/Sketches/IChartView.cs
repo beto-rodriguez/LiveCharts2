@@ -249,17 +249,6 @@ public interface IChartView<TDrawingContext> : IChartView
     IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; set; }
 
     /// <summary>
-    /// Shows the tool tip based on the given points.
-    /// </summary>
-    /// <param name="points">The points.</param>
-    void ShowTooltip(IEnumerable<ChartPoint> points);
-
-    /// <summary>
-    /// Hides the tool tip.
-    /// </summary>
-    void HideTooltip();
-
-    /// <summary>
     /// Called when the pointer goes down on a visual element(s).
     /// </summary>
     /// <param name="visualElements">The visual elements.</param>

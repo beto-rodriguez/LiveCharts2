@@ -264,23 +264,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
     public abstract IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point);
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (tooltip is null || core is null) return;
-
-        tooltip.Show(points, core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (tooltip is null || core is null) return;
-
-        core.ClearTooltipData();
-        tooltip.Hide();
-    }
-
     internal Point GetCanvasPosition()
     {
         return motionCanvas.Location;
@@ -382,7 +365,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <param name="e"></param>
     protected virtual void Chart_MouseLeave(object? sender, EventArgs e)
     {
-        HideTooltip();
+        Tooltip?.Hide();
         core?.InvokePointerLeft();
     }
 
