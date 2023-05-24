@@ -136,26 +136,6 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 }, i, 2);
 
             i++;
-
-            //_ = _tableLayout.AddChild(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
-            //{
-            //    Padding = new Padding(0, 4),
-            //    VerticalAlignment = Align.Middle,
-            //    HorizontalAlignment = Align.Middle,
-            //    Children =
-            //    {
-            //        series.GetMiniatresSketch().AsDrawnControl(),
-            //        new LabelVisual
-            //        {
-            //            Text = point.AsTooltipString,
-            //            Paint = FontPaint,
-            //            TextSize = TextSize,
-            //            Padding = new Padding(8, 0, 0, 0),
-            //            VerticalAlignment = Align.Start,
-            //            HorizontalAlignment = Align.Start
-            //        }
-            //    }
-            //});
         }
 
         var size = _tableLayout.Measure(chart);
