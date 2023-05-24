@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
@@ -38,7 +37,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
 {
     private IPaint<TDrawingContext>? _backgroundPaint;
     private readonly TBackgroundGeometry _boundsGeometry = new();
-    private readonly Dictionary<int, Dictionary<int, VisualElement<TDrawingContext>?>> _positions = new();
+    private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = new();
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
     private int _maxColumn = 0;
@@ -88,13 +87,13 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
                 var tableSize = _measuredSizes[mr, mc];
                 var columnSize = _measuredSizes[mr, c];
 
-                if (!row.TryGetValue(c, out var visualElement) || visualElement is null)
+                if (!row.TryGetValue(c, out var cell))
                 {
                     w += columnSize.Width;
                     continue;
                 }
 
-                var childSize = visualElement.Measure(chart);
+                var childSize = cell.VisualElement.Measure(chart);
 
                 if (cellSize.Width < childSize.Width)
                     _measuredSizes[r, c] = new(childSize.Width, _measuredSizes[r, c].Height);
@@ -135,8 +134,9 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     public void AddChild(VisualElement<TDrawingContext> child, int row, int column)
     {
         if (!_positions.TryGetValue(row, out var r))
-            _positions.Add(row, r = new Dictionary<int, VisualElement<TDrawingContext>?>());
-        r[column] = child;
+            _positions.Add(row, r = new Dictionary<int, TableCell>());
+        r[column] = new(row, column, child);
+
         if (row > _maxRow) _maxRow = row;
         if (column > _maxColumn) _maxColumn = column;
     }
@@ -156,17 +156,11 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <summary>
     /// Enumerates the children in the layout.
     /// </summary>
-    public IEnumerable<TablePosition> EnumerateChildren()
+    public IEnumerable<TableCell> EnumerateChildren()
     {
-        foreach (var r in _positions.Keys.ToArray())
-        {
-            if (!_positions.TryGetValue(r, out var row)) continue;
-            foreach (var c in row.Keys.ToArray())
-            {
-                if (!row.TryGetValue(c, out var visualElement) || visualElement is null) continue;
-                yield return new(r, c, visualElement);
-            }
-        }
+        foreach (var r in _positions.Keys)
+            foreach (var c in _positions[r].Keys)
+                yield return _positions[r][c];
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
@@ -185,20 +179,20 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
             for (var c = 0; c <= _maxColumn; c++)
             {
                 var columnWidth = _measuredSizes[_maxRow + 1, c].Width;
-                if (!row.TryGetValue(c, out var visualElement) || visualElement is null)
+                if (!row.TryGetValue(c, out var cell))
                 {
                     w += columnWidth;
                     continue;
                 }
 
-                visualElement._x = HorizontalAlignment switch
+                cell.VisualElement._x = (cell.HorizontalAlign ?? HorizontalAlignment) switch
                 {
                     Align.Start => w,
                     Align.Middle => w + (columnWidth - _measuredSizes[r, c].Width) * 0.5f,
                     Align.End => w + columnWidth - _measuredSizes[r, c].Width,
                     _ => throw new System.NotImplementedException(),
                 };
-                visualElement._y = VerticalAlignment switch
+                cell.VisualElement._y = (cell.VerticalAlign ?? VerticalAlignment) switch
                 {
                     Align.Start => h,
                     Align.Middle => h + (rowHeight - _measuredSizes[r, c].Height) * 0.5f,
@@ -206,8 +200,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
                     _ => throw new System.NotImplementedException(),
                 };
 
-                visualElement.OnInvalidated(chart);
-                visualElement.SetParent(_boundsGeometry);
+                cell.VisualElement.OnInvalidated(chart);
+                cell.VisualElement.SetParent(_boundsGeometry);
                 w += columnWidth;
             }
 
@@ -249,21 +243,30 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     }
 
     /// <summary>
-    /// A helper class to enumerate the children in the layout.
+    /// Defines a cell in the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/>.
     /// </summary>
-    public class TablePosition
+    public class TableCell
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TablePosition"/> class.
+        /// Initializes a new instance of the <see cref="TableCell"/> class.
         /// </summary>
-        /// <param name="row"></param>
-        /// <param name="column"></param>
-        /// <param name="visualElement"></param>
-        public TablePosition(int row, int column, VisualElement<TDrawingContext> visualElement)
+        /// <param name="row">The row index.</param>
+        /// <param name="column">The column index.</param>
+        /// <param name="visualElement">The visual to add.</param>
+        /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
+        /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
+        public TableCell(
+            int row,
+            int column,
+            VisualElement<TDrawingContext> visualElement,
+            Align? verticalAlign = null,
+            Align? horizontalAlign = null)
         {
             Row = row;
             Column = column;
             VisualElement = visualElement;
+            VerticalAlign = verticalAlign;
+            HorizontalAlign = horizontalAlign;
         }
 
         /// <summary>
@@ -275,6 +278,16 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         /// Gets the column.
         /// </summary>
         public int Column { get; }
+
+        /// <summary>
+        /// Gets or sets the vertical alignment.
+        /// </summary>
+        public Align? VerticalAlign { get; }
+
+        /// <summary>
+        /// Gets or sets the horizontal alignment.
+        /// </summary>
+        public Align? HorizontalAlign { get; }
 
         /// <summary>
         /// Gets the visual element.

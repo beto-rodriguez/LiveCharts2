@@ -287,7 +287,7 @@ public class TableLayoutTest
             }
         };
 
-        chart.SaveImage("this.png");
+        _ = chart.GetImage();
 
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
