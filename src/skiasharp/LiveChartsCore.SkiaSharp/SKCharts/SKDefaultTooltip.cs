@@ -97,8 +97,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             _panel
                 .Animate(chart,
-                    nameof(ISizedGeometry<SkiaSharpDrawingContext>.X),
-                    nameof(ISizedGeometry<SkiaSharpDrawingContext>.Y));
+                    nameof(RoundedRectangleGeometry.X),
+                    nameof(RoundedRectangleGeometry.Y));
         }
 
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;

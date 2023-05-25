@@ -616,12 +616,12 @@ public abstract class Chart<TDrawingContext> : IChart
              {
                  lock (Canvas.Sync)
                  {
-                     if (_pointerPosition.X < DrawMarginLocation.X || _pointerPosition.X > DrawMarginLocation.X + DrawMarginSize.Width ||
-                         _pointerPosition.Y < DrawMarginLocation.Y || _pointerPosition.Y > DrawMarginLocation.Y + DrawMarginSize.Height)
-                     {
-                         // reject tooltip logic when the pointer is outside the draw margin
-                         return;
-                     }
+                     //if (_pointerPosition.X < DrawMarginLocation.X || _pointerPosition.X > DrawMarginLocation.X + DrawMarginSize.Width ||
+                     //    _pointerPosition.Y < DrawMarginLocation.Y || _pointerPosition.Y > DrawMarginLocation.Y + DrawMarginSize.Height)
+                     //{
+                     //    // reject tooltip logic when the pointer is outside the draw margin
+                     //    return;
+                     //}
 
                      // TODO:
                      // all this needs a performance review...
