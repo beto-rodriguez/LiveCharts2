@@ -684,7 +684,6 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
     private void PolarChart_PointerLeave(object? sender, PointerEventArgs e)
     {
-        tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

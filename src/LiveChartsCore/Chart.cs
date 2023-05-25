@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
@@ -89,7 +88,7 @@ public abstract class Chart<TDrawingContext> : IChart
         PointerUp += Chart_PointerUp;
         PointerLeft += Chart_PointerLeft;
 
-        _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+        _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
     }
 
@@ -328,17 +327,6 @@ public abstract class Chart<TDrawingContext> : IChart
         Canvas.Dispose();
     }
 
-    internal void ClearTooltipData()
-    {
-        foreach (var point in _activePoints.Keys.ToArray())
-        {
-            point.Context.Series.OnPointerLeft(point);
-            _ = _activePoints.Remove(point);
-        }
-
-        Canvas.Invalidate();
-    }
-
     internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         PointerDown?.Invoke(point);
@@ -378,6 +366,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal void InvokePointerLeft()
     {
+        Tooltip?.Hide(this);
         PointerLeft?.Invoke();
     }
 
@@ -616,42 +605,28 @@ public abstract class Chart<TDrawingContext> : IChart
              {
                  lock (Canvas.Sync)
                  {
-                     //if (_pointerPosition.X < DrawMarginLocation.X || _pointerPosition.X > DrawMarginLocation.X + DrawMarginSize.Width ||
-                     //    _pointerPosition.Y < DrawMarginLocation.Y || _pointerPosition.Y > DrawMarginLocation.Y + DrawMarginSize.Height)
-                     //{
-                     //    // reject tooltip logic when the pointer is outside the draw margin
-                     //    return;
-                     //}
-
-                     // TODO:
-                     // all this needs a performance review...
-                     // it should not be critical, should not be even close to be the 'bottle neck' in a case where
-                     // we face performance issues.
+                     if (TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
                      var points = FindHoveredPointsBy(_pointerPosition);
-                     if (!points.Any())
-                     {
-                         ClearTooltipData();
-                         Tooltip?.Hide();
-                         return;
-                     }
-
-                     if (_activePoints.Count > 0 && points.All(x => _activePoints.ContainsKey(x))) return;
 
                      var o = new object();
+                     var isEmpty = true;
                      foreach (var tooltipPoint in points)
                      {
                          tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
                          _activePoints[tooltipPoint] = o;
+                         isEmpty = false;
                      }
 
                      foreach (var point in _activePoints.Keys.ToArray())
                      {
-                         if (_activePoints[point] == o) continue;
+                         if (_activePoints[point] == o) continue; // the points was used, don't remove it.
+
                          point.Context.Series.OnPointerLeft(point);
                          _ = _activePoints.Remove(point);
                      }
 
-                     if (TooltipPosition != TooltipPosition.Hidden) Tooltip?.Show(points, this);
+                     if (isEmpty) return;
+                     Tooltip?.Show(points, this);
                      Canvas.Invalidate();
                  }
              }));

@@ -36,7 +36,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
-    private Chart<SkiaSharpDrawingContext>? _chart;
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
@@ -82,8 +81,6 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        _chart = chart;
-
         if (_panel is null)
         {
             _panel = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
@@ -170,13 +167,13 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         _panel.X = location.X;
         _panel.Y = location.Y;
 
-        _chart.AddVisual(_panel);
+        chart.AddVisual(_panel);
     }
 
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Hide"/>
-    public void Hide()
+    public void Hide(Chart<SkiaSharpDrawingContext> chart)
     {
-        if (_chart is null || _panel is null) return;
-        _chart.RemoveVisual(_panel);
+        if (chart is null || _panel is null) return;
+        chart.RemoveVisual(_panel);
     }
 }

@@ -352,15 +352,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <param name="e"></param>
     protected virtual void Chart_MouseLeave(object? sender, EventArgs e)
     {
-        if (this.tooltip is Window tooltip)
-        {
-            var window = tooltip.Size + tooltip.Location;
-
-            if (window.Contains((Point)Mouse.Position)) // mouse over tooltip ?
-                return; // dont hide it 
-        }
-
-        Tooltip?.Hide();
         core?.InvokePointerLeft();
     }
 
