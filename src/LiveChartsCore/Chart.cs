@@ -46,7 +46,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = new();
     internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = new();
-
+    internal bool _isToolTipOpen = false;
     internal bool _preserveFirstDraw = false;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
@@ -366,6 +366,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal void InvokePointerLeft()
     {
+        _isToolTipOpen = false;
         Tooltip?.Hide(this);
         PointerLeft?.Invoke();
     }
@@ -598,6 +599,36 @@ public abstract class Chart<TDrawingContext> : IChart
         }
     }
 
+    /// <summary>
+    /// Draws the current tool tip, requires canvas invalidation after this call.
+    /// </summary>
+    protected void DrawToolTip()
+    {
+        if (TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
+        var points = FindHoveredPointsBy(_pointerPosition);
+
+        var o = new object();
+        var isEmpty = true;
+        foreach (var tooltipPoint in points)
+        {
+            tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
+            _activePoints[tooltipPoint] = o;
+            isEmpty = false;
+        }
+
+        foreach (var point in _activePoints.Keys.ToArray())
+        {
+            if (_activePoints[point] == o) continue; // the points was used, don't remove it.
+
+            point.Context.Series.OnPointerLeft(point);
+            _ = _activePoints.Remove(point);
+        }
+
+        if (isEmpty) return;
+        Tooltip?.Show(points, this);
+        _isToolTipOpen = true;
+    }
+
     private Task TooltipThrottlerUnlocked()
     {
         return Task.Run(() =>
@@ -605,28 +636,7 @@ public abstract class Chart<TDrawingContext> : IChart
              {
                  lock (Canvas.Sync)
                  {
-                     if (TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
-                     var points = FindHoveredPointsBy(_pointerPosition);
-
-                     var o = new object();
-                     var isEmpty = true;
-                     foreach (var tooltipPoint in points)
-                     {
-                         tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
-                         _activePoints[tooltipPoint] = o;
-                         isEmpty = false;
-                     }
-
-                     foreach (var point in _activePoints.Keys.ToArray())
-                     {
-                         if (_activePoints[point] == o) continue; // the points was used, don't remove it.
-
-                         point.Context.Series.OnPointerLeft(point);
-                         _ = _activePoints.Remove(point);
-                     }
-
-                     if (isEmpty) return;
-                     Tooltip?.Show(points, this);
+                     DrawToolTip();
                      Canvas.Invalidate();
                  }
              }));
