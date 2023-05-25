@@ -49,7 +49,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -57,7 +57,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Red)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -122,7 +122,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -130,7 +130,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Red)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -188,7 +188,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -196,7 +196,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Red)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -254,7 +254,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -262,7 +262,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Red)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 25,
@@ -326,7 +326,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -334,7 +334,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Red)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 25,
@@ -392,7 +392,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -400,7 +400,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Red)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 25,
@@ -459,7 +459,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g0, g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -467,7 +467,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -475,7 +475,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -483,7 +483,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -491,7 +491,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -499,7 +499,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g0 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -507,7 +507,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -515,7 +515,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -523,7 +523,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -531,7 +531,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -539,7 +539,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -547,7 +547,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -606,7 +606,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g0, g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -614,7 +614,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -622,7 +622,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -630,7 +630,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -638,7 +638,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -646,7 +646,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g0 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -654,7 +654,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -662,7 +662,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -670,7 +670,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -678,7 +678,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -686,7 +686,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -694,7 +694,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -753,7 +753,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g0, g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -761,7 +761,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -769,7 +769,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -777,7 +777,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -785,7 +785,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -793,7 +793,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g0 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -801,7 +801,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -809,7 +809,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -817,7 +817,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 10,
@@ -825,7 +825,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -833,7 +833,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -841,7 +841,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 12,
@@ -900,7 +900,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g0, g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -908,7 +908,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -916,7 +916,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -924,7 +924,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -932,7 +932,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -940,7 +940,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g0 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -948,7 +948,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -956,7 +956,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -964,7 +964,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -972,7 +972,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 20,
@@ -980,7 +980,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 20,
@@ -988,7 +988,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -1047,7 +1047,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g0, g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1055,7 +1055,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1063,7 +1063,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1071,7 +1071,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1079,7 +1079,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1087,7 +1087,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g0 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -1095,7 +1095,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1103,7 +1103,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1111,7 +1111,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -1119,7 +1119,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 20,
@@ -1127,7 +1127,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 20,
@@ -1135,7 +1135,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -1194,7 +1194,7 @@ public class StackPanelTest
 
         GeometryVisual<RectangleGeometry> g0, g1, g2;
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1202,7 +1202,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1210,7 +1210,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1218,7 +1218,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1226,7 +1226,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1234,7 +1234,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g0 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -1242,7 +1242,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1250,7 +1250,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 15,
@@ -1258,7 +1258,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g1 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
@@ -1266,7 +1266,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Yellow)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 20,
@@ -1274,7 +1274,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Green)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             new GeometryVisual<RectangleGeometry>
             {
                 Width = 20,
@@ -1282,7 +1282,7 @@ public class StackPanelTest
                 Fill = new SolidColorPaint(SKColors.Blue)
             });
 
-        _ = stackPanel.Children.Add(
+        stackPanel.Children.Add(
             g2 = new GeometryVisual<RectangleGeometry>
             {
                 Width = 5,
