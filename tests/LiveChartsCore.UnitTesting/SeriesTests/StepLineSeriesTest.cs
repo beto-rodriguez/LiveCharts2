@@ -26,23 +26,17 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class StackedStepAreaSeriesTest
+public class StepLineSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var sutSeries = new StackedStepAreaSeries<double>
+        var sutSeries = new StepLineSeries<double>
         {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 },
-            GeometrySize = 10
-        };
-
-        var sutSeries2 = new StackedStepAreaSeries<double>
-        {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 },
+            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 },
             GeometrySize = 10
         };
 
@@ -50,13 +44,13 @@ public class StackedStepAreaSeriesTest
         {
             Width = 1000,
             Height = 1000,
-            Series = new[] { sutSeries, sutSeries2 },
+            Series = new[] { sutSeries },
             XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
             YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
         };
 
         _ = chart.GetImage();
-        //chart.SaveImage("test.png"); // use this method to see the actual tested image
+        // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
@@ -65,12 +59,6 @@ public class StackedStepAreaSeriesTest
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
-
-        var datafactory2 = sutSeries2.DataFactory;
-        var points2 = datafactory2.Fetch(sutSeries2, chart.Core).ToArray();
-        var unit2 = points2.First(x => x.PrimaryValue == 1);
-        var typedUnit2 = sutSeries.ConvertToTypedChartPoint(unit2);
-        var toCompareGuys2 = points2.Where(x => x != unit2).Select(sutSeries2.ConvertToTypedChartPoint);
 
         // ensure the unit has valid dimensions
         Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
@@ -94,36 +82,7 @@ public class StackedStepAreaSeriesTest
                 Math.Abs(previousXArea.Value - currentDeltaX) < 0.001);
 
             // test y
-            var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
-            Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
-            Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.StepSegment.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
-
-            previousX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            previousXArea = previous.Visual.StepSegment.Xj - sutPoint.Visual.StepSegment.Xj;
-            previous = sutPoint;
-        }
-
-        previous = typedUnit2;
-        previousX = null;
-        previousXArea = null;
-        foreach (var sutPoint in toCompareGuys2)
-        {
-            // test x
-            var currentDeltaX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            var currentDeltaAreaX = previous.Visual.StepSegment.Xj - sutPoint.Visual.StepSegment.Xj;
-            Assert.IsTrue(
-                previousX is null
-                ||
-                Math.Abs(previousX.Value - currentDeltaX) < 0.001);
-            Assert.IsTrue(
-                previousXArea is null
-                ||
-                Math.Abs(previousXArea.Value - currentDeltaX) < 0.001);
-
-            // test y
-            var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
+            var p = 1f - sutPoint.PrimaryValue / 512f;
             Assert.IsTrue(
                 Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
             Assert.IsTrue(

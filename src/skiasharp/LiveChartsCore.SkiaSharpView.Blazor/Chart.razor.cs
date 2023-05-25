@@ -280,23 +280,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         throw new NotImplementedException();
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (Tooltip is null || core is null) return;
-
-        Tooltip.Show(points, core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (Tooltip is null || core is null) return;
-
-        core.ClearTooltipData();
-        Tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         _ = InvokeAsync(action);
@@ -385,7 +368,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <param name="e"></param>
     protected virtual void OnPointerOut(PointerEventArgs e)
     {
-        HideTooltip();
+        Tooltip?.Hide();
         core?.InvokePointerLeft();
     }
 
@@ -419,7 +402,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
     }
 
     void IChartView.Invalidate()

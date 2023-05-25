@@ -555,23 +555,6 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(cc, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (tooltip is null || _core is null) return;
-
-        tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (tooltip is null || _core is null) return;
-
-        _core.ClearTooltipData();
-        tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         Dispatcher.UIThread.Post(action);
@@ -701,7 +684,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
     private void PolarChart_PointerLeave(object? sender, PointerEventArgs e)
     {
-        _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
+        tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 
@@ -728,7 +711,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

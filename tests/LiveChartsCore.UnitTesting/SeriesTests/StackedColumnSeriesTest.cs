@@ -26,24 +26,22 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class StackedAreaSeriesTest
+public class StackedColumnSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var sutSeries = new StackedAreaSeries<double>
+        var sutSeries = new StackedColumnSeries<double>
         {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 },
-            GeometrySize = 10
+            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 }
         };
 
-        var sutSeries2 = new StackedAreaSeries<double>
+        var sutSeries2 = new StackedColumnSeries<double>
         {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 },
-            GeometrySize = 10
+            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 }
         };
 
         var chart = new SKCartesianChart
@@ -56,7 +54,7 @@ public class StackedAreaSeriesTest
         };
 
         _ = chart.GetImage();
-        //chart.SaveImage("test.png"); // use this method to see the actual tested image
+        // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
@@ -68,69 +66,75 @@ public class StackedAreaSeriesTest
 
         var datafactory2 = sutSeries2.DataFactory;
         var points2 = datafactory2.Fetch(sutSeries2, chart.Core).ToArray();
+
         var unit2 = points2.First(x => x.PrimaryValue == 1);
-        var typedUnit2 = sutSeries.ConvertToTypedChartPoint(unit2);
+        var typedUnit2 = sutSeries2.ConvertToTypedChartPoint(unit2);
+
         var toCompareGuys2 = points2.Where(x => x != unit2).Select(sutSeries2.ConvertToTypedChartPoint);
 
         // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
+        Assert.IsTrue(typedUnit.Visual.Width > 1 && typedUnit.Visual.Height > 1);
 
         var previous = typedUnit;
         float? previousX = null;
-        float? previousXArea = null;
 
         foreach (var sutPoint in toCompareGuys)
         {
+            // test height
+            Assert.IsTrue(
+                // the idea is, the second bar should be 2 times bigger than the first one
+                // and the third bar should be 4 times bigger than the first one and so on
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height / (float)sutPoint.Model) < 0.001);
+
+            // test width
+            Assert.IsTrue(
+                // and also the width should be the same.
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
+
             // test x
-            var currentDeltaX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            var currentDeltaAreaX = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
+            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
             Assert.IsTrue(
                 previousX is null
                 ||
                 Math.Abs(previousX.Value - currentDeltaX) < 0.001);
-            Assert.IsTrue(
-                previousXArea is null
-                ||
-                Math.Abs(previousXArea.Value - currentDeltaX) < 0.001);
 
             // test y
             var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
-            Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Bezier.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 
-            previousX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            previousXArea = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
+            previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;
         }
 
         previous = typedUnit2;
         previousX = null;
-        previousXArea = null;
         foreach (var sutPoint in toCompareGuys2)
         {
+            // test height
+            Assert.IsTrue(
+                // the idea is, the second bar should be 2 times bigger than the first one
+                // and the third bar should be 4 times bigger than the first one and so on
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height / (float)sutPoint.Model) < 0.001);
+
+            // test width
+            Assert.IsTrue(
+                // and also the width should be the same.
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
+
             // test x
-            var currentDeltaX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            var currentDeltaAreaX = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
+            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
             Assert.IsTrue(
                 previousX is null
                 ||
                 Math.Abs(previousX.Value - currentDeltaX) < 0.001);
-            Assert.IsTrue(
-                previousXArea is null
-                ||
-                Math.Abs(previousXArea.Value - currentDeltaX) < 0.001);
 
             // test y
             var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
-            Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Bezier.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 
-            previousX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            previousXArea = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
+            previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;
         }
     }

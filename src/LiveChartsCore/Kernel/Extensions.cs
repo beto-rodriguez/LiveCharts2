@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: animatable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -204,14 +206,102 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Creates a transition builder for the specified properties.
+    /// Sets the transition of the given <paramref name="properties"/> to the <paramref name="animation"/>.
     /// </summary>
-    /// <param name="animatable">The animatable.</param>
-    /// <param name="properties">The properties, use null to apply the transition to all the properties.</param>
-    /// <returns>The builder</returns>
-    public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[]? properties)
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="animation">The animation.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate(this IAnimatable animatable, Animation animation, params string[]? properties)
     {
-        return new TransitionBuilder(animatable, properties);
+        animatable.SetTransition(animation, properties);
+        animatable.CompleteTransition(properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the specified <paramref name="easingFunction"/> and <paramref name="speed"/>.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="easingFunction">The animation's easing function.</param>
+    /// <param name="speed">The animation's speed.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate(this IAnimatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
+    {
+        Animate(animatable, new Animation(easingFunction, speed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
+    /// if the properties are not set, then all the animatable properties in the object will use the given animation.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="chart">
+    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
+    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// </param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this IAnimatable animatable, Chart<TDrawingContext> chart, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(animatable, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart
+    /// for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <param name="visual">The visual.</param>
+    /// <param name="animation">The animation.</param>
+    /// <param name="properties">The properties.</param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Animation animation, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        foreach (var animatable in visual.GetDrawnGeometries())
+        {
+            if (animatable is null) continue;
+            Animate(animatable, animation, properties);
+        }
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the specified <paramref name="easingFunction"/> and <paramref name="speed"/>
+    /// for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <param name="visual">The visual object.</param>
+    /// <param name="easingFunction">The animation's easing function.</param>
+    /// <param name="speed">The animation's speed.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(visual, new Animation(easingFunction, speed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
+    /// if the properties are not set, then all the animatable properties in the object will use the given animation.
+    /// The transition will be set for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <param name="visual">The visual`` object.</param>
+    /// <param name="chart">
+    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
+    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// </param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Chart<TDrawingContext> chart, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(visual, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
     }
 
     /// <summary>
@@ -353,33 +443,6 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Finds the closest visual to the specified location [in pixels].
-    /// </summary>
-    /// <typeparam name="T">The type of the drawing context.</typeparam>
-    /// <param name="source">The visuals to look into.</param>
-    /// <param name="point">The location in pixels.</param>
-    /// <returns></returns>
-    public static VisualElement<T>? FindClosestTo<T>(this IEnumerable<VisualElement<T>> source, LvcPoint point)
-        where T : DrawingContext
-    {
-        return source.Select(visual =>
-        {
-            var location = visual.GetTargetLocation();
-            var size = visual.GetTargetSize();
-
-            return new
-            {
-                distance = Math.Sqrt(
-                    Math.Pow(point.X - (location.X + size.Width * 0.5), 2) +
-                    Math.Pow(point.Y - (location.Y + size.Height * 0.5), 2)),
-                visual
-            };
-        })
-        .OrderBy(p => p.distance)
-        .FirstOrDefault()?.visual;
-    }
-
-    /// <summary>
     /// Gets a scaler for the given axis with the measured bounds (the target, the final dimension of the chart).
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>
@@ -431,6 +494,64 @@ public static class Extensions
             yield return predicate(item);
             yield break;
         }
+    }
+
+    /// <summary>
+    /// Gets the primary value and adds format to it based on the  <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.TooltipLabelFormatter"/> or the axis formatter.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="point">The point.</param>
+    /// <param name="chart">The chart.</param>
+    /// <returns></returns>
+    public static string GetFormattedPrimaryValueForToolTip<TDrawingContext>(this ChartPoint point, Chart<TDrawingContext> chart)
+        where TDrawingContext : DrawingContext
+    {
+        if (chart is CartesianChart<TDrawingContext> cartesianChart)
+        {
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                cartesianChart.YAxes[cs.ScalesYAt].GetActualLabeler()(point.PrimaryValue);
+        }
+
+        if (chart is PolarChart<TDrawingContext> polarChart)
+        {
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                polarChart.RadiusAxes[cs.ScalesRadiusAt].GetActualLabeler()(point.PrimaryValue);
+        }
+
+        return point.Context.Series.GetTooltipText(point) ?? point.PrimaryValue.ToString();
+    }
+
+    /// <summary>
+    /// Gets the secondary value and adds format to it based on the  <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.TooltipLabelFormatter"/> or the axis formatter.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="point">The point.</param>
+    /// <param name="chart">The chart.</param>
+    /// <returns></returns>
+    public static string GetFormattedSecondaryValueForToolTip<TDrawingContext>(this ChartPoint point, Chart<TDrawingContext> chart)
+        where TDrawingContext : DrawingContext
+    {
+        if (chart is CartesianChart<TDrawingContext> cartesianChart)
+        {
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                cartesianChart.XAxes[cs.ScalesXAt].GetActualLabeler()(point.SecondaryValue);
+        }
+
+        if (chart is PolarChart<TDrawingContext> polarChart)
+        {
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+            return
+                point.Context.Series.GetTooltipText(point) ??
+                polarChart.AngleAxes[cs.ScalesAngleAt].GetActualLabeler()(point.SecondaryValue);
+        }
+
+        return point.Context.Series.GetTooltipText(point) ?? point.SecondaryValue.ToString();
     }
 
     /// <summary>

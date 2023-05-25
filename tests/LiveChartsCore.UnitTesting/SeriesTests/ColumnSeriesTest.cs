@@ -22,40 +22,21 @@
 
 using System;
 using System.Linq;
-using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class ScatterSeriesTest
+public class ColumnSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var values = new WeightedPoint[]
+        var sutSeries = new ColumnSeries<double>
         {
-            new(0, 1, 0),
-            new(1, 2, 1),
-            new(2, 4, 2),
-            new(3, 8, 3),
-            new(4, 16, 4),
-            new(5, 32, 5),
-            new(6, 64, 6),
-            new(7, 128, 7),
-            new(8, 256, 8),
-            new(9, 512, 9)
-        };
-
-        var maxW = values.Max(x => x.Weight)!.Value;
-
-        var sutSeries = new ScatterSeries<WeightedPoint>
-        {
-            Values = values,
-            MinGeometrySize = 10,
-            GeometrySize = 100
+            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 }
         };
 
         var chart = new SKCartesianChart
@@ -80,21 +61,22 @@ public class ScatterSeriesTest
 
         // ensure the unit has valid dimensions
         Assert.IsTrue(typedUnit.Visual.Width > 1 && typedUnit.Visual.Height > 1);
-        Assert.IsTrue(typedUnit.Visual.Width == sutSeries.MinGeometrySize && typedUnit.Visual.Height == sutSeries.MinGeometrySize);
 
         var previous = typedUnit;
         float? previousX = null;
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var w = sutPoint.Model.Weight!.Value / maxW;
-            var targetSize = sutSeries.MinGeometrySize + (sutSeries.GeometrySize - sutSeries.MinGeometrySize) * w;
-
             // test height
-            Assert.IsTrue(Math.Abs(sutPoint.Visual.Height - targetSize) < 0.001);
+            Assert.IsTrue(
+                // the idea is, the second bar should be 2 times bigger than the first one
+                // and the third bar should be 4 times bigger than the first one and so on
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height / (float)sutPoint.Model) < 0.001);
 
             // test width
-            Assert.IsTrue(Math.Abs(sutPoint.Visual.Width - targetSize) < 0.001);
+            Assert.IsTrue(
+                // and also the width should be the same.
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
@@ -106,9 +88,7 @@ public class ScatterSeriesTest
             // test y
             var p = 1f - sutPoint.PrimaryValue / 512f;
             Assert.IsTrue(
-                Math.Abs(
-                    p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y -
-                    sutPoint.Visual.Height * 0.5f + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;

@@ -23,52 +23,34 @@
 using System;
 using System.Linq;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class HeatSeriesTest
+public class FinancialSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var sutSeries = new HeatSeries<WeightedPoint>
-        {
-            Values = new WeightedPoint[]
-            {
-                new(0, 0, 0),
-                new(0, 1, 1),
-                new(0, 2, 2),
-                new(0, 3, 3),
-                new(0, 4, 4),
-                new(0, 5, 5),
-                new(0, 5, 6),
-                new(0, 5, 7),
-                new(0, 5, 8),
-                new(0, 5, 9),
-                new(0, 5, 10),
+        var down = new SolidColorPaint();
+        var up = new SolidColorPaint();
 
-                new(1, 0, 0),
-                new(1, 1, 1),
-                new(1, 2, 2),
-                new(1, 3, 3),
-                new(1, 4, 4),
-                new(1, 5, 5),
-                new(1, 5, 6),
-                new(1, 5, 7),
-                new(1, 5, 8),
-                new(1, 5, 9),
-                new(1, 5, 10)
-            },
-            HeatMap = new[]
+        var sutSeries = new CandlesticksSeries<FinancialPoint>
+        {
+            Values = new FinancialPoint[]
             {
-                new LvcColor(0, 0, 0, 0), // the first element is the "coldest"
-                new LvcColor(255, 255, 255, 255) // the last element is the "hottest"
-            }
+                new (new(2022, 1, 1), 1, 0.75, 0.25, 0),
+                new (new(2022, 1, 2), 64, 32, 64, 32),
+                new (new(2022, 1, 3), 512, 511.75, 511.25, 511),
+            },
+            DownFill = down,
+            UpFill = up
         };
 
         var chart = new SKCartesianChart
@@ -76,8 +58,8 @@ public class HeatSeriesTest
             Width = 1000,
             Height = 1000,
             Series = new[] { sutSeries },
-            XAxes = new[] { new Axis() },
-            YAxes = new[] { new Axis() }
+            XAxes = new[] { new Axis { UnitWidth = TimeSpan.FromDays(1).Ticks } },
+            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
         };
 
         _ = chart.GetImage();
@@ -91,29 +73,51 @@ public class HeatSeriesTest
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
+        bool IsInCorrectPaint(ChartPoint<FinancialPoint, CandlestickGeometry, LabelGeometry> point)
+        {
+            var paint = point.Model.Open > point.Model.Close
+                ? down
+                : up;
+
+            foreach (var geometry in paint.GetGeometries(chart.CoreCanvas))
+                if (point.Visual == geometry) return true;
+
+            return false;
+        }
+
         // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Width > 1 && typedUnit.Visual.Height > 1);
+        var unitH = typedUnit.Visual.Low - typedUnit.Visual.Y;
+        Assert.IsTrue(typedUnit.Visual.Width > 1 && unitH > 1);
+        Assert.IsTrue(IsInCorrectPaint(typedUnit));
 
         var previous = typedUnit;
         float? previousX = null;
 
         foreach (var sutPoint in toCompareGuys)
         {
+            // test paint
+            Assert.IsTrue(IsInCorrectPaint(sutPoint));
+
             // test height
-            Assert.IsTrue(
-                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height) < 0.001);
+            var h = sutPoint.Visual.Low - sutPoint.Visual.Y;
+            var sutH = sutPoint.Visual.Low - sutPoint.Visual.Y;
+            var sutDH = sutPoint.Model.High - sutPoint.Model.Low;
+            Assert.IsTrue(Math.Abs(unitH - sutH / (float)sutDH) < 0.001);
 
             // test width
-            Assert.IsTrue(
-                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
+            Assert.IsTrue(Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
 
-            // test gradient
-            var p = (byte)(255 * sutPoint.Model.Weight / 10f);
+            // test x
+            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
             Assert.IsTrue(
-                sutPoint.Visual.Color.R == p &&
-                sutPoint.Visual.Color.G == p &&
-                sutPoint.Visual.Color.B == p &&
-                sutPoint.Visual.Color.A == p);
+                previousX is null
+                ||
+                Math.Abs(previousX.Value - currentDeltaX) < 0.001);
+
+            // test y
+            var p = 1f - sutPoint.PrimaryValue / 512f;
+            Assert.IsTrue(
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;

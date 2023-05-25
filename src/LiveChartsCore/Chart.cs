@@ -507,14 +507,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         if (IsFirstDraw)
         {
-            _ = ActualBounds
-                .TransitionateProperties(null)
-                .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction))
-                .CompleteCurrentTransitions();
-
+            ActualBounds.Animate(EasingFunction, AnimationsSpeed);
             _ = Canvas.Trackers.Add(ActualBounds);
         }
     }
@@ -630,20 +623,10 @@ public abstract class Chart<TDrawingContext> : IChart
                          return;
                      }
 
-#if DEBUG
-                     if (LiveCharts.EnableLogging)
-                     {
-                         Trace.WriteLine(
-                             $"[tooltip view thread]".PadRight(60) +
-                             $"tread: {Environment.CurrentManagedThreadId}");
-                     }
-#endif
-
                      // TODO:
                      // all this needs a performance review...
                      // it should not be critical, should not be even close to be the 'bottle neck' in a case where
                      // we face performance issues.
-
                      var points = FindHoveredPointsBy(_pointerPosition);
                      if (!points.Any())
                      {

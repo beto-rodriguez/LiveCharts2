@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
     <Nullable>enable</Nullable>
 
     <TargetFrameworks>net5.0-windows10.0.18362;net6.0-windows10.0.18362;net6.0-windows10.0.19041;</TargetFrameworks>

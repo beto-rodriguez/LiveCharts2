@@ -55,8 +55,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         DataPadding = new LvcPoint(1, 1);
 
-        DataLabelsFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
-        TooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.SecondaryValue}, {point.PrimaryValue}";
+        DataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+        TooltipLabelFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
     }
 
     /// <summary>
@@ -189,14 +189,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 if (point.Context.Label is not TLabel label)
                 {
                     var l = new TLabel { X = x - hgs, Y = y - hgs, RotateTransform = (float)DataLabelsRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    l.CompleteTransition(null);
+                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -253,17 +246,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         if (visual is null) throw new Exception("Unable to initialize the point instance.");
 
-        _ = visual
-           .TransitionateProperties(
-               nameof(visual.X),
-               nameof(visual.Y),
-               nameof(visual.Width),
-               nameof(visual.Height))
-           .WithAnimation(animation =>
-               animation
-                   .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                   .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-           .CompleteCurrentTransitions();
+        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>

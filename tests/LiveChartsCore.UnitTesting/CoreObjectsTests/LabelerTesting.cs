@@ -23,7 +23,7 @@
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.CoreObjectsTests;
 
 [TestClass]
 public class LabelerTesting

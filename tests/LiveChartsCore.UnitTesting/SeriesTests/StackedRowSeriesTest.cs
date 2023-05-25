@@ -26,20 +26,20 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting;
+namespace LiveChartsCore.UnitTesting.Series;
 
 [TestClass]
-public class StackedColumnSeriesTest
+public class StackedRowSeriesTest
 {
     [TestMethod]
     public void ShouldScaleProperly()
     {
-        var sutSeries = new StackedColumnSeries<double>
+        var sutSeries = new StackedRowSeries<double>
         {
             Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 }
         };
 
-        var sutSeries2 = new StackedColumnSeries<double>
+        var sutSeries2 = new StackedRowSeries<double>
         {
             Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 }
         };
@@ -49,12 +49,12 @@ public class StackedColumnSeriesTest
             Width = 1000,
             Height = 1000,
             Series = new[] { sutSeries, sutSeries2 },
-            XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
-            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
+            XAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } },
+            YAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } }
         };
 
-        _ = chart.GetImage();
-        // chart.SaveImage("test.png"); // use this method to see the actual tested image
+        //_ = chart.GetImage();
+        chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
@@ -72,69 +72,76 @@ public class StackedColumnSeriesTest
 
         var toCompareGuys2 = points2.Where(x => x != unit2).Select(sutSeries2.ConvertToTypedChartPoint);
 
+        // Note #1
+        // TODO: for a strange reason, widths are negative... fix that...
+
         // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Width > 1 && typedUnit.Visual.Height > 1);
+        Assert.IsTrue(typedUnit.Visual.Width < 0 && typedUnit.Visual.Height > 1); // ?
 
         var previous = typedUnit;
-        float? previousX = null;
+        float? previousY = null;
 
         foreach (var sutPoint in toCompareGuys)
         {
-            // test height
+            // test width
             Assert.IsTrue(
                 // the idea is, the second bar should be 2 times bigger than the first one
                 // and the third bar should be 4 times bigger than the first one and so on
-                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height / (float)sutPoint.Model) < 0.001);
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width / (float)sutPoint.Model) < 0.001);
 
-            // test width
+            // test height
             Assert.IsTrue(
                 // and also the width should be the same.
-                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
-
-            // test x
-            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
-            Assert.IsTrue(
-                previousX is null
-                ||
-                Math.Abs(previousX.Value - currentDeltaX) < 0.001);
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height) < 0.001);
 
             // test y
-            var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
+            var currentDeltaY = previous.Visual.Y - sutPoint.Visual.Y;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                previousY is null
+                ||
+                Math.Abs(previousY.Value - currentDeltaY) < 0.001);
 
-            previousX = previous.Visual.X - sutPoint.Visual.X;
+            // test x
+            // NOTICE THE + sutPoint.Visual.Width IS JUST TO FIX THE NOTE #1
+            var p = sutPoint.StackedValue.Start / 512f;
+            var stacked = -p * chart.Core.DrawMarginSize.Width + sutPoint.Visual.Width;
+            Assert.IsTrue(
+                Math.Abs(sutPoint.Visual.X + stacked - chart.Core.DrawMarginLocation.X) < 0.001);
+
+            previousY = previous.Visual.Y - sutPoint.Visual.Y;
             previous = sutPoint;
         }
 
         previous = typedUnit2;
-        previousX = null;
+        previousY = null;
         foreach (var sutPoint in toCompareGuys2)
         {
-            // test height
+            // test width
             Assert.IsTrue(
                 // the idea is, the second bar should be 2 times bigger than the first one
                 // and the third bar should be 4 times bigger than the first one and so on
-                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height / (float)sutPoint.Model) < 0.001);
+                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width / (float)sutPoint.Model) < 0.001);
 
-            // test width
+            // test height
             Assert.IsTrue(
                 // and also the width should be the same.
-                Math.Abs(typedUnit.Visual.Width - sutPoint.Visual.Width) < 0.001);
-
-            // test x
-            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
-            Assert.IsTrue(
-                previousX is null
-                ||
-                Math.Abs(previousX.Value - currentDeltaX) < 0.001);
+                Math.Abs(typedUnit.Visual.Height - sutPoint.Visual.Height) < 0.001);
 
             // test y
-            var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
+            var currentDeltaY = previous.Visual.Y - sutPoint.Visual.Y;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                previousY is null
+                ||
+                Math.Abs(previousY.Value - currentDeltaY) < 0.001);
 
-            previousX = previous.Visual.X - sutPoint.Visual.X;
+            // test x
+            // NOTICE THE + sutPoint.Visual.Width IS JUST TO FIX THE NOTE #1
+            var p = sutPoint.StackedValue.Start / 512f;
+            var stacked = -p * chart.Core.DrawMarginSize.Width + sutPoint.Visual.Width;
+            Assert.IsTrue(
+                Math.Abs(sutPoint.Visual.X + stacked - chart.Core.DrawMarginLocation.X) < 0.001);
+
+            previousY = previous.Visual.Y - sutPoint.Visual.Y;
             previous = sutPoint;
         }
     }

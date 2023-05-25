@@ -560,7 +560,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         if (title is not null)
         {
-            var titleSize = title.Measure(this, null, null);
+            var titleSize = title.Measure(this);
             m.Top = titleSize.Height;
             ts = titleSize.Height;
         }
@@ -750,7 +750,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         if (title is not null)
         {
-            var titleSize = title.Measure(this, null, null);
+            var titleSize = title.Measure(this);
             title.AlignToTopLeftCorner();
             title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
             title.Y = 0;

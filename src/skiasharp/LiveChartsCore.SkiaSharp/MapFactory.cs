@@ -87,13 +87,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                     if (landData.Shape is null)
                     {
                         landData.Shape = shape = new HeatPathShape { IsClosed = true };
-
-                        _ = shape
-                            .TransitionateProperties(nameof(HeatPathShape.FillColor))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(TimeSpan.FromMilliseconds(800))
-                                    .WithEasingFunction(EasingFunctions.ExponentialOut));
+                        shape.Animate(EasingFunctions.ExponentialOut, TimeSpan.FromMilliseconds(800));
                     }
                     else
                     {
