@@ -71,16 +71,10 @@ public static class Extensions
         var w = chart.DrawMarginSize.Width;
         var h = chart.DrawMarginSize.Height;
 
-        // correct y
-        //if (x < 0) x = location.Value.X + tooltipSize.Width;
-        //if (y < 0) y = location.Value.Y + tooltipSize.Height;
-        //if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
-        //if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
-
-        //if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
-        //if (x < 0) x = 0;
-        //if (y < 0) y = 0;
-        //if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
+        if (x < 0) x = location.Value.X + tooltipSize.Width;
+        if (y < 0) y = location.Value.Y + tooltipSize.Height;
+        if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
+        if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
 
         return new LvcPoint(x, y);
     }
