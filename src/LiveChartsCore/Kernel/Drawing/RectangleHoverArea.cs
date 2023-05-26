@@ -85,6 +85,11 @@ public class RectangleHoverArea : HoverArea
     public float Height { get; set; }
 
     /// <summary>
+    /// Gets or sets the suggested tool tip location
+    /// </summary>
+    public LvcPoint SuggestedTooltipLocation { get; set; }
+
+    /// <summary>
     /// Sets the area dimensions.
     /// </summary>
     /// <param name="x">The x.</param>
@@ -98,6 +103,66 @@ public class RectangleHoverArea : HoverArea
         Y = y;
         Width = width;
         Height = height;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the X axis.
+    /// </summary>
+    /// <returns></returns>
+    public RectangleHoverArea CenterXToolTip()
+    {
+        SuggestedTooltipLocation = new LvcPoint(X + Width * 0.5f, SuggestedTooltipLocation.Y);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="SuggestedTooltipLocation"/> to the start of the <see cref="RectangleHoverArea"/> in the X axis.
+    /// </summary>
+    /// <returns></returns>
+    public RectangleHoverArea StartXToolTip()
+    {
+        SuggestedTooltipLocation = new LvcPoint(X, SuggestedTooltipLocation.Y);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the X axis.
+    /// </summary>
+    /// <returns></returns>
+    public RectangleHoverArea EndXToolTip()
+    {
+        SuggestedTooltipLocation = new LvcPoint(X + Width, SuggestedTooltipLocation.Y);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the Y axis.
+    /// </summary>
+    /// <returns></returns>
+    public RectangleHoverArea CenterYToolTip()
+    {
+        SuggestedTooltipLocation = new LvcPoint(SuggestedTooltipLocation.X, Y + Height * 0.5f);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="SuggestedTooltipLocation"/> to the start of the <see cref="RectangleHoverArea"/> in the Y axis.
+    /// </summary>
+    /// <returns></returns>
+    public RectangleHoverArea StartYToolTip()
+    {
+        SuggestedTooltipLocation = new LvcPoint(SuggestedTooltipLocation.X, Y);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the Y axis.
+    /// </summary>
+    /// <returns></returns>
+    public RectangleHoverArea EndYToolTip()
+    {
+        SuggestedTooltipLocation = new LvcPoint(SuggestedTooltipLocation.X, Y + Height);
         return this;
     }
 
@@ -133,9 +198,14 @@ public class RectangleHoverArea : HoverArea
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
     public override void SuggestTooltipPlacement(TooltipPlacementContext cartesianContext)
     {
-        if (Y < cartesianContext.MostTop) cartesianContext.MostTop = Y;
-        if (Y + Height > cartesianContext.MostBottom) cartesianContext.MostBottom = Y + Height;
-        if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = X + Width;
-        if (X < cartesianContext.MostLeft) cartesianContext.MostLeft = X;
+        if (Y < cartesianContext.MostTop) cartesianContext.MostTop = SuggestedTooltipLocation.Y;
+        if (Y + Height > cartesianContext.MostBottom) cartesianContext.MostBottom = SuggestedTooltipLocation.Y;
+        if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = SuggestedTooltipLocation.X;
+        if (X < cartesianContext.MostLeft) cartesianContext.MostLeft = SuggestedTooltipLocation.X;
+
+        //if (Y < cartesianContext.MostTop) cartesianContext.MostTop = Y;
+        //if (Y + Height > cartesianContext.MostBottom) cartesianContext.MostBottom = Y + Height;
+        //if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = X + Width;
+        //if (X < cartesianContext.MostLeft) cartesianContext.MostLeft = X;
     }
 }

@@ -60,7 +60,7 @@ public static class Extensions
         LvcPoint? location = null;
 
         if (chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>)
-            location = _getCartesianTooltipLocation(foundPoints, chart.TooltipPosition, tooltipSize, chart.DrawMarginSize);
+            location = _getCartesianTooltipLocation(foundPoints, chart, tooltipSize);
         if (chart is PieChart<TDrawingContext>)
             location = _getPieTooltipLocation(foundPoints, tooltipSize);
 
@@ -72,19 +72,24 @@ public static class Extensions
         var h = chart.DrawMarginSize.Height;
 
         if (x < 0) x = location.Value.X + tooltipSize.Width;
-        if (y < 0) y = location.Value.Y + tooltipSize.Height;
         if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
+
+        if (y < 0) y = location.Value.Y + tooltipSize.Height;
         if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
 
         return new LvcPoint(x, y);
     }
 
-    private static LvcPoint? _getCartesianTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
+    private static LvcPoint? _getCartesianTooltipLocation<TDrawingContext>(
+        IEnumerable<ChartPoint> foundPoints,
+        Chart<TDrawingContext> chart,
+        LvcSize tooltipSize)
+            where TDrawingContext : DrawingContext
     {
         var count = 0f;
-
         var placementContext = new TooltipPlacementContext();
+        var position = chart.TooltipPosition;
+        var chartSize = chart.DrawMarginSize;
 
         foreach (var point in foundPoints)
         {
@@ -95,22 +100,21 @@ public static class Extensions
 
         if (count == 0) return null;
 
-        if (placementContext.MostBottom > chartSize.Height - tooltipSize.Height)
-            placementContext.MostBottom = chartSize.Height - tooltipSize.Height;
-        if (placementContext.MostTop < 0) placementContext.MostTop = 0;
-
         var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
         var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
 
         return position switch
         {
-            TooltipPosition.Top => new LvcPoint(avrgX, placementContext.MostTop - tooltipSize.Height),
-            TooltipPosition.Bottom => new LvcPoint(avrgX, placementContext.MostBottom),
-            TooltipPosition.Left => new LvcPoint(placementContext.MostLeft - tooltipSize.Width, avrgY),
-            TooltipPosition.Right => new LvcPoint(placementContext.MostRight, avrgY),
-            TooltipPosition.Center => new LvcPoint(avrgX, avrgY),
-            TooltipPosition.Hidden => new LvcPoint(),
-            _ => new LvcPoint(),
+            TooltipPosition.Top => new(avrgX, placementContext.MostTop - tooltipSize.Height),
+            TooltipPosition.Bottom => new(avrgX, placementContext.MostBottom),
+            TooltipPosition.Left => new(placementContext.MostLeft - tooltipSize.Width, avrgY),
+            TooltipPosition.Right => new(placementContext.MostRight, avrgY),
+            TooltipPosition.Center => new(avrgX, avrgY),
+            TooltipPosition.Auto => avrgX > chartSize.Width * 0.5f
+                ? new(placementContext.MostLeft - tooltipSize.Width, avrgY)
+                : new(placementContext.MostRight, avrgY),
+            TooltipPosition.Hidden => new(),
+            _ => new LvcPoint()
         };
     }
     private static LvcPoint? _getPieTooltipLocation(
@@ -387,7 +391,7 @@ public static class Extensions
     /// <summary>
     /// Calculates the tooltips finding strategy based on the series properties.
     /// </summary>
-    /// <param name="seriesCollection">The series collection</param>
+    /// <param name="seriesCollection">The series collection.</param>
     /// <returns></returns>
     public static TooltipFindingStrategy GetTooltipFindingStrategy(this IEnumerable<ISeries> seriesCollection)
     {
@@ -402,7 +406,9 @@ public static class Extensions
 
         return areAllX
             ? TooltipFindingStrategy.CompareOnlyXTakeClosest
-            : (areAllY ? TooltipFindingStrategy.CompareOnlyYTakeClosest : TooltipFindingStrategy.CompareAllTakeClosest);
+            : (areAllY
+                ? TooltipFindingStrategy.CompareOnlyYTakeClosest
+                : TooltipFindingStrategy.CompareAllTakeClosest);
     }
 
     /// <summary>

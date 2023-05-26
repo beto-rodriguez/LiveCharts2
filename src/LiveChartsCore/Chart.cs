@@ -585,6 +585,7 @@ public abstract class Chart<TDrawingContext> : IChart
             }
             else
             {
+                // is this obsolete now?
                 // the legend is drawn by the UI framework... lets return and wait for it to draw/measure it.
                 // maybe we should wait for the legend to draw and then draw the chart?
                 Legend.Draw(this);

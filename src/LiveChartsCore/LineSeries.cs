@@ -298,7 +298,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 if (data.TargetPoint.Context.HoverArea is not RectangleHoverArea ha)
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
-                _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
+
+                _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
+                    .CenterXToolTip()
+                    .CenterYToolTip();
 
                 pointsCleanup.Clean(data.TargetPoint);
 
