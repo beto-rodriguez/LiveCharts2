@@ -101,25 +101,94 @@ public class ColumnSeriesTest
     {
         var sutSeries = new ColumnSeries<double>
         {
-            Values = new double[] { 1, 5, 10 },
+            Values = new double[] { 1, 2, 3, 4, 5 },
             DataPadding = new Drawing.LvcPoint(0, 0)
         };
+
+        var tooltip = new SKDefaultTooltip();
 
         var chart = new SKCartesianChart
         {
             Width = 300,
             Height = 300,
-            Tooltip = new SKDefaultTooltip(),
-            TooltipPosition = TooltipPosition.Auto,
+            Tooltip = tooltip,
+            TooltipPosition = TooltipPosition.Top,
             Series = new[] { sutSeries },
             XAxes = new[] { new Axis { IsVisible = false } },
             YAxes = new[] { new Axis { IsVisible = false } }
         };
 
-        chart.Core.InvokePointerMove(new Drawing.LvcPoint(150, 150));
+        chart.Core._isPointerIn = true;
         chart.Core._isToolTipOpen = true;
+        chart.Core._pointerPosition = new(150, 150);
 
-        chart.SaveImage("column.png");
-        var a = 1;
+        chart.TooltipPosition = TooltipPosition.Top;
+        _ = chart.GetImage();
+        var tp = tooltip._panel.BackgroundGeometry;
+        Assert.IsTrue(
+            tp.X + tp.Width * 0.5f == 150 &&
+            tp.Y == 150 - tp.Height,
+            "Tool tip on top failed");
+
+        chart.TooltipPosition = TooltipPosition.Bottom;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X + tp.Width * 0.5f == 150 &&
+            tp.Y == 150,
+            "Tool tip on bottom failed");
+
+        chart.TooltipPosition = TooltipPosition.Left;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X == 150 - tp.Width &&
+            tp.Y + tp.Height * 0.5f == 150,
+            "Tool tip on left failed");
+
+        chart.TooltipPosition = TooltipPosition.Right;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X == 150 &&
+            tp.Y + tp.Height * 0.5f == 150,
+            "Tool tip on right failed");
+
+        chart.TooltipPosition = TooltipPosition.Center;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X + tp.Width * 0.5f == 150 &&
+            tp.Y + tp.Height * 0.5f == 150,
+            "Tool tip on center failed");
+
+        chart.TooltipPosition = TooltipPosition.Auto;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X + tp.Width * 0.5f == 150 &&
+            tp.Y == 150 - tp.Height &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
+            "Tool tip on top failed [AUTO]");
+
+        sutSeries.Values = new double[] { -1, -2, -3, -4, -5 };
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X + tp.Width * 0.5f == 150 &&
+            tp.Y == 150 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
+            "Tool tip on bottom failed [AUTO]");
+
+        sutSeries.Values = new double[] { 1, 2, 3, 4, 5 };
+        chart.Core._pointerPosition = new(299, 150);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X - (300 - 300 * (1 / 5d) * 0.5 - tp.Width)) < 0.0001 &&
+            tp.Y == -tp.Height * 0.5f &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
+            "Tool tip on left failed [AUTO]");
+
+        chart.Core._pointerPosition = new(1, 150);
+        chart.SaveImage("ggg.png");
+        Assert.IsTrue(
+            Math.Abs(tp.X - 300 * (1 / 5d) * 0.5) < 0.0001 &&
+            tp.Y == 300 - tp.Height * 0.5f &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
+            "Tool tip on left failed [AUTO]");
     }
 }

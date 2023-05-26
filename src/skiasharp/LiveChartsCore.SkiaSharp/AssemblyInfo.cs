@@ -30,3 +30,4 @@ using System.Reflection;
 [assembly: InternalsVisibleTo("LiveChartsCore.BackersPackage")]
 #endif
 
+[assembly: InternalsVisibleTo("LiveChartsCore.UnitTesting")]

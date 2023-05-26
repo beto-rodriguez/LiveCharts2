@@ -95,10 +95,10 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             _panel.BackgroundGeometry.Wedge = wedge;
 
-            _panel
-                .Animate(chart,
-                    nameof(RoundedRectangleGeometry.X),
-                    nameof(RoundedRectangleGeometry.Y));
+            //_panel
+            //    .Animate(chart,
+            //        nameof(RoundedRectangleGeometry.X),
+            //        nameof(RoundedRectangleGeometry.Y));
         }
 
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
@@ -165,11 +165,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         _panel.Children.Add(tableLayout);
 
         var size = _panel.Measure(chart);
-        var location = foundPoints.GetTooltipLocation(size, chart);
-
-        _panel.X = location.X;
-        _panel.Y = location.Y;
-
+        _ = foundPoints.GetTooltipLocation(size, chart);
         _panel.BackgroundGeometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
 
         switch (chart.AutoToolTipsInfo.ToolTipPlacement)
@@ -184,6 +180,13 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 _panel.Padding = new Padding(12 + wedge, 8, 12, 8); break;
             default: break;
         }
+
+        // the size changed... we need to do the math again
+        size = _panel.Measure(chart);
+        var location = foundPoints.GetTooltipLocation(size, chart);
+
+        _panel.X = location.X;
+        _panel.Y = location.Y;
 
         chart.AddVisual(_panel);
     }

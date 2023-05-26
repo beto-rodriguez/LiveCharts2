@@ -47,16 +47,16 @@ public abstract class Chart<TDrawingContext> : IChart
     internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = new();
     internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = new();
     internal bool _isToolTipOpen = false;
+    internal bool _isPointerIn;
+    internal LvcPoint _pointerPosition = new(-10, -10);
     internal bool _preserveFirstDraw = false;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
-    private readonly ActionThrottler _panningThrottler;
-    private LvcPoint _pointerPosition = new(-10, -10);
+    private readonly ActionThrottler _panningThrottler;    
     private LvcPoint _pointerPanningStartPosition = new(-10, -10);
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private bool _isPointerIn;
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
 
