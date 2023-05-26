@@ -605,7 +605,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// </summary>
     protected void DrawToolTip()
     {
-        if (TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
+        if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
         var points = FindHoveredPointsBy(_pointerPosition);
 
         var o = new object();

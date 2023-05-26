@@ -213,7 +213,9 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw);
+
+            _ = ha.SetDimensions(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw)
+                .CenterXToolTip().StartYToolTip();
 
             pointsCleanup.Clean(point);
 

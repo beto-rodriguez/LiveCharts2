@@ -217,7 +217,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 .SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b)
                 .CenterXToolTip();
 
-            _ = point.PrimaryValue >= 0 ? ha.StartYToolTip() : ha.EndYToolTip();
+            _ = point.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
 
             pointsCleanup.Clean(point);
 

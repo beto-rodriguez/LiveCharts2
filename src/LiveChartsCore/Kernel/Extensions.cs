@@ -57,83 +57,98 @@ public static class Extensions
         Chart<TDrawingContext> chart)
             where TDrawingContext : DrawingContext
     {
-        LvcPoint? location = null;
-
-        if (chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>)
-            location = _getCartesianTooltipLocation(foundPoints, chart, tooltipSize);
-        if (chart is PieChart<TDrawingContext>)
-            location = _getPieTooltipLocation(foundPoints, tooltipSize);
-
-        if (location is null) throw new Exception("location not supported");
-
-        var x = location.Value.X;
-        var y = location.Value.Y;
-        var w = chart.DrawMarginSize.Width;
-        var h = chart.DrawMarginSize.Height;
-
-        if (x < 0) x = location.Value.X + tooltipSize.Width;
-        if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
-
-        if (y < 0) y = location.Value.Y + tooltipSize.Height;
-        if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
-
-        return new LvcPoint(x, y);
+        return chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
+            ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
+            : _getPieTooltipLocation(foundPoints, tooltipSize);
     }
 
-    private static LvcPoint? _getCartesianTooltipLocation<TDrawingContext>(
+    private static LvcPoint _getCartesianTooltipLocation<TDrawingContext>(
         IEnumerable<ChartPoint> foundPoints,
         Chart<TDrawingContext> chart,
         LvcSize tooltipSize)
             where TDrawingContext : DrawingContext
     {
         var count = 0f;
-        var placementContext = new TooltipPlacementContext();
+        var placementContext = new TooltipPlacementContext(chart.TooltipPosition);
         var position = chart.TooltipPosition;
-        var chartSize = chart.DrawMarginSize;
 
         foreach (var point in foundPoints)
         {
             if (point.Context.HoverArea is null) continue;
-            point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
+            point.Context.HoverArea.SuggestTooltipPlacement(placementContext, tooltipSize);
             count++;
         }
 
-        if (count == 0) return null;
+        if (count == 0) return new();
 
         var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
         var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
 
-        return position switch
+        if (position == TooltipPosition.Auto)
+        {
+            var x = avrgX;
+            var y = placementContext.MostAutoTop - tooltipSize.Height;
+
+            if (x - tooltipSize.Width * 0.5f < 0)
+            {
+                // the tooltip is out of the left edge
+                // we return TooltipPosition.Right
+                return new(placementContext.MostRight, avrgY);
+            }
+
+            //if (x + tooltipSize.Width * 0.5f > chart.ControlSize.Width)
+            //{
+            //    // the tooltip is out of the right edge
+            //    // we return TooltipPosition.Left
+            //    return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+            //}
+
+            //if (y < 0) y += tooltipSize.Height;
+            //if (y + tooltipSize.Height > chart.ControlSize.Height) y -= tooltipSize.Height;
+
+            return new(x, y);
+        }
+
+        var p2 = position switch
         {
             TooltipPosition.Top => new(avrgX, placementContext.MostTop - tooltipSize.Height),
             TooltipPosition.Bottom => new(avrgX, placementContext.MostBottom),
             TooltipPosition.Left => new(placementContext.MostLeft - tooltipSize.Width, avrgY),
             TooltipPosition.Right => new(placementContext.MostRight, avrgY),
             TooltipPosition.Center => new(avrgX, avrgY),
-            TooltipPosition.Auto => avrgX > chartSize.Width * 0.5f
-                ? new(placementContext.MostLeft - tooltipSize.Width, avrgY)
-                : new(placementContext.MostRight, avrgY),
+            TooltipPosition.Auto => new(), // already solved...
             TooltipPosition.Hidden => new(),
             _ => new LvcPoint()
         };
+
+        var x2 = p2.X;
+        var y2 = p2.Y;
+        var w = chart.DrawMarginSize.Width;
+        var h = chart.DrawMarginSize.Height;
+
+        //if (x < 0) x = location.Value.X + tooltipSize.Width;
+        //if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
+
+        //if (y < 0) y = location.Value.Y + tooltipSize.Height;
+        //if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
+
+        return new LvcPoint(x2, y2);
     }
-    private static LvcPoint? _getPieTooltipLocation(
+    private static LvcPoint _getPieTooltipLocation(
         IEnumerable<ChartPoint> foundPoints, LvcSize tooltipSize)
     {
-        var placementContext = new TooltipPlacementContext();
-        var found = false;
+        var placementContext = new TooltipPlacementContext(TooltipPosition.Auto);
 
         foreach (var foundPoint in foundPoints)
         {
             if (foundPoint.Context.HoverArea is null) continue;
-            foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext);
-            found = true;
+            foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext, tooltipSize);
             break; // we only care about the first one.
         }
 
-        return found
-            ? new LvcPoint(placementContext.PieX - tooltipSize.Width * 0.5f, placementContext.PieY - tooltipSize.Height * 0.5f)
-            : null;
+        return new LvcPoint(
+            placementContext.PieX - tooltipSize.Width * 0.5f,
+            placementContext.PieY - tooltipSize.Height * 0.5f);
     }
 
     /// <summary>

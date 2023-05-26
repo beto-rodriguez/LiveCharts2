@@ -22,6 +22,7 @@
 
 using System;
 using System.Linq;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -96,8 +97,29 @@ public class ColumnSeriesTest
     }
 
     [TestMethod]
-    public void ShouldPlaceTooltipsCorrectly()
+    public void ShouldPlaceToolTipsCorrectly()
     {
+        var sutSeries = new ColumnSeries<double>
+        {
+            Values = new double[] { 1, 5, 10 },
+            DataPadding = new Drawing.LvcPoint(0, 0)
+        };
 
+        var chart = new SKCartesianChart
+        {
+            Width = 300,
+            Height = 300,
+            Tooltip = new SKDefaultTooltip(),
+            TooltipPosition = TooltipPosition.Auto,
+            Series = new[] { sutSeries },
+            XAxes = new[] { new Axis { IsVisible = false } },
+            YAxes = new[] { new Axis { IsVisible = false } }
+        };
+
+        chart.Core.InvokePointerMove(new Drawing.LvcPoint(150, 150));
+        chart.Core._isToolTipOpen = true;
+
+        chart.SaveImage("column.png");
+        var a = 1;
     }
 }

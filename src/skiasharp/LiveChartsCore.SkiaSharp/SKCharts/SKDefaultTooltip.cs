@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _panel;
+    internal StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 

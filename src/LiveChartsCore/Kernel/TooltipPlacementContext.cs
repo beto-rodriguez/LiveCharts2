@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Measure;
+
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
@@ -27,6 +29,20 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public class TooltipPlacementContext
 {
+    /// <summary>
+    /// Intializes a new instance of the <see cref="TooltipPlacementContext"/> class.
+    /// </summary>
+    /// <param name="position"></param>
+    public TooltipPlacementContext(TooltipPosition position)
+    {
+        Position = position;
+    }
+
+    /// <summary>
+    /// Gets the tool tip position.
+    /// </summary>
+    public TooltipPosition Position { get; set; }
+
     /// <summary>
     /// Gets or sets the most top.
     /// </summary>
@@ -58,6 +74,22 @@ public class TooltipPlacementContext
     /// The most left.
     /// </value>
     public float MostLeft { get; set; } = float.MaxValue;
+
+    /// <summary>
+    /// Gets or sets the most top auto.
+    /// </summary>
+    /// <value>
+    /// The most top.
+    /// </value>
+    public float MostAutoTop { get; set; } = float.MaxValue;
+
+    /// <summary>
+    /// Gets or sets the most bottom auto.
+    /// </summary>
+    /// <value>
+    /// The most bottom.
+    /// </value>
+    public float MostAutoBottom { get; set; } = float.MinValue;
 
     /// <summary>
     /// Gets or sets the pie x.

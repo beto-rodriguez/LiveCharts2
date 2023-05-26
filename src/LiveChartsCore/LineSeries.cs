@@ -165,6 +165,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         uwx = uwx < gs ? gs : uwx;
+        var tooltipPositon = chart.TooltipPosition;
 
         var segmentI = 0;
 
@@ -299,9 +300,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 if (data.TargetPoint.Context.HoverArea is not RectangleHoverArea ha)
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
 
-                _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
-                    .CenterXToolTip()
-                    .CenterYToolTip();
+                _ = ha
+                    .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
+                    .CenterXToolTip();
+
+                _ = data.TargetPoint.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(data.TargetPoint);
 

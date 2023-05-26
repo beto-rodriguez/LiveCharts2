@@ -90,13 +90,18 @@ public class RectangleHoverArea : HoverArea
     public LvcPoint SuggestedTooltipLocation { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the primary value is less than pivot.
+    /// </summary>
+    public bool LessThanPivot { get; set; }
+
+    /// <summary>
     /// Sets the area dimensions.
     /// </summary>
     /// <param name="x">The x.</param>
     /// <param name="y">The y.</param>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
-    /// <returns></returns>
+    /// <returns>The current instance.</returns>
     public RectangleHoverArea SetDimensions(float x, float y, float width, float height)
     {
         X = x;
@@ -109,7 +114,7 @@ public class RectangleHoverArea : HoverArea
     /// <summary>
     /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the X axis.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current instance.</returns>
     public RectangleHoverArea CenterXToolTip()
     {
         SuggestedTooltipLocation = new LvcPoint(X + Width * 0.5f, SuggestedTooltipLocation.Y);
@@ -119,7 +124,7 @@ public class RectangleHoverArea : HoverArea
     /// <summary>
     /// Sets the <see cref="SuggestedTooltipLocation"/> to the start of the <see cref="RectangleHoverArea"/> in the X axis.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current instance.</returns>
     public RectangleHoverArea StartXToolTip()
     {
         SuggestedTooltipLocation = new LvcPoint(X, SuggestedTooltipLocation.Y);
@@ -129,7 +134,7 @@ public class RectangleHoverArea : HoverArea
     /// <summary>
     /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the X axis.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current instance.</returns>
     public RectangleHoverArea EndXToolTip()
     {
         SuggestedTooltipLocation = new LvcPoint(X + Width, SuggestedTooltipLocation.Y);
@@ -139,7 +144,7 @@ public class RectangleHoverArea : HoverArea
     /// <summary>
     /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the Y axis.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current instance.</returns>
     public RectangleHoverArea CenterYToolTip()
     {
         SuggestedTooltipLocation = new LvcPoint(SuggestedTooltipLocation.X, Y + Height * 0.5f);
@@ -149,7 +154,7 @@ public class RectangleHoverArea : HoverArea
     /// <summary>
     /// Sets the <see cref="SuggestedTooltipLocation"/> to the start of the <see cref="RectangleHoverArea"/> in the Y axis.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current instance.</returns>
     public RectangleHoverArea StartYToolTip()
     {
         SuggestedTooltipLocation = new LvcPoint(SuggestedTooltipLocation.X, Y);
@@ -159,10 +164,20 @@ public class RectangleHoverArea : HoverArea
     /// <summary>
     /// Sets the <see cref="SuggestedTooltipLocation"/> to the center of the <see cref="RectangleHoverArea"/> in the Y axis.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current instance.</returns>
     public RectangleHoverArea EndYToolTip()
     {
         SuggestedTooltipLocation = new LvcPoint(SuggestedTooltipLocation.X, Y + Height);
+        return this;
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the primary value is less than pivot.
+    /// </summary>
+    /// <returns>The current instance.</returns>
+    public RectangleHoverArea IsLessThanPivot()
+    {
+        LessThanPivot = true;
         return this;
     }
 
@@ -195,9 +210,13 @@ public class RectangleHoverArea : HoverArea
         };
     }
 
-    /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
-    public override void SuggestTooltipPlacement(TooltipPlacementContext cartesianContext)
+    /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext, LvcSize)"/>
+    public override void SuggestTooltipPlacement(TooltipPlacementContext cartesianContext, LvcSize tooltipSize)
     {
+        var autoY = (LessThanPivot ? 1 : 0) * tooltipSize.Height;
+
+        if (Y < cartesianContext.MostAutoTop) cartesianContext.MostAutoTop = SuggestedTooltipLocation.Y + autoY;
+        if (Y + Height > cartesianContext.MostAutoBottom) cartesianContext.MostAutoBottom = SuggestedTooltipLocation.Y + autoY;
         if (Y < cartesianContext.MostTop) cartesianContext.MostTop = SuggestedTooltipLocation.Y;
         if (Y + Height > cartesianContext.MostBottom) cartesianContext.MostBottom = SuggestedTooltipLocation.Y;
         if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = SuggestedTooltipLocation.X;
