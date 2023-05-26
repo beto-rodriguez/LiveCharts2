@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
@@ -89,22 +90,22 @@ public static class Extensions
             var x = avrgX;
             var y = placementContext.MostAutoTop - tooltipSize.Height;
 
-            if (x - tooltipSize.Width * 0.5f < 0)
+            if (x < 0)
             {
                 // the tooltip is out of the left edge
                 // we return TooltipPosition.Right
                 return new(placementContext.MostRight, avrgY);
             }
 
-            //if (x + tooltipSize.Width * 0.5f > chart.ControlSize.Width)
-            //{
-            //    // the tooltip is out of the right edge
-            //    // we return TooltipPosition.Left
-            //    return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
-            //}
+            if (x + tooltipSize.Width > chart.ControlSize.Width)
+            {
+                // the tooltip is out of the right edge
+                // we return TooltipPosition.Left
+                return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+            }
 
-            //if (y < 0) y += tooltipSize.Height;
-            //if (y + tooltipSize.Height > chart.ControlSize.Height) y -= tooltipSize.Height;
+            if (y < 0) y += tooltipSize.Height;
+            if (y + tooltipSize.Height > chart.ControlSize.Height) y -= tooltipSize.Height;
 
             return new(x, y);
         }
@@ -123,14 +124,12 @@ public static class Extensions
 
         var x2 = p2.X;
         var y2 = p2.Y;
-        var w = chart.DrawMarginSize.Width;
-        var h = chart.DrawMarginSize.Height;
 
-        //if (x < 0) x = location.Value.X + tooltipSize.Width;
-        //if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
+        if (x2 < 0) x2 += tooltipSize.Width;
+        if (x2 + tooltipSize.Width > chart.ControlSize.Width) x2 -= tooltipSize.Width;
 
-        //if (y < 0) y = location.Value.Y + tooltipSize.Height;
-        //if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
+        if (y2 < 0) y2 += tooltipSize.Height;
+        if (y2 + tooltipSize.Height > chart.ControlSize.Height) y2 -= tooltipSize.Height;
 
         return new LvcPoint(x2, y2);
     }
