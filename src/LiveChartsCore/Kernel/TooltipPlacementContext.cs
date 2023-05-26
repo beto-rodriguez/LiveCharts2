@@ -49,6 +49,11 @@ public class TooltipPlacementContext
     public PopUpPlacement AutoPopPupPlacement { get; set; } = PopUpPlacement.Top;
 
     /// <summary>
+    /// Gets or sets a value indicating whether all the points evaluated are less than the series' pivot.
+    /// </summary>
+    public bool AreAllLessThanPivot { get; set; } = true;
+
+    /// <summary>
     /// Gets or sets the most top.
     /// </summary>
     /// <value>

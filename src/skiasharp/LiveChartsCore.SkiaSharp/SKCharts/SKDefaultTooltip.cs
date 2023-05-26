@@ -46,9 +46,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     public SKDefaultTooltip()
     {
         FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
-        BackgroundPaint = new SolidColorPaint(new SKColor(240, 240, 240, 230))
+        BackgroundPaint = new SolidColorPaint(new SKColor(250, 250, 250, 230))
         {
-            ImageFilter = new DropShadow(0, 0, 5, 5, new SKColor(30, 30, 30, 90))
+            ImageFilter = new DropShadow(0, 0, 4, 4, new SKColor(0, 0, 0, 90))
         };
     }
 
@@ -81,7 +81,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        const int wedge = 15;
+        const int wedge = 13;
 
         if (_panel is null)
         {

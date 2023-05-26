@@ -213,6 +213,7 @@ public class RectangleHoverArea : HoverArea
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext, LvcSize)"/>
     public override void SuggestTooltipPlacement(TooltipPlacementContext ctx, LvcSize tooltipSize)
     {
+        ctx.AreAllLessThanPivot = LessThanPivot && ctx.AreAllLessThanPivot;
         var autoY = (LessThanPivot ? 1 : 0) * tooltipSize.Height;
 
         if (Y < ctx.MostTop) ctx.MostTop = SuggestedTooltipLocation.Y;
@@ -223,12 +224,12 @@ public class RectangleHoverArea : HoverArea
         if (Y < ctx.MostAutoTop)
         {
             ctx.MostAutoTop = SuggestedTooltipLocation.Y + autoY;
-            ctx.AutoPopPupPlacement = LessThanPivot ? PopUpPlacement.Bottom : PopUpPlacement.Top;
+            ctx.AutoPopPupPlacement = ctx.AreAllLessThanPivot ? PopUpPlacement.Bottom : PopUpPlacement.Top;
         }
         if (Y + Height > ctx.MostAutoBottom)
         {
             ctx.MostAutoBottom = SuggestedTooltipLocation.Y + autoY;
-            ctx.AutoPopPupPlacement = LessThanPivot ? PopUpPlacement.Bottom : PopUpPlacement.Top;
+            ctx.AutoPopPupPlacement = ctx.AreAllLessThanPivot ? PopUpPlacement.Bottom : PopUpPlacement.Top;
         }
     }
 }
