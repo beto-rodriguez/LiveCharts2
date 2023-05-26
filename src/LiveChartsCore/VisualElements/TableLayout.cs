@@ -36,7 +36,6 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private readonly TBackgroundGeometry _boundsGeometry = new();
     private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = new();
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
@@ -65,6 +64,11 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
     }
+
+    /// <summary>
+    /// Gets the background geometry.
+    /// </summary>
+    public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override LvcSize Measure(Chart<TDrawingContext> chart)
@@ -207,7 +211,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
                 };
 
                 cell.VisualElement.OnInvalidated(chart);
-                cell.VisualElement.SetParent(_boundsGeometry);
+                cell.VisualElement.SetParent(BackgroundGeometry);
                 w += columnWidth;
             }
 
@@ -223,24 +227,24 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
             .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         chart.Canvas.AddDrawableTask(BackgroundPaint);
-        _boundsGeometry.X = (float)X;
-        _boundsGeometry.Y = (float)Y;
-        _boundsGeometry.Width = controlSize.Width;
-        _boundsGeometry.Height = controlSize.Height;
+        BackgroundGeometry.X = (float)X;
+        BackgroundGeometry.Y = (float)Y;
+        BackgroundGeometry.Width = controlSize.Width;
+        BackgroundGeometry.Height = controlSize.Height;
 
-        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, _boundsGeometry);
+        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
     {
-        if (_boundsGeometry is null) return;
-        _boundsGeometry.Parent = parent;
+        if (BackgroundGeometry is null) return;
+        BackgroundGeometry.Parent = parent;
     }
 
     internal override IAnimatable?[] GetDrawnGeometries()
     {
-        return new IAnimatable?[] { _boundsGeometry };
+        return new IAnimatable?[] { BackgroundGeometry };
     }
 
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()

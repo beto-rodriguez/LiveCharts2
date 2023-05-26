@@ -304,7 +304,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
                     .CenterXToolTip();
 
-                _ = data.TargetPoint.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
+                _ = data.TargetPoint.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(data.TargetPoint);
 

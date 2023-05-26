@@ -211,15 +211,24 @@ public class RectangleHoverArea : HoverArea
     }
 
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext, LvcSize)"/>
-    public override void SuggestTooltipPlacement(TooltipPlacementContext cartesianContext, LvcSize tooltipSize)
+    public override void SuggestTooltipPlacement(TooltipPlacementContext ctx, LvcSize tooltipSize)
     {
         var autoY = (LessThanPivot ? 1 : 0) * tooltipSize.Height;
 
-        if (Y < cartesianContext.MostAutoTop) cartesianContext.MostAutoTop = SuggestedTooltipLocation.Y + autoY;
-        if (Y + Height > cartesianContext.MostAutoBottom) cartesianContext.MostAutoBottom = SuggestedTooltipLocation.Y + autoY;
-        if (Y < cartesianContext.MostTop) cartesianContext.MostTop = SuggestedTooltipLocation.Y;
-        if (Y + Height > cartesianContext.MostBottom) cartesianContext.MostBottom = SuggestedTooltipLocation.Y;
-        if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = SuggestedTooltipLocation.X;
-        if (X < cartesianContext.MostLeft) cartesianContext.MostLeft = SuggestedTooltipLocation.X;
+        if (Y < ctx.MostTop) ctx.MostTop = SuggestedTooltipLocation.Y;
+        if (Y + Height > ctx.MostBottom) ctx.MostBottom = SuggestedTooltipLocation.Y;
+        if (X + Width > ctx.MostRight) ctx.MostRight = SuggestedTooltipLocation.X;
+        if (X < ctx.MostLeft) ctx.MostLeft = SuggestedTooltipLocation.X;
+
+        if (Y < ctx.MostAutoTop)
+        {
+            ctx.MostAutoTop = SuggestedTooltipLocation.Y + autoY;
+            ctx.AutoPopPupPlacement = LessThanPivot ? PopUpPlacement.Bottom : PopUpPlacement.Top;
+        }
+        if (Y + Height > ctx.MostAutoBottom)
+        {
+            ctx.MostAutoBottom = SuggestedTooltipLocation.Y + autoY;
+            ctx.AutoPopPupPlacement = LessThanPivot ? PopUpPlacement.Bottom : PopUpPlacement.Top;
+        }
     }
 }

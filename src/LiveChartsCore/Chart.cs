@@ -114,6 +114,11 @@ public abstract class Chart<TDrawingContext> : IChart
     #region properties
 
     /// <summary>
+    /// Gets the tool tip meta data.
+    /// </summary>
+    public ToolTipMetaData AutoToolTipsInfo { get; internal set; } = new();
+
+    /// <summary>
     /// Gets the bounds of the chart.
     /// </summary>
     public AnimatableContainer ActualBounds { get; } = new();

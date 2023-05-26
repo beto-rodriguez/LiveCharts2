@@ -44,6 +44,11 @@ public class TooltipPlacementContext
     public TooltipPosition Position { get; set; }
 
     /// <summary>
+    /// Gets or sets the value for the pop-up placement.
+    /// </summary>
+    public PopUpPlacement AutoPopPupPlacement { get; set; } = PopUpPlacement.Top;
+
+    /// <summary>
     /// Gets or sets the most top.
     /// </summary>
     /// <value>

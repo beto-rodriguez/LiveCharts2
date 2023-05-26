@@ -36,7 +36,6 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private readonly TBackgroundGeometry _boundsGeometry = new();
 
     /// <summary>
     /// Gets the children collection.
@@ -73,6 +72,11 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     }
 
     /// <summary>
+    /// Gets the background geometry.
+    /// </summary>
+    public TBackgroundGeometry BackgroundGeometry { get; } = new();
+
+    /// <summary>
     /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
     /// </summary>
     public double MaxWidth { get; set; } = double.MaxValue;
@@ -89,7 +93,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
 
     internal override IAnimatable?[] GetDrawnGeometries()
     {
-        return new IAnimatable?[] { _boundsGeometry };
+        return new IAnimatable?[] { BackgroundGeometry };
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
@@ -106,18 +110,18 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         chart.Canvas.AddDrawableTask(BackgroundPaint);
-        _boundsGeometry.X = (float)X;
-        _boundsGeometry.Y = (float)Y;
-        _boundsGeometry.Width = controlSize.Width;
-        _boundsGeometry.Height = controlSize.Height;
-        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, _boundsGeometry);
+        BackgroundGeometry.X = (float)X;
+        BackgroundGeometry.Y = (float)Y;
+        BackgroundGeometry.Width = controlSize.Width;
+        BackgroundGeometry.Height = controlSize.Height;
+        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
     {
-        if (_boundsGeometry is null) return;
-        _boundsGeometry.Parent = parent;
+        if (BackgroundGeometry is null) return;
+        BackgroundGeometry.Parent = parent;
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
@@ -161,7 +165,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                 }
 
                 child.Visual.OnInvalidated(chart);
-                child.Visual.SetParent(_boundsGeometry);
+                child.Visual.SetParent(BackgroundGeometry);
                 if (child.Size.Width > mx) mx = child.Size.Width;
                 if (child.Size.Height > my) my = child.Size.Height;
             }

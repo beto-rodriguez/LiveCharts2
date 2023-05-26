@@ -35,7 +35,6 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private readonly TBackgroundGeometry _boundsGeometry = new();
 
     /// <summary>
     /// Gets or sets the size.
@@ -56,6 +55,11 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         set => SetPaintProperty(ref _backgroundPaint, value);
     }
 
+    /// <summary>
+    /// Gets the background geometry.
+    /// </summary>
+    public TBackgroundGeometry BackgroundGeometry { get; } = new();
+
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return Array.Empty<IPaint<TDrawingContext>>();
@@ -63,7 +67,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
 
     internal override IAnimatable?[] GetDrawnGeometries()
     {
-        return new IAnimatable?[] { _boundsGeometry };
+        return new IAnimatable?[] { BackgroundGeometry };
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
@@ -78,24 +82,24 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         chart.Canvas.AddDrawableTask(BackgroundPaint);
-        _boundsGeometry.X = (float)X;
-        _boundsGeometry.Y = (float)Y;
-        _boundsGeometry.Width = Size.Width;
-        _boundsGeometry.Height = Size.Height;
-        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, _boundsGeometry);
+        BackgroundGeometry.X = (float)X;
+        BackgroundGeometry.Y = (float)Y;
+        BackgroundGeometry.Width = Size.Width;
+        BackgroundGeometry.Height = Size.Height;
+        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
 
         foreach (var child in Children)
         {
             child.OnInvalidated(chart);
-            child.SetParent(_boundsGeometry);
+            child.SetParent(BackgroundGeometry);
         }
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
     {
-        if (_boundsGeometry is null) return;
-        _boundsGeometry.Parent = parent;
+        if (BackgroundGeometry is null) return;
+        BackgroundGeometry.Parent = parent;
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>

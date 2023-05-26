@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Data;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -36,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
-    internal StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _panel;
+    internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
@@ -46,9 +47,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     public SKDefaultTooltip()
     {
         FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
-        BackgroundPaint = new SolidColorPaint(new SKColor(240, 240, 240, 200))
+        BackgroundPaint = new SolidColorPaint(new SKColor(240, 240, 240, 230))
         {
-            ImageFilter = new DropShadow(2, 2, 2, 2, new SKColor(30, 30, 30, 60))
+            ImageFilter = new DropShadow(0, 0, 4, 4, new SKColor(30, 30, 30, 90))
         };
     }
 
@@ -81,16 +82,19 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
+        const int wedge = 15;
+
         if (_panel is null)
         {
-            _panel = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+            _panel = new StackPanel<PopUpGeometry, SkiaSharpDrawingContext>
             {
-                Padding = new Padding(12, 8),
                 Orientation = ContainerOrientation.Vertical,
                 HorizontalAlignment = Align.Middle,
                 VerticalAlignment = Align.Middle,
                 BackgroundPaint = BackgroundPaint
             };
+
+            _panel.BackgroundGeometry.Wedge = wedge;
 
             _panel
                 .Animate(chart,
@@ -166,6 +170,21 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
         _panel.X = location.X;
         _panel.Y = location.Y;
+
+        _panel.BackgroundGeometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
+
+        switch (chart.AutoToolTipsInfo.ToolTipPlacement)
+        {
+            case Measure.PopUpPlacement.Top:
+                _panel.Padding = new Padding(12, 8, 12, 8 + wedge); break;
+            case Measure.PopUpPlacement.Bottom:
+                _panel.Padding = new Padding(12, 8 + wedge, 12, 8); break;
+            case Measure.PopUpPlacement.Left:
+                _panel.Padding = new Padding(12, 8, 12 + wedge, 8); break;
+            case Measure.PopUpPlacement.Right:
+                _panel.Padding = new Padding(12 + wedge, 8, 12, 8); break;
+            default: break;
+        }
 
         chart.AddVisual(_panel);
     }

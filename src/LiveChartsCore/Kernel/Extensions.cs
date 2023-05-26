@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
@@ -71,7 +70,6 @@ public static class Extensions
     {
         var count = 0f;
         var placementContext = new TooltipPlacementContext(chart.TooltipPosition);
-        var position = chart.TooltipPosition;
 
         foreach (var point in foundPoints)
         {
@@ -85,15 +83,18 @@ public static class Extensions
         var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
         var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
 
+        var position = chart.TooltipPosition;
         if (position == TooltipPosition.Auto)
         {
             var x = avrgX;
             var y = placementContext.MostAutoTop - tooltipSize.Height;
+            chart.AutoToolTipsInfo.ToolTipPlacement = placementContext.AutoPopPupPlacement;
 
             if (x < 0)
             {
                 // the tooltip is out of the left edge
                 // we return TooltipPosition.Right
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
                 return new(placementContext.MostRight, avrgY);
             }
 
@@ -101,37 +102,55 @@ public static class Extensions
             {
                 // the tooltip is out of the right edge
                 // we return TooltipPosition.Left
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
                 return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
             }
 
-            if (y < 0) y += tooltipSize.Height;
-            if (y + tooltipSize.Height > chart.ControlSize.Height) y -= tooltipSize.Height;
+            if (y < 0)
+            {
+                y += tooltipSize.Height;
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+            }
+            if (y + tooltipSize.Height > chart.ControlSize.Height)
+            {
+                y -= tooltipSize.Height;
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+            }
 
             return new(x, y);
         }
 
-        var p2 = position switch
+        LvcPoint location = new();
+
+        switch (position)
         {
-            TooltipPosition.Top => new(avrgX, placementContext.MostTop - tooltipSize.Height),
-            TooltipPosition.Bottom => new(avrgX, placementContext.MostBottom),
-            TooltipPosition.Left => new(placementContext.MostLeft - tooltipSize.Width, avrgY),
-            TooltipPosition.Right => new(placementContext.MostRight, avrgY),
-            TooltipPosition.Center => new(avrgX, avrgY),
-            TooltipPosition.Auto => new(), // already solved...
-            TooltipPosition.Hidden => new(),
-            _ => new LvcPoint()
-        };
+            case TooltipPosition.Top:
+                location = new(avrgX, placementContext.MostTop - tooltipSize.Height);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+                break;
+            case TooltipPosition.Bottom:
+                location = new(avrgX, placementContext.MostBottom);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+                break;
+            case TooltipPosition.Left:
+                location = new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
+                break;
+            case TooltipPosition.Right:
+                location = new(placementContext.MostRight, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
+                break;
+            case TooltipPosition.Center:
+                location = new(avrgX, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+                break;
+            case TooltipPosition.Hidden:
+            case TooltipPosition.Auto:
+            default:
+                break;
+        }
 
-        var x2 = p2.X;
-        var y2 = p2.Y;
-
-        if (x2 < 0) x2 += tooltipSize.Width;
-        if (x2 + tooltipSize.Width > chart.ControlSize.Width) x2 -= tooltipSize.Width;
-
-        if (y2 < 0) y2 += tooltipSize.Height;
-        if (y2 + tooltipSize.Height > chart.ControlSize.Height) y2 -= tooltipSize.Height;
-
-        return new LvcPoint(x2, y2);
+        return location;
     }
     private static LvcPoint _getPieTooltipLocation(
         IEnumerable<ChartPoint> foundPoints, LvcSize tooltipSize)
