@@ -26,7 +26,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting.Series;
+namespace LiveChartsCore.UnitTesting.SeriesTests;
 
 [TestClass]
 public class ColumnSeriesTest
@@ -93,5 +93,11 @@ public class ColumnSeriesTest
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;
         }
+    }
+
+    [TestMethod]
+    public void ShouldPlaceTooltipsCorrectly()
+    {
+
     }
 }

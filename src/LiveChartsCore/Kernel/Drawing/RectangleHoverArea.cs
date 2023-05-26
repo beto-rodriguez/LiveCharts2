@@ -202,10 +202,5 @@ public class RectangleHoverArea : HoverArea
         if (Y + Height > cartesianContext.MostBottom) cartesianContext.MostBottom = SuggestedTooltipLocation.Y;
         if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = SuggestedTooltipLocation.X;
         if (X < cartesianContext.MostLeft) cartesianContext.MostLeft = SuggestedTooltipLocation.X;
-
-        //if (Y < cartesianContext.MostTop) cartesianContext.MostTop = Y;
-        //if (Y + Height > cartesianContext.MostBottom) cartesianContext.MostBottom = Y + Height;
-        //if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = X + Width;
-        //if (X < cartesianContext.MostLeft) cartesianContext.MostLeft = X;
     }
 }

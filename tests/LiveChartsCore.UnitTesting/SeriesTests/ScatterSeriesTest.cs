@@ -27,7 +27,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting.Series;
+namespace LiveChartsCore.UnitTesting.SeriesTests;
 
 [TestClass]
 public class ScatterSeriesTest
