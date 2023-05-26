@@ -45,6 +45,7 @@ public class PopUpGeometry : SizedGeometry
         using var path = new SKPath();
 
         var wedge = Wedge;
+        var wf = 1.25f;
         var x = X + (Placement == PopUpPlacement.Right ? 1 : 0) * wedge;
         var y = Y + (Placement == PopUpPlacement.Bottom ? 1 : 0) * wedge;
         var w = Width - (Placement is PopUpPlacement.Right or PopUpPlacement.Left ? 1 : 0) * wedge;
@@ -54,39 +55,47 @@ public class PopUpGeometry : SizedGeometry
 
         if (Placement == PopUpPlacement.Bottom)
         {
-            path.LineTo(x + (w * 0.5f + wedge * 1.5f * 0.5f), y);
+            path.LineTo(x + (w * 0.5f - wedge * wf * 0.5f), y);
             path.LineTo(x + w * 0.5f, y - wedge);
-            path.LineTo(x + (w * 0.5f - wedge * 1.5f * 0.5f), y);
+            path.LineTo(x + (w * 0.5f + wedge * wf * 0.5f), y);
         }
 
         path.LineTo(x + w, y);
 
         if (Placement == PopUpPlacement.Left)
         {
-            path.LineTo(x + w, y + (h * 0.5f - wedge * 1.5f * 0.5f));
+            path.LineTo(x + w, y + (h * 0.5f - wedge * wf * 0.5f));
             path.LineTo(x + w + wedge, y + h * 0.5f);
-            path.LineTo(x + w, y + (h * 0.5f + wedge * 1.5f * 0.5f));
+            path.LineTo(x + w, y + (h * 0.5f + wedge * wf * 0.5f));
         }
 
         path.LineTo(x + w, y + h);
 
         if (Placement == PopUpPlacement.Top)
         {
-            path.LineTo(x + (w * 0.5f - wedge * 1.5f * 0.5f), y + h);
+            path.LineTo(x + (w * 0.5f + wedge * wf * 0.5f), y + h);
             path.LineTo(x + w * 0.5f, y + h + wedge);
-            path.LineTo(x + (w * 0.5f + wedge * 1.5f * 0.5f), y + h);
+            path.LineTo(x + (w * 0.5f - wedge * wf * 0.5f), y + h);
         }
 
         path.LineTo(x, y + h);
 
         if (Placement == PopUpPlacement.Right)
         {
-            path.LineTo(x, y + (h * 0.5f + wedge * 1.5f * 0.5f));
+            path.LineTo(x, y + (h * 0.5f + wedge * wf * 0.5f));
             path.LineTo(x - wedge, y + h * 0.5f);
-            path.LineTo(x, y + (h * 0.5f - wedge * 1.5f * 0.5f));
+            path.LineTo(x, y + (h * 0.5f - wedge * wf * 0.5f));
         }
 
         path.Close();
         context.Canvas.DrawPath(path, context.Paint);
+
+        var c = new SKColor(
+            (byte)(context.Paint.Color.Red * 0.85),
+            (byte)(context.Paint.Color.Red * 0.85),
+            (byte)(context.Paint.Color.Red * 0.85),
+            255);
+        using var borderPaint = new SKPaint { Color = c, IsStroke = true, IsAntialias = true };
+        context.Canvas.DrawPath(path, borderPaint);
     }
 }
