@@ -100,6 +100,7 @@ public class PopUpGeometry : SizedGeometry
         path.ArcTo(new SKRect(x, y, x + br, y + br), 180, 90, false);
 
         path.Close();
+
         context.Canvas.DrawPath(path, context.Paint);
 
         var c = new SKColor(

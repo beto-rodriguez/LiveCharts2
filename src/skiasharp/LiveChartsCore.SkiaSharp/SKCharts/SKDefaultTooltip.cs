@@ -46,9 +46,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     public SKDefaultTooltip()
     {
         FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
-        BackgroundPaint = new SolidColorPaint(new SKColor(250, 250, 250, 230))
+        BackgroundPaint = new SolidColorPaint(new SKColor(245, 245, 245, 230))
         {
-            ImageFilter = new DropShadow(0, 0, 4, 4, new SKColor(0, 0, 0, 90))
+            ImageFilter = new DropShadow(0, 0, 4, 4, new SKColor(0, 0, 0, 70))
         };
     }
 
