@@ -260,7 +260,12 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 if (point.Context.HoverArea is not RectangleHoverArea ha)
                     point.Context.HoverArea = ha = new RectangleHoverArea();
-                _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
+
+                _ = ha
+                    .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
+                .CenterXToolTip();
+
+                _ = point.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(point);
 

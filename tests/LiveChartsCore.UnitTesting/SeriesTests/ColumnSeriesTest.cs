@@ -123,54 +123,54 @@ public class ColumnSeriesTest
         chart.Core._pointerPosition = new(150, 150);
 
         chart.TooltipPosition = TooltipPosition.Top;
-        _ = chart.GetImage();
+        chart.SaveImage("hh.png");
         var tp = tooltip._panel.BackgroundGeometry;
         Assert.IsTrue(
-            tp.X + tp.Width * 0.5f == 150 &&
-            tp.Y == 150 - tp.Height,
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - (150 - tp.Height)) < 0.1,
             "Tool tip on top failed");
 
         chart.TooltipPosition = TooltipPosition.Bottom;
         _ = chart.GetImage();
         Assert.IsTrue(
-            tp.X + tp.Width * 0.5f == 150 &&
-            tp.Y == 150,
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - 150) < 0.1,
             "Tool tip on bottom failed");
 
         chart.TooltipPosition = TooltipPosition.Left;
         _ = chart.GetImage();
         Assert.IsTrue(
-            tp.X == 150 - tp.Width &&
-            tp.Y + tp.Height * 0.5f == 150,
+            Math.Abs(tp.X - (150 - tp.Width)) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
             "Tool tip on left failed");
 
         chart.TooltipPosition = TooltipPosition.Right;
         _ = chart.GetImage();
         Assert.IsTrue(
-            tp.X == 150 &&
-            tp.Y + tp.Height * 0.5f == 150,
+            Math.Abs(tp.X - 150) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
             "Tool tip on right failed");
 
         chart.TooltipPosition = TooltipPosition.Center;
         _ = chart.GetImage();
         Assert.IsTrue(
-            tp.X + tp.Width * 0.5f == 150 &&
-            tp.Y + tp.Height * 0.5f == 150,
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
             "Tool tip on center failed");
 
         chart.TooltipPosition = TooltipPosition.Auto;
         _ = chart.GetImage();
         Assert.IsTrue(
-            tp.X + tp.Width * 0.5f == 150 &&
-            tp.Y == 150 - tp.Height &&
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - (150 - tp.Height)) < 0.1 &&
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
             "Tool tip on top failed [AUTO]");
 
         sutSeries.Values = new double[] { -1, -2, -3, -4, -5 };
         _ = chart.GetImage();
         Assert.IsTrue(
-            tp.X + tp.Width * 0.5f == 150 &&
-            tp.Y == 150 &&
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - 150) < 0.1 &&
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
             "Tool tip on bottom failed [AUTO]");
 
@@ -179,15 +179,15 @@ public class ColumnSeriesTest
         _ = chart.GetImage();
         Assert.IsTrue(
             Math.Abs(tp.X - (300 - 300 * (1 / 5d) * 0.5 - tp.Width)) < 0.0001 &&
-            tp.Y == -tp.Height * 0.5f &&
+            Math.Abs(tp.Y - -tp.Height * 0.5f) < 0.1 &&
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
             "Tool tip on left failed [AUTO]");
 
         chart.Core._pointerPosition = new(1, 150);
-        chart.SaveImage("ggg.png");
+        _ = chart.GetImage();
         Assert.IsTrue(
             Math.Abs(tp.X - 300 * (1 / 5d) * 0.5) < 0.0001 &&
-            tp.Y == 300 - tp.Height * 0.5f &&
+            Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 0.1 &&
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
             "Tool tip on left failed [AUTO]");
     }

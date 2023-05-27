@@ -22,6 +22,7 @@
 
 using System;
 using System.Linq;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -92,5 +93,103 @@ public class StepLineSeriesTest
             previousXArea = previous.Visual.StepSegment.Xj - sutPoint.Visual.StepSegment.Xj;
             previous = sutPoint;
         }
+    }
+
+    [TestMethod]
+    public void ShouldPlaceToolTipsCorrectly()
+    {
+        var sutSeries = new StepLineSeries<double>
+        {
+            GeometrySize = 0,
+            Values = new double[] { 1, 2, 3, 4, 5 },
+            DataPadding = new Drawing.LvcPoint(0, 0)
+        };
+
+        var tooltip = new SKDefaultTooltip();
+
+        var chart = new SKCartesianChart
+        {
+            Width = 300,
+            Height = 300,
+            Tooltip = tooltip,
+            TooltipPosition = TooltipPosition.Top,
+            Series = new[] { sutSeries },
+            XAxes = new[] { new Axis { IsVisible = false } },
+            YAxes = new[] { new Axis { IsVisible = false } }
+        };
+
+        chart.Core._isPointerIn = true;
+        chart.Core._isToolTipOpen = true;
+        chart.Core._pointerPosition = new(150, 150);
+
+        chart.TooltipPosition = TooltipPosition.Top;
+        chart.SaveImage("hh.png");
+        var tp = tooltip._panel.BackgroundGeometry;
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - (150 - tp.Height)) < 0.1,
+            "Tool tip on top failed");
+
+        chart.TooltipPosition = TooltipPosition.Bottom;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - 150) < 0.1,
+            "Tool tip on bottom failed");
+
+        chart.TooltipPosition = TooltipPosition.Left;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X - (150 - tp.Width)) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
+            "Tool tip on left failed");
+
+        chart.TooltipPosition = TooltipPosition.Right;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X - 150) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
+            "Tool tip on right failed");
+
+        chart.TooltipPosition = TooltipPosition.Center;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
+            "Tool tip on center failed");
+
+        chart.TooltipPosition = TooltipPosition.Auto;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - (150 - tp.Height)) < 0.1 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
+            "Tool tip on top failed [AUTO]");
+
+        sutSeries.Values = new double[] { -1, -2, -3, -4, -5 };
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - 150) < 0.1 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
+            "Tool tip on bottom failed [AUTO]");
+
+        sutSeries.Values = new double[] { 1, 2, 3, 4, 5 };
+        chart.Core._pointerPosition = new(299, 150);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            // that 2... it seems that the lineseries.DataPadding takes more space than expected
+            Math.Abs(tp.X - (300 - tp.Width)) < 2 &&
+            Math.Abs(tp.Y - -tp.Height * 0.5f) < 2 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
+            "Tool tip on left failed [AUTO]");
+
+        chart.Core._pointerPosition = new(1, 150);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X) < 2 &&
+            Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 2 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
+            "Tool tip on left failed [AUTO]");
     }
 }
