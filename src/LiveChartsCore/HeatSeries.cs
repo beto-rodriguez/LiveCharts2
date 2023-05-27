@@ -195,7 +195,10 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
+            _ = ha
+                .SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp)
+                .CenterXToolTip()
+                .CenterYToolTip();
 
             pointsCleanup.Clean(point);
 
