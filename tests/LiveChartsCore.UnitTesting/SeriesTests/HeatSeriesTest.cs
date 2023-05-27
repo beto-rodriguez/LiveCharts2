@@ -253,8 +253,8 @@ public class HeatSeriesTest
         chart.Core._pointerPosition = new(5, 295);
         chart.SaveImage("HOLAAA.PNG");
         Assert.IsTrue(
-            Math.Abs(tp.X) < 0.1 &&
-            Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 0.1 &&
+            Math.Abs(tp.X - 300 * 1 / 5d * 0.5) < 0.1 &&
+            Math.Abs(tp.Y - (300 - tp.Height * 0.5f - 300 * 1 / 5d * 0.5)) < 0.1 &&
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
             "Tool tip on left failed [AUTO]");
     }

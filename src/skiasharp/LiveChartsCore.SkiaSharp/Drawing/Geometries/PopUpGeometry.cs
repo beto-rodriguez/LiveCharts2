@@ -104,9 +104,9 @@ public class PopUpGeometry : SizedGeometry
         context.Canvas.DrawPath(path, context.Paint);
 
         var c = new SKColor(
-            (byte)(context.Paint.Color.Red * 0.85),
-            (byte)(context.Paint.Color.Red * 0.85),
-            (byte)(context.Paint.Color.Red * 0.85),
+            (byte)(context.Paint.Color.Red * 0.9),
+            (byte)(context.Paint.Color.Red * 0.9),
+            (byte)(context.Paint.Color.Red * 0.9),
             255);
         using var borderPaint = new SKPaint { Color = c, IsStroke = true, IsAntialias = true };
         context.Canvas.DrawPath(path, borderPaint);
