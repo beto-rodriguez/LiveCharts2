@@ -123,7 +123,7 @@ public class LineSeriesTest
         chart.Core._pointerPosition = new(150, 150);
 
         chart.TooltipPosition = TooltipPosition.Top;
-        chart.SaveImage("hh.png");
+        _ = chart.GetImage();
         var tp = tooltip._panel.BackgroundGeometry;
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&

@@ -122,6 +122,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         uwx = uwx < gs ? gs : uwx;
         uwy = uwy < gs ? gs : uwy;
 
+        var hy = chart.ControlSize.Height * .5f;
+
         foreach (var point in Fetch(cartesianChart))
         {
             var visual = (TVisual?)point.Context.Visual;
@@ -180,7 +182,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy);
+            _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy).CenterXToolTip().CenterYToolTip();
 
             pointsCleanup.Clean(point);
 
