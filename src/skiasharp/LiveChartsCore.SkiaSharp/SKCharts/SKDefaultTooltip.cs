@@ -95,10 +95,10 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             _panel.BackgroundGeometry.Wedge = wedge;
 
-            //_panel
-            //    .Animate(chart,
-            //        nameof(RoundedRectangleGeometry.X),
-            //        nameof(RoundedRectangleGeometry.Y));
+            _panel
+                .Animate(chart,
+                    nameof(RoundedRectangleGeometry.X),
+                    nameof(RoundedRectangleGeometry.Y));
         }
 
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
