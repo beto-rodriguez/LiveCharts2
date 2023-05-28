@@ -41,7 +41,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
 
         foreach (var point in foundPoints)
         {
-            var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniatresSketch();
+            var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniaturesSketch();
             var relativePanel = sketch.AsDrawnControl();
 
             var label = new LabelVisual

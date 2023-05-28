@@ -63,7 +63,11 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
              SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
     {
-        TooltipLabelFormatter = p => $"H {p.PrimaryValue:N2}{Environment.NewLine}O {p.TertiaryValue:N2}{Environment.NewLine}C {p.QuaternaryValue:N2}{Environment.NewLine}L {p.QuinaryValue:N2}";
+        PrimaryTooltipLabelFormatter = p =>
+            $"H {p.PrimaryValue:N2}{Environment.NewLine}" +
+            $"O {p.TertiaryValue:N2}{Environment.NewLine}" +
+            $"C {p.QuaternaryValue:N2}{Environment.NewLine}" +
+            $"L {p.QuinaryValue:N2}";
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
@@ -247,7 +251,11 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
+
+            _ = ha
+                .SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high))
+                .CenterXToolTip()
+                .StartYToolTip();
 
             pointsCleanup.Clean(point);
 
@@ -442,8 +450,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             DownFill == financial.DownFill && DownStroke == financial.DownStroke;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 

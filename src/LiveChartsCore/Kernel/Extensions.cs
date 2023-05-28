@@ -547,7 +547,7 @@ public static class Extensions
         {
             var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
             return
-                point.Context.Series.GetTooltipText(point) ??
+                point.Context.Series.GetPrimaryTooltipText(point) ??
                 cartesianChart.YAxes[cs.ScalesYAt].GetActualLabeler()(point.PrimaryValue);
         }
 
@@ -555,11 +555,11 @@ public static class Extensions
         {
             var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
             return
-                point.Context.Series.GetTooltipText(point) ??
+                point.Context.Series.GetPrimaryTooltipText(point) ??
                 polarChart.RadiusAxes[cs.ScalesRadiusAt].GetActualLabeler()(point.PrimaryValue);
         }
 
-        return point.Context.Series.GetTooltipText(point) ?? point.PrimaryValue.ToString();
+        return point.Context.Series.GetPrimaryTooltipText(point) ?? point.PrimaryValue.ToString();
     }
 
     /// <summary>
@@ -576,7 +576,7 @@ public static class Extensions
         {
             var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
             return
-                point.Context.Series.GetTooltipText(point) ??
+                point.Context.Series.GetSecondaryTooltipText(point) ??
                 cartesianChart.XAxes[cs.ScalesXAt].GetActualLabeler()(point.SecondaryValue);
         }
 
@@ -584,11 +584,11 @@ public static class Extensions
         {
             var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
             return
-                point.Context.Series.GetTooltipText(point) ??
+                point.Context.Series.GetSecondaryTooltipText(point) ??
                 polarChart.AngleAxes[cs.ScalesAngleAt].GetActualLabeler()(point.SecondaryValue);
         }
 
-        return point.Context.Series.GetTooltipText(point) ?? point.SecondaryValue.ToString();
+        return point.Context.Series.GetSecondaryTooltipText(point) ?? point.SecondaryValue.ToString();
     }
 
     /// <summary>

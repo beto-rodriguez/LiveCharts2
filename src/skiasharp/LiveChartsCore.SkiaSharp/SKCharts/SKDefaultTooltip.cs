@@ -137,7 +137,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 _panel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
             }
 
-            tableLayout.AddChild(series.GetMiniatresSketch().AsDrawnControl(), i, 0);
+            tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, 0);
             tableLayout.AddChild(
                 new LabelVisual
                 {

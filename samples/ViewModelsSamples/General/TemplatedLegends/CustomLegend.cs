@@ -83,7 +83,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
 
         foreach (var series in chart.ChartSeries)
         {
-            var sketch = series.GetMiniatresSketch();
+            var sketch = series.GetMiniaturesSketch();
             var relativePanel = sketch.AsDrawnControl();
 
             var label = new LabelVisual

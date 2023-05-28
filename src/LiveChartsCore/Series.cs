@@ -100,7 +100,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private string? _name;
     private Action<TModel, ChartPoint>? _mapping;
     private int _zIndex;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _secondaryTooltipLabelFormatter;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _primaryTooltipLabelFormatter;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _dataLabelsFormatter = x => x.PrimaryValue.ToString();
     private bool _isVisible = true;
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
@@ -216,10 +217,37 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The tool tip label formatter.
     /// </value>
+    [Obsolete($"You must now use {nameof(SecondaryTooltipLabelFormatter)} or {nameof(PrimaryTooltipLabelFormatter)} instead.")]
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? TooltipLabelFormatter
     {
-        get => _tooltipLabelFormatter;
-        set => SetProperty(ref _tooltipLabelFormatter, value);
+        get => PrimaryTooltipLabelFormatter;
+        set => PrimaryTooltipLabelFormatter = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the X axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? SecondaryTooltipLabelFormatter
+    {
+        get => _secondaryTooltipLabelFormatter;
+        set => SetProperty(ref _secondaryTooltipLabelFormatter, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? PrimaryTooltipLabelFormatter
+    {
+        get => _primaryTooltipLabelFormatter;
+        set => SetProperty(ref _primaryTooltipLabelFormatter, value);
     }
 
     /// <summary>
@@ -385,10 +413,20 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         DataFactory.RestartVisuals();
     }
 
-    /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
-    public string? GetTooltipText(ChartPoint point)
+    /// <inheritdoc cref="ISeries.GetPrimaryTooltipText(ChartPoint)"/>
+    public string? GetPrimaryTooltipText(ChartPoint point)
     {
-        return TooltipLabelFormatter is null ? null : TooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+        return PrimaryTooltipLabelFormatter is null
+            ? null
+            : PrimaryTooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+    }
+
+    /// <inheritdoc cref="ISeries.GetSecondaryTooltipText(ChartPoint)"/>
+    public string? GetSecondaryTooltipText(ChartPoint point)
+    {
+        return SecondaryTooltipLabelFormatter is null
+            ? null
+            : SecondaryTooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
     /// <inheritdoc cref="ISeries.GetDataLabelText(ChartPoint)"/>
@@ -419,8 +457,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniatresSketch"/>
-    public abstract Sketch<TDrawingContext> GetMiniatresSketch();
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniaturesSketch"/>
+    public abstract Sketch<TDrawingContext> GetMiniaturesSketch();
 
     /// <summary>
     /// Builds a paint schedule.
@@ -545,7 +583,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     protected void OnMiniatureChanged()
     {
-        CanvasSchedule = GetMiniatresSketch();
+        CanvasSchedule = GetMiniaturesSketch();
     }
 
     private void NotifySubscribers()

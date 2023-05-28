@@ -96,7 +96,7 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// 
     /// </summary>
     /// <returns></returns>
-    Sketch<TDrawingContext> GetMiniatresSketch();
+    Sketch<TDrawingContext> GetMiniaturesSketch();
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.

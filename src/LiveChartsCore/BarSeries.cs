@@ -78,8 +78,8 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
