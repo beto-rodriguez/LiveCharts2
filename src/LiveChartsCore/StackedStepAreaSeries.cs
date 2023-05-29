@@ -39,7 +39,7 @@ public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPa
     : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
         where TVisualPoint : StepLineVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

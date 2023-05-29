@@ -39,7 +39,7 @@ public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGe
     : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

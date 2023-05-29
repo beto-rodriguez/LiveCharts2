@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Gauge Pushout
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +44,7 @@ namespace LiveChartsCore;
 public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
@@ -468,7 +470,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
+        if (visual is null) return;
         visual.PushOut = (float)HoverPushout;
         visual.Opacity = 0.8f;
 
@@ -479,7 +481,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
+        if (visual is null) return;
         visual.PushOut = (float)Pushout;
         visual.Opacity = 1;
 

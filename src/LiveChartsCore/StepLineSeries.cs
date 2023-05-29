@@ -42,10 +42,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
 public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
         where TVisualPoint : StepLineVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
@@ -282,7 +282,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(point));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var m = label.Measure(DataLabelsPaint);

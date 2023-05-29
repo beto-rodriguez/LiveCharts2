@@ -54,7 +54,7 @@ public class StackedAreaSeries<TModel> : StackedAreaSeries<TModel, CircleGeometr
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class StackedAreaSeries<TModel, TVisual> : StackedAreaSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -75,6 +75,6 @@ public class StackedAreaSeries<TModel, TVisual> : StackedAreaSeries<TModel, TVis
 /// </typeparam>
 public class StackedAreaSeries<TModel, TVisual, TLabel>
     : StackedAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, BezierPoint<TVisual>>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

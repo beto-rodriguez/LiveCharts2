@@ -20,31 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Segments;
-
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a stepline segment chart point.
+/// Defines a geometry in the user interface with rounded corners.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-public interface IStepLineVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
+/// <seealso cref="IGeometry{TDrawingContext}" />
+public interface IRoundedGeometry<TDrawingContext> : IGeometry<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets the geometry.
+    /// Gets or sets the border radius.
     /// </summary>
-    /// <value>
-    /// The geometry.
-    /// </value>
-    ISizedGeometry<TDrawingContext> Geometry { get; }
-
-    /// <summary>
-    /// Gets the stepline.
-    /// </summary>
-    /// <value>
-    /// The stepline.
-    /// </value>
-    StepLineSegment StepSegment { get; }
+    LvcPoint BorderRadius { get; set; }
 }

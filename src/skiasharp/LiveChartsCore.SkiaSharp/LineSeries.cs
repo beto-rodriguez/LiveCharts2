@@ -54,7 +54,7 @@ public class LineSeries<TModel> : LineSeries<TModel, CircleGeometry, LabelGeomet
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class LineSeries<TModel, TVisual> : LineSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -75,6 +75,6 @@ public class LineSeries<TModel, TVisual> : LineSeries<TModel, TVisual, LabelGeom
 /// </typeparam>
 public class LineSeries<TModel, TVisual, TLabel>
     : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, BezierPoint<TVisual>>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

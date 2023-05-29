@@ -29,5 +29,5 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 public class BezierPoint<TGeometry> : BezierVisualPoint<SkiaSharpDrawingContext, TGeometry>
-    where TGeometry : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TGeometry : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }

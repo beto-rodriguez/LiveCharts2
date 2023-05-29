@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a candlestick geometry.
 /// </summary>
-public class CandlestickGeometry : Geometry, IFinancialVisualChartPoint<SkiaSharpDrawingContext>
+public class CandlestickGeometry : Geometry, IFinancialGeometry<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _wProperty;
     private readonly FloatMotionProperty _oProperty;
@@ -90,7 +90,7 @@ public class CandlestickGeometry : Geometry, IFinancialVisualChartPoint<SkiaShar
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint paintTaks)
+    protected override LvcSize OnMeasure(Paint paintTasks)
     {
         return new LvcSize(Width, Math.Abs(Low - Y));
     }

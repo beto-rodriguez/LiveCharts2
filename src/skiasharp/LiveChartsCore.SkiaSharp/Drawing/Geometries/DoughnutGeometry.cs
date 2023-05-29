@@ -29,7 +29,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}" />
-public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>
+public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _cxProperty;
     private readonly FloatMotionProperty _cyProperty;

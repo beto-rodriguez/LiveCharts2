@@ -42,10 +42,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
 public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : ChartSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
+    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
@@ -349,7 +349,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     label.RotateTransform = actualRotation;

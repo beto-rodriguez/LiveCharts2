@@ -22,19 +22,16 @@
 
 namespace LiveChartsCore.Drawing;
 
-// Note #20221909
-// ToDo:
-// IVisualChartPoint? is it necessary?
-// maybe we just need to make this an IDrawable<T>.
-
 /// <summary>
-/// Defines an object that contains a <see cref="IDrawable{TDrawingContext}"/> to highlight when the point requires so.
+/// Defines a colored geometry in the user interface, a geometry with a Color property.
 /// </summary>
-public interface IVisualChartPoint<TDrawingContext>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IGeometry{TDrawingContext}" />
+public interface IColoredGeometry<TDrawingContext> : IGeometry<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets the drawable to style when a chart points requires to highlight it.
+    /// Gets or sets the color.
     /// </summary>
-    IGeometry<TDrawingContext> MainGeometry { get; }
+    LvcColor Color { get; set; }
 }

@@ -42,10 +42,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
 public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
@@ -321,7 +321,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var m = label.Measure(DataLabelsPaint);

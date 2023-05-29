@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <seealso cref="IScatterSeries{TDrawingContext}" />
 public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
