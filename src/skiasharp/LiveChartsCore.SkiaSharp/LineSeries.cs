@@ -74,7 +74,7 @@ public class LineSeries<TModel, TVisual> : LineSeries<TModel, TVisual, LabelGeom
 /// The type of the data label of every point.
 /// </typeparam>
 public class LineSeries<TModel, TVisual, TLabel>
-    : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, BezierPoint<TVisual>>
+    : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry>
     where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }
