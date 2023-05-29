@@ -82,7 +82,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <exception cref="NotImplementedException"></exception>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _stroke, _fill, hoverPaint, DataLabelsPaint };
+        return new[] { _stroke, _fill, DataLabelsPaint };
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

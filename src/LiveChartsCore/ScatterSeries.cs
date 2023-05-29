@@ -75,6 +75,11 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// </value>
     public double GeometrySize { get; set; } = 24d;
 
+    /// <summary>
+    /// Gets a value indicating whether the points in this series use weight.
+    /// </summary>
+    public bool IsWeighted { get; private set; }
+
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
@@ -113,7 +118,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         var gs = (float)GeometrySize;
         var hgs = gs / 2f;
         var sw = Stroke?.StrokeThickness ?? 0;
-        var requiresWScale = _weightBounds.Max - _weightBounds.Min > 0;
+        IsWeighted = _weightBounds.Max - _weightBounds.Min > 0;
         var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.Max - _weightBounds.Min);
 
         var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
@@ -145,7 +150,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 continue;
             }
 
-            if (requiresWScale)
+            if (IsWeighted)
             {
                 gs = (float)(wm * (_weightBounds.Max - point.TertiaryValue) + GeometrySize);
                 hgs = gs / 2f;
@@ -238,6 +243,28 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 0.8f;
+        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1.1f, 1.1f);
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 1;
+        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1f, 1f);
+
+        base.OnPointerLeft(point);
     }
 
     /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>

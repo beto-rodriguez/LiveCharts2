@@ -691,7 +691,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <returns></returns>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
     }
 
     /// <summary>
@@ -751,6 +751,26 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         return new LvcPoint(
              (float)(centerX + Math.Cos(actualAngle) * radius),
              (float)(centerY + Math.Sin(actualAngle) * radius));
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisualPoint?)point.Context.Visual;
+        if (visual is null || visual.Geometry is null) return;
+        visual.Geometry.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisualPoint?)point.Context.Visual;
+        if (visual is null || visual.Geometry is null) return;
+        visual.Geometry.ScaleTransform = new LvcPoint(1f, 1f);
+
+        base.OnPointerLeft(point);
     }
 
     private IEnumerable<ChartPoint[]> SplitEachNull(

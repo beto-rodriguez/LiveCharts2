@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -96,7 +97,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
             _panel.BackgroundGeometry.Wedge = wedge;
 
             _panel
-                .Animate(chart,
+                .Animate(
+                    new Animation(EasingFunctions.EaseOut, TimeSpan.FromMilliseconds(150)),
                     nameof(RoundedRectangleGeometry.X),
                     nameof(RoundedRectangleGeometry.Y));
         }

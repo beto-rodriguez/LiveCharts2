@@ -380,6 +380,26 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             GeometryFill == stepSeries.GeometryFill && GeometryStroke == stepSeries.GeometryStroke;
     }
 
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisualPoint?)point.Context.Visual;
+        if (visual is null || visual.Geometry is null) return;
+        visual.Geometry.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisualPoint?)point.Context.Visual;
+        if (visual is null || visual.Geometry is null) return;
+        visual.Geometry.ScaleTransform = new LvcPoint(1f, 1f);
+
+        base.OnPointerLeft(point);
+    }
+
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
@@ -465,7 +485,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <returns></returns>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
     }
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)

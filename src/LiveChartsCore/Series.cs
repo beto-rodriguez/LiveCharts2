@@ -81,11 +81,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected HashSet<ChartPoint> everFetched = new();
 
     /// <summary>
-    /// The hover paint.
-    /// </summary>
-    protected IPaint<TDrawingContext>? hoverPaint;
-
-    /// <summary>
     /// Indicates whether the custom measure handler was requested already.
     /// </summary>
     protected bool _requestedCustomMeasureHandler = false;
@@ -398,12 +393,12 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     void ISeries.OnPointerEnter(ChartPoint point)
     {
-        WhenPointerEnters(point);
+        OnPointerEnter(point);
     }
 
     void ISeries.OnPointerLeft(ChartPoint point)
     {
-        WhenPointerLeaves(point);
+        OnPointerLeft(point);
     }
 
     /// <inheritdoc cref="ISeries.RestartAnimations"/>
@@ -525,28 +520,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// Called when the pointer enters a point.
     /// </summary>
-    /// /// <param name="point">The chart point.</param>
-    protected virtual void WhenPointerEnters(ChartPoint point)
+    /// <param name="point">The chart point.</param>
+    protected virtual void OnPointerEnter(ChartPoint point)
     {
-        var chartView = (IChartView<TDrawingContext>)point.Context.Chart;
-
-        if (hoverPaint is null)
-        {
-            var coreChart = (Chart<TDrawingContext>)chartView.CoreChart;
-
-            hoverPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>()
-                .GetSolidColorPaint(new LvcColor(255, 255, 255, 100));
-            hoverPaint.ZIndex = 10049;
-            hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
-        }
-
-        chartView.CoreCanvas.AddDrawableTask(hoverPaint);
-
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
-
-        hoverPaint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.MainGeometry);
-
         DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
@@ -554,18 +530,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// Called when the pointer leaves a point.
     /// </summary>
-    /// /// <param name="point">The chart point.</param>
-    protected virtual void WhenPointerLeaves(ChartPoint point)
+    /// <param name="point">The chart point.</param>
+    protected virtual void OnPointerLeft(ChartPoint point)
     {
-        if (hoverPaint is null) return;
-
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
-
-        hoverPaint.RemoveGeometryFromPainTask(
-            (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
-            visual.MainGeometry);
-
         DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }

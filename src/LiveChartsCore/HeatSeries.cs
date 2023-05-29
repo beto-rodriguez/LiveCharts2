@@ -330,6 +330,6 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _paintTaks, hoverPaint };
+        return new[] { _paintTaks };
     }
 }

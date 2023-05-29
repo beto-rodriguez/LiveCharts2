@@ -440,7 +440,27 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     /// <exception cref="NotImplementedException"></exception>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint, hoverPaint };
+        return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 0.8f;
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 1;
+
+        base.OnPointerLeft(point);
     }
 
     /// <summary>

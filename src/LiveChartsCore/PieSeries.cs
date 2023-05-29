@@ -461,27 +461,27 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _fill, _stroke, DataLabelsPaint, hoverPaint };
+        return new[] { _fill, _stroke, DataLabelsPaint };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.WhenPointerEnters(ChartPoint)"/>
-    protected override void WhenPointerEnters(ChartPoint point)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
     {
-        base.WhenPointerEnters(point);
-
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null || visual.MainGeometry is null) return;
         visual.PushOut = (float)HoverPushout;
+
+        base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.WhenPointerLeaves(ChartPoint)"/>
-    protected override void WhenPointerLeaves(ChartPoint point)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
     {
-        base.WhenPointerLeaves(point);
-
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null || visual.MainGeometry is null) return;
         visual.PushOut = (float)Pushout;
+
+        base.OnPointerLeft(point);
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
