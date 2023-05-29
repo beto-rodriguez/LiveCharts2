@@ -256,7 +256,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                         v.Bezier.Yj = p;
                     }
 
-                    data.TargetPoint.Context.Visual = v;
+                    data.TargetPoint.Context.Visual = v.Geometry;
+                    data.TargetPoint.Context.AdditionalVisuals = v;
                     OnPointCreated(data.TargetPoint);
                 }
 
@@ -394,9 +395,9 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
-        var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)point.Context.Visual;
-        if (visual is null || visual.Geometry is null) return;
-        visual.Geometry.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
 
         base.OnPointerEnter(point);
     }
@@ -404,9 +405,9 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
-        var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)point.Context.Visual;
-        if (visual is null || visual.Geometry is null) return;
-        visual.Geometry.ScaleTransform = new LvcPoint(1f, 1f);
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1f, 1f);
 
         base.OnPointerLeft(point);
     }
@@ -587,7 +588,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not BezierVisualPoint<TDrawingContext, TVisual> visual)
+        if (chartPoint.Context.AdditionalVisuals is not BezierVisualPoint<TDrawingContext, TVisual> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
