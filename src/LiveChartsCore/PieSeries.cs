@@ -470,6 +470,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null || visual.MainGeometry is null) return;
         visual.PushOut = (float)HoverPushout;
+        visual.Opacity = 0.8f;
 
         base.OnPointerEnter(point);
     }
@@ -480,6 +481,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null || visual.MainGeometry is null) return;
         visual.PushOut = (float)Pushout;
+        visual.Opacity = 1;
 
         base.OnPointerLeft(point);
     }
