@@ -24,6 +24,7 @@ using System;
 using System.Linq;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -122,5 +123,109 @@ public class FinancialSeriesTest
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;
         }
+    }
+
+    [TestMethod]
+    public void ShouldPlaceToolTipsCorrectly()
+    {
+        var sutSeries = new CandlesticksSeries<FinancialPointI>
+        {
+            Values = new FinancialPointI[]
+            {
+                new(1,0.75,0.25,0),
+                new(2,1.75,1.25,1),
+                new(3,2.75,2.25,2),
+                new(4,3.75,3.25,3),
+                new(5,4.75,4.25,4),
+            },
+            MaxBarWidth = 1000,
+            PrimaryTooltipLabelFormatter = x => x.PrimaryValue.ToString(),
+            DataPadding = new Drawing.LvcPoint(0, 0)
+        };
+
+        var tooltip = new SKDefaultTooltip();
+
+        var chart = new SKCartesianChart
+        {
+            Width = 300,
+            Height = 300,
+            Tooltip = tooltip,
+            TooltipPosition = TooltipPosition.Top,
+            Series = new[] { sutSeries },
+            XAxes = new[] { new Axis { IsVisible = false } },
+            YAxes = new[] { new Axis { IsVisible = false } }
+        };
+
+        chart.Core._isPointerIn = true;
+        chart.Core._isToolTipOpen = true;
+        chart.Core._pointerPosition = new(150, 150);
+
+        chart.TooltipPosition = TooltipPosition.Top;
+        _ = chart.GetImage();
+        var tp = tooltip._panel.BackgroundGeometry;
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - (150 - tp.Height - 1 / 5d * 300 * 0.5d)) < 0.1,
+            "Tool tip on top failed");
+
+        chart.TooltipPosition = TooltipPosition.Bottom;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - (150 + 1 / 5d * 300 * 0.5d)) < 0.1,
+            "Tool tip on bottom failed");
+
+        chart.TooltipPosition = TooltipPosition.Left;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X - (150 - tp.Width - 1 / 5d * 300 * 0.5d)) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
+            "Tool tip on left failed");
+
+        chart.TooltipPosition = TooltipPosition.Right;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X - 150 - 1 / 5d * 300 * 0.5d) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
+            "Tool tip on right failed");
+
+        chart.TooltipPosition = TooltipPosition.Center;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
+            "Tool tip on center failed");
+
+        chart.TooltipPosition = TooltipPosition.Auto;
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
+            Math.Abs(tp.Y - (150 - tp.Height - 1 / 5d * 300 * 0.5d)) < 0.1 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
+            "Tool tip on top failed [AUTO]");
+
+        chart.Core._pointerPosition = new(300 * 4 / 5d - 10, 300 * 1 / 5d + 10);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X + tp.Width * 0.5f - 1 / 5d * 300 - 150) < 0.1 &&
+            Math.Abs(tp.Y - 300 * 1/5d) < 0.1 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
+            "Tool tip on bottom failed [AUTO]");
+
+        chart.Core._pointerPosition = new(299, 150);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X - (300 - 300 * (1 / 5d) * 0.5 - tp.Width)) < 0.0001 &&
+            Math.Abs(tp.Y - -tp.Height * 0.5f) < 0.1 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
+            "Tool tip on left failed [AUTO]");
+
+        chart.Core._pointerPosition = new(1, 150);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            Math.Abs(tp.X - 300 * (1 / 5d) * 0.5) < 0.0001 &&
+            Math.Abs(tp.Y - (300 - tp.Height * 0.5f - 300 * (1 / 5d))) < 0.1 &&
+            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
+            "Tool tip on left failed [AUTO]");
     }
 }

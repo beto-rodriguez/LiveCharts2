@@ -119,6 +119,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
         var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwm = 0.5f * uw;
 
+        var tp = chart.TooltipPosition;
+
         if (uw > MaxBarWidth)
         {
             uw = (float)MaxBarWidth;
@@ -252,10 +254,21 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
 
-            _ = ha
-                .SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high))
-                .CenterXToolTip()
-                .StartYToolTip();
+            _ = ha.SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
+
+            switch (tp)
+            {
+                case TooltipPosition.Hidden:
+                    break;
+                case TooltipPosition.Auto:
+                case TooltipPosition.Top: _ = ha.CenterXToolTip().StartYToolTip(); break;
+                case TooltipPosition.Bottom: _ = ha.CenterXToolTip().EndYToolTip(); break;
+                case TooltipPosition.Left: _ = ha.StartXToolTip().CenterYToolTip(); break;
+                case TooltipPosition.Right: _ = ha.EndXToolTip().CenterYToolTip(); break;
+                case TooltipPosition.Center: _ = ha.CenterXToolTip().CenterYToolTip(); break;
+                default:
+                    break;
+            }
 
             pointsCleanup.Clean(point);
 
