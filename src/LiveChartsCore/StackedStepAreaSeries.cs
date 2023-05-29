@@ -33,11 +33,9 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
-/// <seealso cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}" />
-public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-        where TVisualPoint : StepLineVisualPoint<TDrawingContext, TVisual>, new()
+/// <seealso cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}" />
+public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+    : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()

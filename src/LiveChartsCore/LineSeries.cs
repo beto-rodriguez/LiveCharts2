@@ -616,7 +616,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         var label = (TLabel?)point.Context.Label;
         if (label is null) return;
 
-        label.TextSize = 1;
         label.RemoveOnCompleted = true;
     }
 
