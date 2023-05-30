@@ -73,7 +73,7 @@ public class PolarLineSeriesTest
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
         // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
+        Assert.IsTrue(typedUnit.Visual.Width == 10 && typedUnit.Visual.Height == 10);
 
         foreach (var sutPoint in toCompareGuys)
         {

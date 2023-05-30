@@ -267,7 +267,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 var x = cp.X;
                 var y = cp.Y;
 
-                var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
+                var visual = (TVisualPoint?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {
@@ -294,7 +294,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     v.Bezier.Xj = (float)x2b;
                     v.Bezier.Yj = y2b;
 
-                    data.TargetPoint.Context.Visual = v;
+                    data.TargetPoint.Context.Visual = v.Geometry;
+                    data.TargetPoint.Context.AdditionalVisuals = v;
                     OnPointCreated(data.TargetPoint);
                 }
 
@@ -601,7 +602,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not TVisualPoint visual)
+        if (chartPoint.Context.AdditionalVisuals is not TVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
@@ -756,9 +757,9 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
-        var visual = (TVisualPoint?)point.Context.Visual;
-        if (visual is null || visual.Geometry is null) return;
-        visual.Geometry.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
 
         base.OnPointerEnter(point);
     }
@@ -766,9 +767,9 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
-        var visual = (TVisualPoint?)point.Context.Visual;
-        if (visual is null || visual.Geometry is null) return;
-        visual.Geometry.ScaleTransform = new LvcPoint(1f, 1f);
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1f, 1f);
 
         base.OnPointerLeft(point);
     }

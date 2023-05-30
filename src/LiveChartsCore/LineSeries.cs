@@ -234,7 +234,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                         ? stacker.GetStack(data.TargetPoint).Start
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
-                var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)data.TargetPoint.Context.Visual;
+                var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {

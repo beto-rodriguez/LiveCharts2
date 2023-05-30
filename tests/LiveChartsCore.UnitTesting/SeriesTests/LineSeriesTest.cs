@@ -22,8 +22,11 @@
 
 using System;
 using System.Linq;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -62,7 +65,7 @@ public class LineSeriesTest
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
         // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
+        Assert.IsTrue(typedUnit.Visual.Width == 10 && typedUnit.Visual.Height == 10);
 
         var previous = typedUnit;
         float? previousX = null;
@@ -71,8 +74,13 @@ public class LineSeriesTest
         foreach (var sutPoint in toCompareGuys)
         {
             // test x
-            var currentDeltaX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            var currentDeltaAreaX = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
+            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
+
+            var previousBezier = ((BezierVisualPoint<SkiaSharpDrawingContext, CircleGeometry>?)previous.Context.AdditionalVisuals)?.Bezier;
+            var sutBezier = ((BezierVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)sutPoint.Context.AdditionalVisuals).Bezier;
+
+            var currentDeltaAreaX = previousBezier.Xj - sutBezier.Xj;
+
             Assert.IsTrue(
                 previousX is null
                 ||
@@ -85,12 +93,12 @@ public class LineSeriesTest
             // test y
             var p = 1f - sutPoint.PrimaryValue / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Bezier.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutBezier.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
 
-            previousX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            previousXArea = previous.Visual.Bezier.Xj - sutPoint.Visual.Bezier.Xj;
+            previousX = previous.Visual.X - sutPoint.Visual.X;
+            previousXArea = previousBezier.Xj - sutBezier.Xj;
             previous = sutPoint;
         }
     }
@@ -102,7 +110,7 @@ public class LineSeriesTest
         {
             GeometrySize = 0,
             Values = new double[] { 1, 2, 3, 4, 5 },
-            DataPadding = new Drawing.LvcPoint(0, 0)
+            DataPadding = new LvcPoint(0, 0)
         };
 
         var tooltip = new SKDefaultTooltip();

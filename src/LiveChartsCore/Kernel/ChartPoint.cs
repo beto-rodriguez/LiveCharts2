@@ -216,6 +216,7 @@ public class ChartPoint<TModel, TVisual, TLabel> : ChartPoint
         Context.Visual = point.Context.Visual;
         Context.Label = point.Context.Label;
         Context.HoverArea = point.Context.HoverArea;
+        Context.AdditionalVisuals = point.Context.AdditionalVisuals;
     }
 
     /// <summary>

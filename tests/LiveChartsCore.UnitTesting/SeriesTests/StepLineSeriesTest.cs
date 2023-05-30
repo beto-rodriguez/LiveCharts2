@@ -22,8 +22,11 @@
 
 using System;
 using System.Linq;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -62,7 +65,7 @@ public class StepLineSeriesTest
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
         // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Geometry.Width == 10 && typedUnit.Visual.Geometry.Height == 10);
+        Assert.IsTrue(typedUnit.Visual.Width == 10 && typedUnit.Visual.Height == 10);
 
         var previous = typedUnit;
         float? previousX = null;
@@ -70,9 +73,12 @@ public class StepLineSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
+            var previousSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>?)previous.Context.AdditionalVisuals)?.StepSegment;
+            var sutSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
+
             // test x
-            var currentDeltaX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            var currentDeltaAreaX = previous.Visual.StepSegment.Xj - sutPoint.Visual.StepSegment.Xj;
+            var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
+            var currentDeltaAreaX = previousSegment.Xj - sutSegment.Xj;
             Assert.IsTrue(
                 previousX is null
                 ||
@@ -85,12 +91,12 @@ public class StepLineSeriesTest
             // test y
             var p = 1f - sutPoint.PrimaryValue / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Geometry.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.StepSegment.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutSegment.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
 
-            previousX = previous.Visual.Geometry.X - sutPoint.Visual.Geometry.X;
-            previousXArea = previous.Visual.StepSegment.Xj - sutPoint.Visual.StepSegment.Xj;
+            previousX = previous.Visual.X - sutPoint.Visual.X;
+            previousXArea = previousSegment.Xj - sutSegment.Xj;
             previous = sutPoint;
         }
     }

@@ -199,7 +199,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 var s = 0d;
                 if (stacker is not null) s = stacker.GetStack(point).Start;
 
-                var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.Visual;
+                var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
                 var dp = point.PrimaryValue + s - previousPrimary;
                 var ds = point.SecondaryValue - previousSecondary;
 
