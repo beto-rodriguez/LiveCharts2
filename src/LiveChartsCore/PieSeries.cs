@@ -506,24 +506,15 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         if (IsFillSeries) return;
         var chart = chartPoint.Context.Chart;
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
 
-        // Remove this if you see it again!
-        //if ((SeriesProperties & SeriesProperties.Gauge) == 0)
-        //    _ = visual
-        //        .TransitionateProperties(
-        //            nameof(visual.CenterX),
-        //            nameof(visual.CenterY),
-        //            nameof(visual.X),
-        //            nameof(visual.Y),
-        //            nameof(visual.InnerRadius),
-        //            nameof(visual.Width),
-        //            nameof(visual.Height))
-        //        .WithAnimation(animation =>
-        //            animation
-        //                .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-        //                .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-        //        .CompleteCurrentTransitions();
+        if ((SeriesProperties & SeriesProperties.Gauge) == 0)
+            visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        else
+            visual.Animate(
+                EasingFunction ?? chart.EasingFunction,
+                AnimationsSpeed ?? chart.AnimationsSpeed,
+                nameof(visual.StartAngle),
+                nameof(visual.SweepAngle));
     }
 
     /// <summary>
