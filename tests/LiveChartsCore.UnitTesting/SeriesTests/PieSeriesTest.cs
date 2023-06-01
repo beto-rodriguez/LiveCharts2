@@ -106,7 +106,6 @@ public class PieSeriesTest
         chart.Core._pointerPosition = new(150 + 10, 150 + 10);
 
         _ = chart.GetImage();
-        chart.SaveImage("pie.png");
         var tp = tooltip._panel.BackgroundGeometry;
         Assert.IsTrue(
             tp.X - 150 > 0 &&
@@ -115,7 +114,6 @@ public class PieSeriesTest
 
         chart.Core._pointerPosition = new(150 - 10, 150 + 10);
         _ = chart.GetImage();
-        chart.SaveImage("pie.png");
         Assert.IsTrue(
             tp.X - 150 < 0 &&
             tp.Y + tp.Height - 150 > 0,
@@ -123,7 +121,6 @@ public class PieSeriesTest
 
         chart.Core._pointerPosition = new(150 - 10, 150 - 10);
         _ = chart.GetImage();
-        chart.SaveImage("pie.png");
         Assert.IsTrue(
             tp.X - 150 < 0 &&
             tp.Y + tp.Height - 150 < 0,
@@ -131,7 +128,6 @@ public class PieSeriesTest
 
         chart.Core._pointerPosition = new(150 + 10, 150 - 10);
         _ = chart.GetImage();
-        chart.SaveImage("pie.png");
         Assert.IsTrue(
             tp.X - 150 > 0 &&
             tp.Y + tp.Height - 150 < 0,
