@@ -51,11 +51,6 @@ public interface ISeries
     bool PaintsChanged { get; set; }
 
     /// <summary>
-    /// Gets the active pints.
-    /// </summary>
-    HashSet<ChartPoint> ActivePoints { get; }
-
-    /// <summary>
     /// Gets whether the series requires to find the closest point when the pointer goes down.
     /// </summary>
     bool RequiresFindClosestOnPointerDown { get; }

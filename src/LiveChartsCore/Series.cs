@@ -76,9 +76,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected const float MAX_MINIATURE_STROKE_WIDTH = 3.5f;
 
     /// <summary>
-    /// The ever fetched
+    /// The ever fetched points.
     /// </summary>
-    protected HashSet<ChartPoint> everFetched = new();
+    protected internal HashSet<ChartPoint> everFetched = new();
 
     /// <summary>
     /// Indicates whether the custom measure handler was requested already.
@@ -120,9 +120,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     bool ISeries.PaintsChanged { get; set; }
-
-    /// <inheritdoc cref="ISeries.ActivePoints" />
-    public HashSet<ChartPoint> ActivePoints => everFetched;
 
     /// <inheritdoc cref="ISeries.SeriesProperties"/>
     public SeriesProperties SeriesProperties { get; }

@@ -598,7 +598,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)point.Context.Visual;
+        var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
