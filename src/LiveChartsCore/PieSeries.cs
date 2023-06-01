@@ -343,6 +343,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             if (point.Context.HoverArea is not SemicircleHoverArea ha)
                 point.Context.HoverArea = ha = new SemicircleHoverArea();
+
             _ = ha.SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
 
             pointsCleanup.Clean(point);

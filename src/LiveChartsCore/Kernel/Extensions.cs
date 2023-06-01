@@ -59,7 +59,7 @@ public static class Extensions
     {
         return chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
             ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
-            : _getPieTooltipLocation(foundPoints, tooltipSize);
+            : _getPieTooltipLocation(foundPoints, chart, tooltipSize);
     }
 
     private static LvcPoint _getCartesianTooltipLocation<TDrawingContext>(
@@ -152,8 +152,9 @@ public static class Extensions
 
         return location;
     }
-    private static LvcPoint _getPieTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, LvcSize tooltipSize)
+    private static LvcPoint _getPieTooltipLocation<TDrawingContext>(
+        IEnumerable<ChartPoint> foundPoints, Chart<TDrawingContext> chart, LvcSize tooltipSize)
+            where TDrawingContext : DrawingContext
     {
         var placementContext = new TooltipPlacementContext(TooltipPosition.Auto);
 
@@ -164,9 +165,22 @@ public static class Extensions
             break; // we only care about the first one.
         }
 
-        return new LvcPoint(
+        chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+
+        var p = new LvcPoint(
             placementContext.PieX - tooltipSize.Width * 0.5f,
-            placementContext.PieY - tooltipSize.Height * 0.5f);
+            placementContext.PieY - tooltipSize.Height);
+
+        if (p.Y < 0)
+        {
+            chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+
+            p = new LvcPoint(
+                placementContext.PieX - tooltipSize.Width * 0.5f,
+                placementContext.PieY);
+        }
+
+        return p;
     }
 
     /// <summary>

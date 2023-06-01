@@ -103,15 +103,8 @@ public class SemicircleHoverArea : HoverArea
     /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
     public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
     {
-        var startAngle = StartAngle;
-        startAngle %= 360;
-        if (startAngle < 0) startAngle += 360;
-
-        // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
-        // UPDATE: this should not be necessary anymore? based on: https://github.com/beto-rodriguez/LiveCharts2/issues/623
-        var endAngle = EndAngle - 0.01;
-        endAngle %= 360;
-        if (endAngle < 0) endAngle += 360;
+        var startAngle = GetActualStartAngle();
+        var endAngle = GetActualEndAngle();
 
         var dx = CenterX - pointerLocation.X;
         var dy = CenterY - pointerLocation.Y;
@@ -143,10 +136,34 @@ public class SemicircleHoverArea : HoverArea
     }
 
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext, LvcSize)"/>
-    public override void SuggestTooltipPlacement(TooltipPlacementContext context, LvcSize tooltipSize)
+    public override void SuggestTooltipPlacement(TooltipPlacementContext ctx, LvcSize tooltipSize)
     {
-        var angle = (StartAngle + EndAngle) / 2d;
-        context.PieX = CenterX + (float)Math.Cos(angle * (Math.PI / 180)) * Radius;
-        context.PieY = CenterY + (float)Math.Sin(angle * (Math.PI / 180)) * Radius;
+        var startAngle = GetActualStartAngle();
+        var endAngle = GetActualEndAngle();
+
+        var angle = (startAngle + endAngle) / 2d;
+
+        var r = Radius * 0.95f;
+
+        ctx.PieX = CenterX + (float)Math.Cos(angle * (Math.PI / 180)) * r;
+        ctx.PieY = CenterY + (float)Math.Sin(angle * (Math.PI / 180)) * r;
+    }
+
+    private float GetActualStartAngle()
+    {
+        var startAngle = StartAngle;
+        startAngle %= 360;
+        if (startAngle < 0) startAngle += 360;
+        return startAngle;
+    }
+
+    private float GetActualEndAngle()
+    {
+        // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
+        // UPDATE: this should not be necessary anymore? based on: https://github.com/beto-rodriguez/LiveCharts2/issues/623
+        var endAngle = EndAngle - 0.01f;
+        endAngle %= 360;
+        if (endAngle < 0) endAngle += 360;
+        return endAngle;
     }
 }
