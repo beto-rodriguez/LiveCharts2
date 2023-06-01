@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Linq;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
@@ -38,46 +39,49 @@ public class PolarLineSeriesTest
         {
             Values = new[]
             {
-                new ObservablePolarPoint(0, 10),
-                new ObservablePolarPoint(45, 15),
-                new ObservablePolarPoint(90, 20),
-                new ObservablePolarPoint(135, 25),
-                new ObservablePolarPoint(180, 30),
-                new ObservablePolarPoint(225, 35),
-                new ObservablePolarPoint(270, 40),
-                new ObservablePolarPoint(315, 45),
-                new ObservablePolarPoint(360, 50),
+                new ObservablePolarPoint(360 * 1 / 10d, 1),
+                new ObservablePolarPoint(360 * 2 / 10d, 2),
+                new ObservablePolarPoint(360 * 3 / 10d, 3),
+                new ObservablePolarPoint(360 * 4 / 10d, 4),
+                new ObservablePolarPoint(360 * 5 / 10d, 5),
+                new ObservablePolarPoint(360 * 6 / 10d, 6),
+                new ObservablePolarPoint(360 * 7 / 10d, 7),
+                new ObservablePolarPoint(360 * 8 / 10d, 8),
+                new ObservablePolarPoint(360 * 9 / 10d, 9),
+                new ObservablePolarPoint(360 * 10 / 10d, 10)
             },
-            GeometrySize = 10,
+            GeometrySize = 0,
             IsClosed = false,
             Fill = null
         };
 
         var chart = new SKPolarChart
         {
-            Width = 1000,
-            Height = 1000,
+            Width = 300,
+            Height = 300,
             Series = new[] { sutSeries },
-            AngleAxes = new[] { new PolarAxis { MinLimit = 0, MaxLimit = 360 } }
+            AngleAxes = new[] { new PolarAxis { MinLimit = 0, MaxLimit = 360, IsVisible = false } },
+            RadiusAxes = new[] { new PolarAxis { MinLimit = 0, MaxLimit = 10, IsVisible = false } }
         };
 
-        _ = chart.GetImage();
-        // chart.SaveImage("test.png"); // use this method to see the actual tested image
+        //_ = chart.GetImage();
+        chart.SaveImage("xxx.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
 
         var unit = points.First();
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
+        var tuv = typedUnit.Visual;
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
-        // ensure the unit has valid dimensions
-        Assert.IsTrue(typedUnit.Visual.Width == 10 && typedUnit.Visual.Height == 10);
+        var uHyp = Math.Sqrt(Math.Pow(tuv.X - 150, 2) + Math.Pow(tuv.Y - 150, 2));
 
         foreach (var sutPoint in toCompareGuys)
         {
-            // ToDo
+            var sutHyp = Math.Sqrt(Math.Pow(sutPoint.Visual.X - 150, 2) + Math.Pow(sutPoint.Visual.Y - 150, 2));
+            Assert.IsTrue(Math.Abs(uHyp * (1 + sutPoint.Context.Entity.EntityIndex) - sutHyp) < 0.0001);
         }
     }
 }
