@@ -616,7 +616,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <param name="scaler">The scaler.</param>
     protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, PolarScaler scaler)
     {
-        var visual = (TVisualPoint?)point.Context.Visual;
+        var visual = (TVisualPoint?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 

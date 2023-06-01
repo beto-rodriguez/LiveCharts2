@@ -100,61 +100,20 @@ public class GeneralSeriesTests
         {
             Width = 1000,
             Height = 1000,
-            Series = new ISeries[]
-            {
-                new PolarLineSeries<ObservablePolarPoint>
-                {
-                    Values = new[]
-                    {
-                        new ObservablePolarPoint(0, 10),
-                        new ObservablePolarPoint(45, 15),
-                        new ObservablePolarPoint(90, 20),
-                        new ObservablePolarPoint(135, 25),
-                        new ObservablePolarPoint(180, 30),
-                        new ObservablePolarPoint(225, 35),
-                        new ObservablePolarPoint(270, 40),
-                        new ObservablePolarPoint(315, 45),
-                        new ObservablePolarPoint(360, 50),
-                    },
-                    IsClosed = false,
-                    Fill = null
-                }
-            },
-            AngleAxes = new[]
-            {
-                new PolarAxis
-                {
-                    // force the axis to always show 360 degrees.
-                    MinLimit = 0,
-                    MaxLimit = 360,
-                    Labeler = angle => $"{angle}°",
-                    ForceStepToMin = true,
-                    MinStep = 30
-                }
-            }
-            //Series = new[] { series },
-            //AngleAxes = new[] { new PolarAxis { MinLimit = 0, MaxLimit = 10 } }
+            Series = new[] { series },
+            RadiusAxes = new[] { new PolarAxis { MinLimit = 0, MaxLimit = 10 } }
         };
 
-        chart.SaveImage("polar1.png");
         _ = chart.GetImage();
         Assert.IsTrue(series.everFetched.Count == 1, $"Basic case for {series.Name}");
 
         values.Add(2);
-        values.Add(3);
-        values.Add(4);
-        values.Add(5);
-        values.Add(6);
-        values.Add(7);
-        values.Add(8);
         _ = chart.GetImage();
-        chart.SaveImage("polar2.png");
         var totalY = series.everFetched.Sum(x => series.ConvertToTypedChartPoint(x).Visual.Y);
         Assert.IsTrue(series.everFetched.Count == 2, $"Add case for {series.Name}");
 
         values[1] = 3;
         _ = chart.GetImage();
-        chart.SaveImage("polar3.png");
         // there are still 2 elements, but the shapes must have different position in the canvas
         // the size is not tested here, there is another test for that
         var newTotalY = series.everFetched.Sum(x => series.ConvertToTypedChartPoint(x).Visual.Y);
