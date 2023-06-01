@@ -250,6 +250,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         CollectVisuals();
 
+        if (_isToolTipOpen) DrawToolTip();
         InvokeOnUpdateStarted();
         IsFirstDraw = false;
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
