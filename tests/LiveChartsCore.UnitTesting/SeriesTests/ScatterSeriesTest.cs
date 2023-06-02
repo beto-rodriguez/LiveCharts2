@@ -122,7 +122,8 @@ public class ScatterSeriesTest
         var sutSeries = new ScatterSeries<double>
         {
             Values = new double[] { 1, 2, 3, 4, 5 },
-            DataPadding = new Drawing.LvcPoint(0, 0)
+            DataPadding = new Drawing.LvcPoint(0, 0),
+            YToolTipLabelFormatter = x => $"{x.PrimaryValue}{Environment.NewLine}{x.PrimaryValue}{Environment.NewLine}",
         };
 
         var tooltip = new SKDefaultTooltip();
