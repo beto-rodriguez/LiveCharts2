@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
@@ -59,11 +60,13 @@ public class SemicircleHoverArea : HoverArea
     public float EndAngle { get; set; }
 
     /// <summary>
+    /// Gets or sets the inner radius.
+    /// </summary>
+    public float InnerRadius { get; set; }
+
+    /// <summary>
     /// Gets or sets the radius.
     /// </summary>
-    /// <value>
-    /// The radius.
-    /// </value>
     public float Radius { get; set; }
 
     /// <summary>
@@ -73,15 +76,17 @@ public class SemicircleHoverArea : HoverArea
     /// <param name="centerY">The center y.</param>
     /// <param name="startAngle">The start angle.</param>
     /// <param name="endAngle">The end angle.</param>
+    /// <param name="innerRadius">The inner radius.</param>
     /// <param name="radius">The radius.</param>
     /// <returns></returns>
     public SemicircleHoverArea SetDimensions(
-        float centerX, float centerY, float startAngle, float endAngle, float radius)
+        float centerX, float centerY, float startAngle, float endAngle, float innerRadius, float radius)
     {
         CenterX = centerX;
         CenterY = centerY;
         StartAngle = startAngle;
         EndAngle = endAngle;
+        InnerRadius = innerRadius;
         Radius = radius;
         return this;
     }
@@ -120,7 +125,7 @@ public class SemicircleHoverArea : HoverArea
             return
                 startAngle <= beta &&
                 endAngle >= beta &&
-                r < Radius;
+                r >= InnerRadius && r <= Radius;
         }
 
         // angles are normalized (from 0 to 360)
@@ -132,21 +137,27 @@ public class SemicircleHoverArea : HoverArea
         return
             startAngle <= beta &&
             endAngle + 360 >= beta &&
-            r < Radius;
+            r >= InnerRadius && r <= Radius;
     }
 
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext, LvcSize)"/>
     public override void SuggestTooltipPlacement(TooltipPlacementContext ctx, LvcSize tooltipSize)
     {
+        const double toRadians = Math.PI / 180;
+
         var startAngle = GetActualStartAngle();
         var endAngle = GetActualEndAngle();
 
         var angle = (startAngle + endAngle) / 2d;
 
-        var r = Radius * 0.95f;
+        var r = Radius * 0.5f * 0.95f;
 
-        ctx.PieX = CenterX + (float)Math.Cos(angle * (Math.PI / 180)) * r;
-        ctx.PieY = CenterY + (float)Math.Sin(angle * (Math.PI / 180)) * r;
+        // place it according to the furthest point to the center.
+        if (r <= ctx.PieMostR) return;
+
+        ctx.PieMostR = r;
+        ctx.PieX = CenterX + (float)Math.Cos(angle * toRadians) * r;
+        ctx.PieY = CenterY + (float)Math.Sin(angle * toRadians) * r;
     }
 
     private float GetActualStartAngle()

@@ -116,4 +116,12 @@ public class TooltipPlacementContext
     /// The pie y.
     /// </value>
     public float PieY { get; set; } = 0;
+
+    /// <summary>
+    /// Gets or sets the pie most r, the longest known radius.
+    /// </summary>
+    /// <value>
+    /// The pie most r.
+    /// </value>
+    public float PieMostR { get; set; } = 0;
 }

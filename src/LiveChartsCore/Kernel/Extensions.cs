@@ -162,7 +162,6 @@ public static class Extensions
         {
             if (foundPoint.Context.HoverArea is null) continue;
             foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext, tooltipSize);
-            break; // we only care about the first one.
         }
 
         chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;

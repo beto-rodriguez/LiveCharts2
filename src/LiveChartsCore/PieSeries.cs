@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -320,16 +321,16 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             stackedInnerRadius += relativeInnerRadius;
 
             var md = minDimension;
-            var w = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
+            var stackedOuterRadius = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
 
-            var x = (drawMarginSize.Width - w) * 0.5f;
+            var x = (drawMarginSize.Width - stackedOuterRadius) * 0.5f;
 
             dougnutGeometry.CenterX = cx;
             dougnutGeometry.CenterY = cy;
             dougnutGeometry.X = drawLocation.X + x;
-            dougnutGeometry.Y = drawLocation.Y + (drawMarginSize.Height - w) * 0.5f;
-            dougnutGeometry.Width = w;
-            dougnutGeometry.Height = w;
+            dougnutGeometry.Y = drawLocation.Y + (drawMarginSize.Height - stackedOuterRadius) * 0.5f;
+            dougnutGeometry.Width = stackedOuterRadius;
+            dougnutGeometry.Height = stackedOuterRadius;
             dougnutGeometry.InnerRadius = stackedInnerRadius;
             dougnutGeometry.PushOut = pushout;
             dougnutGeometry.StartAngle = (float)(start + initialRotation);
@@ -344,7 +345,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             if (point.Context.HoverArea is not SemicircleHoverArea ha)
                 point.Context.HoverArea = ha = new SemicircleHoverArea();
 
-            _ = ha.SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
+            _ = ha.SetDimensions(
+                cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep),
+                stackedInnerRadius, stackedOuterRadius);
 
             pointsCleanup.Clean(point);
 
@@ -352,7 +355,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             {
                 var label = (TLabel?)point.Context.Label;
 
-                // middleAngle = startAngle + (sweepAngle/2);
                 var middleAngle = (float)(start + initialRotation + sweep * 0.5);
 
                 var actualRotation = r +
@@ -411,7 +413,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 }
 
                 var labelPosition = GetLabelPolarPosition(
-                    cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
+                    cx, cy, ((stackedOuterRadius + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
                     stackedInnerRadius, (float)(start + initialRotation), (float)sweep,
                     label.Measure(DataLabelsPaint), DataLabelsPosition);
 
@@ -421,7 +423,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             OnPointMeasured(point);
 
-            stackedInnerRadius = (w + relativeOuterRadius * 2) * 0.5f;
+            stackedInnerRadius = (stackedOuterRadius + relativeOuterRadius * 2) * 0.5f;
             i++;
         }
 
