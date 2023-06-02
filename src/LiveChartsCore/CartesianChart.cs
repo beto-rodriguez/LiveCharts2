@@ -834,6 +834,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         IsZoomingOrPanning = false;
         InvokeOnUpdateStarted();
 
+        if (_isToolTipOpen) DrawToolTip();
         IsFirstDraw = false;
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
         PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();

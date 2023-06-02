@@ -20,14 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
-namespace LiveChartsCore.SkiaSharpView.Drawing;
+namespace LiveChartsCore.Measure;
 
 /// <summary>
-/// Defines a bezier point.
+/// Defines the pop up placement.
 /// </summary>
-/// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-public class BezierPoint<TGeometry> : BezierVisualPoint<SkiaSharpDrawingContext, TGeometry>
-    where TGeometry : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-{ }
+public enum PopUpPlacement
+{
+    /// <summary>
+    /// Places PopUp at top.
+    /// </summary>
+    Top,
+    /// <summary>
+    /// Places PopUp at bottom.
+    /// </summary>
+    Bottom,
+    /// <summary>
+    /// Places PopUp at left.
+    /// </summary>
+    Left,
+    /// <summary>
+    /// Places PopUp at right.
+    /// </summary>
+    Right
+}

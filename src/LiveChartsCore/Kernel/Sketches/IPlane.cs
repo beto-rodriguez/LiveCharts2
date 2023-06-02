@@ -169,12 +169,6 @@ public interface IPlane
     IList<string>? Labels { get; set; }
 
     /// <summary>
-    /// Gets the actual labeler function, if <see cref="Labels"/> are not null, the labels collection will be used otherwise the <see cref="Labeler"/> function.
-    /// </summary>
-    /// <returns></returns>
-    Func<double, string> GetActualLabeler();
-
-    /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
     /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
     /// </summary>

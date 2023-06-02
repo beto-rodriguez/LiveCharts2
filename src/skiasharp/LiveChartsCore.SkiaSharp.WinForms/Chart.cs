@@ -365,7 +365,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <param name="e"></param>
     protected virtual void Chart_MouseLeave(object? sender, EventArgs e)
     {
-        Tooltip?.Hide();
         core?.InvokePointerLeft();
     }
 

@@ -597,7 +597,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
     private void OnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        Tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

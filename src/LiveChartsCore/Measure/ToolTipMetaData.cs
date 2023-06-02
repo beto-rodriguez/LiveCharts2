@@ -20,14 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
-namespace LiveChartsCore.SkiaSharpView.Drawing;
+namespace LiveChartsCore.Measure;
 
 /// <summary>
-/// Defines a step line point.
+/// Defines the tool tip meta data class.
 /// </summary>
-/// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-public class StepPoint<TGeometry> : StepLineVisualPoint<SkiaSharpDrawingContext, TGeometry>
-    where TGeometry : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-{ }
+public class ToolTipMetaData
+{
+    /// <summary>
+    /// Gets or sets the tool tip placement.
+    /// </summary>
+    public PopUpPlacement ToolTipPlacement { get; set; } = new();
+}

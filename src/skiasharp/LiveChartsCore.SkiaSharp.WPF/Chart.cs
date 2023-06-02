@@ -551,7 +551,6 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     private void OnMouseLeave(object sender, MouseEventArgs e)
     {
-        Tooltip?.Hide();
         core?.InvokePointerLeft();
     }
 

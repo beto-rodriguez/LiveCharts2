@@ -54,7 +54,7 @@ public class CandlesticksSeries<TModel> : CandlesticksSeries<TModel, Candlestick
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class CandlesticksSeries<TModel, TVisual> : CandlesticksSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, IFinancialVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -74,6 +74,6 @@ public class CandlesticksSeries<TModel, TVisual> : CandlesticksSeries<TModel, TV
 /// The type of the data label of every point.
 /// </typeparam>
 public class CandlesticksSeries<TModel, TVisual, TLabel> : FinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-    where TVisual : class, IFinancialVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

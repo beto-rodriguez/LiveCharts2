@@ -161,14 +161,6 @@ public class ChartPoint
     public StackedValue? StackedValue { get; set; }
 
     /// <summary>
-    /// Gets the point as tooltip string.
-    /// </summary>
-    /// <value>
-    /// As tooltip string.
-    /// </value>
-    public string AsTooltipString => Context.Series.GetTooltipText(this);
-
-    /// <summary>
     /// Gets the point as data label.
     /// </summary>
     /// <value>
@@ -224,6 +216,7 @@ public class ChartPoint<TModel, TVisual, TLabel> : ChartPoint
         Context.Visual = point.Context.Visual;
         Context.Label = point.Context.Label;
         Context.HoverArea = point.Context.HoverArea;
+        Context.AdditionalVisuals = point.Context.AdditionalVisuals;
     }
 
     /// <summary>

@@ -473,7 +473,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
         if (Labels is not null)
         {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
+            labeler = Labelers.BuildNamedLabeler(Labels);
             _minStep = 1;
         }
 
@@ -506,20 +506,6 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
         }
 
         return new LvcSize(0, totalH);
-    }
-
-    /// <inheritdoc cref="IPlane.GetActualLabeler"/>
-    public Func<double, string> GetActualLabeler()
-    {
-        var labeler = Labeler;
-
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
-
-        return labeler;
     }
 
     /// <inheritdoc cref="IPolarAxis.Initialize(PolarAxisOrientation)"/>
@@ -625,5 +611,18 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint };
+    }
+
+    private Func<double, string> GetActualLabeler()
+    {
+        var labeler = Labeler;
+
+        if (Labels is not null)
+        {
+            labeler = Labelers.BuildNamedLabeler(Labels);
+            _minStep = 1;
+        }
+
+        return labeler;
     }
 }

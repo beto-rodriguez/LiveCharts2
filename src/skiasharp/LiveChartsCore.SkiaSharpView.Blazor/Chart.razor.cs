@@ -368,7 +368,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <param name="e"></param>
     protected virtual void OnPointerOut(PointerEventArgs e)
     {
-        Tooltip?.Hide();
         core?.InvokePointerLeft();
     }
 

@@ -695,7 +695,6 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private void OnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        Tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

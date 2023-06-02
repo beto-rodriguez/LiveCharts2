@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -29,46 +30,70 @@ using LiveChartsCore.Kernel.Sketches;
 namespace LiveChartsCore.Defaults;
 
 /// <summary>
-/// Defines a point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
+/// Defines a point with financial data, this point does not use <see cref="DateTime"/> in the X axis, instead it uses the position
+/// of the point the array as the X coordinate,the dates must be specified in the
+/// <see cref="Axis{TDrawingContext, TTextGeometry, TLineGeometry}.Labels"/> property.
 /// </summary>
-/// <seealso cref="INotifyPropertyChanged" />
-public class ObservablePoint : IChartEntity, INotifyPropertyChanged
+public class FinancialPointI : IChartEntity, INotifyPropertyChanged
 {
-    private double? _x;
-    private double? _y;
+    private double _high;
+    private double _open;
+    private double _close;
+    private double _low;
+    private int _entityIndex;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
+    /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
     /// </summary>
-    public ObservablePoint()
+    public FinancialPointI()
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
+    /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
     /// </summary>
-    /// <param name="x">The x coordinate.</param>
-    /// <param name="y">The y coordinate.</param>
-    public ObservablePoint(double? x, double? y)
+    /// <param name="high">The high.</param>
+    /// <param name="open">The open.</param>
+    /// <param name="close">The close.</param>
+    /// <param name="low">The low.</param>
+    public FinancialPointI(double high, double open, double close, double low)
     {
-        X = x;
-        Y = y;
+        High = high;
+        Open = open;
+        Close = close;
+        Low = low;
     }
 
     /// <summary>
-    /// Gets or sets the x coordinate.
+    /// Gets or sets the high.
     /// </summary>
     /// <value>
-    /// The x.
+    /// The high.
     /// </value>
-    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
+    public double High { get => _high; set { _high = value; OnPropertyChanged(); } }
 
     /// <summary>
-    /// Gets or sets the y coordinate.
+    /// Gets or sets the open.
     /// </summary>
     /// <value>
-    /// The y.
+    /// The open.
     /// </value>
-    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double Open { get => _open; set { _open = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the close.
+    /// </summary>
+    /// <value>
+    /// The close.
+    /// </value>
+    public double Close { get => _close; set { _close = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the low.
+    /// </summary>
+    /// <value>
+    /// The low.
+    /// </value>
+    public double Low { get => _low; set { _low = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.EntityIndex"/>
 #if NET5_0_OR_GREATER
@@ -76,7 +101,18 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public int EntityIndex { get; set; }
+    public int EntityIndex
+    {
+        get => _entityIndex;
+        set
+        {
+            // the coordinate of this type depends on the index of element in the data collection.
+            // we update the coordinate if the index changed.
+            if (value == _entityIndex) return;
+            _entityIndex = value;
+            OnCoordinateChanged();
+        }
+    }
 
     /// <inheritdoc cref="IChartEntity.ChartPoints"/>
 #if NET5_0_OR_GREATER
@@ -92,9 +128,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public Coordinate Coordinate => _x is null || _y is null
-        ? Coordinate.Empty
-        : new Coordinate(_x.Value, _y.Value);
+    public Coordinate Coordinate { get; protected set; } = Coordinate.Empty;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -103,11 +137,20 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    /// Called when a property changes.
+    /// Called when a property changed.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        OnCoordinateChanged();
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Called when the coordinate changed.
+    /// </summary>
+    protected virtual void OnCoordinateChanged()
+    {
+        Coordinate = new(_high, EntityIndex, _open, _close, _low);
     }
 }

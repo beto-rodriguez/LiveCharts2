@@ -746,7 +746,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
-        Tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

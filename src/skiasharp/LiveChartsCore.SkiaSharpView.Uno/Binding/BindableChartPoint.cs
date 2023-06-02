@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Data;
 namespace LiveChartsCore.SkiaSharpView.Uno.Binding;
 
 /// <summary>
-/// Defines a biundable chart point.
+/// Defines a bindable chart point.
 /// </summary>
 [Bindable]
 public class BindableChartPoint
@@ -36,7 +36,7 @@ public class BindableChartPoint
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartPoint"/> class.
     /// </summary>
-    /// <param name="chartpoint">The chartpoint.</param>
+    /// <param name="chartpoint">The chart point.</param>
     public BindableChartPoint(ChartPoint chartpoint)
     {
         _chartPoint = chartpoint;
@@ -114,14 +114,6 @@ public class BindableChartPoint
     /// Gets or sets the stacked value, if the point do not belongs to a stacked series then this property is null.
     /// </summary>
     public BindableStackedValue? StackedValue { get; set; }
-
-    /// <summary>
-    /// Gets the point as tooltip string.
-    /// </summary>
-    /// <value>
-    /// As tooltip string.
-    /// </value>
-    public string AsTooltipString => _chartPoint.Context.Series.GetTooltipText(_chartPoint);
 
     /// <summary>
     /// Gets the point as data label.

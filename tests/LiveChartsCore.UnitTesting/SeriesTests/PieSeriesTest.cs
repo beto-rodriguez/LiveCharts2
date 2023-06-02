@@ -22,11 +22,13 @@
 
 using System;
 using System.Linq;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LiveChartsCore.UnitTesting.Series;
+namespace LiveChartsCore.UnitTesting.SeriesTests;
 
 [TestClass]
 public class PieSeriesTest
@@ -83,5 +85,52 @@ public class PieSeriesTest
 
             startAngle += sutPoint.Visual.SweepAngle;
         }
+    }
+
+    [TestMethod]
+    public void ShouldPlaceToolTipsCorrectly()
+    {
+        var tooltip = new SKDefaultTooltip();
+
+        var chart = new SKPieChart
+        {
+            Width = 300,
+            Height = 300,
+            Tooltip = tooltip,
+            TooltipPosition = TooltipPosition.Auto,
+            Series = new double[] { 1, 1, 1, 1 }.AsPieSeries()
+        };
+
+        chart.Core._isPointerIn = true;
+        chart.Core._isToolTipOpen = true;
+        chart.Core._pointerPosition = new(150 + 10, 150 + 10);
+
+        _ = chart.GetImage();
+        var tp = tooltip._panel.BackgroundGeometry;
+        Assert.IsTrue(
+            tp.X - 150 > 0 &&
+            tp.Y + tp.Height - 150 > 0,
+            "Tool tip failed");
+
+        chart.Core._pointerPosition = new(150 - 10, 150 + 10);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X - 150 < 0 &&
+            tp.Y + tp.Height - 150 > 0,
+            "Tool tip failed");
+
+        chart.Core._pointerPosition = new(150 - 10, 150 - 10);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X - 150 < 0 &&
+            tp.Y + tp.Height - 150 < 0,
+            "Tool tip failed");
+
+        chart.Core._pointerPosition = new(150 + 10, 150 - 10);
+        _ = chart.GetImage();
+        Assert.IsTrue(
+            tp.X - 150 > 0 &&
+            tp.Y + tp.Height - 150 < 0,
+            "Tool tip failed");
     }
 }

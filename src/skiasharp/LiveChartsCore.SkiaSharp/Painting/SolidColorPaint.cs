@@ -135,7 +135,7 @@ public class SolidColorPaint : Paint
 
         var baseColor = context.PaintTask.Color;
         context.Paint.Color =
-            new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
+            new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, (byte)(255 * geometry.Opacity));
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />

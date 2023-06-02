@@ -581,7 +581,6 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
     private void Chart_PointerLeave(object? sender, PointerEventArgs e)
     {
-        tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

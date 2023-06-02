@@ -113,9 +113,16 @@ public static class Labelers
     /// </summary>
     /// <param name="labels">The labels.</param>
     /// <returns></returns>
-    public static NamedLabeler BuildNamedLabeler(IList<string> labels)
+    public static Func<double, string> BuildNamedLabeler(IList<string> labels)
     {
-        return new NamedLabeler(labels);
+        return value =>
+        {
+            var index = (int)value;
+
+            return index < 0 || index > labels.Count - 1
+                ? string.Empty
+                : labels[index];
+        };
     }
 
     private static string Log10_6(double value)

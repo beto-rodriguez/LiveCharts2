@@ -38,7 +38,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-    where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<TDrawingContext>, new()
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
@@ -52,7 +52,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
               SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
               SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
-        _isRounded = typeof(IRoundedRectangleChartPoint<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
+        _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
@@ -158,9 +158,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
                 if (_isRounded)
                 {
-                    var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)r;
-                    rounded.Rx = rx;
-                    rounded.Ry = ry;
+                    var rounded = (IRoundedGeometry<TDrawingContext>)r;
+                    rounded.BorderRadius = new LvcPoint(rx, ry);
                 }
 
                 visual = r;
@@ -205,15 +204,16 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
             if (_isRounded)
             {
-                var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)visual;
-                rounded.Rx = rx;
-                rounded.Ry = ry;
+                var rounded = (IRoundedGeometry<TDrawingContext>)visual;
+                rounded.BorderRadius = new LvcPoint(rx, ry);
             }
             visual.RemoveOnCompleted = false;
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw);
+
+            _ = ha.SetDimensions(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw)
+                .CenterXToolTip().StartYToolTip();
 
             pointsCleanup.Clean(point);
 

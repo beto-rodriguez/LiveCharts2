@@ -51,11 +51,6 @@ public interface ISeries
     bool PaintsChanged { get; set; }
 
     /// <summary>
-    /// Gets the active pints.
-    /// </summary>
-    HashSet<ChartPoint> ActivePoints { get; }
-
-    /// <summary>
     /// Gets whether the series requires to find the closest point when the pointer goes down.
     /// </summary>
     bool RequiresFindClosestOnPointerDown { get; }
@@ -158,7 +153,14 @@ public interface ISeries
     /// </summary>
     /// <param name="point">The chart point.</param>
     /// <returns></returns>
-    string? GetTooltipText(ChartPoint point);
+    string? GetPrimaryToolTipText(ChartPoint point);
+
+    /// <summary>
+    /// Gets the tool tip text for a give chart point.
+    /// </summary>
+    /// <param name="point">The chart point.</param>
+    /// <returns></returns>
+    string? GetSecondaryToolTipText(ChartPoint point);
 
     /// <summary>
     /// Gets the data label content for a given chart point.

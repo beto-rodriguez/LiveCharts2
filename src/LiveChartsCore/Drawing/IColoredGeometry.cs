@@ -20,37 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
-namespace LiveChartsCore.Kernel;
+namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// The named labeler helper class.
+/// Defines a colored geometry in the user interface, a geometry with a Color property.
 /// </summary>
-public class NamedLabeler
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IGeometry{TDrawingContext}" />
+public interface IColoredGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
-    private readonly IList<string> _labels;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="NamedLabeler"/> class.
+    /// Gets or sets the color.
     /// </summary>
-    /// <param name="labels">The labels.</param>
-    public NamedLabeler(IList<string> labels)
-    {
-        _labels = labels;
-    }
-
-    /// <summary>
-    /// Functions the specified value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns></returns>
-    public string Function(double value)
-    {
-        var index = (int)value;
-
-        return index < 0 || index > _labels.Count - 1
-            ? string.Empty
-            : _labels[index];
-    }
+    LvcColor Color { get; set; }
 }

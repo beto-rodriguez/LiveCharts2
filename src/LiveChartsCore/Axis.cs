@@ -833,20 +833,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         return new LvcSize(w, h);
     }
 
-    /// <inheritdoc cref="IPlane.GetActualLabeler"/>
-    public Func<double, string> GetActualLabeler()
-    {
-        var labeler = Labeler;
-
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
-
-        return labeler;
-    }
-
     /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>
     void ICartesianAxis.Initialize(AxisOrientation orientation)
     {
@@ -901,6 +887,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
+    }
+
+    private Func<double, string> GetActualLabeler()
+    {
+        var labeler = Labeler;
+
+        if (Labels is not null)
+        {
+            labeler = Labelers.BuildNamedLabeler(Labels);
+            _minStep = 1;
+        }
+
+        return labeler;
     }
 
     private LvcSize GetPossibleMaxLabelSize(Chart<TDrawingContext> chart)

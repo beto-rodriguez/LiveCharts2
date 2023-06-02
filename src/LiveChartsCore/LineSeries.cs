@@ -40,12 +40,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
-public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
-        where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
+public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
@@ -59,7 +57,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TBezierVisual}"/>
+    /// <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/>
     /// class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
@@ -165,6 +163,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         uwx = uwx < gs ? gs : uwx;
+        var tooltipPositon = chart.TooltipPosition;
 
         var segmentI = 0;
 
@@ -235,11 +234,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         ? stacker.GetStack(data.TargetPoint).Start
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
-                var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
+                var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {
-                    var v = new TVisualPoint();
+                    var v = new BezierVisualPoint<TDrawingContext, TVisual>();
                     visual = v;
 
                     if (IsFirstDraw)
@@ -257,7 +256,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         v.Bezier.Yj = p;
                     }
 
-                    data.TargetPoint.Context.Visual = v;
+                    data.TargetPoint.Context.Visual = v.Geometry;
+                    data.TargetPoint.Context.AdditionalVisuals = v;
                     OnPointCreated(data.TargetPoint);
                 }
 
@@ -298,7 +298,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 if (data.TargetPoint.Context.HoverArea is not RectangleHoverArea ha)
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
-                _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
+
+                _ = ha
+                    .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
+                    .CenterXToolTip();
+
+                _ = data.TargetPoint.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(data.TargetPoint);
 
@@ -315,7 +320,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var m = label.Measure(DataLabelsPaint);
@@ -387,6 +392,26 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         IsFirstDraw = false;
     }
 
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1f, 1f);
+
+        base.OnPointerLeft(point);
+    }
+
     /// <inheritdoc cref="GetRequestedGeometrySize"/>
     protected override double GetRequestedGeometrySize()
     {
@@ -396,15 +421,15 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
     {
-        return series is LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint> lineSeries &&
+        return series is LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> lineSeries &&
             Name == series.Name &&
             !((ISeries)this).PaintsChanged &&
             Fill == lineSeries.Fill && Stroke == lineSeries.Stroke &&
             GeometryFill == lineSeries.GeometryFill && GeometryStroke == lineSeries.GeometryStroke;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
@@ -461,7 +486,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// <returns></returns>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
     }
 
     /// <summary>
@@ -563,7 +588,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not TVisualPoint visual)
+        if (chartPoint.Context.AdditionalVisuals is not BezierVisualPoint<TDrawingContext, TVisual> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
@@ -573,7 +598,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (TVisualPoint?)point.Context.Visual;
+        var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -591,13 +616,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var label = (TLabel?)point.Context.Label;
         if (label is null) return;
 
-        label.TextSize = 1;
         label.RemoveOnCompleted = true;
     }
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not TVisualPoint visual) return;
+        if (point.Context.Visual is not BezierVisualPoint<TDrawingContext, TVisual> visual) return;
 
         var x = xScale.ToPixels(point.SecondaryValue);
         var y = yScale.ToPixels(point.PrimaryValue);

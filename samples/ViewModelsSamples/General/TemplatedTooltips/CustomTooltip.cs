@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -15,7 +14,6 @@ namespace ViewModelsSamples.General.TemplatedTooltips;
 
 public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageControl
 {
-    private Chart<SkiaSharpDrawingContext>? _chart;
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
     private static readonly int s_zIndex = 10050;
     private readonly SolidColorPaint _backgroundPaint = new(new SKColor(28, 49, 58)) { ZIndex = s_zIndex };
@@ -25,8 +23,6 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
 
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        _chart = chart;
-
         _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
         {
             Padding = new Padding(25),
@@ -45,7 +41,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
 
         foreach (var point in foundPoints)
         {
-            var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniatresSketch();
+            var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniaturesSketch();
             var relativePanel = sketch.AsDrawnControl();
 
             var label = new LabelVisual
@@ -89,9 +85,9 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
         Size = _stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart);
     }
 
-    public void Hide()
+    public void Hide(Chart<SkiaSharpDrawingContext> chart)
     {
-        if (_chart is null || _stackPanel is null) return;
-        _chart.RemoveVisual(_stackPanel);
+        if (chart is null || _stackPanel is null) return;
+        chart.RemoveVisual(_stackPanel);
     }
 }

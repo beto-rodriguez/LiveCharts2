@@ -134,13 +134,13 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public bool FitToBounds { get; set; }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle"/>
-    public double TotalAngle { get; set; }
+    public double TotalAngle { get; set; } = 360;
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius"/>
     public double InnerRadius { get; set; }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation"/>
-    public double InitialRotation { get; set; }
+    public double InitialRotation { get; set; } = LiveCharts.DefaultSettings.PolarInitialRotation;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }

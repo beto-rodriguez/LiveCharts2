@@ -29,9 +29,8 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <seealso cref="IStepLineVisualChartPoint{TDrawingContext}" />
-public class StepLineVisualPoint<TDrawingContext, TVisual> : IStepLineVisualChartPoint<TDrawingContext>
-    where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
+public class StepLineVisualPoint<TDrawingContext, TVisual>
+    where TVisual : ISizedGeometry<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -65,11 +64,4 @@ public class StepLineVisualPoint<TDrawingContext, TVisual> : IStepLineVisualChar
     /// The stroke path.
     /// </value>
     public IVectorGeometry<StepLineSegment, TDrawingContext>? StrokePath { get; set; }
-
-    /// <summary>
-    /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
-    /// </summary>
-    public IGeometry<TDrawingContext>? MainGeometry => Geometry?.MainGeometry;
-
-    ISizedGeometry<TDrawingContext> IStepLineVisualChartPoint<TDrawingContext>.Geometry => Geometry;
 }

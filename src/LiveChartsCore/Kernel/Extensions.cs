@@ -57,81 +57,129 @@ public static class Extensions
         Chart<TDrawingContext> chart)
             where TDrawingContext : DrawingContext
     {
-        LvcPoint? location = null;
-
-        if (chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>)
-            location = _getCartesianTooltipLocation(foundPoints, chart.TooltipPosition, tooltipSize, chart.DrawMarginSize);
-        if (chart is PieChart<TDrawingContext>)
-            location = _getPieTooltipLocation(foundPoints, tooltipSize);
-
-        if (location is null) throw new Exception("location not supported");
-
-        var chartSize = chart.DrawMarginSize;
-
-        var x = location.Value.X;
-        var y = location.Value.Y;
-        var w = chartSize.Width;
-        var h = chartSize.Height;
-
-        if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
-        if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
-
-        return new LvcPoint(x, y);
+        return chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
+            ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
+            : _getPieTooltipLocation(foundPoints, chart, tooltipSize);
     }
 
-    private static LvcPoint? _getCartesianTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
+    private static LvcPoint _getCartesianTooltipLocation<TDrawingContext>(
+        IEnumerable<ChartPoint> foundPoints,
+        Chart<TDrawingContext> chart,
+        LvcSize tooltipSize)
+            where TDrawingContext : DrawingContext
     {
         var count = 0f;
-
-        var placementContext = new TooltipPlacementContext();
+        var placementContext = new TooltipPlacementContext(chart.TooltipPosition);
 
         foreach (var point in foundPoints)
         {
             if (point.Context.HoverArea is null) continue;
-            point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
+            point.Context.HoverArea.SuggestTooltipPlacement(placementContext, tooltipSize);
             count++;
         }
 
-        if (count == 0) return null;
-
-        if (placementContext.MostBottom > chartSize.Height - tooltipSize.Height)
-            placementContext.MostBottom = chartSize.Height - tooltipSize.Height;
-        if (placementContext.MostTop < 0) placementContext.MostTop = 0;
+        if (count == 0) return new();
 
         var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
         var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
 
-        return position switch
+        var position = chart.TooltipPosition;
+        if (position == TooltipPosition.Auto)
         {
-            TooltipPosition.Top => new LvcPoint(avrgX, placementContext.MostTop - tooltipSize.Height),
-            TooltipPosition.Bottom => new LvcPoint(avrgX, placementContext.MostBottom),
-            TooltipPosition.Left => new LvcPoint(placementContext.MostLeft - tooltipSize.Width, avrgY),
-            TooltipPosition.Right => new LvcPoint(placementContext.MostRight, avrgY),
-            TooltipPosition.Center => new LvcPoint(avrgX, avrgY),
-            TooltipPosition.Hidden => new LvcPoint(),
-            _ => new LvcPoint(),
-        };
+            var x = avrgX;
+            var y = placementContext.MostAutoTop - tooltipSize.Height;
+            chart.AutoToolTipsInfo.ToolTipPlacement = placementContext.AutoPopPupPlacement;
+
+            if (x < 0)
+            {
+                // the tooltip is out of the left edge
+                // we return TooltipPosition.Right
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
+                return new(placementContext.MostRight, avrgY);
+            }
+
+            if (x + tooltipSize.Width > chart.ControlSize.Width)
+            {
+                // the tooltip is out of the right edge
+                // we return TooltipPosition.Left
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
+                return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+            }
+
+            if (y < 0)
+            {
+                y += tooltipSize.Height;
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+            }
+            if (y + tooltipSize.Height > chart.ControlSize.Height)
+            {
+                y -= tooltipSize.Height;
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+            }
+
+            return new(x, y);
+        }
+
+        LvcPoint location = new();
+
+        switch (position)
+        {
+            case TooltipPosition.Top:
+                location = new(avrgX, placementContext.MostTop - tooltipSize.Height);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+                break;
+            case TooltipPosition.Bottom:
+                location = new(avrgX, placementContext.MostBottom);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+                break;
+            case TooltipPosition.Left:
+                location = new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
+                break;
+            case TooltipPosition.Right:
+                location = new(placementContext.MostRight, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
+                break;
+            case TooltipPosition.Center:
+                location = new(avrgX, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+                break;
+            case TooltipPosition.Hidden:
+            case TooltipPosition.Auto:
+            default:
+                break;
+        }
+
+        return location;
     }
-    private static LvcPoint? _getPieTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, LvcSize tooltipSize)
+    private static LvcPoint _getPieTooltipLocation<TDrawingContext>(
+        IEnumerable<ChartPoint> foundPoints, Chart<TDrawingContext> chart, LvcSize tooltipSize)
+            where TDrawingContext : DrawingContext
     {
-        var placementContext = new TooltipPlacementContext();
-        var found = false;
+        var placementContext = new TooltipPlacementContext(TooltipPosition.Auto);
 
         foreach (var foundPoint in foundPoints)
         {
             if (foundPoint.Context.HoverArea is null) continue;
-            foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext);
-            found = true;
-            break; // we only care about the first one.
+            foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext, tooltipSize);
         }
 
-        return found
-            ? new LvcPoint(placementContext.PieX - tooltipSize.Width * 0.5f, placementContext.PieY - tooltipSize.Height * 0.5f)
-            : null;
+        chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+
+        var p = new LvcPoint(
+            placementContext.PieX - tooltipSize.Width * 0.5f,
+            placementContext.PieY - tooltipSize.Height);
+
+        if (p.Y < 0)
+        {
+            chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+
+            p = new LvcPoint(
+                placementContext.PieX - tooltipSize.Width * 0.5f,
+                placementContext.PieY);
+        }
+
+        return p;
     }
 
     /// <summary>
@@ -389,7 +437,7 @@ public static class Extensions
     /// <summary>
     /// Calculates the tooltips finding strategy based on the series properties.
     /// </summary>
-    /// <param name="seriesCollection">The series collection</param>
+    /// <param name="seriesCollection">The series collection.</param>
     /// <returns></returns>
     public static TooltipFindingStrategy GetTooltipFindingStrategy(this IEnumerable<ISeries> seriesCollection)
     {
@@ -404,7 +452,9 @@ public static class Extensions
 
         return areAllX
             ? TooltipFindingStrategy.CompareOnlyXTakeClosest
-            : (areAllY ? TooltipFindingStrategy.CompareOnlyYTakeClosest : TooltipFindingStrategy.CompareAllTakeClosest);
+            : (areAllY
+                ? TooltipFindingStrategy.CompareOnlyYTakeClosest
+                : TooltipFindingStrategy.CompareAllTakeClosest);
     }
 
     /// <summary>
@@ -494,64 +544,6 @@ public static class Extensions
             yield return predicate(item);
             yield break;
         }
-    }
-
-    /// <summary>
-    /// Gets the primary value and adds format to it based on the  <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.TooltipLabelFormatter"/> or the axis formatter.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <param name="point">The point.</param>
-    /// <param name="chart">The chart.</param>
-    /// <returns></returns>
-    public static string GetFormattedPrimaryValueForToolTip<TDrawingContext>(this ChartPoint point, Chart<TDrawingContext> chart)
-        where TDrawingContext : DrawingContext
-    {
-        if (chart is CartesianChart<TDrawingContext> cartesianChart)
-        {
-            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
-            return
-                point.Context.Series.GetTooltipText(point) ??
-                cartesianChart.YAxes[cs.ScalesYAt].GetActualLabeler()(point.PrimaryValue);
-        }
-
-        if (chart is PolarChart<TDrawingContext> polarChart)
-        {
-            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
-            return
-                point.Context.Series.GetTooltipText(point) ??
-                polarChart.RadiusAxes[cs.ScalesRadiusAt].GetActualLabeler()(point.PrimaryValue);
-        }
-
-        return point.Context.Series.GetTooltipText(point) ?? point.PrimaryValue.ToString();
-    }
-
-    /// <summary>
-    /// Gets the secondary value and adds format to it based on the  <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.TooltipLabelFormatter"/> or the axis formatter.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <param name="point">The point.</param>
-    /// <param name="chart">The chart.</param>
-    /// <returns></returns>
-    public static string GetFormattedSecondaryValueForToolTip<TDrawingContext>(this ChartPoint point, Chart<TDrawingContext> chart)
-        where TDrawingContext : DrawingContext
-    {
-        if (chart is CartesianChart<TDrawingContext> cartesianChart)
-        {
-            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
-            return
-                point.Context.Series.GetTooltipText(point) ??
-                cartesianChart.XAxes[cs.ScalesXAt].GetActualLabeler()(point.SecondaryValue);
-        }
-
-        if (chart is PolarChart<TDrawingContext> polarChart)
-        {
-            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
-            return
-                point.Context.Series.GetTooltipText(point) ??
-                polarChart.AngleAxes[cs.ScalesAngleAt].GetActualLabeler()(point.SecondaryValue);
-        }
-
-        return point.Context.Series.GetTooltipText(point) ?? point.SecondaryValue.ToString();
     }
 
     /// <summary>

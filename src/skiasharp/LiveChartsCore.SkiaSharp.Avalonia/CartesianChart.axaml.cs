@@ -710,7 +710,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
     {
-        tooltip?.Hide();
         _core?.InvokePointerLeft();
     }
 

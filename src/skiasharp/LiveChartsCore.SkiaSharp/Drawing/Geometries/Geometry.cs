@@ -30,7 +30,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="IGeometry{TDrawingContext}" />
-public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
+public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
 {
     private readonly bool _hasGeometryTransform = false;
     private readonly FloatMotionProperty _opacityProperty;
@@ -166,9 +166,6 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
     public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
-
-    /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.MainGeometry" />
-    public IGeometry<SkiaSharpDrawingContext> MainGeometry => GetHighlitableGeometry();
 
     /// <inheritdoc cref="IGeometry{TDrawingContext}.Parent"/>
     public IGeometry<SkiaSharpDrawingContext>? Parent { get; set; }
@@ -308,15 +305,6 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
     /// <param name="paintTasks">The paint task.</param>
     /// <returns>the size of the geometry</returns>
     protected abstract LvcSize OnMeasure(Paint paintTasks);
-
-    /// <summary>
-    /// Gets the highlitable geometry.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual IGeometry<SkiaSharpDrawingContext> GetHighlitableGeometry()
-    {
-        return this;
-    }
 
     /// <summary>
     /// Applies the geometry transform.

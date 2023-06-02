@@ -108,7 +108,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default tooltip position.
     /// </value>
-    public TooltipPosition TooltipPosition { get; set; } = TooltipPosition.Top;
+    public TooltipPosition TooltipPosition { get; set; } = TooltipPosition.Auto;
 
     /// <summary>
     /// Gets or sets the default tooltip background paint.

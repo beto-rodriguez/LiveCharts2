@@ -17,7 +17,7 @@ public partial class ViewModel : ObservableObject
         new LineSeries<double>
         {
             Values = new ObservableCollection<double> { 200, 558, 458, 249, 457, 339, 587 },
-            TooltipLabelFormatter = (point) =>
+            XToolTipLabelFormatter = (point) =>
                 $"This is {Environment.NewLine}" +
                 $"A multi-line label {Environment.NewLine}" +
                 $"With a value of {Environment.NewLine}" + point.PrimaryValue,
