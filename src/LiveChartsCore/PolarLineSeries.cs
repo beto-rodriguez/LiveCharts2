@@ -62,6 +62,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     private int _scalesRadiusAt;
     private bool _isClosed = true;
     private PolarLabelsPosition _labelsPosition;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _angleTooltipLabelFormatter;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _radiusTooltipLabelFormatter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
@@ -143,6 +145,32 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the X axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? AngleToolTipLabelFormatter
+    {
+        get => _angleTooltipLabelFormatter;
+        set => SetProperty(ref _angleTooltipLabelFormatter, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? RadiusToolTipLabelFormatter
+    {
+        get => _radiusTooltipLabelFormatter;
+        set { SetProperty(ref _radiusTooltipLabelFormatter, value); _obsolete_formatter = value; }
+    }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -482,6 +510,54 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>
+    public override string? GetPrimaryToolTipText(ChartPoint point)
+    {
+        string? label = null;
+
+        if (RadiusToolTipLabelFormatter is not null)
+            label = RadiusToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+
+        if (label is null)
+        {
+            var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+
+            var ax = cc.RadiusAxes[cs.ScalesRadiusAt];
+
+            label = ax.Labels is not null
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.PrimaryValue)
+                : ax.Labeler(point.PrimaryValue);
+        }
+
+        return label;
+    }
+
+    /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>
+    public override string? GetSecondaryToolTipText(ChartPoint point)
+    {
+        string? label = null;
+
+        if (AngleToolTipLabelFormatter is not null)
+            label = AngleToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+
+        if (label is null)
+        {
+            var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+
+            var ax = cc.AngleAxes[cs.ScalesAngleAt];
+
+            label = ax.Labels is not null
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.SecondaryValue)
+                : (ax.Labeler != Labelers.Default
+                    ? ax.Labeler(point.SecondaryValue)
+                    : LiveCharts.IgnoreToolTipLabel);
+        }
+
+        return label;
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

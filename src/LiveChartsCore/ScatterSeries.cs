@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -56,7 +57,17 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         DataPadding = new LvcPoint(1, 1);
 
         DataLabelsFormatter = (point) => $"{point.PrimaryValue}";
-        TooltipLabelFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
+        YToolTipLabelFormatter = point =>
+        {
+            var series = (ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>)point.Context.Series;
+
+            return series.IsWeighted
+                ? $"X = {point.SecondaryValue}{Environment.NewLine}" +
+                  $"Y = {point.PrimaryValue}{Environment.NewLine}" +
+                  $"W = {point.TertiaryValue}"
+                : $"X = {point.SecondaryValue}{Environment.NewLine}" +
+                  $"Y = {point.PrimaryValue}";
+        };
     }
 
     /// <summary>

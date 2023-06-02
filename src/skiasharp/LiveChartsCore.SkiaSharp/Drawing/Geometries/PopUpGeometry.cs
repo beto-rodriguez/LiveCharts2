@@ -38,7 +38,7 @@ public class PopUpGeometry : SizedGeometry
     /// <summary>
     /// Gets or sets the border radius.
     /// </summary>
-    public double BorderRadius { get; set; } = 15;
+    public double BorderRadius { get; set; } = 10;
 
     /// <summary>
     /// Gets or sets the placement.

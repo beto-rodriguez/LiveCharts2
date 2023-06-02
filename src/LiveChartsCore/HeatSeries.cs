@@ -64,12 +64,17 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
              SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
     {
         DataPadding = new LvcPoint(0, 0);
-        PrimaryTooltipLabelFormatter = (point) =>
+        YToolTipLabelFormatter = (point) =>
         {
             var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
             var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
 
-            return $"{cc.YAxes[cs.ScalesYAt].GetActualLabeler()(point.PrimaryValue)} {point.TertiaryValue}";
+            var ax = cc.YAxes[cs.ScalesYAt];
+
+            var labeler = ax.Labeler;
+            if (ax.Labels is not null) labeler = Labelers.BuildNamedLabeler(ax.Labels);
+
+            return $"{labeler(point.PrimaryValue)} {point.TertiaryValue}";
         };
     }
 

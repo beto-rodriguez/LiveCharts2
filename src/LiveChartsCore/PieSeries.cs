@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -63,6 +62,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     private bool _invertedCornerRadius = false;
     private bool _isFillSeries;
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
@@ -131,6 +131,19 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? ToolTipLabelFormatter
+    {
+        get => _tooltipLabelFormatter;
+        set { SetProperty(ref _tooltipLabelFormatter, value); _obsolete_formatter = value; }
+    }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -451,6 +464,20 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>
+    public override string? GetPrimaryToolTipText(ChartPoint point)
+    {
+        return ToolTipLabelFormatter is not null
+            ? ToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point))
+            : point.PrimaryValue.ToString();
+    }
+
+    /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>
+    public override string? GetSecondaryToolTipText(ChartPoint point)
+    {
+        return LiveCharts.IgnoreToolTipLabel;
     }
 
     /// <summary>

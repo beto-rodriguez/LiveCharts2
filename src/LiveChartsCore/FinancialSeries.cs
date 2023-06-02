@@ -63,7 +63,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
              SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
     {
-        PrimaryTooltipLabelFormatter = p =>
+        YToolTipLabelFormatter = p =>
             $"H {p.PrimaryValue:N2}{Environment.NewLine}" +
             $"O {p.TertiaryValue:N2}{Environment.NewLine}" +
             $"C {p.QuaternaryValue:N2}{Environment.NewLine}" +
