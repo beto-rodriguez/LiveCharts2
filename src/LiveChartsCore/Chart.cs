@@ -22,7 +22,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -59,6 +61,8 @@ public abstract class Chart<TDrawingContext> : IChart
     private bool _isPanning = false;
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
+    private readonly Timer _closeTooltipTimer;
+    private DateTime _tooltipClosesAt = DateTime.MaxValue;
 
     #endregion
 
@@ -90,6 +94,18 @@ public abstract class Chart<TDrawingContext> : IChart
 
         _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
+
+        _closeTooltipTimer = new Timer(o =>
+        {
+            if (DateTime.Now < _tooltipClosesAt) return;
+
+            _tooltipClosesAt = DateTime.MaxValue;
+            view.InvokeOnUIThread(() =>
+            {
+                Tooltip?.Hide(this);
+                canvas.Invalidate();
+            });
+        }, null, 2000, 2000);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
@@ -630,9 +646,15 @@ public abstract class Chart<TDrawingContext> : IChart
             _ = _activePoints.Remove(point);
         }
 
-        if (isEmpty) return;
+        if (isEmpty)
+        {
+            _tooltipClosesAt = DateTime.Now.AddSeconds(1.5);
+            return;
+        }
+
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
+        _tooltipClosesAt = DateTime.MaxValue;
     }
 
     private Task TooltipThrottlerUnlocked()
