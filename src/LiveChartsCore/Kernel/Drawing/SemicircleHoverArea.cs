@@ -120,6 +120,10 @@ public class SemicircleHoverArea : HoverArea
 
         var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
+        // NOTE #230206
+        // angles are normalized (from 0 to 360)
+        // so in cases where (for example) angles start in 350 and end in 370,
+        // then 370 is actually 10 because degrees are normalized from 0-360.
         if (endAngle > startAngle)
         {
             return
@@ -127,10 +131,6 @@ public class SemicircleHoverArea : HoverArea
                 endAngle >= beta &&
                 r >= InnerRadius && r <= Radius;
         }
-
-        // angles are normalized (from 0 to 360)
-        // so in cases where (for example) angles start in 350 and end in 370 (actually 10)
-        // then the previous condition will never be true.
 
         if (beta < startAngle) beta += 360;
 
@@ -156,6 +156,19 @@ public class SemicircleHoverArea : HoverArea
         if (r <= ctx.PieMostR) return;
 
         ctx.PieMostR = r;
+
+        // NOTE #230206
+        // angles are normalized (from 0 to 360)
+        // so in cases where (for example) angles start in 350 and end in 370,
+        // then 370 is actually 10 because degrees are normalized from 0-360.
+        if (endAngle > startAngle)
+        {
+            ctx.PieX = CenterX + (float)Math.Cos(angle * toRadians) * r;
+            ctx.PieY = CenterY + (float)Math.Sin(angle * toRadians) * r;
+            return;
+        }
+
+        angle = (startAngle + endAngle + 360f) / 2d;
         ctx.PieX = CenterX + (float)Math.Cos(angle * toRadians) * r;
         ctx.PieY = CenterY + (float)Math.Sin(angle * toRadians) * r;
     }
