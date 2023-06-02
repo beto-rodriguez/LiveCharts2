@@ -64,7 +64,13 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
              SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
     {
         DataPadding = new LvcPoint(0, 0);
-        TooltipLabelFormatter = (point) => $"{Name}: {point.TertiaryValue:N}";
+        PrimaryTooltipLabelFormatter = (point) =>
+        {
+            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+
+            return $"{cc.YAxes[cs.ScalesYAt].GetActualLabeler()(point.PrimaryValue)} {point.TertiaryValue}";
+        };
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
@@ -292,13 +298,14 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
-        var strokeClone = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
-        var st = strokeClone.StrokeThickness;
+        var solidPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+        var st = solidPaint.StrokeThickness;
+        solidPaint.IsFill = true;
 
         if (st > MAX_MINIATURE_STROKE_WIDTH)
         {
             st = MAX_MINIATURE_STROKE_WIDTH;
-            strokeClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
+            solidPaint.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
         }
 
         var visual = new TVisual
@@ -309,8 +316,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             Width = (float)MiniatureShapeSize,
             Color = HeatMap[0] // ToDo <- draw the gradient?
         };
-        strokeClone.ZIndex = 1;
-        schedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
+        schedules.Add(new PaintSchedule<TDrawingContext>(solidPaint, visual));
 
         return new Sketch<TDrawingContext>()
         {
