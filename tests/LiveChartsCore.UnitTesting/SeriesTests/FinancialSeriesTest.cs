@@ -139,7 +139,7 @@ public class FinancialSeriesTest
                 new(5,4.75,4.25,4),
             },
             MaxBarWidth = 1000,
-            PrimaryTooltipLabelFormatter = x => x.PrimaryValue.ToString(),
+            YToolTipLabelFormatter = x => x.PrimaryValue.ToString(),
             DataPadding = new Drawing.LvcPoint(0, 0)
         };
 
