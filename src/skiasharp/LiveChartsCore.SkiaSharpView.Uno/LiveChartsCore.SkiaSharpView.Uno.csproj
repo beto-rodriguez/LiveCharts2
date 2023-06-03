@@ -16,8 +16,8 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
     <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
-    <Version>2.0.0-beta.700</Version>
+    <LangVersion>11.0</LangVersion>
+    <Version>2.0.0-beta.710</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

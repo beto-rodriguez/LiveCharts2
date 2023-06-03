@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
@@ -135,13 +136,49 @@ public class LinearGradientPaint : Paint
     /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
     public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
     {
-        throw new System.NotImplementedException();
+        if (_skiaPaint is null) return;
+
+        var size = GetDrawRectangleSize(context);
+
+        var xf = size.Location.X;
+        var xt = xf + size.Width;
+
+        var yf = size.Location.Y;
+        var yt = yf + size.Height;
+
+        var start = new SKPoint(xf + (xt - xf) * _startPoint.X, yf + (yt - yf) * _startPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * _endPoint.X, yf + (yt - yf) * _endPoint.Y);
+
+        _skiaPaint.Shader = SKShader.CreateLinearGradient(
+            start,
+            end,
+            _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * geometry.Opacity))).ToArray(),
+            _colorPos,
+            _tileMode);
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
     public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
     {
-        throw new System.NotImplementedException();
+        if (_skiaPaint is null) return;
+
+        var size = GetDrawRectangleSize(context);
+
+        var xf = size.Location.X;
+        var xt = xf + size.Width;
+
+        var yf = size.Location.Y;
+        var yt = yf + size.Height;
+
+        var start = new SKPoint(xf + (xt - xf) * _startPoint.X, yf + (yt - yf) * _startPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * _endPoint.X, yf + (yt - yf) * _endPoint.Y);
+
+        _skiaPaint.Shader = SKShader.CreateLinearGradient(
+            start,
+            end,
+            _gradientStops,
+            _colorPos,
+            _tileMode);
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
@@ -206,7 +243,11 @@ public class LinearGradientPaint : Paint
     /// </summary>
     public override void Dispose()
     {
-        if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
+        // Note #301222
+        // Disposing typefaces could cause render issues.
+        // Does this causes memory leaks?
+        // Should the user dispose typefaces manually?
+        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
         PathEffect?.Dispose();
         ImageFilter?.Dispose();
 

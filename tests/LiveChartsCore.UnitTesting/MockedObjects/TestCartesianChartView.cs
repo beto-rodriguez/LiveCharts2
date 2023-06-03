@@ -31,18 +31,20 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects;
 
+[Obsolete($"We now support in-memory charts, please use {nameof(SKCartesianChart)} instead.")]
 public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContext>
 {
     public TestCartesianChartView()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         Core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas, new RectangleGeometry());
+            this, config => config.UseDefaults(), CoreCanvas, new RectangleGeometry());
     }
 
     public bool DesignerMode => false;
@@ -116,14 +118,10 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
         UpdateFinished?.Invoke(this);
     }
 
-    public void HideTooltip() { }
-
     public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
         return new double[2];
     }
-
-    public void ShowTooltip(IEnumerable<ChartPoint> points) { }
 
     public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 

@@ -29,8 +29,8 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class BezierVisualPoint<TDrawingContext, TVisual> : ICubicBezierVisualChartPoint<TDrawingContext>
-    where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
+public class BezierVisualPoint<TDrawingContext, TVisual>
+    where TVisual : ISizedGeometry<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -64,8 +64,4 @@ public class BezierVisualPoint<TDrawingContext, TVisual> : ICubicBezierVisualCha
     /// The stroke path.
     /// </value>
     public IVectorGeometry<CubicBezierSegment, TDrawingContext>? StrokePath { get; set; }
-
-    IGeometry<TDrawingContext>? IVisualChartPoint<TDrawingContext>.MainGeometry => Geometry?.MainGeometry;
-
-    ISizedGeometry<TDrawingContext> ICubicBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
 }

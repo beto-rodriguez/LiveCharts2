@@ -1,0 +1,29 @@
+﻿<UserControl
+    x:Class="UnoWinUISample.Axes.NamedLabels.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Axes.NamedLabels"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <lvc:CartesianChart
+            Series="{Binding Series}"
+            XAxes="{Binding XAxes}"
+            YAxes="{Binding YAxes}"
+            TooltipPosition="Left"
+            TooltipTextPaint="{Binding TooltipTextPaint}"
+            TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}"
+            TooltipTextSize="16">
+        </lvc:CartesianChart>
+    </Grid>
+
+</UserControl>

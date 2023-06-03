@@ -6,8 +6,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.LabelsFormat2;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {
@@ -32,6 +31,10 @@ public partial class ViewModel
                 // SKTypeface = SKFontManager.Default.MatchCharacter('أ'), // Arab
                 // SKTypeface = SKFontManager.Default.MatchCharacter('あ'), // Japanese
                 // SKTypeface = SKFontManager.Default.MatchCharacter('Ж'), // Russian
+
+                // You can also register a default global SKTypeface // mark
+                // this will load the font in any Paint when the SKTypeface property is null. // mark
+                // for more info see: ToDo: Add link!!! // mark
             }
         }
     };

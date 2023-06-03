@@ -22,12 +22,10 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -39,11 +37,18 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 {
     internal double _x;
     internal double _y;
-    internal float _xc;
-    internal float _yc;
-    internal ISizedGeometry<TDrawingContext>? _parent;
     private int _scalesXAt;
     private int _scalesYAt;
+
+    /// <summary>
+    /// Gets the primary scaler.
+    /// </summary>
+    protected Scaler? PrimaryScaler { get; private set; }
+
+    /// <summary>
+    /// Gets the secondary scaler.
+    /// </summary>
+    protected Scaler? SecondaryScaler { get; private set; }
 
     /// <summary>
     /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
@@ -78,26 +83,18 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
 
-    /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
-        Scaler? primary = null;
-        Scaler? secondary = null;
-
         CartesianChart<TDrawingContext>? cartesianChart = null;
 
         if (chart is CartesianChart<TDrawingContext> cc)
         {
-            cartesianChart = cc;
-            var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-            var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
-            secondary = secondaryAxis.GetNextScaler(cartesianChart);
-            primary = primaryAxis.GetNextScaler(cartesianChart);
+            var primaryAxis = cc.YAxes[ScalesYAt];
+            var secondaryAxis = cc.XAxes[ScalesXAt];
+
+            SecondaryScaler = secondaryAxis.GetNextScaler(cc);
+            PrimaryScaler = primaryAxis.GetNextScaler(cc);
         }
 
         // Todo: polar and pie
@@ -126,34 +123,14 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
             chart.Canvas.AddDrawableTask(paintTask);
         }
 
-        OnInvalidated(chart, primary, secondary);
+        OnInvalidated(chart);
     }
 
     /// <summary>
     /// Measures the element and returns the size.
     /// </summary>
     /// <param name = "chart" > The chart.</param>
-    /// <param name="primaryScaler">
-    /// The primary axis scaler, normally the Y axis. If the chart is Polar then it is the Angle scaler. If the chart is a pie chart
-    /// then it is the Values Scaler.
-    /// </param>
-    /// <param name="secondaryScaler">
-    /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
-    /// then it is the index Scaler.</param>
-    /// <returns>The size of the element.</returns>
-    public abstract LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
-
-    /// <summary>
-    /// Gets the actual location of the element.
-    /// </summary>
-    /// <returns></returns>
-    public abstract LvcPoint GetTargetLocation();
-
-    /// <summary>
-    /// Gets the actual size of the element.
-    /// </summary>
-    /// <returns>The actual size.</returns>
-    public abstract LvcSize GetTargetSize();
+    public abstract LvcSize Measure(Chart<TDrawingContext> chart);
 
     /// <summary>
     /// Called when [paint changed].
@@ -167,65 +144,36 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     }
 
     /// <summary>
-    /// Called when a property changes.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    /// <summary>
     /// Called when the visual is drawn.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    /// <param name="primaryScaler">
-    /// The primary axis scaler, normally the Y axis. If the chart is Polar then it is the Angle scaler. If the chart is a pie chart
-    /// then it is the Values Scaler.
-    /// </param>
-    /// <param name="secondaryScaler">
-    /// The secondary axis scaler, normally the X axis. If the chart is Polar then it is the Radius scaler. If the chart is a pie chart
-    /// then it is the index Scaler.</param>
-    protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler);
+    protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart);
 
     /// <summary>
-    /// Gets the position of the element considering the parent current state.
+    /// Sets the parent to all the geometries in the visual.
     /// </summary>
-    /// <returns></returns>
-    protected LvcPoint GetPositionRelativeToParent()
+    protected internal abstract void SetParent(IGeometry<TDrawingContext> parent);
+
+    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
     {
-        var parentX = 0f;
-        var parentY = 0f;
-
-        if (_parent is not null)
-        {
-            var xProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.X)];
-            var yProperty = (FloatMotionProperty)_parent.MotionProperties[nameof(_parent.Y)];
-            parentX = xProperty.GetCurrentValue((Animatable)_parent);
-            parentY = yProperty.GetCurrentValue((Animatable)_parent);
-        }
-
-        return new LvcPoint(parentX + X, parentY + Y);
-    }
-
-    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(IChart chart, LvcPoint point)
-    {
-        var motionCanvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        var motionCanvas = chart.Canvas;
         if (motionCanvas.StartPoint is not null)
         {
             point.X -= motionCanvas.StartPoint.Value.X;
             point.Y -= motionCanvas.StartPoint.Value.Y;
         }
 
-        var location = GetTargetLocation();
-        var size = GetTargetSize();
+        var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element
-        if (point.X >= location.X && point.X <= location.X + size.Width &&
-            point.Y >= location.Y && point.Y <= location.Y + size.Height)
+        if (point.X >= X && point.X <= X + size.Width &&
+            point.Y >= Y && point.Y <= Y + size.Height)
+        {
             yield return this;
+        }
     }
+
+    internal abstract IAnimatable?[] GetDrawnGeometries();
 
     internal virtual void AlignToTopLeftCorner()
     {

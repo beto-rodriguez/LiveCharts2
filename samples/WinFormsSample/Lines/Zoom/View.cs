@@ -18,7 +18,6 @@ public partial class View : UserControl
         cartesianChart = new CartesianChart
         {
             Series = viewModel.SeriesCollection,
-            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X, // mark
 
             // out of livecharts properties...

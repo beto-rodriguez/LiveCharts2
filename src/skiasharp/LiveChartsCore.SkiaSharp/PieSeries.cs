@@ -62,7 +62,7 @@ public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeomet
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual}"/> class.
@@ -90,7 +90,7 @@ public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeomet
 /// The type of the data label of every point.
 /// </typeparam>
 public class PieSeries<TModel, TVisual, TLabel> : PieSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-    where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>

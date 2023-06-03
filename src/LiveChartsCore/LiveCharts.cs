@@ -31,6 +31,11 @@ namespace LiveChartsCore;
 public static class LiveCharts
 {
     /// <summary>
+    /// A constant that indicates that the tool tip should not add the current label.
+    /// </summary>
+    public static string IgnoreToolTipLabel { get; } = "{{please-ignore-me}}";
+
+    /// <summary>
     /// Gets a value indicating whether LiveCharts should create a log as it renders the charts.
     /// </summary>
     public static bool EnableLogging { get; set; } = false;

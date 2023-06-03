@@ -54,7 +54,7 @@ public class HeatSeries<TModel> : HeatSeries<TModel, ColoredRectangleGeometry, L
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class HeatSeries<TModel, TVisual> : HeatSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISolidColorChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, IColoredGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -74,6 +74,15 @@ public class HeatSeries<TModel, TVisual> : HeatSeries<TModel, TVisual, LabelGeom
 /// The type of the data label of every point.
 /// </typeparam>
 public class HeatSeries<TModel, TVisual, TLabel> : HeatSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
-    where TVisual : class, ISolidColorChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, IColoredGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{ }
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeatSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public HeatSeries()
+    {
+        // This is required for now...
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
+    }
+}

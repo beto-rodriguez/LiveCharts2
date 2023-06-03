@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Gauge Pushout
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +44,7 @@ namespace LiveChartsCore;
 public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
@@ -60,6 +62,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     private bool _invertedCornerRadius = false;
     private bool _isFillSeries;
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
@@ -129,6 +132,19 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? ToolTipLabelFormatter
+    {
+        get => _tooltipLabelFormatter;
+        set { SetProperty(ref _tooltipLabelFormatter, value); _obsolete_formatter = value; }
+    }
+
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
@@ -175,9 +191,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
 
         var dls = (float)DataLabelsSize;
-        var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup());
-        if (stacker is null) throw new NullReferenceException("Unexpected null stacker");
-
+        var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup())
+            ?? throw new NullReferenceException("Unexpected null stacker");
         var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         var fetched = Fetch(pieChart).ToArray();
@@ -319,16 +334,16 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             stackedInnerRadius += relativeInnerRadius;
 
             var md = minDimension;
-            var w = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
+            var stackedOuterRadius = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
 
-            var x = (drawMarginSize.Width - w) * 0.5f;
+            var x = (drawMarginSize.Width - stackedOuterRadius) * 0.5f;
 
             dougnutGeometry.CenterX = cx;
             dougnutGeometry.CenterY = cy;
             dougnutGeometry.X = drawLocation.X + x;
-            dougnutGeometry.Y = drawLocation.Y + (drawMarginSize.Height - w) * 0.5f;
-            dougnutGeometry.Width = w;
-            dougnutGeometry.Height = w;
+            dougnutGeometry.Y = drawLocation.Y + (drawMarginSize.Height - stackedOuterRadius) * 0.5f;
+            dougnutGeometry.Width = stackedOuterRadius;
+            dougnutGeometry.Height = stackedOuterRadius;
             dougnutGeometry.InnerRadius = stackedInnerRadius;
             dougnutGeometry.PushOut = pushout;
             dougnutGeometry.StartAngle = (float)(start + initialRotation);
@@ -342,7 +357,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             if (point.Context.HoverArea is not SemicircleHoverArea ha)
                 point.Context.HoverArea = ha = new SemicircleHoverArea();
-            _ = ha.SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep), md * 0.5f);
+
+            _ = ha.SetDimensions(
+                cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + sweep),
+                stackedInnerRadius, stackedOuterRadius);
 
             pointsCleanup.Clean(point);
 
@@ -350,7 +368,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             {
                 var label = (TLabel?)point.Context.Label;
 
-                // middleAngle = startAngle + (sweepAngle/2);
                 var middleAngle = (float)(start + initialRotation + sweep * 0.5);
 
                 var actualRotation = r +
@@ -363,14 +380,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 if (label is null)
                 {
                     var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? pieChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? pieChart.EasingFunction));
-
-                    l.CompleteTransition(null);
+                    l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -416,7 +426,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 }
 
                 var labelPosition = GetLabelPolarPosition(
-                    cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
+                    cx, cy, ((stackedOuterRadius + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
                     stackedInnerRadius, (float)(start + initialRotation), (float)sweep,
                     label.Measure(DataLabelsPaint), DataLabelsPosition);
 
@@ -426,7 +436,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             OnPointMeasured(point);
 
-            stackedInnerRadius = (w + relativeOuterRadius * 2) * 0.5f;
+            stackedInnerRadius = (stackedOuterRadius + relativeOuterRadius * 2) * 0.5f;
             i++;
         }
 
@@ -440,8 +450,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         return DataFactory.GetPieBounds(chart, this).Bounds;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
@@ -454,6 +464,20 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>
+    public override string? GetPrimaryToolTipText(ChartPoint point)
+    {
+        return ToolTipLabelFormatter is not null
+            ? ToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point))
+            : point.PrimaryValue.ToString();
+    }
+
+    /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>
+    public override string? GetSecondaryToolTipText(ChartPoint point)
+    {
+        return LiveCharts.IgnoreToolTipLabel;
     }
 
     /// <summary>
@@ -469,27 +493,29 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _fill, _stroke, DataLabelsPaint, hoverPaint };
+        return new[] { _fill, _stroke, DataLabelsPaint };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.WhenPointerEnters(ChartPoint)"/>
-    protected override void WhenPointerEnters(ChartPoint point)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
     {
-        base.WhenPointerEnters(point);
-
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
+        if (visual is null) return;
         visual.PushOut = (float)HoverPushout;
+        visual.Opacity = 0.8f;
+
+        base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.WhenPointerLeaves(ChartPoint)"/>
-    protected override void WhenPointerLeaves(ChartPoint point)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
     {
-        base.WhenPointerLeaves(point);
-
         var visual = (TVisual?)point.Context.Visual;
-        if (visual is null || visual.MainGeometry is null) return;
+        if (visual is null) return;
         visual.PushOut = (float)Pushout;
+        visual.Opacity = 1;
+
+        base.OnPointerLeft(point);
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
@@ -507,39 +533,17 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         if (IsFillSeries) return;
-
-        var isGauge = SeriesProperties.HasFlag(SeriesProperties.Gauge);
-
         var chart = chartPoint.Context.Chart;
-
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.StartAngle),
-                nameof(visual.SweepAngle),
-                nameof(visual.PushOut))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-
         if ((SeriesProperties & SeriesProperties.Gauge) == 0)
-            _ = visual
-                .TransitionateProperties(
-                    nameof(visual.CenterX),
-                    nameof(visual.CenterY),
-                    nameof(visual.X),
-                    nameof(visual.Y),
-                    nameof(visual.InnerRadius),
-                    nameof(visual.Width),
-                    nameof(visual.Height))
-                .WithAnimation(animation =>
-                    animation
-                        .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-                .CompleteCurrentTransitions();
+            visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        else
+            visual.Animate(
+                EasingFunction ?? chart.EasingFunction,
+                AnimationsSpeed ?? chart.AnimationsSpeed,
+                nameof(visual.StartAngle),
+                nameof(visual.SweepAngle));
     }
 
     /// <summary>

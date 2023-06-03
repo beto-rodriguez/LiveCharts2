@@ -10,8 +10,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Test.MotionCanvasDispose;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public static void Generate(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {
@@ -23,21 +22,7 @@ public partial class ViewModel
         for (var i = 0; i < 1000; i++)
         {
             var circle = new CircleGeometry { X = r.Next(15, 285), Y = r.Next(15, 285), Width = 5, Height = 5 };
-
-            _ = circle
-                .TransitionateProperties(
-                    nameof(circle.X), nameof(circle.Y))
-                .WithAnimation(animation =>
-                    animation
-                        .WithDuration(TimeSpan.FromSeconds(1))
-                        .WithEasingFunction(EasingFunctions.ElasticOut))
-                .CompleteCurrentTransitions();
-
-            //circle.SetPropertiesTransitions(
-            //    new Animation(EasingFunctions.ElasticOut, TimeSpan.FromSeconds(1)),
-            //    nameof(circle.X), nameof(circle.Y));
-            //circle.CompleteTransition(null);
-
+            circle.Animate(EasingFunctions.ElasticOut, TimeSpan.FromSeconds(1));
             p.AddGeometryToPaintTask(canvas, circle);
 
             circle.X = r.Next(15, 285);

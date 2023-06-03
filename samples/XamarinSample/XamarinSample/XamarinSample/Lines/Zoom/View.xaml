@@ -10,7 +10,6 @@
     <Grid>
         <lvc:CartesianChart
             Series="{Binding SeriesCollection}"
-            TooltipPosition="Hidden"
             ZoomMode="X">
         </lvc:CartesianChart>
     </Grid>

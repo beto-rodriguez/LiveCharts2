@@ -24,7 +24,7 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Dispatching;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+namespace LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 
 /// <summary>
 /// Defines Uno platform helpers.

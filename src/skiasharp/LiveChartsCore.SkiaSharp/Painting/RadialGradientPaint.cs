@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
@@ -155,16 +156,44 @@ public class RadialGradientPaint : Paint
         drawingContext.PaintTask = this;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
-    {
-        throw new System.NotImplementedException();
-    }
-
     /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
     public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
     {
-        throw new System.NotImplementedException();
+        if (_skiaPaint is null) return;
+
+        var size = GetDrawRectangleSize(context);
+        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
+        var r = size.Location.X + size.Width > size.Location.Y + size.Height
+            ? size.Location.Y + size.Height
+            : size.Location.X + size.Width;
+        r *= _radius;
+
+        _skiaPaint.Shader = SKShader.CreateRadialGradient(
+                center,
+                r,
+                _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * geometry.Opacity))).ToArray(),
+                _colorPos,
+                _tileMode);
+    }
+
+    /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+    public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    {
+        if (_skiaPaint is null) return;
+
+        var size = GetDrawRectangleSize(context);
+        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
+        var r = size.Location.X + size.Width > size.Location.Y + size.Height
+            ? size.Location.Y + size.Height
+            : size.Location.X + size.Width;
+        r *= _radius;
+
+        _skiaPaint.Shader = SKShader.CreateRadialGradient(
+                center,
+                r,
+                _gradientStops,
+                _colorPos,
+                _tileMode);
     }
 
     /// <summary>
@@ -172,7 +201,11 @@ public class RadialGradientPaint : Paint
     /// </summary>
     public override void Dispose()
     {
-        if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
+        // Note #301222
+        // Disposing typefaces could cause render issues.
+        // Does this causes memory leaks?
+        // Should the user dispose typefaces manually?
+        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
         PathEffect?.Dispose();
         ImageFilter?.Dispose();
 

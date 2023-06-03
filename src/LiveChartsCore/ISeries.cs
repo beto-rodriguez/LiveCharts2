@@ -51,11 +51,6 @@ public interface ISeries
     bool PaintsChanged { get; set; }
 
     /// <summary>
-    /// Gets the active pints.
-    /// </summary>
-    HashSet<ChartPoint> ActivePoints { get; }
-
-    /// <summary>
     /// Gets whether the series requires to find the closest point when the pointer goes down.
     /// </summary>
     bool RequiresFindClosestOnPointerDown { get; }
@@ -99,6 +94,14 @@ public interface ISeries
     ///   <c>true</c> if this instance is visible at legends; otherwise, <c>false</c>.
     /// </value>
     bool IsVisibleAtLegend { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the size of the legend shape.
+    /// </summary>
+    /// <value>
+    /// The size of the legend shape.
+    /// </value>
+    double MiniatureShapeSize { get; set; }
 
     /// <summary>
     /// Gets or sets the data padding, both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick
@@ -150,14 +153,21 @@ public interface ISeries
     /// </summary>
     /// <param name="point">The chart point.</param>
     /// <returns></returns>
-    string GetTooltipText(ChartPoint point);
+    string? GetPrimaryToolTipText(ChartPoint point);
+
+    /// <summary>
+    /// Gets the tool tip text for a give chart point.
+    /// </summary>
+    /// <param name="point">The chart point.</param>
+    /// <returns></returns>
+    string? GetSecondaryToolTipText(ChartPoint point);
 
     /// <summary>
     /// Gets the data label content for a given chart point.
     /// </summary>
     /// <param name="point">The chart point.</param>
     /// <returns></returns>
-    string GetDataLabelText(ChartPoint point);
+    string? GetDataLabelText(ChartPoint point);
 
     /// <summary>
     /// Gets a <see cref="ChartPoint"/> array with the points used to generate the plot.

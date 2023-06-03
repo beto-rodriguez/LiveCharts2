@@ -37,7 +37,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">the type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-    where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
@@ -52,7 +52,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
               SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
         DataPadding = new LvcPoint(0, 1);
-        _isRounded = typeof(IRoundedRectangleChartPoint<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
+        _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
@@ -157,9 +157,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
                 if (_isRounded)
                 {
-                    var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)r;
-                    rounded.Rx = rx;
-                    rounded.Ry = ry;
+                    var rounded = (IRoundedGeometry<TDrawingContext>)r;
+                    rounded.BorderRadius = new LvcPoint(rx, ry);
                 }
 
                 visual = r;
@@ -204,15 +203,19 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
             if (_isRounded)
             {
-                var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)visual;
-                rounded.Rx = rx;
-                rounded.Ry = ry;
+                var rounded = (IRoundedGeometry<TDrawingContext>)visual;
+                rounded.BorderRadius = new LvcPoint(rx, ry);
             }
             visual.RemoveOnCompleted = false;
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b);
+
+            _ = ha
+                .SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b)
+                .CenterXToolTip();
+
+            _ = point.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
 
             pointsCleanup.Clean(point);
 
@@ -223,14 +226,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = helper.p, RotateTransform = (float)DataLabelsRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    l.CompleteTransition(null);
+                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -268,20 +264,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
-
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.X),
-                nameof(visual.Width),
-                nameof(visual.Y),
-                nameof(visual.Height))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
+        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>

@@ -34,6 +34,51 @@ public class ViewModel : INotifyPropertyChanged
         {
             Name = "Portugal",
             Values = new ObservableCollection<double> { 8, 2, 4 },
+        },
+        new ColumnSeries<double>
+        {
+            Name = "El Salvador",
+            Values = new ObservableCollection<double> { 3, 7, 3,},
+        },
+        new ColumnSeries<double>
+        {
+            Name = "Slovenia",
+            Values = new ObservableCollection<double> { 5, 3, 2 },
+        },
+        new ColumnSeries<double>
+        {
+            Name = "Morocco",
+            Values = new ObservableCollection<double> { 8, 2, 4 },
+        },
+        new ColumnSeries<double>
+        {
+            Name = "Canada",
+            Values = new ObservableCollection<double> { 3, 7, 3,},
+        },
+        new ColumnSeries<double>
+        {
+            Name = "United kingdom",
+            Values = new ObservableCollection<double> { 5, 3, 2 },
+        },
+        new ColumnSeries<double>
+        {
+            Name = "Zimbawe",
+            Values = new ObservableCollection<double> { 8, 2, 4 },
+        },
+        new ColumnSeries<double>
+        {
+            Name = "Cabo verde",
+            Values = new ObservableCollection<double> { 3, 7, 3,},
+        },
+        new ColumnSeries<double>
+        {
+            Name = "France",
+            Values = new ObservableCollection<double> { 5, 3, 2 },
+        },
+        new ColumnSeries<double>
+        {
+            Name = "China",
+            Values = new ObservableCollection<double> { 8, 2, 4 },
         }
     };
 

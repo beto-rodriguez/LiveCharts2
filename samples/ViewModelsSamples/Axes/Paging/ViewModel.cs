@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,8 +7,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Paging;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _random = new();
 
@@ -38,7 +37,7 @@ public partial class ViewModel
 
     public Axis[] XAxes { get; }
 
-    [ICommand]
+    [RelayCommand]
     public void GoToPage1()
     {
         var axis = XAxes[0];
@@ -46,7 +45,7 @@ public partial class ViewModel
         axis.MaxLimit = 10.5;
     }
 
-    [ICommand]
+    [RelayCommand]
     public void GoToPage2()
     {
         var axis = XAxes[0];
@@ -54,7 +53,7 @@ public partial class ViewModel
         axis.MaxLimit = 20.5;
     }
 
-    [ICommand]
+    [RelayCommand]
     public void GoToPage3()
     {
         var axis = XAxes[0];
@@ -62,7 +61,7 @@ public partial class ViewModel
         axis.MaxLimit = 30.5;
     }
 
-    [ICommand]
+    [RelayCommand]
     public void SeeAll()
     {
         var axis = XAxes[0];

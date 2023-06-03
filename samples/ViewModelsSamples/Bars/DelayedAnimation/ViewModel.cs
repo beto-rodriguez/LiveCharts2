@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
-using LiveChartsCore.Easing;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Bars.DelayedAnimation;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {
@@ -48,19 +48,20 @@ public partial class ViewModel
 
     private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
     {
-        var visual = point.Visual;
-        if (visual is null) return;
+        var perPointDelay = 100; // milliseconds
+        var delay = point.Context.Entity.EntityIndex * perPointDelay;
+        var speed = (float)point.Context.Chart.AnimationsSpeed.TotalMilliseconds + delay;
 
-        var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point, 30f);
+        point.Visual?.SetTransition(
+            new Animation(progress =>
+            {
+                var d = delay / speed;
 
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.Y),
-                nameof(visual.Height))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(delayedFunction.Speed)
-                    .WithEasingFunction(delayedFunction.Function));
+                return progress <= d
+                    ? 0
+                    : EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f)((progress - d) / (1 - d));
+            },
+            TimeSpan.FromMilliseconds(speed)));
     }
 
     public List<ISeries> Series { get; set; }

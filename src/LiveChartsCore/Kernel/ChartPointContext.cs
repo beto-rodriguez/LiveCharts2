@@ -95,6 +95,11 @@ public class ChartPointContext
     public object? Visual { get; internal set; }
 
     /// <summary>
+    /// Gets the additional visuals, some series might have more than one visual, here you can find the rest of them.
+    /// </summary>
+    public object? AdditionalVisuals { get; internal set; }
+
+    /// <summary>
     /// Gets the label.
     /// </summary>
     /// <value>

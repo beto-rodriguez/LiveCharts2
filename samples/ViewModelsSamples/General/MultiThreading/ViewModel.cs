@@ -11,8 +11,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.MultiThreading;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _r = new();
     private readonly int _delay = 100;

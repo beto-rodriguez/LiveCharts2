@@ -77,6 +77,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         MouseWheel += OnMouseWheel;
         MouseDown += OnMouseDown;
         MouseUp += OnMouseUp;
+
+        tooltip = new SKDefaultTooltip();
     }
 
     #region dependency properties
@@ -290,9 +292,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     {
         if (canvas is null) throw new Exception("canvas not found");
 
-        core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+        core = new PolarChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
         legend = new SKDefaultLegend(); // Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-        tooltip = new SKDefaultTooltip(); // Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
         core.Update();
     }
 

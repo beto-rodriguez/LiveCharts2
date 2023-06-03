@@ -42,10 +42,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
 public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : ChartSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
+    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
@@ -62,6 +62,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     private int _scalesRadiusAt;
     private bool _isClosed = true;
     private PolarLabelsPosition _labelsPosition;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _angleTooltipLabelFormatter;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _radiusTooltipLabelFormatter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
@@ -143,6 +145,32 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the X axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? AngleToolTipLabelFormatter
+    {
+        get => _angleTooltipLabelFormatter;
+        set => SetProperty(ref _angleTooltipLabelFormatter, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? RadiusToolTipLabelFormatter
+    {
+        get => _radiusTooltipLabelFormatter;
+        set { SetProperty(ref _radiusTooltipLabelFormatter, value); _obsolete_formatter = value; }
+    }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -267,7 +295,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 var x = cp.X;
                 var y = cp.Y;
 
-                var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
+                var visual = (TVisualPoint?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {
@@ -294,7 +322,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     v.Bezier.Xj = (float)x2b;
                     v.Bezier.Yj = y2b;
 
-                    data.TargetPoint.Context.Visual = v;
+                    data.TargetPoint.Context.Visual = v.Geometry;
+                    data.TargetPoint.Context.AdditionalVisuals = v;
                     OnPointCreated(data.TargetPoint);
                 }
 
@@ -325,7 +354,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 var hags = gs < 16 ? 16 : gs;
                 if (data.TargetPoint.Context.HoverArea is not RectangleHoverArea ha)
                     data.TargetPoint.Context.HoverArea = ha = new RectangleHoverArea();
-                _ = ha.SetDimensions(x - hags * 0.5f, y - hags * 0.5f, hags, hags);
+                _ = ha.SetDimensions(x - hags * 0.5f, y - hags * 0.5f, hags, hags).CenterXToolTip().CenterYToolTip();
 
                 pointsCleanup.Clean(data.TargetPoint);
 
@@ -343,20 +372,13 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = scaler.CenterY - hgs, RotateTransform = (float)actualRotation };
-
-                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
-
-                        l.CompleteTransition(null);
+                        l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     label.RotateTransform = actualRotation;
@@ -471,8 +493,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 false);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
@@ -488,6 +510,54 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>
+    public override string? GetPrimaryToolTipText(ChartPoint point)
+    {
+        string? label = null;
+
+        if (RadiusToolTipLabelFormatter is not null)
+            label = RadiusToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+
+        if (label is null)
+        {
+            var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+
+            var ax = cc.RadiusAxes[cs.ScalesRadiusAt];
+
+            label = ax.Labels is not null
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.PrimaryValue)
+                : ax.Labeler(point.PrimaryValue);
+        }
+
+        return label;
+    }
+
+    /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>
+    public override string? GetSecondaryToolTipText(ChartPoint point)
+    {
+        string? label = null;
+
+        if (AngleToolTipLabelFormatter is not null)
+            label = AngleToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+
+        if (label is null)
+        {
+            var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+
+            var ax = cc.AngleAxes[cs.ScalesAngleAt];
+
+            label = ax.Labels is not null
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.SecondaryValue)
+                : (ax.Labeler != Labelers.Default
+                    ? ax.Labeler(point.SecondaryValue)
+                    : LiveCharts.IgnoreToolTipLabel);
+        }
+
+        return label;
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
@@ -608,34 +678,11 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not TVisualPoint visual)
+        if (chartPoint.Context.AdditionalVisuals is not TVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
-        _ = visual.Geometry
-            .TransitionateProperties(
-                nameof(visual.Geometry.X),
-                nameof(visual.Geometry.Y),
-                nameof(visual.Geometry.Width),
-                nameof(visual.Geometry.Height))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-
-        _ = visual.Bezier
-            .TransitionateProperties(
-                nameof(visual.Bezier.Xi),
-                nameof(visual.Bezier.Yi),
-                nameof(visual.Bezier.Xm),
-                nameof(visual.Bezier.Ym),
-                nameof(visual.Bezier.Xj),
-                nameof(visual.Bezier.Yj))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
+        visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Bezier.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <summary>
@@ -645,7 +692,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <param name="scaler">The scaler.</param>
     protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, PolarScaler scaler)
     {
-        var visual = (TVisualPoint?)point.Context.Visual;
+        var visual = (TVisualPoint?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -721,7 +768,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <returns></returns>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
     }
 
     /// <summary>
@@ -781,6 +828,26 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         return new LvcPoint(
              (float)(centerX + Math.Cos(actualAngle) * radius),
              (float)(centerY + Math.Sin(actualAngle) * radius));
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1f, 1f);
+
+        base.OnPointerLeft(point);
     }
 
     private IEnumerable<ChartPoint[]> SplitEachNull(

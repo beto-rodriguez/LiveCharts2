@@ -5,8 +5,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Zoom;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {

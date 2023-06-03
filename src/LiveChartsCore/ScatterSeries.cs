@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <seealso cref="IScatterSeries{TDrawingContext}" />
 public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
@@ -55,8 +55,18 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         DataPadding = new LvcPoint(1, 1);
 
-        DataLabelsFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
-        TooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.SecondaryValue}, {point.PrimaryValue}";
+        DataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+        YToolTipLabelFormatter = point =>
+        {
+            var series = (ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>)point.Context.Series;
+
+            return series.IsWeighted
+                ? $"X = {point.SecondaryValue}{Environment.NewLine}" +
+                  $"Y = {point.PrimaryValue}{Environment.NewLine}" +
+                  $"W = {point.TertiaryValue}"
+                : $"X = {point.SecondaryValue}{Environment.NewLine}" +
+                  $"Y = {point.PrimaryValue}";
+        };
     }
 
     /// <summary>
@@ -74,6 +84,11 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// The size of the geometry.
     /// </value>
     public double GeometrySize { get; set; } = 24d;
+
+    /// <summary>
+    /// Gets a value indicating whether the points in this series use weight.
+    /// </summary>
+    public bool IsWeighted { get; private set; }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -113,7 +128,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         var gs = (float)GeometrySize;
         var hgs = gs / 2f;
         var sw = Stroke?.StrokeThickness ?? 0;
-        var requiresWScale = _weightBounds.Max - _weightBounds.Min > 0;
+        IsWeighted = _weightBounds.Max - _weightBounds.Min > 0;
         var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.Max - _weightBounds.Min);
 
         var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
@@ -121,6 +136,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         uwx = uwx < gs ? gs : uwx;
         uwy = uwy < gs ? gs : uwy;
+
+        var hy = chart.ControlSize.Height * .5f;
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -143,7 +160,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 continue;
             }
 
-            if (requiresWScale)
+            if (IsWeighted)
             {
                 gs = (float)(wm * (_weightBounds.Max - point.TertiaryValue) + GeometrySize);
                 hgs = gs / 2f;
@@ -180,7 +197,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy);
+            _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy).CenterXToolTip().CenterYToolTip();
 
             pointsCleanup.Clean(point);
 
@@ -189,14 +206,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 if (point.Context.Label is not TLabel label)
                 {
                     var l = new TLabel { X = x - hgs, Y = y - hgs, RotateTransform = (float)DataLabelsRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    l.CompleteTransition(null);
+                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -229,8 +239,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         return seriesBounds;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
@@ -245,6 +255,28 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         };
     }
 
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 0.8f;
+        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1.1f, 1.1f);
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 1;
+        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1f, 1f);
+
+        base.OnPointerLeft(point);
+    }
+
     /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
@@ -253,17 +285,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         if (visual is null) throw new Exception("Unable to initialize the point instance.");
 
-        _ = visual
-           .TransitionateProperties(
-               nameof(visual.X),
-               nameof(visual.Y),
-               nameof(visual.Width),
-               nameof(visual.Height))
-           .WithAnimation(animation =>
-               animation
-                   .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                   .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-           .CompleteCurrentTransitions();
+        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>

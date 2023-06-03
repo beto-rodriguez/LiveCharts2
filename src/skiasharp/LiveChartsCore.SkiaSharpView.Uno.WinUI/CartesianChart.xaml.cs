@@ -38,7 +38,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI.Input;
 using LiveChartsCore.VisualElements;
@@ -47,7 +47,7 @@ using LiveChartsCore.SkiaSharpView.SKCharts;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI;
+namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <inheritdoc cref="CartesianChart{TDrawingContext}"/>
 public sealed partial class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>
@@ -70,7 +70,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public CartesianChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -669,21 +669,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (Tooltip == null || _core == null) return;
-        Tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (Tooltip == null || _core == null) return;
-        _core.ClearTooltipData();
-        Tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         UnoPlatformHelpers.InvokeOnUIThread(action, DispatcherQueue);
@@ -708,7 +693,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
 
             _core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
+                this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
 
             if (SyncContext != null)
                 _motionCanvas.CanvasCore.Sync = SyncContext;
@@ -727,10 +712,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             SizeChanged += OnSizeChanged;
 
             _motionCanvas.Pinched += OnCanvasPinched;
-
-            var canvasContainer = (Canvas)FindName("canvasContainer");
-            grid.Width = canvasContainer.ActualWidth;
-            grid.Height = canvasContainer.ActualHeight;
         }
 
         _core.Load();
@@ -750,11 +731,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         if (_core == null) throw new Exception("Core not found!");
-
-        var canvasContainer = (Canvas)FindName("canvasContainer");
-        grid.Width = canvasContainer.ActualWidth;
-        grid.Height = canvasContainer.ActualHeight;
-
         _core.Update();
     }
 
@@ -810,7 +786,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnPointerExited(object? sender, PointerRoutedEventArgs e)
     {
-        HideTooltip();
         _core?.InvokePointerLeft();
     }
 
@@ -862,7 +837,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

@@ -24,18 +24,17 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
 
 /// <summary>
 /// Defines the relative panel class.
 /// </summary>
-/// <typeparam name="TDrawingContext"></typeparam>
-public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
+public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
+    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private LvcPoint _targetPosition;
+    private IPaint<TDrawingContext>? _backgroundPaint;
 
     /// <summary>
     /// Gets or sets the size.
@@ -47,23 +46,66 @@ public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
     /// </summary>
     public HashSet<VisualElement<TDrawingContext>> Children { get; } = new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
-    public override LvcPoint GetTargetLocation()
+    /// <summary>
+    /// Gets or sets the background paint.
+    /// </summary>
+    public IPaint<TDrawingContext>? BackgroundPaint
     {
-        return _targetPosition;
+        get => _backgroundPaint;
+        set => SetPaintProperty(ref _backgroundPaint, value);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
-    public override LvcSize GetTargetSize()
+    /// <summary>
+    /// Gets the background geometry.
+    /// </summary>
+    public TBackgroundGeometry BackgroundGeometry { get; } = new();
+
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    {
+        return Array.Empty<IPaint<TDrawingContext>>();
+    }
+
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { BackgroundGeometry };
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
+    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    {
+        // NOTE #20231605
+        // force the background to have at least an invisible geometry
+        // we use this geometry in the motion canvas to track the position
+        // of the stack panel as the time and animations elapse.
+        BackgroundPaint ??= LiveCharts.DefaultSettings
+                .GetProvider<TDrawingContext>()
+                .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
+
+        chart.Canvas.AddDrawableTask(BackgroundPaint);
+        BackgroundGeometry.X = (float)X;
+        BackgroundGeometry.Y = (float)Y;
+        BackgroundGeometry.Width = Size.Width;
+        BackgroundGeometry.Height = Size.Height;
+        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
+
+        foreach (var child in Children)
+        {
+            child.OnInvalidated(chart);
+            child.SetParent(BackgroundGeometry);
+        }
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
+    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    {
+        if (BackgroundGeometry is null) return;
+        BackgroundGeometry.Parent = parent;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public override LvcSize Measure(Chart<TDrawingContext> chart)
     {
         return Size;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler?, Scaler?)"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
-    {
-        foreach (var child in Children) _ = child.Measure(chart, primaryScaler, secondaryScaler);
-        return GetTargetSize();
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
@@ -75,26 +117,5 @@ public class RelativePanel<TDrawingContext> : VisualElement<TDrawingContext>
         }
 
         base.RemoveFromUI(chart);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
-    {
-        _targetPosition = new((float)X + _xc, (float)Y + _yc);
-
-        foreach (var child in Children)
-        {
-            child._parent = _parent;
-            child._xc = _xc;
-            child._yc = _yc;
-            child._x = X;
-            child._y = Y;
-            child.OnInvalidated(chart, primaryScaler, secondaryScaler);
-        }
-    }
-
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return Array.Empty<IPaint<TDrawingContext>>();
     }
 }

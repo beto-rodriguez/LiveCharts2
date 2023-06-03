@@ -54,7 +54,7 @@ public class StackedColumnSeries<TModel> : StackedColumnSeries<TModel, RoundedRe
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -74,6 +74,6 @@ public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, 
 /// The type of the data label of every point.
 /// </typeparam>
 public class StackedColumnSeries<TModel, TVisual, TLabel> : StackedColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
-    where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

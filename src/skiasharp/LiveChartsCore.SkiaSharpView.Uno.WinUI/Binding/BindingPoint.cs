@@ -25,7 +25,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI.Text;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Binding;
+namespace LiveChartsCore.SkiaSharpView.WinUI.Binding;
 
 /// <summary>
 /// The Uwp poing class, just used to bind the tooltips.

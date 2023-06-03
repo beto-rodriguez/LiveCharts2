@@ -22,9 +22,7 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
@@ -36,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// </summary>
 public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
 {
-    internal LabelGeometry? _labelGeometry;
+    internal readonly LabelGeometry _labelGeometry = new();
     internal IPaint<SkiaSharpDrawingContext>? _paint;
     internal bool _isVirtual = false;
     internal string _text = string.Empty;
@@ -46,6 +44,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     internal LvcColor _backgroundColor;
     internal Padding _padding = new(0);
     internal double _rotation;
+    internal float _lineHeight = 1.75f;
     internal LvcPoint _translate = new();
     private LvcSize _actualSize = new();
     private LvcPoint _targetPosition = new();
@@ -99,9 +98,19 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// </summary>
     public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
+    /// <summary>
+    /// Gets or sets the line height [times the text measured height].
+    /// </summary>
+    public float LineHeight { get => _lineHeight; set { _lineHeight = value; OnPropertyChanged(); } }
+
     internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paint };
+    }
+
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { _labelGeometry };
     }
 
     internal override void AlignToTopLeftCorner()
@@ -110,52 +119,52 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         HorizontalAlignment = Align.Start;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
+    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
     {
         var x = (float)X;
         var y = (float)Y;
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
-            if (primaryScaler is null || secondaryScaler is null)
+            if (PrimaryScaler is null || SecondaryScaler is null)
                 throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
 
-            x = secondaryScaler.ToPixels(x);
-            y = primaryScaler.ToPixels(y);
+            x = SecondaryScaler.ToPixels(x);
+            y = PrimaryScaler.ToPixels(y);
         }
 
-        _targetPosition = new((float)X + _xc, (float)Y + _yc);
-        _ = Measure(chart, primaryScaler, secondaryScaler);
-
-        if (_labelGeometry is null)
-        {
-            var cp = GetPositionRelativeToParent();
-
-            _labelGeometry = new LabelGeometry
-            {
-                Text = Text,
-                TextSize = (float)TextSize,
-                X = cp.X,
-                Y = cp.Y,
-                RotateTransform = (float)Rotation,
-                TranslateTransform = Translate,
-                VerticalAlign = VerticalAlignment,
-                HorizontalAlign = HorizontalAlignment,
-                Background = BackgroundColor,
-                Padding = Padding
-            };
-
-            _ = _labelGeometry
-                .TransitionateProperties()
-                .WithAnimation(chart)
-                .CompleteCurrentTransitions();
-        }
+        _targetPosition = new((float)X, (float)Y);
+        _ = Measure(chart);
 
         _labelGeometry.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
-        _labelGeometry.X = x + _xc;
-        _labelGeometry.Y = y + _yc;
+        _labelGeometry.X = x;
+        _labelGeometry.Y = y;
+        _labelGeometry.RotateTransform = (float)Rotation;
+        _labelGeometry.TranslateTransform = Translate;
+        _labelGeometry.VerticalAlign = VerticalAlignment;
+        _labelGeometry.HorizontalAlign = HorizontalAlignment;
+        _labelGeometry.Background = BackgroundColor;
+        _labelGeometry.Padding = Padding;
+        _labelGeometry.LineHeight = LineHeight;
+
+        var drawing = chart.Canvas.Draw();
+        if (Paint is not null) _ = drawing.SelectPaint(Paint).Draw(_labelGeometry);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
+    protected internal override void SetParent(IGeometry<SkiaSharpDrawingContext> parent)
+    {
+        if (_labelGeometry is null) return;
+        _labelGeometry.Parent = parent;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
+    {
+        _labelGeometry.Text = Text;
+        _labelGeometry.TextSize = (float)TextSize;
         _labelGeometry.RotateTransform = (float)Rotation;
         _labelGeometry.TranslateTransform = Translate;
         _labelGeometry.VerticalAlign = VerticalAlignment;
@@ -163,52 +172,8 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
 
-        var drawing = chart.Canvas.Draw();
-        if (Paint is not null) _ = drawing.SelectPaint(Paint).Draw(_labelGeometry);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
-    {
-        var l = _labelGeometry ?? new LabelGeometry()
-        {
-            Text = Text,
-            TextSize = (float)TextSize,
-            RotateTransform = (float)Rotation,
-            TranslateTransform = Translate,
-            VerticalAlign = VerticalAlignment,
-            HorizontalAlign = HorizontalAlignment,
-            Background = BackgroundColor,
-            Padding = Padding,
-        };
-
         return _actualSize = _paint is null
             ? new LvcSize()
-            : l.Measure(_paint);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
-    public override LvcSize GetTargetSize()
-    {
-        return _actualSize;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
-    public override LvcPoint GetTargetLocation()
-    {
-        var x = _targetPosition.X;
-        var y = _targetPosition.Y;
-
-        x += Translate.X;
-        y += Translate.Y;
-
-        var size = GetTargetSize();
-        if (HorizontalAlignment == Align.Middle) x -= size.Width * 0.5f;
-        if (HorizontalAlignment == Align.End) x -= size.Width;
-
-        if (VerticalAlignment == Align.Middle) y -= size.Height * 0.5f;
-        if (VerticalAlignment == Align.End) y -= size.Height;
-
-        return new(x, y);
+            : _labelGeometry.Measure(_paint);
     }
 }

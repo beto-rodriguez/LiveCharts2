@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Measure;
+
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
@@ -27,6 +29,30 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public class TooltipPlacementContext
 {
+    /// <summary>
+    /// Intializes a new instance of the <see cref="TooltipPlacementContext"/> class.
+    /// </summary>
+    /// <param name="position"></param>
+    public TooltipPlacementContext(TooltipPosition position)
+    {
+        Position = position;
+    }
+
+    /// <summary>
+    /// Gets the tool tip position.
+    /// </summary>
+    public TooltipPosition Position { get; set; }
+
+    /// <summary>
+    /// Gets or sets the value for the pop-up placement.
+    /// </summary>
+    public PopUpPlacement AutoPopPupPlacement { get; set; } = PopUpPlacement.Top;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether all the points evaluated are less than the series' pivot.
+    /// </summary>
+    public bool AreAllLessThanPivot { get; set; } = true;
+
     /// <summary>
     /// Gets or sets the most top.
     /// </summary>
@@ -60,6 +86,22 @@ public class TooltipPlacementContext
     public float MostLeft { get; set; } = float.MaxValue;
 
     /// <summary>
+    /// Gets or sets the most top auto.
+    /// </summary>
+    /// <value>
+    /// The most top.
+    /// </value>
+    public float MostAutoTop { get; set; } = float.MaxValue;
+
+    /// <summary>
+    /// Gets or sets the most bottom auto.
+    /// </summary>
+    /// <value>
+    /// The most bottom.
+    /// </value>
+    public float MostAutoBottom { get; set; } = float.MinValue;
+
+    /// <summary>
     /// Gets or sets the pie x.
     /// </summary>
     /// <value>
@@ -74,4 +116,12 @@ public class TooltipPlacementContext
     /// The pie y.
     /// </value>
     public float PieY { get; set; } = 0;
+
+    /// <summary>
+    /// Gets or sets the pie most r, the longest known radius.
+    /// </summary>
+    /// <value>
+    /// The pie most r.
+    /// </value>
+    public float PieMostR { get; set; } = 0;
 }

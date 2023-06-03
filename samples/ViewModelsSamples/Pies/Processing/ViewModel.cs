@@ -8,8 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Processing;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly ObservableValue _processing;
     private readonly ObservableValue _completed;
@@ -100,8 +99,8 @@ public partial class ViewModel
                     new() { Value = _failed, Series = Series[1] },
                     new() { Value = _completed, Series = Series[2] }
             };
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ValueSeries)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
+            OnPropertyChanged(nameof(ValueSeries));
+            OnPropertyChanged(nameof(Value));
             isProcessing = _completed.Value < 1000;
         }
     }

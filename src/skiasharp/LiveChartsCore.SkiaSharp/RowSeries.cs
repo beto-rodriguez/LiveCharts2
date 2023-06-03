@@ -54,7 +54,7 @@ public class RowSeries<TModel> : RowSeries<TModel, RoundedRectangleGeometry, Lab
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class RowSeries<TModel, TVisual> : RowSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -74,6 +74,6 @@ public class RowSeries<TModel, TVisual> : RowSeries<TModel, TVisual, LabelGeomet
 /// The type of the data label of every point.
 /// </typeparam>
 public class RowSeries<TModel, TVisual, TLabel> : RowSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
-    where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

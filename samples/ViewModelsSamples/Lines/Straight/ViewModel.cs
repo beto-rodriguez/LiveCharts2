@@ -4,8 +4,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Straight;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {

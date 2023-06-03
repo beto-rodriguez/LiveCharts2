@@ -39,7 +39,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
-        where TVisual : class, ISolidColorChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, IColoredGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
@@ -64,7 +64,18 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
              SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
     {
         DataPadding = new LvcPoint(0, 0);
-        TooltipLabelFormatter = (point) => $"{Name}: {point.TertiaryValue:N}";
+        YToolTipLabelFormatter = (point) =>
+        {
+            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+
+            var ax = cc.YAxes[cs.ScalesYAt];
+
+            var labeler = ax.Labeler;
+            if (ax.Labels is not null) labeler = Labelers.BuildNamedLabeler(ax.Labels);
+
+            return $"{labeler(point.PrimaryValue)} {point.TertiaryValue}";
+        };
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
@@ -195,7 +206,10 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
+            _ = ha
+                .SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp)
+                .CenterXToolTip()
+                .CenterYToolTip();
 
             pointsCleanup.Clean(point);
 
@@ -206,14 +220,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - uws * 0.5f, Y = primary - uws * 0.5f, RotateTransform = (float)DataLabelsRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    l.CompleteTransition(null);
+                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -261,21 +268,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
-
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.X),
-                nameof(visual.Width),
-                nameof(visual.Y),
-                nameof(visual.Height),
-                nameof(visual.Color))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
+        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -304,18 +298,19 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         label.RemoveOnCompleted = true;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
-        var strokeClone = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
-        var st = strokeClone.StrokeThickness;
+        var solidPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+        var st = solidPaint.StrokeThickness;
+        solidPaint.IsFill = true;
 
         if (st > MAX_MINIATURE_STROKE_WIDTH)
         {
             st = MAX_MINIATURE_STROKE_WIDTH;
-            strokeClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
+            solidPaint.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
         }
 
         var visual = new TVisual
@@ -326,8 +321,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             Width = (float)MiniatureShapeSize,
             Color = HeatMap[0] // ToDo <- draw the gradient?
         };
-        strokeClone.ZIndex = 1;
-        schedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
+        schedules.Add(new PaintSchedule<TDrawingContext>(solidPaint, visual));
 
         return new Sketch<TDrawingContext>()
         {
@@ -347,6 +341,6 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _paintTaks, hoverPaint };
+        return new[] { _paintTaks };
     }
 }

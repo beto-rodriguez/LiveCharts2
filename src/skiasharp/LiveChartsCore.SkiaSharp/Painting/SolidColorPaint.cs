@@ -135,7 +135,7 @@ public class SolidColorPaint : Paint
 
         var baseColor = context.PaintTask.Color;
         context.Paint.Color =
-            new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
+            new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, (byte)(255 * geometry.Opacity));
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
@@ -152,7 +152,11 @@ public class SolidColorPaint : Paint
     /// </summary>
     public override void Dispose()
     {
-        if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
+        // Note #301222
+        // Disposing typefaces could cause render issues.
+        // Does this causes memory leaks?
+        // Should the user dispose typefaces manually?
+        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
         PathEffect?.Dispose();
         ImageFilter?.Dispose();
 

@@ -92,7 +92,9 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+    public Coordinate Coordinate => _x is null || _y is null
+        ? Coordinate.Empty
+        : new Coordinate(_x.Value, _y.Value);
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -106,9 +108,6 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        Coordinate = _x is null || _y is null
-            ? Coordinate.Empty
-            : new Coordinate(_x.Value, _y.Value);
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

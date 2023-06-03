@@ -60,7 +60,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
         var skiaChart = (Chart<SkiaSharpDrawingContext>)chart;
         BuildLayout(skiaChart);
         if (_stackPanel is null) return;
-        Size = _stackPanel.Measure(skiaChart, null, null);
+        Size = _stackPanel.Measure(skiaChart);
     }
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
@@ -83,7 +83,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
 
         foreach (var series in chart.ChartSeries)
         {
-            var sketch = series.GetMiniatresSketch();
+            var sketch = series.GetMiniaturesSketch();
             var relativePanel = sketch.AsDrawnControl();
 
             var label = new LabelVisual
@@ -108,7 +108,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
                 }
             };
 
-            _ = _stackPanel?.Children.Add(sp);
+            _stackPanel?.Children.Add(sp);
         }
     }
 }

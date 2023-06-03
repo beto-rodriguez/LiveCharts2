@@ -64,7 +64,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public CartesianChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -658,21 +658,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (Tooltip == null || _core == null) return;
-        Tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (Tooltip == null || _core == null) return;
-        _core.ClearTooltipData();
-        Tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         _ = DispatcherQueue.TryEnqueue(
@@ -681,7 +666,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         var canvas = (MotionCanvas)FindName("motionCanvas");
         _canvas = canvas;
@@ -699,7 +684,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
 
             _core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, zoomingSection);
+                this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
             //_legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //_tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             if (SyncContext != null)
@@ -761,7 +746,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private void OnPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
-        HideTooltip();
         _core?.InvokePointerLeft();
     }
 
@@ -832,7 +816,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

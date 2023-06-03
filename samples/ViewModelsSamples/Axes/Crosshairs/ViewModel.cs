@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -31,8 +29,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Crosshairs;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {
@@ -45,8 +42,6 @@ public partial class ViewModel
             Values = new ObservableCollection<double> { 210, 400, 300, 350, 219, 323, 618 },
         },
     };
-
-    public IEnumerable<Axis> AllAxes => XAxes.Concat(YAxes);
 
     public Axis[] XAxes { get; set; } =
     {

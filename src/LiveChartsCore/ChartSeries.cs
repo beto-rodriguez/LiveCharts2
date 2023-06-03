@@ -39,7 +39,7 @@ namespace LiveChartsCore;
 public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     : Series<TModel, TVisual, TLabel, TDrawingContext>, IChartSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _dataLabelsPaint;

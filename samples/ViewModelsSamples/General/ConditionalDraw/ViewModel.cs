@@ -11,8 +11,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.ConditionalDraw;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {

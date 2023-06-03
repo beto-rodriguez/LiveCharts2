@@ -65,7 +65,7 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    /// Gets or sets the nam
+    /// Gets or sets the name.
     /// </summary>
     public string Name { get; set; } = string.Empty;
 

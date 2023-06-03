@@ -36,14 +36,14 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.SKCharts;
-using LiveChartsCore.SkiaSharpView.Uno.WinUI.Helpers;
+using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI;
+namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
 public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
@@ -58,7 +58,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public PieChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -528,21 +528,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (Tooltip == null || _core == null) return;
-        Tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (Tooltip == null || _core == null) return;
-        _core.ClearTooltipData();
-        Tooltip.Hide();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         UnoPlatformHelpers.InvokeOnUIThread(action, DispatcherQueue);
@@ -555,7 +540,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
         if (_core is null)
         {
-            _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;
@@ -612,7 +597,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
     private void OnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        HideTooltip();
         _core?.InvokePointerLeft();
     }
 
@@ -642,7 +626,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

@@ -50,7 +50,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <summary>
     /// The active separators
     /// </summary>
-    protected readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
 
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
@@ -96,6 +96,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private readonly float _tickLength = 6f;
     private readonly int _subSections = 3;
     private Align? _labelsAlignment;
+    private bool _inLineNamePlacement;
 
 #if DEBUG
     private int _stepCount;
@@ -278,6 +279,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
     public double? MinZoomDelta { get; set; }
 
+    /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
+    public bool InLineNamePlacement { get => _inLineNamePlacement; set => SetProperty(ref _inLineNamePlacement, value); }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianAxis.Initialized"/>
@@ -304,14 +308,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (!_animatableBounds.HasPreviousState)
         {
-            _ = _animatableBounds
-                .TransitionateProperties(null)
-                .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                .CompleteCurrentTransitions();
-
+            _animatableBounds.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
             _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
         }
 
@@ -320,12 +317,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
 
-        var labeler = Labeler;
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
+        var labeler = GetActualLabeler();
 
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
@@ -736,11 +728,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint);
 
             _crosshairLabel ??= new TTextGeometry();
-            var labeler = Labeler;
-            if (Labels is not null)
-            {
-                labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            }
+            var labeler = GetActualLabeler();
 
             _crosshairLabel.Text = TryGetLabelOrLogError(labeler, labelValue);
             _crosshairLabel.TextSize = (float)_textSize;
@@ -791,7 +779,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         {
             Text = Name ?? string.Empty,
             TextSize = (float)_nameTextSize,
-            RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
+            RotateTransform = Orientation == AxisOrientation.X
+                ? 0
+                : InLineNamePlacement ? 0 : -90,
             Padding = NamePadding
         };
 
@@ -805,13 +795,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
 
         var ts = (float)_textSize;
-        var labeler = Labeler;
-
-        if (Labels is not null)
-        {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
-            _minStep = 1;
-        }
+        var labeler = GetActualLabeler();
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
         var s = axisTick.Value;
@@ -905,17 +889,24 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
     }
 
-    private LvcSize GetPossibleMaxLabelSize(Chart<TDrawingContext> chart)
+    private Func<double, string> GetActualLabeler()
     {
-        if (LabelsPaint is null) return new LvcSize();
-
         var labeler = Labeler;
 
         if (Labels is not null)
         {
-            labeler = Labelers.BuildNamedLabeler(Labels).Function;
+            labeler = Labelers.BuildNamedLabeler(Labels);
             _minStep = 1;
         }
+
+        return labeler;
+    }
+
+    private LvcSize GetPossibleMaxLabelSize(Chart<TDrawingContext> chart)
+    {
+        if (LabelsPaint is null) return new LvcSize();
+
+        var labeler = GetActualLabeler();
 
         var axisTick = this.GetTick(chart.DrawMarginSize);
         var s = axisTick.Value;
@@ -974,15 +965,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 VerticalAlign = Align.Middle
             };
 
-            _ = _nameGeometry
-                 .TransitionateProperties(
-                         nameof(_nameGeometry.X),
-                         nameof(_nameGeometry.Y))
-                 .WithAnimation(animation =>
-                     animation
-                         .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                         .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
+            _nameGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
             isNew = true;
         }
 
@@ -992,14 +975,30 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (_orientation == AxisOrientation.X)
         {
-            _nameGeometry.X = (lxi + lxj) * 0.5f;
-            _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
+            if (InLineNamePlacement)
+            {
+                _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
+                _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
+            }
+            else
+            {
+                _nameGeometry.X = (lxi + lxj) * 0.5f;
+                _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
+            }
         }
         else
         {
-            _nameGeometry.RotateTransform = -90;
-            _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
-            _nameGeometry.Y = (lyi + lyj) * 0.5f;
+            if (InLineNamePlacement)
+            {
+                _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
+                _nameGeometry.Y = _nameDesiredSize.Height * 0.5f;
+            }
+            else
+            {
+                _nameGeometry.RotateTransform = -90;
+                _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
+                _nameGeometry.Y = (lyi + lyj) * 0.5f;
+            }
         }
 
         if (isNew) _nameGeometry.CompleteTransition(null);
@@ -1039,15 +1038,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     private void InitializeLine(ILineGeometry<TDrawingContext> lineGeometry, CartesianChart<TDrawingContext> cartesianChart)
     {
-        _ = lineGeometry
-            .TransitionateProperties(
-                nameof(lineGeometry.X), nameof(lineGeometry.X1),
-                nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
-                nameof(lineGeometry.Opacity))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+        lineGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
     }
 
     private void InitializeTick(
@@ -1065,15 +1056,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             visualSeparator.Tick = tickGeometry;
         }
 
-        _ = tickGeometry
-            .TransitionateProperties(
-                nameof(tickGeometry.X), nameof(tickGeometry.X1),
-                nameof(tickGeometry.Y), nameof(tickGeometry.Y1),
-                nameof(tickGeometry.Opacity))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+        tickGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
     }
 
     private void InitializeSubticks(
@@ -1100,15 +1083,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         visualSeparator.Label = textGeometry;
         if (hasRotation) textGeometry.RotateTransform = r;
 
-        _ = textGeometry
-            .TransitionateProperties(
-                nameof(textGeometry.X),
-                nameof(textGeometry.Y),
-                nameof(textGeometry.Opacity))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+        textGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
     }
 
     private void UpdateSeparator(

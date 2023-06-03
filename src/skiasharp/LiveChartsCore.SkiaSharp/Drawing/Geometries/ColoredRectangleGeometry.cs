@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a rectangle geometry with a specified color.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class ColoredRectangleGeometry : SizedGeometry, ISolidColorChartPoint<SkiaSharpDrawingContext>
+public class ColoredRectangleGeometry : SizedGeometry, IColoredGeometry<SkiaSharpDrawingContext>
 {
     private readonly ColorMotionProperty _colorProperty;
 

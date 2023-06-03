@@ -7,5 +7,6 @@
     xmlns:skia="using:SkiaSharp.Views.Windows"
     mc:Ignorable="d">
 
-    <skia:SKXamlCanvas x:Name="canvas"></skia:SKXamlCanvas>
+    <skia:SKXamlCanvas x:Name="canvas"/>
+
 </UserControl>

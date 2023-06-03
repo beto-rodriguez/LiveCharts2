@@ -4,12 +4,12 @@
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
     <Nullable>enable</Nullable>
     <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WinForms</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinForms</RootNamespace>
-    <Version>2.0.0-beta.700</Version>
+    <Version>2.0.0-beta.710</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsForms.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

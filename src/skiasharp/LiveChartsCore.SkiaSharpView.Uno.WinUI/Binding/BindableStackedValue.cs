@@ -22,7 +22,7 @@
 
 using Microsoft.UI.Xaml.Data;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.WinUI.Binding;
+namespace LiveChartsCore.SkiaSharpView.WinUI.Binding;
 
 /// <summary>
 /// Defines a bindable stacked value.

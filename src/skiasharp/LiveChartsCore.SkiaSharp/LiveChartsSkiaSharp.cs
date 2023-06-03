@@ -48,6 +48,11 @@ public static class LiveChartsSkiaSharp
     public static DefaultPaint DefaultPaint { get; } = new();
 
     /// <summary>
+    /// Gets or sets an SKTypeface instance to use globally on any paint that does not specify any.
+    /// </summary>
+    public static SKTypeface? DefaultSKTypeface { get; set; }
+
+    /// <summary>
     /// Gets the default platform builder.
     /// </summary>
     /// <value>
@@ -60,6 +65,19 @@ public static class LiveChartsSkiaSharp
             .AddLightTheme();
 
     /// <summary>
+    /// Configures LiveCharts using the default settings for SkiaSharp.
+    /// </summary>
+    /// <param name="settings">The settings.</param>
+    /// <returns>The settings.</returns>
+    public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
+    {
+        return settings
+            .AddDefaultMappers()
+            .AddSkiaSharp()
+            .AddLightTheme();
+    }
+
+    /// <summary>
     /// Adds SkiaSharp as the backend provider for LiveCharts.
     /// </summary>
     /// <param name="settings">The settings.</param>
@@ -70,6 +88,13 @@ public static class LiveChartsSkiaSharp
         LiveCharts.DefaultPaint = DefaultPaint;
 
         return settings.HasProvider(new SkiaSharpProvider());
+    }
+
+    public static LiveChartsSettings WithGlobalSKTypeface(this LiveChartsSettings settings, SKTypeface typeface)
+    {
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(DefaultPlatformBuilder);
+        DefaultSKTypeface = typeface;
+        return settings;
     }
 
     /// <summary>
@@ -128,13 +153,27 @@ public static class LiveChartsSkiaSharp
     /// <param name="source">The data source.</param>
     /// <param name="buider">An optional builder.</param>
     /// <returns></returns>
-    public static ObservableCollection<ISeries> AsLiveChartsPieSeries<T>(
+    public static ObservableCollection<PieSeries<T>> AsPieSeries<T>(
+        this IEnumerable<T> source,
+        Action<T, PieSeries<T>>? buider = null)
+    {
+        return AsLiveChartsPieSeries(source, buider);
+    }
+
+    /// <summary>
+    /// Converts an IEnumerable to an ObservableCollection of pie series.
+    /// </summary>
+    /// <typeparam name="T">The type.</typeparam>
+    /// <param name="source">The data source.</param>
+    /// <param name="buider">An optional builder.</param>
+    /// <returns></returns>
+    public static ObservableCollection<PieSeries<T>> AsLiveChartsPieSeries<T>(
         this IEnumerable<T> source,
         Action<T, PieSeries<T>>? buider = null)
     {
         buider ??= (instance, series) => { };
 
-        return new ObservableCollection<ISeries>(
+        return new ObservableCollection<PieSeries<T>>(
             source.Select(instance =>
             {
                 var series = new PieSeries<T> { Values = new ObservableCollection<T> { instance } };

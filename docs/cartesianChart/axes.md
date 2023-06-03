@@ -111,8 +111,8 @@ in this case you could set the `MinLimit` property to 0 and the `MaxLimit` to 10
 
 <pre><code>var xAxis = new Axis
 {
-    MaxLimit = 0, // mark
-    MinLimit = 10 // mark
+    MaxLimit = 10, // mark
+    MinLimit = 0 // mark
 };
 
 myChart.XAxes = new List&lt;Axis>{ xAxis };</code></pre>
@@ -127,8 +127,8 @@ the `Axis.PropertyChanged` event:
 
 <pre><code>var xAxis = new Axis
 {
-    MaxLimit = 0,
-    MinLimit = 10
+    MaxLimit = 10,
+    MinLimit = 0
 };
 
 xAxis.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) => // mark

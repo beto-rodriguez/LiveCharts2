@@ -40,12 +40,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
-public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
-        where TVisualPoint : StepLineVisualPoint<TDrawingContext, TVisual>, new()
+public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
@@ -57,7 +55,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     private bool _enableNullSplitting = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     public StepLineSeries(bool isStacked = false)
@@ -178,12 +176,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 fillPath.Pivot = p;
                 if (isNew)
                 {
-                    _ = fillPath.TransitionateProperties(nameof(fillPath.Pivot))
-                        .WithAnimation(animation =>
-                                    animation
-                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                        .CompleteCurrentTransitions();
+                    fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                 }
             }
             if (Stroke is not null)
@@ -195,12 +188,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 strokePath.Pivot = p;
                 if (isNew)
                 {
-                    _ = strokePath.TransitionateProperties(nameof(strokePath.Pivot))
-                        .WithAnimation(animation =>
-                                    animation
-                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
-                        .CompleteCurrentTransitions();
+                    strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                 }
             }
 
@@ -211,13 +199,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 var s = 0d;
                 if (stacker is not null) s = stacker.GetStack(point).Start;
 
-                var visual = (TVisualPoint?)point.Context.Visual;
+                var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
                 var dp = point.PrimaryValue + s - previousPrimary;
                 var ds = point.SecondaryValue - previousSecondary;
 
                 if (visual is null)
                 {
-                    var v = new TVisualPoint();
+                    var v = new StepLineVisualPoint<TDrawingContext, TVisual>();
                     visual = v;
 
                     if (IsFirstDraw)
@@ -233,7 +221,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         v.StepSegment.Yj = p;
                     }
 
-                    point.Context.Visual = v;
+                    point.Context.Visual = v.Geometry;
+                    point.Context.AdditionalVisuals = v;
                     OnPointCreated(point);
                 }
 
@@ -270,7 +259,12 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 if (point.Context.HoverArea is not RectangleHoverArea ha)
                     point.Context.HoverArea = ha = new RectangleHoverArea();
-                _ = ha.SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs);
+
+                _ = ha
+                    .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
+                .CenterXToolTip();
+
+                _ = point.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(point);
 
@@ -281,20 +275,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation };
-
-                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                        l.CompleteTransition(null);
+                        l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                         label = l;
                         point.Context.Label = l;
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(point));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var m = label.Measure(DataLabelsPaint);
@@ -363,8 +350,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         return (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
@@ -385,11 +372,31 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
     {
-        return series is StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint> stepSeries &&
+        return series is StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> stepSeries &&
             Name == series.Name &&
             !((ISeries)this).PaintsChanged &&
             Fill == stepSeries.Fill && Stroke == stepSeries.Stroke &&
             GeometryFill == stepSeries.GeometryFill && GeometryStroke == stepSeries.GeometryStroke;
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.ScaleTransform = new LvcPoint(1f, 1f);
+
+        base.OnPointerLeft(point);
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
@@ -397,39 +404,17 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not TVisualPoint visual)
+        if (chartPoint.Context.AdditionalVisuals is not StepLineVisualPoint<TDrawingContext, TVisual> visual)
             throw new Exception("Unable to initialize the point instance.");
 
-        _ = visual.Geometry
-            .TransitionateProperties(
-                nameof(visual.Geometry.X),
-                nameof(visual.Geometry.Y),
-                nameof(visual.Geometry.Width),
-                nameof(visual.Geometry.Height),
-                nameof(visual.Geometry.TranslateTransform))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
-
-        _ = visual.StepSegment
-            .TransitionateProperties(
-                nameof(visual.StepSegment.Xi),
-                nameof(visual.StepSegment.Yi),
-                nameof(visual.StepSegment.Xj),
-                nameof(visual.StepSegment.Yj))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
+        visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.StepSegment.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (TVisualPoint?)point.Context.Visual;
+        var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -456,7 +441,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var label = (TLabel?)point.Context.Label;
         if (label is null) return;
 
-        label.TextSize = 1;
         label.RemoveOnCompleted = true;
     }
 
@@ -499,12 +483,12 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <returns></returns>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
     }
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not TVisualPoint visual) return;
+        if (point.Context.Visual is not StepLineVisualPoint<TDrawingContext, TVisual> visual) return;
 
         var x = xScale.ToPixels(point.SecondaryValue);
         var y = yScale.ToPixels(point.PrimaryValue);

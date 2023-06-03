@@ -1,0 +1,27 @@
+name: "Compile all views"
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+  schedule:
+    - cron: '35 19 * * 4'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+        targetplatform: [ x86, x64 ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Compile Debug
+      run: ./build/build-windows.ps1 -configuration "Debug"

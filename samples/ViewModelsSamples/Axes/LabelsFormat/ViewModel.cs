@@ -6,8 +6,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.LabelsFormat;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {
@@ -22,7 +21,7 @@ public partial class ViewModel
             Name = "Salesman/woman",
             // Use the labels property for named or static labels // mark
             Labels = new string[] { "Sergio", "Lando", "Lewis" }, // mark
-            LabelsRotation = 15
+            LabelsRotation = 15,
         }
     };
 
@@ -30,7 +29,7 @@ public partial class ViewModel
     {
         new Axis
         {
-            Name = "Sales amount",
+            Name = "Salome",
             NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
 
             LabelsPaint = new SolidColorPaint

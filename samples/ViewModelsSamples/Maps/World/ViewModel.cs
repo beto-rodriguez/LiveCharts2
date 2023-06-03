@@ -9,7 +9,6 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World;
 
-[ObservableObject]
 public  partial class ViewModel
 {
     private bool _isBrazilInChart = true;
@@ -48,7 +47,7 @@ public  partial class ViewModel
 
     public HeatLandSeries[] Series { get; set; }
 
-    [ICommand]
+    [RelayCommand]
     public void ToggleBrazil()
     {
         var lands = Series[0].Lands;
