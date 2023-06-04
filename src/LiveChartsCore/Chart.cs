@@ -51,6 +51,7 @@ public abstract class Chart<TDrawingContext> : IChart
     internal bool _isToolTipOpen = false;
     internal bool _isPointerIn;
     internal LvcPoint _pointerPosition = new(-10, -10);
+    internal float _titleHeight = 0f;
     internal bool _preserveFirstDraw = false;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
@@ -61,7 +62,6 @@ public abstract class Chart<TDrawingContext> : IChart
     private bool _isPanning = false;
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
-    private readonly Timer _closeTooltipTimer;
     private DateTime _tooltipClosesAt = DateTime.MaxValue;
 
     #endregion
@@ -95,7 +95,7 @@ public abstract class Chart<TDrawingContext> : IChart
         _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
 
-        _closeTooltipTimer = new Timer(o =>
+        _ = new Timer(o =>
         {
             if (DateTime.Now < _tooltipClosesAt) return;
 
@@ -550,6 +550,42 @@ public abstract class Chart<TDrawingContext> : IChart
         element.RemoveFromUI(this);
         _ = _everMeasuredElements.Remove(element);
         _ = _toDeleteElements.Remove(element);
+    }
+
+    /// <summary>
+    /// Gets the legend position.
+    /// </summary>
+    /// <param name="legendSize">The size of the legend.</param>
+    /// <returns></returns>
+    public LvcPoint GetLegendPosition(LvcSize legendSize)
+    {
+        var actualChartSize = ControlSize;
+        float x = 0f, y = 0f;
+
+        if (LegendPosition == LegendPosition.Top)
+        {
+            Canvas.StartPoint = new LvcPoint(0, legendSize.Height + _titleHeight);
+            x = actualChartSize.Width * 0.5f - legendSize.Width * 0.5f;
+            y = _titleHeight - legendSize.Height;
+        }
+        if (LegendPosition == LegendPosition.Bottom)
+        {
+            x = actualChartSize.Width * 0.5f - legendSize.Width * 0.5f;
+            y = actualChartSize.Height;
+        }
+        if (LegendPosition == LegendPosition.Left)
+        {
+            Canvas.StartPoint = new LvcPoint(legendSize.Width, 0);
+            x = -legendSize.Width;
+            y = actualChartSize.Height * 0.5f - legendSize.Height * 0.5f;
+        }
+        if (LegendPosition == LegendPosition.Right)
+        {
+            x = actualChartSize.Width;
+            y = actualChartSize.Height * 0.5f - legendSize.Height * 0.5f;
+        }
+
+        return new(x, y);
     }
 
     /// <summary>
