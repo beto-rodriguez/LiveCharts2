@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -30,14 +31,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <seealso cref="SizedGeometry" />
 public class SVGPathGeometry : SizedGeometry
 {
-    private string _svg = string.Empty;
-    internal SKPath? _svgPath;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
-    /// </summary>
-    public SVGPathGeometry() : base()
-    { }
+    private readonly SKPath? _path;
+    private readonly Func<SKPath> _pathSource = () => throw new NotImplementedException("There is no path to render.");
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
@@ -45,16 +40,17 @@ public class SVGPathGeometry : SizedGeometry
     /// <param name="svgPath">The SVG path.</param>
     public SVGPathGeometry(SKPath svgPath)
     {
-        _svgPath = svgPath;
+        _path = svgPath;
     }
 
     /// <summary>
-    /// Gets or sets the SVG path.
+    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
     /// </summary>
-    /// <value>
-    /// The SVG.
-    /// </value>
-    public string SVG { get => _svg; set { _svg = value; OnSVGPropertyChanged(); } }
+    /// <param name="pathSource">The path source.</param>
+    public SVGPathGeometry(Func<SKPath> pathSource)
+    {
+        _pathSource = pathSource;
+    }
 
     /// <summary>
     /// Gets or sets whether the path should be fitted to the size of the geometry.
@@ -64,14 +60,12 @@ public class SVGPathGeometry : SizedGeometry
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        if (_svgPath is null)
-            throw new System.NullReferenceException(
-                $"{nameof(SVG)} property is null and there is not a defined path to draw.");
+        var path = _path ?? _pathSource();
 
         _ = context.Canvas.Save();
 
         var canvas = context.Canvas;
-        _ = _svgPath.GetTightBounds(out var bounds);
+        _ = path.GetTightBounds(out var bounds);
 
         if (FitToSize)
         {
@@ -95,13 +89,8 @@ public class SVGPathGeometry : SizedGeometry
             canvas.Translate(-bounds.MidX, -bounds.MidY);
         }
 
-        canvas.DrawPath(_svgPath, paint);
+        canvas.DrawPath(path, paint);
 
         context.Canvas.Restore();
-    }
-
-    private void OnSVGPropertyChanged()
-    {
-        _svgPath = SKPath.ParseSvgPathData(_svg);
     }
 }
