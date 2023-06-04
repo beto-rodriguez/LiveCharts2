@@ -32,7 +32,7 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
-public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
+public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 {
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
@@ -69,18 +69,15 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     /// </summary>
     public double TextSize { get; set; } = 15;
 
-    public LvcSize Size { get; private set; }
-
     public SKDefaultLegend()
     {
         FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
     }
 
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}.Draw(Chart{TDrawingContext})"/>
     public void Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        Measure(chart);
-
-        var legendPosition = chart.GetLegendPosition(Size);
+        var legendPosition = chart.GetLegendPosition();
 
         _stackPanel.X = legendPosition.X;
         _stackPanel.Y = legendPosition.Y;
@@ -89,11 +86,11 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
         if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
     }
 
-    public void Measure(IChart chart)
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
     {
-        var c = (Chart<SkiaSharpDrawingContext>)chart;
-        BuildLayout(c);
-        Size = _stackPanel.Measure(c);
+        BuildLayout(chart);
+        return _stackPanel.Measure(chart);
     }
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)

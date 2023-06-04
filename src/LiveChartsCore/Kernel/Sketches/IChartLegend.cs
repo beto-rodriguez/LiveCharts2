@@ -36,4 +36,10 @@ public interface IChartLegend<TDrawingContext>
     /// </summary>
     /// <param name="chart">The chart.</param>
     void Draw(Chart<TDrawingContext> chart);
+
+    /// <summary>
+    /// Measures the control.
+    /// </summary>
+    /// <param name="chart">The chart that holds the control.</param>
+    LvcSize Measure(Chart<TDrawingContext> chart);
 }

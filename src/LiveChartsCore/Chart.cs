@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,6 +51,7 @@ public abstract class Chart<TDrawingContext> : IChart
     internal bool _isPointerIn;
     internal LvcPoint _pointerPosition = new(-10, -10);
     internal float _titleHeight = 0f;
+    internal LvcSize _legendSize;
     internal bool _preserveFirstDraw = false;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
@@ -555,34 +555,31 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Gets the legend position.
     /// </summary>
-    /// <param name="legendSize">The size of the legend.</param>
-    /// <returns></returns>
-    public LvcPoint GetLegendPosition(LvcSize legendSize)
+    /// <returns>The position of the legend.</returns>
+    public LvcPoint GetLegendPosition()
     {
         var actualChartSize = ControlSize;
         float x = 0f, y = 0f;
 
         if (LegendPosition == LegendPosition.Top)
         {
-            //Canvas.StartPoint = new LvcPoint(0, legendSize.Height + _titleHeight);
-            x = actualChartSize.Width * 0.5f - legendSize.Width * 0.5f;
-            y = _titleHeight - legendSize.Height;
+            x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
+            y = _titleHeight - _legendSize.Height;
         }
         if (LegendPosition == LegendPosition.Bottom)
         {
-            x = actualChartSize.Width * 0.5f - legendSize.Width * 0.5f;
+            x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
             y = actualChartSize.Height;
         }
         if (LegendPosition == LegendPosition.Left)
         {
-            //Canvas.StartPoint = new LvcPoint(legendSize.Width, 0);
-            x = -legendSize.Width;
-            y = actualChartSize.Height * 0.5f - legendSize.Height * 0.5f;
+            x = -_legendSize.Width;
+            y = actualChartSize.Height * 0.5f - _legendSize.Height * 0.5f;
         }
         if (LegendPosition == LegendPosition.Right)
         {
             x = actualChartSize.Width;
-            y = actualChartSize.Height * 0.5f - legendSize.Height * 0.5f;
+            y = actualChartSize.Height * 0.5f - _legendSize.Height * 0.5f;
         }
 
         return new(x, y);
@@ -619,31 +616,23 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
         {
-            if (Legend is IImageControl imageLegend)
-            {
-                // this is the preferred method (drawn legends)
-                imageLegend.Measure(this);
+            var legendSize = Legend.Measure(this);
 
-                if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-                    ControlSize = new(ControlSize.Width - imageLegend.Size.Width, ControlSize.Height);
+            if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
+                ControlSize = new(ControlSize.Width - legendSize.Width, ControlSize.Height);
 
-                if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
-                    ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
+            if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
+                ControlSize = new(ControlSize.Width, ControlSize.Height - legendSize.Height);
 
-                // reset for cases when legend is hidden or changes postion
-                Canvas.StartPoint = new LvcPoint(0, 0);
+            // reset for cases when legend is hidden or changes postion
+            Canvas.StartPoint = new LvcPoint(0, 0);
 
-                Legend.Draw(this);
+            Legend.Draw(this);
 
-                PreviousLegendPosition = LegendPosition;
-                PreviousSeriesAtLegend = seriesInLegend;
-                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-                _preserveFirstDraw = IsFirstDraw;
-            }
-            else
-            {
-                throw new Exception("This kind of legend is no longer supported, please refer to the docs and update it.");
-            }
+            PreviousLegendPosition = LegendPosition;
+            PreviousSeriesAtLegend = seriesInLegend;
+            foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
+            _preserveFirstDraw = IsFirstDraw;
         }
     }
 
