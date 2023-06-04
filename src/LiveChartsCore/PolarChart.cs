@@ -317,7 +317,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         InitializeVisualsCollector();
 
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
-        DrawLegend(seriesInLegend);
+        //DrawLegend(seriesInLegend);
 
         // calculate draw margin
 

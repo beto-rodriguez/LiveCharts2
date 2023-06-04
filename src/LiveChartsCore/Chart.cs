@@ -564,7 +564,7 @@ public abstract class Chart<TDrawingContext> : IChart
         if (LegendPosition == LegendPosition.Top)
         {
             x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
-            y = _titleHeight - _legendSize.Height;
+            y = _titleHeight;// _legendSize.Height;
         }
         if (LegendPosition == LegendPosition.Bottom)
         {
@@ -609,31 +609,37 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    /// Draws the legend.
+    /// Draws the legend and appends the size opf the legend to the current margin calculation.
     /// </summary>
     /// <param name="seriesInLegend"></param>
-    protected void DrawLegend(IChartSeries<TDrawingContext>[] seriesInLegend)
+    /// <param name="ts">The top margin.</param>
+    /// <param name="bs">The bottom margin.</param>
+    /// <param name="ls">The left margin.</param>
+    /// <param name="rs">The right margin.</param>
+    protected void DrawLegend(
+        IChartSeries<TDrawingContext>[] seriesInLegend, ref float ts, ref float bs, ref float ls, ref float rs)
     {
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
+        if (!(Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))) return;
+
+        _legendSize = Legend.Measure(this);
+
+        switch (LegendPosition)
         {
-            var legendSize = Legend.Measure(this);
-
-            if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-                ControlSize = new(ControlSize.Width - legendSize.Width, ControlSize.Height);
-
-            if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
-                ControlSize = new(ControlSize.Width, ControlSize.Height - legendSize.Height);
-
-            // reset for cases when legend is hidden or changes postion
-            Canvas.StartPoint = new LvcPoint(0, 0);
-
-            Legend.Draw(this);
-
-            PreviousLegendPosition = LegendPosition;
-            PreviousSeriesAtLegend = seriesInLegend;
-            foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-            _preserveFirstDraw = IsFirstDraw;
+            case LegendPosition.Top: ts += _legendSize.Height; break;
+            case LegendPosition.Left: ls += _legendSize.Width; break;
+            case LegendPosition.Right: rs += _legendSize.Width; break;
+            case LegendPosition.Bottom: bs += _legendSize.Height; break;
+            case LegendPosition.Hidden:
+            default:
+                break;
         }
+
+        Legend.Draw(this);
+
+        PreviousLegendPosition = LegendPosition;
+        PreviousSeriesAtLegend = seriesInLegend;
+        foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
+        _preserveFirstDraw = IsFirstDraw;
     }
 
     /// <summary>

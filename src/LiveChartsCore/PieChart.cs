@@ -209,7 +209,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         InitializeVisualsCollector();
 
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
-        DrawLegend(seriesInLegend);
+        //DrawLegend(seriesInLegend);
 
         var title = View.Title;
         var m = new Margin();

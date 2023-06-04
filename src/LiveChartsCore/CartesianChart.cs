@@ -551,7 +551,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         InitializeVisualsCollector();
 
-        // calculate draw margin
+        // measure and draw title.
         var title = View.Title;
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
@@ -562,10 +562,17 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             ts = titleSize.Height;
             _titleHeight = titleSize.Height;
         }
-        SetDrawMargin(ControlSize, m);
 
+        // measure and draw legend.
         var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
-        DrawLegend(seriesInLegend);
+        DrawLegend(seriesInLegend, ref ts, ref bs, ref ls, ref rs);
+
+        m.Top = ts;
+        m.Bottom = bs;
+        m.Left = ls;
+        m.Right = rs;
+
+        SetDrawMargin(ControlSize, m);
 
         foreach (var axis in XAxes)
         {
