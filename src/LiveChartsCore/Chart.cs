@@ -564,21 +564,21 @@ public abstract class Chart<TDrawingContext> : IChart
         if (LegendPosition == LegendPosition.Top)
         {
             x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
-            y = _titleHeight;// _legendSize.Height;
+            y = _titleHeight;
         }
         if (LegendPosition == LegendPosition.Bottom)
         {
             x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
-            y = actualChartSize.Height;
+            y = actualChartSize.Height - _legendSize.Height;
         }
         if (LegendPosition == LegendPosition.Left)
         {
-            x = -_legendSize.Width;
+            x = 0f;
             y = actualChartSize.Height * 0.5f - _legendSize.Height * 0.5f;
         }
         if (LegendPosition == LegendPosition.Right)
         {
-            x = actualChartSize.Width;
+            x = actualChartSize.Width - _legendSize.Width;
             y = actualChartSize.Height * 0.5f - _legendSize.Height * 0.5f;
         }
 

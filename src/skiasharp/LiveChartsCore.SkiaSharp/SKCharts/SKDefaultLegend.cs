@@ -34,9 +34,11 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 {
-    private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
-    private readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
+    private static readonly int s_zIndex = 10050;
+
+    // marked as internal only for testing purposes
+    internal readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
     {
         Padding = new Padding(15, 4),
         HorizontalAlignment = Align.Start,
