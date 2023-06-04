@@ -60,8 +60,17 @@ public class SVGPathGeometry : SizedGeometry
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        var path = _path ?? _pathSource();
+        DrawPath(context, paint, _path ?? _pathSource()!);
+    }
 
+    /// <summary>
+    /// Draws the given path to the canvas.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="paint">The paint</param>
+    protected void DrawPath(SkiaSharpDrawingContext context, SKPaint paint, SKPath path)
+    {
         _ = context.Canvas.Save();
 
         var canvas = context.Canvas;
