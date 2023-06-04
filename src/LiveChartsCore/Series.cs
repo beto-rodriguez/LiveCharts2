@@ -123,8 +123,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             (sender, e) => NotifySubscribers());
     }
 
-    bool ISeries.PaintsChanged { get; set; }
-
     /// <inheritdoc cref="ISeries.SeriesProperties"/>
     public SeriesProperties SeriesProperties { get; }
 
@@ -509,7 +507,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     {
         base.OnPaintChanged(propertyName);
         OnMiniatureChanged();
-        ((ISeries)this).PaintsChanged = true;
     }
 
     /// <summary>

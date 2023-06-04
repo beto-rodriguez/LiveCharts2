@@ -423,7 +423,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     {
         return series is LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> lineSeries &&
             Name == series.Name &&
-            !((ISeries)this).PaintsChanged &&
             Fill == lineSeries.Fill && Stroke == lineSeries.Stroke &&
             GeometryFill == lineSeries.GeometryFill && GeometryStroke == lineSeries.GeometryStroke;
     }

@@ -521,8 +521,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         if (_isToolTipOpen) DrawToolTip();
         IsFirstDraw = false;
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
-        PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        PreviousLegendPosition = LegendPosition;
 
         Canvas.Invalidate();
     }

@@ -287,16 +287,6 @@ public abstract class Chart<TDrawingContext> : IChart
     /// </value>
     public ChartElement<TDrawingContext>[] VisualElements { get; protected set; } = Array.Empty<ChartElement<TDrawingContext>>();
 
-    /// <summary>
-    /// Gets the previous legend position.
-    /// </summary>
-    public LegendPosition PreviousLegendPosition { get; protected set; }
-
-    /// <summary>
-    /// Gets the previous series.
-    /// </summary>
-    public IReadOnlyList<IChartSeries<TDrawingContext>> PreviousSeriesAtLegend { get; protected set; } = Array.Empty<IChartSeries<TDrawingContext>>();
-
     object IChart.Canvas => Canvas;
 
     #endregion region
@@ -466,31 +456,6 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    ///SDetermines whether the series miniature changed or not.
-    /// </summary>
-    /// <param name="newSeries">The new series.</param>
-    /// <param name="position">The legend position.</param>
-    /// <returns></returns>
-    protected virtual bool SeriesMiniatureChanged(IReadOnlyList<IChartSeries<TDrawingContext>> newSeries, LegendPosition position)
-    {
-        if (position == LegendPosition.Hidden && PreviousLegendPosition == LegendPosition.Hidden) return false;
-        if (position != PreviousLegendPosition) return true;
-        if (PreviousSeriesAtLegend.Count != newSeries.Count) return true;
-
-        for (var i = 0; i < newSeries.Count; i++)
-        {
-            if (i + 1 > PreviousSeriesAtLegend.Count) return true;
-
-            var a = PreviousSeriesAtLegend[i];
-            var b = newSeries[i];
-
-            if (!a.MiniatureEquals(b)) return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Called when the updated the throttler is unlocked.
     /// </summary>
     /// <returns></returns>
@@ -569,7 +534,7 @@ public abstract class Chart<TDrawingContext> : IChart
         if (LegendPosition == LegendPosition.Bottom)
         {
             x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
-            y = actualChartSize.Height - _legendSize.Height;
+            y = actualChartSize.Height - _titleHeight - _legendSize.Height;
         }
         if (LegendPosition == LegendPosition.Left)
         {
@@ -619,7 +584,7 @@ public abstract class Chart<TDrawingContext> : IChart
     protected void DrawLegend(
         IChartSeries<TDrawingContext>[] seriesInLegend, ref float ts, ref float bs, ref float ls, ref float rs)
     {
-        if (!(Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))) return;
+        if (Legend is null) return;
 
         _legendSize = Legend.Measure(this);
 
@@ -636,9 +601,6 @@ public abstract class Chart<TDrawingContext> : IChart
 
         Legend.Draw(this);
 
-        PreviousLegendPosition = LegendPosition;
-        PreviousSeriesAtLegend = seriesInLegend;
-        foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
         _preserveFirstDraw = IsFirstDraw;
     }
 

@@ -254,8 +254,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         InvokeOnUpdateStarted();
         IsFirstDraw = false;
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
-        PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        PreviousLegendPosition = LegendPosition;
 
         Canvas.Invalidate();
     }
