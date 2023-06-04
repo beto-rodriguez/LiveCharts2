@@ -564,7 +564,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         if (LegendPosition == LegendPosition.Top)
         {
-            Canvas.StartPoint = new LvcPoint(0, legendSize.Height + _titleHeight);
+            //Canvas.StartPoint = new LvcPoint(0, legendSize.Height + _titleHeight);
             x = actualChartSize.Width * 0.5f - legendSize.Width * 0.5f;
             y = _titleHeight - legendSize.Height;
         }
@@ -575,7 +575,7 @@ public abstract class Chart<TDrawingContext> : IChart
         }
         if (LegendPosition == LegendPosition.Left)
         {
-            Canvas.StartPoint = new LvcPoint(legendSize.Width, 0);
+            //Canvas.StartPoint = new LvcPoint(legendSize.Width, 0);
             x = -legendSize.Width;
             y = actualChartSize.Height * 0.5f - legendSize.Height * 0.5f;
         }
