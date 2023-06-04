@@ -34,7 +34,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 {
-    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
     private static readonly int s_zIndex = 10050;
 
     // marked as internal only for testing purposes
@@ -49,22 +48,6 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
     /// Gets or sets the legend font paint.
     /// </summary>
     public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the background paint.
-    /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
-    {
-        get => _backgroundPaint;
-        set
-        {
-            _backgroundPaint = value;
-            if (value is not null)
-            {
-                value.IsFill = true;
-            }
-        }
-    }
 
     /// <summary>
     /// Gets or sets the fonts size.
@@ -97,11 +80,9 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
     {
-        if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
         if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
 
-        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
         _stackPanel.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right

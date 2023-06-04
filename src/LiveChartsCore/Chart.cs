@@ -534,7 +534,7 @@ public abstract class Chart<TDrawingContext> : IChart
         if (LegendPosition == LegendPosition.Bottom)
         {
             x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
-            y = actualChartSize.Height - _titleHeight - _legendSize.Height;
+            y = actualChartSize.Height - _legendSize.Height;
         }
         if (LegendPosition == LegendPosition.Left)
         {
