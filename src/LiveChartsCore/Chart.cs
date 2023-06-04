@@ -606,17 +606,7 @@ public abstract class Chart<TDrawingContext> : IChart
             }
             else
             {
-                // is this obsolete now?
-                // the legend is drawn by the UI framework... lets return and wait for it to draw/measure it.
-                // maybe we should wait for the legend to draw and then draw the chart?
-                Legend.Draw(this);
-                PreviousLegendPosition = LegendPosition;
-                PreviousSeriesAtLegend = seriesInLegend;
-                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-                _preserveFirstDraw = IsFirstDraw;
-                SetPreviousSize();
-                Measure();
-                return;
+                throw new Exception("This kind of legend is no longer supported, please refer to the docs and update it.");
             }
         }
     }
