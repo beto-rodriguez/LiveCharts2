@@ -316,11 +316,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         InitializeVisualsCollector();
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
-        //DrawLegend(seriesInLegend);
-
-        // calculate draw margin
-
         if (FitToBounds)
         {
             float mt = 0, mb = 0, ml = 0, mr = 0;
@@ -390,14 +385,21 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         {
             // calculate draw margin
             var m = new Margin();
-            var ts = 0f;
+            float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
             if (View.Title is not null)
             {
                 var titleSize = View.Title.Measure(this);
                 m.Top = titleSize.Height;
                 ts = titleSize.Height;
+                _titleHeight = titleSize.Height;
             }
-            SetDrawMargin(ControlSize, m);
+
+            DrawLegend(ref ts, ref bs, ref ls, ref rs);
+
+            m.Top = ts;
+            m.Bottom = bs;
+            m.Left = ls;
+            m.Right = rs;
 
             foreach (var axis in AngleAxes)
             {
@@ -440,6 +442,13 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
                 // the angle axis does not require padding?? I think it does not
             }
+
+            var rm = viewDrawMargin ?? new Margin(Margin.Auto);
+            var actualMargin = new Margin(
+                Margin.IsAuto(rm.Left) ? m.Left : rm.Left,
+                Margin.IsAuto(rm.Top) ? m.Top : rm.Top,
+                Margin.IsAuto(rm.Right) ? m.Right : rm.Right,
+                Margin.IsAuto(rm.Bottom) ? m.Bottom : rm.Bottom);
 
             SetDrawMargin(ControlSize, m);
         }

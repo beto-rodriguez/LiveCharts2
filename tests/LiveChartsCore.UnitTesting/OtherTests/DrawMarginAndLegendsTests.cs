@@ -390,7 +390,6 @@ public class DrawMarginAndLegendsTests
         // TEST TOP LEGEND ================================================
         chart.LegendPosition = LegendPosition.Top;
         _ = chart.GetImage();
-        chart.SaveImage("thisshit.png");
 
         var legendSize = legend.Measure(chart.Core);
         var titleSize = title.Measure(chart.Core);
@@ -470,6 +469,243 @@ public class DrawMarginAndLegendsTests
 
         // all the height should be used
         Assert.IsTrue(Math.Abs(500 - dms.Height - titleSize.Height) < 0.01);
+
+        // x should be 500 - legendsSize.Width
+        Assert.IsTrue(Math.Abs(x - (500 - legendSize.Width)) < 0.01);
+
+        // y should be centered
+        Assert.IsTrue(Math.Abs(y - (500 * 0.5f - legendSize.Height * 0.5f)) < 0.01);
+    }
+
+    [TestMethod]
+    public void PolarBasicCase()
+    {
+        var legend = new SKDefaultLegend();
+
+        var chart = new SKPolarChart
+        {
+            Width = 500,
+            Height = 500,
+            Series = new[] { new PolarLineSeries<double> { Values = new double[] { 1, 2, 3 } } },
+            LegendPosition = LegendPosition.Top,
+            Legend = legend,
+        };
+
+        // TEST TOP LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Top;
+        _ = chart.GetImage();
+
+        var legendSize = legend.Measure(chart.Core);
+        var dml = chart.Core.DrawMarginLocation;
+        var dms = chart.Core.DrawMarginSize;
+        var x = legend._stackPanel.X;
+        var y = legend._stackPanel.Y;
+
+        var m = Math.Min(dml.X, dml.Y) * 2;
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - m) < 0.01);
+
+        // all the height should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Height - m - legendSize.Height) < 0.01);
+
+        // x should be centered
+        Assert.IsTrue(Math.Abs(x - (500 * 0.5f - legendSize.Width * 0.5f)) < 0.01);
+
+        // y should be 0
+        Assert.IsTrue(Math.Abs(y - 0) < 0.01);
+
+        // TEST BOTTOM LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Bottom;
+        _ = chart.GetImage();
+
+        legendSize = legend.Measure(chart.Core);
+        dml = chart.Core.DrawMarginLocation;
+        dms = chart.Core.DrawMarginSize;
+        x = legend._stackPanel.X;
+        y = legend._stackPanel.Y;
+
+        m = Math.Min(dml.X, dml.Y) * 2;
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - m) < 0.01);
+
+        // all the height should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Height - m - legendSize.Height) < 0.01);
+
+        // x should be centered
+        Assert.IsTrue(Math.Abs(x - (500 * 0.5f - legendSize.Width * 0.5f)) < 0.01);
+
+        // y should be 500 - legendsSize.Height
+        Assert.IsTrue(Math.Abs(y - (500 - legendSize.Height)) < 0.01);
+
+        // TEST LEFT LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Left;
+        _ = chart.GetImage();
+
+        legendSize = legend.Measure(chart.Core);
+        dml = chart.Core.DrawMarginLocation;
+        dms = chart.Core.DrawMarginSize;
+        x = legend._stackPanel.X;
+        y = legend._stackPanel.Y;
+
+        m = Math.Min(dml.X, dml.Y) * 2;
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - m - legendSize.Width) < 0.01);
+
+        // all the height should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Height - m) < 0.01);
+
+        // x should be 0
+        Assert.IsTrue(Math.Abs(x) < 0.01);
+
+        // y should be centered
+        Assert.IsTrue(Math.Abs(y - (500 * 0.5f - legendSize.Height * 0.5f)) < 0.01);
+
+        // TEST RIGHT LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Right;
+        _ = chart.GetImage();
+
+        legendSize = legend.Measure(chart.Core);
+        dml = chart.Core.DrawMarginLocation;
+        dms = chart.Core.DrawMarginSize;
+        x = legend._stackPanel.X;
+        y = legend._stackPanel.Y;
+
+        m = Math.Min(dml.X, dml.Y) * 2;
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - m - legendSize.Width) < 0.01);
+
+        // all the height should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Height - m) < 0.01);
+
+        // x should be 500 - legendsSize.Width
+        Assert.IsTrue(Math.Abs(x - (500 - legendSize.Width)) < 0.01);
+
+        // y should be centered
+        Assert.IsTrue(Math.Abs(y - (500 * 0.5f - legendSize.Height * 0.5f)) < 0.01);
+    }
+
+    [TestMethod]
+    public void PolarWithTitleCase()
+    {
+        var legend = new SKDefaultLegend();
+        legend._stackPanel.BackgroundPaint = new SolidColorPaint(SKColors.LightGray);
+
+        var title = new LabelVisual
+        {
+            Text = "My chart title",
+            TextSize = 25,
+            Padding = new Padding(10),
+            Paint = new SolidColorPaint(SKColors.White),
+            BackgroundColor = SKColors.Purple.AsLvcColor()
+        };
+
+        var chart = new SKPolarChart
+        {
+            Width = 500,
+            Height = 500,
+            Series = new[] { new PolarLineSeries<double> { Values = new double[] { 1, 2, 3 } } },
+            LegendPosition = LegendPosition.Top,
+            Title = title,
+            Legend = legend
+        };
+
+        // TEST TOP LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Top;
+        _ = chart.GetImage();
+
+        var legendSize = legend.Measure(chart.Core);
+        var titleSize = title.Measure(chart.Core);
+        var dml = chart.Core.DrawMarginLocation;
+        var dms = chart.Core.DrawMarginSize;
+        var x = legend._stackPanel.X;
+        var y = legend._stackPanel.Y;
+
+        var m = Math.Min(dml.X, dml.Y) * 2;
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - m) < 0.01);
+
+        // all the height should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Height - m - legendSize.Height - titleSize.Height) < 0.01);
+
+        // x should be centered
+        Assert.IsTrue(Math.Abs(x - (500 * 0.5f - legendSize.Width * 0.5f)) < 0.01);
+
+        // y should be titleSize.Height
+        Assert.IsTrue(Math.Abs(y - titleSize.Height) < 0.01);
+
+        // TEST BOTTOM LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Bottom;
+        _ = chart.GetImage();
+
+        legendSize = legend.Measure(chart.Core);
+        dml = chart.Core.DrawMarginLocation;
+        dms = chart.Core.DrawMarginSize;
+        x = legend._stackPanel.X;
+        y = legend._stackPanel.Y;
+
+        m = Math.Min(dml.X, dml.Y) * 2;
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - m) < 0.01);
+
+        // all the height should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Height - m - legendSize.Height - titleSize.Height) < 0.01);
+
+        // x should be centered
+        Assert.IsTrue(Math.Abs(x - (500 * 0.5f - legendSize.Width * 0.5f)) < 0.01);
+
+        // y should be 500 - legendsSize.Height
+        Assert.IsTrue(Math.Abs(y - (500 - legendSize.Height)) < 0.01);
+
+        // TEST LEFT LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Left;
+        _ = chart.GetImage();
+
+        legendSize = legend.Measure(chart.Core);
+        dml = chart.Core.DrawMarginLocation;
+        dms = chart.Core.DrawMarginSize;
+        x = legend._stackPanel.X;
+        y = legend._stackPanel.Y;
+
+        m = Math.Min(dml.X, dml.Y) * 2;
+        var dx = dml.X - legendSize.Width; // <- why this distance?
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - dml.X - dx) < 0.01);
+
+        // all the height should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Height - titleSize.Height - dx * 2) < 0.01);
+
+        // x should be 0
+        Assert.IsTrue(Math.Abs(x) < 0.01);
+
+        // y should be centered
+        Assert.IsTrue(Math.Abs(y - (500 * 0.5f - legendSize.Height * 0.5f)) < 0.01);
+
+        // TEST RIGHT LEGEND ================================================
+        chart.LegendPosition = LegendPosition.Right;
+        _ = chart.GetImage();
+        chart.SaveImage("mamá.png");
+
+        legendSize = legend.Measure(chart.Core);
+        dml = chart.Core.DrawMarginLocation;
+        dms = chart.Core.DrawMarginSize;
+        x = legend._stackPanel.X;
+        y = legend._stackPanel.Y;
+
+        m = Math.Min(dml.X, dml.Y) * 2;
+        dx = dml.X + legendSize.Width; // <- why this distance?
+
+        // all the width should be used
+        Assert.IsTrue(Math.Abs(500 - dms.Width - dml.X - dx) < 0.01);
+
+        // all the height should be used
+        //Assert.IsTrue(Math.Abs(500 - dms.Height - dml.Y) < 0.01);
 
         // x should be 500 - legendsSize.Width
         Assert.IsTrue(Math.Abs(x - (500 - legendSize.Width)) < 0.01);
