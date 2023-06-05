@@ -208,18 +208,23 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         InitializeVisualsCollector();
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
-        //DrawLegend(seriesInLegend);
-
         var title = View.Title;
         var m = new Margin();
-        var ts = 0f;
+        float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         if (title is not null)
         {
             var titleSize = title.Measure(this);
             m.Top = titleSize.Height;
             ts = titleSize.Height;
+            _titleHeight = titleSize.Height;
         }
+
+        DrawLegend(ref ts, ref bs, ref ls, ref rs);
+
+        m.Top = ts;
+        m.Bottom = bs;
+        m.Left = ls;
+        m.Right = rs;
 
         var rm = viewDrawMargin ?? new Margin(Margin.Auto);
         var actualMargin = new Margin(

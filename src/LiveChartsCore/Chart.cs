@@ -574,15 +574,13 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    /// Draws the legend and appends the size opf the legend to the current margin calculation.
+    /// Draws the legend and appends the size of the legend to the current margin calculation.
     /// </summary>
-    /// <param name="seriesInLegend"></param>
     /// <param name="ts">The top margin.</param>
     /// <param name="bs">The bottom margin.</param>
     /// <param name="ls">The left margin.</param>
     /// <param name="rs">The right margin.</param>
-    protected void DrawLegend(
-        IChartSeries<TDrawingContext>[] seriesInLegend, ref float ts, ref float bs, ref float ls, ref float rs)
+    protected void DrawLegend(ref float ts, ref float bs, ref float ls, ref float rs)
     {
         if (Legend is null) return;
 

@@ -564,8 +564,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
 
         // measure and draw legend.
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
-        DrawLegend(seriesInLegend, ref ts, ref bs, ref ls, ref rs);
+        DrawLegend(ref ts, ref bs, ref ls, ref rs);
 
         m.Top = ts;
         m.Bottom = bs;

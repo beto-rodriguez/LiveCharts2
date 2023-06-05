@@ -108,6 +108,8 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 
         foreach (var series in chart.ChartSeries)
         {
+            if (!series.IsVisibleAtLegend) continue;
+
             _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 6),
