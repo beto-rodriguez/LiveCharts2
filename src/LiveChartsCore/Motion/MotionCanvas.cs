@@ -53,11 +53,6 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     internal bool DisableAnimations { get; set; }
 
     /// <summary>
-    /// Gets or sets the point where the draw starts.
-    /// </summary>
-    public LvcPoint? StartPoint { get; set; }
-
-    /// <summary>
     /// Occurs when the visual is invalidated.
     /// </summary>
     public event Action<MotionCanvas<TDrawingContext>>? Invalidated;
@@ -104,7 +99,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
         lock (Sync)
         {
-            context.OnBegingDraw();
+            context.OnBeginDraw();
 
             var isValid = true;
             var frameTime = _stopwatch.ElapsedMilliseconds;

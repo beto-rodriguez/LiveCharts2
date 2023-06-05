@@ -30,7 +30,7 @@ public abstract class DrawingContext
     /// <summary>
     /// Called when the frame starts.
     /// </summary>
-    public virtual void OnBegingDraw()
+    public virtual void OnBeginDraw()
     { }
 
     /// <summary>

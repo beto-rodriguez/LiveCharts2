@@ -374,7 +374,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     {
         return series is StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> stepSeries &&
             Name == series.Name &&
-            !((ISeries)this).PaintsChanged &&
             Fill == stepSeries.Fill && Stroke == stepSeries.Stroke &&
             GeometryFill == stepSeries.GeometryFill && GeometryStroke == stepSeries.GeometryStroke;
     }

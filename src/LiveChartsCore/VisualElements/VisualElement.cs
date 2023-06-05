@@ -156,13 +156,6 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 
     internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
     {
-        var motionCanvas = chart.Canvas;
-        if (motionCanvas.StartPoint is not null)
-        {
-            point.X -= motionCanvas.StartPoint.Value.X;
-            point.Y -= motionCanvas.StartPoint.Value.Y;
-        }
-
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element

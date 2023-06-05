@@ -551,10 +551,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         InitializeVisualsCollector();
 
-        var seriesInLegend = Series.Where(x => x.IsVisibleAtLegend).ToArray();
-        DrawLegend(seriesInLegend);
-
-        // calculate draw margin
+        // measure and draw title.
         var title = View.Title;
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
@@ -563,7 +560,17 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var titleSize = title.Measure(this);
             m.Top = titleSize.Height;
             ts = titleSize.Height;
+            _titleHeight = titleSize.Height;
         }
+
+        // measure and draw legend.
+        DrawLegend(ref ts, ref bs, ref ls, ref rs);
+
+        m.Top = ts;
+        m.Bottom = bs;
+        m.Left = ls;
+        m.Right = rs;
+
         SetDrawMargin(ControlSize, m);
 
         foreach (var axis in XAxes)
@@ -837,8 +844,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         if (_isToolTipOpen) DrawToolTip();
         IsFirstDraw = false;
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
-        PreviousSeriesAtLegend = Series.Where(x => x.IsVisibleAtLegend).ToList();
-        PreviousLegendPosition = LegendPosition;
 
         Canvas.Invalidate();
     }
