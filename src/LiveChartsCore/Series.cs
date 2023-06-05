@@ -340,13 +340,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     IEnumerable<ChartPoint> ISeries.FindHitPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
     {
-        var motionCanvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-        if (motionCanvas.StartPoint is not null)
-        {
-            pointerPosition.X -= motionCanvas.StartPoint.Value.X;
-            pointerPosition.Y -= motionCanvas.StartPoint.Value.Y;
-        }
-
         var query =
             Fetch(chart)
             .Where(x =>

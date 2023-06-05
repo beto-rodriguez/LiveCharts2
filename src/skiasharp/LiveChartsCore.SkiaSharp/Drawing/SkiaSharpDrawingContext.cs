@@ -42,13 +42,13 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <param name="info">The information.</param>
     /// <param name="surface">The surface.</param>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="clearOnBegingDraw">Indicates whether the canvas is cleared on frame draw.</param>
+    /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
     public SkiaSharpDrawingContext(
         MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
         SKImageInfo info,
         SKSurface surface,
         SKCanvas canvas,
-        bool clearOnBegingDraw = true)
+        bool clearOnBeginDraw = true)
     {
         MotionCanvas = motionCanvas;
         Info = info;
@@ -56,7 +56,7 @@ public class SkiaSharpDrawingContext : DrawingContext
         Canvas = canvas;
         PaintTask = null!;
         Paint = null!;
-        _clearOnBegingDraw = clearOnBegingDraw;
+        _clearOnBegingDraw = clearOnBeginDraw;
     }
 
     /// <summary>
@@ -67,15 +67,15 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <param name="surface">The surface.</param>
     /// <param name="canvas">The canvas.</param>
     /// <param name="background">The background.</param>
-    /// <param name="clearOnBegingDraw">Indicates whether the canvas is cleared on frame draw.</param>
+    /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
     public SkiaSharpDrawingContext(
         MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
         SKImageInfo info,
         SKSurface surface,
         SKCanvas canvas,
         SKColor background,
-        bool clearOnBegingDraw = true)
-        : this(motionCanvas, info, surface, canvas, clearOnBegingDraw)
+        bool clearOnBeginDraw = true)
+        : this(motionCanvas, info, surface, canvas, clearOnBeginDraw)
     {
         Background = background;
     }
@@ -133,23 +133,13 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// </summary>
     public SKColor Background { get; set; } = SKColor.Empty;
 
-    /// <inheritdoc cref="DrawingContext.OnBegingDraw"/>
-    public override void OnBegingDraw()
+    /// <inheritdoc cref="DrawingContext.OnBeginDraw"/>
+    public override void OnBeginDraw()
     {
         if (_clearOnBegingDraw) Canvas.Clear();
         if (Background != SKColor.Empty)
         {
             Canvas.DrawRect(Info.Rect, new SKPaint { Color = Background });
         }
-
-        if (MotionCanvas.StartPoint is null) return;
-        Canvas.Translate(new SKPoint(MotionCanvas.StartPoint.Value.X, MotionCanvas.StartPoint.Value.Y));
-    }
-
-    /// <inheritdoc cref="DrawingContext.OnEndDraw"/>
-    public override void OnEndDraw()
-    {
-        if (MotionCanvas.StartPoint is null) return;
-        Canvas.Restore();
     }
 }
