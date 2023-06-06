@@ -198,7 +198,7 @@ public static class ThemesExtensions
     }
 
     /// <summary>
-    /// Adds the light theme.
+    /// Adds the dark theme.
     /// </summary>
     /// <param name="settings">The settings.</param>
     /// <param name="additionalStyles">The additional styles.</param>
