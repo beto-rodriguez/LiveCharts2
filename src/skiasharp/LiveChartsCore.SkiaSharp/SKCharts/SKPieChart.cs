@@ -68,6 +68,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
         Total = view.Total;
         LegendPosition = view.LegendPosition;
         Title = view.Title;
+        DrawMargin = view.DrawMargin;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
