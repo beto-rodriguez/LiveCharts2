@@ -72,6 +72,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         LegendPosition = view.LegendPosition;
         Title = view.Title;
         DrawMargin = view.DrawMargin;
+        VisualElements = view.VisualElements;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
