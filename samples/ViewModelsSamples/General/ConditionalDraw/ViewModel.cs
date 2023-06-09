@@ -30,7 +30,7 @@ public partial class ViewModel : ObservableObject
             Mapping = (city, point) =>
             {
                 point.PrimaryValue = city.Population;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             }
         }
         .WithConditionalPaint(new SolidColorPaint(SKColors.Black.WithAlpha(50)))

@@ -21,11 +21,9 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -40,13 +38,14 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     private double _open;
     private double _close;
     private double _low;
-    private int _entityIndex;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
     /// </summary>
     public FinancialPointI()
-    { }
+    {
+        MetaData = new ChartEntityMetaData(this, OnCoordinateChanged);
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
@@ -56,6 +55,7 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     /// <param name="close">The close.</param>
     /// <param name="low">The low.</param>
     public FinancialPointI(double high, double open, double close, double low)
+        : this()
     {
         High = high;
         Open = open;
@@ -95,32 +95,13 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double Low { get => _low; set { _low = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    /// <inheritdoc cref="IChartEntity.MetaData"/>
 #if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public int EntityIndex
-    {
-        get => _entityIndex;
-        set
-        {
-            // the coordinate of this type depends on the index of element in the data collection.
-            // we update the coordinate if the index changed.
-            if (value == _entityIndex) return;
-            _entityIndex = value;
-            OnCoordinateChanged();
-        }
-    }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
-#if NET5_0_OR_GREATER
-    [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
-    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+    public ChartEntityMetaData? MetaData { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
 #if NET5_0_OR_GREATER
@@ -142,15 +123,15 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        OnCoordinateChanged();
+        if (MetaData is not null) OnCoordinateChanged(MetaData.EntityIndex);
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     /// <summary>
     /// Called when the coordinate changed.
     /// </summary>
-    protected virtual void OnCoordinateChanged()
+    protected virtual void OnCoordinateChanged(int index)
     {
-        Coordinate = new(_high, EntityIndex, _open, _close, _low);
+        Coordinate = new(_high, index, _open, _close, _low);
     }
 }

@@ -63,21 +63,13 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// </summary>
     public double? Radius { get => _radius; set { _radius = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    /// <inheritdoc cref="IChartEntity.MetaData"/>
 #if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public int EntityIndex { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
-#if NET5_0_OR_GREATER
-    [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
-    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+    public ChartEntityMetaData? MetaData { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
 #if NET5_0_OR_GREATER
@@ -100,6 +92,7 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
         Coordinate = _radius is null || _angle is null
             ? Coordinate.Empty
             : new(_angle.Value, _radius.Value);
+
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

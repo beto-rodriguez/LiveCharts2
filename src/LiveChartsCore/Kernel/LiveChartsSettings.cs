@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Tooltip
+
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Defaults;
@@ -370,68 +372,67 @@ public class LiveChartsSettings
             HasMap<short>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<int>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<long>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<float>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<double>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<decimal>((model, point) =>
             {
                 point.PrimaryValue = (double)model;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<short?>((model, point) =>
             {
-                if (model is null) throw new Exception("Unexpected exception");
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                // model can not be null at this point.
+                // LiveCharts will return Coordinate.Empty if model was null.
+                point.PrimaryValue = model!.Value;
+
+                // MetaData can not be null neither at this point.
+                // LiveCharts already checked for nulls.
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<int?>((model, point) =>
             {
-                if (model is null) throw new Exception("Unexpected exception");
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.PrimaryValue = model!.Value;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<long?>((model, point) =>
             {
-                if (model is null) throw new Exception("Unexpected exception");
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.PrimaryValue = model!.Value;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<float?>((model, point) =>
             {
-                if (model is null) throw new Exception("Unexpected exception");
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.PrimaryValue = model!.Value;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<double?>((model, point) =>
             {
-                if (model is null) throw new Exception("Unexpected exception");
-                point.PrimaryValue = model.Value;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.PrimaryValue = model!.Value;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             })
             .HasMap<decimal?>((model, point) =>
             {
-                if (model is null) throw new Exception("Unexpected exception");
-                point.PrimaryValue = (double)model.Value;
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.PrimaryValue = (double)model!.Value;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             });
     }
 }

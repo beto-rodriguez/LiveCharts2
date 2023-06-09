@@ -20,20 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using LiveChartsCore.Kernel.Sketches;
+
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines a point with a visual representation in the user interface.
+/// Represents additional data required by LiveCharts to draw a point.
 /// </summary>
-public interface IChartEntity
+public class ChartEntityMetaData
 {
-    /// <summary>
-    /// Gets or sets the meta data, the additional data required by LiveCharts to draw a point.
-    /// </summary>
-    public ChartEntityMetaData? MetaData { get; set; }
+    private readonly Action<int>? _entityIndexChangedCallback;
+    private int _entityIndex;
 
     /// <summary>
-    /// Gets the coordinate, the position of the point in the chart.
+    /// Initializes a new instance of the <see cref="ChartEntityMetaData"/> class.
     /// </summary>
-    Coordinate Coordinate { get; }
+    /// <param name="entity">The entity.</param>
+    /// <param name="onEntityIndexChanged">The callback to call when the entity index changes.</param>
+    public ChartEntityMetaData(object entity, Action<int>? onEntityIndexChanged = null)
+    {
+        Entity = entity;
+    }
+
+    /// <summary>
+    /// Gets the entity.
+    /// </summary>
+    public object Entity { get; set; }
+
+    /// <summary>
+    /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.
+    /// </summary>
+    public int EntityIndex
+    {
+        get => _entityIndex;
+        set
+        {
+            if (value == _entityIndex) return;
+            _entityIndex = value;
+            _entityIndexChangedCallback?.Invoke(value);
+        }
+    }
+
+    /// <summary>
+    /// Gets the chart points dictionary.
+    /// </summary>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 }

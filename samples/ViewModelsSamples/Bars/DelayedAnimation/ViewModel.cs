@@ -49,7 +49,7 @@ public partial class ViewModel : ObservableObject
     private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
     {
         var perPointDelay = 100; // milliseconds
-        var delay = point.Context.Entity.EntityIndex * perPointDelay;
+        var delay = point.Context.Entity.MetaData!.EntityIndex * perPointDelay;
         var speed = (float)point.Context.Chart.AnimationsSpeed.TotalMilliseconds + delay;
 
         point.Visual?.SetTransition(

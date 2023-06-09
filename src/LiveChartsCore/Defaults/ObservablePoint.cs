@@ -20,11 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -70,21 +68,13 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    /// <inheritdoc cref="IChartEntity.MetaData"/>
 #if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public int EntityIndex { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
-#if NET5_0_OR_GREATER
-    [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
-    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+    public ChartEntityMetaData? MetaData { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
 #if NET5_0_OR_GREATER
@@ -92,9 +82,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public Coordinate Coordinate => _x is null || _y is null
-        ? Coordinate.Empty
-        : new Coordinate(_x.Value, _y.Value);
+    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -108,6 +96,10 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
+        Coordinate = _x is null || _y is null
+            ? Coordinate.Empty
+            : new Coordinate(_x.Value, _y.Value);
+
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
