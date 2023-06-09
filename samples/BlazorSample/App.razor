@@ -1,7 +1,7 @@
-﻿@using LiveChartsCore.SkiaSharpView.Blazor
+﻿@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Blazor
 @using System.Collections.ObjectModel;
-@using LiveChartsCore;
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
 
@@ -17,6 +17,38 @@
 </Router>
 
 @code {
+    public record City(string Name, double Population);
+
+    protected override void OnInitialized()
+    {
+        LiveCharts.Configure(config => // mark
+            config // mark
+                // registers SkiaSharp as the library backend
+                // REQUIRED unless you build your own
+                .AddSkiaSharp() // mark
+
+                // adds the default supported types
+                // OPTIONAL but highly recommend
+                .AddDefaultMappers() // mark
+
+                // select a theme, default is Light
+                // OPTIONAL
+                //.AddDarkTheme()
+                .AddLightTheme() // mark
+
+                // finally register your own mappers
+                // you can learn more about mappers at:
+                // https://lvcharts.com/docs/WPF/{{ version }}/Overview.Mappers
+                .HasMap<City>((city, point) => // mark
+                { // mark
+                    point.PrimaryValue = city.Population; // mark
+                    point.SecondaryValue = point.Context.Index; // mark
+                }) // mark
+            // .HasMap<Foo>( .... ) // mark
+            // .HasMap<Bar>( .... ) // mark
+            ); // mark
+    }
+
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);

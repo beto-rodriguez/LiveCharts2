@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore; // mark
+using LiveChartsCore.SkiaSharpView; // mark
+
 namespace UnoPlatformSample;
 
 public class App : Application
@@ -27,8 +30,37 @@ public class App : Application
     private static Window? _window;
     public static IHost? Host { get; private set; }
 
+    public record City(string Name, double Population);
+
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        LiveCharts.Configure(config => // mark
+            config // mark
+                   // registers SkiaSharp as the library backend
+                   // REQUIRED unless you build your own
+                .AddSkiaSharp() // mark
+
+                // adds the default supported types
+                // OPTIONAL but highly recommend
+                .AddDefaultMappers() // mark
+
+                // select a theme, default is Light
+                // OPTIONAL
+                //.AddDarkTheme()
+                .AddLightTheme() // mark
+
+                // finally register your own mappers
+                // you can learn more about mappers at:
+                // https://lvcharts.com/docs/WPF/{{ version }}/Overview.Mappers
+                .HasMap<City>((city, point) => // mark
+                { // mark
+                    point.PrimaryValue = city.Population; // mark
+                    point.SecondaryValue = point.Context.Index; // mark
+                }) // mark
+                   // .HasMap<Foo>( .... ) // mark
+                   // .HasMap<Bar>( .... ) // mark
+        ); // mark
+
         var builder = this.CreateBuilder(args)
 
             // Add navigation support for toolkit controls such as TabBar and NavigationView

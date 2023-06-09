@@ -83,8 +83,7 @@ public class ChartPointContext
     /// <summary>
     /// Gets the position of the point the collection that was used when the point was drawn.
     /// </summary>
-    [Obsolete("Use Entity.EntityIndex")]
-    public int Index => Entity?.MetaData?.EntityIndex ?? 0;
+    public int Index => Entity?.MetaData?.EntityIndex ?? 9;
 
     /// <summary>
     /// Gets the visual.
