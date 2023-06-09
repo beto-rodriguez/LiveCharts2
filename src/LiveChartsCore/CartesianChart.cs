@@ -820,6 +820,15 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         if (_chartView.DrawMarginFrame is not null)
         {
+            var ce = (ChartElement<TDrawingContext>)_chartView.DrawMarginFrame;
+            if (!ce._isThemeSet || isNewTheme)
+            {
+                ce._isInternalSet = true;
+                theme.ApplyStyleToDrawMargin(_chartView.DrawMarginFrame);
+                ce._isThemeSet = true;
+                ce._isInternalSet = false;
+            }
+
             AddVisual(_chartView.DrawMarginFrame);
             _previousDrawMarginFrame = _chartView.DrawMarginFrame;
         }

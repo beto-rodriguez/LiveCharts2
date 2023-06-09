@@ -220,7 +220,7 @@ public class Theme<TDrawingContext>
     public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new();
 
     /// <summary>
-    /// Constructs an axis.
+    /// Applies the theme to an axis.
     /// </summary>
     /// <param name="axis">The axis.</param>
     public void ApplyStyleToAxis(IPlane<TDrawingContext> axis)
@@ -229,7 +229,7 @@ public class Theme<TDrawingContext>
     }
 
     /// <summary>
-    /// Constructs a series.
+    /// Applies the theme to a series.
     /// </summary>
     /// <param name="series">The series.</param>
     public virtual void ApplyStyleToSeries(IChartSeries<TDrawingContext> series)
@@ -354,5 +354,14 @@ public class Theme<TDrawingContext>
             var financialSeries = (IFinancialSeries<TDrawingContext>)series;
             foreach (var rule in FinancialSeriesBuilder) rule(financialSeries);
         }
+    }
+
+    /// <summary>
+    /// Applies the theme to  a draw margin.
+    /// </summary>
+    /// <param name="drawMarginFrame"></param>
+    public void ApplyStyleToDrawMargin(DrawMarginFrame<TDrawingContext> drawMarginFrame)
+    {
+        foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
     }
 }
