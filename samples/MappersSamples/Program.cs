@@ -71,7 +71,7 @@ var citiesChart = new SKCartesianChart
             {
                 // use population as primary value (normally Y)
                 chartPoint.PrimaryValue = sample.Population;
-                // use the index of the item in the array as secondary value (normally X)
+                // use the index of the item in the array as X
                 chartPoint.SecondaryValue = chartPoint.Index;
             },
             Values = cities
@@ -118,3 +118,27 @@ Console.WriteLine("chart saved");
 
 public record TempSample(int Time, double Temperature, string Unit);
 public record City(string Name, double Population);
+
+// -------------------------------------------------------------------
+// IMPORTANT NOTE
+// -------------------------------------------------------------------
+// There are 2 special plots that use more than X and Y coordinates.
+
+// Weighted plots: HeatMaps and Bubble charts use 3 coordinates, X, Y and Weight.
+// Mapping = (sample, chartPoint) =>
+// {
+//    chartPoint.PrimaryValue = sample.X;
+//    chartPoint.SecondaryValue = sample.Y;
+//    chartPoint.TertiaryValue = sample.Weigth;
+// }
+
+// While financial Points use 5.
+// Coordinate = new Coordinate(High, X, Open, Close, Low);
+// Mapping = (sample, chartPoint) =>
+// {
+//    chartPoint.PrimaryValue = sample.High;
+//    chartPoint.SecondaryValue = sample.X;
+//    chartPoint.TertiaryValue = sample.Open;
+//    chartPoint.QuaternaryValue = sample.Close;
+//    chartPoint.QuinaryValue = sample.Low;
+//}

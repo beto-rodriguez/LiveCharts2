@@ -152,3 +152,16 @@ public partial class TempNullableSample : ObservableObject, IChartEntity
         base.OnPropertyChanged(e);
     }
 }
+
+// -------------------------------------------------------------------
+// IMPORTANT NOTE
+// -------------------------------------------------------------------
+// There are 2 special plots that use more than X and Y coordinates.
+
+// Weited plots: HeatMaps and Bubble charts use 3 coordinates, X, Y and Weight.
+// Coordinate = new Coordinate(X, Y, Weight);
+// https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/Defaults/WeightedPoint.cs
+
+// While financial Points use 5.
+// Coordinate = new Coordinate(High, X, Open, Close, Low);
+// https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/Defaults/FinancialPoint.cs
