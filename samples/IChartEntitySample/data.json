@@ -1,0 +1,17 @@
+[
+  {
+    "Time": 1,
+    "Temperature": 65.65,
+    "Unit": "Celcius"
+  },
+  {
+    "Time": 5,
+    "Temperature": 62.23,
+    "Unit": "Celcius"
+  },
+  {
+    "Time": 8,
+    "Temperature": 85.12,
+    "Unit": "Celcius"
+  }
+]

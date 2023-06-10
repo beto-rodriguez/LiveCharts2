@@ -20,36 +20,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel;
+using System;
+using System.Collections.Generic;
+using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Defaults;
+namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines the <see cref="MappedChartEntity"/> class, a helper class to map any object that does not implements <see cref="IChartEntity"/>,
-/// when you need a better performance you should implement <see cref="IChartEntity"/> in your DTOs, the default objects in the library
-/// already implement <see cref="IChartEntity"/>.
+/// Represents additional data required by LiveCharts to draw a point.
 /// </summary>
-public sealed class MappedChartEntity : IChartEntity
+public class ChartEntityMetaData
 {
-    /// <inheritdoc cref="IChartEntity.MetaData"/>
-#if NET5_0_OR_GREATER
-    [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
-    public ChartEntityMetaData? MetaData { get; set; }
+    private readonly Action<int>? _entityIndexChangedCallback;
+    private int _entityIndex;
 
-    /// <inheritdoc cref="IChartEntity.Coordinate"/>
-#if NET5_0_OR_GREATER
-    [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
-    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
-
-    internal void UpdateCoordinate(ChartPoint chartPoint)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChartEntityMetaData"/> class.
+    /// </summary>
+    /// <param name="onEntityIndexChanged">The callback to call when the entity index changes.</param>
+    public ChartEntityMetaData(Action<int>? onEntityIndexChanged = null)
     {
-        Coordinate = new Coordinate(
-            chartPoint.PrimaryValue, chartPoint.SecondaryValue, chartPoint.TertiaryValue, chartPoint.QuaternaryValue, chartPoint.QuinaryValue);
+        _entityIndexChangedCallback = onEntityIndexChanged;
     }
+
+    /// <summary>
+    /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.
+    /// </summary>
+    public int EntityIndex
+    {
+        get => _entityIndex;
+        set
+        {
+            if (value == _entityIndex) return;
+            _entityIndex = value;
+            _entityIndexChangedCallback?.Invoke(value);
+        }
+    }
+
+    /// <summary>
+    /// Gets the chart points dictionary.
+    /// </summary>
+    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
 }
