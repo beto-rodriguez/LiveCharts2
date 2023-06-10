@@ -370,7 +370,7 @@ public class DataFactory<TModel, TDrawingContext>
                 continue;
             }
 
-            entity.MetaData ??= new ChartEntityMetaData(entity);
+            entity.MetaData ??= new ChartEntityMetaData();
             entity.MetaData.ChartPoints ??= new Dictionary<IChartView, ChartPoint>();
 
             if (!entity.MetaData.ChartPoints.TryGetValue(chart.View, out var point))
@@ -415,7 +415,7 @@ public class DataFactory<TModel, TDrawingContext>
             {
                 IndexEntityMap[index] = entity = new MappedChartEntity
                 {
-                    MetaData = new ChartEntityMetaData(entity)
+                    MetaData = new ChartEntityMetaData
                     {
                         ChartPoints = new Dictionary<IChartView, ChartPoint>()
                     }
@@ -467,7 +467,7 @@ public class DataFactory<TModel, TDrawingContext>
             {
                 IndexEntityMap[item] = entity = new MappedChartEntity
                 {
-                    MetaData = new ChartEntityMetaData(entity)
+                    MetaData = new ChartEntityMetaData
                     {
                         ChartPoints = new Dictionary<IChartView, ChartPoint>()
                     }

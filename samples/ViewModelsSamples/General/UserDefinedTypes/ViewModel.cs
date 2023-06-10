@@ -24,7 +24,7 @@ public partial class ViewModel : ObservableObject
                     // now we need to populate the point coordinates from our City instance to our point
 
                     // in this case we will use the Population property as our primary value (normally the Y coordinate)
-                    point.PrimaryValue = (float)city.Population;
+                    point.PrimaryValue = city.Population;
 
                     // then the secondary value (normally the X coordinate)
                     // will be the index of the given dog class in our array
@@ -36,8 +36,8 @@ public partial class ViewModel : ObservableObject
                 {
                     // in this case we will use the Population property in the Y axis (primary)
                     // and the LandArea property in the X axis (secondary)
-                    point.PrimaryValue = (float)cityDensity.Population;
-                    point.SecondaryValue = (float)cityDensity.LandArea;
+                    point.PrimaryValue = cityDensity.Population;
+                    point.SecondaryValue = cityDensity.LandArea;
                 })
             );
     }
@@ -50,7 +50,7 @@ public partial class ViewModel : ObservableObject
             // you can also configure this series locally // mark
             //Mapping = (city, point) =>
             //{
-            //    point.PrimaryValue = (float)city.Population;
+            //    point.PrimaryValue = city.Population;
             //    point.SecondaryValue = point.Context.Index;
             //},
             Values = new[]

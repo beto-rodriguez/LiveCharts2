@@ -44,7 +44,7 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     /// </summary>
     public FinancialPointI()
     {
-        MetaData = new ChartEntityMetaData(this, OnCoordinateChanged);
+        MetaData = new ChartEntityMetaData(OnCoordinateChanged);
     }
 
     /// <summary>

@@ -37,17 +37,11 @@ public class ChartEntityMetaData
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartEntityMetaData"/> class.
     /// </summary>
-    /// <param name="entity">The entity.</param>
     /// <param name="onEntityIndexChanged">The callback to call when the entity index changes.</param>
-    public ChartEntityMetaData(object entity, Action<int>? onEntityIndexChanged = null)
+    public ChartEntityMetaData(Action<int>? onEntityIndexChanged = null)
     {
-        Entity = entity;
+        _entityIndexChangedCallback = onEntityIndexChanged;
     }
-
-    /// <summary>
-    /// Gets the entity.
-    /// </summary>
-    public object Entity { get; set; }
 
     /// <summary>
     /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.

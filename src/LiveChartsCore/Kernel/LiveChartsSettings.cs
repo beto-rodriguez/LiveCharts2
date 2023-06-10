@@ -372,27 +372,27 @@ public class LiveChartsSettings
             HasMap<short>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<int>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<long>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<float>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<double>((model, point) =>
             {
                 point.PrimaryValue = model;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<decimal>((model, point) =>
             {
@@ -407,32 +407,32 @@ public class LiveChartsSettings
 
                 // MetaData can not be null neither at this point.
                 // LiveCharts already checked for nulls.
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<int?>((model, point) =>
             {
                 point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<long?>((model, point) =>
             {
                 point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<float?>((model, point) =>
             {
                 point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<double?>((model, point) =>
             {
                 point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             })
             .HasMap<decimal?>((model, point) =>
             {
                 point.PrimaryValue = (double)model!.Value;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                point.SecondaryValue = point.Index;
             });
     }
 }

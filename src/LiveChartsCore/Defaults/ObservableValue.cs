@@ -38,13 +38,16 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// Initializes a new instance of the <see cref="ObservableValue"/> class.
     /// </summary>
     public ObservableValue()
-    { }
+    {
+        MetaData = new ChartEntityMetaData(OnCoordinateChanged);
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableValue"/> class.
     /// </summary>
     /// <param name="value">The value.</param>
     public ObservableValue(double? value)
+        : this()
     {
         Value = value;
     }
