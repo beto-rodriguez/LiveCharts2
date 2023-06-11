@@ -203,7 +203,7 @@ public class ColumnSeriesTest
         {
             Values = new double[] { -10, -5, -1, 0, 1, 5, 10 },
             MaxBarWidth = 35,
-            DataPadding = new Drawing.LvcPoint(0, 0)
+            DataPadding = new Drawing.LvcPoint(0, 0),
         };
 
         var chart = new SKCartesianChart

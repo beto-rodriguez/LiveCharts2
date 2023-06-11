@@ -26,6 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -272,6 +273,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <summary>
+    /// Called when a point is measured.
+    /// </summary>
+    public Action<ChartPoint<TModel, TVisual, TLabel>>? WhenPointMeasured { get; set; }
+
+    /// <summary>
     /// Gets or sets the size of the legend shape.
     /// </summary>
     /// <value>
@@ -445,6 +451,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="chartPoint">The chart point.</param>
     protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
     {
+        WhenPointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
         PointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
     }
 
