@@ -323,7 +323,6 @@ public class ColumnSeriesTest
         sutSeries.DataLabelsPosition = DataLabelsPosition.Middle;
 
         _ = chart.GetImage();
-        chart.SaveImage("test.png");
 
         points = datafactory
             .Fetch(sutSeries, chart.Core)

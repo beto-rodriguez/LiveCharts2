@@ -28,6 +28,6 @@ public class TestLabel : LabelGeometry
 {
     public TestLabel()
     {
-        Background = new Drawing.LvcColor(200, 200, 200);
+        Background = new Drawing.LvcColor(200, 200, 200, 50);
     }
 }
