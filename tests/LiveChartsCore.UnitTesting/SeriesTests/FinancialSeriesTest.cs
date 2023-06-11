@@ -244,7 +244,6 @@ public class FinancialSeriesTest
                 new(1, .75, 0.25, 0),
                 new(10, 9.75, 9.25, 9)
             },
-            MaxBarWidth = 35,
             DataPadding = new Drawing.LvcPoint(0, 0),
         };
 
