@@ -35,8 +35,8 @@ namespace LiveChartsCore.Motion;
 public class MotionCanvas<TDrawingContext> : IDisposable
     where TDrawingContext : DrawingContext
 {
+    internal HashSet<IPaint<TDrawingContext>> _paintTasks = new();
     private readonly Stopwatch _stopwatch = new();
-    private HashSet<IPaint<TDrawingContext>> _paintTasks = new();
     private readonly List<double> _fpsStack = new();
     private long _previousFrameTime;
     private long _previousLogTime;

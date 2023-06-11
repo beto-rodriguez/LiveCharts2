@@ -246,6 +246,10 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }
+            else
+            {
+                // ....
+            }
 
             OnPointMeasured(point);
         }
