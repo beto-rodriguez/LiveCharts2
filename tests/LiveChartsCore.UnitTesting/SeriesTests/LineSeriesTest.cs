@@ -248,7 +248,6 @@ public class LineSeriesTest
         // TEST TOP ===============================================================
         sutSeries.DataLabelsPosition = DataLabelsPosition.Top;
         _ = chart.GetImage();
-        chart.SaveImage("test.png");
 
         points = datafactory
             .Fetch(sutSeries, chart.Core)
@@ -263,7 +262,7 @@ public class LineSeriesTest
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
-                Math.Abs(v.Y - (l.Y + ls.Height * 0.5 - gs)) < 0.01);  // y is top
+                Math.Abs(v.Y - (l.Y + ls.Height * 0.5 + gs)) < 0.01);  // y is top
         }
 
         // TEST BOTTOM ===========================================================
@@ -283,8 +282,8 @@ public class LineSeriesTest
             var ls = l.Measure(sutSeries.DataLabelsPaint);
 
             Assert.IsTrue(
-                Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&              // x is centered
-                Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5)) < 0.01); // y is bottom
+                Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
+                Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5 + gs)) < 0.01); // y is bottom
         }
 
         // TEST RIGHT ============================================================
@@ -304,8 +303,8 @@ public class LineSeriesTest
             var ls = l.Measure(sutSeries.DataLabelsPaint);
 
             Assert.IsTrue(
-                Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5)) < 0.01 &&  // x is right
-                Math.Abs(v.Y + v.Height * 0.5 - l.Y) < 0.01);               // y is centered
+                Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5 + gs)) < 0.01 &&  // x is right
+                Math.Abs(v.Y + v.Height * 0.5 - l.Y - gs) < 0.01);               // y is centered
         }
 
         // TEST LEFT =============================================================
@@ -325,8 +324,8 @@ public class LineSeriesTest
             var ls = l.Measure(sutSeries.DataLabelsPaint);
 
             Assert.IsTrue(
-                Math.Abs(v.X - (l.X + ls.Width * 0.5f)) < 0.01 &&   // x is left
-                Math.Abs(v.Y + v.Height * 0.5f - l.Y) < 0.01);      // y is centered
+                Math.Abs(v.X - (l.X + ls.Width * 0.5f + gs)) < 0.01 &&   // x is left
+                Math.Abs(v.Y + v.Height * 0.5f - l.Y - gs) < 0.01);      // y is centered
         }
 
         // TEST MIDDLE ===========================================================
@@ -346,8 +345,8 @@ public class LineSeriesTest
             var ls = l.Measure(sutSeries.DataLabelsPaint);
 
             Assert.IsTrue(
-                Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&      // x is centered
-                Math.Abs(v.Y + v.Height * 0.5f - l.Y) < 0.01);      // y is centered
+                Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&      // x is centered
+                Math.Abs(v.Y + v.Height * 0.5f - l.Y - gs) < 0.01);      // y is centered
         }
 
         // TEST START ===========================================================
@@ -370,15 +369,15 @@ public class LineSeriesTest
             {
                 // it should be placed using the top position
                 Assert.IsTrue(
-                    Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&    // x is centered
-                    Math.Abs(v.Y - (l.Y + ls.Height * 0.5)) < 0.01);  // y is top
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
+                    Math.Abs(v.Y - (l.Y + ls.Height * 0.5 + gs)) < 0.01);  // y is top
             }
             else
             {
                 // it should be placed using the bottom position
                 Assert.IsTrue(
-                    Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&              // x is centered
-                    Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5)) < 0.01); // y is bottom
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
+                    Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5 + gs)) < 0.01); // y is bottom
             }
         }
 
@@ -402,15 +401,15 @@ public class LineSeriesTest
             {
                 // it should be placed using the bottom position
                 Assert.IsTrue(
-                    Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&              // x is centered
-                    Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5)) < 0.01); // y is bottom
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
+                    Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5 + gs)) < 0.01); // y is bottom
             }
             else
             {
                 // it should be placed using the top position
                 Assert.IsTrue(
-                    Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&    // x is centered
-                    Math.Abs(v.Y - (l.Y + ls.Height * 0.5)) < 0.01);  // y is top
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
+                    Math.Abs(v.Y - (l.Y + ls.Height * 0.5 + gs)) < 0.01);  // y is top
             }
         }
 

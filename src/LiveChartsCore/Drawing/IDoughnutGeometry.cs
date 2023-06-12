@@ -63,7 +63,7 @@ public interface IDoughnutGeometry<TDrawingContext> : IGeometry<TDrawingContext>
     float Height { get; set; }
 
     /// <summary>
-    /// Gets or sets the start angle.
+    /// Gets or sets the start angle in degrees.
     /// </summary>
     /// <value>
     /// The start angle.
@@ -71,7 +71,7 @@ public interface IDoughnutGeometry<TDrawingContext> : IGeometry<TDrawingContext>
     float StartAngle { get; set; }
 
     /// <summary>
-    /// Gets or sets the sweep angle.
+    /// Gets or sets the sweep angle in degrees.
     /// </summary>
     /// <value>
     /// The sweep angle.
