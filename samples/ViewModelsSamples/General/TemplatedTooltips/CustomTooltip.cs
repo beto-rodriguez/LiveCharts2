@@ -34,9 +34,10 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
             };
 
             _stackPanel
-                .Animate(new Animation(EasingFunctions.BounceOut, TimeSpan.FromSeconds(1)),
-                nameof(_stackPanel.X),
-                nameof(_stackPanel.Y));
+                .Animate(
+                    new Animation(EasingFunctions.BounceOut, TimeSpan.FromSeconds(1)),
+                    nameof(_stackPanel.X),
+                    nameof(_stackPanel.Y));
         }
 
         // clear the previous elements.
