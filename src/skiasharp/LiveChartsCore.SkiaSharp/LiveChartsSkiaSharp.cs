@@ -149,15 +149,82 @@ public static class LiveChartsSkiaSharp
     /// <summary>
     /// Converts an IEnumerable to an ObservableCollection of pie series.
     /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <param name="source">The data source.</param>
-    /// <param name="buider">An optional builder.</param>
+    /// <param name="builder">An optional builder.</param>
     /// <returns></returns>
-    public static ObservableCollection<PieSeries<T>> AsPieSeries<T>(
-        this IEnumerable<T> source,
-        Action<T, PieSeries<T>>? buider = null)
+    public static ObservableCollection<PieSeries<TModel>> AsPieSeries<TModel>(
+        this IEnumerable<TModel> source,
+        Action<TModel, PieSeries<TModel>>? builder = null)
     {
-        return AsLiveChartsPieSeries(source, buider);
+        builder ??= (instance, series) => { };
+
+        return new ObservableCollection<PieSeries<TModel>>(
+            source.Select(instance =>
+            {
+                var series = new PieSeries<TModel> { Values = new ObservableCollection<TModel> { instance } };
+                builder(instance, series);
+                return series;
+            })
+            .ToArray());
+    }
+
+    /// <summary>
+    /// Converts an IEnumerable to an ObservableCollection of pie series.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <param name="source">The data source.</param>
+    /// <param name="builder">An optional builder.</param>
+    /// <returns></returns>
+    public static ObservableCollection<PieSeries<TModel, TVisual>> AsPieSeries<TModel, TVisual>(
+        this IEnumerable<TModel> source,
+        Action<TModel, PieSeries<TModel, TVisual>>? builder = null)
+            where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
+    {
+        builder ??= (instance, series) => { };
+
+        return new ObservableCollection<PieSeries<TModel, TVisual>>(
+            source.Select(instance =>
+            {
+                var series = new PieSeries<TModel, TVisual>
+                {
+                    Values = new ObservableCollection<TModel> { instance }
+                };
+                builder(instance, series);
+                return series;
+            })
+            .ToArray());
+    }
+
+    /// <summary>
+    /// Converts an IEnumerable to an ObservableCollection of pie series.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <param name="source">The data source.</param>
+    /// <param name="builder">An optional builder.</param>
+    /// <returns></returns>
+    public static ObservableCollection<PieSeries<TModel, TVisual, TLabel>> AsPieSeries<TModel, TVisual, TLabel>(
+        this IEnumerable<TModel> source,
+        Action<TModel, PieSeries<TModel, TVisual, TLabel>>? builder = null)
+            where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+    {
+        builder ??= (instance, series) => { };
+
+        return new ObservableCollection<PieSeries<TModel, TVisual, TLabel>>(
+            source.Select(instance =>
+            {
+                var series = new PieSeries<TModel, TVisual, TLabel>
+                {
+                    Values = new ObservableCollection<TModel> { instance }
+                };
+                builder(instance, series);
+                return series;
+            })
+            .ToArray());
     }
 
     /// <summary>
@@ -167,20 +234,12 @@ public static class LiveChartsSkiaSharp
     /// <param name="source">The data source.</param>
     /// <param name="buider">An optional builder.</param>
     /// <returns></returns>
+    [Obsolete($"Renamed to {nameof(AsPieSeries)}.")]
     public static ObservableCollection<PieSeries<T>> AsLiveChartsPieSeries<T>(
         this IEnumerable<T> source,
         Action<T, PieSeries<T>>? buider = null)
     {
-        buider ??= (instance, series) => { };
-
-        return new ObservableCollection<PieSeries<T>>(
-            source.Select(instance =>
-            {
-                var series = new PieSeries<T> { Values = new ObservableCollection<T> { instance } };
-                buider(instance, series);
-                return series;
-            })
-            .ToArray());
+        return AsPieSeries(source, buider);
     }
 
     /// <summary>
