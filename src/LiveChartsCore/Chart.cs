@@ -612,7 +612,17 @@ public abstract class Chart<TDrawingContext> : IChart
     /// </summary>
     protected void DrawToolTip()
     {
-        if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
+        var x = _pointerPosition.X;
+        var y = _pointerPosition.Y;
+
+        if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn ||
+            x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
+            y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
+        {
+            _tooltipClosesAt = DateTime.Now.AddSeconds(1.5);
+            return;
+        }
+
         var points = FindHoveredPointsBy(_pointerPosition);
 
         var o = new object();
