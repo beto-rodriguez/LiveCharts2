@@ -37,7 +37,7 @@ public partial class App : Application
                 .HasMap<City>((city, point) => // mark
                 { // mark
                     point.PrimaryValue = city.Population; // mark
-                    point.SecondaryValue = point.Context.Index; // mark
+                    point.SecondaryValue = point.Index; // mark
                 }) // mark
             // .HasMap<Foo>( .... ) // mark
             // .HasMap<Bar>( .... ) // mark
