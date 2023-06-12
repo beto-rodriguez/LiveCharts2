@@ -21,11 +21,9 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -70,21 +68,13 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// </value>
     public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    /// <inheritdoc cref="IChartEntity.MetaData"/>
 #if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public int EntityIndex { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
-#if NET5_0_OR_GREATER
-    [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
-    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+    public ChartEntityMetaData? MetaData { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
 #if NET5_0_OR_GREATER
@@ -109,6 +99,7 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
         Coordinate = _value is null
             ? Coordinate.Empty
             : new(_timeSpan.Ticks, _value ?? 0d);
+
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

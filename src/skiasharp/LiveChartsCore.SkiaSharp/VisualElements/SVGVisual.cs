@@ -20,24 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
+// Ignore Spelling: SVG
 
-namespace LiveChartsCore.VisualElements;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.VisualElements;
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
-/// An image control
+/// Defines a visual element in a chart that draws a svg geometry in the user interface.
 /// </summary>
-public interface IImageControl
+public class SVGVisual : GeometryVisual<SVGPathGeometry>
 {
     /// <summary>
-    /// Gets the size.
+    /// Gets or sets the SVG path.
     /// </summary>
-    public LvcSize Size { get; }
+    public SKPath? Path { get; set; }
 
-    /// <summary>
-    /// Measures the control.
-    /// </summary>
-    /// <param name="chart">The chart that holds the control.</param>
-    public void Measure(IChart chart);
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
+    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
+    {
+        var l = GetActualCoordinate();
+
+        var size = Measure(chart);
+
+        _geometry.X = l.X;
+        _geometry.Y = l.Y;
+        _geometry.Width = size.Width;
+        _geometry.Height = size.Height;
+        _geometry.Path = Path;
+
+        var drawing = chart.Canvas.Draw();
+        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
+        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
+    }
 }

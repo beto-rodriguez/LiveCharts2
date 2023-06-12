@@ -64,10 +64,11 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
     {
         YToolTipLabelFormatter = p =>
-            $"H {p.PrimaryValue:N2}{Environment.NewLine}" +
-            $"O {p.TertiaryValue:N2}{Environment.NewLine}" +
-            $"C {p.QuaternaryValue:N2}{Environment.NewLine}" +
-            $"L {p.QuinaryValue:N2}";
+            $"H {p.PrimaryValue:C2}{Environment.NewLine}" +
+            $"O {p.TertiaryValue:C2}{Environment.NewLine}" +
+            $"C {p.QuaternaryValue:C2}{Environment.NewLine}" +
+            $"L {p.QuinaryValue:C2}";
+        DataLabelsFormatter = point => $"{point.PrimaryValue:C2} - {point.QuinaryValue:C2}";
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>

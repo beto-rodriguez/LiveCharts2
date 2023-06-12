@@ -231,7 +231,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 GeometryStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                visual.StepSegment.Id = point.Context.Entity.EntityIndex;
+                visual.StepSegment.Id = point.Context.Entity.MetaData!.EntityIndex;
 
                 if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
                 if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
@@ -374,7 +374,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     {
         return series is StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> stepSeries &&
             Name == series.Name &&
-            !((ISeries)this).PaintsChanged &&
             Fill == stepSeries.Fill && Stroke == stepSeries.Stroke &&
             GeometryFill == stepSeries.GeometryFill && GeometryStroke == stepSeries.GeometryStroke;
     }

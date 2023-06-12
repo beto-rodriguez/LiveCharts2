@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: svg
+
+using System;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -30,13 +33,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <seealso cref="SizedGeometry" />
 public class SVGPathGeometry : SizedGeometry
 {
-    private string _svg = string.Empty;
-    internal SKPath? _svgPath;
+    private readonly Func<SKPath> _pathSource = () => throw new NotImplementedException("There is no path to render.");
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
+    /// Inieializes a new instance of the <see cref="SVGPathGeometry"/> class.
     /// </summary>
-    public SVGPathGeometry() : base()
+    public SVGPathGeometry()
     { }
 
     /// <summary>
@@ -45,16 +47,23 @@ public class SVGPathGeometry : SizedGeometry
     /// <param name="svgPath">The SVG path.</param>
     public SVGPathGeometry(SKPath svgPath)
     {
-        _svgPath = svgPath;
+        Path = svgPath;
     }
 
     /// <summary>
-    /// Gets or sets the SVG path.
+    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class,
+    /// when <see cref="Path"/> is null, The path will be obtained from the <paramref name="pathSource"/> function.
     /// </summary>
-    /// <value>
-    /// The SVG.
-    /// </value>
-    public string SVG { get => _svg; set { _svg = value; OnSVGPropertyChanged(); } }
+    /// <param name="pathSource">The path source.</param>
+    public SVGPathGeometry(Func<SKPath> pathSource)
+    {
+        _pathSource = pathSource;
+    }
+
+    /// <summary>
+    /// Gets or sets the path.
+    /// </summary>
+    public SKPath? Path { get; set; }
 
     /// <summary>
     /// Gets or sets whether the path should be fitted to the size of the geometry.
@@ -64,14 +73,21 @@ public class SVGPathGeometry : SizedGeometry
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        if (_svgPath is null)
-            throw new System.NullReferenceException(
-                $"{nameof(SVG)} property is null and there is not a defined path to draw.");
+        DrawPath(context, paint, Path ?? _pathSource()!);
+    }
 
+    /// <summary>
+    /// Draws the given path to the canvas.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="paint">The paint</param>
+    protected void DrawPath(SkiaSharpDrawingContext context, SKPaint paint, SKPath path)
+    {
         _ = context.Canvas.Save();
 
         var canvas = context.Canvas;
-        _ = _svgPath.GetTightBounds(out var bounds);
+        _ = path.GetTightBounds(out var bounds);
 
         if (FitToSize)
         {
@@ -95,13 +111,8 @@ public class SVGPathGeometry : SizedGeometry
             canvas.Translate(-bounds.MidX, -bounds.MidY);
         }
 
-        canvas.DrawPath(_svgPath, paint);
+        canvas.DrawPath(path, paint);
 
         context.Canvas.Restore();
-    }
-
-    private void OnSVGPropertyChanged()
-    {
-        _svgPath = SKPath.ParseSvgPathData(_svg);
     }
 }

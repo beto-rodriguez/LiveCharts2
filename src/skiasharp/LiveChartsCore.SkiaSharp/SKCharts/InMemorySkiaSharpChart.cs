@@ -115,6 +115,8 @@ public abstract class InMemorySkiaSharpChart
         if (CoreChart is null || CoreChart is not Chart<SkiaSharpDrawingContext> skiaChart)
             throw new Exception("Something is missing :(");
 
+        if (LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+
         skiaChart.Canvas.DisableAnimations = true;
 
         skiaChart.IsLoaded = true;

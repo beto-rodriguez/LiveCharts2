@@ -72,8 +72,8 @@ public class LabelsMeasureTest
             VisualElements = visuls
         };
 
-        //_ = chart.GetImage();
-        chart.SaveImage("test.png"); // use this method to see the actual tested image
+        _ = chart.GetImage();
+        //chart.SaveImage("test.png"); // use this method to see the actual tested image
     }
 
     [TestMethod]
@@ -122,8 +122,7 @@ public class LabelsMeasureTest
             VisualElements = visuls
         };
 
-        //_ = chart.GetImage();
-        chart.SaveImage("multi line labels test.png"); // use this method to see the actual tested image
+        _ = chart.GetImage();
+        //chart.SaveImage("multi line labels test.png"); // use this method to see the actual tested image
     }
 }
-

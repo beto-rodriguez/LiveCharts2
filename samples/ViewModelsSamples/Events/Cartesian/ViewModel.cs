@@ -36,7 +36,7 @@ public partial class ViewModel : ObservableObject
             Mapping = (fruit, point) =>
             {
                 point.PrimaryValue = fruit.SalesPerDay; // use the SalesPerDay property in this series // mark
-                point.SecondaryValue = point.Context.Entity.EntityIndex;
+                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
             }
         };
 

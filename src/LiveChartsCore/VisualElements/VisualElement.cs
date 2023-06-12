@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
@@ -154,20 +155,35 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// </summary>
     protected internal abstract void SetParent(IGeometry<TDrawingContext> parent);
 
-    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <summary>
+    /// Gets the acdtual coordinate of the visual.
+    /// </summary>
+    /// <returns></returns>
+    protected LvcPoint GetActualCoordinate()
     {
-        var motionCanvas = chart.Canvas;
-        if (motionCanvas.StartPoint is not null)
+        var x = (float)X;
+        var y = (float)Y;
+
+        if (LocationUnit == MeasureUnit.ChartValues)
         {
-            point.X -= motionCanvas.StartPoint.Value.X;
-            point.Y -= motionCanvas.StartPoint.Value.Y;
+            if (PrimaryScaler is null || SecondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
+            x = SecondaryScaler.ToPixels(x);
+            y = PrimaryScaler.ToPixels(y);
         }
 
+        return new(x, y);
+    }
+
+    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    {
+        var location = GetActualCoordinate();
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element
-        if (point.X >= X && point.X <= X + size.Width &&
-            point.Y >= Y && point.Y <= Y + size.Height)
+        if (point.X >= location.X && point.X <= location.X + size.Width &&
+            point.Y >= location.Y && point.Y <= location.Y + size.Height)
         {
             yield return this;
         }

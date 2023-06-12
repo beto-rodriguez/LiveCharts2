@@ -24,12 +24,13 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
-/// Defines a visual element in a chart that draws a rectangle geometry in the user interface.
+/// Defines a visual element in a chart that draws a sized geometry in the user interface.
 /// </summary>
 public class GeometryVisual<TGeometry> : BaseGeometryVisual
     where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
@@ -44,22 +45,12 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
     {
-        var x = (float)X;
-        var y = (float)Y;
-
-        if (LocationUnit == MeasureUnit.ChartValues)
-        {
-            if (PrimaryScaler is null || SecondaryScaler is null)
-                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
-
-            x = SecondaryScaler.ToPixels(x);
-            y = PrimaryScaler.ToPixels(y);
-        }
+        var l = GetActualCoordinate();
 
         var size = Measure(chart);
 
-        _geometry.X = x;
-        _geometry.Y = y;
+        _geometry.X = l.X;
+        _geometry.Y = l.Y;
         _geometry.Width = size.Width;
         _geometry.Height = size.Height;
 

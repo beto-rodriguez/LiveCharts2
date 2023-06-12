@@ -32,11 +32,12 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
-public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageControl
+public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 {
     private static readonly int s_zIndex = 10050;
-    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
-    private readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
+
+    // marked as internal only for testing purposes
+    internal readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
     {
         Padding = new Padding(15, 4),
         HorizontalAlignment = Align.Start,
@@ -49,80 +50,39 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
     public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
 
     /// <summary>
-    /// Gets or sets the background paint.
-    /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
-    {
-        get => _backgroundPaint;
-        set
-        {
-            _backgroundPaint = value;
-            if (value is not null)
-            {
-                value.IsFill = true;
-            }
-        }
-    }
-
-    /// <summary>
     /// Gets or sets the fonts size.
     /// </summary>
     public double TextSize { get; set; } = 15;
-
-    public LvcSize Size { get; private set; }
 
     public SKDefaultLegend()
     {
         FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
     }
 
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}.Draw(Chart{TDrawingContext})"/>
     public void Draw(Chart<SkiaSharpDrawingContext> chart)
     {
-        Measure(chart);
+        var legendPosition = chart.GetLegendPosition();
 
-        var actualChartSize = chart.ControlSize;
-
-        if (chart.LegendPosition == LegendPosition.Top)
-        {
-            chart.Canvas.StartPoint = new LvcPoint(0, Size.Height);
-            _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
-            _stackPanel.Y = -Size.Height;
-        }
-        if (chart.LegendPosition == LegendPosition.Bottom)
-        {
-            _stackPanel.X = actualChartSize.Width * 0.5f - Size.Width * 0.5f;
-            _stackPanel.Y = actualChartSize.Height;
-        }
-        if (chart.LegendPosition == LegendPosition.Left)
-        {
-            chart.Canvas.StartPoint = new LvcPoint(Size.Width, 0);
-            _stackPanel.X = -Size.Width;
-            _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
-        }
-        if (chart.LegendPosition == LegendPosition.Right)
-        {
-            _stackPanel.X = actualChartSize.Width;
-            _stackPanel.Y = actualChartSize.Height * 0.5f - Size.Height * 0.5f;
-        }
+        _stackPanel.X = legendPosition.X;
+        _stackPanel.Y = legendPosition.Y;
 
         chart.AddVisual(_stackPanel);
         if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
     }
 
-    public void Measure(IChart chart)
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
     {
-        var c = (Chart<SkiaSharpDrawingContext>)chart;
-        BuildLayout(c);
-        Size = _stackPanel.Measure(c);
+        BuildLayout(chart);
+        return _stackPanel.Measure(chart);
     }
 
     private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
     {
-        if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
         if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
 
-        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
         _stackPanel.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
@@ -148,6 +108,8 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IImageCont
 
         foreach (var series in chart.ChartSeries)
         {
+            if (!series.IsVisibleAtLegend) continue;
+
             _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 6),

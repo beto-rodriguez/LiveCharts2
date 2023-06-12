@@ -78,6 +78,11 @@ public class ChartPoint
     public bool IsNull => IsEmpty;
 
     /// <summary>
+    /// Gets the position of the point the collection that was used when the point was drawn.
+    /// </summary>
+    public int Index => Context?.Entity?.MetaData?.EntityIndex ?? 0;
+
+    /// <summary>
     /// Gets or sets a value indicating whether this instance is empty.
     /// </summary>
     /// <value>

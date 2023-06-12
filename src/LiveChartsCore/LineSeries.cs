@@ -266,7 +266,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                 GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 GeometryStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                visual.Bezier.Id = data.TargetPoint.Context.Entity.EntityIndex;
+                visual.Bezier.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
                 if (Fill is not null) fillVector.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
                 if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
@@ -423,7 +423,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     {
         return series is LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> lineSeries &&
             Name == series.Name &&
-            !((ISeries)this).PaintsChanged &&
             Fill == lineSeries.Fill && Stroke == lineSeries.Stroke &&
             GeometryFill == lineSeries.GeometryFill && GeometryStroke == lineSeries.GeometryStroke;
     }

@@ -22,11 +22,14 @@
 
 using System;
 using System.Linq;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.UnitTesting.MockedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SkiaSharp;
 
 namespace LiveChartsCore.UnitTesting.SeriesTests;
 
@@ -34,11 +37,11 @@ namespace LiveChartsCore.UnitTesting.SeriesTests;
 public class PieSeriesTest
 {
     [TestMethod]
-    public void ShouldScaleProperly()
+    public void ShouldScale()
     {
         var values = new double[] { 100, 50, 25, 25 };
         var total = values.Sum();
-        var seriesCollection = values.AsLiveChartsPieSeries((value, series) =>
+        var seriesCollection = values.AsPieSeries((value, series) =>
         {
             series.HoverPushout = 50;
         });
@@ -88,7 +91,7 @@ public class PieSeriesTest
     }
 
     [TestMethod]
-    public void ShouldPlaceToolTipsCorrectly()
+    public void ShouldPlaceToolTips()
     {
         var tooltip = new SKDefaultTooltip();
 
@@ -132,5 +135,131 @@ public class PieSeriesTest
             tp.X - 150 > 0 &&
             tp.Y + tp.Height - 150 < 0,
             "Tool tip failed");
+    }
+
+    [TestMethod]
+    public void ShouldPlaceDataLabel()
+    {
+        var vals = new[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        var seriesCollection = vals.AsPieSeries<int, DoughnutGeometry, TestLabel>();
+
+        var chart = new SKPieChart
+        {
+            Width = 500,
+            Height = 500,
+            DrawMargin = new Margin(50),
+            TooltipPosition = TooltipPosition.Top,
+            Series = seriesCollection
+        };
+
+        // TEST HIDDEN ===========================================================
+        _ = chart.GetImage();
+
+        var points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        Assert.IsTrue(seriesCollection.All(x => x.DataLabelsPosition == PolarLabelsPosition.Middle));
+        Assert.IsTrue(points.All(x => x.Label is null));
+
+        foreach (var series in seriesCollection)
+            series.DataLabelsPaint = new SolidColorPaint
+            {
+                Color = SKColors.Black,
+                SKTypeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
+            };
+
+        // TEST TOP ===============================================================
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
+        _ = chart.GetImage();
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            Assert.IsTrue(
+                Math.Abs(p.Label.X - 250) < 0.01 &&
+                Math.Abs(p.Label.Y - 250) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Middle;
+        _ = chart.GetImage();
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Start;
+        _ = chart.GetImage();
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.End;
+        _ = chart.GetImage();
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle;
+            if (Math.Abs(r - 360) < 0.001) r = 0;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Outer;
+        _ = chart.GetImage();
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h > p.Visual.Width * 0.5f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
     }
 }

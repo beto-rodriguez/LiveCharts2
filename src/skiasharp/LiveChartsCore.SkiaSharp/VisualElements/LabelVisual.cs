@@ -46,8 +46,6 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     internal double _rotation;
     internal float _lineHeight = 1.75f;
     internal LvcPoint _translate = new();
-    private LvcSize _actualSize = new();
-    private LvcPoint _targetPosition = new();
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -134,7 +132,6 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
             y = PrimaryScaler.ToPixels(y);
         }
 
-        _targetPosition = new((float)X, (float)Y);
         _ = Measure(chart);
 
         _labelGeometry.Text = Text;
@@ -172,7 +169,7 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
 
-        return _actualSize = _paint is null
+        return _paint is null
             ? new LvcSize()
             : _labelGeometry.Measure(_paint);
     }

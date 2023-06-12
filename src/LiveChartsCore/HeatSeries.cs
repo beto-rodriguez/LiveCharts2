@@ -76,6 +76,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             return $"{labeler(point.PrimaryValue)} {point.TertiaryValue}";
         };
+        DataLabelsPosition = DataLabelsPosition.Middle;
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
@@ -231,8 +232,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
                 var labelPosition = GetLabelPosition(
-                     secondary, primary, uws, uws, label.Measure(DataLabelsPaint), DataLabelsPosition,
-                     SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                     secondary - uws * 0.5f + p.Left, primary - uwp * 0.5f + p.Top, uws - p.Left - p.Right, uwp - p.Top - p.Bottom,
+                     label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }

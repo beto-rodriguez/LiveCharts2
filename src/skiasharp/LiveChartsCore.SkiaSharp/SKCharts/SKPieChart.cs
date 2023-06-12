@@ -68,6 +68,8 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
         Total = view.Total;
         LegendPosition = view.LegendPosition;
         Title = view.Title;
+        DrawMargin = view.DrawMargin;
+        VisualElements = view.VisualElements;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
@@ -212,20 +214,6 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
 
     private LvcSize GetControlSize()
     {
-        if (LegendPosition == LegendPosition.Hidden || Legend is null) return new(Width, Height);
-
-        if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-        {
-            var imageControl = (IImageControl)Legend;
-            return new(Width - imageControl.Size.Width, Height);
-        }
-
-        if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
-        {
-            var imageControl = (IImageControl)Legend;
-            return new(Width, Height - imageControl.Size.Height);
-        }
-
         return new(Width, Height);
     }
 

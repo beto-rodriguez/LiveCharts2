@@ -168,7 +168,7 @@ the **Zooming**, the **Panning**, the **Scale** (log) and the **Paging**.
 This is a brief sample about how to use the main features of the `Axis` class, you can find a more detailed article at the button below or at the 
 [API explorer]({{ website_url }}/api/{{ version }}/LiveChartsCore.SkiaSharpView.Axis).
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Axes" class="btn btn-light btn-lg text-primary shadow-sm mb-3">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties" class="btn btn-light btn-lg text-primary shadow-sm mb-3">
 <b>Go to the full axes article</b>
 </a>
 

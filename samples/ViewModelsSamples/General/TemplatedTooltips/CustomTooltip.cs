@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -12,25 +13,32 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.TemplatedTooltips;
 
-public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageControl
+public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
     private static readonly int s_zIndex = 10050;
     private readonly SolidColorPaint _backgroundPaint = new(new SKColor(28, 49, 58)) { ZIndex = s_zIndex };
     private readonly SolidColorPaint _fontPaint = new(new SKColor(230, 230, 230)) { ZIndex = s_zIndex + 1 };
 
-    public LvcSize Size { get; private set; }
-
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        _stackPanel ??= new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+        if (_stackPanel is null)
         {
-            Padding = new Padding(25),
-            Orientation = ContainerOrientation.Vertical,
-            HorizontalAlignment = Align.Start,
-            VerticalAlignment = Align.Middle,
-            BackgroundPaint = _backgroundPaint
-        };
+            _stackPanel = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+            {
+                Padding = new Padding(25),
+                Orientation = ContainerOrientation.Vertical,
+                HorizontalAlignment = Align.Start,
+                VerticalAlignment = Align.Middle,
+                BackgroundPaint = _backgroundPaint
+            };
+
+            _stackPanel
+                .Animate(
+                    new Animation(EasingFunctions.BounceOut, TimeSpan.FromSeconds(1)),
+                    nameof(_stackPanel.X),
+                    nameof(_stackPanel.Y));
+        }
 
         // clear the previous elements.
         foreach (var child in _stackPanel.Children.ToArray())
@@ -46,7 +54,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
 
             var label = new LabelVisual
             {
-                //Text = point.AsTooltipString,
+                Text = point.SecondaryValue.ToString("C2"),
                 Paint = _fontPaint,
                 TextSize = 15,
                 Padding = new Padding(8, 0, 0, 0),
@@ -69,20 +77,14 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>, IImageContr
             _stackPanel?.Children.Add(sp);
         }
 
-        Measure(chart);
+        var size = _stackPanel.Measure(chart);
 
-        var location = foundPoints.GetTooltipLocation(Size, chart);
+        var location = foundPoints.GetTooltipLocation(size, chart);
 
         _stackPanel.X = location.X;
         _stackPanel.Y = location.Y;
 
         chart.AddVisual(_stackPanel);
-    }
-
-    public void Measure(IChart chart)
-    {
-        if (_stackPanel is null) return;
-        Size = _stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart);
     }
 
     public void Hide(Chart<SkiaSharpDrawingContext> chart)

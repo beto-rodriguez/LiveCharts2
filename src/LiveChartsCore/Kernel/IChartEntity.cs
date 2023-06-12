@@ -20,9 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using LiveChartsCore.Kernel.Sketches;
-
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
@@ -31,17 +28,12 @@ namespace LiveChartsCore.Kernel;
 public interface IChartEntity
 {
     /// <summary>
-    /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.
+    /// Gets or sets the meta data, the additional data required by LiveCharts to draw a point.
     /// </summary>
-    public int EntityIndex { get; set; }
+    public ChartEntityMetaData? MetaData { get; set; }
 
     /// <summary>
-    /// Gets the chart points dictionary.
-    /// </summary>
-    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
-
-    /// <summary>
-    /// Gets the coordinate.
+    /// Gets the coordinate, the position of the point in the chart.
     /// </summary>
     Coordinate Coordinate { get; }
 }

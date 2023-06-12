@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Defaults;
 
@@ -33,21 +31,13 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public sealed class MappedChartEntity : IChartEntity
 {
-    /// <inheritdoc cref="IChartEntity.EntityIndex"/>
+    /// <inheritdoc cref="IChartEntity.MetaData"/>
 #if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public int EntityIndex { get; set; }
-
-    /// <inheritdoc cref="IChartEntity.ChartPoints"/>
-#if NET5_0_OR_GREATER
-    [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
-    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+    public ChartEntityMetaData? MetaData { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
 #if NET5_0_OR_GREATER
