@@ -126,4 +126,3 @@ public class LabelsMeasureTest
         //chart.SaveImage("multi line labels test.png"); // use this method to see the actual tested image
     }
 }
-

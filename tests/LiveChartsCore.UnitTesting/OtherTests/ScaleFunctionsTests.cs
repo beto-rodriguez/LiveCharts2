@@ -103,7 +103,6 @@ public class ScaleFunctionsTests
                 Padding = new Padding(10),
                 Paint = new SolidColorPaint(SKColors.White),
                 BackgroundColor = SKColors.Purple.AsLvcColor()
-
             }
         };
 
@@ -157,7 +156,6 @@ public class ScaleFunctionsTests
                 Padding = new Padding(10),
                 Paint = new SolidColorPaint(SKColors.White),
                 BackgroundColor = SKColors.Purple.AsLvcColor()
-
             }
         };
 
@@ -211,7 +209,6 @@ public class ScaleFunctionsTests
                 Padding = new Padding(10),
                 Paint = new SolidColorPaint(SKColors.White),
                 BackgroundColor = SKColors.Purple.AsLvcColor()
-
             }
         };
 
@@ -265,7 +262,6 @@ public class ScaleFunctionsTests
                 Padding = new Padding(10),
                 Paint = new SolidColorPaint(SKColors.White),
                 BackgroundColor = SKColors.Purple.AsLvcColor()
-
             }
         };
 
