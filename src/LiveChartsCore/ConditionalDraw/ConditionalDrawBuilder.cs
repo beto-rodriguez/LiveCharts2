@@ -31,7 +31,7 @@ namespace LiveChartsCore.ConditionalDraw;
 /// </summary>
 public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+    where TVisual : class, IGeometry<TDrawingContext>, new()
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private bool _isPaintInCanvas = false;
@@ -66,7 +66,7 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// Un-subscribes the generated event handlers from the target series.
     /// </summary>
-    public void Unsubscribe()
+    public void UnSubscribe()
     {
         _series.PointMeasured -= OnMeasured;
     }
@@ -77,7 +77,7 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
 
         var isTriggered = _whenPredicate.Invoke(point);
         var canvas = ((Chart<TDrawingContext>)point.Context.Chart.CoreChart).Canvas;
-        var drawable = (IDrawable<TDrawingContext>?)point.Visual.MainGeometry; // see note #20221909
+        var drawable = (IDrawable<TDrawingContext>?)point.Visual; // see note #20221909
         if (drawable is null) return;
 
         if (!_isPaintInCanvas)

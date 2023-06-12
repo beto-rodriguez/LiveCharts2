@@ -118,14 +118,10 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
         UpdateFinished?.Invoke(this);
     }
 
-    public void HideTooltip() { }
-
     public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
         return new double[2];
     }
-
-    public void ShowTooltip(IEnumerable<ChartPoint> points) { }
 
     public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 

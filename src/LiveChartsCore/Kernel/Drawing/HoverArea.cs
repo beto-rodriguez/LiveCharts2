@@ -49,5 +49,6 @@ public abstract class HoverArea
     /// Suggests the tooltip placement.
     /// </summary>
     /// <param name="context">The context.</param>
-    public abstract void SuggestTooltipPlacement(TooltipPlacementContext context);
+    /// <param name="tooltipSize">Size of the tooltip.</param>
+    public abstract void SuggestTooltipPlacement(TooltipPlacementContext context, LvcSize tooltipSize);
 }

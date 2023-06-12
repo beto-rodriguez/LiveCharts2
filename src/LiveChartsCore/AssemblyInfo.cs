@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Runtime.CompilerServices;
+
 #if !DEBUG
 using System.Reflection;
 
@@ -51,3 +52,5 @@ using System.Reflection;
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
 [assembly: InternalsVisibleTo("LiveChartsCore.BackersPackage")]
 #endif
+
+[assembly: InternalsVisibleTo("LiveChartsCore.UnitTesting")]

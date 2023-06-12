@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Events;
@@ -39,13 +40,33 @@ public class VisualElementsEventArgs<TDrawingContext>
     /// <summary>
     /// Initializes a new instance of the <see cref="VisualElementsEventArgs{TDrawingContext}"/> class.
     /// </summary>
+    /// <param name="chart">The chart.</param>
     /// <param name="pointerLocation">The pointer location.</param>
     /// <param name="visualElements">The visual elements.</param>
-    public VisualElementsEventArgs(IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointerLocation)
+    public VisualElementsEventArgs(Chart<TDrawingContext> chart, IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointerLocation)
     {
+        Chart = chart;
         PointerLocation = pointerLocation;
         VisualElements = visualElements;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VisualElementsEventArgs{TDrawingContext}"/> class.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="pointerLocation">The pointer location.</param>
+    /// <param name="visualElements">The visual elements.</param>
+    public VisualElementsEventArgs(IChart chart, IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointerLocation)
+    {
+        Chart = (Chart<TDrawingContext>)chart;
+        PointerLocation = pointerLocation;
+        VisualElements = visualElements;
+    }
+
+    /// <summary>
+    /// Gets the chart.
+    /// </summary>
+    public Chart<TDrawingContext> Chart { get; }
 
     /// <summary>
     /// Gets or sets the pointer location.
@@ -64,6 +85,19 @@ public class VisualElementsEventArgs<TDrawingContext>
 
     private VisualElement<TDrawingContext>? FindClosest()
     {
-        return VisualElements.FindClosestTo(PointerLocation);
+        return VisualElements.Select(visual =>
+        {
+            var size = visual.Measure(Chart);
+
+            return new
+            {
+                distance = Math.Sqrt(
+                    Math.Pow(PointerLocation.X - (visual.X + size.Width * 0.5), 2) +
+                    Math.Pow(PointerLocation.Y - (visual.Y + size.Height * 0.5), 2)),
+                visual
+            };
+        })
+       .OrderBy(p => p.distance)
+       .FirstOrDefault()?.visual;
     }
 }

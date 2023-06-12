@@ -35,8 +35,8 @@ namespace LiveChartsCore.Motion;
 public class MotionCanvas<TDrawingContext> : IDisposable
     where TDrawingContext : DrawingContext
 {
+    internal HashSet<IPaint<TDrawingContext>> _paintTasks = new();
     private readonly Stopwatch _stopwatch = new();
-    private HashSet<IPaint<TDrawingContext>> _paintTasks = new();
     private readonly List<double> _fpsStack = new();
     private long _previousFrameTime;
     private long _previousLogTime;
@@ -51,11 +51,6 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     }
 
     internal bool DisableAnimations { get; set; }
-
-    /// <summary>
-    /// Gets or sets the point where the draw starts.
-    /// </summary>
-    public LvcPoint? StartPoint { get; set; }
 
     /// <summary>
     /// Occurs when the visual is invalidated.
@@ -104,7 +99,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
         lock (Sync)
         {
-            context.OnBegingDraw();
+            context.OnBeginDraw();
 
             var isValid = true;
             var frameTime = _stopwatch.ElapsedMilliseconds;

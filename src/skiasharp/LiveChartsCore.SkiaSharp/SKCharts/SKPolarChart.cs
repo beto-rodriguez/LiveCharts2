@@ -71,6 +71,8 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         InitialRotation = view.InitialRotation;
         LegendPosition = view.LegendPosition;
         Title = view.Title;
+        DrawMargin = view.DrawMargin;
+        VisualElements = view.VisualElements;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
@@ -134,13 +136,13 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public bool FitToBounds { get; set; }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle"/>
-    public double TotalAngle { get; set; }
+    public double TotalAngle { get; set; } = 360;
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius"/>
     public double InnerRadius { get; set; }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation"/>
-    public double InitialRotation { get; set; }
+    public double InitialRotation { get; set; } = LiveCharts.DefaultSettings.PolarInitialRotation;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }
@@ -184,12 +186,6 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
     public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        throw new NotImplementedException();
-    }
-
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
     {
@@ -227,12 +223,6 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         return Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        throw new NotImplementedException();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         action();
@@ -255,20 +245,6 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
 
     private LvcSize GetControlSize()
     {
-        if (LegendPosition == LegendPosition.Hidden || Legend is null) return new(Width, Height);
-
-        if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-        {
-            var imageControl = (IImageControl)Legend;
-            return new(Width - imageControl.Size.Width, Height);
-        }
-
-        if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
-        {
-            var imageControl = (IImageControl)Legend;
-            return new(Width, Height - imageControl.Size.Height);
-        }
-
         return new(Width, Height);
     }
 
@@ -281,7 +257,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
     }
 
     void IChartView.Invalidate()

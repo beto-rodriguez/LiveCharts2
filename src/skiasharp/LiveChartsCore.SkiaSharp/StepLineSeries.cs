@@ -54,7 +54,7 @@ public class StepLineSeries<TModel> : StepLineSeries<TModel, CircleGeometry, Lab
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual> : StepLineSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -74,7 +74,7 @@ public class StepLineSeries<TModel, TVisual> : StepLineSeries<TModel, TVisual, L
 /// The type of the data label of every point.
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual, TLabel>
-    : StepLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry, StepPoint<TVisual>>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    : StepLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry>
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

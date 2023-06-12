@@ -34,12 +34,12 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
-/// <seealso cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}" />
+/// <seealso cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}" />
 public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
-    : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
+    : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

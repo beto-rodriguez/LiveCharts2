@@ -134,31 +134,8 @@ public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMar
 
         if (!_isInitialized)
         {
-            if (_fillSizedGeometry is not null)
-            {
-                _ = _fillSizedGeometry
-                    .TransitionateProperties(
-                       nameof(_fillSizedGeometry.X), nameof(_fillSizedGeometry.Y),
-                       nameof(_fillSizedGeometry.Width), nameof(_fillSizedGeometry.Height))
-                   .WithAnimation(animation =>
-                       animation
-                           .WithDuration(chart.AnimationsSpeed)
-                           .WithEasingFunction(chart.EasingFunction))
-                   .CompleteCurrentTransitions();
-            }
-            if (_strokeSizedGeometry is not null)
-            {
-                _ = _strokeSizedGeometry
-                    .TransitionateProperties(
-                       nameof(_fillSizedGeometry.X), nameof(_fillSizedGeometry.Y),
-                       nameof(_fillSizedGeometry.Width), nameof(_fillSizedGeometry.Height))
-                   .WithAnimation(animation =>
-                       animation
-                           .WithDuration(chart.AnimationsSpeed)
-                           .WithEasingFunction(chart.EasingFunction))
-                   .CompleteCurrentTransitions();
-            }
-
+            _fillSizedGeometry?.Animate(chart);
+            _strokeSizedGeometry?.Animate(chart);
             _isInitialized = true;
         }
     }

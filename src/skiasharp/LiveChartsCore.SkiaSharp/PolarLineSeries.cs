@@ -54,7 +54,7 @@ public class PolarLineSeries<TModel> : PolarLineSeries<TModel, CircleGeometry, L
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual> : PolarLineSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }
 
 /// <summary>
@@ -74,7 +74,7 @@ public class PolarLineSeries<TModel, TVisual> : PolarLineSeries<TModel, TVisual,
 /// The type of the data label of every point.
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual, TLabel>
-    : PolarLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, BezierPoint<TVisual>>
-    where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    : PolarLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, BezierVisualPoint<SkiaSharpDrawingContext, TVisual>>
+    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

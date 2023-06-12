@@ -23,6 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
@@ -35,10 +36,10 @@ public static class VisualElementsExtensions
     /// <summary>
     /// Creates a relative panel control from a given sketch.
     /// </summary>
-    public static RelativePanel<SkiaSharpDrawingContext> AsDrawnControl(
+    public static RelativePanel<RectangleGeometry, SkiaSharpDrawingContext> AsDrawnControl(
         this Sketch<SkiaSharpDrawingContext> sketch, int baseZIndex = 10050)
     {
-        var relativePanel = new RelativePanel<SkiaSharpDrawingContext>
+        var relativePanel = new RelativePanel<RectangleGeometry, SkiaSharpDrawingContext>
         {
             Size = new LvcSize((float)sketch.Width, (float)sketch.Height)
         };

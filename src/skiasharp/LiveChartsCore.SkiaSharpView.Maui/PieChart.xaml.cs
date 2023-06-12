@@ -515,21 +515,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
     #endregion
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (_tooltip is null || _core is null) return;
-        _tooltip.Show(points, _core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (_tooltip is null || _core is null) return;
-        _core.ClearTooltipData();
-        _tooltip.Hide();
-    }
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
     {
@@ -636,7 +621,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer);
+        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

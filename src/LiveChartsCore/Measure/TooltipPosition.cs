@@ -33,6 +33,11 @@ public enum TooltipPosition
     Hidden,
 
     /// <summary>
+    /// Places the tool tip based on the space available.
+    /// </summary>
+    Auto,
+
+    /// <summary>
     /// The top position, places the tool tip at the top of the hovered point.
     /// </summary>
     Top,

@@ -37,7 +37,7 @@ namespace LiveChartsCore;
 public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _stroke = null;
@@ -82,13 +82,13 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <exception cref="NotImplementedException"></exception>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _stroke, _fill, hoverPaint, DataLabelsPaint };
+        return new[] { _stroke, _fill, DataLabelsPaint };
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
     {
         return series is StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext> sfSeries &&
-            Name == series.Name && !((ISeries)this).PaintsChanged && Fill == sfSeries.Fill && Stroke == sfSeries.Stroke;
+            Name == series.Name && Fill == sfSeries.Fill && Stroke == sfSeries.Stroke;
     }
 }

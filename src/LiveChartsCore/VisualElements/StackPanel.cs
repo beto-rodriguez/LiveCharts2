@@ -21,28 +21,26 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
 
 /// <summary>
 /// Defines the stack panel class.
 /// </summary>
-public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDrawingContext>
+/// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TBackgroundGemetry : ISizedGeometry<TDrawingContext>, new()
+    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private LvcPoint _targetPosition;
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private TBackgroundGemetry? _backgroundGeometry;
 
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public HashSet<VisualElement<TDrawingContext>> Children { get; } = new();
+    public List<VisualElement<TDrawingContext>> Children { get; } = new();
 
     /// <summary>
     /// Gets or sets the panel orientation.
@@ -73,41 +71,167 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         set => SetPaintProperty(ref _backgroundPaint, value);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetLocation"/>
-    public override LvcPoint GetTargetLocation()
+    /// <summary>
+    /// Gets the background geometry.
+    /// </summary>
+    public TBackgroundGeometry BackgroundGeometry { get; } = new();
+
+    /// <summary>
+    /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
+    /// </summary>
+    public double MaxWidth { get; set; } = double.MaxValue;
+
+    /// <summary>
+    /// Gets or sets the maximum height. When the maximum height is reached, a new column is created.
+    /// </summary>
+    public double MaxHeight { get; set; } = double.MaxValue;
+
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return _targetPosition;
+        return new[] { _backgroundPaint };
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetTargetSize"/>
-    public override LvcSize GetTargetSize()
+    internal override IAnimatable?[] GetDrawnGeometries()
     {
-        var size = Orientation == ContainerOrientation.Horizontal
-            ? Children.Aggregate(new LvcSize(), (current, next) =>
-            {
-                var size = next.GetTargetSize();
-
-                return new LvcSize(
-                    current.Width + size.Width,
-                    size.Height > current.Height ? size.Height : current.Height);
-            })
-            : Children.Aggregate(new LvcSize(), (current, next) =>
-            {
-                var size = next.GetTargetSize();
-
-                return new LvcSize(
-                    size.Width > current.Width ? size.Width : current.Width,
-                    current.Height + size.Height);
-            });
-
-        return new LvcSize(Padding.Left + Padding.Right + size.Width, Padding.Top + Padding.Bottom + size.Height);
+        return new IAnimatable?[] { BackgroundGeometry };
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
+    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
-        foreach (var child in Children) _ = child.Measure(chart, primaryScaler, secondaryScaler);
-        return GetTargetSize();
+        var controlSize = Measure(chart);
+
+        // NOTE #20231605
+        // force the background to have at least an invisible geometry
+        // we use this geometry in the motion canvas to track the position
+        // of the stack panel as the time and animations elapse.
+        BackgroundPaint ??= LiveCharts.DefaultSettings
+                .GetProvider<TDrawingContext>()
+                .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
+
+        chart.Canvas.AddDrawableTask(BackgroundPaint);
+        BackgroundGeometry.X = (float)X;
+        BackgroundGeometry.Y = (float)Y;
+        BackgroundGeometry.Width = controlSize.Width;
+        BackgroundGeometry.Height = controlSize.Height;
+        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
+    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    {
+        if (BackgroundGeometry is null) return;
+        BackgroundGeometry.Parent = parent;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    {
+        var xl = Padding.Left;
+        var yl = Padding.Top;
+        var rowHeight = -1f;
+        var columnWidth = -1f;
+        var mx = 0f;
+        var my = 0f;
+
+        List<MeasureResult> line = new();
+
+        LvcSize alignCurrentLine()
+        {
+            var mx = -1f;
+            var my = -1f;
+
+            foreach (var child in line)
+            {
+                if (Orientation == ContainerOrientation.Horizontal)
+                {
+                    child.Visual._y = VerticalAlignment switch
+                    {
+                        Align.Start => yl,
+                        Align.Middle => yl + (rowHeight - child.Size.Height) / 2f,
+                        Align.End => yl + rowHeight - child.Size.Height,
+                        _ => throw new System.NotImplementedException()
+                    };
+                }
+                else
+                {
+                    child.Visual._x = HorizontalAlignment switch
+                    {
+                        Align.Start => xl,
+                        Align.Middle => xl + (columnWidth - child.Size.Width) / 2f,
+                        Align.End => xl + columnWidth - child.Size.Width,
+                        _ => throw new System.NotImplementedException()
+                    };
+                }
+
+                child.Visual.OnInvalidated(chart);
+                child.Visual.SetParent(BackgroundGeometry);
+                if (child.Size.Width > mx) mx = child.Size.Width;
+                if (child.Size.Height > my) my = child.Size.Height;
+            }
+
+            line = new();
+            return new LvcSize(mx, my);
+        }
+
+        foreach (var child in Children)
+        {
+            var childSize = child.Measure(chart);
+
+            if (Orientation == ContainerOrientation.Horizontal)
+            {
+                if (xl + childSize.Width > MaxWidth)
+                {
+                    var lineSize = alignCurrentLine();
+                    xl = Padding.Left;
+                    yl += lineSize.Height;
+                    rowHeight = -1f;
+                }
+
+                if (rowHeight < childSize.Height) rowHeight = childSize.Height;
+                child._x = xl;
+
+                xl += childSize.Width;
+            }
+            else
+            {
+                if (yl + childSize.Height > MaxHeight)
+                {
+                    var lineSize = alignCurrentLine();
+                    yl = Padding.Top;
+                    xl += lineSize.Width;
+                    columnWidth = -1f;
+                }
+
+                if (columnWidth < childSize.Width) columnWidth = childSize.Width;
+                child._y = yl;
+
+                yl += childSize.Height;
+            }
+
+            if (xl > mx) mx = xl;
+            if (yl > my) my = yl;
+            line.Add(new MeasureResult(child, childSize));
+        }
+
+        if (line.Count > 0)
+        {
+            var lineSize = alignCurrentLine();
+
+            if (Orientation == ContainerOrientation.Horizontal)
+            {
+                yl += lineSize.Height;
+            }
+            else
+            {
+                xl += lineSize.Width;
+            }
+
+            if (xl > mx) mx = xl;
+            if (yl > my) my = yl;
+        }
+
+        return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
@@ -121,99 +245,15 @@ public class StackPanel<TBackgroundGemetry, TDrawingContext> : VisualElement<TDr
         base.RemoveFromUI(chart);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext}, Scaler, Scaler)"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart, Scaler? primaryScaler, Scaler? secondaryScaler)
+    private class MeasureResult
     {
-        var xl = Padding.Left;
-        var yl = Padding.Top;
-
-        _targetPosition = new((float)X + _xc, (float)Y + _yc);
-        var controlSize = Measure(chart, primaryScaler, secondaryScaler);
-
-        if (_backgroundGeometry is null)
+        public MeasureResult(VisualElement<TDrawingContext> visual, LvcSize size)
         {
-            var cp = GetPositionRelativeToParent();
-
-            _backgroundGeometry = new TBackgroundGemetry
-            {
-                X = cp.X,
-                Y = cp.Y,
-                Width = controlSize.Width,
-                Height = controlSize.Height
-            };
-
-            _ = _backgroundGeometry
-                .TransitionateProperties()
-                .WithAnimation(chart)
-                .CompleteCurrentTransitions();
+            Visual = visual;
+            Size = size;
         }
 
-        // force the background to have at least an invisible geometry
-        // we use this geometry in the motion canvas to track the position
-        // of the stack panel as the time and animations elapse.
-        BackgroundPaint ??= LiveCharts.DefaultSettings
-                .GetProvider<TDrawingContext>()
-                .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
-
-        chart.Canvas.AddDrawableTask(BackgroundPaint);
-        _backgroundGeometry.X = _targetPosition.X;
-        _backgroundGeometry.Y = _targetPosition.Y;
-        _backgroundGeometry.Width = controlSize.Width;
-        _backgroundGeometry.Height = controlSize.Height;
-        BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, _backgroundGeometry);
-
-        if (Orientation == ContainerOrientation.Horizontal)
-        {
-            foreach (var child in Children)
-            {
-                _ = child.Measure(chart, primaryScaler, secondaryScaler);
-                var childSize = child.GetTargetSize();
-
-                child._parent = _backgroundGeometry ?? throw new System.Exception("Background is required.");
-
-                child._xc = _targetPosition.X;
-                child._yc = _targetPosition.Y;
-
-                child._x = xl;
-                child._y = VerticalAlignment == Align.Middle
-                    ? yl + (controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height) / 2f
-                    : VerticalAlignment == Align.End
-                        ? yl + controlSize.Height - Padding.Top - Padding.Bottom - childSize.Height
-                        : yl;
-
-                child.OnInvalidated(chart, primaryScaler, secondaryScaler);
-
-                xl += childSize.Width;
-            }
-        }
-        else
-        {
-            foreach (var child in Children)
-            {
-                _ = child.Measure(chart, primaryScaler, secondaryScaler);
-                var childSize = child.GetTargetSize();
-
-                child._parent = _backgroundGeometry ?? throw new System.Exception("Background is required.");
-
-                child._xc = _targetPosition.X;
-                child._yc = _targetPosition.Y;
-
-                child._x = HorizontalAlignment == Align.Middle
-                    ? xl + (controlSize.Width - Padding.Left - Padding.Right - childSize.Width) / 2f
-                    : HorizontalAlignment == Align.End
-                        ? xl + controlSize.Width - Padding.Left - Padding.Right - childSize.Width
-                        : xl;
-                child._y = yl;
-
-                child.OnInvalidated(chart, primaryScaler, secondaryScaler);
-
-                yl += childSize.Height;
-            }
-        }
-    }
-
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _backgroundPaint };
+        public VisualElement<TDrawingContext> Visual { get; set; }
+        public LvcSize Size { get; set; }
     }
 }

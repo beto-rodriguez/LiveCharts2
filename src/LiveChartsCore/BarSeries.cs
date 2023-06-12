@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <seealso cref="IBarSeries{TDrawingContext}" />
 public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
@@ -78,8 +78,8 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 
@@ -127,7 +127,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
             uw = scaler.MeasureInPixels(axis.UnitWidth);
             actualUw = uw;
 
-            var gp = (float)barSeries.GroupPadding;
+            var gp = (float)barSeries.Padding;
 
             if (uw - gp < 1) gp -= uw - gp;
 
@@ -172,5 +172,25 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         /// helper units.
         /// </summary>
         public float uw, uwm, cp, p, actualUw;
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 0.8f;
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 1;
+
+        base.OnPointerLeft(point);
     }
 }

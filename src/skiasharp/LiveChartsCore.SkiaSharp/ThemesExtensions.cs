@@ -53,7 +53,7 @@ public static class ThemesExtensions
                     .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
                     .WithEasingFunction(EasingFunctions.ExponentialOut);
 
-                var colors = ColorPalletes.MaterialDesign500;
+                theme.Colors = ColorPalletes.MaterialDesign500;
 
                 _ = theme
                     .HasRuleForAxes(axis =>
@@ -76,7 +76,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
-                        var color = lineSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(lineSeries).AsSKColor();
 
                         lineSeries.Name = $"Series #{lineSeries.SeriesId + 1}";
                         lineSeries.GeometrySize = 12;
@@ -87,7 +87,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
                     {
-                        var color = steplineSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(steplineSeries).AsSKColor();
 
                         steplineSeries.Name = $"Series #{steplineSeries.SeriesId + 1}";
                         steplineSeries.GeometrySize = 12;
@@ -98,7 +98,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStackedLineSeries(stackedLine =>
                     {
-                        var color = stackedLine.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(stackedLine).AsSKColor();
 
                         stackedLine.Name = $"Series #{stackedLine.SeriesId + 1}";
                         stackedLine.GeometrySize = 0;
@@ -109,7 +109,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForBarSeries(barSeries =>
                     {
-                        var color = barSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(barSeries).AsSKColor();
 
                         barSeries.Name = $"Series #{barSeries.SeriesId + 1}";
                         barSeries.Stroke = null;
@@ -119,7 +119,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStackedBarSeries(stackedBarSeries =>
                     {
-                        var color = stackedBarSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(stackedBarSeries).AsSKColor();
 
                         stackedBarSeries.Name = $"Series #{stackedBarSeries.SeriesId + 1}";
                         stackedBarSeries.Stroke = null;
@@ -129,7 +129,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStackedStepLineSeries(stackedStep =>
                     {
-                        var color = stackedStep.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(stackedStep).AsSKColor();
 
                         stackedStep.Name = $"Series #{stackedStep.SeriesId + 1}";
                         stackedStep.GeometrySize = 0;
@@ -153,7 +153,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForScatterSeries(scatterSeries =>
                     {
-                        var color = scatterSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(scatterSeries).AsSKColor();
 
                         scatterSeries.Name = $"Series #{scatterSeries.SeriesId + 1}";
                         scatterSeries.Stroke = null;
@@ -161,7 +161,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForPieSeries(pieSeries =>
                     {
-                        var color = pieSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(pieSeries).AsSKColor();
 
                         pieSeries.Name = $"Series #{pieSeries.SeriesId + 1}";
                         pieSeries.Stroke = null;
@@ -169,7 +169,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
                     {
-                        var color = polarLine.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(polarLine).AsSKColor();
 
                         polarLine.Name = $"Series #{polarLine.SeriesId + 1}";
                         polarLine.GeometrySize = 12;
@@ -180,7 +180,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForGaugeSeries(gaugeSeries =>
                     {
-                        var color = gaugeSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(gaugeSeries).AsSKColor();
 
                         gaugeSeries.Name = $"Series #{gaugeSeries.SeriesId + 1}";
                         gaugeSeries.Stroke = null;
@@ -198,7 +198,7 @@ public static class ThemesExtensions
     }
 
     /// <summary>
-    /// Adds the light theme.
+    /// Adds the dark theme.
     /// </summary>
     /// <param name="settings">The settings.</param>
     /// <param name="additionalStyles">The additional styles.</param>
@@ -215,7 +215,7 @@ public static class ThemesExtensions
                     .WithTooltipBackgroundPaint(new SolidColorPaint(new SKColor(45, 45, 45)))
                     .WithTooltipTextPaint(new SolidColorPaint(new SKColor(245, 245, 245)));
 
-                var colors = ColorPalletes.MaterialDesign200;
+                theme.Colors = ColorPalletes.MaterialDesign200;
 
                 _ = theme
                     .HasRuleForAxes(axis =>
@@ -238,7 +238,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
-                        var color = lineSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(lineSeries).AsSKColor();
 
                         lineSeries.Name = $"Series #{lineSeries.SeriesId + 1}";
                         lineSeries.GeometrySize = 12;
@@ -249,7 +249,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
                     {
-                        var color = steplineSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(steplineSeries).AsSKColor();
 
                         steplineSeries.Name = $"Series #{steplineSeries.SeriesId + 1}";
                         steplineSeries.GeometrySize = 12;
@@ -260,7 +260,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStackedLineSeries(stackedLine =>
                     {
-                        var color = stackedLine.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(stackedLine).AsSKColor();
 
                         stackedLine.Name = $"Series #{stackedLine.SeriesId + 1}";
                         stackedLine.GeometrySize = 0;
@@ -271,7 +271,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForBarSeries(barSeries =>
                     {
-                        var color = barSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(barSeries).AsSKColor();
 
                         barSeries.Name = $"Series #{barSeries.SeriesId + 1}";
                         barSeries.Stroke = null;
@@ -281,7 +281,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStackedBarSeries(stackedBarSeries =>
                     {
-                        var color = stackedBarSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(stackedBarSeries).AsSKColor();
 
                         stackedBarSeries.Name = $"Series #{stackedBarSeries.SeriesId + 1}";
                         stackedBarSeries.Stroke = null;
@@ -291,7 +291,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForPieSeries(pieSeries =>
                     {
-                        var color = pieSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(pieSeries).AsSKColor();
 
                         pieSeries.Name = $"Series #{pieSeries.SeriesId + 1}";
                         pieSeries.Stroke = null;
@@ -299,7 +299,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForStackedStepLineSeries(stackedStep =>
                     {
-                        var color = stackedStep.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(stackedStep).AsSKColor();
 
                         stackedStep.Name = $"Series #{stackedStep.SeriesId + 1}";
                         stackedStep.GeometrySize = 0;
@@ -322,7 +322,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
                     {
-                        var color = polarLine.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(polarLine).AsSKColor();
 
                         polarLine.Name = $"Series #{polarLine.SeriesId + 1}";
                         polarLine.GeometrySize = 12;
@@ -333,7 +333,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleForGaugeSeries(gaugeSeries =>
                     {
-                        var color = gaugeSeries.GetThemedColor(colors);
+                        var color = theme.GetSeriesColor(gaugeSeries).AsSKColor();
 
                         gaugeSeries.Name = $"Series #{gaugeSeries.SeriesId + 1}";
                         gaugeSeries.Stroke = null;
@@ -347,10 +347,5 @@ public static class ThemesExtensions
 
                 additionalStyles?.Invoke(theme);
             });
-    }
-
-    private static SKColor GetThemedColor(this ISeries series, LvcColor[] colors)
-    {
-        return colors[series.SeriesId % colors.Length].AsSKColor();
     }
 }

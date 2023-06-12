@@ -30,7 +30,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="IGeometry{TDrawingContext}" />
-public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
+public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
 {
     private readonly bool _hasGeometryTransform = false;
     private readonly FloatMotionProperty _opacityProperty;
@@ -74,10 +74,22 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
     private bool HasTransform => _hasGeometryTransform || _hasTranslate || _hasRotation || _hasScale || _hasSkew || _hasTransform;
 
     /// <inheritdoc cref="IGeometry{TDrawingContext}.X" />
-    public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
+    public float X
+    {
+        get => Parent is null
+            ? _xProperty.GetMovement(this)
+            : _xProperty.GetMovement(this) + Parent.X;
+        set => _xProperty.SetMovement(value, this);
+    }
 
     /// <inheritdoc cref="IGeometry{TDrawingContext}.Y" />
-    public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
+    public float Y
+    {
+        get => Parent is null
+            ? _yProperty.GetMovement(this)
+            : _yProperty.GetMovement(this) + Parent.Y;
+        set => _yProperty.SetMovement(value, this);
+    }
 
     /// <inheritdoc cref="IGeometry{TDrawingContext}.TransformOrigin" />
     public LvcPoint TransformOrigin
@@ -155,8 +167,8 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
     public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
 
-    /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.MainGeometry" />
-    public IGeometry<SkiaSharpDrawingContext> MainGeometry => GetHighlitableGeometry();
+    /// <inheritdoc cref="IGeometry{TDrawingContext}.Parent"/>
+    public IGeometry<SkiaSharpDrawingContext>? Parent { get; set; }
 
     /// <summary>
     /// Draws the geometry in the user interface.
@@ -268,7 +280,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
         var r = RotateTransform;
         if (Math.Abs(r) > 0)
         {
-            const double toRadias = Math.PI / 180;
+            const double toRadians = Math.PI / 180;
 
             r %= 360;
             if (r < 0) r += 360;
@@ -276,7 +288,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
             if (r > 180) r = 360 - r;
             if (r is > 90 and <= 180) r = 180 - r;
 
-            var rRadians = r * toRadias;
+            var rRadians = r * toRadians;
 
             var w = (float)(Math.Cos(rRadians) * measure.Width + Math.Sin(rRadians) * measure.Height);
             var h = (float)(Math.Sin(rRadians) * measure.Width + Math.Cos(rRadians) * measure.Height);
@@ -290,18 +302,9 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, I
     /// <summary>
     /// Called when the geometry is measured.
     /// </summary>
-    /// <param name="paintTaks">The paint task.</param>
+    /// <param name="paintTasks">The paint task.</param>
     /// <returns>the size of the geometry</returns>
-    protected abstract LvcSize OnMeasure(Paint paintTaks);
-
-    /// <summary>
-    /// Gets the highlitable geometry.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual IGeometry<SkiaSharpDrawingContext> GetHighlitableGeometry()
-    {
-        return this;
-    }
+    protected abstract LvcSize OnMeasure(Paint paintTasks);
 
     /// <summary>
     /// Applies the geometry transform.

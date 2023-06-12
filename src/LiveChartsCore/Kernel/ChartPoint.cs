@@ -78,6 +78,11 @@ public class ChartPoint
     public bool IsNull => IsEmpty;
 
     /// <summary>
+    /// Gets the position of the point the collection that was used when the point was drawn.
+    /// </summary>
+    public int Index => Context?.Entity?.MetaData?.EntityIndex ?? 0;
+
+    /// <summary>
     /// Gets or sets a value indicating whether this instance is empty.
     /// </summary>
     /// <value>
@@ -161,14 +166,6 @@ public class ChartPoint
     public StackedValue? StackedValue { get; set; }
 
     /// <summary>
-    /// Gets the point as tooltip string.
-    /// </summary>
-    /// <value>
-    /// As tooltip string.
-    /// </value>
-    public string AsTooltipString => Context.Series.GetTooltipText(this);
-
-    /// <summary>
     /// Gets the point as data label.
     /// </summary>
     /// <value>
@@ -224,6 +221,7 @@ public class ChartPoint<TModel, TVisual, TLabel> : ChartPoint
         Context.Visual = point.Context.Visual;
         Context.Label = point.Context.Label;
         Context.HoverArea = point.Context.HoverArea;
+        Context.AdditionalVisuals = point.Context.AdditionalVisuals;
     }
 
     /// <summary>

@@ -247,18 +247,7 @@ public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> :
                     Height = yj - yi
                 };
 
-                _ = _fillSizedGeometry
-                   .TransitionateProperties(
-                       nameof(_fillSizedGeometry.X),
-                       nameof(_fillSizedGeometry.Width),
-                       nameof(_fillSizedGeometry.Y),
-                       nameof(_fillSizedGeometry.Height))
-                   .WithAnimation(animation =>
-                       animation
-                           .WithDuration(chart.AnimationsSpeed)
-                           .WithEasingFunction(chart.EasingFunction));
-
-                _fillSizedGeometry.CompleteTransition(null);
+                _fillSizedGeometry.Animate(cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed);
             }
 
             _fillSizedGeometry.X = xi;
@@ -285,18 +274,7 @@ public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> :
                     Height = yj - yi
                 };
 
-                _ = _strokeSizedGeometry
-                   .TransitionateProperties(
-                       nameof(_strokeSizedGeometry.X),
-                       nameof(_strokeSizedGeometry.Width),
-                       nameof(_strokeSizedGeometry.Y),
-                       nameof(_strokeSizedGeometry.Height))
-                   .WithAnimation(animation =>
-                       animation
-                           .WithDuration(chart.AnimationsSpeed)
-                           .WithEasingFunction(chart.EasingFunction));
-
-                _strokeSizedGeometry.CompleteTransition(null);
+                _strokeSizedGeometry.Animate(chart);
             }
 
             _strokeSizedGeometry.X = xi;
@@ -325,16 +303,7 @@ public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> :
                     Padding = new Padding(6)
                 };
 
-                _ = _labelGeometry
-                    .TransitionateProperties(
-                       nameof(_labelGeometry.X),
-                       nameof(_labelGeometry.Y))
-                   .WithAnimation(animation =>
-                       animation
-                           .WithDuration(chart.AnimationsSpeed)
-                           .WithEasingFunction(chart.EasingFunction));
-
-                _labelGeometry.CompleteTransition(null);
+                _labelGeometry.Animate(cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed);
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;
             }

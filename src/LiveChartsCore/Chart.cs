@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -47,19 +47,22 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = new();
     internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = new();
-
+    internal bool _isToolTipOpen = false;
+    internal bool _isPointerIn;
+    internal LvcPoint _pointerPosition = new(-10, -10);
+    internal float _titleHeight = 0f;
+    internal LvcSize _legendSize;
     internal bool _preserveFirstDraw = false;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;
-    private LvcPoint _pointerPosition = new(-10, -10);
     private LvcPoint _pointerPanningStartPosition = new(-10, -10);
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private bool _isPointerIn;
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
+    private DateTime _tooltipClosesAt = DateTime.MaxValue;
 
     #endregion
 
@@ -89,8 +92,20 @@ public abstract class Chart<TDrawingContext> : IChart
         PointerUp += Chart_PointerUp;
         PointerLeft += Chart_PointerLeft;
 
-        _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+        _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
+
+        _ = new Timer(o =>
+        {
+            if (DateTime.Now < _tooltipClosesAt) return;
+
+            _tooltipClosesAt = DateTime.MaxValue;
+            view.InvokeOnUIThread(() =>
+            {
+                Tooltip?.Hide(this);
+                canvas.Invalidate();
+            });
+        }, null, 2000, 2000);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
@@ -113,6 +128,11 @@ public abstract class Chart<TDrawingContext> : IChart
     internal event Action<PanGestureEventArgs>? PanGesture;
 
     #region properties
+
+    /// <summary>
+    /// Gets the tool tip meta data.
+    /// </summary>
+    public ToolTipMetaData AutoToolTipsInfo { get; internal set; } = new();
 
     /// <summary>
     /// Gets the bounds of the chart.
@@ -267,16 +287,6 @@ public abstract class Chart<TDrawingContext> : IChart
     /// </value>
     public ChartElement<TDrawingContext>[] VisualElements { get; protected set; } = Array.Empty<ChartElement<TDrawingContext>>();
 
-    /// <summary>
-    /// Gets the previous legend position.
-    /// </summary>
-    public LegendPosition PreviousLegendPosition { get; protected set; }
-
-    /// <summary>
-    /// Gets the previous series.
-    /// </summary>
-    public IReadOnlyList<IChartSeries<TDrawingContext>> PreviousSeriesAtLegend { get; protected set; } = Array.Empty<IChartSeries<TDrawingContext>>();
-
     object IChart.Canvas => Canvas;
 
     #endregion region
@@ -328,17 +338,6 @@ public abstract class Chart<TDrawingContext> : IChart
         Canvas.Dispose();
     }
 
-    internal void ClearTooltipData()
-    {
-        foreach (var point in _activePoints.Keys.ToArray())
-        {
-            point.Context.Series.OnPointerLeft(point);
-            _ = _activePoints.Remove(point);
-        }
-
-        Canvas.Invalidate();
-    }
-
     internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         PointerDown?.Invoke(point);
@@ -362,7 +361,12 @@ public abstract class Chart<TDrawingContext> : IChart
 
         // fire the visual elements event.
         // ToDo: VisualElements should be of type VisualElement<T>
-        var iterableVisualElements = VisualElements.Cast<VisualElement<TDrawingContext>>().SelectMany(x => x.IsHitBy(this, point));
+
+        var iterableVisualElements =
+            VisualElements
+                .Cast<VisualElement<TDrawingContext>>()
+                .SelectMany(x => x.IsHitBy(this, point));
+
         View.OnVisualElementPointerDown(iterableVisualElements, point);
     }
 
@@ -378,6 +382,8 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal void InvokePointerLeft()
     {
+        _isToolTipOpen = false;
+        Tooltip?.Hide(this);
         PointerLeft?.Invoke();
     }
 
@@ -455,31 +461,6 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    ///SDetermines whether the series miniature changed or not.
-    /// </summary>
-    /// <param name="newSeries">The new series.</param>
-    /// <param name="position">The legend position.</param>
-    /// <returns></returns>
-    protected virtual bool SeriesMiniatureChanged(IReadOnlyList<IChartSeries<TDrawingContext>> newSeries, LegendPosition position)
-    {
-        if (position == LegendPosition.Hidden && PreviousLegendPosition == LegendPosition.Hidden) return false;
-        if (position != PreviousLegendPosition) return true;
-        if (PreviousSeriesAtLegend.Count != newSeries.Count) return true;
-
-        for (var i = 0; i < newSeries.Count; i++)
-        {
-            if (i + 1 > PreviousSeriesAtLegend.Count) return true;
-
-            var a = PreviousSeriesAtLegend[i];
-            var b = newSeries[i];
-
-            if (!a.MiniatureEquals(b)) return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Called when the updated the throttler is unlocked.
     /// </summary>
     /// <returns></returns>
@@ -507,14 +488,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
         if (IsFirstDraw)
         {
-            _ = ActualBounds
-                .TransitionateProperties(null)
-                .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction))
-                .CompleteCurrentTransitions();
-
+            ActualBounds.Animate(EasingFunction, AnimationsSpeed);
             _ = Canvas.Trackers.Add(ActualBounds);
         }
     }
@@ -549,6 +523,39 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
+    /// Gets the legend position.
+    /// </summary>
+    /// <returns>The position of the legend.</returns>
+    public LvcPoint GetLegendPosition()
+    {
+        var actualChartSize = ControlSize;
+        float x = 0f, y = 0f;
+
+        if (LegendPosition == LegendPosition.Top)
+        {
+            x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
+            y = _titleHeight;
+        }
+        if (LegendPosition == LegendPosition.Bottom)
+        {
+            x = actualChartSize.Width * 0.5f - _legendSize.Width * 0.5f;
+            y = actualChartSize.Height - _legendSize.Height;
+        }
+        if (LegendPosition == LegendPosition.Left)
+        {
+            x = 0f;
+            y = actualChartSize.Height * 0.5f - _legendSize.Height * 0.5f;
+        }
+        if (LegendPosition == LegendPosition.Right)
+        {
+            x = actualChartSize.Width - _legendSize.Width;
+            y = actualChartSize.Height * 0.5f - _legendSize.Height * 0.5f;
+        }
+
+        return new(x, y);
+    }
+
+    /// <summary>
     /// Collects and deletes from the UI the unused visuals.
     /// </summary>
     protected void CollectVisuals()
@@ -572,48 +579,78 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    /// Draws the legend.
+    /// Draws the legend and appends the size of the legend to the current margin calculation.
     /// </summary>
-    /// <param name="seriesInLegend"></param>
-    protected void DrawLegend(IChartSeries<TDrawingContext>[] seriesInLegend)
+    /// <param name="ts">The top margin.</param>
+    /// <param name="bs">The bottom margin.</param>
+    /// <param name="ls">The left margin.</param>
+    /// <param name="rs">The right margin.</param>
+    protected void DrawLegend(ref float ts, ref float bs, ref float ls, ref float rs)
     {
-        if (Legend is not null && (SeriesMiniatureChanged(seriesInLegend, LegendPosition) || SizeChanged()))
+        if (Legend is null) return;
+
+        _legendSize = Legend.Measure(this);
+
+        switch (LegendPosition)
         {
-            if (Legend is IImageControl imageLegend)
-            {
-                // this is the preferred method (drawn legends)
-                imageLegend.Measure(this);
-
-                if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-                    ControlSize = new(ControlSize.Width - imageLegend.Size.Width, ControlSize.Height);
-
-                if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
-                    ControlSize = new(ControlSize.Width, ControlSize.Height - imageLegend.Size.Height);
-
-                // reset for cases when legend is hidden or changes postion
-                Canvas.StartPoint = new LvcPoint(0, 0);
-
-                Legend.Draw(this);
-
-                PreviousLegendPosition = LegendPosition;
-                PreviousSeriesAtLegend = seriesInLegend;
-                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-                _preserveFirstDraw = IsFirstDraw;
-            }
-            else
-            {
-                // the legend is drawn by the UI framework... lets return and wait for it to draw/measure it.
-                // maybe we should wait for the legend to draw and then draw the chart?
-                Legend.Draw(this);
-                PreviousLegendPosition = LegendPosition;
-                PreviousSeriesAtLegend = seriesInLegend;
-                foreach (var series in PreviousSeriesAtLegend.Cast<ISeries>()) series.PaintsChanged = false;
-                _preserveFirstDraw = IsFirstDraw;
-                SetPreviousSize();
-                Measure();
-                return;
-            }
+            case LegendPosition.Top: ts += _legendSize.Height; break;
+            case LegendPosition.Left: ls += _legendSize.Width; break;
+            case LegendPosition.Right: rs += _legendSize.Width; break;
+            case LegendPosition.Bottom: bs += _legendSize.Height; break;
+            case LegendPosition.Hidden:
+            default:
+                break;
         }
+
+        Legend.Draw(this);
+
+        _preserveFirstDraw = IsFirstDraw;
+    }
+
+    /// <summary>
+    /// Draws the current tool tip, requires canvas invalidation after this call.
+    /// </summary>
+    protected void DrawToolTip()
+    {
+        var x = _pointerPosition.X;
+        var y = _pointerPosition.Y;
+
+        if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn ||
+            x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
+            y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
+        {
+            _tooltipClosesAt = DateTime.Now.AddSeconds(1.5);
+            return;
+        }
+
+        var points = FindHoveredPointsBy(_pointerPosition);
+
+        var o = new object();
+        var isEmpty = true;
+        foreach (var tooltipPoint in points)
+        {
+            tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
+            _activePoints[tooltipPoint] = o;
+            isEmpty = false;
+        }
+
+        foreach (var point in _activePoints.Keys.ToArray())
+        {
+            if (_activePoints[point] == o) continue; // the points was used, don't remove it.
+
+            point.Context.Series.OnPointerLeft(point);
+            _ = _activePoints.Remove(point);
+        }
+
+        if (isEmpty)
+        {
+            _tooltipClosesAt = DateTime.Now.AddSeconds(1.5);
+            return;
+        }
+
+        Tooltip?.Show(points, this);
+        _isToolTipOpen = true;
+        _tooltipClosesAt = DateTime.MaxValue;
     }
 
     private Task TooltipThrottlerUnlocked()
@@ -623,52 +660,7 @@ public abstract class Chart<TDrawingContext> : IChart
              {
                  lock (Canvas.Sync)
                  {
-                     if (_pointerPosition.X < DrawMarginLocation.X || _pointerPosition.X > DrawMarginLocation.X + DrawMarginSize.Width ||
-                         _pointerPosition.Y < DrawMarginLocation.Y || _pointerPosition.Y > DrawMarginLocation.Y + DrawMarginSize.Height)
-                     {
-                         // reject tooltip logic when the pointer is outside the draw margin
-                         return;
-                     }
-
-#if DEBUG
-                     if (LiveCharts.EnableLogging)
-                     {
-                         Trace.WriteLine(
-                             $"[tooltip view thread]".PadRight(60) +
-                             $"tread: {Environment.CurrentManagedThreadId}");
-                     }
-#endif
-
-                     // TODO:
-                     // all this needs a performance review...
-                     // it should not be critical, should not be even close to be the 'bottle neck' in a case where
-                     // we face performance issues.
-
-                     var points = FindHoveredPointsBy(_pointerPosition);
-                     if (!points.Any())
-                     {
-                         ClearTooltipData();
-                         Tooltip?.Hide();
-                         return;
-                     }
-
-                     if (_activePoints.Count > 0 && points.All(x => _activePoints.ContainsKey(x))) return;
-
-                     var o = new object();
-                     foreach (var tooltipPoint in points)
-                     {
-                         tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
-                         _activePoints[tooltipPoint] = o;
-                     }
-
-                     foreach (var point in _activePoints.Keys.ToArray())
-                     {
-                         if (_activePoints[point] == o) continue;
-                         point.Context.Series.OnPointerLeft(point);
-                         _ = _activePoints.Remove(point);
-                     }
-
-                     if (TooltipPosition != TooltipPosition.Hidden) Tooltip?.Show(points, this);
+                     DrawToolTip();
                      Canvas.Invalidate();
                  }
              }));

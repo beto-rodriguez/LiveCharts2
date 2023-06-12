@@ -3,26 +3,10 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms"
        x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart">
-    <AbsoluteLayout>
-        <Grid x:Name="gridLayout" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <lvc:MotionCanvas Grid.Column="0" x:Name="canvas" >
-                <lvc:MotionCanvas.GestureRecognizers >
-                    <PinchGestureRecognizer PinchUpdated="PinchGestureRecognizer_PinchUpdated" />
-                    <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
-                </lvc:MotionCanvas.GestureRecognizers>
-            </lvc:MotionCanvas>
-
-            <!--<lvc:DefaultLegend Grid.Column="1" x:Name="legend"/>-->
-        </Grid>
-        
-        <!--<lvc:DefaultTooltip x:Name="tooltip"
-                            AbsoluteLayout.LayoutFlags="PositionProportional"
-                            AbsoluteLayout.LayoutBounds=".05,.05,AutoSize,AutoSize">
-        </lvc:DefaultTooltip>-->
-    </AbsoluteLayout>
+    <lvc:MotionCanvas x:Name="canvas" >
+        <lvc:MotionCanvas.GestureRecognizers >
+            <PinchGestureRecognizer PinchUpdated="PinchGestureRecognizer_PinchUpdated" />
+            <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
+        </lvc:MotionCanvas.GestureRecognizers>
+    </lvc:MotionCanvas>
 </ContentView>

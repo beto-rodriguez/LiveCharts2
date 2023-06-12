@@ -5,14 +5,7 @@
     xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF">
 
     <ControlTemplate x:Key="DefaultChartTemplate" TargetType="{x:Type local:Chart}">
-        <DockPanel LastChildFill="true" Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:Chart}}">
-            <!--<local:DefaultTooltip x:Name="tooltip" />-->
-            <!--<local:DefaultLegend x:Name="legend"
-                DockPanel.Dock="{Binding ElementName=legend, Path=Dock}"
-                Orientation="{Binding ElementName=legend, Path=Orientation}"
-                Visibility="{Binding ElementName=legend, Path=Visibility}" />-->
-            <local:MotionCanvas x:Name="canvas"/>
-        </DockPanel>
+        <local:MotionCanvas x:Name="canvas"/>
     </ControlTemplate>
 
     <Style TargetType="{x:Type local:CartesianChart}">

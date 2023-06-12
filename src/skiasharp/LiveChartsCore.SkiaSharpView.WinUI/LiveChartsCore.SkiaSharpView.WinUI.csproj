@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
     <Nullable>enable</Nullable>
 
     <TargetFrameworks>net5.0-windows10.0.18362;net6.0-windows10.0.18362;net6.0-windows10.0.19041;</TargetFrameworks>
@@ -9,7 +9,7 @@
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
 
-    <Version>2.0.0-beta.710</Version>
+    <Version>2.0.0-beta.800</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WinUI 3.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

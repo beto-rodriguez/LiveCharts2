@@ -5,27 +5,7 @@
     xmlns:local="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ctx="using:LiveChartsCore.Kernel"
     mc:Ignorable="d">
 
-    <!--<ToolTipService.ToolTip>
-        <ToolTip x:Name="tooltipControl" BorderThickness="0" Padding="0" Background="Transparent">
-            <local:DefaultTooltip x:Name="tooltip"/>
-        </ToolTip>
-    </ToolTipService.ToolTip>-->
-
-    <Grid x:Name="grid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <local:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="motionCanvas" />
-        <!--<local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
-    </Grid>
+    <local:MotionCanvas x:Name="motionCanvas" />
 </UserControl>

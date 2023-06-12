@@ -7,18 +7,5 @@
              x:Class="LiveChartsCore.SkiaSharpView.Avalonia.PieChart"
              Name="chart"
              ClipToBounds="False">
-
-    <Canvas ClipToBounds="False">
-        <DockPanel LastChildFill="True"
-                   Width="{Binding ElementName=chart, Path=Bounds.Width}"
-                   Height="{Binding ElementName=chart, Path=Bounds.Height}">
-            <!--<local:DefaultLegend x:Name="legend"
-                                 DockPanel.Dock="{Binding ElementName=legend, Path=Dock}"
-                                 Orientation="{Binding ElementName=legend, Path=Orientation}"
-                                 IsVisible="{Binding ElementName=legend, Path=IsVisible}" />-->
-            <local:MotionCanvas x:Name="canvas"/>
-        </DockPanel>
-        <!--<local:DefaultTooltip x:Name="tooltip" />-->
-    </Canvas>
-    
+    <local:MotionCanvas x:Name="canvas"/>
 </UserControl>

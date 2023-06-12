@@ -33,7 +33,7 @@ namespace LiveChartsCore.Kernel;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class SeriesStyleRule<TVisual, TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TVisual : IVisualChartPoint<TDrawingContext>
+    where TVisual : IGeometry<TDrawingContext>
 {
     /// <summary>
     /// Gets or sets the series properties.

@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <seealso cref="IHeatSeries{TDrawingContext}" />
 public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
-        where TVisual : class, IFinancialVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IFinancialGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
@@ -63,7 +63,12 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
              SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
     {
-        TooltipLabelFormatter = p => $"{Name}, H: {p.PrimaryValue:N2}, O: {p.TertiaryValue:N2}, C: {p.QuaternaryValue:N2}, L: {p.QuinaryValue:N2}";
+        YToolTipLabelFormatter = p =>
+            $"H {p.PrimaryValue:C2}{Environment.NewLine}" +
+            $"O {p.TertiaryValue:C2}{Environment.NewLine}" +
+            $"C {p.QuaternaryValue:C2}{Environment.NewLine}" +
+            $"L {p.QuinaryValue:C2}";
+        DataLabelsFormatter = point => $"{point.PrimaryValue:C2} - {point.QuinaryValue:C2}";
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
@@ -114,6 +119,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
         var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwm = 0.5f * uw;
+
+        var tp = chart.TooltipPosition;
 
         if (uw > MaxBarWidth)
         {
@@ -247,7 +254,22 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
+
             _ = ha.SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
+
+            switch (tp)
+            {
+                case TooltipPosition.Hidden:
+                    break;
+                case TooltipPosition.Auto:
+                case TooltipPosition.Top: _ = ha.CenterXToolTip().StartYToolTip(); break;
+                case TooltipPosition.Bottom: _ = ha.CenterXToolTip().EndYToolTip(); break;
+                case TooltipPosition.Left: _ = ha.StartXToolTip().CenterYToolTip(); break;
+                case TooltipPosition.Right: _ = ha.EndXToolTip().CenterYToolTip(); break;
+                case TooltipPosition.Center: _ = ha.CenterXToolTip().CenterYToolTip(); break;
+                default:
+                    break;
+            }
 
             pointsCleanup.Clean(point);
 
@@ -258,14 +280,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - uwm, Y = high, RotateTransform = (float)DataLabelsRotation };
-
-                    _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                    l.CompleteTransition(null);
+                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -380,22 +395,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
-
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-
-        _ = visual
-            .TransitionateProperties(
-                nameof(visual.X),
-                nameof(visual.Width),
-                nameof(visual.Y),
-                nameof(visual.Open),
-                nameof(visual.Close),
-                nameof(visual.Low))
-            .WithAnimation(animation =>
-                animation
-                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
-            .CompleteCurrentTransitions();
+        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -440,7 +441,27 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     /// <exception cref="NotImplementedException"></exception>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint, hoverPaint };
+        return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    protected override void OnPointerEnter(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 0.8f;
+
+        base.OnPointerEnter(point);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    protected override void OnPointerLeft(ChartPoint point)
+    {
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null) return;
+        visual.Opacity = 1;
+
+        base.OnPointerLeft(point);
     }
 
     /// <summary>
@@ -463,8 +484,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             DownFill == financial.DownFill && DownStroke == financial.DownStroke;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniatresSketch"/>
-    public override Sketch<TDrawingContext> GetMiniatresSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
 

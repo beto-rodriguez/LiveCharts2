@@ -26,6 +26,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore;
 
@@ -42,13 +43,15 @@ namespace LiveChartsCore;
 public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, ICartesianSeries<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+    where TVisual : class, IGeometry<TDrawingContext>, new()
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private int _scalesXAt;
     private int _scalesYAt;
     private DataLabelsPosition _labelsPosition;
     private LvcPoint? _labelsTranslate = null;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _xTooltipLabelFormatter;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _yTooltipLabelFormatter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -67,6 +70,32 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsTranslate"/>
     public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set => SetProperty(ref _labelsTranslate, value); }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the X axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? XToolTipLabelFormatter
+    {
+        get => _xTooltipLabelFormatter;
+        set => SetProperty(ref _xTooltipLabelFormatter, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? YToolTipLabelFormatter
+    {
+        get => _yTooltipLabelFormatter;
+        set { SetProperty(ref _yTooltipLabelFormatter, value); _obsolete_formatter = value; }
+    }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(
@@ -143,6 +172,54 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
 
         return new SeriesBounds(dimensionalBounds, false);
+    }
+
+    /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>
+    public override string? GetPrimaryToolTipText(ChartPoint point)
+    {
+        string? label = null;
+
+        if (YToolTipLabelFormatter is not null)
+            label = YToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+
+        if (label is null)
+        {
+            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+
+            var ax = cc.YAxes[cs.ScalesYAt];
+
+            label = ax.Labels is not null
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.PrimaryValue)
+                : ax.Labeler(point.PrimaryValue);
+        }
+
+        return label;
+    }
+
+    /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>
+    public override string? GetSecondaryToolTipText(ChartPoint point)
+    {
+        string? label = null;
+
+        if (XToolTipLabelFormatter is not null)
+            label = XToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+
+        if (label is null)
+        {
+            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+
+            var ax = cc.XAxes[cs.ScalesXAt];
+
+            label = ax.Labels is not null
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.SecondaryValue)
+                : (ax.Labeler != Labelers.Default
+                    ? ax.Labeler(point.SecondaryValue)
+                    : LiveCharts.IgnoreToolTipLabel);
+        }
+
+        return label;
     }
 
     /// <summary>

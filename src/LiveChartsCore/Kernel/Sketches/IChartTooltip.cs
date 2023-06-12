@@ -42,5 +42,6 @@ public interface IChartTooltip<TDrawingContext>
     /// <summary>
     /// Hides this tool tip instance.
     /// </summary>
-    void Hide();
+    /// <param name="chart">The chart.</param>
+    void Hide(Chart<TDrawingContext> chart);
 }

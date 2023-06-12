@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\livecharts.png" />
@@ -13,9 +13,9 @@
     <AvaloniaResource Include="Assets\livecharts.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.14" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.14" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.14" />
+    <PackageReference Include="Avalonia" Version="0.10.21" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.21" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.21" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Avalonia\LiveChartsCore.SkiaSharpView.Avalonia.csproj" />

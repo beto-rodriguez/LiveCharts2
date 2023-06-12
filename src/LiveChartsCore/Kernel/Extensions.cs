@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: animatable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,81 +57,129 @@ public static class Extensions
         Chart<TDrawingContext> chart)
             where TDrawingContext : DrawingContext
     {
-        LvcPoint? location = null;
-
-        if (chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>)
-            location = _getCartesianTooltipLocation(foundPoints, chart.TooltipPosition, tooltipSize, chart.DrawMarginSize);
-        if (chart is PieChart<TDrawingContext>)
-            location = _getPieTooltipLocation(foundPoints, tooltipSize);
-
-        if (location is null) throw new Exception("location not supported");
-
-        var chartSize = chart.DrawMarginSize;
-
-        var x = location.Value.X;
-        var y = location.Value.Y;
-        var w = chartSize.Width;
-        var h = chartSize.Height;
-
-        if (x + tooltipSize.Width > w) x = w - tooltipSize.Width;
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
-        if (y + tooltipSize.Height > h) y = h - tooltipSize.Height;
-
-        return new LvcPoint(x, y);
+        return chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
+            ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
+            : _getPieTooltipLocation(foundPoints, chart, tooltipSize);
     }
 
-    private static LvcPoint? _getCartesianTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
+    private static LvcPoint _getCartesianTooltipLocation<TDrawingContext>(
+        IEnumerable<ChartPoint> foundPoints,
+        Chart<TDrawingContext> chart,
+        LvcSize tooltipSize)
+            where TDrawingContext : DrawingContext
     {
         var count = 0f;
-
-        var placementContext = new TooltipPlacementContext();
+        var placementContext = new TooltipPlacementContext(chart.TooltipPosition);
 
         foreach (var point in foundPoints)
         {
             if (point.Context.HoverArea is null) continue;
-            point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
+            point.Context.HoverArea.SuggestTooltipPlacement(placementContext, tooltipSize);
             count++;
         }
 
-        if (count == 0) return null;
-
-        if (placementContext.MostBottom > chartSize.Height - tooltipSize.Height)
-            placementContext.MostBottom = chartSize.Height - tooltipSize.Height;
-        if (placementContext.MostTop < 0) placementContext.MostTop = 0;
+        if (count == 0) return new();
 
         var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
         var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
 
-        return position switch
+        var position = chart.TooltipPosition;
+        if (position == TooltipPosition.Auto)
         {
-            TooltipPosition.Top => new LvcPoint(avrgX, placementContext.MostTop - tooltipSize.Height),
-            TooltipPosition.Bottom => new LvcPoint(avrgX, placementContext.MostBottom),
-            TooltipPosition.Left => new LvcPoint(placementContext.MostLeft - tooltipSize.Width, avrgY),
-            TooltipPosition.Right => new LvcPoint(placementContext.MostRight, avrgY),
-            TooltipPosition.Center => new LvcPoint(avrgX, avrgY),
-            TooltipPosition.Hidden => new LvcPoint(),
-            _ => new LvcPoint(),
-        };
+            var x = avrgX;
+            var y = placementContext.MostAutoTop - tooltipSize.Height;
+            chart.AutoToolTipsInfo.ToolTipPlacement = placementContext.AutoPopPupPlacement;
+
+            if (x < 0)
+            {
+                // the tooltip is out of the left edge
+                // we return TooltipPosition.Right
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
+                return new(placementContext.MostRight, avrgY);
+            }
+
+            if (x + tooltipSize.Width > chart.ControlSize.Width)
+            {
+                // the tooltip is out of the right edge
+                // we return TooltipPosition.Left
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
+                return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+            }
+
+            if (y < 0)
+            {
+                y += tooltipSize.Height;
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+            }
+            if (y + tooltipSize.Height > chart.ControlSize.Height)
+            {
+                y -= tooltipSize.Height;
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+            }
+
+            return new(x, y);
+        }
+
+        LvcPoint location = new();
+
+        switch (position)
+        {
+            case TooltipPosition.Top:
+                location = new(avrgX, placementContext.MostTop - tooltipSize.Height);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+                break;
+            case TooltipPosition.Bottom:
+                location = new(avrgX, placementContext.MostBottom);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+                break;
+            case TooltipPosition.Left:
+                location = new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
+                break;
+            case TooltipPosition.Right:
+                location = new(placementContext.MostRight, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
+                break;
+            case TooltipPosition.Center:
+                location = new(avrgX, avrgY);
+                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+                break;
+            case TooltipPosition.Hidden:
+            case TooltipPosition.Auto:
+            default:
+                break;
+        }
+
+        return location;
     }
-    private static LvcPoint? _getPieTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, LvcSize tooltipSize)
+    private static LvcPoint _getPieTooltipLocation<TDrawingContext>(
+        IEnumerable<ChartPoint> foundPoints, Chart<TDrawingContext> chart, LvcSize tooltipSize)
+            where TDrawingContext : DrawingContext
     {
-        var placementContext = new TooltipPlacementContext();
-        var found = false;
+        var placementContext = new TooltipPlacementContext(TooltipPosition.Auto);
 
         foreach (var foundPoint in foundPoints)
         {
             if (foundPoint.Context.HoverArea is null) continue;
-            foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext);
-            found = true;
-            break; // we only care about the first one.
+            foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext, tooltipSize);
         }
 
-        return found
-            ? new LvcPoint(placementContext.PieX - tooltipSize.Width * 0.5f, placementContext.PieY - tooltipSize.Height * 0.5f)
-            : null;
+        chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+
+        var p = new LvcPoint(
+            placementContext.PieX - tooltipSize.Width * 0.5f,
+            placementContext.PieY - tooltipSize.Height);
+
+        if (p.Y < 0)
+        {
+            chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+
+            p = new LvcPoint(
+                placementContext.PieX - tooltipSize.Width * 0.5f,
+                placementContext.PieY);
+        }
+
+        return p;
     }
 
     /// <summary>
@@ -204,14 +254,102 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Creates a transition builder for the specified properties.
+    /// Sets the transition of the given <paramref name="properties"/> to the <paramref name="animation"/>.
     /// </summary>
-    /// <param name="animatable">The animatable.</param>
-    /// <param name="properties">The properties, use null to apply the transition to all the properties.</param>
-    /// <returns>The builder</returns>
-    public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[]? properties)
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="animation">The animation.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate(this IAnimatable animatable, Animation animation, params string[]? properties)
     {
-        return new TransitionBuilder(animatable, properties);
+        animatable.SetTransition(animation, properties);
+        animatable.CompleteTransition(properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the specified <paramref name="easingFunction"/> and <paramref name="speed"/>.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="easingFunction">The animation's easing function.</param>
+    /// <param name="speed">The animation's speed.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate(this IAnimatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
+    {
+        Animate(animatable, new Animation(easingFunction, speed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
+    /// if the properties are not set, then all the animatable properties in the object will use the given animation.
+    /// </summary>
+    /// <param name="animatable">The animatable object.</param>
+    /// <param name="chart">
+    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
+    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// </param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this IAnimatable animatable, Chart<TDrawingContext> chart, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(animatable, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart
+    /// for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <param name="visual">The visual.</param>
+    /// <param name="animation">The animation.</param>
+    /// <param name="properties">The properties.</param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Animation animation, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        foreach (var animatable in visual.GetDrawnGeometries())
+        {
+            if (animatable is null) continue;
+            Animate(animatable, animation, properties);
+        }
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the specified <paramref name="easingFunction"/> and <paramref name="speed"/>
+    /// for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <param name="visual">The visual object.</param>
+    /// <param name="easingFunction">The animation's easing function.</param>
+    /// <param name="speed">The animation's speed.</param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(visual, new Animation(easingFunction, speed), properties);
+    }
+
+    /// <summary>
+    /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
+    /// if the properties are not set, then all the animatable properties in the object will use the given animation.
+    /// The transition will be set for all the geometries in a <see cref="VisualElement{TDrawingContext}"/>.
+    /// </summary>
+    /// <param name="visual">The visual`` object.</param>
+    /// <param name="chart">
+    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
+    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// </param>
+    /// <param name="properties">
+    /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
+    /// </param>
+    public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Chart<TDrawingContext> chart, params string[]? properties)
+        where TDrawingContext : DrawingContext
+    {
+        Animate(visual, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
     }
 
     /// <summary>
@@ -299,7 +437,7 @@ public static class Extensions
     /// <summary>
     /// Calculates the tooltips finding strategy based on the series properties.
     /// </summary>
-    /// <param name="seriesCollection">The series collection</param>
+    /// <param name="seriesCollection">The series collection.</param>
     /// <returns></returns>
     public static TooltipFindingStrategy GetTooltipFindingStrategy(this IEnumerable<ISeries> seriesCollection)
     {
@@ -314,7 +452,9 @@ public static class Extensions
 
         return areAllX
             ? TooltipFindingStrategy.CompareOnlyXTakeClosest
-            : (areAllY ? TooltipFindingStrategy.CompareOnlyYTakeClosest : TooltipFindingStrategy.CompareAllTakeClosest);
+            : (areAllY
+                ? TooltipFindingStrategy.CompareOnlyYTakeClosest
+                : TooltipFindingStrategy.CompareAllTakeClosest);
     }
 
     /// <summary>
@@ -350,33 +490,6 @@ public static class Extensions
             })
             .OrderBy(p => p.distance)
             .FirstOrDefault()?.point;
-    }
-
-    /// <summary>
-    /// Finds the closest visual to the specified location [in pixels].
-    /// </summary>
-    /// <typeparam name="T">The type of the drawing context.</typeparam>
-    /// <param name="source">The visuals to look into.</param>
-    /// <param name="point">The location in pixels.</param>
-    /// <returns></returns>
-    public static VisualElement<T>? FindClosestTo<T>(this IEnumerable<VisualElement<T>> source, LvcPoint point)
-        where T : DrawingContext
-    {
-        return source.Select(visual =>
-        {
-            var location = visual.GetTargetLocation();
-            var size = visual.GetTargetSize();
-
-            return new
-            {
-                distance = Math.Sqrt(
-                    Math.Pow(point.X - (location.X + size.Width * 0.5), 2) +
-                    Math.Pow(point.Y - (location.Y + size.Height * 0.5), 2)),
-                visual
-            };
-        })
-        .OrderBy(p => p.distance)
-        .FirstOrDefault()?.visual;
     }
 
     /// <summary>

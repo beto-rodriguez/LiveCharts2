@@ -83,7 +83,7 @@ public sealed partial class MotionCanvas : UserControl
     /// <value>
     /// The frames per second.
     /// </value>
-    public double MaxFps { get; set; } = 66;
+    public double MaxFps { get; set; } = 60;
 
     /// <summary>
     /// Gets the canvas core.
@@ -113,7 +113,7 @@ public sealed partial class MotionCanvas : UserControl
         var ts = TimeSpan.FromSeconds(1 / MaxFps);
         while (!CanvasCore.IsValid)
         {
-            _skiaElement.Invalidate();
+            _skiaElement?.Invalidate();
             await Task.Delay(ts);
         }
 

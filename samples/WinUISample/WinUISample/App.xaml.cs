@@ -1,4 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
+using LiveChartsCore; // mark
+using LiveChartsCore.SkiaSharpView; // mark
 
 namespace WinUISample;
 
@@ -7,6 +9,8 @@ namespace WinUISample;
 /// </summary>
 public partial class App : Application
 {
+    public record City(string Name, double Population);
+
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -25,6 +29,33 @@ public partial class App : Application
     {
         m_window = new MainWindow();
         m_window.Activate();
+
+        LiveCharts.Configure(config => // mark
+            config // mark
+                   // registers SkiaSharp as the library backend
+                   // REQUIRED unless you build your own
+                .AddSkiaSharp() // mark
+
+                // adds the default supported types
+                // OPTIONAL but highly recommend
+                .AddDefaultMappers() // mark
+
+                // select a theme, default is Light
+                // OPTIONAL
+                //.AddDarkTheme()
+                .AddLightTheme() // mark
+
+                // finally register your own mappers
+                // you can learn more about mappers at:
+                // https://lvcharts.com/docs/WPF/{{ version }}/Overview.Mappers
+                .HasMap<City>((city, point) => // mark
+                { // mark
+                    point.PrimaryValue = city.Population; // mark
+                    point.SecondaryValue = point.Index; // mark
+                }) // mark
+                   // .HasMap<Foo>( .... ) // mark
+                   // .HasMap<Bar>( .... ) // mark
+            ); // mark
     }
 
     private Window m_window;

@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects;
 

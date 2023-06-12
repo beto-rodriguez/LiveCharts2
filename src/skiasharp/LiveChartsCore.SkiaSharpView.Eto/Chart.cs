@@ -260,23 +260,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
     public abstract IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point);
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        if (tooltip is null || core is null) return;
-
-        tooltip.Show(points, core);
-    }
-
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        if (tooltip is null || core is null) return;
-
-        core.ClearTooltipData();
-        tooltip.Hide();
-    }
-
     internal Point GetCanvasPosition()
     {
         return motionCanvas.Location;
@@ -369,15 +352,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <param name="e"></param>
     protected virtual void Chart_MouseLeave(object? sender, EventArgs e)
     {
-        if (this.tooltip is Window tooltip)
-        {
-            var window = tooltip.Size + tooltip.Location;
-
-            if (window.Contains((Point)Mouse.Position)) // mouse over tooltip ?
-                return; // dont hide it 
-        }
-
-        HideTooltip();
         core?.InvokePointerLeft();
     }
 
@@ -405,7 +379,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
     }
 
     void IChartView.Invalidate()

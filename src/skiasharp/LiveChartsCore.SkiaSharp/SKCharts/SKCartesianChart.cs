@@ -71,6 +71,8 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
         DrawMarginFrame = view.DrawMarginFrame;
         LegendPosition = view.LegendPosition;
         Title = view.Title;
+        DrawMargin = view.DrawMargin;
+        VisualElements = view.VisualElements;
     }
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
@@ -187,12 +189,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
     public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
-    public void HideTooltip()
-    {
-        throw new NotImplementedException();
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)"/>
     [Obsolete($"Use {nameof(ScalePixelsToData)} instead.")]
     public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
@@ -233,12 +229,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
         return Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, point));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
-    public void ShowTooltip(IEnumerable<ChartPoint> points)
-    {
-        throw new NotImplementedException();
-    }
-
     void IChartView.InvokeOnUIThread(Action action)
     {
         action();
@@ -261,20 +251,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
 
     private LvcSize GetControlSize()
     {
-        if (LegendPosition == LegendPosition.Hidden || Legend is null) return new(Width, Height);
-
-        if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-        {
-            var imageControl = (IImageControl)Legend;
-            return new(Width - imageControl.Size.Width, Height);
-        }
-
-        if (LegendPosition is LegendPosition.Top or LegendPosition.Bottom)
-        {
-            var imageControl = (IImageControl)Legend;
-            return new(Width, Height - imageControl.Size.Height);
-        }
-
         return new(Width, Height);
     }
 
@@ -287,7 +263,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(visualElements, pointer));
+        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
     }
 
     void IChartView.Invalidate()

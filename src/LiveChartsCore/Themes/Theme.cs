@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Gauge
+
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
@@ -35,6 +37,11 @@ namespace LiveChartsCore.Themes;
 public class Theme<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
+    /// <summary>
+    /// Gets or sets the theme colors.
+    /// </summary>
+    public LvcColor[] Colors { get; set; } = Array.Empty<LvcColor>();
+
     /// <summary>
     /// Gets or sets the axis builder.
     /// </summary>
@@ -220,7 +227,7 @@ public class Theme<TDrawingContext>
     public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new();
 
     /// <summary>
-    /// Constructs an axis.
+    /// Applies the theme to an axis.
     /// </summary>
     /// <param name="axis">The axis.</param>
     public void ApplyStyleToAxis(IPlane<TDrawingContext> axis)
@@ -229,7 +236,7 @@ public class Theme<TDrawingContext>
     }
 
     /// <summary>
-    /// Constructs a series.
+    /// Applies the theme to a series.
     /// </summary>
     /// <param name="series">The series.</param>
     public virtual void ApplyStyleToSeries(IChartSeries<TDrawingContext> series)
@@ -354,5 +361,23 @@ public class Theme<TDrawingContext>
             var financialSeries = (IFinancialSeries<TDrawingContext>)series;
             foreach (var rule in FinancialSeriesBuilder) rule(financialSeries);
         }
+    }
+
+    /// <summary>
+    /// Applies the theme to  a draw margin.
+    /// </summary>
+    /// <param name="drawMarginFrame"></param>
+    public void ApplyStyleToDrawMargin(DrawMarginFrame<TDrawingContext> drawMarginFrame)
+    {
+        foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
+    }
+
+    /// <summary>
+    /// Gets the color of a series according to the theme.
+    /// </summary>
+    /// <returns></returns>
+    public LvcColor GetSeriesColor(ISeries series)
+    {
+        return Colors[series.SeriesId % Colors.Length];
     }
 }
