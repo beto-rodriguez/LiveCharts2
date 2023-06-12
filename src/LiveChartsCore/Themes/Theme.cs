@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Gauge
+
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
@@ -35,6 +37,11 @@ namespace LiveChartsCore.Themes;
 public class Theme<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
+    /// <summary>
+    /// Gets or sets the theme colors.
+    /// </summary>
+    public LvcColor[] Colors { get; set; } = Array.Empty<LvcColor>();
+
     /// <summary>
     /// Gets or sets the axis builder.
     /// </summary>
@@ -363,5 +370,14 @@ public class Theme<TDrawingContext>
     public void ApplyStyleToDrawMargin(DrawMarginFrame<TDrawingContext> drawMarginFrame)
     {
         foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
+    }
+
+    /// <summary>
+    /// Gets the color of a series according to the theme.
+    /// </summary>
+    /// <returns></returns>
+    public LvcColor GetSeriesColor(ISeries series)
+    {
+        return Colors[series.SeriesId % Colors.Length];
     }
 }

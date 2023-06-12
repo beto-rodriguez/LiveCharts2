@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: svg
+
 using System;
 using SkiaSharp;
 
@@ -31,8 +33,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <seealso cref="SizedGeometry" />
 public class SVGPathGeometry : SizedGeometry
 {
-    private readonly SKPath? _path;
     private readonly Func<SKPath> _pathSource = () => throw new NotImplementedException("There is no path to render.");
+
+    /// <summary>
+    /// Inieializes a new instance of the <see cref="SVGPathGeometry"/> class.
+    /// </summary>
+    public SVGPathGeometry()
+    { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
@@ -40,17 +47,23 @@ public class SVGPathGeometry : SizedGeometry
     /// <param name="svgPath">The SVG path.</param>
     public SVGPathGeometry(SKPath svgPath)
     {
-        _path = svgPath;
+        Path = svgPath;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
+    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class,
+    /// when <see cref="Path"/> is null, The path will be obtained from the <paramref name="pathSource"/> function.
     /// </summary>
     /// <param name="pathSource">The path source.</param>
     public SVGPathGeometry(Func<SKPath> pathSource)
     {
         _pathSource = pathSource;
     }
+
+    /// <summary>
+    /// Gets or sets the path.
+    /// </summary>
+    public SKPath? Path { get; set; }
 
     /// <summary>
     /// Gets or sets whether the path should be fitted to the size of the geometry.
@@ -60,7 +73,7 @@ public class SVGPathGeometry : SizedGeometry
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        DrawPath(context, paint, _path ?? _pathSource()!);
+        DrawPath(context, paint, Path ?? _pathSource()!);
     }
 
     /// <summary>

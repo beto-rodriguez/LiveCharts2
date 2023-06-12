@@ -2,6 +2,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -15,8 +16,11 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
 {
     private static readonly int s_zIndex = 10050;
     private readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new();
-    private readonly SolidColorPaint _backgroundPaint = new(new SKColor(28, 49, 58)) { ZIndex = s_zIndex };
-    private readonly SolidColorPaint _fontPaint = new(new SKColor(230, 230, 230)) { ZIndex = s_zIndex + 1 };
+    private readonly SolidColorPaint _fontPaint = new(new SKColor(30, 20, 30))
+    {
+        SKTypeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold),
+        ZIndex = s_zIndex + 1
+    };
 
     public void Draw(Chart<SkiaSharpDrawingContext> chart)
     {
@@ -34,7 +38,6 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
         _stackPanel.Orientation = ContainerOrientation.Vertical;
         _stackPanel.MaxWidth = double.MaxValue;
         _stackPanel.MaxHeight = chart.ControlSize.Height;
-        _stackPanel.BackgroundPaint = _backgroundPaint;
 
         // clear the previous elements.
         foreach (var visual in _stackPanel.Children.ToArray())
@@ -42,6 +45,8 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
             _ = _stackPanel.Children.Remove(visual);
             chart.RemoveVisual(visual);
         }
+
+        var theme = LiveCharts.DefaultSettings.GetTheme<SkiaSharpDrawingContext>();
 
         foreach (var series in chart.ChartSeries)
         {
@@ -54,12 +59,18 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    series.GetMiniaturesSketch().AsDrawnControl(),
+                    new SVGVisual
+                    {
+                        Path = SVGPoints.Star, // or define your own svg path: SKPath.ParseSvgPathData(...)
+                        Width = 25,
+                        Height = 25,
+                        Fill = new SolidColorPaint(theme.GetSeriesColor(series).AsSKColor()) {ZIndex = s_zIndex + 1 }
+                    },
                     new LabelVisual
                     {
                         Text = series.Name ?? string.Empty,
                         Paint = _fontPaint,
-                        TextSize = 10,
+                        TextSize = 15,
                         Padding = new Padding(8, 0, 0, 0),
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start

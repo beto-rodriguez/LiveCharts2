@@ -20,27 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
+// Ignore Spelling: SVG
+
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <summary>
-/// Defines a visual element in a chart that draws a sized geometry in the user interface.
+/// Defines a visual element in a chart that draws a svg geometry in the user interface.
 /// </summary>
-public class GeometryVisual<TGeometry> : BaseGeometryVisual
-    where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
+public class SVGVisual : GeometryVisual<SVGPathGeometry>
 {
-    internal readonly TGeometry _geometry = new();
-
-    internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { _geometry };
-    }
+    /// <summary>
+    /// Gets or sets the SVG path.
+    /// </summary>
+    public SKPath? Path { get; set; }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
@@ -53,34 +50,10 @@ public class GeometryVisual<TGeometry> : BaseGeometryVisual
         _geometry.Y = l.Y;
         _geometry.Width = size.Width;
         _geometry.Height = size.Height;
+        _geometry.Path = Path;
 
         var drawing = chart.Canvas.Draw();
         if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
         if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<SkiaSharpDrawingContext> parent)
-    {
-        if (_geometry is null) return;
-        _geometry.Parent = parent;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
-    {
-        var w = (float)Width;
-        var h = (float)Height;
-
-        if (SizeUnit == MeasureUnit.ChartValues)
-        {
-            if (PrimaryScaler is null || SecondaryScaler is null)
-                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
-
-            w = SecondaryScaler.MeasureInPixels(w);
-            h = PrimaryScaler.MeasureInPixels(h);
-        }
-
-        return new LvcSize(w, h);
     }
 }
