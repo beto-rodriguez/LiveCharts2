@@ -140,8 +140,8 @@ public class PieSeriesTest
     [TestMethod]
     public void ShouldPlaceDataLabel()
     {
-        var vals = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        var seriesCollection = vals.AsPieSeries<double, DoughnutGeometry, TestLabel>();
+        var vals = new[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        var seriesCollection = vals.AsPieSeries<int, DoughnutGeometry, TestLabel>();
 
         var chart = new SKPieChart
         {
@@ -261,17 +261,5 @@ public class PieSeriesTest
 
             Assert.IsTrue(Math.Abs(a - r) < 0.01);
         }
-
-        //foreach (var p in points)
-        //{
-        //    var v = p.Visual;
-        //    var l = p.Label;
-
-        //    var ls = l.Measure(sutSeries.DataLabelsPaint);
-
-        //    Assert.IsTrue(
-        //        Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&    // x is centered
-        //        Math.Abs(v.Y - (l.Y + ls.Height * 0.5)) < 0.01);  // y is top
-        //}
     }
 }
