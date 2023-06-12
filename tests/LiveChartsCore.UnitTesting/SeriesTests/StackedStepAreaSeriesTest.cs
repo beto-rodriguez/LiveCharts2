@@ -23,11 +23,15 @@
 using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.UnitTesting.MockedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SkiaSharp;
 
 namespace LiveChartsCore.UnitTesting.SeriesTests;
 
@@ -35,7 +39,7 @@ namespace LiveChartsCore.UnitTesting.SeriesTests;
 public class StackedStepAreaSeriesTest
 {
     [TestMethod]
-    public void ShouldScaleProperly()
+    public void ShouldScale()
     {
         var sutSeries = new StackedStepAreaSeries<double>
         {
@@ -141,5 +145,222 @@ public class StackedStepAreaSeriesTest
             previousXArea = previousSegment.Xj - sutSegment.Xj;
             previous = sutPoint;
         }
+    }
+
+    [TestMethod]
+    public void ShouldPlaceDataLabel()
+    {
+        var gs = 5f;
+        var sutSeries = new StackedStepAreaSeries<double, RectangleGeometry, TestLabel>
+        {
+            Values = new double[] { -10, -5, -1, 0, 1, 5, 10 },
+            DataPadding = new LvcPoint(0, 0),
+            GeometrySize = gs * 2,
+        };
+
+        var chart = new SKCartesianChart
+        {
+            Width = 500,
+            Height = 500,
+            DrawMargin = new Margin(100),
+            DrawMarginFrame = new DrawMarginFrame { Stroke = new SolidColorPaint(SKColors.Yellow, 2) },
+            TooltipPosition = TooltipPosition.Top,
+            Series = new[] { sutSeries },
+            XAxes = new[] { new Axis { IsVisible = false } },
+            YAxes = new[] { new Axis { IsVisible = false } }
+        };
+
+        var datafactory = sutSeries.DataFactory;
+
+        // TEST HIDDEN ===========================================================
+        _ = chart.GetImage();
+
+        var points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        Assert.IsTrue(sutSeries.DataLabelsPosition == DataLabelsPosition.End);
+        Assert.IsTrue(points.All(x => x.Label is null));
+
+        sutSeries.DataLabelsPaint = new SolidColorPaint
+        {
+            Color = SKColors.Black,
+            SKTypeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
+        };
+
+        // TEST TOP ===============================================================
+        sutSeries.DataLabelsPosition = DataLabelsPosition.Top;
+        _ = chart.GetImage();
+
+        points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        foreach (var p in points)
+        {
+            var v = p.Visual;
+            var l = p.Label;
+
+            var ls = l.Measure(sutSeries.DataLabelsPaint);
+
+            Assert.IsTrue(
+                Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
+                Math.Abs(v.Y - (l.Y + ls.Height * 0.5 + gs)) < 0.01);  // y is top
+        }
+
+        // TEST BOTTOM ===========================================================
+        sutSeries.DataLabelsPosition = DataLabelsPosition.Bottom;
+
+        _ = chart.GetImage();
+
+        points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        foreach (var p in points)
+        {
+            var v = p.Visual;
+            var l = p.Label;
+
+            var ls = l.Measure(sutSeries.DataLabelsPaint);
+
+            Assert.IsTrue(
+                Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
+                Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5 + gs)) < 0.01); // y is bottom
+        }
+
+        // TEST RIGHT ============================================================
+        sutSeries.DataLabelsPosition = DataLabelsPosition.Right;
+
+        _ = chart.GetImage();
+
+        points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        foreach (var p in points)
+        {
+            var v = p.Visual;
+            var l = p.Label;
+
+            var ls = l.Measure(sutSeries.DataLabelsPaint);
+
+            Assert.IsTrue(
+                Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5 + gs)) < 0.01 &&  // x is right
+                Math.Abs(v.Y + v.Height * 0.5 - l.Y - gs) < 0.01);               // y is centered
+        }
+
+        // TEST LEFT =============================================================
+        sutSeries.DataLabelsPosition = DataLabelsPosition.Left;
+
+        _ = chart.GetImage();
+
+        points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        foreach (var p in points)
+        {
+            var v = p.Visual;
+            var l = p.Label;
+
+            var ls = l.Measure(sutSeries.DataLabelsPaint);
+
+            Assert.IsTrue(
+                Math.Abs(v.X - (l.X + ls.Width * 0.5f + gs)) < 0.01 &&   // x is left
+                Math.Abs(v.Y + v.Height * 0.5f - l.Y - gs) < 0.01);      // y is centered
+        }
+
+        // TEST MIDDLE ===========================================================
+        sutSeries.DataLabelsPosition = DataLabelsPosition.Middle;
+
+        _ = chart.GetImage();
+
+        points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        foreach (var p in points)
+        {
+            var v = p.Visual;
+            var l = p.Label;
+
+            var ls = l.Measure(sutSeries.DataLabelsPaint);
+
+            Assert.IsTrue(
+                Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&      // x is centered
+                Math.Abs(v.Y + v.Height * 0.5f - l.Y - gs) < 0.01);      // y is centered
+        }
+
+        // TEST START ===========================================================
+        sutSeries.DataLabelsPosition = DataLabelsPosition.Start;
+
+        _ = chart.GetImage();
+
+        points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        foreach (var p in points)
+        {
+            var v = p.Visual;
+            var l = p.Label;
+
+            var ls = l.Measure(sutSeries.DataLabelsPaint);
+
+            if (p.Model <= 0)
+            {
+                // it should be placed using the top position
+                Assert.IsTrue(
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
+                    Math.Abs(v.Y - (l.Y + ls.Height * 0.5 + gs)) < 0.01);  // y is top
+            }
+            else
+            {
+                // it should be placed using the bottom position
+                Assert.IsTrue(
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
+                    Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5 + gs)) < 0.01); // y is bottom
+            }
+        }
+
+        // TEST END ===========================================================
+        sutSeries.DataLabelsPosition = DataLabelsPosition.End;
+
+        _ = chart.GetImage();
+
+        points = datafactory
+            .Fetch(sutSeries, chart.Core)
+            .Select(sutSeries.ConvertToTypedChartPoint);
+
+        foreach (var p in points)
+        {
+            var v = p.Visual;
+            var l = p.Label;
+
+            var ls = l.Measure(sutSeries.DataLabelsPaint);
+
+            if (p.Model <= 0)
+            {
+                // it should be placed using the bottom position
+                Assert.IsTrue(
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
+                    Math.Abs(v.Y + v.Height - (l.Y - ls.Height * 0.5 + gs)) < 0.01); // y is bottom
+            }
+            else
+            {
+                // it should be placed using the top position
+                Assert.IsTrue(
+                    Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
+                    Math.Abs(v.Y - (l.Y + ls.Height * 0.5 + gs)) < 0.01);  // y is top
+            }
+        }
+
+        // FINALLY IF LABELS ARE NULL, IT SHOULD REMOVE THE CURRENT LABELS.
+        var previousPaint = sutSeries.DataLabelsPaint;
+        sutSeries.DataLabelsPaint = null;
+        _ = chart.GetImage();
+
+        Assert.IsTrue(!chart.CoreCanvas._paintTasks.Contains(previousPaint));
     }
 }

@@ -127,7 +127,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
             uw = scaler.MeasureInPixels(axis.UnitWidth);
             actualUw = uw;
 
-            var gp = (float)barSeries.GroupPadding;
+            var gp = (float)barSeries.Padding;
 
             if (uw - gp < 1) gp -= uw - gp;
 

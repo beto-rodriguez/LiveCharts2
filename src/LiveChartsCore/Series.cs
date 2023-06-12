@@ -26,6 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -34,8 +35,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
-
 namespace LiveChartsCore;
 
 /// <summary>
@@ -101,7 +100,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private string? _name;
     private Action<TModel, ChartPoint>? _mapping;
     private int _zIndex;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _dataLabelsFormatter = x => x.PrimaryValue.ToString();
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.PrimaryValue.ToString();
     private bool _isVisible = true;
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
@@ -227,7 +226,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The data label formatter.
     /// </value>
-    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? DataLabelsFormatter
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
     {
         get => _dataLabelsFormatter;
         set => SetProperty(ref _dataLabelsFormatter, value);
@@ -272,6 +271,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             return _dataFactory;
         }
     }
+
+    /// <summary>
+    /// Called when a point is measured.
+    /// </summary>
+    public Action<ChartPoint<TModel, TVisual, TLabel>>? WhenPointMeasured { get; set; }
 
     /// <summary>
     /// Gets or sets the size of the legend shape.
@@ -447,6 +451,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="chartPoint">The chart point.</param>
     protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
     {
+        WhenPointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
         PointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
     }
 
