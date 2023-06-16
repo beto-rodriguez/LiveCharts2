@@ -20,29 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: SVG
+using System;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.VisualElements;
-using SkiaSharp;
-
-namespace LiveChartsCore.SkiaSharpView.VisualElements;
+namespace LiveChartsCore.VisualElements;
 
 /// <summary>
-/// Defines a visual element in a chart that draws a svg geometry in the user interface.
+/// Defines a visual element in a chart that draws a sized geometry in the user interface.
 /// </summary>
-public class SVGVisual : GeometryVisual<SVGPathGeometry>
+/// <typeparam name="TGeometry">The type of the geometry.</typeparam>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class GeometryVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
+    where TDrawingContext : DrawingContext
+    where TGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private SKPath? _path;
+    internal readonly TGeometry _geometry = new();
 
-    /// <summary>
-    /// Gets or sets the SVG path.
-    /// </summary>
-    public SKPath? Path { get => _path; set => SetProperty(ref _path, value); }
+    internal override IAnimatable?[] GetDrawnGeometries()
+    {
+        return new IAnimatable?[] { _geometry };
+    }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
+    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
         var l = GetActualCoordinate();
 
@@ -52,7 +53,6 @@ public class SVGVisual : GeometryVisual<SVGPathGeometry>
         _geometry.Y = l.Y;
         _geometry.Width = size.Width;
         _geometry.Height = size.Height;
-        _geometry.Path = Path;
 
         if (Fill is not null)
         {
@@ -65,5 +65,30 @@ public class SVGVisual : GeometryVisual<SVGPathGeometry>
             chart.Canvas.AddDrawableTask(Stroke);
             Stroke.AddGeometryToPaintTask(chart.Canvas, _geometry);
         }
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
+    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    {
+        if (_geometry is null) return;
+        _geometry.Parent = parent;
+    }
+
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    {
+        var w = (float)Width;
+        var h = (float)Height;
+
+        if (SizeUnit == MeasureUnit.ChartValues)
+        {
+            if (PrimaryScaler is null || SecondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
+            w = SecondaryScaler.MeasureInPixels(w);
+            h = PrimaryScaler.MeasureInPixels(h);
+        }
+
+        return new LvcSize(w, h);
     }
 }
