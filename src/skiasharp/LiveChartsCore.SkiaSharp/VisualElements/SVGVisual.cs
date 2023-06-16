@@ -34,10 +34,12 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// </summary>
 public class SVGVisual : GeometryVisual<SVGPathGeometry>
 {
+    private SKPath? _path;
+
     /// <summary>
     /// Gets or sets the SVG path.
     /// </summary>
-    public SKPath? Path { get; set; }
+    public SKPath? Path { get => _path; set => SetProperty(ref _path, value); }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)

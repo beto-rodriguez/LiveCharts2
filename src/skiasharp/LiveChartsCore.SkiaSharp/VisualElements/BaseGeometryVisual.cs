@@ -37,22 +37,22 @@ public abstract class BaseGeometryVisual : VisualElement<SkiaSharpDrawingContext
     private double _height;
     private IPaint<SkiaSharpDrawingContext>? _fill;
     private IPaint<SkiaSharpDrawingContext>? _stroke;
+    private MeasureUnit _sizeUnit = MeasureUnit.Pixels;
 
     /// <summary>
     /// Gets or sets the height of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
     /// </summary>
-    public double Width { get => _width; set { _width = value; OnPropertyChanged(); } }
+    public double Width { get => _width; set => SetProperty(ref _width, value); }
 
     /// <summary>
     /// Gets or sets the width of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
     /// </summary>
-    public double Height { get => _height; set { _height = value; OnPropertyChanged(); } }
+    public double Height { get => _height; set => SetProperty(ref _height, value); }
 
     /// <summary>
     /// Gets or sets the unit of the <see cref="Height"/> and <see cref="Width"/> properties.
     /// </summary>
-    public MeasureUnit SizeUnit { get; set; } = MeasureUnit.Pixels;
-
+    public MeasureUnit SizeUnit { get => _sizeUnit; set => SetProperty(ref _sizeUnit, value); }
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>

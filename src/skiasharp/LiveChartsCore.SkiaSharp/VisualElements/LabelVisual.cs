@@ -59,12 +59,12 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets the label text.
     /// </summary>
-    public string Text { get => _text; set { _text = value; OnPropertyChanged(); } }
+    public string Text { get => _text; set => SetProperty(ref _text, value); }
 
     /// <summary>
     /// Gets or sets the font size.
     /// </summary>
-    public double TextSize { get => _textSize; set { _textSize = value; OnPropertyChanged(); } }
+    public double TextSize { get => _textSize; set => SetProperty(ref _textSize, value); }
 
     /// <summary>
     /// Gets or sets the rotation.
@@ -74,32 +74,32 @@ public class LabelVisual : VisualElement<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets the translate transform.
     /// </summary>
-    public LvcPoint Translate { get => _translate; set { _translate = value; OnPropertyChanged(); } }
+    public LvcPoint Translate { get => _translate; set => SetProperty(ref _translate, value); }
 
     /// <summary>
     /// Gets or sets the vertical alignment.
     /// </summary>
-    public Align VerticalAlignment { get => _verticalAlignment; set { _verticalAlignment = value; OnPropertyChanged(); } }
+    public Align VerticalAlignment { get => _verticalAlignment; set => SetProperty(ref _verticalAlignment, value); }
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align HorizontalAlignment { get => _horizontalAlignment; set { _horizontalAlignment = value; OnPropertyChanged(); } }
+    public Align HorizontalAlignment { get => _horizontalAlignment; set => SetProperty(ref _horizontalAlignment, value); }
 
     /// <summary>
     /// Gets or sets the background color.
     /// </summary>
-    public LvcColor BackgroundColor { get => _backgroundColor; set { _backgroundColor = value; OnPropertyChanged(); } }
+    public LvcColor BackgroundColor { get => _backgroundColor; set => SetProperty(ref _backgroundColor, value); }
 
     /// <summary>
     /// Gets or sets the padding.
     /// </summary>
-    public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
+    public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
 
     /// <summary>
     /// Gets or sets the line height [times the text measured height].
     /// </summary>
-    public float LineHeight { get => _lineHeight; set { _lineHeight = value; OnPropertyChanged(); } }
+    public float LineHeight { get => _lineHeight; set => SetProperty(ref _lineHeight, value); }
 
     internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
     {

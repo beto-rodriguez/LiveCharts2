@@ -40,6 +40,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     internal double _y;
     private int _scalesXAt;
     private int _scalesYAt;
+    private MeasureUnit _locationUnit = MeasureUnit.Pixels;
 
     /// <summary>
     /// Gets the primary scaler.
@@ -54,17 +55,17 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <summary>
     /// Gets or sets the X coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
     /// </summary>
-    public double X { get => _x; set { _x = value; OnPropertyChanged(); } }
+    public double X { get => _x; set => SetProperty(ref _x, value); }
 
     /// <summary>
     /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
     /// </summary>
-    public double Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double Y { get => _y; set => SetProperty(ref _y, value); }
 
     /// <summary>
     /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
     /// </summary>
-    public MeasureUnit LocationUnit { get; set; } = MeasureUnit.Pixels;
+    public MeasureUnit LocationUnit { get => _locationUnit; set => SetProperty(ref _locationUnit, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
@@ -73,7 +74,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }
+    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
@@ -82,13 +83,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
+    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
-        CartesianChart<TDrawingContext>? cartesianChart = null;
-
         if (chart is CartesianChart<TDrawingContext> cc)
         {
             var primaryAxis = cc.YAxes[ScalesYAt];
@@ -98,29 +97,9 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
             PrimaryScaler = primaryAxis.GetNextScaler(cc);
         }
 
-        // Todo: polar and pie
-        // if (chart is PolarChart<TDrawingContext> pc)
-        // if (chart is PieChart<TDrawingContext> pc)
-        // if (chart is PolarChart<TDrawingContext> pc)
-        // {
-        //     var primaryAxis = pc.AngleAxes[ScalesYAt];
-        //     var secondaryAxis = pc.RadiusAxes[ScalesXAt];
-
-        //     var primary = new PolarScaler(
-        //         chart.DrawMarginLocation, chart.DrawMarginSize, primaryAxis, secondaryAxis, pc.InnerRadius, pc.InitialRotation, pc.TotalAnge);
-        // }
-
         foreach (var paintTask in GetPaintTasks())
         {
             if (paintTask is null) continue;
-
-            if (cartesianChart is not null)
-            {
-                //paintTask.SetClipRectangle(
-                //    cartesianChart.Canvas,
-                //    new LvcRectangle(cartesianChart.DrawMarginLocation, cartesianChart.DrawMarginSize));
-            }
-
             chart.Canvas.AddDrawableTask(paintTask);
         }
 
