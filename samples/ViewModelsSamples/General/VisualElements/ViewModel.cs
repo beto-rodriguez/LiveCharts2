@@ -27,8 +27,11 @@ public partial class ViewModel : ObservableObject
              Width = 4,
              Height = 2,
              SizeUnit = MeasureUnit.ChartValues,
-             Fill = new SolidColorPaint(new SKColor(239, 83, 80, 50)) { ZIndex = 10 },
+             Fill = new SolidColorPaint(new SKColor(239, 83, 80, 220)) { ZIndex = 10 },
              Stroke = new SolidColorPaint(new SKColor(239, 83, 80)) { ZIndex = 10, StrokeThickness = 1.5f },
+             Label = "Hello!",
+             LabelPaint = new SolidColorPaint(new SKColor(220, 220, 220)) { ZIndex = 11 },
+             LabelSize = 12
          },
          new GeometryVisual<OvalGeometry>
          {

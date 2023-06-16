@@ -22,6 +22,7 @@
 
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
@@ -30,24 +31,52 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a visual element in a chart that draws a sized geometry in the user interface.
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
+/// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class GeometryVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
+public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TGeometry : ISizedGeometry<TDrawingContext>, new()
+    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
     internal readonly TGeometry _geometry = new();
+    private string _label = string.Empty;
+    private float _labelSize = 12;
+    internal TLabelGeometry? _labelGeometry;
+    private IPaint<TDrawingContext>? _labelPaint = null;
+
+    /// <summary>
+    /// Gets or sets the label, a string to be displayed within the section.
+    /// </summary>
+    public string Label { get => _label; set => SetProperty(ref _label, value); }
+
+    /// <summary>
+    /// Gets or sets the label size.
+    /// </summary>
+    public double LabelSize { get => _labelSize; set => SetProperty(ref _labelSize, (float)value); }
+
+    /// <summary>
+    /// Gets or sets the label paint.
+    /// </summary>
+    /// <value>
+    /// The fill.
+    /// </value>
+    public IPaint<TDrawingContext>? LabelPaint
+    {
+        get => _labelPaint;
+        set => SetPaintProperty(ref _labelPaint, value);
+    }
 
     internal override IAnimatable?[] GetDrawnGeometries()
     {
-        return new IAnimatable?[] { _geometry };
+        return new IAnimatable?[] { _geometry, _labelGeometry };
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
         var l = GetActualCoordinate();
-
         var size = Measure(chart);
+        var clipArea = new LvcRectangle(chart.DrawMarginLocation, chart.DrawMarginSize);
 
         _geometry.X = l.X;
         _geometry.Y = l.Y;
@@ -58,12 +87,42 @@ public class GeometryVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDr
         {
             chart.Canvas.AddDrawableTask(Fill);
             Fill.AddGeometryToPaintTask(chart.Canvas, _geometry);
+            Fill.SetClipRectangle(chart.Canvas, clipArea);
         }
 
         if (Stroke is not null)
         {
             chart.Canvas.AddDrawableTask(Stroke);
             Stroke.AddGeometryToPaintTask(chart.Canvas, _geometry);
+            Stroke.SetClipRectangle(chart.Canvas, clipArea);
+        }
+
+        if (LabelPaint is not null)
+        {
+            const int padding = 5;
+
+            if (_labelGeometry is null)
+            {
+                _labelGeometry = new TLabelGeometry
+                {
+                    X = l.X,
+                    Y = l.Y,
+                    Padding = new Padding(6)
+                };
+
+                _labelGeometry.Animate(chart);
+                _labelGeometry.VerticalAlign = Align.Start;
+                _labelGeometry.HorizontalAlign = Align.Start;
+            }
+
+            _labelGeometry.X = l.X + padding;
+            _labelGeometry.Y = l.Y + padding;
+            _labelGeometry.Text = _label;
+            _labelGeometry.TextSize = _labelSize;
+
+            chart.Canvas.AddDrawableTask(LabelPaint);
+            LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
+            LabelPaint.SetClipRectangle(chart.Canvas, clipArea);
         }
     }
 
