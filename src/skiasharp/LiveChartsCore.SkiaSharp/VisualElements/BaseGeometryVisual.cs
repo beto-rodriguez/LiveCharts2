@@ -25,8 +25,6 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <summary>
-/// Defines a visual element with stroke and fill properties.
-/// </summary>
+/// <inheritdoc cref="BaseGeometryVisual{TDrawingContext}"/>
 public abstract class BaseGeometryVisual : BaseGeometryVisual<SkiaSharpDrawingContext>
 { }

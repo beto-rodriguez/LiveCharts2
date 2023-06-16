@@ -26,6 +26,6 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <inheritdoc cref="LabelVisual   {TLabelGeometry, TDrawingContext}"/>
+/// <inheritdoc cref="LabelVisual{TLabelGeometry, TDrawingContext}"/>
 public class LabelVisual : LabelVisual<LabelGeometry, SkiaSharpDrawingContext>
 { }

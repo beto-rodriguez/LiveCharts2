@@ -26,9 +26,7 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <summary>
-/// Defines a visual element in a chart that draws a sized geometry in the user interface.
-/// </summary>
+/// <inheritdoc cref="GeometryVisual{TGeometry, TDrawingContext}"/>
 public class GeometryVisual<TGeometry> : GeometryVisual<TGeometry, SkiaSharpDrawingContext>
     where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
 { }
