@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
-using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
@@ -44,17 +42,6 @@ public partial class ViewModel : ObservableObject
              Fill = new SolidColorPaint(new SKColor(100, 221, 23, 50)) { ZIndex = - 10 },
              Stroke = new SolidColorPaint(new SKColor(100, 221, 23)) { ZIndex = -10, StrokeThickness = 1.5f },
          },
-         new GeometryVisual<MyGeometry>
-         {
-             X = 18,
-             Y = 6,
-             LocationUnit = MeasureUnit.ChartValues,
-             Width = 100,
-             Height = 100,
-             SizeUnit = MeasureUnit.Pixels,
-             Fill = new SolidColorPaint(new SKColor(251, 192, 45, 50)) { ZIndex = 10 },
-             Stroke = new SolidColorPaint(new SKColor(251, 192, 45)) { ZIndex = 10, StrokeThickness = 1.5f },
-         },
          new LabelVisual
          {
              Text = "What happened here?",
@@ -66,7 +53,22 @@ public partial class ViewModel : ObservableObject
              Padding = new Padding(12),
              LocationUnit = MeasureUnit.ChartValues,
              Translate = new LvcPoint(0, -35)
-         }
+         },
+         new SVGVisual
+         {
+             Path = SVGPoints.Star,
+             X = 80,
+             Y = 80,
+             LocationUnit = MeasureUnit.Pixels,
+             Width = 100,
+             Height = 100,
+             SizeUnit = MeasureUnit.Pixels,
+             Fill = new SolidColorPaint(new SKColor(251, 192, 45, 50)) { ZIndex = 10 },
+             Stroke = new SolidColorPaint(new SKColor(251, 192, 45)) { ZIndex = 10, StrokeThickness = 1.5f },
+             Label = "This one is fixed",
+             LabelPaint = new SolidColorPaint(SKColors.Black) { ZIndex = 11 },
+             LabelSize = 10
+         },
     };
 
     public ISeries[] Series { get; set; } =

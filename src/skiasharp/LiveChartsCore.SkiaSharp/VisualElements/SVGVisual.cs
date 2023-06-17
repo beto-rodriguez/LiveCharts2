@@ -44,26 +44,7 @@ public class SVGVisual : GeometryVisual<SVGPathGeometry>
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
     {
-        var l = GetActualCoordinate();
-
-        var size = Measure(chart);
-
-        _geometry.X = l.X;
-        _geometry.Y = l.Y;
-        _geometry.Width = size.Width;
-        _geometry.Height = size.Height;
-        _geometry.Path = Path;
-
-        if (Fill is not null)
-        {
-            chart.Canvas.AddDrawableTask(Fill);
-            Fill.AddGeometryToPaintTask(chart.Canvas, _geometry);
-        }
-
-        if (Stroke is not null)
-        {
-            chart.Canvas.AddDrawableTask(Stroke);
-            Stroke.AddGeometryToPaintTask(chart.Canvas, _geometry);
-        }
+        base.OnInvalidated(chart);
+        if (_geometry is not null) _geometry.Path = Path;
     }
 }
