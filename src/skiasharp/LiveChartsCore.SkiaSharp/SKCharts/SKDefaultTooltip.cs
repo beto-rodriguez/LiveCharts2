@@ -103,6 +103,10 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                     nameof(RoundedRectangleGeometry.Y));
         }
 
+        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
+        if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
+        if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
+
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
         if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
 
