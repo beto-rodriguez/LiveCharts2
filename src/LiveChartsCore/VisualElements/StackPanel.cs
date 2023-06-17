@@ -36,6 +36,12 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _backgroundPaint;
+    private Align _verticalAlignment = Align.Middle;
+    private Align _horizontalAlignment = Align.Middle;
+    private Padding _padding = new();
+    private double _maxWidth = double.MaxValue;
+    private double _maxHeight = double.MaxValue;
+    private ContainerOrientation _orientation;
 
     /// <summary>
     /// Gets the children collection.
@@ -45,22 +51,22 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <summary>
     /// Gets or sets the panel orientation.
     /// </summary>
-    public ContainerOrientation Orientation { get; set; }
+    public ContainerOrientation Orientation { get => _orientation; set => SetProperty(ref _orientation, value); }
 
     /// <summary>
     /// Gets or sets the vertical alignment.
     /// </summary>
-    public Align VerticalAlignment { get; set; } = Align.Middle;
+    public Align VerticalAlignment { get => _verticalAlignment; set => SetProperty(ref _verticalAlignment, value); }
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align HorizontalAlignment { get; set; } = Align.Middle;
+    public Align HorizontalAlignment { get => _horizontalAlignment; set => SetProperty(ref _horizontalAlignment, value); }
 
     /// <summary>
     /// Gets or sets the padding.
     /// </summary>
-    public Padding Padding { get; set; } = new();
+    public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
 
     /// <summary>
     /// Gets or sets the background paint.
@@ -79,12 +85,12 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <summary>
     /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
     /// </summary>
-    public double MaxWidth { get; set; } = double.MaxValue;
+    public double MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
 
     /// <summary>
     /// Gets or sets the maximum height. When the maximum height is reached, a new column is created.
     /// </summary>
-    public double MaxHeight { get; set; } = double.MaxValue;
+    public double MaxHeight { get => _maxHeight; set => SetProperty(ref _maxHeight, value); }
 
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {

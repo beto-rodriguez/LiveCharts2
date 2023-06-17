@@ -34,26 +34,17 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// </summary>
 public class SVGVisual : GeometryVisual<SVGPathGeometry>
 {
+    private SKPath? _path;
+
     /// <summary>
     /// Gets or sets the SVG path.
     /// </summary>
-    public SKPath? Path { get; set; }
+    public SKPath? Path { get => _path; set => SetProperty(ref _path, value); }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
     {
-        var l = GetActualCoordinate();
-
-        var size = Measure(chart);
-
-        _geometry.X = l.X;
-        _geometry.Y = l.Y;
-        _geometry.Width = size.Width;
-        _geometry.Height = size.Height;
-        _geometry.Path = Path;
-
-        var drawing = chart.Canvas.Draw();
-        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(_geometry);
-        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(_geometry);
+        base.OnInvalidated(chart);
+        if (_geometry is not null) _geometry.Path = Path;
     }
 }

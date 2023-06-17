@@ -20,7 +20,7 @@ public partial class View : UserControl
         {
             Series = viewModel.Series,
             VisualElements = viewModel.VisualElements,
-            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden,
+            ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

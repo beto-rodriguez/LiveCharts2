@@ -9,7 +9,8 @@
     <Grid>
         <lvc:CartesianChart
             Series="{Binding Series}"
-            VisualElements="{Binding VisualElements}">
+            VisualElements="{Binding VisualElements}"
+            ZoomMode="X">
         </lvc:CartesianChart>
     </Grid>
 </UserControl>
