@@ -22,6 +22,7 @@
 
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
@@ -35,7 +36,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     where TDrawingContext : DrawingContext
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
-    internal readonly ILabelGeometry<TDrawingContext> _labelGeometry;
+    internal TLabelGeometry? _labelGeometry;
     internal IPaint<TDrawingContext>? _paint;
     internal bool _isVirtual = false;
     internal string _text = string.Empty;
@@ -47,14 +48,6 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     internal double _rotation;
     internal float _lineHeight = 1.75f;
     internal LvcPoint _translate = new();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LabelVisual{TLabelGeometry, TDrawingContext}"/> class.
-    /// </summary>
-    public LabelVisual()
-    {
-        _labelGeometry = new TLabelGeometry();
-    }
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -141,9 +134,10 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
             y = PrimaryScaler.ToPixels(y);
         }
 
+        InitializeLabel(chart);
         _ = Measure(chart);
 
-        _labelGeometry.Text = Text;
+        _labelGeometry!.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
         _labelGeometry.X = x;
         _labelGeometry.Y = y;
@@ -159,6 +153,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         {
             chart.Canvas.AddDrawableTask(Paint);
             Paint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
+            Paint.SetClipRectangle(chart.Canvas, new LvcRectangle(chart.DrawMarginLocation, chart.DrawMarginSize));
         }
     }
 
@@ -172,7 +167,9 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override LvcSize Measure(Chart<TDrawingContext> chart)
     {
-        _labelGeometry.Text = Text;
+        InitializeLabel(chart);
+
+        _labelGeometry!.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
         _labelGeometry.RotateTransform = (float)Rotation;
         _labelGeometry.TranslateTransform = Translate;
@@ -184,5 +181,34 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         return _paint is null
             ? new LvcSize()
             : _labelGeometry.Measure(_paint);
+    }
+
+    private void InitializeLabel(Chart<TDrawingContext> chart)
+    {
+        if (_labelGeometry is not null) return;
+
+        var x = (float)X;
+        var y = (float)Y;
+
+        if (LocationUnit == MeasureUnit.ChartValues)
+        {
+            if (PrimaryScaler is null || SecondaryScaler is null)
+                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
+
+            x = SecondaryScaler.ToPixels(x);
+            y = PrimaryScaler.ToPixels(y);
+        }
+
+        _labelGeometry = new()
+        {
+            X = x,
+            Y = y,
+        };
+
+        // Enabling animations looks strange for tool tips.
+        // we need to improve this, by default there are no animations.
+        // if you need to enable the animation you can do it manually:
+        // this.Animate(new Animation(...));
+        //_labelGeometry.Animate(chart);
     }
 }

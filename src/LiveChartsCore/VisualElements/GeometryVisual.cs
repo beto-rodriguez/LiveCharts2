@@ -38,7 +38,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     where TGeometry : ISizedGeometry<TDrawingContext>, new()
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
-    internal readonly TGeometry _geometry = new();
+    internal TGeometry? _geometry;
     private string _label = string.Empty;
     private float _labelSize = 12;
     internal TLabelGeometry? _labelGeometry;
@@ -77,6 +77,18 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         var l = GetActualCoordinate();
         var size = Measure(chart);
         var clipArea = new LvcRectangle(chart.DrawMarginLocation, chart.DrawMarginSize);
+
+        if (_geometry is null)
+        {
+            _geometry = new()
+            {
+                X = l.X,
+                Y = l.Y,
+                Width = size.Width,
+                Height = size.Height
+            };
+            _geometry.Animate(chart);
+        }
 
         _geometry.X = l.X;
         _geometry.Y = l.Y;
