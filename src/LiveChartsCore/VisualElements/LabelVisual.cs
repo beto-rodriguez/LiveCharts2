@@ -152,7 +152,6 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         {
             chart.Canvas.AddDrawableTask(Paint);
             Paint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
-            Paint.SetClipRectangle(chart.Canvas, new LvcRectangle(chart.DrawMarginLocation, chart.DrawMarginSize));
         }
     }
 
