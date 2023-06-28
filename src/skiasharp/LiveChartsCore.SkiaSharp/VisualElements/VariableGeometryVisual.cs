@@ -20,119 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <summary>
-/// Defines a visual element in a chart that draws a rectangle geometry in the user interface.
-/// </summary>
-public class VariableGeometryVisual : BaseGeometryVisual
+/// <inheritdoc cref="VariableGeometryVisual{TDrawingContext}"/>
+public class VariableGeometryVisual : VariableGeometryVisual<SkiaSharpDrawingContext>
 {
-    private ISizedGeometry<SkiaSharpDrawingContext> _geometry;
-    private bool _isInitialized;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VariableGeometryVisual"/> class.
-    /// </summary>
-    /// <param name="geometry"></param>
     public VariableGeometryVisual(ISizedGeometry<SkiaSharpDrawingContext> geometry)
-    {
-        _geometry = geometry;
-    }
-
-    /// <summary>
-    /// Gets or sets the geometry.
-    /// </summary>
-    public ISizedGeometry<SkiaSharpDrawingContext> Geometry
-    {
-        get => _geometry;
-        set
-        {
-            if (_geometry == value) return;
-            _geometry = value;
-            _isInitialized = false;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    /// Occurs when the geometry is initialized.
-    /// </summary>
-    public event Action<ISizedGeometry<SkiaSharpDrawingContext>>? GeometryInitialized;
-
-    internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { _geometry };
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
-    {
-        var x = (float)X;
-        var y = (float)Y;
-
-        if (LocationUnit == MeasureUnit.ChartValues)
-        {
-            if (PrimaryScaler is null || SecondaryScaler is null)
-                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
-
-            x = SecondaryScaler.ToPixels(x);
-            y = PrimaryScaler.ToPixels(y);
-        }
-
-        var size = Measure(chart);
-
-        if (!_isInitialized)
-        {
-            Geometry.X = (float)X;
-            Geometry.Y = (float)Y;
-            Geometry.Width = size.Width;
-            Geometry.Height = size.Height;
-
-            GeometryInitialized?.Invoke(Geometry);
-
-            Geometry.Animate(chart);
-            _isInitialized = true;
-        }
-
-        Geometry.X = x;
-        Geometry.Y = y;
-        Geometry.Width = size.Width;
-        Geometry.Height = size.Height;
-
-        var drawing = chart.Canvas.Draw();
-        if (Fill is not null) _ = drawing.SelectPaint(Fill).Draw(Geometry);
-        if (Stroke is not null) _ = drawing.SelectPaint(Stroke).Draw(Geometry);
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<SkiaSharpDrawingContext> parent)
-    {
-        if (_geometry is null) return;
-        _geometry.Parent = parent;
-    }
-
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
-    {
-        var w = (float)Width;
-        var h = (float)Height;
-
-        if (SizeUnit == MeasureUnit.ChartValues)
-        {
-            if (PrimaryScaler is null || SecondaryScaler is null)
-                throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
-
-            w = SecondaryScaler.MeasureInPixels(w);
-            h = PrimaryScaler.MeasureInPixels(h);
-        }
-
-        return new LvcSize(w, h);
-    }
+        : base(geometry)
+    { }
 }

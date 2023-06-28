@@ -11,8 +11,9 @@
 	<ContentPage.Content>
         <Grid>
             <lvc:CartesianChart
-            Series="{Binding Series}"
-            VisualElements="{Binding VisualElements}">
+                Series="{Binding Series}"
+                VisualElements="{Binding VisualElements}"
+                ZoomMode="X">
             </lvc:CartesianChart>
         </Grid>
     </ContentPage.Content>

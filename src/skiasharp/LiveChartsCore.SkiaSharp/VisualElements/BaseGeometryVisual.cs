@@ -20,71 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <summary>
-/// Defines a visual element with stroke and fill properties.
-/// </summary>
-public abstract class BaseGeometryVisual : VisualElement<SkiaSharpDrawingContext>
-{
-    private double _width;
-    private double _height;
-    private IPaint<SkiaSharpDrawingContext>? _fill;
-    private IPaint<SkiaSharpDrawingContext>? _stroke;
-
-    /// <summary>
-    /// Gets or sets the height of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
-    /// </summary>
-    public double Width { get => _width; set { _width = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the width of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
-    /// </summary>
-    public double Height { get => _height; set { _height = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the unit of the <see cref="Height"/> and <see cref="Width"/> properties.
-    /// </summary>
-    public MeasureUnit SizeUnit { get; set; } = MeasureUnit.Pixels;
-
-    /// <summary>
-    /// Gets or sets the fill paint.
-    /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? Fill
-    {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the stroke paint.
-    /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
-    {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
-    }
-
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    internal override IPaint<SkiaSharpDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _fill, _stroke };
-    }
-
-    /// <summary>
-    /// Called when [paint changed].
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-        OnPropertyChanged(propertyName);
-    }
-}
+/// <inheritdoc cref="BaseGeometryVisual{TDrawingContext}"/>
+public abstract class BaseGeometryVisual : BaseGeometryVisual<SkiaSharpDrawingContext>
+{ }

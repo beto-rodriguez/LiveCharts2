@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Skia Lvc
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,14 +41,6 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public static class LiveChartsSkiaSharp
 {
-    /// <summary>
-    /// Gets the default paint task.
-    /// </summary>
-    /// <value>
-    /// The default paint.
-    /// </value>
-    public static DefaultPaint DefaultPaint { get; } = new();
-
     /// <summary>
     /// Gets or sets an SKTypeface instance to use globally on any paint that does not specify any.
     /// </summary>
@@ -78,21 +72,23 @@ public static class LiveChartsSkiaSharp
     }
 
     /// <summary>
-    /// Adds SkiaSharp as the backend provider for LiveCharts.
+    /// Adds SkiaSharp as the library backend.
     /// </summary>
     /// <param name="settings">The settings.</param>
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
-        // this is obsolete, currently only used in the GeoMap control and will be removed a future version.
-        LiveCharts.DefaultPaint = DefaultPaint;
-
         return settings.HasProvider(new SkiaSharpProvider());
     }
 
-    public static LiveChartsSettings WithGlobalSKTypeface(this LiveChartsSettings settings, SKTypeface typeface)
+    /// <summary>
+    /// Registers a global SKTypeface instance to use on any <see cref="Paint"/> that does not specify a typeface.
+    /// </summary>
+    /// <param name="settings"></param>
+    /// <param name="typeface"></param>
+    /// <returns></returns>
+    public static LiveChartsSettings HasGlobalSKTypeface(this LiveChartsSettings settings, SKTypeface typeface)
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(DefaultPlatformBuilder);
         DefaultSKTypeface = typeface;
         return settings;
     }
@@ -232,14 +228,14 @@ public static class LiveChartsSkiaSharp
     /// </summary>
     /// <typeparam name="T">The type.</typeparam>
     /// <param name="source">The data source.</param>
-    /// <param name="buider">An optional builder.</param>
+    /// <param name="builder">An optional builder.</param>
     /// <returns></returns>
     [Obsolete($"Renamed to {nameof(AsPieSeries)}.")]
     public static ObservableCollection<PieSeries<T>> AsLiveChartsPieSeries<T>(
         this IEnumerable<T> source,
-        Action<T, PieSeries<T>>? buider = null)
+        Action<T, PieSeries<T>>? builder = null)
     {
-        return AsPieSeries(source, buider);
+        return AsPieSeries(source, builder);
     }
 
     /// <summary>

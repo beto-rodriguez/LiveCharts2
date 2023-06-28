@@ -40,21 +40,24 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
     private int _maxColumn = 0;
+    private Padding _padding = new();
+    private Align _horizontalAlignment = Align.Middle;
+    private Align _verticalAlignment = Align.Middle;
 
     /// <summary>
     /// Gets or sets the padding.
     /// </summary>
-    public Padding Padding { get; set; } = new();
+    public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align HorizontalAlignment { get; set; } = Align.Middle;
+    public Align HorizontalAlignment { get => _horizontalAlignment; set => SetProperty(ref _horizontalAlignment, value); }
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align VerticalAlignment { get; set; } = Align.Middle;
+    public Align VerticalAlignment { get => _verticalAlignment; set => SetProperty(ref _verticalAlignment, value); }
 
     /// <summary>
     /// Gets or sets the background paint.

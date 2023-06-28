@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using SkiaSharp;
 
 namespace MauiSample;
 
@@ -31,9 +32,16 @@ public partial class App : Application
                 //.AddDarkTheme()
                 .AddLightTheme() // mark
 
+                // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
+                .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('أ'))  // <- Arabic // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('あ')) // <- Japanese // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('헬')) // <- Korean // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('Ж'))  // <- Russian // mark
+
                 // finally register your own mappers
                 // you can learn more about mappers at:
-                // https://lvcharts.com/docs/WPF/{{ version }}/Overview.Mappers
+                // https://lvcharts.com/docs/{{ platform }}/{{ version }}/Overview.Mappers
                 .HasMap<City>((city, point) => // mark
                 { // mark
                     point.PrimaryValue = city.Population; // mark
