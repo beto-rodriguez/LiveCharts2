@@ -22,7 +22,6 @@
 
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
@@ -141,6 +140,7 @@ public class FinancialSeriesTest
                 new(4,3.75,3.25,3),
                 new(5,4.75,4.25,4),
             },
+            Name = "A",
             MaxBarWidth = 1000,
             YToolTipLabelFormatter = x => $"{x.PrimaryValue}{Environment.NewLine}{x.PrimaryValue}{Environment.NewLine}",
             DataPadding = new Drawing.LvcPoint(0, 0)
@@ -209,7 +209,6 @@ public class FinancialSeriesTest
 
         chart.Core._pointerPosition = new(300 * 4 / 5d - 10, 300 * 1 / 5d + 10);
         _ = chart.GetImage();
-        chart.SaveImage("this.png");
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 1 / 5d * 300 - 150) < 0.1 &&
             Math.Abs(tp.Y - 300 * 1 / 5d) < 0.1 &&

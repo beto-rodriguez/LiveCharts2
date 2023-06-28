@@ -80,68 +80,40 @@ public static class Extensions
 
         if (count == 0) return new();
 
-        var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
-        var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
+        var avrgX = (placementContext.MostRight + placementContext.MostLeft) * 0.5f - tooltipSize.Width * 0.5f;
+        var avrgY = (placementContext.MostTop + placementContext.MostBottom) * 0.5f - tooltipSize.Height * 0.5f;
 
         var position = chart.TooltipPosition;
-        if (position == TooltipPosition.Auto)
-        {
-            var x = avrgX;
-            var y = placementContext.MostAutoTop - tooltipSize.Height;
-            chart.AutoToolTipsInfo.ToolTipPlacement = placementContext.AutoPopPupPlacement;
 
-            if (x < 0)
-            {
-                // the tooltip is out of the left edge
-                // we return TooltipPosition.Right
-                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
-                return new(placementContext.MostRight, avrgY);
-            }
-
-            if (x + tooltipSize.Width > chart.ControlSize.Width)
-            {
-                // the tooltip is out of the right edge
-                // we return TooltipPosition.Left
-                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
-                return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
-            }
-
-            if (y < 0)
-            {
-                y += tooltipSize.Height;
-                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
-            }
-            if (y + tooltipSize.Height > chart.ControlSize.Height)
-            {
-                y -= tooltipSize.Height;
-                chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
-            }
-
-            return new(x, y);
-        }
-
-        LvcPoint location = new();
+        var x = avrgX;
+        var y = placementContext.MostAutoTop - tooltipSize.Height;
+        chart.AutoToolTipsInfo.ToolTipPlacement = placementContext.AutoPopPupPlacement;
 
         switch (position)
         {
             case TooltipPosition.Top:
-                location = new(avrgX, placementContext.MostTop - tooltipSize.Height);
+                x = avrgX;
+                y = placementContext.MostTop - tooltipSize.Height;
                 chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
                 break;
             case TooltipPosition.Bottom:
-                location = new(avrgX, placementContext.MostBottom);
+                x = avrgX;
+                y = placementContext.MostBottom;
                 chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
                 break;
             case TooltipPosition.Left:
-                location = new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+                x = placementContext.MostLeft - tooltipSize.Width;
+                y = avrgY;
                 chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
                 break;
             case TooltipPosition.Right:
-                location = new(placementContext.MostRight, avrgY);
+                x = placementContext.MostRight;
+                y = avrgY;
                 chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
                 break;
             case TooltipPosition.Center:
-                location = new(avrgX, avrgY);
+                x = avrgX;
+                y = avrgY;
                 chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
                 break;
             case TooltipPosition.Hidden:
@@ -150,7 +122,34 @@ public static class Extensions
                 break;
         }
 
-        return location;
+        if (x < 0)
+        {
+            // the tooltip is out of the left edge
+            // we return TooltipPosition.Right
+            chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Right;
+            return new(placementContext.MostRight, avrgY);
+        }
+
+        if (x + tooltipSize.Width > chart.ControlSize.Width)
+        {
+            // the tooltip is out of the right edge
+            // we return TooltipPosition.Left
+            chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Left;
+            return new(placementContext.MostLeft - tooltipSize.Width, avrgY);
+        }
+
+        if (y < 0)
+        {
+            y += tooltipSize.Height;
+            chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Bottom;
+        }
+        if (y + tooltipSize.Height > chart.ControlSize.Height)
+        {
+            y -= tooltipSize.Height;
+            chart.AutoToolTipsInfo.ToolTipPlacement = PopUpPlacement.Top;
+        }
+
+        return new(x, y);
     }
     private static LvcPoint _getPieTooltipLocation<TDrawingContext>(
         IEnumerable<ChartPoint> foundPoints, Chart<TDrawingContext> chart, LvcSize tooltipSize)

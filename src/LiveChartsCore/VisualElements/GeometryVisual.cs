@@ -117,12 +117,14 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
             {
                 _labelGeometry = new TLabelGeometry
                 {
-                    X = l.X,
-                    Y = l.Y,
+                    X = l.X + padding,
+                    Y = l.Y + padding,
                     Padding = new Padding(6)
                 };
 
-                _labelGeometry.Animate(chart);
+                _labelGeometry.Animate(
+                    chart,
+                    nameof(_labelGeometry.X), nameof(_labelGeometry.Y), nameof(_labelGeometry.Opacity));
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;
             }
