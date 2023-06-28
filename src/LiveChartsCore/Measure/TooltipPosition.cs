@@ -38,22 +38,26 @@ public enum TooltipPosition
     Auto,
 
     /// <summary>
-    /// The top position, places the tool tip at the top of the hovered point.
+    /// The top position, places the tool tip at the top of the hovered point,
+    /// if there is not enough space, the library will place it in another position.
     /// </summary>
     Top,
 
     /// <summary>
-    /// The bottom position, places the tool tip at the bottom of the hovered point.
+    /// The bottom position, places the tool tip at the bottom of the hovered point,
+    /// if there is not enough space, the library will place it in another position.
     /// </summary>
     Bottom,
 
     /// <summary>
     /// The left position, places the tool tip at the left of the hovered point.
+    /// if there is not enough space, the library will place it in another position.
     /// </summary>
     Left,
 
     /// <summary>
     /// The right position, places the tool tip at the right of the hovered point.
+    /// if there is not enough space, the library will place it in another position.
     /// </summary>
     Right,
 
