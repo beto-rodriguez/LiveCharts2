@@ -148,8 +148,8 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
             if (PrimaryScaler is null || SecondaryScaler is null)
                 throw new Exception($"You can not use {MeasureUnit.ChartValues} scale at this element.");
 
-            x = SecondaryScaler.ToPixels(x);
-            y = PrimaryScaler.ToPixels(y);
+            x = SecondaryScaler.ToPixels(X);
+            y = PrimaryScaler.ToPixels(Y);
         }
 
         return new(x, y);
