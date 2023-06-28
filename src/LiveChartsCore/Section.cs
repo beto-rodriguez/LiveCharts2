@@ -187,16 +187,6 @@ public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> :
     private float _labelSize = 12;
 
     /// <summary>
-    /// Gets or sets the label, a string to be displayed within the section.
-    /// </summary>
-    public string Label { get => _label; set => SetProperty(ref _label, value); }
-
-    /// <summary>
-    /// Gets or sets the label size.
-    /// </summary>
-    public double LabelSize { get => _labelSize; set => SetProperty(ref _labelSize, (float)value); }
-
-    /// <summary>
     /// The fill sized geometry
     /// </summary>
     protected internal TSizedGeometry? _fillSizedGeometry;
@@ -210,6 +200,16 @@ public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> :
     /// The label geometry.
     /// </summary>
     protected internal TLabelGeometry? _labelGeometry;
+
+    /// <summary>
+    /// Gets or sets the label, a string to be displayed within the section.
+    /// </summary>
+    public string Label { get => _label; set => SetProperty(ref _label, value); }
+
+    /// <summary>
+    /// Gets or sets the label size.
+    /// </summary>
+    public double LabelSize { get => _labelSize; set => SetProperty(ref _labelSize, (float)value); }
 
     /// <summary>
     /// Measures the specified chart.

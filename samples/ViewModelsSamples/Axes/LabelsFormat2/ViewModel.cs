@@ -1,4 +1,16 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿// You must register any non-Latin based font //mark
+// you can add this code when the app starts to register Chinese characters: // mark
+
+// LiveCharts.Configure(c =>
+//     c.AddSkiaSharp()
+//      .AddDefaultMappers()
+//      .AddLightTheme()
+//      .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
+
+// You can learn more about extra settings at: // mark
+// https://localhost:7053/docs/{{ platform }}/{{ version }}/Overview.Installation#configure-themes-fonts-or-mappers-optional // mark
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -20,22 +32,7 @@ public partial class ViewModel : ObservableObject
         {
             Name = "Salesman/woman",
             Labels = new string[] { "王", "赵", "张" },
-            LabelsPaint = new SolidColorPaint
-            {
-                Color = SKColors.Black,
-
-                // you need to enable the Chinese characters for SkiaSharp
-                // use the SKFontManager.Default.MatchCharacter() SkiaSharp function.
-
-                SKTypeface = SKFontManager.Default.MatchCharacter('汉') // 汉语 // mark
-                // SKTypeface = SKFontManager.Default.MatchCharacter('أ'), // Arab
-                // SKTypeface = SKFontManager.Default.MatchCharacter('あ'), // Japanese
-                // SKTypeface = SKFontManager.Default.MatchCharacter('Ж'), // Russian
-
-                // You can also register a default global SKTypeface // mark
-                // this will load the font in any Paint when the SKTypeface property is null. // mark
-                // for more info see: ToDo: Add link!!! // mark
-            }
+            LabelsPaint = new SolidColorPaint(SKColors.Black)
         }
     };
 

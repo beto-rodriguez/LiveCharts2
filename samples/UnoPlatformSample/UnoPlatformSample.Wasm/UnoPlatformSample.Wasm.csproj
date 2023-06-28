@@ -55,7 +55,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Uno.Resizetizer" Version="1.0.2" />
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.19" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.19" />
 		<PackageReference Include="Uno.WinUI.WebAssembly" Version="4.8.24" />

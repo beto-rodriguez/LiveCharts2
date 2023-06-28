@@ -51,6 +51,5 @@ using System.Reflection;
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Blazor")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
 [assembly: InternalsVisibleTo("LiveChartsCore.BackersPackage")]
-#endif
-
 [assembly: InternalsVisibleTo("LiveChartsCore.UnitTesting")]
+#endif

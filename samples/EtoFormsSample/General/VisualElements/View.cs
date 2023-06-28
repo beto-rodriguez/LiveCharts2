@@ -14,6 +14,7 @@ public class View : Panel
         {
             Series = viewModel.Series,
             VisualElements = viewModel.VisualElements,
+            ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X
         };
 
         Content = cartesianChart;
