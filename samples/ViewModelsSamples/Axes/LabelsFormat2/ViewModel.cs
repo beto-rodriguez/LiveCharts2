@@ -1,4 +1,16 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿// You must register any non-Latin based font //mark
+// you can add this code when the app starts to register Chinese characters: // mark
+
+// LiveCharts.Configure(c =>
+//     c.AddSkiaSharp()
+//      .AddDefaultMappers()
+//      .AddLightTheme()
+//      .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
+
+// You can learn more about extra settings at: // mark
+// https://localhost:7053/docs/{{ platform }}/{{ version }}/Overview.Installation#configure-themes-fonts-or-mappers-optional // mark
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -8,19 +20,6 @@ namespace ViewModelsSamples.Axes.LabelsFormat2;
 
 public partial class ViewModel : ObservableObject
 {
-    public ViewModel()
-    {
-        // you need to enable the Chinese characters for SkiaSharp
-        // use the SKFontManager.Default.MatchCharacter() SkiaSharp function.
-
-        // it is recommended to run this only once when the app starts.
-        LiveChartsSkiaSharp.DefaultSKTypeface = SKFontManager.Default.MatchCharacter('汉');
-
-        // SKTypeface = SKFontManager.Default.MatchCharacter('أ'), // Arab
-        // SKTypeface = SKFontManager.Default.MatchCharacter('あ'), // Japanese
-        // SKTypeface = SKFontManager.Default.MatchCharacter('Ж'), // Russian
-    }
-
     public ISeries[] Series { get; set; } =
     {
         new ColumnSeries<double> { Values = new double[] { 426, 583, 104 } },

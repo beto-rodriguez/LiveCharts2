@@ -1,7 +1,8 @@
-using Eto.Forms;
+﻿using Eto.Forms;
 using System;
 using LiveChartsCore; // mark
 using LiveChartsCore.SkiaSharpView; //mark
+using SkiaSharp;
 
 namespace EtoFormsSample;
 
@@ -13,12 +14,10 @@ static class Program
     [STAThread]
     static void Main()
     {
-        new Application(Eto.Platform.Detect).Run(new Form1());
-
         LiveCharts.Configure(config => // mark
             config // mark
-                   // registers SkiaSharp as the library backend
-                   // REQUIRED unless you build your own
+                // registers SkiaSharp as the library backend
+                // REQUIRED unless you build your own
                 .AddSkiaSharp() // mark
 
                 // adds the default supported types
@@ -30,9 +29,16 @@ static class Program
                 //.AddDarkTheme()
                 .AddLightTheme() // mark
 
+                // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
+                .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('أ'))  // <- Arabic // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('あ')) // <- Japanese // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('헬')) // <- Korean // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('Ж'))  // <- Russian // mark
+
                 // finally register your own mappers
                 // you can learn more about mappers at:
-                // https://lvcharts.com/docs/WPF/{{ version }}/Overview.Mappers
+                // https://lvcharts.com/docs/{{ platform }}/{{ version }}/Overview.Mappers
                 .HasMap<City>((city, point) => // mark
                 { // mark
                     point.PrimaryValue = city.Population; // mark
@@ -41,6 +47,8 @@ static class Program
                    // .HasMap<Foo>( .... ) // mark
                    // .HasMap<Bar>( .... ) // mark
             ); // mark
+
+        new Application(Eto.Platform.Detect).Run(new Form1());
     }
 
     public record City(string Name, double Population);
