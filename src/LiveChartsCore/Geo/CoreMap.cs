@@ -98,8 +98,11 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <returns>The added layer.</returns>
     public MapLayer<TDrawingContext> AddLayerFromDirectory(string path, string layerName = "default")
     {
-        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-        return AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName);
+        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
+        var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
+
+        return AddLayerFromDirectory(path, stroke, fill, layerName);
     }
 
     /// <summary>
@@ -145,8 +148,11 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <returns>The added layer.</returns>
     public MapLayer<TDrawingContext> AddLayerFromStreamReader(StreamReader streamReader, string layerName = "default")
     {
-        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-        return AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName);
+        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
+        var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
+
+        return AddLayerFromStreamReader(streamReader, stroke, fill, layerName);
     }
 
     /// <summary>
@@ -171,8 +177,11 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <returns>The added layer as await-able task.</returns>
     public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(string path, string layerName = "default")
     {
-        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-        return Task.Run(() => AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName));
+        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
+        var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
+
+        return Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
     }
 
     /// <summary>
@@ -197,8 +206,11 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <returns>The added layer as await-able task.</returns>
     public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName = "default")
     {
-        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-        return Task.Run(() => AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName));
+        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
+        var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
+
+        return Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
     }
 
     /// <summary>

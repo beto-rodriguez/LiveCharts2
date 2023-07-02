@@ -40,8 +40,6 @@ public static class LiveCharts
     /// </summary>
     public static bool EnableLogging { get; set; } = false;
 
-    private static readonly object s_defaultPaintTask = new();
-
     /// <summary>
     /// Gets a value indicating whether this instance is configured.
     /// </summary>
@@ -57,11 +55,6 @@ public static class LiveCharts
     /// The current settings.
     /// </value>
     public static LiveChartsSettings DefaultSettings { get; } = new();
-
-    /// <summary>
-    /// Gets the default paint.
-    /// </summary>
-    public static object DefaultPaint { get; internal set; } = new();
 
     /// <summary>
     /// Gets the hover key.
