@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+// Ignore Spelling: Quinary
+
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -31,13 +32,6 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public class ChartPoint
 {
-    private Coordinate _localCoordinate = Coordinate.Empty;
-
-    /// <summary>
-    /// Overrides whether the coordinate is empty.
-    /// </summary>
-    protected bool IsLocalEmpty;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartPoint"/> class.
     /// </summary>
@@ -54,9 +48,7 @@ public class ChartPoint
     /// </summary>
     /// <param name="point">The point.</param>
     protected ChartPoint(ChartPoint point) : this(point.Context.Chart, point.Context.Series, point.Context.Entity)
-    {
-        IsLocalEmpty = point.IsLocalEmpty;
-    }
+    { }
 
     private ChartPoint()
     {
@@ -66,29 +58,29 @@ public class ChartPoint
     /// <summary>
     /// Gets a new instance of an empty chart point.
     /// </summary>
-    public static ChartPoint Empty => new() { IsLocalEmpty = true };
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is null.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is null; otherwise, <c>false</c>.
-    /// </value>
-    [Obsolete($"Use IsEmpty instead")]
-    public bool IsNull => IsEmpty;
+    public static ChartPoint Empty => new() { Coordinate = Coordinate.Empty };
 
     /// <summary>
     /// Gets the position of the point the collection that was used when the point was drawn.
     /// </summary>
-    public int Index => Context?.Entity?.MetaData?.EntityIndex ?? 0;
+    public int Index => Context.Entity.MetaData?.EntityIndex ?? 0;
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is empty.
+    /// Gets or sets the coordinate.
+    /// </summary>
+    public Coordinate Coordinate
+    {
+        get => Context.Entity.Coordinate;
+        set => Context.Entity.Coordinate = value;
+    }
+
+    /// <summary>
+    /// Gets or a value indicating whether this instance is empty, LivveCharts will ignore the point in the chart.
     /// </summary>
     /// <value>
     ///   <c>true</c> if this instance is empty; otherwise, <c>false</c>.
     /// </value>
-    public bool IsEmpty => IsLocalEmpty || Context.Entity.Coordinate.IsEmpty;
+    public bool IsEmpty => Context.Entity.Coordinate.IsEmpty;
 
     /// <summary>
     /// Gets or sets the primary value.
@@ -98,10 +90,8 @@ public class ChartPoint
     /// </value>
     public double PrimaryValue
     {
-        get => _localCoordinate.IsEmpty ? Context.Entity.Coordinate.PrimaryValue : _localCoordinate.PrimaryValue;
-        set => OnCoordinateChanged(
-            new Coordinate(value, _localCoordinate.SecondaryValue, _localCoordinate.TertiaryValue,
-                _localCoordinate.QuaternaryValue, _localCoordinate.QuinaryValue));
+        get => Context.Entity.Coordinate.PrimaryValue;
+        set => SetCoordinate(primary: value);
     }
 
     /// <summary>
@@ -112,10 +102,8 @@ public class ChartPoint
     /// </value>
     public double SecondaryValue
     {
-        get => _localCoordinate.IsEmpty ? Context.Entity.Coordinate.SecondaryValue : _localCoordinate.SecondaryValue;
-        set => OnCoordinateChanged(
-            new Coordinate(_localCoordinate.PrimaryValue, value, _localCoordinate.TertiaryValue,
-                _localCoordinate.QuaternaryValue, _localCoordinate.QuinaryValue));
+        get => Context.Entity.Coordinate.SecondaryValue;
+        set => SetCoordinate(secondary: value);
     }
 
     /// <summary>
@@ -126,10 +114,8 @@ public class ChartPoint
     /// </value>
     public double TertiaryValue
     {
-        get => _localCoordinate.IsEmpty ? Context.Entity.Coordinate.TertiaryValue : _localCoordinate.TertiaryValue;
-        set => OnCoordinateChanged(
-            new Coordinate(_localCoordinate.PrimaryValue, _localCoordinate.SecondaryValue, value,
-                _localCoordinate.QuaternaryValue, _localCoordinate.QuinaryValue));
+        get => Context.Entity.Coordinate.TertiaryValue;
+        set => SetCoordinate(tertiary: value);
     }
 
     /// <summary>
@@ -140,10 +126,8 @@ public class ChartPoint
     /// </value>
     public double QuaternaryValue
     {
-        get => _localCoordinate.IsEmpty ? Context.Entity.Coordinate.QuaternaryValue : _localCoordinate.QuaternaryValue;
-        set => OnCoordinateChanged(
-            new Coordinate(_localCoordinate.PrimaryValue, _localCoordinate.SecondaryValue,
-                _localCoordinate.TertiaryValue, value, _localCoordinate.QuinaryValue));
+        get => Context.Entity.Coordinate.QuaternaryValue;
+        set => SetCoordinate(quaternary: value);
     }
 
     /// <summary>
@@ -154,10 +138,8 @@ public class ChartPoint
     /// </value>
     public double QuinaryValue
     {
-        get => _localCoordinate.IsEmpty ? Context.Entity.Coordinate.QuinaryValue : _localCoordinate.QuinaryValue;
-        set => OnCoordinateChanged(
-            new Coordinate(_localCoordinate.PrimaryValue, _localCoordinate.SecondaryValue,
-                _localCoordinate.TertiaryValue, _localCoordinate.QuaternaryValue, value));
+        get => Context.Entity.Coordinate.QuinaryValue;
+        set => SetCoordinate(quinary: value);
     }
 
     /// <summary>
@@ -171,7 +153,7 @@ public class ChartPoint
     /// <value>
     /// As tooltip string.
     /// </value>
-    public string AsDataLabel => Context.Series.GetDataLabelText(this);
+    public string AsDataLabel => Context.Series.GetDataLabelText(this) ?? string.Empty;
 
     /// <summary>
     /// Gets the context.
@@ -193,12 +175,21 @@ public class ChartPoint
         return Context.HoverArea?.DistanceTo(point) ?? double.NaN;
     }
 
-    private void OnCoordinateChanged(Coordinate coordinate)
+    private void SetCoordinate(
+        double primary = double.NaN, double secondary = double.NaN, double tertiary = double.NaN,
+        double quaternary = double.NaN, double quinary = double.NaN)
     {
-        // ToDo:
-        // how can this be improved???
-        // does this have a significant performance impact?
-        _localCoordinate = coordinate;
+        // This is a method that allows previous versions of LiveCharts to map the entity to the chart coordinate
+        // you should not use the setters of PrimaryValue, SecondaryValue, etc. instead set the Coordinate property.
+        var current = Coordinate;
+
+        if (double.IsNaN(primary)) primary = current.PrimaryValue;
+        if (double.IsNaN(secondary)) secondary = current.SecondaryValue;
+        if (double.IsNaN(tertiary)) tertiary = current.TertiaryValue;
+        if (double.IsNaN(quaternary)) quaternary = current.QuaternaryValue;
+        if (double.IsNaN(quinary)) quinary = current.QuinaryValue;
+
+        Coordinate = new Coordinate(primary, secondary, tertiary, quaternary, quinary);
     }
 }
 

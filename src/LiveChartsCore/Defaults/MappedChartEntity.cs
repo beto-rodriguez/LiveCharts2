@@ -45,7 +45,7 @@ public sealed class MappedChartEntity : IChartEntity
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+    public Coordinate Coordinate { get; set; } = Coordinate.Empty;
 
     internal void UpdateCoordinate(ChartPoint chartPoint)
     {

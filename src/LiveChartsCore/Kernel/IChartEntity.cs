@@ -33,7 +33,7 @@ public interface IChartEntity
     public ChartEntityMetaData? MetaData { get; set; }
 
     /// <summary>
-    /// Gets the coordinate, the position of the point in the chart.
+    /// Gets or sets the coordinate, the position of the point in the chart.
     /// </summary>
-    Coordinate Coordinate { get; }
+    Coordinate Coordinate { get; set; }
 }

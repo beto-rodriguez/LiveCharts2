@@ -75,7 +75,7 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+    public Coordinate Coordinate { get; set; } = Coordinate.Empty;
 
     /// <summary>
     /// Called when a property changes.
