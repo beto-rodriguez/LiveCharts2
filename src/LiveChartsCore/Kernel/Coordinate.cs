@@ -30,18 +30,18 @@ public readonly struct Coordinate
     /// <summary>
     /// Initializes a new instance of the <see cref="Coordinate"/> struct.
     /// </summary>
-    /// <param name="primaryValue">The primary value.</param>
-    /// <param name="secondaryValue">The secondary value.</param>
-    /// <param name="tertiaryValue">The tertiary value.</param>
-    /// <param name="quaternaryValue">The quaternary value.</param>
-    /// <param name="quinaryValue">The quinary value.</param>
-    public Coordinate(double primaryValue, double secondaryValue, double tertiaryValue, double quaternaryValue, double quinaryValue) : this()
+    /// /// <param name="x">The x value.</param>
+    /// <param name="high">The high value.</param>
+    /// <param name="open">The open value.</param>
+    /// <param name="close">The quaternary value.</param>
+    /// <param name="low">The quinary value.</param>
+    public Coordinate(double x, double high, double open, double close, double low) : this()
     {
-        PrimaryValue = primaryValue;
-        SecondaryValue = secondaryValue;
-        TertiaryValue = tertiaryValue;
-        QuaternaryValue = quaternaryValue;
-        QuinaryValue = quinaryValue;
+        PrimaryValue = high;
+        SecondaryValue = x;
+        TertiaryValue = open;
+        QuaternaryValue = close;
+        QuinaryValue = low;
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public readonly struct Coordinate
     /// </summary>
     /// <param name="x">The X coordinate.</param>
     /// <param name="y">The Y coordinate.</param>
-    public Coordinate(double x, double y) : this(y, x, 0, 0, 0)
+    public Coordinate(double x, double y) : this(x, y, 0, 0, 0)
     { }
 
     /// <summary>
@@ -58,7 +58,7 @@ public readonly struct Coordinate
     /// <param name="x">The X coordinate.</param>
     /// <param name="y">The Y coordinate.</param>
     /// <param name="weight">The weight of the pint.</param>
-    public Coordinate(double x, double y, double weight) : this(y, x, weight, 0, 0)
+    public Coordinate(double x, double y, double weight) : this(x, y, weight, 0, 0)
     { }
 
     private Coordinate(bool isEmpty) : this(0, 0, 0, 0, 0)

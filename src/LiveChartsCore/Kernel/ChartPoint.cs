@@ -22,6 +22,7 @@
 
 // Ignore Spelling: Quinary
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -88,6 +89,7 @@ public class ChartPoint
     /// <value>
     /// The primary value.
     /// </value>
+    [Obsolete($"Use {nameof(Coordinate)} instead.")]
     public double PrimaryValue
     {
         get => Context.Entity.Coordinate.PrimaryValue;
@@ -100,6 +102,7 @@ public class ChartPoint
     /// <value>
     /// The secondary value.
     /// </value>
+    [Obsolete($"Use {nameof(Coordinate)} instead.")]
     public double SecondaryValue
     {
         get => Context.Entity.Coordinate.SecondaryValue;
@@ -112,6 +115,7 @@ public class ChartPoint
     /// <value>
     /// The tertiary value.
     /// </value>
+    [Obsolete($"Use {nameof(Coordinate)} instead.")]
     public double TertiaryValue
     {
         get => Context.Entity.Coordinate.TertiaryValue;
@@ -124,6 +128,7 @@ public class ChartPoint
     /// <value>
     /// The quaternary value.
     /// </value>
+    [Obsolete($"Use {nameof(Coordinate)} instead.")]
     public double QuaternaryValue
     {
         get => Context.Entity.Coordinate.QuaternaryValue;
@@ -136,6 +141,7 @@ public class ChartPoint
     /// <value>
     /// The quinary value.
     /// </value>
+    [Obsolete($"Use {nameof(Coordinate)} instead.")]
     public double QuinaryValue
     {
         get => Context.Entity.Coordinate.QuinaryValue;
