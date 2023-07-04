@@ -132,6 +132,6 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     /// </summary>
     protected virtual void OnCoordinateChanged(int index)
     {
-        Coordinate = new(_high, index, _open, _close, _low);
+        Coordinate = new(index, _high, _open, _close, _low);
     }
 }

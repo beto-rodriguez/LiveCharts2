@@ -389,7 +389,6 @@ public class DataFactory<TModel, TDrawingContext>
             entity.MetaData.EntityIndex = index++;
 
             mapper(item, point);
-            entity.UpdateCoordinate(point);
 
             yield return entity;
         }
