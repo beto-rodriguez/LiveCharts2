@@ -141,9 +141,11 @@ public class DataFactory<TModel, TDrawingContext>
         {
             if (point.IsEmpty) continue;
 
-            var primary = point.PrimaryValue;
-            var secondary = point.SecondaryValue;
-            var tertiary = point.TertiaryValue;
+            var coordinate = point.Coordinate;
+
+            var primary = coordinate.PrimaryValue;
+            var secondary = coordinate.SecondaryValue;
+            var tertiary = coordinate.TertiaryValue;
 
             if (stack is not null) primary = stack.StackPoint(point);
 
@@ -160,8 +162,10 @@ public class DataFactory<TModel, TDrawingContext>
 
             if (previous is not null)
             {
-                var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
-                var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
+                var previousCoordinate = previous.Coordinate;
+
+                var dx = Math.Abs(previousCoordinate.SecondaryValue - coordinate.SecondaryValue);
+                var dy = Math.Abs(previousCoordinate.PrimaryValue - coordinate.PrimaryValue);
                 if (dx < bounds.SecondaryBounds.MinDelta) bounds.SecondaryBounds.MinDelta = dx;
                 if (dy < bounds.PrimaryBounds.MinDelta) bounds.PrimaryBounds.MinDelta = dy;
             }
@@ -202,10 +206,12 @@ public class DataFactory<TModel, TDrawingContext>
         {
             if (point.IsEmpty) continue;
 
-            var primaryMax = point.PrimaryValue;
-            var primaryMin = point.QuinaryValue;
-            var secondary = point.SecondaryValue;
-            var tertiary = point.TertiaryValue;
+            var coordinate = point.Coordinate;
+
+            var primaryMax = coordinate.PrimaryValue;
+            var primaryMin = coordinate.QuinaryValue;
+            var secondary = coordinate.SecondaryValue;
+            var tertiary = coordinate.TertiaryValue;
 
             bounds.PrimaryBounds.AppendValue(primaryMax);
             bounds.PrimaryBounds.AppendValue(primaryMin);
@@ -222,8 +228,10 @@ public class DataFactory<TModel, TDrawingContext>
 
             if (previous is not null)
             {
-                var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
-                var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
+                var previousCoordinate = previous.Coordinate;
+
+                var dx = Math.Abs(previousCoordinate.SecondaryValue - coordinate.SecondaryValue);
+                var dy = Math.Abs(previousCoordinate.PrimaryValue - coordinate.PrimaryValue);
                 if (dx < bounds.SecondaryBounds.MinDelta) bounds.SecondaryBounds.MinDelta = dx;
                 if (dy < bounds.PrimaryBounds.MinDelta) bounds.PrimaryBounds.MinDelta = dy;
             }
@@ -258,8 +266,8 @@ public class DataFactory<TModel, TDrawingContext>
             if (point.IsEmpty) continue;
 
             _ = stack.StackPoint(point);
-            bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
-            bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
+            bounds.PrimaryBounds.AppendValue(point.Coordinate.PrimaryValue);
+            bounds.SecondaryBounds.AppendValue(point.Coordinate.SecondaryValue);
             bounds.TertiaryBounds.AppendValue(series.Pushout > series.HoverPushout ? series.Pushout : series.HoverPushout);
             hasData = true;
         }

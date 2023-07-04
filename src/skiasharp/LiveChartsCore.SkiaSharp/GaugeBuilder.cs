@@ -53,7 +53,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     private PolarLabelsPosition? _labelsPosition = null;
     private double? _backgroundMaxRadialColumnWidth = null;
     private double? _maxColumnWidth = null;
-    private Func<ChartPoint, string> _labelFormatter = point => point.PrimaryValue.ToString();
+    private Func<ChartPoint, string> _labelFormatter = point => point.Coordinate.PrimaryValue.ToString();
 
     /// <summary>
     /// Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.

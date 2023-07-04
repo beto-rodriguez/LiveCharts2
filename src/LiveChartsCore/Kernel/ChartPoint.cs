@@ -89,7 +89,7 @@ public class ChartPoint
     /// <value>
     /// The primary value.
     /// </value>
-    [Obsolete($"Use {nameof(Coordinate)} instead.")]
+    [Obsolete($"Instead set the {nameof(Coordinate)} of the point.")]
     public double PrimaryValue
     {
         get => Context.Entity.Coordinate.PrimaryValue;

@@ -250,6 +250,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
         foreach (var point in fetched)
         {
+            var coordinate = point.Coordinate;
             var visual = point.Context.Visual as TVisual;
 
             if (point.IsEmpty)
@@ -292,7 +293,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             else
             {
                 start = stackedValue / total * completeAngle;
-                sweep = (stackedValue + point.PrimaryValue) / total * completeAngle - start;
+                sweep = (stackedValue + coordinate.PrimaryValue) / total * completeAngle - start;
                 if (!isClockWise) start = completeAngle - start - sweep;
             }
 
@@ -364,7 +365,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null && point.PrimaryValue >= 0)
+            if (DataLabelsPaint is not null && coordinate.PrimaryValue >= 0)
             {
                 var label = (TLabel?)point.Context.Label;
 
@@ -471,7 +472,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     {
         return ToolTipLabelFormatter is not null
             ? ToolTipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point))
-            : point.PrimaryValue.ToString();
+            : point.Coordinate.PrimaryValue.ToString();
     }
 
     /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>

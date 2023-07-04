@@ -64,7 +64,8 @@ public class DataProviderTest
             for (var i = 0; i < points.Length; i++)
             {
                 var point = points[i];
-                Assert.IsTrue(point.SecondaryValue == i && point.PrimaryValue == 1);
+                var c = point.Coordinate;
+                Assert.IsTrue(c.SecondaryValue == i && c.PrimaryValue == 1);
             }
         }
 
@@ -91,7 +92,8 @@ public class DataProviderTest
                 for (var i = 0; i < points.Length; i++)
                 {
                     var point = points[i];
-                    Assert.IsTrue(point.SecondaryValue == i && point.PrimaryValue == 1 && point.TertiaryValue == i * 10);
+                    var c = point.Coordinate;
+                    Assert.IsTrue(c.SecondaryValue == i && c.PrimaryValue == 1 && c.TertiaryValue == i * 10);
                 }
             });
 
@@ -103,9 +105,10 @@ public class DataProviderTest
                 for (var i = 0; i < points.Length; i++)
                 {
                     var point = points[i];
+                    var c = point.Coordinate;
                     Assert.IsTrue(
-                        point.SecondaryValue == now.AddDays(i).Ticks &&
-                        point.PrimaryValue == 1);
+                        c.SecondaryValue == now.AddDays(i).Ticks &&
+                        c.PrimaryValue == 1);
                 }
             });
 
@@ -120,9 +123,10 @@ public class DataProviderTest
                 for (var i = 0; i < points.Length; i++)
                 {
                     var point = points[i];
+                    var c = point.Coordinate;
                     Assert.IsTrue(
-                        point.SecondaryValue == TimeSpan.FromMilliseconds(i).Ticks &&
-                        point.PrimaryValue == 1);
+                        c.SecondaryValue == TimeSpan.FromMilliseconds(i).Ticks &&
+                        c.PrimaryValue == 1);
                 }
             });
 
@@ -139,10 +143,11 @@ public class DataProviderTest
                 for (var i = 0; i < points.Length; i++)
                 {
                     var point = points[i];
+                    var c = point.Coordinate;
                     Assert.IsTrue(
-                        point.SecondaryValue == now.AddDays(i).Ticks &&
-                        point.PrimaryValue == 1 && point.TertiaryValue == 2 &&
-                        point.QuaternaryValue == 3 && point.QuinaryValue == 4);
+                        c.SecondaryValue == now.AddDays(i).Ticks &&
+                        c.PrimaryValue == 1 && c.TertiaryValue == 2 &&
+                        c.QuaternaryValue == 3 && c.QuinaryValue == 4);
                 }
             });
 
@@ -157,10 +162,11 @@ public class DataProviderTest
                  for (var i = 0; i < points.Length; i++)
                  {
                      var point = points[i];
+                     var c = point.Coordinate;
                      Assert.IsTrue(
-                         point.SecondaryValue == now.AddDays(i).Ticks &&
-                         point.PrimaryValue == 1 && point.TertiaryValue == 2 &&
-                         point.QuaternaryValue == 3 && point.QuinaryValue == 4);
+                         c.SecondaryValue == now.AddDays(i).Ticks &&
+                         c.PrimaryValue == 1 && c.TertiaryValue == 2 &&
+                         c.QuaternaryValue == 3 && c.QuinaryValue == 4);
                  }
              });
 
@@ -175,10 +181,11 @@ public class DataProviderTest
                 for (var i = 0; i < points.Length; i++)
                 {
                     var point = points[i];
+                    var c = point.Coordinate;
                     Assert.IsTrue(
-                        point.SecondaryValue == i &&
-                        point.PrimaryValue == 1 && point.TertiaryValue == 2 &&
-                        point.QuaternaryValue == 3 && point.QuinaryValue == 4);
+                        c.SecondaryValue == i &&
+                        c.PrimaryValue == 1 && c.TertiaryValue == 2 &&
+                        c.QuaternaryValue == 3 && c.QuinaryValue == 4);
                 }
             });
     }
