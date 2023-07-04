@@ -188,5 +188,44 @@ public class DataProviderTest
                         c.QuaternaryValue == 3 && c.QuinaryValue == 4);
                 }
             });
+
+        // finally lets test a mapper
+        var sutSeries = new ColumnSeries<City>
+        {
+            Values = new City[] { new(1), new(1), new(1), new(1), new(1) },
+            Mapping = (city, point) =>
+            {
+                point.Coordinate = new(point.Index, city.Population);
+            }
+        };
+
+        var chart = new SKCartesianChart
+        {
+            Width = 100,
+            Height = 100,
+            Series = new[] { sutSeries }
+        };
+
+        _ = chart.GetImage();
+
+        var datafactory = sutSeries.DataFactory;
+        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+
+        for (var i = 0; i < points.Length; i++)
+        {
+            var point = points[i];
+            var c = point.Coordinate;
+            Assert.IsTrue(c.SecondaryValue == i && c.PrimaryValue == 1);
+        }
+    }
+
+    public class City
+    {
+        public City(double population)
+        {
+            Population = population;
+        }
+
+        public double Population { get; set; }
     }
 }
