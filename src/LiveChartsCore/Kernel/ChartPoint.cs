@@ -195,7 +195,7 @@ public class ChartPoint
         if (double.IsNaN(quaternary)) quaternary = current.QuaternaryValue;
         if (double.IsNaN(quinary)) quinary = current.QuinaryValue;
 
-        Coordinate = new Coordinate(primary, secondary, tertiary, quaternary, quinary);
+        Coordinate = new Coordinate(secondary, primary, tertiary, quaternary, quinary);
     }
 }
 

@@ -191,7 +191,7 @@ public class DataProviderTest
     }
 
     [TestMethod]
-    public void FetchCurstomType()
+    public void FetchCustomType()
     {
         // finally lets test a mapper
         var sutSeries = new ColumnSeries<City>
@@ -200,6 +200,41 @@ public class DataProviderTest
             Mapping = (city, point) =>
             {
                 point.Coordinate = new(point.Index, city.Population.Value);
+            }
+        };
+
+        var chart = new SKCartesianChart
+        {
+            Width = 100,
+            Height = 100,
+            Series = new[] { sutSeries }
+        };
+
+        _ = chart.GetImage();
+
+        var datafactory = sutSeries.DataFactory;
+        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+
+        for (var i = 0; i < points.Length; i++)
+        {
+            var point = points[i];
+            var c = point.Coordinate;
+            Assert.IsTrue(c.SecondaryValue == i && c.PrimaryValue == 1);
+        }
+    }
+
+    [TestMethod]
+    public void FetchCustomTypeObsolete()
+    {
+        var sutSeries = new ColumnSeries<City>
+        {
+            Values = new City[] { new(1), new(1), new(1), new(1), new(1) },
+            Mapping = (city, point) =>
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                point.PrimaryValue = city.Population.Value;
+                point.SecondaryValue = point.Index;
+#pragma warning restore CS0618 // Type or member is obsolete
             }
         };
 
