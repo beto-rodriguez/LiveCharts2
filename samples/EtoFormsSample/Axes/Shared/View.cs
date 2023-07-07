@@ -28,7 +28,6 @@ public class View : Panel
 
         Content = new DynamicLayout(
             new DynamicRow(new DynamicControl() { Control = cartesianChart, YScale = true }),
-            new DynamicRow(new DynamicControl() { Control = cartesianChart2, YScale = true })
-            );
+            new DynamicRow(new DynamicControl() { Control = cartesianChart2, YScale = true }));
     }
 }
