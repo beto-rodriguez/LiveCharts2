@@ -121,6 +121,9 @@
     <Compile Update="General\MultiThreading\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\Scrollable\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\VisualElements\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
