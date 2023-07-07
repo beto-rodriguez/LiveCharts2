@@ -44,16 +44,21 @@ public partial class ViewModel
             }
         };
 
-        ScrollableAxes = new Axis[]
+        ScrollableAxes = new[] { new Axis() };
+
+        Thumbs = new[]
         {
-            new Axis()
+            new RectangularSection
+            {
+                Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
+            },
         };
 
         InvisibleX = new[] { new Axis { IsVisible = false } };
         InvisibleY = new[] { new Axis { IsVisible = false } };
 
         // force the left margin to be 100 in both charts, this will
-        // align the start point ogg the series, no matter the size
+        // align the start point of the series, no matter the size
         // of the labels in the Y axis of both chart.
         var auto = LiveChartsCore.Measure.Margin.Auto;
         Margin = new(100, auto, auto, auto);
@@ -97,15 +102,5 @@ public partial class ViewModel
     public Axis[] InvisibleX { get; set; }
     public Axis[] InvisibleY { get; set; }
     public LiveChartsCore.Measure.Margin Margin { get; set; }
-
-    public RectangularSection[] Thumbs { get; set; } =
-    {
-        new RectangularSection
-        {
-            // creates a section from 3 to 4 in the X axis
-            Xi = 3,
-            Xj = 4,
-            Fill = new SolidColorPaint(new SKColor(255, 205, 210))
-        },
-    };
+    public RectangularSection[] Thumbs { get; set; }
 }

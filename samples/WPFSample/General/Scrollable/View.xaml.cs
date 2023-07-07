@@ -27,7 +27,10 @@ public partial class View : UserControl
 
         var x = cartesianChart.XAxes.First();
 
+        // update the scroll bar thumb when the chart is updated (zoom/pan)
+        // this will let the user know the current visible range
         var thumb = vm.Thumbs[0];
+
         thumb.Xi = x.MinLimit;
         thumb.Xj = x.MaxLimit;
     }
@@ -50,9 +53,11 @@ public partial class View : UserControl
         var thumb = vm.Thumbs[0];
         var currentRange = thumb.Xj - thumb.Xi;
 
+        // update the scroll bar thumb when the user is dragging the chart
         thumb.Xi = positionInData.X - currentRange / 2;
         thumb.Xj = positionInData.X + currentRange / 2;
 
+        // update the chart visible range
         vm.ScrollableAxes[0].MinLimit = thumb.Xi;
         vm.ScrollableAxes[0].MaxLimit = thumb.Xj;
     }
