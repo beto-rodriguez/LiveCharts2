@@ -51,53 +51,21 @@ public partial class ViewModel
             new RectangularSection
             {
                 Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
-            },
+            }
         };
 
         InvisibleX = new[] { new Axis { IsVisible = false } };
         InvisibleY = new[] { new Axis { IsVisible = false } };
 
-        // force the left margin to be 100 in both charts, this will
-        // align the start point of the series, no matter the size
-        // of the labels in the Y axis of both chart.
+        // force the left margin to be 100 and the right margin 20 in both charts, this will
+        // align the start and end point of the "draw margin",
+        // no matter the size of the labels in the Y axis of both chart.
         var auto = LiveChartsCore.Measure.Margin.Auto;
-        Margin = new(100, auto, auto, auto);
+        Margin = new(100, auto, auto, 20);
     }
 
-    public ISeries[] Series { get; set; } =
-    {
-        new ScatterSeries<ObservablePoint>
-        {
-            Values = new ObservableCollection<ObservablePoint>
-            {
-                new(2.2, 5.4),
-                new(4.5, 2.5),
-                new(4.2, 7.4),
-                new(6.4, 9.9),
-                new(4.2, 9.2),
-                new(5.8, 3.5),
-                new(7.3, 5.8),
-                new(8.9, 3.9),
-                new(6.1, 4.6),
-                new(9.4, 7.7),
-                new(8.4, 8.5),
-                new(3.6, 9.6),
-                new(4.4, 6.3),
-                new(5.8, 4.8),
-                new(6.9, 3.4),
-                new(7.6, 1.8),
-                new(8.3, 8.3),
-                new(9.9, 5.2),
-                new(8.1, 4.7),
-                new(7.4, 3.9),
-                new(6.8, 2.3),
-                new(5.3, 7.1),
-            }
-        }
-    };
-
+    public ISeries[] Series { get; set; }
     public Axis[] ScrollableAxes { get; set; }
-
     public ISeries[] ScrollbarSeries { get; set; }
     public Axis[] InvisibleX { get; set; }
     public Axis[] InvisibleY { get; set; }
