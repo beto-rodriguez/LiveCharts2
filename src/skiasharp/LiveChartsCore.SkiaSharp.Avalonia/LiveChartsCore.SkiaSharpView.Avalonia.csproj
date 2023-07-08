@@ -6,7 +6,7 @@
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net462;</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Avalonia</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Avalonia</RootNamespace>
-    <Version>2.0.0-beta.802</Version>
+    <Version>2.0.0-beta.802-11.0.0-rc1.1</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for AvaloniaUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -25,28 +25,17 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.0" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
+    <PackageReference Include="Avalonia" Version="11.0.0-rc1.1" />
+    <PackageReference Include="Avalonia.Skia" Version="11.0.0-rc1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="PolarChart.axaml.cs">
-      <DependentUpon>PolarChart.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="PieChart.axaml.cs">
-      <DependentUpon>PieChart.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="CartesianChart.axaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="MotionCanvas.axaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

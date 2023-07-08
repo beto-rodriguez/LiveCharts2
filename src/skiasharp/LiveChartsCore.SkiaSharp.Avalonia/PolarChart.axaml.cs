@@ -109,7 +109,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         PointerPressed += PolarChart_PointerPressed;
         PointerMoved += PolarChart_PointerMoved;
 
-        PointerLeave += PolarChart_PointerLeave;
+        PointerExited += PolarChart_PointerLeave;
         DetachedFromVisualTree += PolarChart_DetachedFromVisualTree;
     }
 
@@ -332,91 +332,91 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
     {
-        get => GetValue(SyncContextProperty);
+        get => GetValue(SyncContextProperty)!;
         set => SetValue(SyncContextProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
     public bool FitToBounds
     {
-        get => (bool)GetValue(FitToBoundsProperty);
+        get => (bool)GetValue(FitToBoundsProperty)!;
         set => SetValue(FitToBoundsProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
     public double TotalAngle
     {
-        get => (double)GetValue(TotalAngleProperty);
+        get => (double)GetValue(TotalAngleProperty)!;
         set => SetValue(TotalAngleProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
     public double InnerRadius
     {
-        get => (double)GetValue(InnerRadiusProperty);
+        get => (double)GetValue(InnerRadiusProperty)!;
         set => SetValue(InnerRadiusProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
     public double InitialRotation
     {
-        get => (double)GetValue(InitialRotationProperty);
+        get => (double)GetValue(InitialRotationProperty)!;
         set => SetValue(InitialRotationProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
     public VisualElement<SkiaSharpDrawingContext>? Title
     {
-        get => (VisualElement<SkiaSharpDrawingContext>)GetValue(TitleProperty);
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (IEnumerable<ISeries>)GetValue(SeriesProperty)!;
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
     public IEnumerable<IPolarAxis> AngleAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty);
+        get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty)!;
         set => SetValue(AngleAxesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
     public IEnumerable<IPolarAxis> RadiusAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty);
+        get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty)!;
         set => SetValue(RadiusAxesProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     public TimeSpan AnimationsSpeed
     {
-        get => (TimeSpan)GetValue(AnimationsSpeedProperty);
+        get => (TimeSpan)GetValue(AnimationsSpeedProperty)!;
         set => SetValue(AnimationsSpeedProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.EasingFunction" />
     public Func<float, float>? EasingFunction
     {
-        get => (Func<float, float>)GetValue(EasingFunctionProperty);
+        get => (Func<float, float>?)GetValue(EasingFunctionProperty);
         set => SetValue(EasingFunctionProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
     {
-        get => (TooltipPosition)GetValue(TooltipPositionProperty);
+        get => (TooltipPosition)GetValue(TooltipPositionProperty)!;
         set => SetValue(TooltipPositionProperty, value);
     }
 
@@ -447,7 +447,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition
     {
-        get => (LegendPosition)GetValue(LegendPositionProperty);
+        get => (LegendPosition)GetValue(LegendPositionProperty)!;
         set => SetValue(LegendPositionProperty, value);
     }
 
@@ -569,7 +569,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
         _core = new PolarChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), canvas.CanvasCore);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas!.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
@@ -581,8 +581,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         _core.Update();
     }
 
-    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
-    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
 
@@ -590,31 +590,31 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
         if (change.Property.Name == nameof(SyncContext))
         {
-            CoreCanvas.Sync = change.NewValue;
+            CoreCanvas.Sync = change.NewValue ?? new object();
         }
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-            _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<ISeries>?)change.OldValue);
+            _seriesObserver?.Initialize((IEnumerable<ISeries>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(AngleAxes))
         {
-            _angleObserver?.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
-            _angleObserver?.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
+            _angleObserver?.Dispose((IEnumerable<IPolarAxis>?)change.OldValue);
+            _angleObserver?.Initialize((IEnumerable<IPolarAxis>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(RadiusAxes))
         {
-            _radiusObserver?.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
-            _radiusObserver?.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
+            _radiusObserver?.Dispose((IEnumerable<IPolarAxis>?)change.OldValue);
+            _radiusObserver?.Initialize((IEnumerable<IPolarAxis>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(VisualElements))
         {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.OldValue.Value);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.NewValue.Value);
+            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.OldValue);
+            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.NewValue);
         }
 
         _core.Update();
@@ -647,7 +647,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
     private void PolarChart_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         var p = e.GetPosition(this);
         foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
         _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), false);
@@ -661,7 +661,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
     private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
         var p = e.GetPosition(this);
         _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), false);

@@ -99,13 +99,13 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes = new List<ICartesianAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
+        {
+            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+        };
         YAxes = new List<ICartesianAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
+        {
+            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+        };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
@@ -113,7 +113,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         PointerMoved += CartesianChart_PointerMoved;
         // .. special case in avalonia for pointer released... he handle our own pointer capture.
         PointerWheelChanged += CartesianChart_PointerWheelChanged;
-        PointerLeave += CartesianChart_PointerLeave;
+        PointerExited += CartesianChart_PointerLeave;
 
         DetachedFromVisualTree += CartesianChart_DetachedFromVisualTree;
     }
@@ -354,91 +354,91 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
     {
-        get => GetValue(SyncContextProperty);
+        get => GetValue(SyncContextProperty)!;
         set => SetValue(SyncContextProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
     public VisualElement<SkiaSharpDrawingContext>? Title
     {
-        get => (VisualElement<SkiaSharpDrawingContext>)GetValue(TitleProperty);
+        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
     public IEnumerable<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (IEnumerable<ISeries>)GetValue(SeriesProperty)!;
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
     public IEnumerable<ICartesianAxis> XAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
+        get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty)!;
         set => SetValue(XAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
     public IEnumerable<ICartesianAxis> YAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
+        get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty)!;
         set => SetValue(YAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
     public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
     {
-        get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
+        get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty)!;
         set => SetValue(SectionsProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
     public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
     {
-        get => (DrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
+        get => (DrawMarginFrame<SkiaSharpDrawingContext>?)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
     public ZoomAndPanMode ZoomMode
     {
-        get => (ZoomAndPanMode)GetValue(ZoomModeProperty);
+        get => (ZoomAndPanMode)GetValue(ZoomModeProperty)!;
         set => SetValue(ZoomModeProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
     public double ZoomingSpeed
     {
-        get => (double)GetValue(ZoomingSpeedProperty);
+        get => (double)GetValue(ZoomingSpeedProperty)!;
         set => SetValue(ZoomingSpeedProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     public TimeSpan AnimationsSpeed
     {
-        get => (TimeSpan)GetValue(AnimationsSpeedProperty);
+        get => (TimeSpan)GetValue(AnimationsSpeedProperty)!;
         set => SetValue(AnimationsSpeedProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.EasingFunction" />
     public Func<float, float>? EasingFunction
     {
-        get => (Func<float, float>)GetValue(EasingFunctionProperty);
+        get => (Func<float, float>?)GetValue(EasingFunctionProperty);
         set => SetValue(EasingFunctionProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
     {
-        get => (TooltipPosition)GetValue(TooltipPositionProperty);
+        get => (TooltipPosition)GetValue(TooltipPositionProperty)!;
         set => SetValue(TooltipPositionProperty, value);
     }
 
@@ -448,7 +448,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
     public TooltipFindingStrategy TooltipFindingStrategy
     {
-        get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
+        get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty)!;
         set => SetValue(TooltipFindingStrategyProperty, value);
     }
 
@@ -476,7 +476,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition
     {
-        get => (LegendPosition)GetValue(LegendPositionProperty);
+        get => (LegendPosition)GetValue(LegendPositionProperty)!;
         set => SetValue(LegendPositionProperty, value);
     }
 
@@ -608,7 +608,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
             Color = new SkiaSharp.SKColor(33, 150, 243, 50),
             ZIndex = int.MaxValue
         };
-        zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+        zoomingSectionPaint.AddGeometryToPaintTask(canvas!.CanvasCore, zoomingSection);
         canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
 
         _avaloniaCanvas = canvas;
@@ -625,46 +625,45 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         _core.Update();
     }
 
-    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
-    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-
         if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
         if (change.Property.Name == nameof(SyncContext))
         {
-            CoreCanvas.Sync = change.NewValue;
+            CoreCanvas.Sync = change.NewValue ?? new object();
         }
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver?.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-            _seriesObserver?.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+            _seriesObserver?.Dispose((IEnumerable<ISeries>?)change.OldValue);
+            _seriesObserver?.Initialize((IEnumerable<ISeries>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(XAxes))
         {
-            _xObserver?.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
-            _xObserver?.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
+            _xObserver?.Dispose((IEnumerable<ICartesianAxis>?)change.OldValue);
+            _xObserver?.Initialize((IEnumerable<ICartesianAxis>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(YAxes))
         {
-            _yObserver?.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
-            _yObserver?.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
+            _yObserver?.Dispose((IEnumerable<ICartesianAxis>?)change.OldValue);
+            _yObserver?.Initialize((IEnumerable<ICartesianAxis>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(Sections))
         {
-            _sectionsObserver?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)change.OldValue.Value);
-            _sectionsObserver?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)change.NewValue.Value);
+            _sectionsObserver?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>?)change.OldValue);
+            _sectionsObserver?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>?)change.NewValue);
         }
 
         if (change.Property.Name == nameof(VisualElementsProperty))
         {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.OldValue.Value);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)change.NewValue.Value);
+            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.OldValue);
+            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.NewValue);
         }
 
         _core.Update();
@@ -687,7 +686,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         if (e.KeyModifiers > 0) return;
         var p = e.GetPosition(this);
         foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
@@ -702,7 +701,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
         var p = e.GetPosition(this);
         _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), e.GetCurrentPoint(this).Properties.IsRightButtonPressed);

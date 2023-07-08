@@ -31,7 +31,7 @@
         </Border>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 20">
 
-          <ItemsControl Name="items" Items="{Binding Samples}">
+          <ItemsControl Name="items" ItemsSource="{Binding Samples}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
                 <StackPanel Orientation="Vertical"/>
@@ -44,7 +44,7 @@
                              Foreground="{Binding DataContext.Foreground, RelativeSource={RelativeSource AncestorType=Window}}"
                              FontSize="16"
                              FontFamily="Open Sans"></TextBlock>
-                    
+
                 </Border>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
