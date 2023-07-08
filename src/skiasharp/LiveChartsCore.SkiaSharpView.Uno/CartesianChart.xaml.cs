@@ -70,7 +70,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public CartesianChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
+        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 

@@ -58,7 +58,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public PieChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
+        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 

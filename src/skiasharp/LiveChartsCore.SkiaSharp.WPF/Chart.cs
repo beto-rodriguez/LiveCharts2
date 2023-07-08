@@ -74,7 +74,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// <exception cref="Exception">Default colors are not valid</exception>
     protected Chart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
+        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
 
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);

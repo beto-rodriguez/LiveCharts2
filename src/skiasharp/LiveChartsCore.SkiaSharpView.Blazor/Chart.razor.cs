@@ -73,7 +73,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     {
         base.OnInitialized();
 
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
+        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
 
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);

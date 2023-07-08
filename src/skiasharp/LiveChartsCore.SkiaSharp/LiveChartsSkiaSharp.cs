@@ -78,6 +78,7 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
+        LiveCharts.HasBackend = true;
         return settings.HasProvider(new SkiaSharpProvider());
     }
 

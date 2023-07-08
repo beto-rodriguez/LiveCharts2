@@ -41,12 +41,9 @@ public static class LiveCharts
     public static bool EnableLogging { get; set; } = false;
 
     /// <summary>
-    /// Gets a value indicating whether this instance is configured.
+    /// Gets a value indicating whether LiveCharts has a backend registered.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is configured; otherwise, <c>false</c>.
-    /// </value>
-    public static bool IsConfigured { get; private set; } = false;
+    public static bool HasBackend { get; internal set; } = false;
 
     /// <summary>
     /// Gets the current settings.
@@ -88,8 +85,6 @@ public static class LiveCharts
     public static void Configure(Action<LiveChartsSettings> configuration)
     {
         if (configuration is null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
-
-        IsConfigured = true;
         configuration(DefaultSettings);
     }
 
