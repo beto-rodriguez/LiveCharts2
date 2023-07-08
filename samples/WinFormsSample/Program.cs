@@ -42,8 +42,8 @@ static class Program
                // https://lvcharts.com/docs/{{ platform }}/{{ version }}/Overview.Mappers
                .HasMap<City>((city, point) => // mark
                { // mark
-                   point.PrimaryValue = city.Population; // mark
-                   point.SecondaryValue = point.Index; // mark
+                   // here we use the index as X, and the population as Y // mark
+                   point.Coordinate = new(point.Index, city.Population); // mark
                }) // mark
                   // .HasMap<Foo>( .... ) // mark
                   // .HasMap<Bar>( .... ) // mark

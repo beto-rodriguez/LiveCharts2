@@ -110,8 +110,9 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         foreach (var point in Fetch(cartesianChart))
         {
             var visual = point.Context.Visual as TVisual;
-            var primary = primaryScale.ToPixels(point.PrimaryValue);
-            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+            var coordinate = point.Coordinate;
+            var primary = primaryScale.ToPixels(coordinate.PrimaryValue);
+            var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var b = Math.Abs(primary - helper.p);
 
             if (point.IsEmpty)
@@ -137,11 +138,11 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
                 {
-                    var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
+                    var previousPrimary = previousPrimaryScale.ToPixels(coordinate.PrimaryValue);
                     var bp = Math.Abs(previousPrimary - pHelper.p);
-                    var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
+                    var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
-                    xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - pHelper.uwm + pHelper.cp;
+                    xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - pHelper.uwm + pHelper.cp;
                     pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
                     uwi = pHelper.uw;
                     hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
@@ -172,8 +173,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             var cy = primaryAxis.IsInverted
-                ? (point.PrimaryValue > pivot ? primary - b : primary)
-                : (point.PrimaryValue > pivot ? primary : primary - b);
+                ? (coordinate.PrimaryValue > pivot ? primary - b : primary)
+                : (coordinate.PrimaryValue > pivot ? primary : primary - b);
             var x = secondary - helper.uwm + helper.cp;
 
             if (stacker is not null)
@@ -181,7 +182,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 var sy = stacker.GetStack(point);
 
                 float primaryI, primaryJ;
-                if (point.PrimaryValue >= 0)
+                if (coordinate.PrimaryValue >= 0)
                 {
                     primaryI = primaryScale.ToPixels(sy.Start);
                     primaryJ = primaryScale.ToPixels(sy.End);
@@ -215,7 +216,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 .SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b)
                 .CenterXToolTip();
 
-            _ = point.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
+            _ = coordinate.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
 
             pointsCleanup.Clean(point);
 
@@ -239,7 +240,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
                     x, cy, helper.uw, b, m,
-                    DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                    DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
 
@@ -289,7 +290,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         }
 
         var p = primaryScale.ToPixels(pivot);
-        var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+        var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
         visual.X = secondary;
         visual.Y = p;

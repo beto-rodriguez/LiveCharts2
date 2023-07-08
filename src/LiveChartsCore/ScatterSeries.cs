@@ -55,17 +55,17 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         DataPadding = new LvcPoint(1, 1);
 
-        DataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+        DataLabelsFormatter = (point) => $"{point.Coordinate.PrimaryValue}";
         YToolTipLabelFormatter = point =>
         {
             var series = (ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>)point.Context.Series;
-
+            var c = point.Coordinate;
             return series.IsWeighted
-                ? $"X = {point.SecondaryValue}{Environment.NewLine}" +
-                  $"Y = {point.PrimaryValue}{Environment.NewLine}" +
-                  $"W = {point.TertiaryValue}"
-                : $"X = {point.SecondaryValue}{Environment.NewLine}" +
-                  $"Y = {point.PrimaryValue}";
+                ? $"X = {c.SecondaryValue}{Environment.NewLine}" +
+                  $"Y = {c.PrimaryValue}{Environment.NewLine}" +
+                  $"W = {c.TertiaryValue}"
+                : $"X = {c.SecondaryValue}{Environment.NewLine}" +
+                  $"Y = {c.PrimaryValue}";
         };
     }
 
@@ -141,10 +141,12 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         foreach (var point in Fetch(cartesianChart))
         {
+            var coordinate = point.Coordinate;
+
             var visual = (TVisual?)point.Context.Visual;
 
-            var x = xScale.ToPixels(point.SecondaryValue);
-            var y = yScale.ToPixels(point.PrimaryValue);
+            var x = xScale.ToPixels(coordinate.SecondaryValue);
+            var y = yScale.ToPixels(coordinate.PrimaryValue);
 
             if (point.IsEmpty)
             {
@@ -162,7 +164,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (IsWeighted)
             {
-                gs = (float)(wm * (_weightBounds.Max - point.TertiaryValue) + GeometrySize);
+                gs = (float)(wm * (_weightBounds.Max - coordinate.TertiaryValue) + GeometrySize);
                 hgs = gs / 2f;
             }
 
@@ -218,7 +220,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
                     x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
-                    SeriesProperties, point.PrimaryValue > 0, drawLocation, drawMarginSize);
+                    SeriesProperties, coordinate.PrimaryValue > 0, drawLocation, drawMarginSize);
                 if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
                 label.X = labelPosition.X;
@@ -304,8 +306,10 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             return;
         }
 
-        var x = secondaryScale.ToPixels(point.SecondaryValue);
-        var y = primaryScale.ToPixels(point.PrimaryValue);
+        var c = point.Coordinate;
+
+        var x = secondaryScale.ToPixels(c.SecondaryValue);
+        var y = primaryScale.ToPixels(c.PrimaryValue);
 
         visual.X = x;
         visual.Y = y;

@@ -115,7 +115,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+    public Coordinate Coordinate { get; set; } = Coordinate.Empty;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -131,7 +131,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     {
         Coordinate = _open is null || _high is null || _low is null || _close is null
             ? Coordinate.Empty
-            : new(_high.Value, _date.Ticks, _open.Value, _close.Value, _low.Value);
+            : new(_date.Ticks, _high.Value, _open.Value, _close.Value, _low.Value);
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

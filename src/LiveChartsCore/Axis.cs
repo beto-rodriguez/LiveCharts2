@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Crosshair Subticks Subseparators
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -97,6 +99,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private readonly int _subSections = 3;
     private Align? _labelsAlignment;
     private bool _inLineNamePlacement;
+    private IEnumerable<double>? _customSeparators;
 
 #if DEBUG
     private int _stepCount;
@@ -170,6 +173,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
     public bool ShowSeparatorLines { get => _showSeparatorLines; set => SetProperty(ref _showSeparatorLines, value); }
+
+    /// <inheritdoc cref="IPlane.CustomSeparators"/>
+    public IEnumerable<double>? CustomSeparators { get => _customSeparators; set => SetProperty(ref _customSeparators, value); }
 
     /// <inheritdoc cref="IPlane.IsVisible"/>
     public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
@@ -472,7 +478,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (!_separatorsAtCenter && _orientation == AxisOrientation.X) sxco = uw * 0.5f;
         if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) sxco = uw * 0.5f;
 
-        for (var i = start - s; i <= max + s; i += s)
+        var separatorsSource = CustomSeparators ?? EnumerateSeparators(start, s, max);
+
+        foreach (var i in separatorsSource)
         {
             var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
             var labelContent = i < min || i > max ? string.Empty : TryGetLabelOrLogError(labeler, i - 1d + 1d);
@@ -663,8 +671,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
 
-                crosshairX = scale.ToPixels(closestPoint?.SecondaryValue ?? pointerPosition.X);
-                labelValue = closestPoint?.SecondaryValue ?? scale.ToChartValues(pointerPosition.X);
+                var c = closestPoint?.Coordinate;
+
+                crosshairX = scale.ToPixels(c?.SecondaryValue ?? pointerPosition.X);
+                labelValue = c?.SecondaryValue ?? scale.ToChartValues(pointerPosition.X);
             }
             else
             {
@@ -684,8 +694,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
 
-                crosshairY = scale.ToPixels(closestPoint?.PrimaryValue ?? pointerPosition.Y);
-                labelValue = closestPoint?.PrimaryValue ?? scale.ToChartValues(pointerPosition.Y);
+                var c = closestPoint?.Coordinate;
+
+                crosshairY = scale.ToPixels(c?.PrimaryValue ?? pointerPosition.Y);
+                labelValue = c?.PrimaryValue ?? scale.ToChartValues(pointerPosition.Y);
             }
             else
             {
@@ -746,6 +758,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         UpdateSeparator(_crosshairLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
 
         chart.Canvas.Invalidate();
+    }
+
+    private IEnumerable<double> EnumerateSeparators(double start, double s, double max)
+    {
+        for (var i = start - s; i <= max + s; i += s) yield return i;
     }
 
     private static ChartPoint? FindClosestPoint(

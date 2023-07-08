@@ -78,6 +78,7 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
+        LiveCharts.HasBackend = true;
         return settings.HasProvider(new SkiaSharpProvider());
     }
 
@@ -265,8 +266,10 @@ public static class LiveChartsSkiaSharp
                 var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
                 var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-                x = secondaryScale.ToPixels(target.SecondaryValue);
-                y = primaryScale.ToPixels(target.PrimaryValue);
+                var coordinate = target.Coordinate;
+
+                x = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                y = primaryScale.ToPixels(coordinate.PrimaryValue);
             }
             else
             {
@@ -279,8 +282,10 @@ public static class LiveChartsSkiaSharp
                 var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
                 var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
 
-                x = secondaryScale.ToPixels(target.SecondaryValue);
-                y = primaryScale.ToPixels(target.PrimaryValue);
+                var coordinate = target.Coordinate;
+
+                x = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                y = primaryScale.ToPixels(coordinate.PrimaryValue);
             }
         }
         else if (target.Context is IPolarChartView<SkiaSharpDrawingContext> polarChart)

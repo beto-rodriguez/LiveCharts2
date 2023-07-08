@@ -74,7 +74,9 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             var labeler = ax.Labeler;
             if (ax.Labels is not null) labeler = Labelers.BuildNamedLabeler(ax.Labels);
 
-            return $"{labeler(point.PrimaryValue)} {point.TertiaryValue}";
+            var c = point.Coordinate;
+
+            return $"{labeler(c.PrimaryValue)} {c.TertiaryValue}";
         };
         DataLabelsPosition = DataLabelsPosition.Middle;
     }
@@ -142,10 +144,11 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         foreach (var point in Fetch(cartesianChart))
         {
+            var coordinate = point.Coordinate;
             var visual = point.Context.Visual as TVisual;
-            var primary = primaryScale.ToPixels(point.PrimaryValue);
-            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-            var tertiary = (float)point.TertiaryValue;
+            var primary = primaryScale.ToPixels(coordinate.PrimaryValue);
+            var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
+            var tertiary = (float)coordinate.TertiaryValue;
 
             var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
 
@@ -172,12 +175,12 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                 {
                     var previousP = previousPrimaryScale.ToPixels(pivot);
-                    var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
+                    var previousPrimary = previousPrimaryScale.ToPixels(coordinate.PrimaryValue);
                     var bp = Math.Abs(previousPrimary - previousP);
-                    var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
+                    var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
-                    xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uws * 0.5f;
-                    yi = previousPrimaryScale.ToPixels(point.PrimaryValue) - uwp * 0.5f;
+                    xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - uws * 0.5f;
+                    yi = previousPrimaryScale.ToPixels(coordinate.PrimaryValue) - uwp * 0.5f;
                 }
 
                 var r = new TVisual
@@ -233,7 +236,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 label.Padding = DataLabelsPadding;
                 var labelPosition = GetLabelPosition(
                      secondary - uws * 0.5f + p.Left, primary - uwp * 0.5f + p.Top, uws - p.Left - p.Right, uwp - p.Top - p.Bottom,
-                     label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                     label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }

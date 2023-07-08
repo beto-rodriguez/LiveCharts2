@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="WPFSample.General.Scrollable.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.Scrollable;assembly=ViewModelsSamples">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            Series="{Binding Series}"
+            XAxes="{Binding ScrollableAxes}"
+            ZoomMode="X"
+            DrawMargin="{Binding Margin}"
+            UpdateStarted="OnChart_Updated">
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            x:Name="ScrollBarChart"
+            Grid.Row="1"
+            Series="{Binding ScrollbarSeries}"
+            DrawMargin="{Binding Margin}"
+            Sections="{Binding Thumbs}"
+            XAxes="{Binding InvisibleX}"
+            YAxes="{Binding InvisibleY}"
+            MouseDown="CartesianChart_MouseDown"
+            MouseMove="CartesianChart_MouseMove"
+            MouseUp="CartesianChart_MouseUp"
+            TooltipPosition="Hidden">
+        </lvc:CartesianChart>
+    </Grid>
+</UserControl>

@@ -59,8 +59,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
         foreach (var layer in layersQuery)
         {
-            var stroke = layer.Stroke == LiveCharts.DefaultPaint ? context.View.Stroke : layer.Stroke;
-            var fill = layer.Fill == LiveCharts.DefaultPaint ? context.View.Fill : layer.Fill;
+            var stroke = context.View.Stroke ?? layer.Stroke;
+            var fill = context.View.Fill ?? layer.Fill;
 
             if (fill is not null)
             {
@@ -136,8 +136,6 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
         foreach (var paint in toRemovePaints)
         {
-            if (paint == LiveCharts.DefaultPaint) continue;
-
             _ = _usedPaints.Remove(paint);
             context.View.Canvas.RemovePaintTask(paint);
         }
@@ -168,8 +166,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
             foreach (var layer in layersQuery)
             {
-                var stroke = layer.Stroke == LiveCharts.DefaultPaint ? _mapView.Stroke : layer.Stroke;
-                var fill = layer.Fill == LiveCharts.DefaultPaint ? _mapView.Fill : layer.Fill;
+                var stroke = _mapView.Stroke ?? layer.Stroke;
+                var fill = _mapView.Fill ?? layer.Fill;
 
                 foreach (var landDefinition in layer.Lands.Values)
                 {
@@ -190,8 +188,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                     paint.ClearGeometriesFromPaintTask(_mapView.Canvas);
                 }
 
-                _mapView.Canvas.RemovePaintTask(stroke);
-                _mapView.Canvas.RemovePaintTask(fill);
+                if (stroke is not null) _mapView.Canvas.RemovePaintTask(stroke);
+                if (fill is not null) _mapView.Canvas.RemovePaintTask(fill);
             }
         }
 

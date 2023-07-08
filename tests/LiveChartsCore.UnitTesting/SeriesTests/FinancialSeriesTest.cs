@@ -71,7 +71,7 @@ public class FinancialSeriesTest
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
 
-        var unit = points.First(x => x.PrimaryValue == 1);
+        var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
@@ -118,7 +118,7 @@ public class FinancialSeriesTest
                 Math.Abs(previousX.Value - currentDeltaX) < 0.001);
 
             // test y
-            var p = 1f - sutPoint.PrimaryValue / 512f;
+            var p = 1f - sutPoint.Coordinate.PrimaryValue / 512f;
             Assert.IsTrue(
                 Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 
@@ -142,7 +142,7 @@ public class FinancialSeriesTest
             },
             Name = "A",
             MaxBarWidth = 1000,
-            YToolTipLabelFormatter = x => $"{x.PrimaryValue}{Environment.NewLine}{x.PrimaryValue}{Environment.NewLine}",
+            YToolTipLabelFormatter = x => $"{x.Coordinate.PrimaryValue}{Environment.NewLine}{x.Coordinate.PrimaryValue}{Environment.NewLine}",
             DataPadding = new Drawing.LvcPoint(0, 0)
         };
 

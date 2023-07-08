@@ -64,7 +64,7 @@ public class StackedColumnSeriesTest
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
 
-        var unit = points.First(x => x.PrimaryValue == 1);
+        var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
@@ -72,7 +72,7 @@ public class StackedColumnSeriesTest
         var datafactory2 = sutSeries2.DataFactory;
         var points2 = datafactory2.Fetch(sutSeries2, chart.Core).ToArray();
 
-        var unit2 = points2.First(x => x.PrimaryValue == 1);
+        var unit2 = points2.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit2 = sutSeries2.ConvertToTypedChartPoint(unit2);
 
         var toCompareGuys2 = points2.Where(x => x != unit2).Select(sutSeries2.ConvertToTypedChartPoint);
@@ -104,7 +104,7 @@ public class StackedColumnSeriesTest
                 Math.Abs(previousX.Value - currentDeltaX) < 0.001);
 
             // test y
-            var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
+            var p = 1f - (sutPoint.Coordinate.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
             Assert.IsTrue(
                 Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 
@@ -135,7 +135,7 @@ public class StackedColumnSeriesTest
                 Math.Abs(previousX.Value - currentDeltaX) < 0.001);
 
             // test y
-            var p = 1f - (sutPoint.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
+            var p = 1f - (sutPoint.Coordinate.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
             Assert.IsTrue(
                 Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 

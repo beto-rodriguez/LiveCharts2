@@ -12,7 +12,7 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <ComboBox Grid.Row="0"
-              Items="{Binding Positions}"
+              ItemsSource="{Binding Positions}"
               SelectedItem="{Binding SelectedPosition}">
       <ComboBox.ItemTemplate>
         <DataTemplate>

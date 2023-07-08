@@ -99,8 +99,8 @@ public interface ISeries
     double MiniatureShapeSize { get; set; }
 
     /// <summary>
-    /// Gets or sets the data padding, both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick
-    /// (the separation between every label).
+    /// Gets or sets the data padding, the distance from the edge of the chart to where the series is drawn,
+    /// both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick (the separation between every label).
     /// </summary>
     /// <value>
     /// The data padding.

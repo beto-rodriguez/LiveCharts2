@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSample.General.Scrollable.View"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.XamarinForms"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.Scrollable;assembly=ViewModelsSamples">
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            Series="{Binding Series}"
+            XAxes="{Binding ScrollableAxes}"
+            ZoomMode="X"
+            DrawMargin="{Binding Margin}"
+            UpdateStarted="OnChart_Updated">
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            x:Name="ScrollBarChart"
+            Grid.Row="1"
+            Series="{Binding ScrollbarSeries}"
+            DrawMargin="{Binding Margin}"
+            Sections="{Binding Thumbs}"
+            XAxes="{Binding InvisibleX}"
+            YAxes="{Binding InvisibleY}"
+            TooltipPosition="Hidden">
+            <lvc:CartesianChart.GestureRecognizers>
+                <PanGestureRecognizer
+                    PanUpdated="PanGestureRecognizer_PanUpdated">
+                </PanGestureRecognizer>
+            </lvc:CartesianChart.GestureRecognizers>
+        </lvc:CartesianChart>
+    </Grid>
+</ContentPage>

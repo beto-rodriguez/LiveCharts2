@@ -38,7 +38,7 @@ public partial class ViewModel : ObservableObject
                 DataLabelsPaint = new SolidColorPaint(new SKColor(245, 245, 245)),
                 DataLabelsPosition = DataLabelsPosition.End,
                 DataLabelsTranslate = new LvcPoint(-1, 0),
-                DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.Coordinate.PrimaryValue}"
             })
             .OrderByDescending(x => ((ObservableValue[])x.Values!)[0].Value)
             .ToArray();

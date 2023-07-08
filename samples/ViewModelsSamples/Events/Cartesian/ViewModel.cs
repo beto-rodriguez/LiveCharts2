@@ -29,14 +29,15 @@ public partial class ViewModel : ObservableObject
         {
             Name = "Items sold per day",
             Values = data,
-            TooltipLabelFormatter = point => $"{point.Model?.Name}, sold {point.Model?.SalesPerDay} items",
+            YToolTipLabelFormatter = point => $"{point.Model?.Name}, sold {point.Model?.SalesPerDay} items",
             DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
             DataLabelsFormatter = point => $"{point.Model?.SalesPerDay} {point.Model?.Name}",
             DataLabelsPosition = DataLabelsPosition.End,
             Mapping = (fruit, point) =>
             {
-                point.PrimaryValue = fruit.SalesPerDay; // use the SalesPerDay property in this series // mark
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                // use the SalesPerDay property in this in the Y axis // mark
+                // and the index of the fruit in the array in the X axis // mark
+                point.Coordinate = new(point.Index, fruit.SalesPerDay);
             }
         };
 

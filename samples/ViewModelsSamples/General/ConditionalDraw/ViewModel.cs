@@ -29,8 +29,9 @@ public partial class ViewModel : ObservableObject
             Values = new City[] { new(4), new(2), new(8), new(3), new(2), new(4), new(6), new(4), new(4) },
             Mapping = (city, point) =>
             {
-                point.PrimaryValue = city.Population;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
+                // use the Population property as the Y coordinate
+                // and the index of the city in the array as the X coordinate
+                point.Coordinate = new(point.Index, city.Population);
             }
         }
         .WithConditionalPaint(new SolidColorPaint(SKColors.Black.WithAlpha(50)))

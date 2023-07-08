@@ -13,7 +13,7 @@
           <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
       <ComboBox Grid.Row="0"
-                Items="{Binding AvalaibaleCurves}"
+                ItemsSource="{Binding AvalaibaleCurves}"
                 SelectedItem="{Binding SelectedCurve}">
           <ComboBox.ItemTemplate>
               <DataTemplate>
@@ -22,7 +22,7 @@
           </ComboBox.ItemTemplate>
       </ComboBox>
       <ComboBox Grid.Row="1"
-                Items="{Binding AvailableSpeeds}"
+                ItemsSource="{Binding AvailableSpeeds}"
                 SelectedItem="{Binding SelectedSpeed}">
           <ComboBox.ItemTemplate>
               <DataTemplate>

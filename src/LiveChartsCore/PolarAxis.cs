@@ -79,6 +79,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     private Align _labelsVerticalAlign = Align.Middle;
     private Align _labelsHorizontalAlign = Align.Middle;
     private LvcColor _labelsBackground = new(255, 255, 255);
+    private IEnumerable<double>? _customSeparators;
     private AnimatableAxisBounds _animatableBounds = new();
 
     #endregion
@@ -149,6 +150,9 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
     public bool ShowSeparatorLines { get => _showSeparatorLines; set => SetProperty(ref _showSeparatorLines, value); }
+
+    /// <inheritdoc cref="IPlane.CustomSeparators"/>
+    public IEnumerable<double>? CustomSeparators { get => _customSeparators; set => SetProperty(ref _customSeparators, value); }
 
     /// <inheritdoc cref="IPlane.IsVisible"/>
     public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
@@ -281,18 +285,11 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
         var measured = new HashSet<IVisualSeparator<TDrawingContext>>();
 
-        for (var i = start; i <= max; i += s)
+        var separatorsSource = CustomSeparators ?? EnumerateSeparators(start, s, max);
+
+        foreach (var i in separatorsSource)
         {
             if (i < min) continue;
-
-            //if (_orientation == PolarAxisOrientation.Angle && Math.Abs(scaler.GetAngle(i) - b.LabelsAngle) < 10)
-            //    continue;
-
-            // - 1d + 1d is a dummy operation to fix a bug
-            // where i == 0 then calling i.ToString() returns "-0"...
-            // that dummy operation seems to hide that issue
-            // I am not completly sure of what causes that
-            // it seems that the bits storing that number (i) have the negative bit on
             var label = labeler(i - 1d + 1d);
 
             if (!separators.TryGetValue(i, out var visualSeparator))
@@ -611,6 +608,11 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint };
+    }
+
+    private IEnumerable<double> EnumerateSeparators(double start, double s, double max)
+    {
+        for (var i = start; i <= max; i += s) yield return i;
     }
 
     private Func<double, string> GetActualLabeler()

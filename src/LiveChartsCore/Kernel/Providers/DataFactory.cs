@@ -40,9 +40,7 @@ public class DataFactory<TModel, TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     private readonly bool _isTModelChartEntity = false;
-    private readonly bool _isValueType = false;
     private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = new();
-    private readonly Dictionary<object, Dictionary<TModel, MappedChartEntity>> _chartRefEntityMap = new();
     private ISeries? _series;
 
     /// <summary>
@@ -57,10 +55,6 @@ public class DataFactory<TModel, TDrawingContext>
     {
         var bounds = new DimensionalBounds(true);
         PreviousKnownBounds = bounds;
-
-        var t = typeof(TModel);
-        _isValueType = t.IsValueType;
-
         _isTModelChartEntity = typeof(IChartEntity).IsAssignableFrom(typeof(TModel));
     }
 
@@ -97,23 +91,10 @@ public class DataFactory<TModel, TDrawingContext>
         if (_isTModelChartEntity) return;
 
         var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
-
-        if (_isValueType)
-        {
-            _ = _chartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
-            var map = d;
-            if (map is null) return;
-            _ = map.Remove(point.Context.Entity.MetaData?.EntityIndex ?? 0);
-        }
-        else
-        {
-            _ = _chartRefEntityMap.TryGetValue(canvas.Sync, out var d);
-            var map = d;
-            if (map is null) return;
-            var src = (TModel?)point.Context.DataSource;
-            if (src is null) return;
-            _ = map.Remove(src);
-        }
+        _ = _chartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
+        var map = d;
+        if (map is null) return;
+        _ = map.Remove(point.Context.Entity.MetaData?.EntityIndex ?? 0);
     }
 
     /// <summary>
@@ -125,16 +106,8 @@ public class DataFactory<TModel, TDrawingContext>
         _series = null;
         if (_isTModelChartEntity) return;
 
-        if (_isValueType)
-        {
-            var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-            _ = _chartIndexEntityMap.Remove(canvas.Sync);
-        }
-        else
-        {
-            var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-            _ = _chartRefEntityMap.Remove(canvas.Sync);
-        }
+        var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+        _ = _chartIndexEntityMap.Remove(canvas.Sync);
     }
 
     /// <summary>
@@ -168,9 +141,11 @@ public class DataFactory<TModel, TDrawingContext>
         {
             if (point.IsEmpty) continue;
 
-            var primary = point.PrimaryValue;
-            var secondary = point.SecondaryValue;
-            var tertiary = point.TertiaryValue;
+            var coordinate = point.Coordinate;
+
+            var primary = coordinate.PrimaryValue;
+            var secondary = coordinate.SecondaryValue;
+            var tertiary = coordinate.TertiaryValue;
 
             if (stack is not null) primary = stack.StackPoint(point);
 
@@ -187,8 +162,10 @@ public class DataFactory<TModel, TDrawingContext>
 
             if (previous is not null)
             {
-                var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
-                var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
+                var previousCoordinate = previous.Coordinate;
+
+                var dx = Math.Abs(previousCoordinate.SecondaryValue - coordinate.SecondaryValue);
+                var dy = Math.Abs(previousCoordinate.PrimaryValue - coordinate.PrimaryValue);
                 if (dx < bounds.SecondaryBounds.MinDelta) bounds.SecondaryBounds.MinDelta = dx;
                 if (dy < bounds.PrimaryBounds.MinDelta) bounds.PrimaryBounds.MinDelta = dy;
             }
@@ -229,10 +206,12 @@ public class DataFactory<TModel, TDrawingContext>
         {
             if (point.IsEmpty) continue;
 
-            var primaryMax = point.PrimaryValue;
-            var primaryMin = point.QuinaryValue;
-            var secondary = point.SecondaryValue;
-            var tertiary = point.TertiaryValue;
+            var coordinate = point.Coordinate;
+
+            var primaryMax = coordinate.PrimaryValue;
+            var primaryMin = coordinate.QuinaryValue;
+            var secondary = coordinate.SecondaryValue;
+            var tertiary = coordinate.TertiaryValue;
 
             bounds.PrimaryBounds.AppendValue(primaryMax);
             bounds.PrimaryBounds.AppendValue(primaryMin);
@@ -249,8 +228,10 @@ public class DataFactory<TModel, TDrawingContext>
 
             if (previous is not null)
             {
-                var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
-                var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
+                var previousCoordinate = previous.Coordinate;
+
+                var dx = Math.Abs(previousCoordinate.SecondaryValue - coordinate.SecondaryValue);
+                var dy = Math.Abs(previousCoordinate.PrimaryValue - coordinate.PrimaryValue);
                 if (dx < bounds.SecondaryBounds.MinDelta) bounds.SecondaryBounds.MinDelta = dx;
                 if (dy < bounds.PrimaryBounds.MinDelta) bounds.PrimaryBounds.MinDelta = dy;
             }
@@ -285,8 +266,8 @@ public class DataFactory<TModel, TDrawingContext>
             if (point.IsEmpty) continue;
 
             _ = stack.StackPoint(point);
-            bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
-            bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
+            bounds.PrimaryBounds.AppendValue(point.Coordinate.PrimaryValue);
+            bounds.SecondaryBounds.AppendValue(point.Coordinate.SecondaryValue);
             bounds.TertiaryBounds.AppendValue(series.Pushout > series.HoverPushout ? series.Pushout : series.HoverPushout);
             hasData = true;
         }
@@ -331,28 +312,13 @@ public class DataFactory<TModel, TDrawingContext>
             }
         }
         _chartIndexEntityMap.Clear();
-
-        foreach (var item in _chartRefEntityMap.Values)
-        {
-            foreach (var index in item.Values)
-            {
-                foreach (var chartPoint in index.MetaData?.ChartPoints?.Values ?? Enumerable.Empty<ChartPoint>())
-                {
-                    if (chartPoint.Context.Visual is not IAnimatable visual) continue;
-                    visual.RemoveTransition(null);
-                }
-            }
-        }
-        _chartRefEntityMap.Clear();
     }
 
     private IEnumerable<IChartEntity?> GetEntities(ISeries<TModel> series, IChart chart)
     {
         return _isTModelChartEntity
             ? EnumerateChartEntities(series, chart)
-            : (_isValueType
-                ? EnumerateByValEntities(series, chart)
-                : EnumerateByRefEntities(series, chart));
+            : EnumerateIndexedEntities(series, chart);
     }
 
     private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries<TModel> series, IChart chart)
@@ -371,22 +337,21 @@ public class DataFactory<TModel, TDrawingContext>
             }
 
             entity.MetaData ??= new ChartEntityMetaData();
-            entity.MetaData.ChartPoints ??= new Dictionary<IChartView, ChartPoint>();
 
             if (!entity.MetaData.ChartPoints.TryGetValue(chart.View, out var point))
             {
                 point = new ChartPoint(chart.View, series, entity);
                 entity.MetaData.ChartPoints[chart.View] = point;
+                point.Context.DataSource = entity;
             }
 
-            point.Context.DataSource = entity;
             entity.MetaData.EntityIndex = index++;
 
             yield return entity;
         }
     }
 
-    private IEnumerable<IChartEntity?> EnumerateByValEntities(ISeries<TModel> series, IChart chart)
+    private IEnumerable<IChartEntity?> EnumerateIndexedEntities(ISeries<TModel> series, IChart chart)
     {
         if (series.Values is null) yield break;
 
@@ -412,15 +377,7 @@ public class DataFactory<TModel, TDrawingContext>
             }
 
             if (!IndexEntityMap.TryGetValue(index, out var entity))
-            {
-                IndexEntityMap[index] = entity = new MappedChartEntity
-                {
-                    MetaData = new ChartEntityMetaData
-                    {
-                        ChartPoints = new Dictionary<IChartView, ChartPoint>()
-                    }
-                };
-            }
+                IndexEntityMap[index] = entity = new MappedChartEntity { MetaData = new ChartEntityMetaData() };
 
             if (!entity.MetaData!.ChartPoints!.TryGetValue(chart.View, out var point))
             {
@@ -432,59 +389,6 @@ public class DataFactory<TModel, TDrawingContext>
             entity.MetaData.EntityIndex = index++;
 
             mapper(item, point);
-            entity.UpdateCoordinate(point);
-
-            yield return entity;
-        }
-    }
-
-    private IEnumerable<IChartEntity?> EnumerateByRefEntities(ISeries<TModel> series, IChart chart)
-    {
-        if (series.Values is null) yield break;
-
-        var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
-        var mapper = series.Mapping ?? LiveCharts.DefaultSettings.GetMap<TModel>();
-        var index = 0;
-
-        _ = _chartRefEntityMap.TryGetValue(canvas.Sync, out var d);
-        if (d is null)
-        {
-            d = new Dictionary<TModel, MappedChartEntity>();
-            _chartRefEntityMap[canvas.Sync] = d;
-        }
-        var IndexEntityMap = d;
-
-        foreach (var item in series.Values)
-        {
-            if (item is null)
-            {
-                yield return new MappedChartEntity();
-                index++;
-                continue;
-            }
-
-            if (!IndexEntityMap.TryGetValue(item, out var entity))
-            {
-                IndexEntityMap[item] = entity = new MappedChartEntity
-                {
-                    MetaData = new ChartEntityMetaData
-                    {
-                        ChartPoints = new Dictionary<IChartView, ChartPoint>()
-                    }
-                };
-            }
-
-            if (!entity.MetaData!.ChartPoints!.TryGetValue(chart.View, out var point))
-            {
-                point = new ChartPoint(chart.View, series, entity);
-                entity.MetaData.ChartPoints[chart.View] = point;
-            }
-
-            point.Context.DataSource = item;
-            entity.MetaData.EntityIndex = index++;
-
-            mapper(item, point);
-            entity.UpdateCoordinate(point);
 
             yield return entity;
         }

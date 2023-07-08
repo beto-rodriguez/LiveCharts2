@@ -23,10 +23,11 @@ var chart = new SKCartesianChart
     {
         new LineSeries<TempSample>
         {
-            Mapping = (sample, chartPoint) =>
+            Mapping = (tempSample, chartPoint) =>
             {
-                chartPoint.PrimaryValue = sample.Temperature;   // use temperature as primary value (normally Y)
-                chartPoint.SecondaryValue = sample.Time;        // use time as secondary value (normally X)
+                // we set the X coordinate to the Time property
+                // and the Y coordinate to the Temperature property
+                chartPoint.Coordinate = new(tempSample.Time, tempSample.Temperature);
             },
             Values = samples
         }
@@ -67,12 +68,11 @@ var citiesChart = new SKCartesianChart
     {
         new ColumnSeries<City>
         {
-            Mapping = (sample, chartPoint) =>
+            Mapping = (city, chartPoint) =>
             {
-                // use population as primary value (normally Y)
-                chartPoint.PrimaryValue = sample.Population;
-                // use the index of the item in the array as X
-                chartPoint.SecondaryValue = chartPoint.Index;
+                // we set the X coordinate to the index of the item in the array
+                // and the Y coordinate to the Population property
+                chartPoint.Coordinate = new(chartPoint.Index, city.Population);
             },
             Values = cities
         }
@@ -98,21 +98,16 @@ citiesChart.SaveImage("cities.png");
 
 // you can remove the mapping from the series and register the mappers globally
 // this is useful when you have a lot of series and you don't want to repeat the mapping for each series.
-
 LiveCharts.Configure(config =>
     config
-        .HasMap<TempSample>(
-            (sample, chartPoint) =>
-            {
-                chartPoint.PrimaryValue = sample.Temperature;
-                chartPoint.SecondaryValue = sample.Time;
-            })
-        .HasMap<City>(
-            (city, chartPoint) =>
-            {
-                chartPoint.PrimaryValue = city.Population;
-                chartPoint.SecondaryValue = chartPoint.Index;
-            }));
+        .HasMap<TempSample>((tempSample, chartPoint) =>
+        {
+            chartPoint.Coordinate = new(tempSample.Time, tempSample.Temperature);
+        })
+        .HasMap<City>((city, chartPoint) =>
+        {
+            chartPoint.Coordinate = new(chartPoint.Index, city.Population);
+        }));
 
 Console.WriteLine("chart saved");
 
@@ -122,23 +117,17 @@ public record City(string Name, double Population);
 // -------------------------------------------------------------------
 // IMPORTANT NOTE
 // -------------------------------------------------------------------
-// There are 2 special plots that use more than X and Y coordinates.
+// There are some plots that use more than X and Y coordinates.
 
 // Weighted plots: HeatMaps and Bubble charts use 3 coordinates, X, Y and Weight.
 // Mapping = (sample, chartPoint) =>
 // {
-//    chartPoint.PrimaryValue = sample.X;
-//    chartPoint.SecondaryValue = sample.Y;
-//    chartPoint.TertiaryValue = sample.Weigth;
+//     chartPoint.Coordinate = new(x, y, weight);
 // }
 
 // While financial Points use 5.
 // Coordinate = new Coordinate(High, X, Open, Close, Low);
 // Mapping = (sample, chartPoint) =>
 // {
-//    chartPoint.PrimaryValue = sample.High;
-//    chartPoint.SecondaryValue = sample.X;
-//    chartPoint.TertiaryValue = sample.Open;
-//    chartPoint.QuaternaryValue = sample.Close;
-//    chartPoint.QuinaryValue = sample.Low;
-//}
+//     chartPoint.Coordinate = new(x, high, open, close, low);
+// }

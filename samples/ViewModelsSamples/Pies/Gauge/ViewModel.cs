@@ -33,7 +33,7 @@ public class ViewModel : INotifyPropertyChanged
             Background = new SolidColorPaint(new SKColor(0, 0, 0, 10)),
             BackgroundInnerRadius = _backgroundInnerRadius,
             BackgroundOffsetRadius = _backgroundOffsetRadius,
-            LabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}",
+            LabelFormatter = point => $"{point.Context.Series.Name} {point.Coordinate.PrimaryValue}",
             LabelsPosition = PolarLabelsPosition.Start,
             LabelsSize = 30
         }

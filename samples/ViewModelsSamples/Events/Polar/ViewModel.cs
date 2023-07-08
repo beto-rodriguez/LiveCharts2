@@ -25,11 +25,12 @@ public partial class ViewModel : ObservableObject
         var polarLineSeries = new PolarLineSeries<City>
         {
             Values = data,
-            TooltipLabelFormatter = point => $"{point.Model?.Name} {point.Model?.Population} Million",
+            RadiusToolTipLabelFormatter = point => $"{point.Model?.Name} {point.Model?.Population} Million",
             Mapping = (city, point) =>
             {
-                point.PrimaryValue = city.Population; // use the population property in this series // mark
-                point.SecondaryValue = point.Context.Index;
+                // use the Popuplation property in the Y axis
+                // and the index of the city in the array as the X axis
+                point.Coordinate = new(point.Index, city.Population);
             }
         };
 

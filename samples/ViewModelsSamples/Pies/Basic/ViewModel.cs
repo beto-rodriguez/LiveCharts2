@@ -18,14 +18,15 @@ public partial class ViewModel : ObservableObject
         // Series = data.AsLiveChartsPieSeries(); this could be enough in some cases // mark
 
         // but you can customize the series properties using the following overload: // mark
-        Series = data.AsLiveChartsPieSeries((value, series) =>
+        Series = data.AsPieSeries((value, series) =>
         {
             // here you can configure the series assigned to each value.
             series.Name = $"Series for value {value}";
             series.DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30));
             series.DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Outer;
-            series.DataLabelsFormatter = p => $"{p.PrimaryValue} / {p.StackedValue!.Total} ({p.StackedValue.Share:P2})";
-            series.TooltipLabelFormatter = p => $"{p.PrimaryValue:C2}";
+            series.DataLabelsFormatter =
+                p => $"{p.Coordinate.PrimaryValue} / {p.StackedValue!.Total} ({p.StackedValue.Share:P2})";
+            series.ToolTipLabelFormatter = p => $"{p.Coordinate.PrimaryValue:C2}";
         });
 
         // this is an equivalent and more verbose syntax. // mark

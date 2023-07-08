@@ -61,7 +61,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// </summary>
     public PolarChart()
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
+        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -622,7 +622,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!LiveCharts.IsConfigured) LiveCharts.Configure(config => config.UseDefaults());
+        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
 
         var canvas = (MotionCanvas)FindName("motionCanvas");
         _canvas = canvas;

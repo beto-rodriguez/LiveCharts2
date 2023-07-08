@@ -80,8 +80,10 @@ public class Stacker<TDrawingContext>
     /// <returns></returns>
     public double StackPoint(ChartPoint point, int seriesStackPosition)
     {
-        var index = point.SecondaryValue;
-        var value = point.PrimaryValue;
+        var coordinate = point.Coordinate;
+
+        var index = coordinate.SecondaryValue;
+        var value = coordinate.PrimaryValue;
         var positiveStart = 0d;
         var negativeStart = 0d;
 
@@ -109,7 +111,7 @@ public class Stacker<TDrawingContext>
 
         var si = _stack[seriesStackPosition];
 
-        if (!si.TryGetValue(point.SecondaryValue, out var currentStack))
+        if (!si.TryGetValue(coordinate.SecondaryValue, out var currentStack))
         {
             currentStack = new StackedValue
             {
@@ -149,7 +151,7 @@ public class Stacker<TDrawingContext>
     /// <returns></returns>
     public StackedValue GetStack(ChartPoint point, int seriesStackPosition)
     {
-        var index = point.SecondaryValue;
+        var index = point.Coordinate.SecondaryValue;
         var p = _stack[seriesStackPosition][index];
 
         return new StackedValue
