@@ -1,0 +1,12 @@
+﻿@page "/Axes/CustomSeparatorsInterval"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Axes.CustomSeparatorsInterval
+
+<CartesianChart
+	Series="ViewModel.Series"
+	YAxes="ViewModel.YAxes">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}
