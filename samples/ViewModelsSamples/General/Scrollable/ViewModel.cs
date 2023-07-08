@@ -57,11 +57,11 @@ public partial class ViewModel
         InvisibleX = new[] { new Axis { IsVisible = false } };
         InvisibleY = new[] { new Axis { IsVisible = false } };
 
-        // force the left margin to be 100 and the right margin 20 in both charts, this will
+        // force the left margin to be 100 and the right margin 50 in both charts, this will
         // align the start and end point of the "draw margin",
         // no matter the size of the labels in the Y axis of both chart.
         var auto = LiveChartsCore.Measure.Margin.Auto;
-        Margin = new(100, auto, auto, 20);
+        Margin = new(100, auto, 50, auto);
     }
 
     public ISeries[] Series { get; set; }
