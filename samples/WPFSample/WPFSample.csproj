@@ -119,6 +119,9 @@
     <Compile Update="General\MultiThreading\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="General\Scrollable\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\VisualElements\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -396,6 +399,9 @@
     <Page Update="General\MultiThreading\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Scrollable\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="General\VisualElements\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

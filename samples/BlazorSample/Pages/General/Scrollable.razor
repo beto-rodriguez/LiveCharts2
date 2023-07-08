@@ -1,0 +1,94 @@
+﻿@page "/General/Scrollable"
+@using LiveChartsCore.Kernel.Sketches;
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using LiveChartsCore.SkiaSharpView.Drawing;
+@using ViewModelsSamples.General.Scrollable
+
+<div class="bg-primary text-white p-3">
+    This is an experimental feature, it is not ready for production in Blazor, it seems that
+    the chart is updating multiple times resulting in a poor performance.
+</div>
+
+<CartesianChart
+    @ref="_mainChart"
+	Series="ViewModel.Series"
+    XAxes="ViewModel.ScrollableAxes"
+    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X"
+    DrawMargin="ViewModel.Margin">
+</CartesianChart>
+
+<div style="height: 100px">
+    <CartesianChart
+        @ref="_scrollableChart"
+        Series="ViewModel.ScrollbarSeries"
+        DrawMargin="ViewModel.Margin"
+        Sections="ViewModel.Thumbs"
+        XAxes="ViewModel.InvisibleX"
+        YAxes="ViewModel.InvisibleY"
+        OnPointerDownCallback="OnPointeDown"
+        OnPointerUpCallback="OnPointeUp"
+        OnPointerMoveCallback="OnPointeMove"
+        TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Hidden">
+    </CartesianChart>
+</div>
+
+@code {
+    private bool _isDown;
+
+    public CartesianChart _mainChart = null!;
+    public CartesianChart _scrollableChart = null!;
+    public ViewModel ViewModel { get; set; } = new();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        _mainChart.UpdateStarted += OnChart_Updated;
+    }
+
+    private void OnChart_Updated(IChartView<SkiaSharpDrawingContext> chart)
+    {
+        var vm = ViewModel;
+        var cartesianChart = (CartesianChart)chart;
+
+        var x = cartesianChart.XAxes.First();
+
+        // update the scroll bar thumb when the chart is updated (zoom/pan)
+        // this will let the user know the current visible range
+        var thumb = vm.Thumbs[0];
+
+        thumb.Xi = x.MinLimit;
+        thumb.Xj = x.MaxLimit;
+    }
+
+    private void OnPointeDown(PointerEventArgs e)
+    {
+        _isDown = true;
+    }
+
+    private void OnPointeMove(PointerEventArgs e)
+    {
+        if (!_isDown) return;
+
+        var vm = ViewModel;
+        var scrollBarChart = _scrollableChart;
+
+        var positionInData = scrollBarChart.ScalePixelsToData(new(e.OffsetX, e.OffsetY));
+
+        var thumb = vm.Thumbs[0];
+        var currentRange = thumb.Xj - thumb.Xi;
+
+        // update the scroll bar thumb when the user is dragging the chart
+        thumb.Xi = positionInData.X - currentRange / 2;
+        thumb.Xj = positionInData.X + currentRange / 2;
+
+        // update the chart visible range
+        vm.ScrollableAxes[0].MinLimit = thumb.Xi;
+        vm.ScrollableAxes[0].MaxLimit = thumb.Xj;
+    }
+
+    private void OnPointeUp(PointerEventArgs e)
+    {
+        _isDown = false;
+    }
+}

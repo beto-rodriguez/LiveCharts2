@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.General.Scrollable.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.Scrollable;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <!--
+        This sample requies net MAUI 7 at least, if you are on net6.0 please update:
+        https://devblogs.microsoft.com/dotnet/dotnet-maui-dotnet-7/#upgrading-from-net-6
+        -->
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+
+            <lvc:CartesianChart
+                Grid.Row="0"
+                Series="{Binding Series}"
+                XAxes="{Binding ScrollableAxes}"
+                ZoomMode="X"
+                DrawMargin="{Binding Margin}"
+                UpdateStarted="OnChart_Updated">
+            </lvc:CartesianChart>
+
+            <lvc:CartesianChart
+                x:Name="ScrollBarChart"
+                Grid.Row="1"
+                Series="{Binding ScrollbarSeries}"
+                DrawMargin="{Binding Margin}"
+                Sections="{Binding Thumbs}"
+                XAxes="{Binding InvisibleX}"
+                YAxes="{Binding InvisibleY}"
+                TooltipPosition="Hidden"
+                >
+                <lvc:CartesianChart.GestureRecognizers>
+                    <PointerGestureRecognizer
+                        PointerEntered="OnPointerEntered"
+                        PointerMoved="OnPointerMoved"
+                        PointerExited="OnPointerExited">
+                    </PointerGestureRecognizer>
+                </lvc:CartesianChart.GestureRecognizers>
+            </lvc:CartesianChart>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
