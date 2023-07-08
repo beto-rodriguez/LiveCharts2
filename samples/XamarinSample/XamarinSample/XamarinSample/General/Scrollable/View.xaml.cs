@@ -36,6 +36,9 @@ public partial class View : ContentPage
 
     private void PanGestureRecognizer_PanUpdated(object sender, PanUpdatedEventArgs e)
     {
+        // This event is not fired when the user is dragging the chart
+        // ToDo: check why.
+
         switch (e.StatusType)
         {
             case GestureStatus.Started:
