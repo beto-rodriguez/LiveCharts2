@@ -59,7 +59,7 @@ public class ColumnSeriesTest
         var datafactory = sutSeries.DataFactory;
         var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
 
-        var unit = points.First(x => x.PrimaryValue == 1);
+        var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
 
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
@@ -91,7 +91,7 @@ public class ColumnSeriesTest
                 Math.Abs(previousX.Value - currentDeltaX) < 0.001);
 
             // test y
-            var p = 1f - sutPoint.PrimaryValue / 512f;
+            var p = 1f - sutPoint.Coordinate.PrimaryValue / 512f;
             Assert.IsTrue(
                 Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
 

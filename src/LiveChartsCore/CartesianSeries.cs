@@ -26,7 +26,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 
 namespace LiveChartsCore;
 
@@ -189,9 +188,11 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             var ax = cc.YAxes[cs.ScalesYAt];
 
+            var c = point.Coordinate;
+
             label = ax.Labels is not null
-                ? Labelers.BuildNamedLabeler(ax.Labels)(point.PrimaryValue)
-                : ax.Labeler(point.PrimaryValue);
+                ? Labelers.BuildNamedLabeler(ax.Labels)(c.PrimaryValue)
+                : ax.Labeler(c.PrimaryValue);
         }
 
         return label;
@@ -212,10 +213,12 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             var ax = cc.XAxes[cs.ScalesXAt];
 
+            var c = point.Coordinate;
+
             label = ax.Labels is not null
-                ? Labelers.BuildNamedLabeler(ax.Labels)(point.SecondaryValue)
+                ? Labelers.BuildNamedLabeler(ax.Labels)(c.SecondaryValue)
                 : (ax.Labeler != Labelers.Default
-                    ? ax.Labeler(point.SecondaryValue)
+                    ? ax.Labeler(c.SecondaryValue)
                     : LiveCharts.IgnoreToolTipLabel);
         }
 

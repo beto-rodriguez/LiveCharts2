@@ -20,7 +20,7 @@ public partial class ViewModel : ObservableObject
             XToolTipLabelFormatter = (point) =>
                 $"This is {Environment.NewLine}" +
                 $"A multi-line label {Environment.NewLine}" +
-                $"With a value of {Environment.NewLine}" + point.PrimaryValue,
+                $"With a value of {Environment.NewLine}" + point.Coordinate.PrimaryValue,
         }
     };
 

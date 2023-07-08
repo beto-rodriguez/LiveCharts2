@@ -39,7 +39,7 @@ public class PolarScaler
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarScaler"/> class.
     /// </summary>
-    /// <param name="drawMagrinLocation">The draw margin location.</param>
+    /// <param name="drawMarginLocation">The draw margin location.</param>
     /// <param name="drawMarginSize">Size of the draw margin.</param>
     /// <param name="radiusAxis">The radius axis.</param>
     /// <param name="angleAxis">The angle axis.</param>
@@ -49,7 +49,7 @@ public class PolarScaler
     /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
     /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
     public PolarScaler(
-        LvcPoint drawMagrinLocation,
+        LvcPoint drawMarginLocation,
         LvcSize drawMarginSize,
         IPolarAxis angleAxis,
         IPolarAxis radiusAxis,
@@ -84,8 +84,8 @@ public class PolarScaler
         if (actualAngleBounds is null || actualAngleVisibleBounds is null) throw new Exception("angle bounds not found");
         if (actualRadiusBounds is null || actualRadiusVisibleBounds is null) throw new Exception("radius bounds not found");
 
-        CenterX = drawMagrinLocation.X + drawMarginSize.Width * 0.5f;
-        CenterY = drawMagrinLocation.Y + drawMarginSize.Height * 0.5f;
+        CenterX = drawMarginLocation.X + drawMarginSize.Width * 0.5f;
+        CenterY = drawMarginLocation.Y + drawMarginSize.Height * 0.5f;
 
         MinRadius = radiusAxis.MinLimit ?? actualRadiusVisibleBounds.Min;
         MaxRadius = radiusAxis.MaxLimit ?? actualRadiusVisibleBounds.Max;
@@ -147,7 +147,8 @@ public class PolarScaler
     /// <returns></returns>
     public LvcPoint ToPixels(ChartPoint polarPoint)
     {
-        return ToPixels(polarPoint.SecondaryValue, polarPoint.PrimaryValue);
+        var c = polarPoint.Coordinate;
+        return ToPixels(c.SecondaryValue, c.PrimaryValue);
     }
 
     /// <summary>

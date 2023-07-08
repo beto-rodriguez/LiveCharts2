@@ -60,5 +60,5 @@ public class ChartEntityMetaData
     /// <summary>
     /// Gets the chart points dictionary.
     /// </summary>
-    public Dictionary<IChartView, ChartPoint>? ChartPoints { get; set; }
+    public Dictionary<IChartView, ChartPoint> ChartPoints { get; set; } = new();
 }

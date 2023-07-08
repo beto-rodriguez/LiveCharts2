@@ -17,11 +17,9 @@ public partial class ViewModel : ObservableObject
         {
             Mapping = (logPoint, chartPoint) =>
             {
-                // for the x coordinate, we use the X property of the LogaritmicPoint instance
-                chartPoint.SecondaryValue = logPoint.X;
-
-                // but for the Y coordinate, we will map to the logarithm of the value
-                chartPoint.PrimaryValue = Math.Log(logPoint.Y, s_logBase); // mark
+                // for the x coordinate, we use the X property
+                // and for the Y coordinate, we will map it to the logarithm of the value
+                chartPoint.Coordinate = new(logPoint.X, Math.Log(logPoint.Y, s_logBase));
             },
             Values = new LogarithmicPoint[]
             {

@@ -67,12 +67,12 @@ public class MapLayer<TDrawingContext>
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
-    public IPaint<TDrawingContext>? Stroke { get; set; } = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+    public IPaint<TDrawingContext>? Stroke { get; set; }
 
     /// <summary>
     /// Gets or sets the fill.
     /// </summary>
-    public IPaint<TDrawingContext>? Fill { get; set; } = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+    public IPaint<TDrawingContext>? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets the X bounds.

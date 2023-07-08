@@ -64,11 +64,20 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
     {
         YToolTipLabelFormatter = p =>
-            $"H {p.PrimaryValue:C2}{Environment.NewLine}" +
-            $"O {p.TertiaryValue:C2}{Environment.NewLine}" +
-            $"C {p.QuaternaryValue:C2}{Environment.NewLine}" +
-            $"L {p.QuinaryValue:C2}";
-        DataLabelsFormatter = point => $"{point.PrimaryValue:C2} - {point.QuinaryValue:C2}";
+        {
+            var c = p.Coordinate;
+            return
+                $"H {c.PrimaryValue:C2}{Environment.NewLine}" +
+                $"O {c.TertiaryValue:C2}{Environment.NewLine}" +
+                $"C {c.QuaternaryValue:C2}{Environment.NewLine}" +
+                $"L {c.QuinaryValue:C2}";
+        };
+
+        DataLabelsFormatter = p =>
+        {
+            var c = p.Coordinate;
+            return $"{c.PrimaryValue:C2} - {c.QuinaryValue:C2}";
+        };
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
@@ -167,13 +176,14 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
 
         foreach (var point in Fetch(cartesianChart))
         {
+            var coordinate = point.Coordinate;
             var visual = point.Context.Visual as TVisual;
-            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+            var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
 
-            var high = primaryScale.ToPixels(point.PrimaryValue);
-            var open = primaryScale.ToPixels(point.TertiaryValue);
-            var close = primaryScale.ToPixels(point.QuaternaryValue);
-            var low = primaryScale.ToPixels(point.QuinaryValue);
+            var high = primaryScale.ToPixels(coordinate.PrimaryValue);
+            var open = primaryScale.ToPixels(coordinate.TertiaryValue);
+            var close = primaryScale.ToPixels(coordinate.QuaternaryValue);
+            var low = primaryScale.ToPixels(coordinate.QuinaryValue);
             var middle = open;
 
             if (point.IsEmpty)
@@ -201,11 +211,11 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                 {
                     var previousP = previousPrimaryScale.ToPixels(pivot);
-                    var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
+                    var previousPrimary = previousPrimaryScale.ToPixels(coordinate.PrimaryValue);
                     var bp = Math.Abs(previousPrimary - previousP);
-                    var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
+                    var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
-                    xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm;
+                    xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - uwm;
                     uwi = puw;
                     hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                 }
@@ -293,7 +303,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
                     x, high, uw, Math.Abs(low - high), m, DataLabelsPosition,
-                    SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                    SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
 
@@ -416,7 +426,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
         }
 
         var p = primaryScale.ToPixels(pivot);
-        var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+        var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
         visual.X = secondary;
         visual.Y = p;

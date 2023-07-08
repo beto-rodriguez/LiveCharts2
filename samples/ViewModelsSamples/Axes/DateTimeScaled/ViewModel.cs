@@ -13,8 +13,8 @@ public partial class ViewModel : ObservableObject
     {
         new ColumnSeries<DateTimePoint>
         {
-            TooltipLabelFormatter = (chartPoint) =>
-                $"{new DateTime((long) chartPoint.SecondaryValue):MMMM dd}: {chartPoint.PrimaryValue}",
+            YToolTipLabelFormatter = (chartPoint) =>
+                $"{new DateTime((long) chartPoint.Coordinate.SecondaryValue):MMMM dd}: {chartPoint.Coordinate.PrimaryValue}",
             Values = new ObservableCollection<DateTimePoint>
             {
                 new DateTimePoint(new DateTime(2021, 1, 1), 3),

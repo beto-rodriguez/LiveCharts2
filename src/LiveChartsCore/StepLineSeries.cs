@@ -196,12 +196,14 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
             foreach (var point in segment)
             {
+                var coordinate = point.Coordinate;
+
                 var s = 0d;
                 if (stacker is not null) s = stacker.GetStack(point).Start;
 
                 var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
-                var dp = point.PrimaryValue + s - previousPrimary;
-                var ds = point.SecondaryValue - previousSecondary;
+                var dp = coordinate.PrimaryValue + s - previousPrimary;
+                var ds = coordinate.SecondaryValue - previousSecondary;
 
                 if (visual is null)
                 {
@@ -210,13 +212,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                     if (IsFirstDraw)
                     {
-                        v.Geometry.X = secondaryScale.ToPixels(point.SecondaryValue);
+                        v.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
                         v.Geometry.Y = p;
                         v.Geometry.Width = 0;
                         v.Geometry.Height = 0;
 
-                        v.StepSegment.Xi = secondaryScale.ToPixels(point.SecondaryValue - ds);
-                        v.StepSegment.Xj = secondaryScale.ToPixels(point.SecondaryValue);
+                        v.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
+                        v.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
                         v.StepSegment.Yi = p;
                         v.StepSegment.Yj = p;
                     }
@@ -236,13 +238,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
                 if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
 
-                visual.StepSegment.Xi = secondaryScale.ToPixels(point.SecondaryValue - ds);
-                visual.StepSegment.Xj = secondaryScale.ToPixels(point.SecondaryValue);
-                visual.StepSegment.Yi = primaryScale.ToPixels(point.PrimaryValue + s - dp);
-                visual.StepSegment.Yj = primaryScale.ToPixels(point.PrimaryValue + s);
+                visual.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
+                visual.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                visual.StepSegment.Yi = primaryScale.ToPixels(coordinate.PrimaryValue + s - dp);
+                visual.StepSegment.Yj = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
-                var x = secondaryScale.ToPixels(point.SecondaryValue);
-                var y = primaryScale.ToPixels(point.PrimaryValue + s);
+                var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.X)].CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Xj)]);
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)].CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Yj)]);
@@ -264,7 +266,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
                 .CenterXToolTip();
 
-                _ = point.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
+                _ = coordinate.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(point);
 
@@ -287,7 +289,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var m = label.Measure(DataLabelsPaint);
                     var labelPosition = GetLabelPosition(
                         x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
-                        SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                        SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                     if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
 
@@ -296,8 +298,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 }
 
                 OnPointMeasured(point);
-                previousPrimary = point.PrimaryValue + s;
-                previousSecondary = point.SecondaryValue;
+                previousPrimary = coordinate.PrimaryValue + s;
+                previousSecondary = coordinate.SecondaryValue;
             }
 
             strokeVector.End();
@@ -426,8 +428,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             return;
         }
 
-        var x = secondaryScale.ToPixels(point.SecondaryValue);
-        var y = primaryScale.ToPixels(point.PrimaryValue);
+        var coordinate = point.Coordinate;
+
+        var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
+        var y = primaryScale.ToPixels(coordinate.PrimaryValue);
 
         visual.Geometry.X = x;
         visual.Geometry.Y = y;
@@ -489,8 +493,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     {
         if (point.Context.Visual is not StepLineVisualPoint<TDrawingContext, TVisual> visual) return;
 
-        var x = xScale.ToPixels(point.SecondaryValue);
-        var y = yScale.ToPixels(point.PrimaryValue);
+        var coordinate = point.Coordinate;
+
+        var x = xScale.ToPixels(coordinate.SecondaryValue);
+        var y = yScale.ToPixels(coordinate.PrimaryValue);
         var gs = _geometrySize;
         var hgs = gs / 2f;
 

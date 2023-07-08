@@ -227,10 +227,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
 
             foreach (var data in GetSpline(segment, stacker))
             {
+                var coordinate = data.TargetPoint.Coordinate;
+
                 isSegmentEmpty = false;
                 var s = 0d;
                 if (stacker is not null)
-                    s = data.TargetPoint.PrimaryValue > 0
+                    s = coordinate.PrimaryValue > 0
                         ? stacker.GetStack(data.TargetPoint).Start
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
@@ -243,7 +245,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
 
                     if (IsFirstDraw)
                     {
-                        v.Geometry.X = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
+                        v.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
                         v.Geometry.Y = p;
                         v.Geometry.Width = 0;
                         v.Geometry.Height = 0;
@@ -278,8 +280,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                 visual.Bezier.Ym = primaryScale.ToPixels(data.Y1);
                 visual.Bezier.Yj = primaryScale.ToPixels(data.Y2);
 
-                var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
-                var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
+                var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
                     .CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Xj)]);
@@ -303,7 +305,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                     .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
                     .CenterXToolTip();
 
-                _ = data.TargetPoint.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
+                _ = coordinate.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(data.TargetPoint);
 
@@ -326,7 +328,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                     var m = label.Measure(DataLabelsPaint);
                     var labelPosition = GetLabelPosition(
                         x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
-                        SeriesProperties, data.TargetPoint.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                        SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                     if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
 
@@ -502,11 +504,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         {
             if (item.IsFirst)
             {
-                var c = item.Current;
+                var c = item.Current.Coordinate;
 
-                var sc = (item.Current.PrimaryValue > 0
-                    ? stacker?.GetStack(c).Start
-                    : stacker?.GetStack(c).NegativeStart) ?? 0;
+                var sc = (c.PrimaryValue > 0
+                    ? stacker?.GetStack(item.Current).Start
+                    : stacker?.GetStack(item.Current).NegativeStart) ?? 0;
 
                 yield return new BezierData(item.Next)
                 {
@@ -526,33 +528,46 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
             var nys = 0d;
             var nnys = 0d;
 
+            var previous = item.Previous.Coordinate;
+            var current = item.Current.Coordinate;
+            var next = item.Next.Coordinate;
+            var afterNext = item.AfterNext.Coordinate;
+
             if (stacker is not null)
             {
-                pys = item.Previous.PrimaryValue > 0 ? stacker.GetStack(item.Previous).Start : stacker.GetStack(item.Previous).NegativeStart;
-                cys = item.Current.PrimaryValue > 0 ? stacker.GetStack(item.Current).Start : stacker.GetStack(item.Current).NegativeStart;
-                nys = item.Next.PrimaryValue > 0 ? stacker.GetStack(item.Next).Start : stacker.GetStack(item.Next).NegativeStart;
-                nnys = item.AfterNext.PrimaryValue > 0 ? stacker.GetStack(item.AfterNext).Start : stacker.GetStack(item.AfterNext).NegativeStart;
+                pys = previous.PrimaryValue > 0
+                    ? stacker.GetStack(item.Previous).Start
+                    : stacker.GetStack(item.Previous).NegativeStart;
+                cys = current.PrimaryValue > 0
+                    ? stacker.GetStack(item.Current).Start
+                    : stacker.GetStack(item.Current).NegativeStart;
+                nys = next.PrimaryValue > 0
+                    ? stacker.GetStack(item.Next).Start
+                    : stacker.GetStack(item.Next).NegativeStart;
+                nnys = afterNext.PrimaryValue > 0
+                    ? stacker.GetStack(item.AfterNext).Start
+                    : stacker.GetStack(item.AfterNext).NegativeStart;
             }
 
-            var xc1 = (item.Previous.SecondaryValue + item.Current.SecondaryValue) / 2.0f;
-            var yc1 = (item.Previous.PrimaryValue + pys + item.Current.PrimaryValue + cys) / 2.0f;
-            var xc2 = (item.Current.SecondaryValue + item.Next.SecondaryValue) / 2.0f;
-            var yc2 = (item.Current.PrimaryValue + cys + item.Next.PrimaryValue + nys) / 2.0f;
-            var xc3 = (item.Next.SecondaryValue + item.AfterNext.SecondaryValue) / 2.0f;
-            var yc3 = (item.Next.PrimaryValue + nys + item.AfterNext.PrimaryValue + nnys) / 2.0f;
+            var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0f;
+            var yc1 = (previous.PrimaryValue + pys + current.PrimaryValue + cys) / 2.0f;
+            var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0f;
+            var yc2 = (current.PrimaryValue + cys + next.PrimaryValue + nys) / 2.0f;
+            var xc3 = (next.SecondaryValue + afterNext.SecondaryValue) / 2.0f;
+            var yc3 = (next.PrimaryValue + nys + afterNext.PrimaryValue + nnys) / 2.0f;
 
             var len1 = (float)Math.Sqrt(
-                (item.Current.SecondaryValue - item.Previous.SecondaryValue) *
-                (item.Current.SecondaryValue - item.Previous.SecondaryValue) +
-                (item.Current.PrimaryValue + cys - item.Previous.PrimaryValue + pys) * (item.Current.PrimaryValue + cys - item.Previous.PrimaryValue + pys));
+                (current.SecondaryValue - previous.SecondaryValue) *
+                (current.SecondaryValue - previous.SecondaryValue) +
+                (current.PrimaryValue + cys - previous.PrimaryValue + pys) * (current.PrimaryValue + cys - previous.PrimaryValue + pys));
             var len2 = (float)Math.Sqrt(
-                (item.Next.SecondaryValue - item.Current.SecondaryValue) *
-                (item.Next.SecondaryValue - item.Current.SecondaryValue) +
-                (item.Next.PrimaryValue + nys - item.Current.PrimaryValue + cys) * (item.Next.PrimaryValue + nys - item.Current.PrimaryValue + cys));
+                (next.SecondaryValue - current.SecondaryValue) *
+                (next.SecondaryValue - current.SecondaryValue) +
+                (next.PrimaryValue + nys - current.PrimaryValue + cys) * (next.PrimaryValue + nys - current.PrimaryValue + cys));
             var len3 = (float)Math.Sqrt(
-                (item.AfterNext.SecondaryValue - item.Next.SecondaryValue) *
-                (item.AfterNext.SecondaryValue - item.Next.SecondaryValue) +
-                (item.AfterNext.PrimaryValue + nnys - item.Next.PrimaryValue + nys) * (item.AfterNext.PrimaryValue + nnys - item.Next.PrimaryValue + nys));
+                (afterNext.SecondaryValue - next.SecondaryValue) *
+                (afterNext.SecondaryValue - next.SecondaryValue) +
+                (afterNext.PrimaryValue + nnys - next.PrimaryValue + nys) * (afterNext.PrimaryValue + nnys - next.PrimaryValue + nys));
 
             var k1 = len1 / (len1 + len2);
             var k2 = len2 / (len2 + len3);
@@ -565,10 +580,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
             var xm2 = xc2 + (xc3 - xc2) * k2;
             var ym2 = yc2 + (yc3 - yc2) * k2;
 
-            var c1X = xm1 + (xc2 - xm1) * _lineSmoothness + item.Current.SecondaryValue - xm1;
-            var c1Y = ym1 + (yc2 - ym1) * _lineSmoothness + item.Current.PrimaryValue + cys - ym1;
-            var c2X = xm2 + (xc2 - xm2) * _lineSmoothness + item.Next.SecondaryValue - xm2;
-            var c2Y = ym2 + (yc2 - ym2) * _lineSmoothness + item.Next.PrimaryValue + nys - ym2;
+            var c1X = xm1 + (xc2 - xm1) * _lineSmoothness + current.SecondaryValue - xm1;
+            var c1Y = ym1 + (yc2 - ym1) * _lineSmoothness + current.PrimaryValue + cys - ym1;
+            var c2X = xm2 + (xc2 - xm2) * _lineSmoothness + next.SecondaryValue - xm2;
+            var c2Y = ym2 + (yc2 - ym2) * _lineSmoothness + next.PrimaryValue + nys - ym2;
 
             yield return new BezierData(item.Next)
             {
@@ -576,8 +591,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                 Y0 = c1Y,
                 X1 = c2X,
                 Y1 = c2Y,
-                X2 = item.Next.SecondaryValue,
-                Y2 = item.Next.PrimaryValue + nys
+                X2 = next.SecondaryValue,
+                Y2 = next.PrimaryValue + nys
             };
         }
     }
@@ -601,8 +616,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var x = secondaryScale.ToPixels(point.SecondaryValue);
-        var y = primaryScale.ToPixels(point.PrimaryValue);
+        var c = point.Coordinate;
+
+        var x = secondaryScale.ToPixels(c.SecondaryValue);
+        var y = primaryScale.ToPixels(c.PrimaryValue);
 
         visual.Geometry.X = x;
         visual.Geometry.Y = y;
@@ -622,8 +639,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     {
         if (point.Context.Visual is not BezierVisualPoint<TDrawingContext, TVisual> visual) return;
 
-        var x = xScale.ToPixels(point.SecondaryValue);
-        var y = yScale.ToPixels(point.PrimaryValue);
+        var c = point.Coordinate;
+
+        var x = xScale.ToPixels(c.SecondaryValue);
+        var y = yScale.ToPixels(c.PrimaryValue);
         var gs = _geometrySize;
         var hgs = gs / 2f;
 

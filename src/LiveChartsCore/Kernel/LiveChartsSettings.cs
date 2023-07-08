@@ -369,70 +369,22 @@ public class LiveChartsSettings
     public LiveChartsSettings AddDefaultMappers()
     {
         return
-            HasMap<short>((model, point) =>
-            {
-                point.PrimaryValue = model;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<int>((model, point) =>
-            {
-                point.PrimaryValue = model;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<long>((model, point) =>
-            {
-                point.PrimaryValue = model;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<float>((model, point) =>
-            {
-                point.PrimaryValue = model;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<double>((model, point) =>
-            {
-                point.PrimaryValue = model;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<decimal>((model, point) =>
-            {
-                point.PrimaryValue = (double)model;
-                point.SecondaryValue = point.Context.Entity.MetaData!.EntityIndex;
-            })
+            HasMap<short>((model, point) => point.Coordinate = new(point.Index, model))
+            .HasMap<int>((model, point) => point.Coordinate = new(point.Index, model))
+            .HasMap<long>((model, point) => point.Coordinate = new(point.Index, model))
+            .HasMap<float>((model, point) => point.Coordinate = new(point.Index, model))
+            .HasMap<double>((model, point) => point.Coordinate = new(point.Index, model))
+            .HasMap<decimal>((model, point) => point.Coordinate = new(point.Index, (double)model))
             .HasMap<short?>((model, point) =>
             {
                 // model can not be null at this point.
-                // LiveCharts will return Coordinate.Empty if model was null.
-                point.PrimaryValue = model!.Value;
-
-                // MetaData can not be null neither at this point.
-                // LiveCharts already checked for nulls.
-                point.SecondaryValue = point.Index;
+                // LiveCharts will return Coordinate.Empty if the model was null.
+                point.Coordinate = new(point.Index, model!.Value);
             })
-            .HasMap<int?>((model, point) =>
-            {
-                point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<long?>((model, point) =>
-            {
-                point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<float?>((model, point) =>
-            {
-                point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<double?>((model, point) =>
-            {
-                point.PrimaryValue = model!.Value;
-                point.SecondaryValue = point.Index;
-            })
-            .HasMap<decimal?>((model, point) =>
-            {
-                point.PrimaryValue = (double)model!.Value;
-                point.SecondaryValue = point.Index;
-            });
+            .HasMap<int?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
+            .HasMap<long?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
+            .HasMap<float?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
+            .HasMap<double?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
+            .HasMap<decimal?>((model, point) => point.Coordinate = new(point.Index, (double)model!.Value));
     }
 }

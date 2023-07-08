@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Ignore Spelling: Crosshair Subticks Subseparators
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -663,8 +665,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
 
-                crosshairX = scale.ToPixels(closestPoint?.SecondaryValue ?? pointerPosition.X);
-                labelValue = closestPoint?.SecondaryValue ?? scale.ToChartValues(pointerPosition.X);
+                var c = closestPoint?.Coordinate;
+
+                crosshairX = scale.ToPixels(c?.SecondaryValue ?? pointerPosition.X);
+                labelValue = c?.SecondaryValue ?? scale.ToChartValues(pointerPosition.X);
             }
             else
             {
@@ -684,8 +688,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
 
-                crosshairY = scale.ToPixels(closestPoint?.PrimaryValue ?? pointerPosition.Y);
-                labelValue = closestPoint?.PrimaryValue ?? scale.ToChartValues(pointerPosition.Y);
+                var c = closestPoint?.Coordinate;
+
+                crosshairY = scale.ToPixels(c?.PrimaryValue ?? pointerPosition.Y);
+                labelValue = c?.PrimaryValue ?? scale.ToChartValues(pointerPosition.Y);
             }
             else
             {

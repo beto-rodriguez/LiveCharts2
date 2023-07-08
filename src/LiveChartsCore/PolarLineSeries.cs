@@ -284,13 +284,15 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
             foreach (var data in GetSpline(segment, scaler, stacker))
             {
+                var coordinate = data.TargetPoint.Coordinate;
+
                 var s = 0d;
                 if (stacker is not null)
                 {
                     s = stacker.GetStack(data.TargetPoint).Start;
                 }
 
-                var cp = scaler.ToPixels(data.TargetPoint.SecondaryValue, data.TargetPoint.PrimaryValue + s);
+                var cp = scaler.ToPixels(coordinate.SecondaryValue, coordinate.PrimaryValue + s);
 
                 var x = cp.X;
                 var y = cp.Y;
@@ -363,8 +365,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     var label = (TLabel?)data.TargetPoint.Context.Label;
 
                     var actualRotation = r +
-                        (isTangent ? scaler.GetAngle(data.TargetPoint.SecondaryValue) - 90 : 0) +
-                        (isCotangent ? scaler.GetAngle(data.TargetPoint.SecondaryValue) : 0);
+                        (isTangent ? scaler.GetAngle(coordinate.SecondaryValue) - 90 : 0) +
+                        (isCotangent ? scaler.GetAngle(coordinate.SecondaryValue) : 0);
 
                     if ((isTangent || isCotangent) && ((actualRotation + 90) % 360) > 180)
                         actualRotation += 180;
@@ -386,7 +388,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     var rad = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
 
                     var labelPosition = GetLabelPolarPosition(
-                        scaler.CenterX, scaler.CenterY, (float)rad, scaler.GetAngle(data.TargetPoint.SecondaryValue),
+                        scaler.CenterX, scaler.CenterY, (float)rad, scaler.GetAngle(coordinate.SecondaryValue),
                         label.Measure(DataLabelsPaint), (float)GeometrySize, DataLabelsPosition);
 
                     label.X = labelPosition.X;
@@ -528,8 +530,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             var ax = cc.RadiusAxes[cs.ScalesRadiusAt];
 
             label = ax.Labels is not null
-                ? Labelers.BuildNamedLabeler(ax.Labels)(point.PrimaryValue)
-                : ax.Labeler(point.PrimaryValue);
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.Coordinate.PrimaryValue)
+                : ax.Labeler(point.Coordinate.PrimaryValue);
         }
 
         return label;
@@ -551,9 +553,9 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             var ax = cc.AngleAxes[cs.ScalesAngleAt];
 
             label = ax.Labels is not null
-                ? Labelers.BuildNamedLabeler(ax.Labels)(point.SecondaryValue)
+                ? Labelers.BuildNamedLabeler(ax.Labels)(point.Coordinate.SecondaryValue)
                 : (ax.Labeler != Labelers.Default
-                    ? ax.Labeler(point.SecondaryValue)
+                    ? ax.Labeler(point.Coordinate.SecondaryValue)
                     : LiveCharts.IgnoreToolTipLabel);
         }
 
@@ -595,10 +597,15 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             var p2 = points[i + 1 > points.Length - 1 ? (isClosed ? a1 : points.Length - 1) : i + 1];
             var p3 = points[i + 2 > points.Length - 1 ? (isClosed ? a2 : points.Length - 1) : i + 2];
 
-            previous = scaler.ToPixels(p0.SecondaryValue, p0.PrimaryValue);
-            current = scaler.ToPixels(p1.SecondaryValue, p1.PrimaryValue);
-            next = scaler.ToPixels(p2.SecondaryValue, p2.PrimaryValue);
-            next2 = scaler.ToPixels(p3.SecondaryValue, p3.PrimaryValue);
+            var p0c = p0.Coordinate;
+            var p1c = p1.Coordinate;
+            var p2c = p2.Coordinate;
+            var p3c = p3.Coordinate;
+
+            previous = scaler.ToPixels(p0c.SecondaryValue, p0c.PrimaryValue);
+            current = scaler.ToPixels(p1c.SecondaryValue, p1c.PrimaryValue);
+            next = scaler.ToPixels(p2c.SecondaryValue, p2c.PrimaryValue);
+            next2 = scaler.ToPixels(p3c.SecondaryValue, p3c.PrimaryValue);
 
             var pys = 0d;
             var cys = 0d;

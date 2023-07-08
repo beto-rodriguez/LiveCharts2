@@ -26,16 +26,17 @@ public partial class ViewModel : ObservableObject
         };
 
         // the parameter in the AsLiveChartsSeries() function is optional
-        // and is usefull to customize each series
+        // and is useful to customize each series
         // it is a function that takes the city and the series assigned to the city as parameters
-        var seriesCollection = data.AsLiveChartsPieSeries(
+        var seriesCollection = data.AsPieSeries(
             (city, series) =>
             {
                 series.Name = city.Name;
                 series.Mapping = (cityMapper, point) =>
                 {
-                    point.PrimaryValue = cityMapper.Population; // use the population property in this series // mark
-                    point.SecondaryValue = point.Context.Index;
+                    // use the population property in the Y axis // mark
+                    // and the index of the city in the array in the X axis // mark
+                    point.Coordinate = new(point.Index, cityMapper.Population);
                 };
                 series.DataPointerDown += Series_DataPointerDown;
             });

@@ -87,6 +87,7 @@ public static class Index
         "Events/Pie",
         "Events/Polar",
 
+        "General/Scrollable",
         "General/Sections",
         "General/Sections2",
         "General/ConditionalDraw",

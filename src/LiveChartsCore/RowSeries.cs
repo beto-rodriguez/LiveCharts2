@@ -110,9 +110,11 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
         foreach (var point in Fetch(cartesianChart))
         {
+            var coordinate = point.Coordinate;
+
             var visual = point.Context.Visual as TVisual;
-            var primary = primaryScale.ToPixels(point.PrimaryValue);
-            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+            var primary = primaryScale.ToPixels(coordinate.PrimaryValue);
+            var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var b = Math.Abs(primary - helper.p);
 
             if (point.IsEmpty)
@@ -138,11 +140,11 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
                 {
-                    var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
+                    var previousPrimary = previousPrimaryScale.ToPixels(coordinate.PrimaryValue);
                     var bp = Math.Abs(previousPrimary - pHelper.p);
-                    var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
+                    var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
-                    yi = previousSecondaryScale.ToPixels(point.SecondaryValue) - pHelper.uwm + pHelper.cp;
+                    yi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - pHelper.uwm + pHelper.cp;
                     pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
                     uwi = pHelper.uw;
                     hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
@@ -173,8 +175,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             var cx = secondaryAxis.IsInverted
-                ? (point.PrimaryValue > pivot ? primary : primary - b)
-                : (point.PrimaryValue > pivot ? primary - b : primary);
+                ? (coordinate.PrimaryValue > pivot ? primary : primary - b)
+                : (coordinate.PrimaryValue > pivot ? primary - b : primary);
             var y = secondary - helper.uwm + helper.cp;
 
             if (stacker is not null)
@@ -182,7 +184,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 var sx = stacker.GetStack(point);
 
                 float primaryI, primaryJ;
-                if (point.PrimaryValue >= 0)
+                if (coordinate.PrimaryValue >= 0)
                 {
                     primaryI = primaryScale.ToPixels(sx.Start);
                     primaryJ = primaryScale.ToPixels(sx.End);
@@ -237,7 +239,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
                     cx, y, b, helper.uw, label.Measure(DataLabelsPaint),
-                    DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                    DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
 
@@ -289,7 +291,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         }
 
         var p = primaryScale.ToPixels(pivot);
-        var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+        var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
         visual.X = p;
         visual.Y = secondary;

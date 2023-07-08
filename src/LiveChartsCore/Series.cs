@@ -26,7 +26,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -100,7 +99,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private string? _name;
     private Action<TModel, ChartPoint>? _mapping;
     private int _zIndex;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.PrimaryValue.ToString();
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
     private bool _isVisible = true;
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel, TDrawingContext>? _dataFactory;

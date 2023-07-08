@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// Ignore Spelling: Gauge
+
+using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
@@ -125,7 +127,7 @@ public partial class ViewModel : ObservableObject
         Series11 = new GaugeBuilder()
         {
             LabelsPosition = PolarLabelsPosition.Start,
-            LabelFormatter = point => point.Context.Series.Name + " " + point.PrimaryValue,
+            LabelFormatter = point => point.Context.Series.Name + " " + point.Coordinate.PrimaryValue,
             LabelsSize = 20,
             InnerRadius = 20,
             BackgroundInnerRadius = 20
@@ -141,7 +143,7 @@ public partial class ViewModel : ObservableObject
         Series12 = new GaugeBuilder()
         {
             LabelsPosition = PolarLabelsPosition.Start,
-            LabelFormatter = point => point.PrimaryValue + " " + point.Context.Series.Name,
+            LabelFormatter = point => point.Coordinate.PrimaryValue + " " + point.Context.Series.Name,
             LabelsSize = 20,
             InnerRadius = 20,
             OffsetRadius = 8,
@@ -158,7 +160,7 @@ public partial class ViewModel : ObservableObject
         Series13 = new GaugeBuilder()
         {
             LabelsPosition = PolarLabelsPosition.Start,
-            LabelFormatter = point => point.PrimaryValue + " " + point.Context.Series.Name,
+            LabelFormatter = point => point.Coordinate.PrimaryValue + " " + point.Context.Series.Name,
             LabelsSize = 20,
             InnerRadius = 20,
             OffsetRadius = 4,
@@ -176,7 +178,7 @@ public partial class ViewModel : ObservableObject
         Series14 = new GaugeBuilder()
         {
             LabelsPosition = PolarLabelsPosition.End,
-            LabelFormatter = point => point.PrimaryValue.ToString(),
+            LabelFormatter = point => point.Coordinate.PrimaryValue.ToString(),
             LabelsSize = 20,
             InnerRadius = 20,
             MaxColumnWidth = 5,

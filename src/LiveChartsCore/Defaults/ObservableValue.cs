@@ -74,7 +74,7 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
 #else
     [Newtonsoft.Json.JsonIgnore]
 #endif
-    public Coordinate Coordinate { get; private set; } = Coordinate.Empty;
+    public Coordinate Coordinate { get; set; } = Coordinate.Empty;
 
     /// <summary>
     /// Occurs when a property value changes.

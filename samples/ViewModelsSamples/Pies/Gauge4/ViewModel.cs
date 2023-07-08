@@ -12,7 +12,7 @@ public partial class ViewModel : ObservableObject
         = new GaugeBuilder()
         .WithLabelsSize(20)
         .WithLabelsPosition(PolarLabelsPosition.End)
-        .WithLabelFormatter(point => point.PrimaryValue.ToString())
+        .WithLabelFormatter(point => point.Coordinate.PrimaryValue.ToString())
         .WithInnerRadius(20)
         .WithMaxColumnWidth(5)
         .WithBackground(null)
