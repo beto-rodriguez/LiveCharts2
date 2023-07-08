@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="General\Scrollable\View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Lines\Basic\View.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -129,6 +133,10 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\MultiThreading\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\Scrollable\View.xaml.cs">
+      <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\VisualElements\View.xaml.cs">
