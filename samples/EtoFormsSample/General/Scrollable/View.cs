@@ -11,7 +11,7 @@ public class View : Panel
 {
     private readonly ViewModel _viewModel = new();
     private readonly CartesianChart _scrollBarChart;
-    private bool _isDown = true;
+    private bool _isDown = false;
 
     public View()
     {

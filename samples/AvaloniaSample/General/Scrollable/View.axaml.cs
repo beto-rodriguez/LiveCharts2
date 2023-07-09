@@ -11,7 +11,7 @@ namespace AvaloniaSample.General.Scrollable;
 
 public class View : UserControl
 {
-    private bool _isDown = true;
+    private bool _isDown = false;
 
     public View()
     {

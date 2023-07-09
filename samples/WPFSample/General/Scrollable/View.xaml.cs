@@ -13,7 +13,7 @@ namespace WPFSample.General.Scrollable;
 /// </summary>
 public partial class View : UserControl
 {
-    private bool _isDown = true;
+    private bool _isDown = false;
 
     public View()
     {

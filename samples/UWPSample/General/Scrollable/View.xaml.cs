@@ -10,7 +10,7 @@ namespace UWPSample.General.Scrollable
 {
     public sealed partial class View : UserControl
     {
-        private bool _isDown = true;
+        private bool _isDown = false;
 
         public View()
         {

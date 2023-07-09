@@ -12,7 +12,7 @@ namespace XamarinSample.General.Scrollable;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage
 {
-    private bool _isDown = true;
+    private bool _isDown = false;
 
     public View()
     {
