@@ -39,7 +39,7 @@ public class HeatLandSeries : HeatLandSeries<SkiaSharpDrawingContext>
             LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
         IntitializeSeries(LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
     }
 }

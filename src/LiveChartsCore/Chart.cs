@@ -80,7 +80,7 @@ public abstract class Chart<TDrawingContext> : IChart
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
         EasingFunction = EasingFunctions.QuadraticOut;
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(defaultPlatformConfig);
+        LiveCharts.Configure(defaultPlatformConfig);
 
         _updateThrottler = view.DesignerMode
                 ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))

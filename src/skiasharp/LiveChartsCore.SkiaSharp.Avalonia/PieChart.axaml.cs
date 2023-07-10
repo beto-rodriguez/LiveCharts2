@@ -79,7 +79,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         // Avalonia do not seem to detect events if background is not set.
         Background = new SolidColorBrush(Colors.Transparent);
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
 
@@ -505,8 +505,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     {
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
-        _core = new PieChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas!.CanvasCore);
+        _core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas!.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;

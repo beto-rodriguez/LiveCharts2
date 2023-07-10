@@ -82,7 +82,6 @@ public class HeatSeries<TModel, TVisual, TLabel> : HeatSeries<TModel, TVisual, T
     /// </summary>
     public HeatSeries()
     {
-        // This is required for now...
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
     }
 }

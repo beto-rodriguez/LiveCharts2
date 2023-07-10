@@ -84,7 +84,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         // Avalonia do not seem to detect pointer events if background is not set.
         ((IChartView)this).BackColor = LvcColor.FromArgb(0, 0, 0, 0);
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
 

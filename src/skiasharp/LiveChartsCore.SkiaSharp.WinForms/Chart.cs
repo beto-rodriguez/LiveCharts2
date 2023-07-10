@@ -106,7 +106,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         Name = "CartesianChart";
         ResumeLayout(true);
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
 

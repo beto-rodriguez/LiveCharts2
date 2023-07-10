@@ -58,7 +58,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     public GeoMap()
     {
         InitializeComponent();
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
         _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
 
         _core = new GeoMap<SkiaSharpDrawingContext>(this);

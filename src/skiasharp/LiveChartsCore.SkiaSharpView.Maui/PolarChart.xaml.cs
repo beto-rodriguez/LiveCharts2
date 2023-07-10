@@ -69,7 +69,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     {
         InitializeComponent();
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
         SizeChanged += OnSizeChanged;

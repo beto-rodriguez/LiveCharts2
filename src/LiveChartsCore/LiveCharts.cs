@@ -46,6 +46,16 @@ public static class LiveCharts
     public static bool HasBackend { get; internal set; } = false;
 
     /// <summary>
+    /// Gets a value indicating whether LiveCharts has a theme registered.
+    /// </summary>
+    public static bool HasTheme { get; set; } = false;
+
+    /// <summary>
+    /// Gets a value indicating whether LiveCharts has the default mappers registered.
+    /// </summary>
+    public static bool HasDefaultMappers { get; set; } = false;
+
+    /// <summary>
     /// Gets the current settings.
     /// </summary>
     /// <value>
