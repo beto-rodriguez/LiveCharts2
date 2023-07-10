@@ -22,19 +22,8 @@
     protected override void OnInitialized()
     {
         LiveCharts.Configure(config => // mark
-            config // mark
-                // registers SkiaSharp as the library backend
-                // REQUIRED unless you build your own
-                .AddSkiaSharp() // mark
-
-                // adds the default supported types
-                // OPTIONAL but highly recommend
-                .AddDefaultMappers() // mark
-
-                // select a theme, default is Light
-                // OPTIONAL
-                //.AddDarkTheme()
-                .AddLightTheme() // mark
+            config // you can override the theme
+                // .AddDarkTheme() // mark
 
                 // finally register your own mappers
                 // you can learn more about mappers at:
