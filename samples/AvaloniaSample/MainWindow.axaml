@@ -5,8 +5,7 @@
         xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
         xmlns:vms="using:ViewModelsSamples"
         xmlns:local="using:AvaloniaSample"
-        Background="{Binding Background}"
-        TransparencyLevelHint="Blur"
+        Background="#909090"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="50"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -41,7 +40,7 @@
               <DataTemplate>
                 <Border Padding="0 6" Cursor="Hand"  PointerPressed="OnPointerPressed">
                   <TextBlock Text="{Binding}"
-                             Foreground="{Binding DataContext.Foreground, RelativeSource={RelativeSource AncestorType=Window}}"
+                             Foreground="#ffffff"
                              FontSize="16"
                              FontFamily="Open Sans"></TextBlock>
 
@@ -54,7 +53,7 @@
       </Grid>
 
       <Border Grid.Column="1"
-              Background="{Binding DataContext.HighlightedBackgound, RelativeSource={RelativeSource AncestorType=Window}}"
+              Background="#ffffff"
               Margin="20 35 0 0"
               Padding="25"
               BoxShadow="0 0 10 0 #15000000, 0 0 10 0 #15000000, 0 0 10 0 #15000000, 0 0 10 0 #15000000">
