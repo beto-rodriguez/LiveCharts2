@@ -150,12 +150,15 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
             cp = 0f;
 
             var padding = (float)barSeries.Padding;
+            if (barSeries.IgnoresBarPosition) count = 1;
 
             uw /= count;
             var mw = (float)barSeries.MaxBarWidth;
             if (uw > mw) uw = mw;
             uwm = 0.5f * uw;
-            cp = barSeries.IgnoresBarPosition ? 0 : (pos - count / 2f) * uw + uwm;
+            cp = barSeries.IgnoresBarPosition
+                ? 0
+                : (pos - count / 2f) * uw + uwm;
 
             // apply the pading
             uw -= padding;
