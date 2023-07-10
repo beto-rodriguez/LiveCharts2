@@ -108,4 +108,26 @@ public static class LiveCharts
     {
         return DefaultSettings.HasMap(mapper);
     }
+
+    /// <summary>
+    /// Converts ticks to Date, and prevents overflow exceptions.
+    /// </summary>
+    /// <param name="ticks">The ticks.</param>
+    /// <returns>A DateTime object.</returns>
+    public static DateTime AsDate(this double ticks)
+    {
+        if (ticks < 0) ticks = 0;
+        return new DateTime((long)ticks);
+    }
+
+    /// <summary>
+    /// Converts ticks to TimeSpan, and prevents overflow exceptions.
+    /// </summary>
+    /// <param name="ticks">The ticks.</param>
+    /// <returns>A DateTime object.</returns>
+    public static TimeSpan AsTimeSpan(this double ticks)
+    {
+        if (ticks < 0) ticks = 0;
+        return TimeSpan.FromTicks((long)ticks);
+    }
 }

@@ -33,7 +33,7 @@ public partial class ViewModel : ObservableObject
     {
         new Axis
         {
-            Labeler = value => new DateTime((long) value).ToString("MMMM dd"),
+            Labeler = value => value.AsDate().ToString("MMMM dd"),
             LabelsRotation = 80,
 
             // when using a date time type, let the library know your unit // mark
