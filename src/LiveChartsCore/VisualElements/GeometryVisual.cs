@@ -164,4 +164,9 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
 
         return new LvcSize(w, h);
     }
+
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    {
+        return new[] { Fill, Stroke, _labelPaint };
+    }
 }
