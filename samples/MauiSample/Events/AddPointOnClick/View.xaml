@@ -11,7 +11,9 @@
     <lvc:CartesianChart
                 x:Name="chart"
                 Series="{Binding SeriesCollection}"
-                Touched="Chart_Touched"
                 TooltipPosition="Hidden">
+        <lvc:CartesianChart.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnTapped"/>
+        </lvc:CartesianChart.GestureRecognizers>
     </lvc:CartesianChart>
 </ContentPage>

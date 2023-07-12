@@ -12,10 +12,11 @@ public partial class View : ContentPage
         InitializeComponent();
     }
 
-    private void Chart_Touched(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
+    private void OnTapped(object sender, TappedEventArgs e)
     {
         var viewModel = (ViewModel)BindingContext;
-        var p = new LvcPointD(e.Location.X, e.Location.Y);
+        var position = e.GetPosition(chart).Value;
+        var p = new LvcPointD(position.X, position.Y);
 
         // scales the UI coordinates to the corresponding data in the chart.
         var dataCoordinates = chart.ScalePixelsToData(p);
