@@ -45,7 +45,6 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
-using SkiaSharp.Views.Maui;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -101,9 +100,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
-
-        canvas.SkCanvasView.EnableTouchEvents = true;
-        canvas.SkCanvasView.Touch += OnSkCanvasTouched;
 
         if (_core is null) throw new Exception("Core not found!");
         _core.Measuring += OnCoreMeasuring;
@@ -377,11 +373,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
     public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
-
-    /// <summary>
-    /// Called when the chart is touched.
-    /// </summary>
-    public event EventHandler<SKTouchEventArgs>? Touched;
 
     #endregion
 
@@ -727,11 +718,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _core?.Update();
     }
 
-    private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
+    private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
-        // gestures might not be working properly in android in the current version of maui (rc2)
-        // https://github.com/dotnet/maui/issues/6553
-
         if (_core is null) return;
         if (e.StatusType is not GestureStatus.Running and not GestureStatus.Completed) return;
         if (DateTime.Now < _panLocketUntil) return;
@@ -765,11 +753,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _lastPanY = 0;
     }
 
-    private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
+    private void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
-        // gestures might not be working properly in android in the current version of maui (rc2)
-        // https://github.com/dotnet/maui/issues/6553
-
         if (_core is null) return;
         if (e.Status is not GestureStatus.Running and not GestureStatus.Completed) return;
 
@@ -791,17 +776,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         // so the core is able to bounce back the plot in case it exceeded the allowed limits
         // this is a dummy request of += .001 percent just in the corresponding direction
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, _lastScale < 1 ? 0.99999 : 1.00001, false);
-    }
-
-    private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)
-    {
-        if (_core is null) return;
-
-        var location = new LvcPoint(e.Location.X, e.Location.Y);
-        _core.InvokePointerDown(location, false);
-        _core.InvokePointerMove(location);
-
-        Touched?.Invoke(this, e);
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
