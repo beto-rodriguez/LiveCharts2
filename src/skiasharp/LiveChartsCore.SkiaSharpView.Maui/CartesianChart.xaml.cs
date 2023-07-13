@@ -778,6 +778,23 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, _lastScale < 1 ? 0.99999 : 1.00001, false);
     }
 
+    private void OnTapped(object sender, TappedEventArgs e)
+    {
+        if (_core is null) return;
+        var position = e.GetPosition(this);
+        if (position is null) return;
+        var location = new LvcPoint(position.Value.X, position.Value.Y);
+        _core.InvokePointerDown(location, false);
+        _core.InvokePointerMove(location);
+    }
+
+    private void OnPointerMoved(object sender, PointerEventArgs e)
+    {
+        var p = e.GetPosition(this);
+        if (p is null) return;
+        _core?.InvokePointerMove(new LvcPoint((float)p.Value.X, (float)p.Value.Y));
+    }
+
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
     {
         UpdateFinished?.Invoke(this);
