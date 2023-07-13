@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "src\LiveChartsCore\LiveChartsCore.csproj", "{3BE7FD01-B44C-4D44-9A0A-19A5E62D21CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView", "src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj", "{5B06DBCE-0C94-4BB1-90C9-1FA95D958543}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Avalonia", "src\skiasharp\LiveChartsCore.SkiaSharp.Avalonia\LiveChartsCore.SkiaSharpView.Avalonia.csproj", "{ED99F871-EF03-4A47-9965-665CF6B754D4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaSample", "samples\AvaloniaSample\AvaloniaSample.csproj", "{570890A6-8121-4E8F-9647-6FF08ED0EBC4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModelsSamples", "samples\ViewModelsSamples\ViewModelsSamples.csproj", "{C768EB32-8DFC-421C-BA52-4B868E429389}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3BE7FD01-B44C-4D44-9A0A-19A5E62D21CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BE7FD01-B44C-4D44-9A0A-19A5E62D21CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BE7FD01-B44C-4D44-9A0A-19A5E62D21CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE7FD01-B44C-4D44-9A0A-19A5E62D21CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B06DBCE-0C94-4BB1-90C9-1FA95D958543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B06DBCE-0C94-4BB1-90C9-1FA95D958543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B06DBCE-0C94-4BB1-90C9-1FA95D958543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B06DBCE-0C94-4BB1-90C9-1FA95D958543}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED99F871-EF03-4A47-9965-665CF6B754D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED99F871-EF03-4A47-9965-665CF6B754D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED99F871-EF03-4A47-9965-665CF6B754D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED99F871-EF03-4A47-9965-665CF6B754D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{570890A6-8121-4E8F-9647-6FF08ED0EBC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{570890A6-8121-4E8F-9647-6FF08ED0EBC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{570890A6-8121-4E8F-9647-6FF08ED0EBC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{570890A6-8121-4E8F-9647-6FF08ED0EBC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C768EB32-8DFC-421C-BA52-4B868E429389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C768EB32-8DFC-421C-BA52-4B868E429389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C768EB32-8DFC-421C-BA52-4B868E429389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C768EB32-8DFC-421C-BA52-4B868E429389}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9500D7AE-705F-4B1B-A34B-3550FBC35993}
+	EndGlobalSection
+EndGlobal

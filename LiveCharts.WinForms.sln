@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "src\LiveChartsCore\LiveChartsCore.csproj", "{EC082C23-0912-44B7-91BF-4F417FDE58C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView", "src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj", "{FEBC20B5-12EB-46A7-A7F5-B119A0894949}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.WinForms", "src\skiasharp\LiveChartsCore.SkiaSharp.WinForms\LiveChartsCore.SkiaSharpView.WinForms.csproj", "{FF4DE22C-F7ED-4FD3-A7E2-13FA88380857}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsSample", "samples\WinFormsSample\WinFormsSample.csproj", "{52C87D18-3B17-42CC-B433-38507F35BA79}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModelsSamples", "samples\ViewModelsSamples\ViewModelsSamples.csproj", "{FDA82E2F-B072-421E-BE43-FB0A473E76BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC082C23-0912-44B7-91BF-4F417FDE58C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC082C23-0912-44B7-91BF-4F417FDE58C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC082C23-0912-44B7-91BF-4F417FDE58C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC082C23-0912-44B7-91BF-4F417FDE58C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEBC20B5-12EB-46A7-A7F5-B119A0894949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEBC20B5-12EB-46A7-A7F5-B119A0894949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEBC20B5-12EB-46A7-A7F5-B119A0894949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEBC20B5-12EB-46A7-A7F5-B119A0894949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF4DE22C-F7ED-4FD3-A7E2-13FA88380857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF4DE22C-F7ED-4FD3-A7E2-13FA88380857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF4DE22C-F7ED-4FD3-A7E2-13FA88380857}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF4DE22C-F7ED-4FD3-A7E2-13FA88380857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52C87D18-3B17-42CC-B433-38507F35BA79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C87D18-3B17-42CC-B433-38507F35BA79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52C87D18-3B17-42CC-B433-38507F35BA79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52C87D18-3B17-42CC-B433-38507F35BA79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA82E2F-B072-421E-BE43-FB0A473E76BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA82E2F-B072-421E-BE43-FB0A473E76BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA82E2F-B072-421E-BE43-FB0A473E76BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA82E2F-B072-421E-BE43-FB0A473E76BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2FCF03AF-AB77-4031-B20F-E5C1692B60CD}
+	EndGlobalSection
+EndGlobal
