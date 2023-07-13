@@ -13,7 +13,7 @@ public sealed partial class View : UserControl
         InitializeComponent();
     }
 
-    private async void Button_PointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    private async void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         var vm = (ViewModel)DataContext;
         _isStreaming = _isStreaming is null ? true : !_isStreaming;
