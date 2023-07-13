@@ -42,6 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 public partial class MotionCanvas : ContentView
 {
     private bool _isDrawingLoopRunning = false;
+    private bool _isLoaded = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -57,6 +58,7 @@ public partial class MotionCanvas : ContentView
 
         skiaElement.PaintSurface += OnCanvasViewPaintSurface;
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+        Unloaded += MotionCanvas_Unloaded;
     }
 
     /// <summary>
@@ -139,7 +141,7 @@ public partial class MotionCanvas : ContentView
         _isDrawingLoopRunning = true;
 
         var ts = TimeSpan.FromSeconds(1 / MaxFps);
-        while (!CanvasCore.IsValid)
+        while (!CanvasCore.IsValid && _isLoaded)
         {
             skiaElement?.InvalidateSurface();
             await Task.Delay(ts);
@@ -161,5 +163,10 @@ public partial class MotionCanvas : ContentView
         }
 
         motionCanvas.CanvasCore.SetPaintTasks(tasks);
+    }
+
+    private void MotionCanvas_Unloaded(object? sender, EventArgs e)
+    {
+        _isLoaded = false;
     }
 }
