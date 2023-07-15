@@ -30,6 +30,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Devices;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
@@ -127,6 +128,9 @@ public partial class MotionCanvas : ContentView
 
     private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
+        var scale = DeviceDisplay.MainDisplayInfo.Density;
+        args.Surface.Canvas.Scale((float)scale, (float)scale);
+
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 

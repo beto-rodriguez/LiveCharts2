@@ -379,11 +379,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core
         => _core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)_core;
 
-    LvcSize IChartView.ControlSize => new()
-    {
-        Width = (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density),
-        Height = (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density)
-    };
+    LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
