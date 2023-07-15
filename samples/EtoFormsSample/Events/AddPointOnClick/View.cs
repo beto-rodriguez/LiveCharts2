@@ -1,4 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿// NOTE: // mark
+// BECAUSE THIS VIEWMODEL IS SHARED WITH OTHER VIEWS // mark
+// THE _viewModel.ChartUpdated, _viewModel.PointerDown and _viewModel.PointerUp EVENTS // mark
+// are repeated in Eto, Eto forms do not support Command binding, please // mark
+// ignore the viewmodel RelayCommands and use the events instead. // mark
+
+using System.Collections.ObjectModel;
 using Eto.Forms;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
