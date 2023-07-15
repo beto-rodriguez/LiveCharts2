@@ -202,7 +202,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
-    /// The pointer down command.
+    /// The update started command.
     /// </summary>
     public static readonly DependencyProperty UpdateStartedCommandProperty =
        DependencyProperty.Register(
@@ -456,7 +456,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
-    /// Gets or sets a command to execute when the pointer goes down on the chart.
+    /// Gets or sets a command to execute when the chart update started.
     /// </summary>
     public ICommand? UpdateStartedCommand
     {
