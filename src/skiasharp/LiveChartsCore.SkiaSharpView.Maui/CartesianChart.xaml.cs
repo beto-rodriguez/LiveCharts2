@@ -329,28 +329,46 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
+    /// The update started command.
+    /// </summary>
+    public static readonly BindableProperty UpdateStartedCommandProperty =
+        BindableProperty.Create(
+            nameof(UpdateStartedCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
+    /// The tapped command.
+    /// </summary>
+    public static readonly BindableProperty TappedCommandProperty =
+        BindableProperty.Create(
+            nameof(TappedCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
+    /// The pointer move command.
+    /// </summary>
+    public static readonly BindableProperty PointerMoveCommandProperty =
+        BindableProperty.Create(
+            nameof(PointerMoveCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
     /// The data pointer down command property
     /// </summary>
     public static readonly BindableProperty DataPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(DataPointerDownCommand), typeof(ICommand), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(DataPointerDownCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The chart point pointer down command property
     /// </summary>
     public static readonly BindableProperty ChartPointPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The visual elements pointer down command property
     /// </summary>
     public static readonly BindableProperty VisualElementsPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     #endregion
 
@@ -572,6 +590,33 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the chart update started.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users taped the chart.
+    /// </summary>
+    public ICommand? TappedCommand
+    {
+        get => (ICommand?)GetValue(TappedCommandProperty);
+        set => SetValue(TappedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer moves over the chart.
+    /// </summary>
+    public ICommand? PointerMoveCommand
+    {
+        get => (ICommand?)GetValue(PointerMoveCommandProperty);
+        set => SetValue(PointerMoveCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand? DataPointerDownCommand
@@ -781,9 +826,16 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private void OnTapped(object sender, TappedEventArgs e)
     {
         if (_core is null) return;
-        var position = e.GetPosition(this);
-        if (position is null) return;
-        var location = new LvcPoint(position.Value.X, position.Value.Y);
+        var p = e.GetPosition(this);
+        if (p is null) return;
+
+        if (TappedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
+            if (TappedCommand.CanExecute(args)) TappedCommand.Execute(args);
+        }
+
+        var location = new LvcPoint(p.Value.X, p.Value.Y);
         _core.InvokePointerDown(location, false);
         _core.InvokePointerMove(location);
     }
@@ -792,6 +844,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         var p = e.GetPosition(this);
         if (p is null) return;
+
+        if (PointerMoveCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
+            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
+        }
+
         _core?.InvokePointerMove(new LvcPoint((float)p.Value.X, (float)p.Value.Y));
     }
 
@@ -802,6 +861,12 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 
