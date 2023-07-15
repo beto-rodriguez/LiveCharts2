@@ -98,6 +98,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
         PointerMoved += Chart_PointerMoved;
         PointerPressed += Chart_PointerPressed;
+        PointerReleased += PieChart_PointerReleased;
         DetachedFromVisualTree += PieChart_DetachedFromVisualTree;
     }
 
@@ -227,6 +228,30 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
         AvaloniaProperty.Register<PieChart, double?>(
             nameof(LegendTextSize), LiveCharts.DefaultSettings.LegendTextSize, inherits: true);
+
+    /// <summary>
+    /// The data pointer down command property
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> UpdateStartedCommandProperty =
+        AvaloniaProperty.Register<PieChart, ICommand?>(nameof(UpdateStartedCommand), null, inherits: true);
+
+    /// <summary>
+    /// The pointer pressed command.
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> PointerPressedCommandProperty =
+        AvaloniaProperty.Register<PieChart, ICommand?>(nameof(PointerPressedCommand), null, inherits: true);
+
+    /// <summary>
+    /// The pointer released command.
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> PointerReleasedCommandProperty =
+        AvaloniaProperty.Register<PieChart, ICommand?>(nameof(PointerReleasedCommand), null, inherits: true);
+
+    /// <summary>
+    /// The pointer move command.
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> PointerMoveCommandProperty =
+        AvaloniaProperty.Register<PieChart, ICommand?>(nameof(PointerMoveCommand), null, inherits: true);
 
     /// <summary>
     /// The data pointer down command property
@@ -445,6 +470,42 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the chart update started.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer is pressed on the chart.
+    /// </summary>
+    public ICommand? PointerPressedCommand
+    {
+        get => (ICommand?)GetValue(PointerPressedCommandProperty);
+        set => SetValue(PointerPressedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer is released on the chart.
+    /// </summary>
+    public ICommand? PointerReleasedCommand
+    {
+        get => (ICommand?)GetValue(PointerReleasedCommandProperty);
+        set => SetValue(PointerReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer moves over the chart.
+    /// </summary>
+    public ICommand? PointerMoveCommand
+    {
+        get => (ICommand?)GetValue(PointerMoveCommandProperty);
+        set => SetValue(PointerMoveCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand? DataPointerDownCommand
@@ -511,8 +572,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        legend = new SKDefaultLegend(); // this.FindControl<DefaultLegend>("legend");
-        tooltip = new SKDefaultTooltip(); // this.FindControl<DefaultTooltip>("tooltip");
+        legend = new SKDefaultLegend();
+        tooltip = new SKDefaultTooltip();
 
         _core.Update();
     }
@@ -554,13 +615,38 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     private void Chart_PointerMoved(object? sender, PointerEventArgs e)
     {
         var p = e.GetPosition(_avaloniaCanvas);
+
+        if (PointerMoveCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
+        }
+
         _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
     private void Chart_PointerPressed(object sender, PointerPressedEventArgs e)
     {
         var p = e.GetPosition(this);
+
+        if (PointerPressedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+            if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
+        }
+
         _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), false);
+    }
+
+    private void PieChart_PointerReleased(object sender, PointerReleasedEventArgs e)
+    {
+        var p = e.GetPosition(this);
+
+        if (PointerReleasedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+            if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
+        }
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -570,6 +656,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 
