@@ -212,17 +212,17 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The pointer down command.
     /// </summary>
-    public static readonly DependencyProperty PointerDownCommandProperty =
+    public static readonly DependencyProperty PointerPressedCommandProperty =
        DependencyProperty.Register(
-           nameof(PointerDownCommand), typeof(ICommand), typeof(Chart),
+           nameof(PointerPressedCommand), typeof(ICommand), typeof(Chart),
            new PropertyMetadata(null));
 
     /// <summary>
     /// The pointer up command.
     /// </summary>
-    public static readonly DependencyProperty PointerUpCommandProperty =
+    public static readonly DependencyProperty PointerReleasedCommandProperty =
        DependencyProperty.Register(
-           nameof(PointerUpCommand), typeof(ICommand), typeof(Chart),
+           nameof(PointerReleasedCommand), typeof(ICommand), typeof(Chart),
            new PropertyMetadata(null));
 
     /// <summary>
@@ -467,19 +467,19 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on the chart.
     /// </summary>
-    public ICommand? PointerDownCommand
+    public ICommand? PointerPressedCommand
     {
-        get => (ICommand?)GetValue(PointerDownCommandProperty);
-        set => SetValue(PointerDownCommandProperty, value);
+        get => (ICommand?)GetValue(PointerPressedCommandProperty);
+        set => SetValue(PointerPressedCommandProperty, value);
     }
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer goes up on the chart.
     /// </summary>
-    public ICommand? PointerUpCommand
+    public ICommand? PointerReleasedCommand
     {
-        get => (ICommand?)GetValue(PointerUpCommandProperty);
-        set => SetValue(PointerUpCommandProperty, value);
+        get => (ICommand?)GetValue(PointerReleasedCommandProperty);
+        set => SetValue(PointerReleasedCommandProperty, value);
     }
 
     /// <summary>
@@ -639,18 +639,18 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     private void Chart_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (PointerUpCommand is null) return;
+        if (PointerReleasedCommand is null) return;
         var p = e.GetPosition(this);
         var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
-        if (PointerUpCommand.CanExecute(args)) PointerUpCommand.Execute(args);
+        if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
     }
 
     private void Chart_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (PointerDownCommand is null) return;
+        if (PointerPressedCommand is null) return;
         var p = e.GetPosition(this);
         var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
-        if (PointerDownCommand.CanExecute(args)) PointerDownCommand.Execute(args);
+        if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
     }
 
     private void Chart_MouseDoubleClick(object sender, MouseButtonEventArgs e)

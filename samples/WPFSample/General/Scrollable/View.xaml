@@ -29,9 +29,9 @@
             Sections="{Binding Thumbs}"
             XAxes="{Binding InvisibleX}"
             YAxes="{Binding InvisibleY}"
-            PointerDownCommand="{Binding PointerDownCommand}"
+            PointerPressedCommand="{Binding PointerDownCommand}"
             PointerMoveCommand="{Binding PointerMoveCommand}"
-            PointerUpCommand="{Binding PointerUpCommand}"
+            PointerReleasedCommand="{Binding PointerUpCommand}"
             TooltipPosition="Hidden">
         </lvc:CartesianChart>
     </Grid>
