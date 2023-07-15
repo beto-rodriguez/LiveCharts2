@@ -338,11 +338,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(SyncContextProperty, value);
     }
 
-    LvcSize IChartView.ControlSize => new()
-    {
-        Width = (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density),
-        Height = (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density)
-    };
+    LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;

@@ -178,10 +178,10 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density);
+    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)canvas.Width;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density);
+    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)canvas.Height;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
     public MapProjection MapProjection
