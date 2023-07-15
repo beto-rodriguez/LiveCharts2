@@ -303,20 +303,32 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
+    /// The update started command.
+    /// </summary>
+    public static readonly BindableProperty UpdateStartedCommandProperty =
+        BindableProperty.Create(
+            nameof(UpdateStartedCommand), typeof(ICommand), typeof(PolarChart), null);
+
+    /// <summary>
+    /// The tapped command.
+    /// </summary>
+    public static readonly BindableProperty TappedCommandProperty =
+        BindableProperty.Create(
+            nameof(TappedCommand), typeof(ICommand), typeof(PolarChart), null);
+
+    /// <summary>
     /// The data pointer down command property
     /// </summary>
     public static readonly BindableProperty DataPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(DataPointerDownCommand), typeof(ICommand), typeof(PolarChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(DataPointerDownCommand), typeof(ICommand), typeof(PolarChart), null);
 
     /// <summary>
     /// The chart point pointer down command property
     /// </summary>
     public static readonly BindableProperty ChartPointPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PolarChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PolarChart), null);
 
     /// <summary>
     /// The visual elements pointer down command property
@@ -540,6 +552,24 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the chart update started.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users taped the chart.
+    /// </summary>
+    public ICommand? TappedCommand
+    {
+        get => (ICommand?)GetValue(TappedCommandProperty);
+        set => SetValue(TappedCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand? DataPointerDownCommand
@@ -671,42 +701,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         core.Update();
     }
 
-    private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
-    {
-        //if (core is null) return;
-        //if (e.StatusType != GestureStatus.Running) return;
-
-        //var c = (PolarChart<SkiaSharpDrawingContext>)core;
-        //var delta = new PointF((float)e.TotalX, (float)e.TotalY);
-        //var args = new PanGestureEventArgs(delta);
-        //c.InvokePanGestrue(args);
-        //if (!args.Handled) c.Pan(delta);
-    }
-
-    private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
-    {
-        //if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || core is null) return;
-
-        //var c = (PolarChart<SkiaSharpDrawingContext>)core;
-        //var p = e.ScaleOrigin;
-        //var s = c.ControlSize;
-
-        //c.Zoom(
-        //    new PointF((float)(p.X * s.Width), (float)(p.Y * s.Height)),
-        //    e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)
-    {
-        if (core is null) return;
-
-        var location = new LvcPoint(e.Location.X, e.Location.Y);
-        core.InvokePointerDown(location, false);
-        core.InvokePointerMove(location);
-
-        Touched?.Invoke(this, e);
-    }
-
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
     {
         UpdateFinished?.Invoke(this);
@@ -714,12 +708,37 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
+    }
+
+    private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)
+    {
+        if (core is null) return;
+
+        var density = DeviceDisplay.MainDisplayInfo.Density;
+        var location = new LvcPoint(e.Location.X / density, e.Location.Y / density);
+
+        if (TappedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(location.X, location.Y), e);
+            if (TappedCommand.CanExecute(args)) TappedCommand.Execute(args);
+        }
+
+        core.InvokePointerDown(location, false);
+        core.InvokePointerMove(location);
+
+        Touched?.Invoke(this, e);
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
