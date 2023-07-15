@@ -9,7 +9,7 @@
   <lvc:CartesianChart
       x:Name="chart"
       Series="{Binding SeriesCollection}"
-      PointerPressed="ChartPointerPressed"
+      PointerPressedCommand="{Binding PointerDownCommand}"
       TooltipPosition="Hidden">
   </lvc:CartesianChart>
 </UserControl>
