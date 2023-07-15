@@ -24,7 +24,7 @@ public class View : Panel
     {
         var viewModel = new ViewModel();
 
-        _data = viewModel.Data;
+        _data = (ObservableCollection<ObservablePoint>)viewModel.SeriesCollection[0].Values;
 
         var cartesianChart = new CartesianChart
         {
