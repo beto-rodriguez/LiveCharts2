@@ -33,6 +33,11 @@
 </div>
 
 @code {
+    // NOTE: // mark
+    // BECAUSE THIS VIEWMODEL IS SHARED WITH OTHER VIEWS // mark
+    // THE ViewModel.ChartUpdated, ViewModel.PointerDown and ViewModel.PointerUp METHODS // mark
+    // are repeated, please ignore the viewmodel RelayCommands and use the events instead. // mark
+
     private bool _isDown;
 
     public CartesianChart _mainChart = null!;

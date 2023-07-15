@@ -1,4 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿// NOTE: // mark
+// BECAUSE THIS VIEWMODEL IS SHARED WITH OTHER VIEWS // mark
+// THE _viewModel.ChartUpdated, _viewModel.PointerDown and _viewModel.PointerUp METHODS // mark
+// are repeated in WindowsForms, WindowsForms do not support Command binding, please // mark
+// ignore the viewmodel RelayCommands and use the events instead. // mark
+
+using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
@@ -21,7 +27,7 @@ public partial class View : UserControl
 
         var viewModel = new ViewModel();
 
-        _data = viewModel.Data;
+        _data = (ObservableCollection<ObservablePoint>)viewModel.SeriesCollection[0].Values;
 
         var cartesianChart = new CartesianChart
         {

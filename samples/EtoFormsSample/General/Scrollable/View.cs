@@ -1,4 +1,10 @@
-﻿using System.Linq;
+﻿// NOTE: // mark
+// BECAUSE THIS VIEWMODEL IS SHARED WITH OTHER VIEWS // mark
+// THE _viewModel.ChartUpdated, _viewModel.PointerDown and _viewModel.PointerUp METHODS // mark
+// are repeated in Eto, Eto forms do not support Command binding, please // mark
+// ignore the viewmodel RelayCommands and use the events instead. // mark
+
+using System.Linq;
 using Eto.Forms;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -48,7 +54,8 @@ public class View : Panel
 
     private void OnChart_Updated(IChartView<SkiaSharpDrawingContext> chart)
     {
-        var vm = _viewModel;
+        var vm = _viewModel.PointerDown;
+
         var cartesianChart = (CartesianChart)chart;
 
         var x = cartesianChart.XAxes.First();
