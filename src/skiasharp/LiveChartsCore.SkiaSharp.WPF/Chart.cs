@@ -79,7 +79,10 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
+        MouseDown += Chart_MouseDown;
         MouseMove += OnMouseMove;
+        MouseUp += Chart_MouseUp;
+        MouseDoubleClick += Chart_MouseDoubleClick;
         MouseLeave += OnMouseLeave;
         Unloaded += Chart_Unloaded;
 
@@ -199,12 +202,52 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
+    /// The pointer down command.
+    /// </summary>
+    public static readonly DependencyProperty UpdateStartedCommandProperty =
+       DependencyProperty.Register(
+           nameof(UpdateStartedCommand), typeof(ICommand), typeof(Chart),
+           new PropertyMetadata(null));
+
+    /// <summary>
+    /// The pointer down command.
+    /// </summary>
+    public static readonly DependencyProperty PointerDownCommandProperty =
+       DependencyProperty.Register(
+           nameof(PointerDownCommand), typeof(ICommand), typeof(Chart),
+           new PropertyMetadata(null));
+
+    /// <summary>
+    /// The pointer up command.
+    /// </summary>
+    public static readonly DependencyProperty PointerUpCommandProperty =
+       DependencyProperty.Register(
+           nameof(PointerUpCommand), typeof(ICommand), typeof(Chart),
+           new PropertyMetadata(null));
+
+    /// <summary>
+    /// The pointer move command.
+    /// </summary>
+    public static readonly DependencyProperty PointerMoveCommandProperty =
+       DependencyProperty.Register(
+           nameof(PointerMoveCommand), typeof(ICommand), typeof(Chart),
+           new PropertyMetadata(null));
+
+    /// <summary>
+    /// The double click command.
+    /// </summary>
+    public static readonly DependencyProperty DoubleClickCommandProperty =
+       DependencyProperty.Register(
+           nameof(DoubleClickCommand), typeof(ICommand), typeof(Chart),
+           new PropertyMetadata(null));
+
+    /// <summary>
     /// The data pointer down command.
     /// </summary>
     public static readonly DependencyProperty DataPointerDownCommandProperty =
        DependencyProperty.Register(
            nameof(DataPointerDownCommand), typeof(ICommand), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(null));
 
     /// <summary>
     /// The chart point pointer down command.
@@ -212,7 +255,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty ChartPointPointerDownCommandProperty =
        DependencyProperty.Register(
            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(null));
 
     /// <summary>
     /// The visual elements pointer down command.
@@ -220,7 +263,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty VisualElementsPointerDownCommandProperty =
        DependencyProperty.Register(
            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(Chart),
-           new PropertyMetadata(null, OnDependencyPropertyChanged));
+           new PropertyMetadata(null));
 
     /// <summary>
     /// The visual elements property
@@ -413,6 +456,51 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on the chart.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on the chart.
+    /// </summary>
+    public ICommand? PointerDownCommand
+    {
+        get => (ICommand?)GetValue(PointerDownCommandProperty);
+        set => SetValue(PointerDownCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes up on the chart.
+    /// </summary>
+    public ICommand? PointerUpCommand
+    {
+        get => (ICommand?)GetValue(PointerUpCommandProperty);
+        set => SetValue(PointerUpCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer moves over the chart.
+    /// </summary>
+    public ICommand? PointerMoveCommand
+    {
+        get => (ICommand?)GetValue(PointerMoveCommandProperty);
+        set => SetValue(PointerMoveCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when a double click happens on a chart.
+    /// </summary>
+    public ICommand? DoubleClickCommand
+    {
+        get => (ICommand?)GetValue(DoubleClickCommandProperty);
+        set => SetValue(DoubleClickCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand? DataPointerDownCommand
@@ -521,6 +609,12 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 
@@ -543,9 +637,40 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
             SetCurrentValue(dp, value);
     }
 
+    private void Chart_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (PointerUpCommand is null) return;
+        var p = e.GetPosition(this);
+        var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+        if (PointerUpCommand.CanExecute(args)) PointerUpCommand.Execute(args);
+    }
+
+    private void Chart_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (PointerDownCommand is null) return;
+        var p = e.GetPosition(this);
+        var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+        if (PointerDownCommand.CanExecute(args)) PointerDownCommand.Execute(args);
+    }
+
+    private void Chart_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (DoubleClickCommand is null) return;
+        var p = e.GetPosition(this);
+        var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+        if (DoubleClickCommand.CanExecute(args)) DoubleClickCommand.Execute(args);
+    }
+
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        var p = e.GetPosition(canvas);
+        var p = e.GetPosition(this);
+
+        if (PointerMoveCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
+        }
+
         core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
