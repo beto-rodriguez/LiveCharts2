@@ -762,8 +762,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         if (e.StatusType == GestureStatus.Running)
         {
             var delta = new LvcPoint(
-                (float)((e.TotalX - _lastPanX) * DeviceDisplay.MainDisplayInfo.Density),
-                (float)((e.TotalY - _lastPanY) * DeviceDisplay.MainDisplayInfo.Density));
+                (float)(e.TotalX - _lastPanX),
+                (float)(e.TotalY - _lastPanY));
 
             var args = new PanGestureEventArgs(delta);
             c.InvokePanGestrue(args);
