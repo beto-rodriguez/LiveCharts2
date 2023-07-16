@@ -670,9 +670,4 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         CoreCanvas.Invalidate();
     }
-
-    private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
-    {
-
-    }
 }
