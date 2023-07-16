@@ -95,7 +95,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         if (DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            //DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
 
