@@ -52,7 +52,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     public GeoMap()
     {
         InitializeComponent();
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
 
         PointerPressed += OnPointerPressed;

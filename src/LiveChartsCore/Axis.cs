@@ -590,9 +590,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
 
-#if DEBUG
-            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
-#endif
+            if (_stepCount++ > 10000) ThrowPresicionError();
         }
 
         foreach (var separatorValueKey in separators.ToArray())
@@ -842,9 +840,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
 
-#if DEBUG
-            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
-#endif
+            if (_stepCount++ > 10000) ThrowPresicionError();
         }
 
         return new LvcSize(w, h);
@@ -955,9 +951,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
                 maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
 
-#if DEBUG
-            if (_stepCount++ > 10000) throw new Exception("Too many iterations");
-#endif
+            if (_stepCount++ > 10000) ThrowPresicionError();
         }
 
         return maxLabelSize;
@@ -1360,6 +1354,14 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 #endif
             return string.Empty;
         }
+    }
+
+    private void ThrowPresicionError()
+    {
+        throw new Exception(
+            "LiveCharts has detected a precision error, this is probably caused because you are zooming too deep, " +
+            $"try to set a limit to the current chart zoom using the Axis.{nameof(MinZoomDelta)} property. " +
+            $"For more info see: https://github.com/beto-rodriguez/LiveCharts2/issues/1076.");
     }
 
     private enum UpdateMode

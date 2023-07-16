@@ -10,7 +10,8 @@
     </ContentPage.BindingContext>
 	<ContentPage.Content>
         <!--
-        This sample requies net MAUI 7 at least, if you are on net6.0 please update:
+        This sample is not working yet, this is an experimental version that requies net MAUI 7 at least,
+        if you are on net6.0 please update:
         https://devblogs.microsoft.com/dotnet/dotnet-maui-dotnet-7/#upgrading-from-net-6
         -->
 

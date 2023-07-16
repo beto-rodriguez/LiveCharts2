@@ -6,7 +6,7 @@
 
     <Nullable>enable</Nullable>
     <LangVersion>11.0</LangVersion>
-    <Version>2.0.0-beta.810</Version>
+    <Version>2.0.0-beta.850</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -21,12 +21,12 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
-    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.3" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.4-preview.84" />
+    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.4-preview.84" />
     <PackageReference Include="Uno.WinUI" Version="4.8.24" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" />
   </ItemGroup>

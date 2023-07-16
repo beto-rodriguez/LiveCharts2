@@ -80,7 +80,7 @@ public abstract class Chart<TDrawingContext> : IChart
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
         EasingFunction = EasingFunctions.QuadraticOut;
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(defaultPlatformConfig);
+        LiveCharts.Configure(defaultPlatformConfig);
 
         _updateThrottler = view.DesignerMode
                 ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
@@ -384,6 +384,7 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         _isToolTipOpen = false;
         Tooltip?.Hide(this);
+        CleanHoveredPoints(new());
         PointerLeft?.Invoke();
     }
 
@@ -634,13 +635,7 @@ public abstract class Chart<TDrawingContext> : IChart
             isEmpty = false;
         }
 
-        foreach (var point in _activePoints.Keys.ToArray())
-        {
-            if (_activePoints[point] == o) continue; // the points was used, don't remove it.
-
-            point.Context.Series.OnPointerLeft(point);
-            _ = _activePoints.Remove(point);
-        }
+        CleanHoveredPoints(o);
 
         if (isEmpty)
         {
@@ -651,6 +646,17 @@ public abstract class Chart<TDrawingContext> : IChart
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
         _tooltipClosesAt = DateTime.MaxValue;
+    }
+
+    private void CleanHoveredPoints(object comparer)
+    {
+        foreach (var point in _activePoints.Keys.ToArray())
+        {
+            if (_activePoints[point] == comparer) continue; // the points was used, don't remove it.
+
+            point.Context.Series.OnPointerLeft(point);
+            _ = _activePoints.Remove(point);
+        }
     }
 
     private Task TooltipThrottlerUnlocked()

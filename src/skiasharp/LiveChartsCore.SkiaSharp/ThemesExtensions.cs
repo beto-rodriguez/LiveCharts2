@@ -46,6 +46,8 @@ public static class ThemesExtensions
     public static LiveChartsSettings AddLightTheme(
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
+        LiveCharts.HasTheme = true;
+
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {
@@ -206,6 +208,8 @@ public static class ThemesExtensions
     public static LiveChartsSettings AddDarkTheme(
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
+        LiveCharts.HasTheme = true;
+
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
             {

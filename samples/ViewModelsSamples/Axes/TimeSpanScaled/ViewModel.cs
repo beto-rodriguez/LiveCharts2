@@ -28,7 +28,7 @@ public partial class ViewModel : ObservableObject
     {
         new Axis
         {
-            Labeler = value => TimeSpan.FromTicks((long)value).ToString("fff") + " ms",
+            Labeler = value => value.AsTimeSpan().ToString("fff") + " ms",
 
             // when using a date time type, let the library know your unit // mark
             UnitWidth = TimeSpan.FromMilliseconds(1).Ticks, //mark

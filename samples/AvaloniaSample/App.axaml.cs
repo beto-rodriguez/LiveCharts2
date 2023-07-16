@@ -16,18 +16,8 @@ public class App : Application
 
         LiveCharts.Configure(config => // mark
             config // mark
-                // registers SkiaSharp as the library backend
-                // REQUIRED unless you build your own
-                .AddSkiaSharp() // mark
-
-                // adds the default supported types
-                // OPTIONAL but highly recommend
-                .AddDefaultMappers() // mark
-
-                // select a theme, default is Light
-                // OPTIONAL
-                //.AddDarkTheme()
-                .AddLightTheme() // mark
+                // you can override the theme 
+                // .AddDarkTheme() // mark 
 
                 // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
                 .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark

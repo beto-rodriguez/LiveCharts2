@@ -3,8 +3,8 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms"
        x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart">
-    <lvc:MotionCanvas x:Name="canvas" >
-        <lvc:MotionCanvas.GestureRecognizers >
+    <lvc:MotionCanvas x:Name="canvas">
+        <lvc:MotionCanvas.GestureRecognizers>
             <PinchGestureRecognizer PinchUpdated="PinchGestureRecognizer_PinchUpdated" />
             <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
         </lvc:MotionCanvas.GestureRecognizers>

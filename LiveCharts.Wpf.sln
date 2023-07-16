@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "src\LiveChartsCore\LiveChartsCore.csproj", "{9998ACF8-4D0D-4D7F-818A-15F69024B034}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView", "src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj", "{E0372418-3379-469B-83AB-297E05F70353}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.WPF", "src\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj", "{69332AFD-5F12-45DF-873B-83DDFF9C57F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFSample", "samples\WPFSample\WPFSample.csproj", "{B785F74A-4DF1-466C-8222-250A2FE08AE0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModelsSamples", "samples\ViewModelsSamples\ViewModelsSamples.csproj", "{5277BE83-B525-48E3-8D41-CDE647A15A3A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9998ACF8-4D0D-4D7F-818A-15F69024B034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9998ACF8-4D0D-4D7F-818A-15F69024B034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9998ACF8-4D0D-4D7F-818A-15F69024B034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9998ACF8-4D0D-4D7F-818A-15F69024B034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0372418-3379-469B-83AB-297E05F70353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0372418-3379-469B-83AB-297E05F70353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0372418-3379-469B-83AB-297E05F70353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0372418-3379-469B-83AB-297E05F70353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69332AFD-5F12-45DF-873B-83DDFF9C57F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69332AFD-5F12-45DF-873B-83DDFF9C57F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69332AFD-5F12-45DF-873B-83DDFF9C57F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69332AFD-5F12-45DF-873B-83DDFF9C57F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B785F74A-4DF1-466C-8222-250A2FE08AE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B785F74A-4DF1-466C-8222-250A2FE08AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B785F74A-4DF1-466C-8222-250A2FE08AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B785F74A-4DF1-466C-8222-250A2FE08AE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5277BE83-B525-48E3-8D41-CDE647A15A3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5277BE83-B525-48E3-8D41-CDE647A15A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5277BE83-B525-48E3-8D41-CDE647A15A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5277BE83-B525-48E3-8D41-CDE647A15A3A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {42F0AD87-D50D-4DF5-97F7-933D5B2EA34D}
+	EndGlobalSection
+EndGlobal

@@ -39,7 +39,7 @@ public abstract class InMemorySkiaSharpChart
     /// </summary>
     public InMemorySkiaSharpChart()
     {
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        LiveCharts.Configure(config => config.UseDefaults());
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>

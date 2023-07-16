@@ -57,7 +57,7 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public GeoMap()
     {
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         MouseDown += OnMouseDown;
         MouseMove += OnMouseMove;

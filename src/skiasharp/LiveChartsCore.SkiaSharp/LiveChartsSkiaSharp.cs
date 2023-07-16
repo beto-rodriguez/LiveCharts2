@@ -47,28 +47,17 @@ public static class LiveChartsSkiaSharp
     public static SKTypeface? DefaultSKTypeface { get; set; }
 
     /// <summary>
-    /// Gets the default platform builder.
-    /// </summary>
-    /// <value>
-    /// The default platform builder.
-    /// </value>
-    public static Action<LiveChartsSettings> DefaultPlatformBuilder =>
-        (LiveChartsSettings settings) => settings
-            .AddDefaultMappers()
-            .AddSkiaSharp()
-            .AddLightTheme();
-
-    /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
     /// </summary>
     /// <param name="settings">The settings.</param>
     /// <returns>The settings.</returns>
     public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
     {
-        return settings
-            .AddDefaultMappers()
-            .AddSkiaSharp()
-            .AddLightTheme();
+        if (!LiveCharts.HasBackend) _ = settings.AddSkiaSharp();
+        if (!LiveCharts.HasTheme) _ = settings.AddLightTheme();
+        if (!LiveCharts.HasDefaultMappers) _ = settings.AddDefaultMappers();
+
+        return settings;
     }
 
     /// <summary>

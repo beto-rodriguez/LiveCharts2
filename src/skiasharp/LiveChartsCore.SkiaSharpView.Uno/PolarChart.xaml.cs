@@ -65,7 +65,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// </summary>
     public PolarChart()
     {
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
 
@@ -295,25 +295,57 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
+    /// The update started command.
+    /// </summary>
+    public static readonly DependencyProperty UpdateStartedCommandProperty =
+       DependencyProperty.Register(
+           nameof(UpdateStartedCommand), typeof(ICommand), typeof(PolarChart),
+           new PropertyMetadata(null));
+
+    /// <summary>
+    /// The pointer pressed command.
+    /// </summary>
+    public static readonly DependencyProperty PointerPressedCommandProperty =
+       DependencyProperty.Register(
+           nameof(PointerPressedCommand), typeof(ICommand), typeof(PolarChart),
+           new PropertyMetadata(null));
+
+    /// <summary>
+    /// The pointer released command.
+    /// </summary>
+    public static readonly DependencyProperty PointerReleasedCommandProperty =
+       DependencyProperty.Register(
+           nameof(PointerReleasedCommand), typeof(ICommand), typeof(PolarChart),
+           new PropertyMetadata(null));
+
+    /// <summary>
+    /// The pointer move command.
+    /// </summary>
+    public static readonly DependencyProperty PointerMoveCommandProperty =
+       DependencyProperty.Register(
+           nameof(PointerMoveCommand), typeof(ICommand), typeof(PolarChart),
+           new PropertyMetadata(null));
+
+    /// <summary>
     /// The data pointer down command property
     /// </summary>
     public static readonly DependencyProperty DataPointerDownCommandProperty =
         DependencyProperty.Register(
-            nameof(DataPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(DataPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The chart point pointer down command property
     /// </summary>
     public static readonly DependencyProperty ChartPointPointerDownCommandProperty =
         DependencyProperty.Register(
-            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The chart point pointer down command property
     /// </summary>
     public static readonly DependencyProperty VisualElementsPointerDownCommandProperty =
         DependencyProperty.Register(
-            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null));
 
     #endregion
 
@@ -543,6 +575,42 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the chart update started.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer is pressed on the chart.
+    /// </summary>
+    public ICommand? PointerPressedCommand
+    {
+        get => (ICommand?)GetValue(PointerPressedCommandProperty);
+        set => SetValue(PointerPressedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer is released on the chart.
+    /// </summary>
+    public ICommand? PointerReleasedCommand
+    {
+        get => (ICommand?)GetValue(PointerReleasedCommandProperty);
+        set => SetValue(PointerReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer moves over the chart.
+    /// </summary>
+    public ICommand? PointerMoveCommand
+    {
+        get => (ICommand?)GetValue(PointerMoveCommandProperty);
+        set => SetValue(PointerMoveCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand DataPointerDownCommand
@@ -669,6 +737,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(motionCanvas);
+
+        if (PointerMoveCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
+            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
+        }
+
         _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 
@@ -679,6 +754,12 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 
@@ -695,12 +776,26 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(this);
+
+        if (PointerReleasedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
+            if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
+        }
+
         _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
     }
 
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(this);
+
+        if (PointerPressedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
+            if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
+        }
+
         _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
     }
 

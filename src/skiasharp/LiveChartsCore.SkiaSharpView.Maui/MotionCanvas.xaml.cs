@@ -30,6 +30,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Devices;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
@@ -42,6 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 public partial class MotionCanvas : ContentView
 {
     private bool _isDrawingLoopRunning = false;
+    private bool _isLoaded = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -57,6 +59,7 @@ public partial class MotionCanvas : ContentView
 
         skiaElement.PaintSurface += OnCanvasViewPaintSurface;
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+        Unloaded += MotionCanvas_Unloaded;
     }
 
     /// <summary>
@@ -125,6 +128,9 @@ public partial class MotionCanvas : ContentView
 
     private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
+        var scale = DeviceDisplay.MainDisplayInfo.Density;
+        args.Surface.Canvas.Scale((float)scale, (float)scale);
+
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
@@ -139,7 +145,7 @@ public partial class MotionCanvas : ContentView
         _isDrawingLoopRunning = true;
 
         var ts = TimeSpan.FromSeconds(1 / MaxFps);
-        while (!CanvasCore.IsValid)
+        while (!CanvasCore.IsValid && _isLoaded)
         {
             skiaElement?.InvalidateSurface();
             await Task.Delay(ts);
@@ -161,5 +167,10 @@ public partial class MotionCanvas : ContentView
         }
 
         motionCanvas.CanvasCore.SetPaintTasks(tasks);
+    }
+
+    private void MotionCanvas_Unloaded(object? sender, EventArgs e)
+    {
+        _isLoaded = false;
     }
 }

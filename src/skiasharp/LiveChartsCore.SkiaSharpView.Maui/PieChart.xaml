@@ -4,6 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui">
     <ContentView.Content>
-        <lvc:MotionCanvas Grid.Column="0" x:Name="canvas" />
+        <lvc:MotionCanvas x:Name="canvas">
+            <lvc:MotionCanvas.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTapped"/>
+                <PointerGestureRecognizer PointerMoved="OnPointerMoved"/>
+            </lvc:MotionCanvas.GestureRecognizers>
+        </lvc:MotionCanvas>
     </ContentView.Content>
 </ContentView>

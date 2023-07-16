@@ -429,7 +429,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         if (DataLabelsPaint is not null)
         {
             polarChart.Canvas.AddDrawableTask(DataLabelsPaint);
-            //DataLabelsPaint.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 

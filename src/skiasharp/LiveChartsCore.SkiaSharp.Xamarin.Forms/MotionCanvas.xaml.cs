@@ -123,6 +123,9 @@ public partial class MotionCanvas : ContentView
 
     private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
     {
+        var scale = DeviceDisplay.MainDisplayInfo.Density;
+        args.Surface.Canvas.Scale((float)scale, (float)scale);
+
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 

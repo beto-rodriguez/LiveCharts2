@@ -20,8 +20,6 @@ public partial class ViewModel : ObservableObject
 
     public ViewModel()
     {
-        // notice this case is not working in Avalonia, use the invoke on UI thread alternative (MultiThreading2).
-
         var items = new List<int>();
         for (var i = 0; i < 1500; i++)
         {

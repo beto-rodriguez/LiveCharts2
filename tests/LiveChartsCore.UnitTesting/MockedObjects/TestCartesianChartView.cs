@@ -41,7 +41,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
 {
     public TestCartesianChartView()
     {
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         Core = new CartesianChart<SkiaSharpDrawingContext>(
             this, config => config.UseDefaults(), CoreCanvas, new RectangleGeometry());

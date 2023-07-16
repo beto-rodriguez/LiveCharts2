@@ -45,7 +45,6 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
-using SkiaSharp.Views.Maui;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -78,7 +77,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         InitializeComponent();
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
         SizeChanged += OnSizeChanged;
@@ -101,9 +100,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
-
-        canvas.SkCanvasView.EnableTouchEvents = true;
-        canvas.SkCanvasView.Touch += OnSkCanvasTouched;
 
         if (_core is null) throw new Exception("Core not found!");
         _core.Measuring += OnCoreMeasuring;
@@ -333,28 +329,46 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
+    /// The update started command.
+    /// </summary>
+    public static readonly BindableProperty UpdateStartedCommandProperty =
+        BindableProperty.Create(
+            nameof(UpdateStartedCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
+    /// The tapped command.
+    /// </summary>
+    public static readonly BindableProperty TappedCommandProperty =
+        BindableProperty.Create(
+            nameof(TappedCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
+    /// The pointer move command.
+    /// </summary>
+    public static readonly BindableProperty PointerMoveCommandProperty =
+        BindableProperty.Create(
+            nameof(PointerMoveCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
     /// The data pointer down command property
     /// </summary>
     public static readonly BindableProperty DataPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(DataPointerDownCommand), typeof(ICommand), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(DataPointerDownCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The chart point pointer down command property
     /// </summary>
     public static readonly BindableProperty ChartPointPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The visual elements pointer down command property
     /// </summary>
     public static readonly BindableProperty VisualElementsPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(CartesianChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     #endregion
 
@@ -378,11 +392,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
     public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
-    /// <summary>
-    /// Called when the chart is touched.
-    /// </summary>
-    public event EventHandler<SKTouchEventArgs>? Touched;
-
     #endregion
 
     #region properties
@@ -405,11 +414,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => _core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;
 
-    LvcSize IChartView.ControlSize => new()
-    {
-        Width = (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density),
-        Height = (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density)
-    };
+    LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
@@ -581,6 +586,33 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the chart update started.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users taped the chart.
+    /// </summary>
+    public ICommand? TappedCommand
+    {
+        get => (ICommand?)GetValue(TappedCommandProperty);
+        set => SetValue(TappedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer moves over the chart.
+    /// </summary>
+    public ICommand? PointerMoveCommand
+    {
+        get => (ICommand?)GetValue(PointerMoveCommandProperty);
+        set => SetValue(PointerMoveCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand? DataPointerDownCommand
@@ -727,11 +759,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _core?.Update();
     }
 
-    private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
+    private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
-        // gestures might not be working properly in android in the current version of maui (rc2)
-        // https://github.com/dotnet/maui/issues/6553
-
         if (_core is null) return;
         if (e.StatusType is not GestureStatus.Running and not GestureStatus.Completed) return;
         if (DateTime.Now < _panLocketUntil) return;
@@ -741,8 +770,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         if (e.StatusType == GestureStatus.Running)
         {
             var delta = new LvcPoint(
-                (float)((e.TotalX - _lastPanX) * DeviceDisplay.MainDisplayInfo.Density),
-                (float)((e.TotalY - _lastPanY) * DeviceDisplay.MainDisplayInfo.Density));
+                (float)(e.TotalX - _lastPanX),
+                (float)(e.TotalY - _lastPanY));
 
             var args = new PanGestureEventArgs(delta);
             c.InvokePanGestrue(args);
@@ -765,11 +794,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _lastPanY = 0;
     }
 
-    private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
+    private void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
-        // gestures might not be working properly in android in the current version of maui (rc2)
-        // https://github.com/dotnet/maui/issues/6553
-
         if (_core is null) return;
         if (e.Status is not GestureStatus.Running and not GestureStatus.Completed) return;
 
@@ -793,15 +819,35 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, _lastScale < 1 ? 0.99999 : 1.00001, false);
     }
 
-    private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)
+    private void OnTapped(object sender, TappedEventArgs e)
     {
         if (_core is null) return;
+        var p = e.GetPosition(this);
+        if (p is null) return;
 
-        var location = new LvcPoint(e.Location.X, e.Location.Y);
+        if (TappedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
+            if (TappedCommand.CanExecute(args)) TappedCommand.Execute(args);
+        }
+
+        var location = new LvcPoint(p.Value.X, p.Value.Y);
         _core.InvokePointerDown(location, false);
         _core.InvokePointerMove(location);
+    }
 
-        Touched?.Invoke(this, e);
+    private void OnPointerMoved(object sender, PointerEventArgs e)
+    {
+        var p = e.GetPosition(this);
+        if (p is null) return;
+
+        if (PointerMoveCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
+            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
+        }
+
+        _core?.InvokePointerMove(new LvcPoint((float)p.Value.X, (float)p.Value.Y));
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -811,6 +857,12 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 

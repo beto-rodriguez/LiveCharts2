@@ -46,7 +46,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// </summary>
     public SKPieChart()
     {
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         Core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;

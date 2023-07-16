@@ -46,6 +46,16 @@ public static class LiveCharts
     public static bool HasBackend { get; internal set; } = false;
 
     /// <summary>
+    /// Gets a value indicating whether LiveCharts has a theme registered.
+    /// </summary>
+    public static bool HasTheme { get; set; } = false;
+
+    /// <summary>
+    /// Gets a value indicating whether LiveCharts has the default mappers registered.
+    /// </summary>
+    public static bool HasDefaultMappers { get; set; } = false;
+
+    /// <summary>
     /// Gets the current settings.
     /// </summary>
     /// <value>
@@ -97,5 +107,27 @@ public static class LiveCharts
     public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
     {
         return DefaultSettings.HasMap(mapper);
+    }
+
+    /// <summary>
+    /// Converts ticks to Date, and prevents overflow exceptions.
+    /// </summary>
+    /// <param name="ticks">The ticks.</param>
+    /// <returns>A DateTime object.</returns>
+    public static DateTime AsDate(this double ticks)
+    {
+        if (ticks < 0) ticks = 0;
+        return new DateTime((long)ticks);
+    }
+
+    /// <summary>
+    /// Converts ticks to TimeSpan, and prevents overflow exceptions.
+    /// </summary>
+    /// <param name="ticks">The ticks.</param>
+    /// <returns>A DateTime object.</returns>
+    public static TimeSpan AsTimeSpan(this double ticks)
+    {
+        if (ticks < 0) ticks = 0;
+        return TimeSpan.FromTicks((long)ticks);
     }
 }

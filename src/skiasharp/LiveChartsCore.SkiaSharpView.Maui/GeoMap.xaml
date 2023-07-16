@@ -5,6 +5,6 @@
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui"
              BackgroundColor="White">
     <ContentView.Content>
-        <lvc:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="canvas"></lvc:MotionCanvas>
+        <lvc:MotionCanvas x:Name="canvas"/>
     </ContentView.Content>
 </ContentView>

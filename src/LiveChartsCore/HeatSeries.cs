@@ -127,7 +127,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         if (DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            //DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
 

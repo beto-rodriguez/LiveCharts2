@@ -2,6 +2,7 @@
 @using LiveChartsCore.Defaults
 @using LiveChartsCore.Drawing
 @using LiveChartsCore.SkiaSharpView.Blazor
+@using System.Collections.ObjectModel;
 @using ViewModelsSamples.Events.AddPointOnClick
 
 <CartesianChart
@@ -12,6 +13,11 @@
 </CartesianChart>
 
 @code {
+    // NOTE: // mark
+    // BECAUSE THIS VIEWMODEL IS SHARED WITH OTHER VIEWS // mark
+    // THE ViewModel.ChartUpdated, ViewModel.PointerDown and ViewModel.PointerUp METHODS // mark
+    // are repeated, please ignore the viewmodel RelayCommands and use the events instead. // mark
+
     private CartesianChart _chart;
 
     public ViewModel ViewModel { get; set; } = new();
@@ -23,8 +29,10 @@
         // scales the UI coordinates to the corresponding data in the chart.
         var dataCoordinates = _chart.ScalePixelsToData(p);
 
+        var data = (ObservableCollection<ObservablePoint>)ViewModel.SeriesCollection[0].Values!;
+
         // finally add the new point to the data in our chart.
-        ViewModel?.Data.Add(new ObservablePoint(dataCoordinates.X, dataCoordinates.Y));
+        data.Add(new ObservablePoint(dataCoordinates.X, dataCoordinates.Y));
 
         // You can also get all the points or visual elements in a given location.
         var points = _chart.GetPointsAt(new LvcPoint(p.X, p.Y));

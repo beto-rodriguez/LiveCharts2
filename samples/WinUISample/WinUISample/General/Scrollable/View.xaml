@@ -23,7 +23,7 @@
             XAxes="{Binding ScrollableAxes}"
             ZoomMode="X"
             DrawMargin="{Binding Margin}"
-            UpdateStarted="OnChart_Updated">
+            UpdateStartedCommand="{Binding ChartUpdatedCommand}">
         </lvc:CartesianChart>
 
         <lvc:CartesianChart
@@ -34,9 +34,9 @@
             Sections="{Binding Thumbs}"
             XAxes="{Binding InvisibleX}"
             YAxes="{Binding InvisibleY}"
-            PointerPressed="ScrollBarChart_PointerPressed"
-            PointerMoved="ScrollBarChart_PointerMoved"
-            PointerReleased="ScrollBarChart_PointerReleased"
+            PointerPressedCommand="{Binding PointerDownCommand}"
+            PointerMoveCommand="{Binding PointerMoveCommand}"
+            PointerReleasedCommand="{Binding PointerUpCommand}"
             TooltipPosition="Hidden">
         </lvc:CartesianChart>
     </Grid>

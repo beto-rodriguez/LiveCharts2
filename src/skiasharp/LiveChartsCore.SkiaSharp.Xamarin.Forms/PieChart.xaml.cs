@@ -66,7 +66,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         InitializeComponent();
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
         SizeChanged += OnSizeChanged;
@@ -259,28 +259,39 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
+    /// The update started command.
+    /// </summary>
+    public static readonly BindableProperty UpdateStartedCommandProperty =
+        BindableProperty.Create(
+            nameof(UpdateStartedCommand), typeof(ICommand), typeof(PieChart), null);
+
+    /// <summary>
+    /// The tapped command.
+    /// </summary>
+    public static readonly BindableProperty TappedCommandProperty =
+        BindableProperty.Create(
+            nameof(TappedCommand), typeof(ICommand), typeof(PieChart), null);
+
+    /// <summary>
     /// The data pointer down command property
     /// </summary>
     public static readonly BindableProperty DataPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(DataPointerDownCommand), typeof(ICommand), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(DataPointerDownCommand), typeof(ICommand), typeof(PieChart), null);
 
     /// <summary>
     /// The data pointer chart point command property
     /// </summary>
     public static readonly BindableProperty ChartPointPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PieChart), null);
 
     /// <summary>
     /// The visual elements pointer down command property
     /// </summary>
     public static readonly BindableProperty VisualElementsPointerDownCommandProperty =
         BindableProperty.Create(
-            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PieChart),
-            null, propertyChanged: OnBindablePropertyChanged);
+            nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PieChart), null);
 
     #endregion
 
@@ -338,11 +349,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(SyncContextProperty, value);
     }
 
-    LvcSize IChartView.ControlSize => new()
-    {
-        Width = (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density),
-        Height = (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density)
-    };
+    LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
@@ -486,6 +493,24 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the chart update started.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users taped the chart.
+    /// </summary>
+    public ICommand? TappedCommand
+    {
+        get => (ICommand?)GetValue(TappedCommandProperty);
+        set => SetValue(TappedCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand? DataPointerDownCommand
@@ -585,7 +610,15 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         if (core is null) return;
 
-        var location = new LvcPoint(e.Location.X, e.Location.Y);
+        var density = DeviceDisplay.MainDisplayInfo.Density;
+        var location = new LvcPoint(e.Location.X / density, e.Location.Y / density);
+
+        if (TappedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(location.X, location.Y), e);
+            if (TappedCommand.CanExecute(args)) TappedCommand.Execute(args);
+        }
+
         core.InvokePointerDown(location, false);
         core.InvokePointerMove(location);
 
@@ -599,6 +632,12 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 

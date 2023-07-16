@@ -56,7 +56,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     public GeoMap()
     {
         InitializeComponent();
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
 
         canvas.SkCanvasView.EnableTouchEvents = true;
@@ -179,10 +179,10 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density);
+    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)canvas.Width;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density);
+    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)canvas.Height;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
     public MapProjection MapProjection

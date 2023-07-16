@@ -11,7 +11,7 @@
     <lvc:CartesianChart
                 x:Name="chart"
                 Series="{Binding SeriesCollection}"
-                Touched="Chart_Touched"
+                TappedCommand="{Binding PointerDownCommand}"
                 TooltipPosition="Hidden">
     </lvc:CartesianChart>
 </ContentPage>

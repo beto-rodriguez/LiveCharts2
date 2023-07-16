@@ -82,7 +82,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         // Avalonia do not seem to detect pointer events if background is not set.
         ((IChartView)this).BackColor = LvcColor.FromArgb(0, 0, 0, 0);
 
-        if (!LiveCharts.HasBackend) LiveCharts.Configure(config => config.UseDefaults());
+        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
 
@@ -253,6 +253,30 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
         AvaloniaProperty.Register<PolarChart, double?>(
             nameof(LegendTextSize), LiveCharts.DefaultSettings.LegendTextSize, inherits: true);
+
+    /// <summary>
+    /// The data pointer down command property
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> UpdateStartedCommandProperty =
+        AvaloniaProperty.Register<PolarChart, ICommand?>(nameof(UpdateStartedCommand), null, inherits: true);
+
+    /// <summary>
+    /// The pointer pressed command.
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> PointerPressedCommandProperty =
+        AvaloniaProperty.Register<PolarChart, ICommand?>(nameof(PointerPressedCommand), null, inherits: true);
+
+    /// <summary>
+    /// The pointer released command.
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> PointerReleasedCommandProperty =
+        AvaloniaProperty.Register<PolarChart, ICommand?>(nameof(PointerReleasedCommand), null, inherits: true);
+
+    /// <summary>
+    /// The pointer move command.
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?> PointerMoveCommandProperty =
+        AvaloniaProperty.Register<PolarChart, ICommand?>(nameof(PointerMoveCommand), null, inherits: true);
 
     /// <summary>
     /// The data pointer down command property
@@ -482,6 +506,42 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <summary>
+    /// Gets or sets a command to execute when the chart update started.
+    /// </summary>
+    public ICommand? UpdateStartedCommand
+    {
+        get => (ICommand?)GetValue(UpdateStartedCommandProperty);
+        set => SetValue(UpdateStartedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer is pressed on the chart.
+    /// </summary>
+    public ICommand? PointerPressedCommand
+    {
+        get => (ICommand?)GetValue(PointerPressedCommandProperty);
+        set => SetValue(PointerPressedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer is released on the chart.
+    /// </summary>
+    public ICommand? PointerReleasedCommand
+    {
+        get => (ICommand?)GetValue(PointerReleasedCommandProperty);
+        set => SetValue(PointerReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer moves over the chart.
+    /// </summary>
+    public ICommand? PointerMoveCommand
+    {
+        get => (ICommand?)GetValue(PointerMoveCommandProperty);
+        set => SetValue(PointerMoveCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
     public ICommand? DataPointerDownCommand
@@ -568,15 +628,14 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     {
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
-        _core = new PolarChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas!.CanvasCore);
+        _core = new PolarChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas!.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        legend = new SKDefaultLegend(); // this.FindControl<DefaultLegend>("legend");
-        tooltip = new SKDefaultTooltip(); // this.FindControl<DefaultTooltip>("tooltip");
+        legend = new SKDefaultLegend();
+        tooltip = new SKDefaultTooltip();
 
         _core.Update();
     }
@@ -649,6 +708,13 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         var p = e.GetPosition(this);
+
+        if (PointerPressedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+            if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
+        }
+
         foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
         _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), false);
     }
@@ -656,6 +722,13 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     private void PolarChart_PointerMoved(object? sender, PointerEventArgs e)
     {
         var p = e.GetPosition(_avaloniaCanvas);
+
+        if (PointerMoveCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
+        }
+
         _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
@@ -664,6 +737,13 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
         var p = e.GetPosition(this);
+
+        if (PointerReleasedCommand is not null)
+        {
+            var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+            if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
+        }
+
         _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), false);
     }
 
@@ -674,6 +754,12 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
+        if (UpdateStartedCommand is not null)
+        {
+            var args = new ChartCommandArgs(this);
+            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
+        }
+
         UpdateStarted?.Invoke(this);
     }
 
