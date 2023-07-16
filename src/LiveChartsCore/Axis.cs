@@ -101,9 +101,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
 
-#if DEBUG
     private int _stepCount;
-#endif
 
     #endregion
 
@@ -296,9 +294,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
-#if DEBUG
         _stepCount = 0;
-#endif
 
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
@@ -497,7 +493,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 y = scale.ToPixels(i);
             }
 
-            float xc = 0, yc = 0;
+            float yc;
+            float xc;
+
             if (_orientation == AxisOrientation.X)
             {
                 xc = actualScale.ToPixels(i);
