@@ -54,7 +54,7 @@ public class View : Panel
 
     private void OnChart_Updated(IChartView<SkiaSharpDrawingContext> chart)
     {
-        var vm = _viewModel.PointerDown;
+        var vm = _viewModel;
 
         var cartesianChart = (CartesianChart)chart;
 
