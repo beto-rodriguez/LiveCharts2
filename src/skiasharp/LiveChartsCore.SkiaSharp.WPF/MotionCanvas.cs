@@ -115,20 +115,20 @@ public class MotionCanvas : Control
     /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
     protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
-        (var dpiX, var dpiY) = GetPixelDensity();
-        args.Surface.Canvas.Scale(dpiX, dpiY);
+        var density = GetPixelDensity();
+        args.Surface.Canvas.Scale(density.dpix, density.dpiy);
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
-    private (float dpiX, float dpiY) GetPixelDensity()
+    private ResolutionHelper GetPixelDensity()
     {
         var presentationSource = PresentationSource.FromVisual(this);
-        if (presentationSource is null) return (1f, 1f);
+        if (presentationSource is null) return new(1f, 1f);
         var compositionTarget = presentationSource.CompositionTarget;
-        if (compositionTarget is null) return (1f, 1f);
+        if (compositionTarget is null) return new(1f, 1f);
 
         var matrix = compositionTarget.TransformToDevice;
-        return ((float)matrix.M11, (float)matrix.M22);
+        return new((float)matrix.M11, (float)matrix.M22);
     }
 
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)

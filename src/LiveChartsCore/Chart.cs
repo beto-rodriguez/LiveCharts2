@@ -342,32 +342,35 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         PointerDown?.Invoke(point);
 
-        var strategy = ChartSeries.GetTooltipFindingStrategy();
-
-        // fire the series event.
-        foreach (var series in ChartSeries)
+        lock (View.SyncContext)
         {
-            if (!series.RequiresFindClosestOnPointerDown) continue;
+            var strategy = ChartSeries.GetTooltipFindingStrategy();
 
-            var points = series.FindHitPoints(this, point, strategy);
-            if (!points.Any()) continue;
+            // fire the series event.
+            foreach (var series in ChartSeries)
+            {
+                if (!series.RequiresFindClosestOnPointerDown) continue;
 
-            series.OnDataPointerDown(View, points, point);
+                var points = series.FindHitPoints(this, point, strategy);
+                if (!points.Any()) continue;
+
+                series.OnDataPointerDown(View, points, point);
+            }
+
+            // fire the chart event.
+            var iterablePoints = ChartSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
+            View.OnDataPointerDown(iterablePoints, point);
+
+            // fire the visual elements event.
+            // ToDo: VisualElements should be of type VisualElement<T>
+
+            var iterableVisualElements =
+                VisualElements
+                    .Cast<VisualElement<TDrawingContext>>()
+                    .SelectMany(x => x.IsHitBy(this, point));
+
+            View.OnVisualElementPointerDown(iterableVisualElements, point);
         }
-
-        // fire the chart event.
-        var iterablePoints = ChartSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
-        View.OnDataPointerDown(iterablePoints, point);
-
-        // fire the visual elements event.
-        // ToDo: VisualElements should be of type VisualElement<T>
-
-        var iterableVisualElements =
-            VisualElements
-                .Cast<VisualElement<TDrawingContext>>()
-                .SelectMany(x => x.IsHitBy(this, point));
-
-        View.OnVisualElementPointerDown(iterableVisualElements, point);
     }
 
     internal virtual void InvokePointerMove(LvcPoint point)

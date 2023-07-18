@@ -66,7 +66,7 @@ public partial class TempSample : ObservableObject, IChartEntity
     private double _temperature;
 
     // Use the coordinate property to let LiveCharts know the position of the point.
-    public Coordinate Coordinate { get; protected set; }
+    public Coordinate Coordinate { get; set; }
 
     // The meta data property is used by LiveCharts to store info about the plot.
     public ChartEntityMetaData? MetaData { get; set; }
@@ -90,7 +90,7 @@ public partial class City : ObservableObject, IChartEntity
         MetaData = new ChartEntityMetaData(OnCoordinateChanged);
     }
 
-    public Coordinate Coordinate { get; protected set; }
+    public Coordinate Coordinate { get; set; }
 
     public ChartEntityMetaData? MetaData { get; set; }
 
@@ -115,7 +115,7 @@ public partial class DateSample : ObservableObject, IChartEntity
     [ObservableProperty]
     private double _temperature;
 
-    public Coordinate Coordinate { get; protected set; }
+    public Coordinate Coordinate { get; set; }
 
     public ChartEntityMetaData? MetaData { get; set; }
 
@@ -138,7 +138,7 @@ public partial class TempNullableSample : ObservableObject, IChartEntity
     [ObservableProperty]
     private double? _temperature;
 
-    public Coordinate Coordinate { get; protected set; }
+    public Coordinate Coordinate { get; set; }
 
     public ChartEntityMetaData? MetaData { get; set; }
 
