@@ -116,7 +116,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(CartesianChart), new(), BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (CartesianChart)o;

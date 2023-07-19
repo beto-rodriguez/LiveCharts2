@@ -196,7 +196,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// </summary>
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
-            nameof(SyncContext), typeof(object), typeof(PolarChart), new PropertyMetadata(null,
+            nameof(SyncContext), typeof(object), typeof(PolarChart), new PropertyMetadata(new(),
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (PolarChart)o;

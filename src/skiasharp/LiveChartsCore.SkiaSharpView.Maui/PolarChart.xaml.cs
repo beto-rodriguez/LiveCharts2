@@ -102,7 +102,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(PolarChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(PolarChart), new(), BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (PolarChart)o;

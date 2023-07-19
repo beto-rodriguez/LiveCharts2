@@ -97,7 +97,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(PieChart), new(), BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (PieChart)o;
