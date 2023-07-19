@@ -186,7 +186,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
-            nameof(SyncContext), typeof(object), typeof(CartesianChart), new PropertyMetadata(null,
+            nameof(SyncContext), typeof(object), typeof(CartesianChart), new PropertyMetadata(new(),
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (CartesianChart)o;

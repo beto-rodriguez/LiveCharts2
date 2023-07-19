@@ -122,7 +122,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
-            nameof(SyncContext), typeof(object), typeof(PieChart), new PropertyMetadata(null,
+            nameof(SyncContext), typeof(object), typeof(PieChart), new PropertyMetadata(new(),
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (PieChart)o;
