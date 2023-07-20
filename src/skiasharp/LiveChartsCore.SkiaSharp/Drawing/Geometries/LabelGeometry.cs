@@ -105,17 +105,18 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint drawable)
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
+    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> drawable)
     {
-        var typeface = drawable.GetSKTypeface();
+        var skiaSpaint = (Paint)drawable;
+        var typeface = skiaSpaint.GetSKTypeface();
 
         using var p = new SKPaint
         {
-            Color = drawable.Color,
-            IsAntialias = drawable.IsAntialias,
-            IsStroke = drawable.IsStroke,
-            StrokeWidth = drawable.StrokeThickness,
+            Color = skiaSpaint.Color,
+            IsAntialias = skiaSpaint.IsAntialias,
+            IsStroke = skiaSpaint.IsStroke,
+            StrokeWidth = skiaSpaint.StrokeThickness,
             TextSize = TextSize,
             Typeface = typeface
         };
