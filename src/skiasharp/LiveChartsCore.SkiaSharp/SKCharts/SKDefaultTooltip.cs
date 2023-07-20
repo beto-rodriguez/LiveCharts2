@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
-    internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
+    internal StackPanel<RectangleGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10050;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
@@ -46,8 +46,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// </summary>
     public SKDefaultTooltip()
     {
-        FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
-        BackgroundPaint = new SolidColorPaint(new SKColor(245, 245, 245, 230))
+        FontPaint = new SolidColorPaint(new SKColor(250, 250, 250));
+        BackgroundPaint = new SolidColorPaint(new SKColor(45, 45, 45, 230))
         {
             ImageFilter = new DropShadow(0, 0, 4, 4, new SKColor(0, 0, 0, 70))
         };
@@ -84,13 +84,13 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     {
         const int wedge = 13;
 
-        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
+        if (chart.View.TooltipTextSize is not null) TextSize = chart.View.TooltipTextSize.Value;
         if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
         if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
 
         if (_panel is null)
         {
-            _panel = new StackPanel<PopUpGeometry, SkiaSharpDrawingContext>
+            _panel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
                 Orientation = ContainerOrientation.Vertical,
                 HorizontalAlignment = Align.Middle,
@@ -98,7 +98,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 BackgroundPaint = BackgroundPaint
             };
 
-            _panel.BackgroundGeometry.Wedge = wedge;
+            //_panel.BackgroundGeometry.Wedge = wedge;
 
             _panel
                 .Animate(
@@ -152,27 +152,27 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, 0);
+                //tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, 0);
                 tableLayout.AddChild(
                     new LabelVisual
                     {
-                        Text = point.Context.Series.Name ?? string.Empty,
+                        Text = "THIS IS JUST A TEST", // point.Context.Series.Name ?? string.Empty,
                         Paint = FontPaint,
                         TextSize = TextSize,
-                        Padding = new Padding(8, 0, 0, 0),
+                        //Padding = new Padding(8, 0, 0, 0),
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
-                    }, i, 1, horizontalAlign: Align.Start);
-                tableLayout.AddChild(
-                    new LabelVisual
-                    {
-                        Text = content,
-                        Paint = FontPaint,
-                        TextSize = TextSize,
-                        Padding = new Padding(16, 0, 0, 0),
-                        VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start
-                    }, i, 2, horizontalAlign: Align.End);
+                    }, i, 0, horizontalAlign: Align.Start);
+                //tableLayout.AddChild(
+                //    new LabelVisual
+                //    {
+                //        Text = content,
+                //        Paint = FontPaint,
+                //        TextSize = TextSize,
+                //        //Padding = new Padding(16, 0, 0, 0),
+                //        VerticalAlignment = Align.Start,
+                //        HorizontalAlignment = Align.Start
+                //    }, i, 2, horizontalAlign: Align.End);
 
                 i++;
             }
@@ -181,24 +181,24 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         _panel.Children.Add(tableLayout);
 
         var size = _panel.Measure(chart);
-        _ = foundPoints.GetTooltipLocation(size, chart);
-        _panel.BackgroundGeometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
+        //_ = foundPoints.GetTooltipLocation(size, chart);
+        //_panel.BackgroundGeometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
 
-        switch (chart.AutoToolTipsInfo.ToolTipPlacement)
-        {
-            case Measure.PopUpPlacement.Top:
-                _panel.Padding = new Padding(12, 8, 12, 8 + wedge); break;
-            case Measure.PopUpPlacement.Bottom:
-                _panel.Padding = new Padding(12, 8 + wedge, 12, 8); break;
-            case Measure.PopUpPlacement.Left:
-                _panel.Padding = new Padding(12, 8, 12 + wedge, 8); break;
-            case Measure.PopUpPlacement.Right:
-                _panel.Padding = new Padding(12 + wedge, 8, 12, 8); break;
-            default: break;
-        }
+        //switch (chart.AutoToolTipsInfo.ToolTipPlacement)
+        //{
+        //    case Measure.PopUpPlacement.Top:
+        //        _panel.Padding = new Padding(12, 8, 12, 8 + wedge); break;
+        //    case Measure.PopUpPlacement.Bottom:
+        //        _panel.Padding = new Padding(12, 8 + wedge, 12, 8); break;
+        //    case Measure.PopUpPlacement.Left:
+        //        _panel.Padding = new Padding(12, 8, 12 + wedge, 8); break;
+        //    case Measure.PopUpPlacement.Right:
+        //        _panel.Padding = new Padding(12 + wedge, 8, 12, 8); break;
+        //    default: break;
+        //}
 
-        // the size changed... we need to do the math again
-        size = _panel.Measure(chart);
+        //// the size changed... we need to do the math again
+        //size = _panel.Measure(chart);
         var location = foundPoints.GetTooltipLocation(size, chart);
 
         _panel.X = location.X;

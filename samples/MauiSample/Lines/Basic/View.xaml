@@ -7,5 +7,5 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart Series="{Binding Series}" Title="{Binding Title}" />
+    <lvc:CartesianChart Series="{Binding Series}" Title="{Binding Title}" TooltipTextSize="100"/>
 </ContentPage>
