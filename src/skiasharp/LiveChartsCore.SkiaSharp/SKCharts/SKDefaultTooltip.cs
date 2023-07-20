@@ -84,7 +84,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     {
         const int wedge = 13;
 
-        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
+        if (chart.View.TooltipTextSize is not null) TextSize = chart.View.TooltipTextSize.Value;
         if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
         if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
 
