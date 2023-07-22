@@ -186,11 +186,6 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
             var xo = m.Width * o.X;
             var yo = m.Height * o.Y;
 
-            if (_hasGeometryTransform)
-            {
-                ApplyCustomGeometryTransform(context);
-            }
-
             if (_hasRotation)
             {
                 context.Canvas.Translate(p.X + xo, p.Y + yo);
@@ -304,10 +299,4 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// <param name="paintTasks">The paint task.</param>
     /// <returns>the size of the geometry</returns>
     protected abstract LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks);
-
-    /// <summary>
-    /// Applies the geometry transform.
-    /// </summary>
-    /// <param name="context"></param>
-    protected virtual void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context) { }
 }
