@@ -35,6 +35,9 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
+/// <summary>
+/// Defines the default tooltip.
+/// </summary>
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
@@ -159,7 +162,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Text = point.Context.Series.Name ?? string.Empty,
                         Paint = FontPaint,
                         TextSize = TextSize,
-                        Padding = new Padding(8, 0, 0, 0),
+                        Padding = new Padding(10, 0, 0, 0),
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
                     }, i, 1, horizontalAlign: Align.Start);

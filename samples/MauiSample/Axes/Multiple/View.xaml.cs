@@ -1,4 +1,4 @@
-﻿namespace MauiSample.Axes.CustomSeparatorsInterval;
+﻿namespace MauiSample.Axes.Multiple;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

@@ -32,6 +32,9 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
+/// <summary>
+/// Defines the default legend for a chart.
+/// </summary>
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 {
     private static readonly int s_zIndex = 10050;
@@ -45,6 +48,14 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
     };
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="SKDefaultLegend"/> class.
+    /// </summary>
+    public SKDefaultLegend()
+    {
+        FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
+    }
+
+    /// <summary>
     /// Gets or sets the legend font paint.
     /// </summary>
     public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
@@ -53,11 +64,6 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
     /// Gets or sets the fonts size.
     /// </summary>
     public double TextSize { get; set; } = 15;
-
-    public SKDefaultLegend()
-    {
-        FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
-    }
 
     /// <inheritdoc cref="IChartLegend{TDrawingContext}.Draw(Chart{TDrawingContext})"/>
     public void Draw(Chart<SkiaSharpDrawingContext> chart)
