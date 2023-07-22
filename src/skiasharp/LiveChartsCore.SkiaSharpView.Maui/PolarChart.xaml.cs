@@ -370,7 +370,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     #region properties
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
-    bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
+    bool IChartView.DesignerMode => false; // DesignMode.IsDesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
