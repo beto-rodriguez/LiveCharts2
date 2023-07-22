@@ -1,16 +1,4 @@
-﻿// You must register any non-Latin based font //mark
-// you can add this code when the app starts to register Chinese characters: // mark
-
-// LiveCharts.Configure(c =>
-//     c.AddSkiaSharp()
-//      .AddDefaultMappers()
-//      .AddLightTheme()
-//      .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
-
-// You can learn more about extra settings at: // mark
-// https://localhost:7053/docs/{{ platform }}/{{ version }}/Overview.Installation#configure-themes-fonts-or-mappers-optional // mark
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -20,6 +8,18 @@ namespace ViewModelsSamples.Axes.LabelsFormat2;
 
 public partial class ViewModel : ObservableObject
 {
+    public ViewModel()
+    {
+        // You must register any non-Latin based font //mark
+        // you can add this code when the app starts to register Chinese characters: // mark
+
+        LiveCharts.Configure(config =>
+            config.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
+
+        // You can learn more about extra settings at: // mark
+        // https://localhost:7053/docs/{{ platform }}/{{ version }}/Overview.Installation#configure-themes-fonts-or-mappers-optional // mark
+    }
+
     public ISeries[] Series { get; set; } =
     {
         new ColumnSeries<double> { Values = new double[] { 426, 583, 104 } },
