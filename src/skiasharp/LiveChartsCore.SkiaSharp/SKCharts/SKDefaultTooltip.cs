@@ -143,7 +143,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Paint = FontPaint,
                         TextSize = TextSize,
                         Padding = new Padding(0, 0, 0, 0),
-                        VerticalAlignment = Align.Middle,
+                        VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
                     });
 
@@ -163,7 +163,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Paint = FontPaint,
                         TextSize = TextSize,
                         Padding = new Padding(8, 0, 0, 0),
-                        VerticalAlignment = Align.Middle,
+                        VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
                     }, i, 1, horizontalAlign: Align.Start);
                 tableLayout.AddChild(
@@ -173,7 +173,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Paint = FontPaint,
                         TextSize = TextSize,
                         Padding = new Padding(16, 0, 0, 0),
-                        VerticalAlignment = Align.Middle,
+                        VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
                     }, i, 2, horizontalAlign: Align.End);
 
