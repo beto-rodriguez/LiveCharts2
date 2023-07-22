@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -76,7 +77,10 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     public float LineHeight { get; set; } = 1.75f;
 
 #if DEBUG
-    public static bool ShowDebugLines { get; set; } = false;
+    /// <summary>
+    /// This property is only available on debug mode, it indicates if the debug lines should be shown.
+    /// </summary>
+    public static bool ShowDebugLines { get; set; } = true;
 #endif
 
     private LvcPoint GetAlignmentOffset(SKRect bounds)
@@ -117,38 +121,45 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         // for a reason the text size is not set on the InitializeTask() method.
         context.Paint.TextSize = TextSize;
 
-        var textBounds = new SKRect();
-        _ = context.Paint.MeasureText(Text, ref textBounds);
+        var verticalPos = 0f;
 
-        var lhd = (textBounds.Height * LineHeight - textBounds.Height) * 0.5f;
-        var ao = GetAlignmentOffset(textBounds);
-        var p = Padding;
+        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        {
+            var textBounds = new SKRect();
+            _ = context.Paint.MeasureText(line, ref textBounds);
 
-        context.Canvas.DrawText(Text, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd, paint);
+            var lhd = (textBounds.Height * LineHeight - textBounds.Height) * 0.5f;
+            var ao = GetAlignmentOffset(textBounds);
+            var p = Padding;
+
+            context.Canvas.DrawText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
 
 #if DEBUG
-        if (ShowDebugLines)
-        {
-            using var r = new SKPaint { Color = new SKColor(255, 0, 0), IsStroke = true };
-            using var b = new SKPaint { Color = new SKColor(0, 0, 255), IsStroke = true };
+            if (ShowDebugLines)
+            {
+                using var r = new SKPaint { Color = new SKColor(255, 0, 0), IsStroke = true };
+                using var b = new SKPaint { Color = new SKColor(0, 0, 255), IsStroke = true };
 
-            context.Canvas.DrawRect(X - 2.5f, Y - 2.5f, 5, 5, b);
+                context.Canvas.DrawRect(X - 2.5f, Y - 2.5f, 5, 5, b);
 
-            context.Canvas.DrawRect(
-                X + ao.X,
-                Y + ao.Y - textBounds.Height,
-                textBounds.Width + Padding.Left + Padding.Right,
-                textBounds.Height * LineHeight + Padding.Top + Padding.Bottom,
-                r);
+                context.Canvas.DrawRect(
+                    X + ao.X,
+                    Y + ao.Y - textBounds.Height + verticalPos,
+                    textBounds.Width + Padding.Left + Padding.Right,
+                    textBounds.Height * LineHeight + Padding.Top + Padding.Bottom,
+                    r);
 
-            context.Canvas.DrawRect(
-                X + ao.X + p.Left,
-                Y + ao.Y - textBounds.Height + p.Top,
-                textBounds.Width,
-                textBounds.Height * LineHeight,
-                b);
-        }
+                context.Canvas.DrawRect(
+                    X + ao.X + p.Left,
+                    Y + ao.Y - textBounds.Height + p.Top + verticalPos,
+                    textBounds.Width,
+                    textBounds.Height * LineHeight,
+                    b);
+            }
 #endif
+
+            verticalPos += textBounds.Height * LineHeight;
+        }
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
@@ -167,8 +178,17 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             Typeface = typeface
         };
 
-        var bounds = new SKRect();
-        _ = p.MeasureText(Text, ref bounds);
+        var w = 0f;
+        var h = 0f;
+
+        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        {
+            var bounds = new SKRect();
+            _ = p.MeasureText(line, ref bounds);
+
+            if (bounds.Width > w) w = bounds.Width;
+            h += bounds.Height * LineHeight;
+        }
 
         // Note #301222
         // Disposing typefaces could cause render issues (Blazor) at least on SkiaSharp (2.88.3)
@@ -177,7 +197,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         // typeface.Dispose();
 
         return new LvcSize(
-            bounds.Width + Padding.Left + Padding.Right,
-            bounds.Height * LineHeight + Padding.Top + Padding.Bottom);
+            w + Padding.Left + Padding.Right,
+            h + Padding.Top + Padding.Bottom);
     }
 }
