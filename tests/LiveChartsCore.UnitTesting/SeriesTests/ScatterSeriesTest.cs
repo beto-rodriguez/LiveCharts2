@@ -127,7 +127,10 @@ public class ScatterSeriesTest
         {
             Values = new double[] { 1, 2, 3, 4, 5 },
             DataPadding = new Drawing.LvcPoint(0, 0),
-            YToolTipLabelFormatter = x => $"{x.Coordinate.PrimaryValue}{Environment.NewLine}{x.Coordinate.PrimaryValue}{Environment.NewLine}",
+            YToolTipLabelFormatter = x =>
+                $"{x.Coordinate.PrimaryValue}" +
+                $"{Environment.NewLine}{x.Coordinate.PrimaryValue}" +
+                $"{Environment.NewLine}{x.Coordinate.PrimaryValue}",
         };
 
         var tooltip = new SKDefaultTooltip();
@@ -193,6 +196,7 @@ public class ScatterSeriesTest
 
         chart.Core._pointerPosition = new(300 * 4 / 5d, 300 * 1 / 5d);
         _ = chart.GetImage();
+        chart.SaveImage("testme.png");
         Assert.IsTrue(
             Math.Abs(tp.X - (300 * 3 / 4d - tp.Width * 0.5f)) < 0.1 &&
             Math.Abs(tp.Y - 300 * 1 / 4d) < 0.1 &&
