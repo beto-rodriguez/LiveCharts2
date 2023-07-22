@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
@@ -132,7 +133,17 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             var ao = GetAlignmentOffset(textBounds);
             var p = Padding;
 
-            context.Canvas.DrawText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+            if (paint.Typeface is not null)
+            {
+                // This needs to be verified.
+                // this is just a temporal fix to support older versions of LiveCharts
+                using var eventTextShaper = new SKShaper(paint.Typeface);
+                context.Canvas.DrawShapedText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+            }
+            else
+            {
+                context.Canvas.DrawText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+            }
 
 #if DEBUG
             if (ShowDebugLines)
