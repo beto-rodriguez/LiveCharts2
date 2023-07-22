@@ -80,7 +80,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <summary>
     /// This property is only available on debug mode, it indicates if the debug lines should be shown.
     /// </summary>
-    public static bool ShowDebugLines { get; set; } = false;
+    public static bool ShowDebugLines { get; set; }
 #endif
 
     private LvcPoint GetAlignmentOffset(SKRect bounds)
