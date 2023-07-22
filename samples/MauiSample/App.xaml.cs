@@ -1,6 +1,6 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using SkiaSharp;
+using LiveChartsCore.SkiaSharpView; // mark
+using SkiaSharp; // mark
 
 namespace MauiSample;
 
@@ -24,7 +24,7 @@ public partial class App : Application
                 //.AddDarkTheme() // mark 
 
                 // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
-                .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('أ'))  // <- Arabic // mark
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('あ')) // <- Japanese // mark
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('헬')) // <- Korean // mark

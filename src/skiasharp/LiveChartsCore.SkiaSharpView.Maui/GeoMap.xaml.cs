@@ -152,7 +152,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => DesignMode.IsDesignModeEnabled;
+    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => false;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
     public object SyncContext

@@ -24,7 +24,6 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Motion;
-using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -187,11 +186,6 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
             var xo = m.Width * o.X;
             var yo = m.Height * o.Y;
 
-            if (_hasGeometryTransform)
-            {
-                ApplyCustomGeometryTransform(context);
-            }
-
             if (_hasRotation)
             {
                 context.Canvas.Translate(p.X + xo, p.Y + yo);
@@ -275,7 +269,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// <returns>the size of the geometry.</returns>
     public LvcSize Measure(IPaint<SkiaSharpDrawingContext> drawableTask)
     {
-        var measure = OnMeasure((Paint)drawableTask);
+        var measure = OnMeasure(drawableTask);
 
         var r = RotateTransform;
         if (Math.Abs(r) > 0)
@@ -304,11 +298,5 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// </summary>
     /// <param name="paintTasks">The paint task.</param>
     /// <returns>the size of the geometry</returns>
-    protected abstract LvcSize OnMeasure(Paint paintTasks);
-
-    /// <summary>
-    /// Applies the geometry transform.
-    /// </summary>
-    /// <param name="context"></param>
-    protected virtual void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context) { }
+    protected abstract LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks);
 }

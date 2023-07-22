@@ -67,7 +67,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private TTextGeometry? _nameGeometry;
     private AxisPosition _position = AxisPosition.Start;
     private Func<double, string> _labeler = Labelers.Default;
-    private Padding _padding = Padding.Default;
+    private Padding _padding = new();
     private double? _minLimit = null;
     private double? _maxLimit = null;
     private IPaint<TDrawingContext>? _namePaint;

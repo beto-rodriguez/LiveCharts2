@@ -77,147 +77,138 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
     public float LineHeight { get; set; } = 1.75f;
 
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+#if DEBUG
+    /// <summary>
+    /// This property is only available on debug mode, it indicates if the debug lines should be shown.
+    /// </summary>
+    public static bool ShowDebugLines { get; set; }
+#endif
+
+    private LvcPoint GetAlignmentOffset(SKRect bounds)
     {
-        var size = OnMeasure(context.PaintTask);
-
-        var bg = Background;
-        if (bg != LvcColor.Empty)
-        {
-            using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity)) })
-            {
-                var p = Padding;
-                context.Canvas.DrawRect(X - p.Left, Y - size.Height + p.Bottom, size.Width, size.Height, bgPaint);
-            }
-        }
-
-        var lines = GetLines(Text);
-        double linesCount = lines.Length;
-        var lineNumber = 0;
-        var lhd = (GetActualLineHeight(paint) - GetRawLineHeight(paint)) * 0.5f;
-
-        foreach (var line in lines)
-        {
-            var ph = (float)(++lineNumber / linesCount) * size.Height;
-            var yLine = ph - size.Height;
-            DrawLine(line, yLine - lhd, context, paint);
-        }
-    }
-
-    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint drawable)
-    {
-        var typeface = drawable.GetSKTypeface();
-
-        using var p = new SKPaint
-        {
-            Color = drawable.Color,
-            IsAntialias = drawable.IsAntialias,
-            IsStroke = drawable.IsStroke,
-            StrokeWidth = drawable.StrokeThickness,
-            TextSize = TextSize,
-            Typeface = typeface
-        };
-
-        var bounds = MeasureLines(p);
-
-        // Note #301222
-        // Disposing typefaces could cause render issues.
-        // Does this causes memory leaks?
-        // Should the user dispose typefaces manually?
-        //typeface.Dispose();
-
-        return new LvcSize(bounds.Width + Padding.Left + Padding.Right, bounds.Height + Padding.Top + Padding.Bottom);
-    }
-
-    /// <inheritdoc cref="Geometry.ApplyCustomGeometryTransform(SkiaSharpDrawingContext)" />
-    protected override void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context)
-    {
-        context.Paint.TextSize = TextSize;
-        var size = MeasureLines(context.Paint);
-
-        const double toRadians = Math.PI / 180d;
         var p = Padding;
-        float w = 0.5f, h = 0.5f;
+
+        var w = bounds.Width + p.Left + p.Right;
+        var h = bounds.Height * LineHeight + p.Top + p.Bottom;
+
+        float l = -bounds.Left, t = -bounds.Top;
 
         switch (VerticalAlign)
         {
-            case Align.Start: h = 1f * size.Height + p.Top; break;
-            case Align.Middle: h = 0.5f * (size.Height + p.Top - p.Bottom); break;
-            case Align.End: h = 0f * size.Height - p.Bottom; break;
+            case Align.Start: t += 0; break;
+            case Align.Middle: t -= h * 0.5f; break;
+            case Align.End: t -= h + 0; break;
             default:
                 break;
         }
         switch (HorizontalAlign)
         {
-            case Align.Start: w = 0f * size.Width - p.Left; break;
-            case Align.Middle: w = 0.5f * (size.Width - p.Left + p.Right); break;
-            case Align.End: w = 1 * size.Width + p.Right; break;
+            case Align.Start: l += 0; break;
+            case Align.Middle: l -= w * 0.5f; break;
+            case Align.End: l -= w + 0; break;
             default:
                 break;
         }
 
-        var rotation = RotateTransform;
-        rotation = (float)(rotation * toRadians);
-
-        var xp = -Math.Cos(rotation) * w + -Math.Sin(rotation) * h;
-        var yp = -Math.Sin(rotation) * w + Math.Cos(rotation) * h;
-
-        // translate the label to the upper-left corner
-        // just for consistency with the rest of the shapes in the library (and Skia??),
-        // and also translate according to the vertical an horizontal alignment properties
-        context.Canvas.Translate((float)xp, (float)yp);
+        return new(l, t);
     }
 
-    private void DrawLine(string content, float yLine, SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        if (paint.Typeface is not null)
+        // it seems that skia allocates a lot of memory when drawing text
+        // for now we are not focused on performance, but this should be improved in the future
+
+        // for a reason the text size is not set on the InitializeTask() method.
+        context.Paint.TextSize = TextSize;
+
+        var verticalPos = 0f;
+
+        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
         {
-            using var eventTextShaper = new SKShaper(paint.Typeface);
-            context.Canvas.DrawShapedText(content, new SKPoint(X, Y + yLine), paint);
-            return;
-        }
+            var textBounds = new SKRect();
+            _ = context.Paint.MeasureText(line, ref textBounds);
 
-        context.Canvas.DrawText(content, new SKPoint(X, Y + yLine), paint);
+            var lhd = (textBounds.Height * LineHeight - textBounds.Height) * 0.5f;
+            var ao = GetAlignmentOffset(textBounds);
+            var p = Padding;
+
+            if (paint.Typeface is not null)
+            {
+                // This needs to be verified.
+                // this is just a temporal fix to support older versions of LiveCharts
+                using var eventTextShaper = new SKShaper(paint.Typeface);
+                context.Canvas.DrawShapedText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+            }
+            else
+            {
+                context.Canvas.DrawText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+            }
+
+#if DEBUG
+            if (ShowDebugLines)
+            {
+                using var r = new SKPaint { Color = new SKColor(255, 0, 0), IsStroke = true };
+                using var b = new SKPaint { Color = new SKColor(0, 0, 255), IsStroke = true };
+
+                context.Canvas.DrawRect(X - 2.5f, Y - 2.5f, 5, 5, b);
+
+                context.Canvas.DrawRect(
+                    X + ao.X,
+                    Y + ao.Y - textBounds.Height + verticalPos,
+                    textBounds.Width + Padding.Left + Padding.Right,
+                    textBounds.Height * LineHeight + Padding.Top + Padding.Bottom,
+                    r);
+
+                context.Canvas.DrawRect(
+                    X + ao.X + p.Left,
+                    Y + ao.Y - textBounds.Height + p.Top + verticalPos,
+                    textBounds.Width,
+                    textBounds.Height * LineHeight,
+                    b);
+            }
+#endif
+
+            verticalPos += textBounds.Height * LineHeight;
+        }
     }
 
-    private LvcSize MeasureLines(SKPaint paint)
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
+    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paint)
     {
-        float w = 0f, h = 0f;
-        var lineHeight = GetActualLineHeight(paint);
+        var skiaPaint = (Paint)paint;
+        var typeface = skiaPaint.GetSKTypeface();
 
-        foreach (var line in GetLines(Text))
+        using var p = new SKPaint
+        {
+            Color = skiaPaint.Color,
+            IsAntialias = skiaPaint.IsAntialias,
+            IsStroke = skiaPaint.IsStroke,
+            StrokeWidth = skiaPaint.StrokeThickness,
+            TextSize = TextSize,
+            Typeface = typeface
+        };
+
+        var w = 0f;
+        var h = 0f;
+
+        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
         {
             var bounds = new SKRect();
-
-            _ = paint.MeasureText(line, ref bounds);
+            _ = p.MeasureText(line, ref bounds);
 
             if (bounds.Width > w) w = bounds.Width;
-            h += lineHeight;
+            h += bounds.Height * LineHeight;
         }
 
-        return new LvcSize(w, h);
-    }
+        // Note #301222
+        // Disposing typefaces could cause render issues (Blazor) at least on SkiaSharp (2.88.3)
+        // Could this cause memory leaks?
+        // Should the user dispose typefaces manually?
+        // typeface.Dispose();
 
-    private float GetActualLineHeight(SKPaint paint)
-    {
-        var boundsH = new SKRect();
-        _ = paint.MeasureText("█", ref boundsH);
-        return LineHeight * boundsH.Height;
-    }
-
-    private float GetRawLineHeight(SKPaint paint)
-    {
-        var boundsH = new SKRect();
-        _ = paint.MeasureText("█", ref boundsH);
-        return boundsH.Height;
-    }
-
-    private string[] GetLines(string multiLineText)
-    {
-        return string.IsNullOrEmpty(multiLineText)
-            ? Array.Empty<string>()
-            : multiLineText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+        return new LvcSize(
+            w + Padding.Left + Padding.Right,
+            h + Padding.Top + Padding.Bottom);
     }
 }

@@ -23,7 +23,6 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -93,8 +92,8 @@ public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingCont
 
     internal static Action<DoughnutGeometry, SkiaSharpDrawingContext, SKPaint>? AlternativeDraw { get; set; }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint paint)
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
+    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paint)
     {
         return new LvcSize(Width, Height);
     }
