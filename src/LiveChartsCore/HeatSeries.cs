@@ -327,10 +327,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         };
         schedules.Add(new PaintSchedule<TDrawingContext>(solidPaint, visual));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

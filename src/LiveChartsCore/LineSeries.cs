@@ -223,6 +223,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                 }
             }
 
+            var hasSvg = this.HasSvgGeometry();
             var isSegmentEmpty = true;
 
             foreach (var data in GetSpline(segment, stacker))
@@ -261,6 +262,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                     data.TargetPoint.Context.Visual = v.Geometry;
                     data.TargetPoint.Context.AdditionalVisuals = v;
                     OnPointCreated(data.TargetPoint);
+                }
+
+                if (hasSvg && _geometrySvgChanged)
+                {
+                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
                 }
 
                 _ = everFetched.Add(data.TargetPoint);
@@ -440,10 +447,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
         else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

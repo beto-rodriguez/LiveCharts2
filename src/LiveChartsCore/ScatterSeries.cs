@@ -249,10 +249,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

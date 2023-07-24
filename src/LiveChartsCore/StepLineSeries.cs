@@ -363,10 +363,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
         else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

@@ -501,10 +501,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
 
         if (UpStroke is not null) schedules.Add(BuildMiniatureSchedule(UpStroke, new TMiniatureGeometry()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

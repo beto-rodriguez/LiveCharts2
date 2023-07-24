@@ -459,10 +459,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TMiniatureGeometry()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TMiniatureGeometry()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

@@ -61,7 +61,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
                 {
                     new SVGVisual
                     {
-                        Path = SVGPoints.Star, // or define your own svg path: SKPath.ParseSvgPathData(...)
+                        Path = SKPath.ParseSvgPathData(SVGPoints.Star),
                         Width = 25,
                         Height = 25,
                         Fill = new SolidColorPaint(theme.GetSeriesColor(series).AsSKColor()) {ZIndex = s_zIndex + 1 }
