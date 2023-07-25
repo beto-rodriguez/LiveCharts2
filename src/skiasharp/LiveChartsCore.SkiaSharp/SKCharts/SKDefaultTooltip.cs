@@ -50,9 +50,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     public SKDefaultTooltip()
     {
         FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
-        BackgroundPaint = new SolidColorPaint(new SKColor(245, 245, 245, 230))
+        BackgroundPaint = new SolidColorPaint(new SKColor(235, 235, 235, 230))
         {
-            ImageFilter = new DropShadow(0, 0, 4, 4, new SKColor(0, 0, 0, 70))
+            ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
         };
     }
 
@@ -85,7 +85,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        const int wedge = 13;
+        const int wedge = 10;
 
         if (chart.View.TooltipTextSize is not null) TextSize = chart.View.TooltipTextSize.Value;
         if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
@@ -102,6 +102,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
             };
 
             _panel.BackgroundGeometry.Wedge = wedge;
+            _panel.BackgroundGeometry.WedgeThickness = 3;
 
             _panel
                 .Animate(

@@ -312,7 +312,9 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                     .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
                     .CenterXToolTip();
 
-                _ = coordinate.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
+                _ = coordinate.PrimaryValue >= pivot
+                    ? ha.StartYToolTip()
+                    : ha.EndYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(data.TargetPoint);
 
@@ -407,7 +409,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     {
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null) return;
-        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+        visual.ScaleTransform = new LvcPoint(1.35f, 1.35f);
 
         base.OnPointerEnter(point);
     }

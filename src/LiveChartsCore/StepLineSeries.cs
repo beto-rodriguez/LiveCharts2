@@ -271,9 +271,11 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 _ = ha
                     .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
-                .CenterXToolTip();
+                    .CenterXToolTip();
 
-                _ = coordinate.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
+                _ = coordinate.PrimaryValue >= pivot
+                    ? ha.StartYToolTip()
+                    : ha.EndYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(point);
 
