@@ -107,6 +107,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         var ry = (float)Ry;
 
         var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -169,6 +170,12 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 OnPointCreated(point);
 
                 _ = everFetched.Add(point);
+            }
+
+            if (hasSvg && _geometrySvgChanged)
+            {
+                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
             }
 
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
@@ -252,6 +259,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
         pointsCleanup.CollectPoints(
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>

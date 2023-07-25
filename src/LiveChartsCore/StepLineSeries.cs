@@ -143,6 +143,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         uwx = uwx < gs ? gs : uwx;
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var segment in segments)
         {
@@ -226,6 +227,12 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     point.Context.Visual = v.Geometry;
                     point.Context.AdditionalVisuals = v;
                     OnPointCreated(point);
+                }
+
+                if (hasSvg && _geometrySvgChanged)
+                {
+                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
                 }
 
                 _ = everFetched.Add(point);
@@ -344,6 +351,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="GetRequestedGeometrySize"/>

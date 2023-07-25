@@ -166,6 +166,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         var tooltipPositon = chart.TooltipPosition;
 
         var segmentI = 0;
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var segment in segments)
         {
@@ -223,7 +224,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                 }
             }
 
-            var hasSvg = this.HasSvgGeometry();
             var isSegmentEmpty = true;
 
             foreach (var data in GetSpline(segment, stacker))
@@ -399,6 +399,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
