@@ -249,6 +249,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             isCotangent = true;
         }
 
+        var hasSvg = this.HasSvgGeometry();
+
         foreach (var segment in segments)
         {
             TPathGeometry fillPath;
@@ -327,6 +329,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     data.TargetPoint.Context.Visual = v.Geometry;
                     data.TargetPoint.Context.AdditionalVisuals = v;
                     OnPointCreated(data.TargetPoint);
+                }
+
+                if (hasSvg && _geometrySvgChanged)
+                {
+                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
                 }
 
                 _ = everFetched.Add(data.TargetPoint);
@@ -434,6 +442,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         }
 
         pointsCleanup.CollectPoints(everFetched, polarChart.View, scaler, SoftDeleteOrDisposePoint);
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.GetBounds(PolarChart{TDrawingContext}, IPolarAxis, IPolarAxis)"/>
@@ -506,10 +515,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
         else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

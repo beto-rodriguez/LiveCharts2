@@ -33,11 +33,24 @@ public class Sketch<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="Sketch{TDrawingContext}"/> class.
+    /// </summary>
+    /// <param name="width">The widht.</param>
+    /// <param name="height">The height.</param>
+    /// <param name="svg">The svg path.</param>
+    public Sketch(double width, double height, string? svg)
+    {
+        Svg = svg;
+        Width = width;
+        Height = height;
+    }
+
+    /// <summary>
     /// Gets or sets the width.
     /// </summary>
     /// <value>
     /// The width.
-    /// </value>
+    /// </value>kjio9
     public double Width { get; set; }
 
     /// <summary>
@@ -47,6 +60,11 @@ public class Sketch<TDrawingContext>
     /// The height.
     /// </value>
     public double Height { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Svg.
+    /// </summary>/
+    public string? Svg { get; set; }
 
     /// <summary>
     /// Gets or sets the paint schedules.

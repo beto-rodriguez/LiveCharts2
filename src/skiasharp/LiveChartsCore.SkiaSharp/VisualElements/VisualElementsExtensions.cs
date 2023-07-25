@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -54,6 +55,11 @@ public static class VisualElementsExtensions
                     Width = sizedGeometry.Width,
                     Height = sizedGeometry.Height,
                 };
+
+                if (g is ISvgPath<SkiaSharpDrawingContext> svgPath)
+                {
+                    svgPath.OnPathChanged(sketch.Svg ?? throw new NullReferenceException("sketch.Svg can not be null at this point."));
+                }
 
                 schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + baseZIndex;
 

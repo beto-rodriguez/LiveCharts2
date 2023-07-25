@@ -142,6 +142,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             _heatKnownLength = HeatMap.Length;
         }
 
+        var hasSvg = this.HasSvgGeometry();
+
         foreach (var point in Fetch(cartesianChart))
         {
             var coordinate = point.Coordinate;
@@ -199,6 +201,12 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 _ = everFetched.Add(point);
             }
 
+            if (hasSvg && _geometrySvgChanged)
+            {
+                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
+            }
+
             _paintTaks?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             visual.X = secondary - uws * 0.5f + p.Left;
@@ -246,6 +254,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         pointsCleanup.CollectPoints(
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
@@ -327,10 +336,8 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         };
         schedules.Add(new PaintSchedule<TDrawingContext>(solidPaint, visual));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }

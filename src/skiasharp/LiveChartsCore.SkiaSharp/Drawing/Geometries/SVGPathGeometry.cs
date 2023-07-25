@@ -23,6 +23,8 @@
 // Ignore Spelling: svg
 
 using System;
+using System.Collections.Generic;
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -31,8 +33,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a geometry that is built using from a svg path.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class SVGPathGeometry : SizedGeometry
+public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
 {
+    public static Dictionary<string, SKPath> _cache = new();
     private readonly Func<SKPath> _pathSource = () => throw new NotImplementedException("There is no path to render.");
 
     /// <summary>
@@ -74,6 +77,17 @@ public class SVGPathGeometry : SizedGeometry
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         DrawPath(context, paint, Path ?? _pathSource()!);
+    }
+
+    public void OnPathChanged(string path)
+    {
+        if (!_cache.TryGetValue(path, out var skPath))
+        {
+            skPath = SKPath.ParseSvgPathData(path);
+            _cache[path] = skPath;
+        }
+
+        Path = skPath;
     }
 
     /// <summary>

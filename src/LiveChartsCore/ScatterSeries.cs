@@ -138,6 +138,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         uwy = uwy < gs ? gs : uwy;
 
         var hy = chart.ControlSize.Height * .5f;
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -183,6 +184,12 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                 OnPointCreated(point);
 
                 _ = everFetched.Add(point);
+            }
+
+            if (hasSvg && _geometrySvgChanged)
+            {
+                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
             }
 
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
@@ -231,6 +238,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
 
         pointsCleanup.CollectPoints(everFetched, cartesianChart.View, yScale, xScale, SoftDeleteOrDisposePoint);
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
@@ -249,10 +257,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }
