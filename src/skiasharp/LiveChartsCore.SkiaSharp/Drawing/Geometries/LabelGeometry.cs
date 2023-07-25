@@ -123,6 +123,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         context.Paint.TextSize = TextSize;
 
         var verticalPos = 0f;
+        var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
         foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
         {
@@ -135,10 +136,9 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
             if (paint.Typeface is not null)
             {
-                // This needs to be verified.
-                // this is just a temporal fix to support older versions of LiveCharts
-                using var eventTextShaper = new SKShaper(paint.Typeface);
-                context.Canvas.DrawShapedText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+                paint.Typeface = paint.Typeface;
+                context.Canvas.DrawShapedText(
+                    shaper, line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
             }
             else
             {
@@ -171,6 +171,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
             verticalPos += textBounds.Height * LineHeight;
         }
+
+        shaper?.Dispose();
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
