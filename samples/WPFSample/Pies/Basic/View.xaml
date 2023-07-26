@@ -8,7 +8,6 @@
     </UserControl.DataContext>
     <lvc:PieChart
         Series="{Binding Series}"
-        Title="{Binding Title}"
-        LegendPosition="Right">
+        Title="{Binding Title}">
     </lvc:PieChart>
 </UserControl>
