@@ -93,6 +93,10 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         // for a reason the text size is not set on the InitializeTask() method.
         context.Paint.TextSize = TextSize;
 
+        var p = Padding;
+        var bg = Background;
+
+        var isFirstLine = true;
         var verticalPos = 0f;
         var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
@@ -103,7 +107,16 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
             var lhd = (textBounds.Height * LineHeight - textBounds.Height) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);
-            var p = Padding;
+
+            if (isFirstLine && bg != LvcColor.Empty)
+            {
+                var size = OnMeasure(context.PaintTask);
+                var c = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity));
+                using var bgPaint = new SKPaint { Color = c };
+
+                context.Canvas.DrawRect(
+                    X + ao.X, Y + ao.Y - textBounds.Height, size.Width, size.Height, bgPaint);
+            }
 
             if (paint.Typeface is not null)
             {
@@ -140,6 +153,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 #endif
 
             verticalPos += textBounds.Height * LineHeight;
+            isFirstLine = false;
         }
 
         shaper?.Dispose();
