@@ -302,7 +302,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
         visual.X = p;
-        visual.Y = secondary;
+        visual.Y = secondary - visual.Height * 0.5f;
         visual.Width = 0;
         visual.RemoveOnCompleted = true;
 

@@ -300,7 +300,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var p = primaryScale.ToPixels(pivot);
         var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
-        visual.X = secondary;
+        visual.X = secondary - visual.Width * 0.5f;
         visual.Y = p;
         visual.Height = 0;
         visual.RemoveOnCompleted = true;
