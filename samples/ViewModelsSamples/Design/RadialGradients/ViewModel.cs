@@ -28,6 +28,7 @@ public partial class ViewModel : ObservableObject
     {
         new PieSeries<int>
         {
+            Name = "Maria",
             Values = new []{ 7 },
             Stroke = null,
             Fill = new RadialGradientPaint(s_colors),
@@ -36,6 +37,7 @@ public partial class ViewModel : ObservableObject
         },
         new PieSeries<int>
         {
+            Name = "Charles",
             Values = new []{ 3 },
             Stroke = null,
             Fill = new RadialGradientPaint(new SKColor(255, 205, 210), new SKColor(183, 28, 28))
