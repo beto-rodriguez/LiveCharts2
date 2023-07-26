@@ -9,40 +9,40 @@ namespace ViewModelsSamples.Lines.Custom;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
+    {
+        new LineSeries<double>
         {
-            new LineSeries<double>
-            {
-                Values = new double[] { 2, 1, 4, 2, 2, -5, -2 },
-                Fill = null,
-                GeometrySize = 20
-            },
+            Values = new double[] { 2, 1, 4, 2, 2, -5, -2 },
+            Fill = null,
+            GeometrySize = 20
+        },
 
-            // use the second type parameter to specify the geometry to draw for every point
-            // there are already many predefined geometries in the
-            // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
-            new LineSeries<double, RectangleGeometry>
-            {
-                Values = new double[] { 3, 3, -3, -2, -4, -3, -1 },
-                Fill = null,
-                GeometrySize = 20
-            },
+        // use the second type parameter to specify the geometry to draw for every point
+        // there are already many predefined geometries in the
+        // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
+        new LineSeries<double, RectangleGeometry>
+        {
+            Values = new double[] { 3, 3, -3, -2, -4, -3, -1 },
+            Fill = null,
+            GeometrySize = 20
+        },
 
-            // You can also use SVG paths to draw the geometry
-            // LiveCharts already provides some predefined paths in the SVGPoints class.
-            new LineSeries<double, SVGPathGeometry>
-            {
-                Values = new double[] { -2, 2, 1, 3, -1, 4, 3 },
-                Fill = null,
-                GeometrySvg = SVGPoints.Star,
-                GeometrySize = 20
-            },
+        // You can also use SVG paths to draw the geometry
+        // LiveCharts already provides some predefined paths in the SVGPoints class.
+        new LineSeries<double, SVGPathGeometry>
+        {
+            Values = new double[] { -2, 2, 1, 3, -1, 4, 3 },
+            Fill = null,
+            GeometrySvg = SVGPoints.Star,
+            GeometrySize = 20
+        },
 
-            // you can declare your own gemetry and use the SkiaSharp api to draw it
-            new LineSeries<double, MyGeometry>
-            {
-                Values = new double[] { 4, 5, 2, 4, 3, 2, 1 },
-                Fill = null,
-                GeometrySize = 20
-            },
-        };
+        // you can declare your own gemetry and use the SkiaSharp api to draw it
+        new LineSeries<double, MyGeometry>
+        {
+            Values = new double[] { 4, 5, 2, 4, 3, 2, 1 },
+            Fill = null,
+            GeometrySize = 20
+        },
+    };
 }
