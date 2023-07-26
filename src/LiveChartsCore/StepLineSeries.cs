@@ -379,15 +379,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         };
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> stepSeries &&
-            Name == series.Name &&
-            Fill == stepSeries.Fill && Stroke == stepSeries.Stroke &&
-            GeometryFill == stepSeries.GeometryFill && GeometryStroke == stepSeries.GeometryStroke;
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {

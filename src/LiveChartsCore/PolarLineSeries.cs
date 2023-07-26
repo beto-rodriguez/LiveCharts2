@@ -569,13 +569,6 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         return label;
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext> sfSeries &&
-            Name == series.Name && Fill == sfSeries.Fill && Stroke == sfSeries.Stroke;
-    }
-
     /// <summary>
     /// Builds an spline from the given points.
     /// </summary>

@@ -84,11 +84,4 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     {
         return new[] { _stroke, _fill, DataLabelsPaint };
     }
-
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext> sfSeries &&
-            Name == series.Name && Fill == sfSeries.Fill && Stroke == sfSeries.Stroke;
-    }
 }

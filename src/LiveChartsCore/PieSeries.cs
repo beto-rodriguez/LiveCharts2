@@ -517,13 +517,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         base.OnPointerLeft(point);
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> instance)
-    {
-        return instance is PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext> pieSeries &&
-           Name == pieSeries.Name && Fill == pieSeries.Fill && Stroke == pieSeries.Stroke;
-    }
-
     /// <summary>
     /// Sets the default point transitions.
     /// </summary>

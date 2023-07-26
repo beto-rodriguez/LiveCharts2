@@ -485,15 +485,6 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
         OnPropertyChanged();
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext> financial &&
-            Name == series.Name &&
-            UpFill == financial.UpFill && UpStroke == financial.UpStroke &&
-            DownFill == financial.DownFill && DownStroke == financial.DownStroke;
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {

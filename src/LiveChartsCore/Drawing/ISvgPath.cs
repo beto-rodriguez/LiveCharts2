@@ -28,5 +28,9 @@ namespace LiveChartsCore.Drawing;
 public interface ISvgPath<TDrawingContext> : ISizedGeometry<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
+    /// <summary>
+    /// Called when the path changed.
+    /// </summary>
+    /// <param name="path">the path.</param>
     void OnPathChanged(string path);
 }

@@ -86,13 +86,6 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     int GetStackGroup();
 
     /// <summary>
-    /// Determines if the given instance has the same series miniature.
-    /// </summary>
-    /// <param name="instance">The instance to compare.</param>
-    /// <returns></returns>
-    bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
-
-    /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>

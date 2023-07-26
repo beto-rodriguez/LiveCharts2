@@ -121,7 +121,8 @@ public interface ISeries
     double Pivot { get; set; }
 
     /// <summary>
-    /// Gets or sets the series geometry svg.
+    /// Gets or sets the series geometry svg, this property requires the series visual to be
+    /// an <see cref="ISvgPath{TDrawingContext}"/> instance.
     /// </summary>
     string? GeometrySvg { get; set; }
 

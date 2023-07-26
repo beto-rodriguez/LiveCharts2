@@ -342,13 +342,6 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         };
     }
 
-    /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> instance)
-    {
-        return instance is HeatSeries<TModel, TVisual, TLabel, TDrawingContext> hSeries
-            && Name == instance.Name && HeatMap == hSeries.HeatMap;
-    }
-
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {

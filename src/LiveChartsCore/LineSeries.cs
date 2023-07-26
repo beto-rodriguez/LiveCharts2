@@ -430,15 +430,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         return (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> lineSeries &&
-            Name == series.Name &&
-            Fill == lineSeries.Fill && Stroke == lineSeries.Stroke &&
-            GeometryFill == lineSeries.GeometryFill && GeometryStroke == lineSeries.GeometryStroke;
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
