@@ -432,8 +432,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
         var y = primaryScale.ToPixels(coordinate.PrimaryValue);
 
-        visual.Geometry.X = x;
-        visual.Geometry.Y = y;
+        visual.Geometry.X = x + visual.Geometry.Width * 0.5f;
+        visual.Geometry.Y = y + visual.Geometry.Height * 0.5f;
         visual.Geometry.Height = 0;
         visual.Geometry.Width = 0;
         visual.Geometry.RemoveOnCompleted = true;
