@@ -136,7 +136,6 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
             if (paint.Typeface is not null)
             {
-                paint.Typeface = paint.Typeface;
                 context.Canvas.DrawShapedText(
                     shaper, line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
             }
