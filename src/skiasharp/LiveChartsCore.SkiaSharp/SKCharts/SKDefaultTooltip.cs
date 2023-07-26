@@ -138,25 +138,28 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 if (title != LiveCharts.IgnoreToolTipLabel)
                 {
                     _panel.Children.Add(
-                    new LabelVisual
-                    {
-                        Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
-                        Paint = FontPaint,
-                        TextSize = TextSize,
-                        Padding = new Padding(0, 0, 0, 0),
-                        VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start
-                    });
+                        new LabelVisual
+                        {
+                            Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
+                            Paint = FontPaint,
+                            TextSize = TextSize,
+                            Padding = new Padding(0, 0, 0, 0),
+                            VerticalAlignment = Align.Start,
+                            HorizontalAlignment = Align.Start
+                        });
 
-                    _panel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
+                    _panel.Children.Add(
+                        new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
                 }
             }
 
             var content = point.Context.Series.GetPrimaryToolTipText(point) ?? string.Empty;
 
+            var ltr = LiveCharts.DefaultSettings.IsRightToLeft;
+
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, 0);
+                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, ltr ? 3 : 0);
                 tableLayout.AddChild(
                     new LabelVisual
                     {
@@ -176,7 +179,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Padding = new Padding(16, 0, 0, 0),
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
-                    }, i, 2, horizontalAlign: Align.End);
+                    }, i, ltr ? 0 : 2, horizontalAlign: Align.End);
 
                 i++;
             }
