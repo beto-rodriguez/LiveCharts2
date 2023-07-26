@@ -76,11 +76,14 @@ public static class ThemesExtensions
                             axis.SeparatorsPaint = new SolidColorPaint(new SKColor(235, 235, 235));
                         }
                     })
+                    .HasRuleForAnySeries(series =>
+                    {
+                        series.Name = LiveCharts.IgnoreSeriesName;
+                    })
                     .HasRuleForLineSeries(lineSeries =>
                     {
                         var color = theme.GetSeriesColor(lineSeries).AsSKColor();
 
-                        lineSeries.Name = $"Series #{lineSeries.SeriesId + 1}";
                         lineSeries.GeometrySize = 12;
                         lineSeries.GeometryStroke = new SolidColorPaint(color, 4);
                         lineSeries.GeometryFill = new SolidColorPaint(new SKColor(250, 250, 250));
@@ -91,7 +94,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(steplineSeries).AsSKColor();
 
-                        steplineSeries.Name = $"Series #{steplineSeries.SeriesId + 1}";
                         steplineSeries.GeometrySize = 12;
                         steplineSeries.GeometryStroke = new SolidColorPaint(color, 4);
                         steplineSeries.GeometryFill = new SolidColorPaint(new SKColor(250, 250, 250));
@@ -102,7 +104,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(stackedLine).AsSKColor();
 
-                        stackedLine.Name = $"Series #{stackedLine.SeriesId + 1}";
                         stackedLine.GeometrySize = 0;
                         stackedLine.GeometryStroke = null;
                         stackedLine.GeometryFill = null;
@@ -113,7 +114,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(barSeries).AsSKColor();
 
-                        barSeries.Name = $"Series #{barSeries.SeriesId + 1}";
                         barSeries.Stroke = null;
                         barSeries.Fill = new SolidColorPaint(color);
                         barSeries.Rx = 4;
@@ -123,7 +123,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(stackedBarSeries).AsSKColor();
 
-                        stackedBarSeries.Name = $"Series #{stackedBarSeries.SeriesId + 1}";
                         stackedBarSeries.Stroke = null;
                         stackedBarSeries.Fill = new SolidColorPaint(color);
                         stackedBarSeries.Rx = 0;
@@ -133,7 +132,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(stackedStep).AsSKColor();
 
-                        stackedStep.Name = $"Series #{stackedStep.SeriesId + 1}";
                         stackedStep.GeometrySize = 0;
                         stackedStep.GeometryStroke = null;
                         stackedStep.GeometryFill = null;
@@ -146,8 +144,6 @@ public static class ThemesExtensions
                     })
                     .HasRuleForFinancialSeries(financialSeries =>
                     {
-                        financialSeries.Name = $"Series #{financialSeries.SeriesId + 1}";
-
                         financialSeries.UpFill = new SolidColorPaint(new SKColor(139, 195, 74, 255));
                         financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
                         financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
@@ -157,7 +153,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(scatterSeries).AsSKColor();
 
-                        scatterSeries.Name = $"Series #{scatterSeries.SeriesId + 1}";
                         scatterSeries.Stroke = null;
                         scatterSeries.Fill = new SolidColorPaint(color.WithAlpha(200));
                     })
@@ -165,7 +160,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(pieSeries).AsSKColor();
 
-                        pieSeries.Name = $"Series #{pieSeries.SeriesId + 1}";
                         pieSeries.Stroke = null;
                         pieSeries.Fill = new SolidColorPaint(color);
                     })
@@ -173,7 +167,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(polarLine).AsSKColor();
 
-                        polarLine.Name = $"Series #{polarLine.SeriesId + 1}";
                         polarLine.GeometrySize = 12;
                         polarLine.GeometryStroke = new SolidColorPaint(color, 4);
                         polarLine.GeometryFill = new SolidColorPaint(new SKColor(250, 250, 250));
@@ -184,7 +177,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(gaugeSeries).AsSKColor();
 
-                        gaugeSeries.Name = $"Series #{gaugeSeries.SeriesId + 1}";
                         gaugeSeries.Stroke = null;
                         gaugeSeries.Fill = new SolidColorPaint(color);
                         gaugeSeries.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
@@ -240,11 +232,14 @@ public static class ThemesExtensions
                             axis.SeparatorsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
                         }
                     })
+                    .HasRuleForAnySeries(series =>
+                    {
+                        series.Name = LiveCharts.IgnoreSeriesName;
+                    })
                     .HasRuleForLineSeries(lineSeries =>
                     {
                         var color = theme.GetSeriesColor(lineSeries).AsSKColor();
 
-                        lineSeries.Name = $"Series #{lineSeries.SeriesId + 1}";
                         lineSeries.GeometrySize = 12;
                         lineSeries.GeometryStroke = new SolidColorPaint(color, 4);
                         lineSeries.GeometryFill = new SolidColorPaint(new SKColor(30, 30, 30));
@@ -255,7 +250,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(steplineSeries).AsSKColor();
 
-                        steplineSeries.Name = $"Series #{steplineSeries.SeriesId + 1}";
                         steplineSeries.GeometrySize = 12;
                         steplineSeries.GeometryStroke = new SolidColorPaint(color, 4);
                         steplineSeries.GeometryFill = new SolidColorPaint(new SKColor(30, 30, 30));
@@ -266,7 +260,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(stackedLine).AsSKColor();
 
-                        stackedLine.Name = $"Series #{stackedLine.SeriesId + 1}";
                         stackedLine.GeometrySize = 0;
                         stackedLine.GeometryStroke = null;
                         stackedLine.GeometryFill = null;
@@ -277,7 +270,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(barSeries).AsSKColor();
 
-                        barSeries.Name = $"Series #{barSeries.SeriesId + 1}";
                         barSeries.Stroke = null;
                         barSeries.Fill = new SolidColorPaint(color);
                         barSeries.Rx = 4;
@@ -287,7 +279,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(stackedBarSeries).AsSKColor();
 
-                        stackedBarSeries.Name = $"Series #{stackedBarSeries.SeriesId + 1}";
                         stackedBarSeries.Stroke = null;
                         stackedBarSeries.Fill = new SolidColorPaint(color);
                         stackedBarSeries.Rx = 0;
@@ -297,7 +288,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(pieSeries).AsSKColor();
 
-                        pieSeries.Name = $"Series #{pieSeries.SeriesId + 1}";
                         pieSeries.Stroke = null;
                         pieSeries.Fill = new SolidColorPaint(color);
                     })
@@ -305,7 +295,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(stackedStep).AsSKColor();
 
-                        stackedStep.Name = $"Series #{stackedStep.SeriesId + 1}";
                         stackedStep.GeometrySize = 0;
                         stackedStep.GeometryStroke = null;
                         stackedStep.GeometryFill = null;
@@ -318,7 +307,6 @@ public static class ThemesExtensions
                     })
                     .HasRuleForFinancialSeries(financialSeries =>
                     {
-                        financialSeries.Name = $"Series #{financialSeries.SeriesId + 1}";
                         financialSeries.UpFill = new SolidColorPaint(new SKColor(139, 195, 74, 255));
                         financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
                         financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
@@ -328,7 +316,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(polarLine).AsSKColor();
 
-                        polarLine.Name = $"Series #{polarLine.SeriesId + 1}";
                         polarLine.GeometrySize = 12;
                         polarLine.GeometryStroke = new SolidColorPaint(color, 4);
                         polarLine.GeometryFill = new SolidColorPaint(new SKColor());
@@ -339,7 +326,6 @@ public static class ThemesExtensions
                     {
                         var color = theme.GetSeriesColor(gaugeSeries).AsSKColor();
 
-                        gaugeSeries.Name = $"Series #{gaugeSeries.SeriesId + 1}";
                         gaugeSeries.Stroke = null;
                         gaugeSeries.Fill = new SolidColorPaint(color);
                         gaugeSeries.DataLabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));

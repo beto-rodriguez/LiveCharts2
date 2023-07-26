@@ -33,7 +33,12 @@ public static class LiveCharts
     /// <summary>
     /// A constant that indicates that the tool tip should not add the current label.
     /// </summary>
-    public static string IgnoreToolTipLabel { get; } = "{{please-ignore-me}}";
+    public static string IgnoreToolTipLabel { get; } = $"{{{nameof(IgnoreToolTipLabel)}}}";
+
+    /// <summary>
+    /// A constant that indicates that the tool tip should ignore the series name.
+    /// </summary>
+    public static string IgnoreSeriesName { get; } = "{{Series Name not set}}";
 
     /// <summary>
     /// Gets a value indicating whether LiveCharts should create a log as it renders the charts.
