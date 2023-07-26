@@ -88,6 +88,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private ILabelGeometry<TDrawingContext>? _crosshairLabel;
     private IPaint<TDrawingContext>? _crosshairPaint;
     private IPaint<TDrawingContext>? _crosshairLabelsPaint;
+    private LvcColor? _crosshairLabelsBackground;
     private bool _showSeparatorLines = true;
     private bool _isVisible = true;
     private bool _isInverted;
@@ -100,7 +101,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Align? _labelsAlignment;
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
-
     private int _stepCount;
 
     #endregion
@@ -254,7 +254,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsBackground"/>
-    public LvcColor? CrosshairLabelsBackground { get; set; }
+    public LvcColor? CrosshairLabelsBackground
+    {
+        get => _crosshairLabelsBackground;
+        set => SetProperty(ref _crosshairLabelsBackground, value);
+    }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPadding"/>
     public Padding? CrosshairPadding { get; set; }
