@@ -1,0 +1,13 @@
+﻿@page "/Axes/Crosshairs"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Axes.Crosshairs
+
+<CartesianChart
+	Series="ViewModel.Series"
+	XAxes="ViewModel.XAxes"
+	YAxes="ViewModel.YAxes">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

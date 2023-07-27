@@ -18,7 +18,8 @@ public partial class App : Application
     {
         LiveCharts.Configure(config => // mark
             config // mark
-                // you can override the theme 
+                // you can override the theme
+                .AddLightTheme() // optional, this is the default theme
                 // .AddDarkTheme() // mark 
 
                 // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
