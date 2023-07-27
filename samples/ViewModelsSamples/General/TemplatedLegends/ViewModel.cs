@@ -11,6 +11,7 @@ public partial class ViewModel : ObservableObject
     {
         new ColumnSeries<double>
         {
+            Name = "Roger",
             Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 }
         }
     };
