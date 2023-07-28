@@ -83,6 +83,7 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
         if (!_isPaintInCanvas)
         {
             canvas.AddDrawableTask(_paint);
+            if (_paint.ZIndex == 0) _paint.ZIndex = int.MaxValue;
             _isPaintInCanvas = true;
         }
 
