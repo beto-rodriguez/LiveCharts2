@@ -64,15 +64,15 @@ public enum ZoomAndPanMode
     /// <summary>
     /// Enables zooming and panning on the X axis.
     /// </summary>
-    X = 1 << PanX | ZoomX,
+    X = PanX | ZoomX,
 
     /// <summary>
     /// Enables zooming and panning on the Y axis.
     /// </summary>
-    Y = 1 << PanY | ZoomY,
+    Y = PanY | ZoomY,
 
     /// <summary>
     /// Enables zooming and panning on both axes.
     /// </summary>
-    Both = X | Y,
+    Both = X | Y
 }
