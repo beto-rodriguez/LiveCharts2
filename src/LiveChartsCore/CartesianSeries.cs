@@ -136,8 +136,8 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
             },
             PrimaryBounds = new Bounds
             {
-                Max = rawBaseBounds.PrimaryBounds.Max + rpo * secondaryAxis.UnitWidth,
-                Min = rawBaseBounds.PrimaryBounds.Min - rpo * secondaryAxis.UnitWidth,
+                Max = rawBaseBounds.PrimaryBounds.Max + rpo * primaryAxis.UnitWidth,
+                Min = rawBaseBounds.PrimaryBounds.Min - rpo * primaryAxis.UnitWidth,
                 MinDelta = rawBaseBounds.PrimaryBounds.MinDelta,
                 PaddingMax = tp,
                 PaddingMin = tp,
@@ -150,25 +150,12 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
             },
             VisiblePrimaryBounds = new Bounds
             {
-                Max = rawBaseBounds.VisiblePrimaryBounds.Max + rpo * secondaryAxis.UnitWidth,
-                Min = rawBaseBounds.VisiblePrimaryBounds.Min - rpo * secondaryAxis.UnitWidth
+                Max = rawBaseBounds.VisiblePrimaryBounds.Max + rpo * primaryAxis.UnitWidth,
+                Min = rawBaseBounds.VisiblePrimaryBounds.Min - rpo * primaryAxis.UnitWidth
             },
             TertiaryBounds = rawBaseBounds.TertiaryBounds,
             VisibleTertiaryBounds = rawBaseBounds.VisibleTertiaryBounds
         };
-
-        if (GetIsInvertedBounds())
-        {
-            var tempSb = dimensionalBounds.SecondaryBounds;
-            var tempPb = dimensionalBounds.PrimaryBounds;
-            var tempVsb = dimensionalBounds.VisibleSecondaryBounds;
-            var tempVpb = dimensionalBounds.VisiblePrimaryBounds;
-
-            dimensionalBounds.SecondaryBounds = tempPb;
-            dimensionalBounds.PrimaryBounds = tempSb;
-            dimensionalBounds.VisibleSecondaryBounds = tempVpb;
-            dimensionalBounds.VisiblePrimaryBounds = tempVsb;
-        }
 
         return new SeriesBounds(dimensionalBounds, false);
     }
@@ -250,15 +237,6 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     protected virtual double GetRequestedPrimaryOffset()
     {
         return 0;
-    }
-
-    /// <summary>
-    /// Gets whether the requested bounds are inverted.
-    /// </summary>
-    /// <returns>The offset</returns>
-    protected virtual bool GetIsInvertedBounds()
-    {
-        return false;
     }
 
     /// <summary>

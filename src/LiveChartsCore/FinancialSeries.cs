@@ -379,19 +379,6 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             VisibleTertiaryBounds = rawBaseBounds.VisibleTertiaryBounds
         };
 
-        if (GetIsInvertedBounds())
-        {
-            var tempSb = dimensionalBounds.SecondaryBounds;
-            var tempPb = dimensionalBounds.PrimaryBounds;
-            var tempVsb = dimensionalBounds.VisibleSecondaryBounds;
-            var tempVpb = dimensionalBounds.VisiblePrimaryBounds;
-
-            dimensionalBounds.SecondaryBounds = tempPb;
-            dimensionalBounds.PrimaryBounds = tempSb;
-            dimensionalBounds.VisibleSecondaryBounds = tempVpb;
-            dimensionalBounds.VisiblePrimaryBounds = tempVsb;
-        }
-
         return new SeriesBounds(dimensionalBounds, false);
     }
 
