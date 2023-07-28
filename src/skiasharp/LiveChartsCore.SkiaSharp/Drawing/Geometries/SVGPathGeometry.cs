@@ -30,7 +30,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
-/// Defines a geometry that is built using from a svg path.
+/// Defines a geometry that is buil from a svg path.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
 public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>

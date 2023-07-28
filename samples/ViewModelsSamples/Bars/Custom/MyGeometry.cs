@@ -14,7 +14,7 @@ public class MyGeometry : SizedGeometry
         while (y < Y + Height)
         {
             canvas.DrawLine(X, y, X + Width, y, paint);
-            y += 10;
+            y += 5;
         }
     }
 }
