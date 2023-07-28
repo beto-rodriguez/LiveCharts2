@@ -117,7 +117,7 @@ public class ColumnSeriesTest
             Width = 300,
             Height = 300,
             Tooltip = tooltip,
-            TooltipPosition = TooltipPosition.Top
+            TooltipPosition = TooltipPosition.Top,
             Series = new[] { sutSeries },
             XAxes = new[] { new Axis { IsVisible = false } },
             YAxes = new[] { new Axis { IsVisible = false } }
@@ -182,7 +182,6 @@ public class ColumnSeriesTest
         sutSeries.Values = new double[] { 1, 2, 3, 4, 5 };
         chart.Core._pointerPosition = new(299, 150);
         _ = chart.GetImage();
-        chart.SaveImage("__err.png");
         Assert.IsTrue(
             Math.Abs(tp.X - (300 - 300 * (1 / 5d) * 0.5 - tp.Width)) < 0.0001 &&
             Math.Abs(tp.Y - -tp.Height * 0.5f) < 0.1 &&
