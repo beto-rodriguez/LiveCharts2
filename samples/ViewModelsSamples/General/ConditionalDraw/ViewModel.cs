@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
@@ -6,45 +7,32 @@ using LiveChartsCore.ConditionalDraw;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 
 namespace ViewModelsSamples.General.ConditionalDraw;
 
 public partial class ViewModel : ObservableObject
 {
+    private readonly ObservableCollection<ObservableValue> _values = new();
+
     public ViewModel()
     {
+        _values = new ObservableCollection<ObservableValue>
+        {
+            new(2), new(5), new(4), new(6), new(8), new(3), new(2), new(4), new(6)
+        };
+
         var series1 = new ColumnSeries<ObservableValue>
         {
             Name = "Mary",
-            Values = new ObservableValue[] { new(2), new(5), new(4), new(6), new(8), new(3), new(2), new(4), new(6) }
+            Values = _values
         }
-        .WithConditionalPaint(new SolidColorPaint(SKColors.Black.WithAlpha(50)))
+        .WithConditionalPaint(new SolidColorPaint(SKColors.Red))
         .When(point => point.Model?.Value > 5);
 
-        var series2 = new ColumnSeries<City>
-        {
-            Name = "Mary",
-            Values = new City[] { new(4), new(2), new(8), new(3), new(2), new(4), new(6), new(4), new(4) },
-            Mapping = (city, point) =>
-            {
-                // use the Population property as the Y coordinate
-                // and the index of the city in the array as the X coordinate
-                point.Coordinate = new(point.Index, city.Population);
-            }
-        }
-        .WithConditionalPaint(new SolidColorPaint(SKColors.Black.WithAlpha(50)))
-        .When(point => point.Model?.Population > 5);
+        Series = new ISeries[] { series1 };
 
-        Series = new ISeries[]
-        {
-            series1,
-            series2
-        };
-
-        Randomize((ISeries<ObservableValue>)Series[0]);
-        Randomize((ISeries<City>)Series[1]);
+        Randomize();
     }
 
     public ISeries[] Series { get; set; }
@@ -53,14 +41,8 @@ public partial class ViewModel : ObservableObject
     {
         new RectangularSection
         {
-            Yi = 5,
             Yj = 5,
-            Stroke = new SolidColorPaint
-            {
-                Color = SKColors.Black,
-                StrokeThickness = 3,
-                PathEffect = new DashEffect(new float[] { 6, 6 })
-            }
+            Fill = new SolidColorPaint(SKColors.Red.WithAlpha(50))
         }
     };
 
@@ -69,26 +51,17 @@ public partial class ViewModel : ObservableObject
         new Axis { MinLimit = 0 }
     };
 
-    private async void Randomize<T>(ISeries<T> series)
+    private async void Randomize()
     {
         var r = new Random();
-        if (series.Values is null) return;
 
         while (true)
         {
             await Task.Delay(3000);
 
-            foreach (var item in series.Values)
+            foreach (var item in _values)
             {
-                if (item is ObservableValue observableValue)
-                {
-                    observableValue.Value = r.Next(0, 10);
-                }
-
-                if (item is City city)
-                {
-                    city.Population = r.Next(0, 10);
-                }
+                item.Value = r.Next(0, 10);
             }
         }
     }
