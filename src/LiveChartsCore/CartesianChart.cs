@@ -185,7 +185,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
 
-        if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
+        if ((_zoomMode & ZoomAndPanMode.ZoomX) == ZoomAndPanMode.ZoomX)
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -241,7 +241,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             }
         }
 
-        if ((_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
+        if ((_zoomMode & ZoomAndPanMode.ZoomY) == ZoomAndPanMode.ZoomY)
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
@@ -307,7 +307,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <returns></returns>
     public void Pan(LvcPoint delta, bool isActive)
     {
-        if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
+        if ((_zoomMode & ZoomAndPanMode.PanX) == ZoomAndPanMode.PanX)
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -340,7 +340,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             }
         }
 
-        if ((_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
+        if ((_zoomMode & ZoomAndPanMode.PanY) == ZoomAndPanMode.PanY)
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
