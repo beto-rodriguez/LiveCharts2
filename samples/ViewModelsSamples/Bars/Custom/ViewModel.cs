@@ -12,21 +12,21 @@ public partial class ViewModel : ObservableObject
         {
             new ColumnSeries<double>
             {
-                Values = new double[] { 2, 1, 4, 2, 2, -5, -2 },
+                Values = new double[] { 2, 1, 4},
             },
 
             // You can also use SVG paths to draw the geometry
             // LiveCharts already provides some predefined paths in the SVGPoints class.
             new ColumnSeries<double, SVGPathGeometry>
             {
-                Values = new double[] { -2, 2, 1, 3, -1, 4, 3 },
-                GeometrySvg = SVGPoints.Gem
+                Values = new double[] { -2, 2, 1 },
+                GeometrySvg = SVGPoints.Star
             },
 
             // you can declare your own gemetry and use the SkiaSharp api to draw it
             new ColumnSeries<double, MyGeometry>
             {
-                Values = new double[] { 4, 5, 2, 4, 3, 2, 1 },
+                Values = new double[] { 4, 5, 2 },
             },
         };
 }
