@@ -10,8 +10,21 @@ namespace ViewModelsSamples.Pies.Basic;
 
 public partial class ViewModel : ObservableObject
 {
+    // you can convert any array, list or IEnnumerable<T> to a pie series collection:
     public IEnumerable<ISeries> Series { get; set; } =
         new[] { 2, 4, 1, 4, 3 }.AsPieSeries();
+
+    // the expression above is equivalent to the next series collection,
+    // use the AsPieSeries() to convert 
+    public IEnumerable<ISeries> Series2 { get; set; } =
+        new[]
+        {
+            new PieSeries<int> { Values = new[]{ 2 } },
+            new PieSeries<int> { Values = new[]{ 4 } },
+            new PieSeries<int> { Values = new[]{ 1 } },
+            new PieSeries<int> { Values = new[]{ 4 } },
+            new PieSeries<int> { Values = new[]{ 3 } },
+        };
 
     public LabelVisual Title { get; set; } =
         new LabelVisual

@@ -7,12 +7,13 @@ namespace ViewModelsSamples.Pies.Pushout;
 
 public partial class ViewModel : ObservableObject
 {
-    public ISeries[] Series { get; set; } =
-    {
-        new PieSeries<double> { Values = new List<double> { 3 }, Pushout = 4 },
-        new PieSeries<double> { Values = new List<double> { 3 }, Pushout = 4 },
-        new PieSeries<double> { Values = new List<double> { 3 }, Pushout = 4 },
-        new PieSeries<double> { Values = new List<double> { 2 }, Pushout = 4 },
-        new PieSeries<double> { Values = new List<double> { 5 }, Pushout = 30 }
-    };
+    // you can convert any array, list or IEnumerable<T> to a pie series collection:
+    public IEnumerable<ISeries> Series { get; set; } =
+        new[] { 6, 5, 4, 3, 2 }.AsPieSeries((value, series) =>
+        {
+            // pushes out the slice with the value of 6 to 30 pixels.
+            if (value != 6) return;
+
+            series.Pushout = 30;
+        });
 }
