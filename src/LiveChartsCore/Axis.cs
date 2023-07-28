@@ -592,7 +592,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
 
-            if (_stepCount++ > 10000) ThrowPresicionError();
+            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         foreach (var separatorValueKey in separators.ToArray())
@@ -842,7 +842,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
 
-            if (_stepCount++ > 10000) ThrowPresicionError();
+            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         return new LvcSize(w, h);
@@ -953,7 +953,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
                 maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
 
-            if (_stepCount++ > 10000) ThrowPresicionError();
+            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         return maxLabelSize;
@@ -1358,10 +1358,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    private void ThrowPresicionError()
+    private void ThrowInfiniteSeparators()
     {
         throw new Exception(
-            "LiveCharts has detected a precision error, this is probably caused because you are zooming too deep, " +
+            $"The {_orientation} axis has an excesive number of separators. " +
+            $"If you set the step manually, ensure the number of separators is less than 10,000. " +
+            $"This could also be caused because you are zooming too deep, " +
             $"try to set a limit to the current chart zoom using the Axis.{nameof(MinZoomDelta)} property. " +
             $"For more info see: https://github.com/beto-rodriguez/LiveCharts2/issues/1076.");
     }
