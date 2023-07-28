@@ -41,6 +41,12 @@ public partial class ViewModel : ObservableObject
     {
         new RectangularSection
         {
+            Label = "Danger zone!",
+            LabelSize = 15,
+            LabelPaint = new SolidColorPaint(SKColors.Red)
+            {
+                SKTypeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
+            },
             Yj = 5,
             Fill = new SolidColorPaint(SKColors.Red.WithAlpha(50))
         }
