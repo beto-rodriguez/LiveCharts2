@@ -14,8 +14,7 @@ public partial class ViewModel : ObservableObject
     public IEnumerable<ISeries> Series { get; set; } =
         new[] { 2, 4, 1, 4, 3 }.AsPieSeries();
 
-    // the expression above is equivalent to the next series collection,
-    // use the AsPieSeries() to convert 
+    // the expression above is equivalent to the next series collection:
     public IEnumerable<ISeries> Series2 { get; set; } =
         new[]
         {
