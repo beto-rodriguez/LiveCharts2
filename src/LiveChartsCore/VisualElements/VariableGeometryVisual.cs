@@ -105,6 +105,8 @@ public class VariableGeometryVisual<TDrawingContext> : BaseGeometryVisual<TDrawi
         Geometry.Y = y;
         Geometry.Width = size.Width;
         Geometry.Height = size.Height;
+        Geometry.RotateTransform = (float)Rotation;
+        Geometry.TranslateTransform = Translate;
 
         if (Fill is not null)
         {

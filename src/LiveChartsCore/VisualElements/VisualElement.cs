@@ -38,6 +38,8 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 {
     internal double _x;
     internal double _y;
+    internal LvcPoint _translate = new();
+    internal double _rotation;
     private int _scalesXAt;
     private int _scalesYAt;
     private MeasureUnit _locationUnit = MeasureUnit.Pixels;
@@ -61,6 +63,16 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Gets or sets the Y coordinate [in Pixels or ChartValues, see <see cref="LocationUnit"/>].
     /// </summary>
     public double Y { get => _y; set => SetProperty(ref _y, value); }
+
+    /// <summary>
+    /// Gets or sets the rotation.
+    /// </summary>
+    public double Rotation { get => _rotation; set { _rotation = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the translate transform.
+    /// </summary>
+    public LvcPoint Translate { get => _translate; set => SetProperty(ref _translate, value); }
 
     /// <summary>
     /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.

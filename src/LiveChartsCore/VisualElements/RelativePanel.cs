@@ -86,6 +86,8 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         BackgroundGeometry.Y = (float)Y;
         BackgroundGeometry.Width = Size.Width;
         BackgroundGeometry.Height = Size.Height;
+        BackgroundGeometry.RotateTransform = (float)Rotation;
+        BackgroundGeometry.TranslateTransform = Translate;
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
 
         foreach (var child in Children)
