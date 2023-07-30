@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
@@ -408,13 +407,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
 
         pointsCleanup.CollectPoints(
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
-
-        Trace.WriteLine($"===");
-        var ii = 0;
-        foreach (var item in strokePathHelperContainer)
-        {
-            Trace.WriteLine($"segment {ii++} => {item.Commands.Count} commands");
-        }
 
         IsFirstDraw = false;
         _geometrySvgChanged = false;
