@@ -230,8 +230,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
-        foreach (var item in strokePathHelperContainer) item.ClearCommands();
-        foreach (var item in fillPathHelperContainer) item.ClearCommands();
+        foreach (var item in strokePathHelperContainer) item.Commands.Clear();
+        foreach (var item in fillPathHelperContainer) item.Commands.Clear();
 
         var r = (float)DataLabelsRotation;
         var isTangent = false;
@@ -349,8 +349,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 visual.Bezier.Xj = (float)data.X2;
                 visual.Bezier.Yj = (float)data.Y2;
 
-                if (Fill is not null) _ = fillPath.AddLast(visual.Bezier);
-                if (Stroke is not null) _ = strokePath.AddLast(visual.Bezier);
+                if (Fill is not null) _ = fillPath.Commands.AddLast(visual.Bezier);
+                if (Stroke is not null) _ = strokePath.Commands.AddLast(visual.Bezier);
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;

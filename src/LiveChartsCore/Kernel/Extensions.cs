@@ -596,6 +596,7 @@ public static class Extensions
 
         if (!e.MoveNext())
         {
+            data.IsNextEmpty = true;
             yield return data;
             yield break;
         }
@@ -686,6 +687,7 @@ public static class Extensions
         public ChartPoint AfterNext { get; set; }
 
         public bool IsFirst { get; set; } = true;
+        public bool IsNextEmpty { get; set; }
 
         public void GoNext(ChartPoint point)
         {
