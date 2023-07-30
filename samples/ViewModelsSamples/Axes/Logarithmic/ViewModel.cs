@@ -42,7 +42,7 @@ public partial class ViewModel : ObservableObject
             MinStep = 1,
 
             // converts the log scale back for the label
-            Labeler = value => Math.Pow(s_logBase, value).ToString() // mark
+            Labeler = value => Math.Pow(s_logBase, value).ToString("N2") // mark
         }
     };
 }

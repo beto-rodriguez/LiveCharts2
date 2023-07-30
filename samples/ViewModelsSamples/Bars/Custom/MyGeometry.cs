@@ -1,20 +1,20 @@
-﻿using System;
+﻿using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.Custom;
 
-public class MyGeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
+public class MyGeometry : SizedGeometry
 {
-    public MyGeometry()
-        : base(() => SelectedPath ?? throw new NotImplementedException("Path not set yet!"))
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        // we passed the "path source" to the base class
-        // it is a function that returns the path to draw
-        // this way we can change the path at runtime
+        var canvas = context.Canvas;
+        var y = Y;
 
-        // Note: LiveCharts geometries do not implement INotifyPropertyChanged
-        // so if you change the path at runtime you will need to call a chart update.
+        while (y < Y + Height)
+        {
+            canvas.DrawLine(X, y, X + Width, y, paint);
+            y += 5;
+        }
     }
-
-    public static SKPath? SelectedPath { get; set; }
 }

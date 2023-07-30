@@ -48,77 +48,13 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// <summary>
     /// Gets the commands in the vector.
     /// </summary>
-    protected LinkedList<TSegment> Commands { get; } = new();
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.FirstCommand" />
-    public LinkedListNode<TSegment>? FirstCommand => Commands.First;
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.LastCommand" />
-    public LinkedListNode<TSegment>? LastCommand => Commands.Last;
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.CountCommands" />
-    public int CountCommands => Commands.Count;
+    public LinkedList<TSegment> Commands { get; } = new();
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ClosingMethod" />
     public VectorClosingMethod ClosingMethod { get; set; }
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Pivot" />
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddLast(TSegment)" />
-    public LinkedListNode<TSegment> AddLast(TSegment command)
-    {
-        IsValid = false;
-        return Commands.AddLast(command);
-    }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddFirst(TSegment)" />
-    public LinkedListNode<TSegment> AddFirst(TSegment command)
-    {
-        IsValid = false;
-        return Commands.AddFirst(command);
-    }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddAfter(LinkedListNode{TSegment}, TSegment)" />
-    public LinkedListNode<TSegment> AddAfter(LinkedListNode<TSegment> node, TSegment command)
-    {
-        IsValid = false;
-        return Commands.AddAfter(node, command);
-    }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.AddBefore(LinkedListNode{TSegment}, TSegment)" />
-    public LinkedListNode<TSegment> AddBefore(LinkedListNode<TSegment> node, TSegment command)
-    {
-        IsValid = false;
-        return Commands.AddBefore(node, command);
-    }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ContainsCommand(TSegment)" />
-    public bool ContainsCommand(TSegment segment)
-    {
-        return Commands.Contains(segment);
-    }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.RemoveCommand(TSegment)" />
-    public bool RemoveCommand(TSegment command)
-    {
-        IsValid = false;
-        return Commands.Remove(command);
-    }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.RemoveCommand(LinkedListNode{TSegment})" />
-    public void RemoveCommand(LinkedListNode<TSegment> node)
-    {
-        IsValid = false;
-        Commands.Remove(node);
-    }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ClearCommands" />
-    public void ClearCommands()
-    {
-        IsValid = false;
-        Commands.Clear();
-    }
 
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
     public override void CompleteTransition(params string[]? propertyName)

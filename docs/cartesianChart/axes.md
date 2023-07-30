@@ -19,10 +19,29 @@ not cover all of them, if you need to know more about this type then use the [AP
 
 Both of these features are directly related to the <a href="#MaxLimit and MinLimit properties">MaxLimit and MinLimit properties</a>,
 zooming occurs when the mouse wheel moves or when the pinch gesture occurs, the panning is called when the pointer goes down,
-moves and then goes up
+moves and then goes up or when the pinch gesture occurs.
 
-Zooming is disabled by default, you must set the `ZoomMode` property to `X`, `Y` or `Both`, normally the `X` mode is the most accurate 
-for horizontal series  (LineSeries, ColumnSeries), the `Y` mode for vertical series (RowSeries) and the `Both` mode for Heat or Scatter series.
+Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
+[ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) and the options are:
+
+- `X`: Enables zooming and panning on the X axis.
+- `Y`: Enables zooming and panning on the Y axis.
+- `Both`: Enables zooming and panning on both axes.
+- `None`: Disables zooming and panning.
+- `PanX`: Enables panning on the X axis.
+- `PanY`: Enables panning on the Y axis.
+- `ZoomX`: Enables zooming on the X axis.
+- `ZoomY`: Enables zooming on the Y axis.
+
+The [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) type is a flag enum,
+so you can combine the options, for example, if you want to enable zooming on the X axis and panning on the Y axis you can
+set the `ZoomMode` property to `ZoomAndPanMode.ZoomX | ZoomAndPanMode.PanY`.
+
+There is also the `InvertPanningPointerTrigger` flag, when this flag is present the panning will be triggered using
+the right click on desktop devices and the touch-and-hold gesture on touch devices, the `zoom by section` feature will be
+triggered to the left click on desktop devices and the touch-and-hold gesture on touch devices.
+
+Here are a few examples of the different zoom modes:
 
 **X Mode:**
 

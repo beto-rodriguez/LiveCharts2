@@ -15,8 +15,7 @@ public class View : Panel
         pieChart = new PieChart
         {
             Series = viewModel.Series,
-            Title = viewModel.Title,
-            LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
+            Title = viewModel.Title
         };
 
         Content = pieChart;

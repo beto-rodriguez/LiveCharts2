@@ -7,26 +7,10 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="80" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="Enable Crosshair Snapping:" />
-            <ItemsControl  ItemsSource="{Binding AllAxes}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding Name}" IsChecked="{Binding CrosshairSnapEnabled}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-        
-        <lvc:CartesianChart Grid.Row="1"
+        <lvc:CartesianChart
             Series="{Binding Series}"
             XAxes="{Binding XAxes}"
-            YAxes="{Binding YAxes}"
-            TooltipPosition="Hidden"/>
+            YAxes="{Binding YAxes}">
+        </lvc:CartesianChart>
     </Grid>
 </UserControl>

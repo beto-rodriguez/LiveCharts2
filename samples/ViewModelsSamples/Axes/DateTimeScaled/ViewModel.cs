@@ -13,8 +13,6 @@ public partial class ViewModel : ObservableObject
     {
         new ColumnSeries<DateTimePoint>
         {
-            YToolTipLabelFormatter = (chartPoint) =>
-                $"{new DateTime((long) chartPoint.Coordinate.SecondaryValue):MMMM dd}: {chartPoint.Coordinate.PrimaryValue}",
             Values = new ObservableCollection<DateTimePoint>
             {
                 new DateTimePoint(new DateTime(2021, 1, 1), 3),
@@ -37,6 +35,8 @@ public partial class ViewModel : ObservableObject
             LabelsRotation = 80,
 
             // when using a date time type, let the library know your unit // mark
+            // where "unit" means the distance between your points, this will improve
+            // how tooltips are triggered.
             UnitWidth = TimeSpan.FromDays(1).Ticks, // mark
 
             // if the difference between our points is in hours then we would:

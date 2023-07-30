@@ -17,15 +17,16 @@ static class Program
         LiveCharts.Configure(config => // mark
             config // mark
                 // you can override the theme 
-                // .AddDarkTheme() // mark 
-                .AddLightTheme() // mark
+                //.AddDarkTheme() // mark 
 
                 // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark
-                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('أ'))  // <- Arabic // mark
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('あ')) // <- Japanese // mark
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('헬')) // <- Korean // mark
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('Ж'))  // <- Russian // mark
+
+                //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('أ'))  // <- Arabic // mark
+                //.UseRightToLeftSettings() // Enables right to left tooltips // mark
 
                 // finally register your own mappers
                 // you can learn more about mappers at:

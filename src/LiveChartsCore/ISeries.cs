@@ -89,7 +89,7 @@ public interface ISeries
     ///   <c>true</c> if this instance is visible at legends; otherwise, <c>false</c>.
     /// </value>
     bool IsVisibleAtLegend { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the size of the legend shape.
     /// </summary>
@@ -119,6 +119,12 @@ public interface ISeries
     /// Gets or sets the value where the direction of the axis changes, by default is 0.
     /// </summary>
     double Pivot { get; set; }
+
+    /// <summary>
+    /// Gets or sets the series geometry svg, this property requires the series visual to be
+    /// an <see cref="ISvgPath{TDrawingContext}"/> instance.
+    /// </summary>
+    string? GeometrySvg { get; set; }
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the

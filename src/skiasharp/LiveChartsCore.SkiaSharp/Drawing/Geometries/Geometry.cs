@@ -104,7 +104,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         set
         {
             _translateProperty.SetMovement(value, this);
-            _hasTranslate = value.X != 0 || value.Y != 0;
+            _hasTranslate = true;
         }
     }
 
@@ -115,7 +115,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         set
         {
             _rotationProperty.SetMovement(value, this);
-            _hasRotation = value != 0;
+            _hasRotation = true;
         }
     }
 
@@ -126,7 +126,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         set
         {
             _scaleProperty.SetMovement(value, this);
-            _hasScale = value.X != 1 || value.Y != 1;
+            _hasScale = true;
         }
     }
 
@@ -137,7 +137,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         set
         {
             _skewProperty.SetMovement(value, this);
-            _hasSkew = value.X != 0 || value.Y != 0;
+            _hasSkew = true;
         }
     }
 
@@ -153,7 +153,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         set
         {
             _transformProperty.SetMovement(value, this);
-            _hasTransform = !value.IsIdentity;
+            _hasTransform = true;
         }
     }
 

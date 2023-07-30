@@ -50,9 +50,9 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     public SKDefaultTooltip()
     {
         FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
-        BackgroundPaint = new SolidColorPaint(new SKColor(245, 245, 245, 230))
+        BackgroundPaint = new SolidColorPaint(new SKColor(235, 235, 235, 230))
         {
-            ImageFilter = new DropShadow(0, 0, 4, 4, new SKColor(0, 0, 0, 70))
+            ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
         };
     }
 
@@ -85,7 +85,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
     {
-        const int wedge = 13;
+        const int wedge = 10;
 
         if (chart.View.TooltipTextSize is not null) TextSize = chart.View.TooltipTextSize.Value;
         if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
@@ -102,6 +102,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
             };
 
             _panel.BackgroundGeometry.Wedge = wedge;
+            _panel.BackgroundGeometry.WedgeThickness = 3;
 
             _panel
                 .Animate(
@@ -137,45 +138,51 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 if (title != LiveCharts.IgnoreToolTipLabel)
                 {
                     _panel.Children.Add(
-                    new LabelVisual
-                    {
-                        Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
-                        Paint = FontPaint,
-                        TextSize = TextSize,
-                        Padding = new Padding(0, 0, 0, 0),
-                        VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start
-                    });
+                        new LabelVisual
+                        {
+                            Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
+                            Paint = FontPaint,
+                            TextSize = TextSize,
+                            Padding = new Padding(0, 0, 0, 0),
+                            VerticalAlignment = Align.Start,
+                            HorizontalAlignment = Align.Start
+                        });
 
-                    _panel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
+                    _panel.Children.Add(
+                        new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
                 }
             }
 
             var content = point.Context.Series.GetPrimaryToolTipText(point) ?? string.Empty;
 
+            var ltr = LiveCharts.DefaultSettings.IsRightToLeft;
+
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, 0);
-                tableLayout.AddChild(
-                    new LabelVisual
-                    {
-                        Text = point.Context.Series.Name ?? string.Empty,
-                        Paint = FontPaint,
-                        TextSize = TextSize,
-                        Padding = new Padding(10, 0, 0, 0),
-                        VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start
-                    }, i, 1, horizontalAlign: Align.Start);
+                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, ltr ? 3 : 0);
+
+                if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
+                    tableLayout.AddChild(
+                        new LabelVisual
+                        {
+                            Text = point.Context.Series.Name ?? string.Empty,
+                            Paint = FontPaint,
+                            TextSize = TextSize,
+                            Padding = new Padding(10, 0, 0, 0),
+                            VerticalAlignment = Align.Start,
+                            HorizontalAlignment = Align.Start
+                        }, i, 1, horizontalAlign: Align.Start);
+
                 tableLayout.AddChild(
                     new LabelVisual
                     {
                         Text = content,
                         Paint = FontPaint,
                         TextSize = TextSize,
-                        Padding = new Padding(16, 0, 0, 0),
+                        Padding = new Padding(10, 0, 0, 0),
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
-                    }, i, 2, horizontalAlign: Align.End);
+                    }, i, ltr ? 0 : 2, horizontalAlign: Align.End);
 
                 i++;
             }

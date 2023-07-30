@@ -106,6 +106,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var ry = (float)Ry;
 
         var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -167,6 +168,12 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                 OnPointCreated(point);
 
                 _ = everFetched.Add(point);
+            }
+
+            if (hasSvg && _geometrySvgChanged)
+            {
+                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
             }
 
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
@@ -257,6 +264,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
         pointsCleanup.CollectPoints(
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
@@ -292,7 +300,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var p = primaryScale.ToPixels(pivot);
         var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
-        visual.X = secondary;
+        visual.X = secondary - visual.Width * 0.5f;
         visual.Y = p;
         visual.Height = 0;
         visual.RemoveOnCompleted = true;

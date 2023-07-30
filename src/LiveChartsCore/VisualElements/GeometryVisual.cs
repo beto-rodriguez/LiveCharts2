@@ -94,6 +94,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         _geometry.Y = l.Y;
         _geometry.Width = size.Width;
         _geometry.Height = size.Height;
+        _geometry.RotateTransform = (float)Rotation;
+        _geometry.TranslateTransform = Translate;
 
         if (Fill is not null)
         {
@@ -133,6 +135,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
             _labelGeometry.Y = l.Y + padding;
             _labelGeometry.Text = _label;
             _labelGeometry.TextSize = _labelSize;
+            _labelGeometry.RotateTransform = (float)Rotation;
+            _labelGeometry.TranslateTransform = Translate;
 
             chart.Canvas.AddDrawableTask(LabelPaint);
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);

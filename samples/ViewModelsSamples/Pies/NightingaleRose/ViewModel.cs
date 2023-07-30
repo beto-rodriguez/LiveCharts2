@@ -7,12 +7,23 @@ namespace ViewModelsSamples.Pies.NightingaleRose;
 
 public partial class ViewModel : ObservableObject
 {
-    public ISeries[] Series { get; set; } =
+    public ViewModel()
     {
-        new PieSeries<double> { Values = new List<double> { 2 }, InnerRadius = 50, MaxOuterRadius = 1.0 },
-        new PieSeries<double> { Values = new List<double> { 4 }, InnerRadius = 50, MaxOuterRadius = 0.9 },
-        new PieSeries<double> { Values = new List<double> { 1 }, InnerRadius = 50, MaxOuterRadius = 0.8 },
-        new PieSeries<double> { Values = new List<double> { 4 }, InnerRadius = 50, MaxOuterRadius = 0.7 },
-        new PieSeries<double> { Values = new List<double> { 3 }, InnerRadius = 50, MaxOuterRadius = 0.6 }
-    };
+        var outer = 1d;
+        var data = new[] { 6, 5, 4, 3, 2 };
+
+        // you can convert any array, list or IEnumerable<T> to a pie series collection:
+        Series = data.AsPieSeries((value, series) =>
+        {
+            // this method is called once per element in the array
+            // we are decremting the outer radius 10 percent (0.1)
+            // on every element in the array.
+
+            series.InnerRadius = 50;
+            series.MaxOuterRadius = outer;
+            outer -= 0.1;
+        });
+    }
+
+    public IEnumerable<ISeries> Series { get; set; }
 }

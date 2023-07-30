@@ -143,6 +143,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         uwx = uwx < gs ? gs : uwx;
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var segment in segments)
         {
@@ -228,6 +229,12 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     OnPointCreated(point);
                 }
 
+                if (hasSvg && _geometrySvgChanged)
+                {
+                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
+                }
+
                 _ = everFetched.Add(point);
 
                 GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
@@ -264,9 +271,11 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 _ = ha
                     .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
-                .CenterXToolTip();
+                    .CenterXToolTip();
 
-                _ = coordinate.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
+                _ = coordinate.PrimaryValue >= pivot
+                    ? ha.StartYToolTip()
+                    : ha.EndYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(point);
 
@@ -344,6 +353,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="GetRequestedGeometrySize"/>
@@ -363,21 +373,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
         else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
-    }
-
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> stepSeries &&
-            Name == series.Name &&
-            Fill == stepSeries.Fill && Stroke == stepSeries.Stroke &&
-            GeometryFill == stepSeries.GeometryFill && GeometryStroke == stepSeries.GeometryStroke;
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
@@ -433,8 +432,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
         var y = primaryScale.ToPixels(coordinate.PrimaryValue);
 
-        visual.Geometry.X = x;
-        visual.Geometry.Y = y;
+        visual.Geometry.X = x + visual.Geometry.Width * 0.5f;
+        visual.Geometry.Y = y + visual.Geometry.Height * 0.5f;
         visual.Geometry.Height = 0;
         visual.Geometry.Width = 0;
         visual.Geometry.RemoveOnCompleted = true;

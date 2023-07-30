@@ -234,6 +234,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         BackgroundGeometry.Y = (float)Y;
         BackgroundGeometry.Width = controlSize.Width;
         BackgroundGeometry.Height = controlSize.Height;
+        BackgroundGeometry.RotateTransform = (float)Rotation;
+        BackgroundGeometry.TranslateTransform = Translate;
 
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
     }

@@ -140,6 +140,8 @@ public class PieSeriesTest
     [TestMethod]
     public void ShouldPlaceDataLabel()
     {
+        LabelGeometry.ShowDebugLines = true;
+
         var vals = new[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         var seriesCollection = vals.AsPieSeries<int, DoughnutGeometry, TestLabel>();
 
@@ -154,6 +156,7 @@ public class PieSeriesTest
 
         // TEST HIDDEN ===========================================================
         _ = chart.GetImage();
+        chart.SaveImage("_pie-hidden.png");
 
         var points = seriesCollection.SelectMany(x =>
             x.DataFactory
@@ -170,9 +173,11 @@ public class PieSeriesTest
                 SKTypeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
             };
 
-        // TEST TOP ===============================================================
+        #region normal
+
         foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
         _ = chart.GetImage();
+        chart.SaveImage("_pie-center.png");
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
@@ -188,6 +193,7 @@ public class PieSeriesTest
 
         foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Middle;
         _ = chart.GetImage();
+        chart.SaveImage("_pie-middle.png");
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
@@ -208,6 +214,7 @@ public class PieSeriesTest
 
         foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Start;
         _ = chart.GetImage();
+        chart.SaveImage("_pie-start.png");
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
@@ -228,6 +235,7 @@ public class PieSeriesTest
 
         foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.End;
         _ = chart.GetImage();
+        chart.SaveImage("_pie-end.png");
 
         foreach (var p in points)
         {
@@ -244,6 +252,7 @@ public class PieSeriesTest
 
         foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Outer;
         _ = chart.GetImage();
+        chart.SaveImage("_pie-outer.png");
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
@@ -261,5 +270,315 @@ public class PieSeriesTest
 
             Assert.IsTrue(Math.Abs(a - r) < 0.01);
         }
+
+        #endregion
+
+        #region inner
+
+        foreach (var series in seriesCollection) series.InnerRadius = 100;
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-center-inner.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            Assert.IsTrue(
+                Math.Abs(p.Label.X - 250) < 0.01 &&
+                Math.Abs(p.Label.Y - 250) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Middle;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-middle-inner.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Start;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-start-inner.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.End;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-end-inner.png");
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle;
+            if (Math.Abs(r - 360) < 0.001) r = 0;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Outer;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-outer-inner.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h > p.Visual.Width * 0.5f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        #endregion
+
+        #region outer
+
+        foreach (var series in seriesCollection) series.InnerRadius = 0;
+        foreach (var series in seriesCollection) series.MaxOuterRadius = 0.5;
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-center-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            Assert.IsTrue(
+                Math.Abs(p.Label.X - 250) < 0.01 &&
+                Math.Abs(p.Label.Y - 250) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Middle;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-middle-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Start;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-start-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.End;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-end-outer.png");
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle;
+            if (Math.Abs(r - 360) < 0.001) r = 0;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Outer;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-outer-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h > p.Visual.Width * 0.5f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        #endregion
+
+        #region inner and outer
+
+        foreach (var series in seriesCollection) series.InnerRadius = 50;
+        foreach (var series in seriesCollection) series.MaxOuterRadius = 0.75;
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-center-inner-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            Assert.IsTrue(
+                Math.Abs(p.Label.X - 250) < 0.01 &&
+                Math.Abs(p.Label.Y - 250) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Middle;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-middle-inner-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Start;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-start-inner-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.End;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-end-inner-outer.png");
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h < 500 * 0.5f * 0.65f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle;
+            if (Math.Abs(r - 360) < 0.001) r = 0;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.Outer;
+        _ = chart.GetImage();
+        chart.SaveImage("_pie-outer-inner-outer.png");
+
+        points = seriesCollection.SelectMany(x =>
+            x.DataFactory
+                .Fetch(x, chart.Core)
+                .Select(x.ConvertToTypedChartPoint));
+
+        foreach (var p in points)
+        {
+            var h = Math.Sqrt(Math.Pow(p.Label.X - 250, 2) + Math.Pow(p.Label.Y - 250, 2));
+            Assert.IsTrue(h > p.Visual.Width * 0.5f);
+
+            var a = Math.Atan2(p.Label.Y - 250, p.Label.X - 250) * 180 / Math.PI;
+            if (a < 0) a += 360;
+            var r = p.Visual.StartAngle + p.Visual.SweepAngle * 0.5f;
+
+            Assert.IsTrue(Math.Abs(a - r) < 0.01);
+        }
+
+        #endregion
     }
 }

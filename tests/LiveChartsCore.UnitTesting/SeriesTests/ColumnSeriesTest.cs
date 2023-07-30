@@ -106,6 +106,7 @@ public class ColumnSeriesTest
         var sutSeries = new ColumnSeries<double>
         {
             Values = new double[] { 1, 2, 3, 4, 5 },
+            Name = "Series #1",
             DataPadding = new Drawing.LvcPoint(0, 0)
         };
 
@@ -193,7 +194,7 @@ public class ColumnSeriesTest
             Math.Abs(tp.X - 300 * (1 / 5d) * 0.5) < 0.0001 &&
             Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 0.1 &&
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
-            "Tool tip on left failed [AUTO]");
+            "Tool tip on right failed [AUTO]");
     }
 
     [TestMethod]

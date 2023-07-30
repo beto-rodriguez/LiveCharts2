@@ -393,43 +393,17 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 label.Padding = DataLabelsPadding;
                 label.RotateTransform = actualRotation;
 
-                if (DataLabelsPosition == PolarLabelsPosition.Start)
-                {
-                    var a = start + initialRotation;
-                    a %= 360;
-                    if (a < 0) a += 360;
-                    var c = 90;
-
-                    if (a > 180) c = -90;
-
-                    label.HorizontalAlign = a > 180 ? Align.End : Align.Start;
-                    label.RotateTransform = (float)(a - c);
-                }
-
-                if (DataLabelsPosition == PolarLabelsPosition.End)
-                {
-                    var a = start + initialRotation + sweep;
-                    a %= 360;
-                    if (a < 0) a += 360;
-                    var c = 90;
-
-                    if (a > 180) c = -90;
-
-                    label.HorizontalAlign = a > 180 ? Align.Start : Align.End;
-                    label.RotateTransform = (float)(a - c);
-                }
-
-                if (DataLabelsPosition == PolarLabelsPosition.Outer)
-                {
-                    var a = start + initialRotation + sweep * 0.5;
-                    var isStart = a % 360 is < 90 or (> 270 and < 360);
-                    label.HorizontalAlign = label.HorizontalAlign = isStart ? Align.Start : Align.End;
-                }
+                AlignLabel(label, (float)start, initialRotation, sweep);
 
                 var labelPosition = GetLabelPolarPosition(
-                    cx, cy, ((stackedOuterRadius + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
-                    stackedInnerRadius, (float)(start + initialRotation), (float)sweep,
-                    label.Measure(DataLabelsPaint), DataLabelsPosition);
+                    cx,
+                    cy,
+                    stackedInnerRadius,
+                    (stackedOuterRadius + relativeOuterRadius * 2) * 0.5f,
+                    (float)(start + initialRotation),
+                    (float)sweep,
+                    label.Measure(DataLabelsPaint),
+                    DataLabelsPosition);
 
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
@@ -459,10 +433,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TMiniatureGeometry()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TMiniatureGeometry()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }
@@ -519,13 +491,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         base.OnPointerLeft(point);
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> instance)
-    {
-        return instance is PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext> pieSeries &&
-           Name == pieSeries.Name && Fill == pieSeries.Fill && Stroke == pieSeries.Stroke;
-    }
-
     /// <summary>
     /// Sets the default point transitions.
     /// </summary>
@@ -578,8 +543,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// </summary>
     /// <param name="centerX">The center x.</param>
     /// <param name="centerY">The center y.</param>
-    /// <param name="radius">The radius.</param>
     /// <param name="innerRadius">The iner radius.</param>
+    /// <param name="outerRadius">The outer radius.</param>
     /// <param name="startAngle">The start angle.</param>
     /// <param name="sweepAngle">The sweep angle.</param>
     /// <param name="labelSize">Size of the label.</param>
@@ -588,31 +553,33 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     protected virtual LvcPoint GetLabelPolarPosition(
         float centerX,
         float centerY,
-        float radius,
         float innerRadius,
+        float outerRadius,
         float startAngle,
         float sweepAngle,
         LvcSize labelSize,
         PolarLabelsPosition position)
     {
-        const float toRadians = (float)(Math.PI / 180);
-        float angle = 0;
+        float angle = 0, radius = 0;
 
         switch (position)
         {
             case PolarLabelsPosition.End:
                 angle = startAngle + sweepAngle;
+                radius = innerRadius + (outerRadius - innerRadius) * 0.5f;
                 break;
             case PolarLabelsPosition.Start:
                 angle = startAngle;
+                radius = innerRadius + (outerRadius - innerRadius) * 0.5f;
                 break;
             case PolarLabelsPosition.Outer:
                 angle = startAngle + sweepAngle * 0.5f;
-                radius += radius - innerRadius;
+                radius = outerRadius
+                    + 0.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
                 break;
             case PolarLabelsPosition.Middle:
                 angle = startAngle + sweepAngle * 0.5f;
-                radius *= 1.15f;
+                radius = innerRadius + (outerRadius - innerRadius) * 0.65f;
                 break;
             case PolarLabelsPosition.ChartCenter:
                 return new LvcPoint(centerX, centerY);
@@ -620,10 +587,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 break;
         }
 
-        //angle %= 360;
-        //if (angle < 0) angle += 360;
+        const float toRadians = (float)(Math.PI / 180);
         angle *= toRadians;
-        radius += 0.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
 
         return new LvcPoint(
              (float)(centerX + Math.Cos(angle) * radius),
@@ -656,5 +621,42 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         foreach (var item in toDelete) _ = everFetched.Remove(item);
 
         OnVisibilityChanged();
+    }
+
+    private void AlignLabel(TLabel label, double start, double initialRotation, double sweep)
+    {
+        switch (DataLabelsPosition)
+        {
+            case PolarLabelsPosition.Middle:
+            case PolarLabelsPosition.ChartCenter:
+                label.HorizontalAlign = Align.Middle;
+                label.VerticalAlign = Align.Middle;
+                break;
+            case PolarLabelsPosition.End:
+                var a = start + initialRotation + sweep;
+                a %= 360;
+                if (a < 0) a += 360;
+                var c = 90;
+                if (a > 180) c = -90;
+                label.HorizontalAlign = a > 180 ? Align.Start : Align.End;
+                label.RotateTransform = (float)(a - c);
+                break;
+            case PolarLabelsPosition.Start:
+                var a1 = start + initialRotation;
+                a1 %= 360;
+                if (a1 < 0) a1 += 360;
+                var c1 = 90;
+                if (a1 > 180) c1 = -90;
+                label.HorizontalAlign = a1 > 180 ? Align.End : Align.Start;
+                label.RotateTransform = (float)(a1 - c1);
+                break;
+            case PolarLabelsPosition.Outer:
+                var a2 = start + initialRotation + sweep * 0.5;
+                var isStart = a2 % 360 is < 90 or (> 270 and < 360);
+                label.HorizontalAlign = label.HorizontalAlign = isStart ? Align.Start : Align.End;
+                break;
+            default:
+                break;
+        }
     }
 }

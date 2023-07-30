@@ -27,9 +27,8 @@ public partial class ViewModel : ObservableObject
 
         var salesPerDaysSeries = new ColumnSeries<Fruit>
         {
-            Name = "Items sold per day",
             Values = data,
-            YToolTipLabelFormatter = point => $"{point.Model?.Name}, sold {point.Model?.SalesPerDay} items",
+            YToolTipLabelFormatter = point => $"{point.Model?.SalesPerDay} {point.Model?.Name}",
             DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
             DataLabelsFormatter = point => $"{point.Model?.SalesPerDay} {point.Model?.Name}",
             DataLabelsPosition = DataLabelsPosition.End,

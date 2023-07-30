@@ -230,8 +230,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
-        foreach (var item in strokePathHelperContainer) item.ClearCommands();
-        foreach (var item in fillPathHelperContainer) item.ClearCommands();
+        foreach (var item in strokePathHelperContainer) item.Commands.Clear();
+        foreach (var item in fillPathHelperContainer) item.Commands.Clear();
 
         var r = (float)DataLabelsRotation;
         var isTangent = false;
@@ -248,6 +248,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             r -= LiveCharts.CotangentAngle;
             isCotangent = true;
         }
+
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var segment in segments)
         {
@@ -329,6 +331,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     OnPointCreated(data.TargetPoint);
                 }
 
+                if (hasSvg && _geometrySvgChanged)
+                {
+                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
+                }
+
                 _ = everFetched.Add(data.TargetPoint);
 
                 GeometryFill?.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
@@ -341,8 +349,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 visual.Bezier.Xj = (float)data.X2;
                 visual.Bezier.Yj = (float)data.Y2;
 
-                if (Fill is not null) _ = fillPath.AddLast(visual.Bezier);
-                if (Stroke is not null) _ = strokePath.AddLast(visual.Bezier);
+                if (Fill is not null) _ = fillPath.Commands.AddLast(visual.Bezier);
+                if (Stroke is not null) _ = strokePath.Commands.AddLast(visual.Bezier);
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;
@@ -434,6 +442,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         }
 
         pointsCleanup.CollectPoints(everFetched, polarChart.View, scaler, SoftDeleteOrDisposePoint);
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.GetBounds(PolarChart{TDrawingContext}, IPolarAxis, IPolarAxis)"/>
@@ -506,10 +515,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
         else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }
@@ -560,13 +567,6 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         }
 
         return label;
-    }
-
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext> sfSeries &&
-            Name == series.Name && Fill == sfSeries.Fill && Stroke == sfSeries.Stroke;
     }
 
     /// <summary>

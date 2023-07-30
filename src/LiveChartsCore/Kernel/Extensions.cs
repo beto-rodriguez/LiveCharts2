@@ -434,6 +434,18 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Determines whether is bar series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    /// <returns>
+    ///   <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasSvgGeometry(this ISeries series)
+    {
+        return (series.SeriesProperties & SeriesProperties.IsSVGPath) != 0;
+    }
+
+    /// <summary>
     /// Calculates the tooltips finding strategy based on the series properties.
     /// </summary>
     /// <param name="seriesCollection">The series collection.</param>
@@ -584,6 +596,7 @@ public static class Extensions
 
         if (!e.MoveNext())
         {
+            data.IsNextEmpty = true;
             yield return data;
             yield break;
         }
@@ -674,6 +687,7 @@ public static class Extensions
         public ChartPoint AfterNext { get; set; }
 
         public bool IsFirst { get; set; } = true;
+        public bool IsNextEmpty { get; set; }
 
         public void GoNext(ChartPoint point)
         {

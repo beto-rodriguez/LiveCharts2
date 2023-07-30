@@ -16,6 +16,7 @@ public partial class ViewModel : ObservableObject
     {
         new ColumnSeries<int>
         {
+            Name = "John",
             Values = new []{ 3, 7, 2, 9, 4 },
             Stroke = null,
 
@@ -47,6 +48,7 @@ public partial class ViewModel : ObservableObject
         },
         new LineSeries<int>
         {
+            Name = "Charles",
             Values = new []{ 4, 2, 8, 5, 3 },
             GeometrySize = 22,
             Stroke = new LinearGradientPaint(new[]{ new SKColor(45, 64, 89), new SKColor(255, 212, 96)}) { StrokeThickness = 10 },

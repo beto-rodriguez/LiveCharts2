@@ -120,6 +120,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         BackgroundGeometry.Y = (float)Y;
         BackgroundGeometry.Width = controlSize.Width;
         BackgroundGeometry.Height = controlSize.Height;
+        BackgroundGeometry.RotateTransform = (float)Rotation;
+        BackgroundGeometry.TranslateTransform = Translate;
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
     }
 

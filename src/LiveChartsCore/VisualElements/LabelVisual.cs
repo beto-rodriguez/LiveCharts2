@@ -44,9 +44,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     internal Align _horizontalAlignment = Align.Middle;
     internal LvcColor _backgroundColor;
     internal Padding _padding = new(0);
-    internal double _rotation;
     internal float _lineHeight = 1.75f;
-    internal LvcPoint _translate = new();
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -66,16 +64,6 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// Gets or sets the font size.
     /// </summary>
     public double TextSize { get => _textSize; set => SetProperty(ref _textSize, value); }
-
-    /// <summary>
-    /// Gets or sets the rotation.
-    /// </summary>
-    public double Rotation { get => _rotation; set { _rotation = value; OnPropertyChanged(); } }
-
-    /// <summary>
-    /// Gets or sets the translate transform.
-    /// </summary>
-    public LvcPoint Translate { get => _translate; set => SetProperty(ref _translate, value); }
 
     /// <summary>
     /// Gets or sets the vertical alignment.

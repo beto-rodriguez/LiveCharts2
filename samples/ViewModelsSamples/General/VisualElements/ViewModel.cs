@@ -56,7 +56,7 @@ public partial class ViewModel : ObservableObject
          },
          new SVGVisual
          {
-             Path = SVGPoints.Star,
+             Path = SKPath.ParseSvgPathData(SVGPoints.Star),
              X = 80,
              Y = 80,
              LocationUnit = MeasureUnit.Pixels,

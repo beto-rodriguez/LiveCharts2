@@ -36,6 +36,12 @@ public class PopUpGeometry : SizedGeometry
     public double Wedge { get; set; } = 15;
 
     /// <summary>
+    /// Gets or sets the wedge thickness, it controls the width of the wedge,
+    /// the value is normalized, where 1 means the <see cref="Wedge"/> size, default is 2.
+    /// </summary>
+    public double WedgeThickness { get; set; } = 2;
+
+    /// <summary>
     /// Gets or sets the border radius.
     /// </summary>
     public double BorderRadius { get; set; } = 10;
@@ -51,7 +57,7 @@ public class PopUpGeometry : SizedGeometry
 
         var wedge = (float)Wedge;
         var br = (float)BorderRadius;
-        var wf = 1.25f;
+        var wf = (float)WedgeThickness;
         var x = X + (Placement == PopUpPlacement.Right ? 1 : 0) * wedge;
         var y = Y + (Placement == PopUpPlacement.Bottom ? 1 : 0) * wedge;
         var w = Width - (Placement is PopUpPlacement.Right or PopUpPlacement.Left ? 1 : 0) * wedge;
@@ -102,13 +108,5 @@ public class PopUpGeometry : SizedGeometry
         path.Close();
 
         context.Canvas.DrawPath(path, context.Paint);
-
-        var c = new SKColor(
-            (byte)(context.Paint.Color.Red * 0.9),
-            (byte)(context.Paint.Color.Red * 0.9),
-            (byte)(context.Paint.Color.Red * 0.9),
-            255);
-        using var borderPaint = new SKPaint { Color = c, IsStroke = true, IsAntialias = true };
-        context.Canvas.DrawPath(path, borderPaint);
     }
 }

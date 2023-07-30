@@ -10,37 +10,20 @@ namespace ViewModelsSamples.Pies.Basic;
 
 public partial class ViewModel : ObservableObject
 {
-    public ViewModel()
-    {
-        // you could convert any IEnumerable to a pie series collection
-        var data = new double[] { 2, 4, 1, 4, 3 };
+    // you can convert any array, list or IEnnumerable<T> to a pie series collection:
+    public IEnumerable<ISeries> Series { get; set; } =
+        new[] { 2, 4, 1, 4, 3 }.AsPieSeries();
 
-        // Series = data.AsLiveChartsPieSeries(); this could be enough in some cases // mark
-
-        // but you can customize the series properties using the following overload: // mark
-        Series = data.AsPieSeries((value, series) =>
+    // the expression above is equivalent to the next series collection:
+    public IEnumerable<ISeries> Series2 { get; set; } =
+        new[]
         {
-            // here you can configure the series assigned to each value.
-            series.Name = $"Series for value {value}";
-            series.DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30));
-            series.DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Outer;
-            series.DataLabelsFormatter =
-                p => $"{p.Coordinate.PrimaryValue} / {p.StackedValue!.Total} ({p.StackedValue.Share:P2})";
-            series.ToolTipLabelFormatter = p => $"{p.Coordinate.PrimaryValue:C2}";
-        });
-
-        // this is an equivalent and more verbose syntax. // mark
-        // Series = new ISeries[]
-        // {
-        //     new PieSeries<double> { Values = new double[] { 2 }, Name = "Slice 1" },
-        //     new PieSeries<double> { Values = new double[] { 4 }, Name = "Slice 2" },
-        //     new PieSeries<double> { Values = new double[] { 1 }, Name = "Slice 3" },
-        //     new PieSeries<double> { Values = new double[] { 4 }, Name = "Slice 4" },
-        //     new PieSeries<double> { Values = new double[] { 3 }, Name = "Slice 5" }
-        // };
-    }
-
-    public IEnumerable<ISeries> Series { get; set; }
+            new PieSeries<int> { Values = new[]{ 2 } },
+            new PieSeries<int> { Values = new[]{ 4 } },
+            new PieSeries<int> { Values = new[]{ 1 } },
+            new PieSeries<int> { Values = new[]{ 4 } },
+            new PieSeries<int> { Values = new[]{ 3 } },
+        };
 
     public LabelVisual Title { get; set; } =
         new LabelVisual

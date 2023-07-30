@@ -129,5 +129,10 @@ public enum SeriesProperties
     /// <summary>
     /// The polar line series
     /// </summary>
-    PolarLine = 1 << 20
+    PolarLine = 1 << 20,
+
+    /// <summary>
+    /// Sepcifies that the series visual comes from a svg path.
+    /// </summary>
+    IsSVGPath = 1 << 21,
 }

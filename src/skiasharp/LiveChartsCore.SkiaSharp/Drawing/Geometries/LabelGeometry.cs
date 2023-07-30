@@ -84,35 +84,6 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     public static bool ShowDebugLines { get; set; }
 #endif
 
-    private LvcPoint GetAlignmentOffset(SKRect bounds)
-    {
-        var p = Padding;
-
-        var w = bounds.Width + p.Left + p.Right;
-        var h = bounds.Height * LineHeight + p.Top + p.Bottom;
-
-        float l = -bounds.Left, t = -bounds.Top;
-
-        switch (VerticalAlign)
-        {
-            case Align.Start: t += 0; break;
-            case Align.Middle: t -= h * 0.5f; break;
-            case Align.End: t -= h + 0; break;
-            default:
-                break;
-        }
-        switch (HorizontalAlign)
-        {
-            case Align.Start: l += 0; break;
-            case Align.Middle: l -= w * 0.5f; break;
-            case Align.End: l -= w + 0; break;
-            default:
-                break;
-        }
-
-        return new(l, t);
-    }
-
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
@@ -122,7 +93,12 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         // for a reason the text size is not set on the InitializeTask() method.
         context.Paint.TextSize = TextSize;
 
+        var p = Padding;
+        var bg = Background;
+
+        var isFirstLine = true;
         var verticalPos = 0f;
+        var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
         foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
         {
@@ -131,14 +107,21 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
             var lhd = (textBounds.Height * LineHeight - textBounds.Height) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);
-            var p = Padding;
+
+            if (isFirstLine && bg != LvcColor.Empty)
+            {
+                var size = OnMeasure(context.PaintTask);
+                var c = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity));
+                using var bgPaint = new SKPaint { Color = c };
+
+                context.Canvas.DrawRect(
+                    X + ao.X, Y + ao.Y - textBounds.Height, size.Width, size.Height, bgPaint);
+            }
 
             if (paint.Typeface is not null)
             {
-                // This needs to be verified.
-                // this is just a temporal fix to support older versions of LiveCharts
-                using var eventTextShaper = new SKShaper(paint.Typeface);
-                context.Canvas.DrawShapedText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+                context.Canvas.DrawShapedText(
+                    shaper, line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
             }
             else
             {
@@ -170,7 +153,10 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 #endif
 
             verticalPos += textBounds.Height * LineHeight;
+            isFirstLine = false;
         }
+
+        shaper?.Dispose();
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
@@ -210,5 +196,34 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         return new LvcSize(
             w + Padding.Left + Padding.Right,
             h + Padding.Top + Padding.Bottom);
+    }
+
+    private LvcPoint GetAlignmentOffset(SKRect bounds)
+    {
+        var p = Padding;
+
+        var w = bounds.Width + p.Left + p.Right;
+        var h = bounds.Height * LineHeight + p.Top + p.Bottom;
+
+        float l = -bounds.Left, t = -bounds.Top;
+
+        switch (VerticalAlign)
+        {
+            case Align.Start: t += 0; break;
+            case Align.Middle: t -= h * 0.5f; break;
+            case Align.End: t -= h + 0; break;
+            default:
+                break;
+        }
+        switch (HorizontalAlign)
+        {
+            case Align.Start: l += 0; break;
+            case Align.Middle: l -= w * 0.5f; break;
+            case Align.End: l -= w + 0; break;
+            default:
+                break;
+        }
+
+        return new(l, t);
     }
 }

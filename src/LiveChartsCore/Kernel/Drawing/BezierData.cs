@@ -92,5 +92,10 @@ public class BezierData
     /// The y2.
     /// </value>
     public double Y2 { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the next point is empty.
+    /// </summary>
+    public bool IsNextEmpty { get; set; }
 }
 

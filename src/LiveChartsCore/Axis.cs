@@ -88,6 +88,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private ILabelGeometry<TDrawingContext>? _crosshairLabel;
     private IPaint<TDrawingContext>? _crosshairPaint;
     private IPaint<TDrawingContext>? _crosshairLabelsPaint;
+    private LvcColor? _crosshairLabelsBackground;
     private bool _showSeparatorLines = true;
     private bool _isVisible = true;
     private bool _isInverted;
@@ -100,7 +101,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Align? _labelsAlignment;
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
-
     private int _stepCount;
 
     #endregion
@@ -254,7 +254,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsBackground"/>
-    public LvcColor? CrosshairLabelsBackground { get; set; }
+    public LvcColor? CrosshairLabelsBackground
+    {
+        get => _crosshairLabelsBackground;
+        set => SetProperty(ref _crosshairLabelsBackground, value);
+    }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPadding"/>
     public Padding? CrosshairPadding { get; set; }
@@ -588,7 +592,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
 
-            if (_stepCount++ > 10000) ThrowPresicionError();
+            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         foreach (var separatorValueKey in separators.ToArray())
@@ -838,7 +842,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
 
-            if (_stepCount++ > 10000) ThrowPresicionError();
+            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         return new LvcSize(w, h);
@@ -949,7 +953,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
                 maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
 
-            if (_stepCount++ > 10000) ThrowPresicionError();
+            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         return maxLabelSize;
@@ -1354,10 +1358,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    private void ThrowPresicionError()
+    private void ThrowInfiniteSeparators()
     {
         throw new Exception(
-            "LiveCharts has detected a precision error, this is probably caused because you are zooming too deep, " +
+            $"The {_orientation} axis has an excesive number of separators. " +
+            $"If you set the step manually, ensure the number of separators is less than 10,000. " +
+            $"This could also be caused because you are zooming too deep, " +
             $"try to set a limit to the current chart zoom using the Axis.{nameof(MinZoomDelta)} property. " +
             $"For more info see: https://github.com/beto-rodriguez/LiveCharts2/issues/1076.");
     }

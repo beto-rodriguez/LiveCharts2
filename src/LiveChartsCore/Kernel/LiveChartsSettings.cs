@@ -152,6 +152,11 @@ public class LiveChartsSettings
     public TimeSpan UpdateThrottlingTimeout { get; set; } = TimeSpan.FromMilliseconds(50);
 
     /// <summary>
+    /// Gets or sets a value indicating whether the text is right to left.
+    /// </summary>
+    public bool IsRightToLeft { get; set; }
+
+    /// <summary>
     /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
     /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
     /// </summary>
@@ -162,6 +167,17 @@ public class LiveChartsSettings
     {
         var t = typeof(TModel);
         _mappers[t] = mapper;
+        return this;
+    }
+
+    /// <summary>
+    /// Indicates that the library should render tooltips in a right to left mode, you also need to load
+    /// a right to left font.
+    /// </summary>
+    /// <returns></returns>
+    public LiveChartsSettings UseRightToLeftSettings()
+    {
+        IsRightToLeft = true;
         return this;
     }
 

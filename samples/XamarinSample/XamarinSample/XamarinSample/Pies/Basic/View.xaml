@@ -9,7 +9,6 @@
     </ContentPage.BindingContext>
     <lvc:PieChart
         Series="{Binding Series}"
-        LegendPosition="Right"
         Title="{Binding Title}">
     </lvc:PieChart>
 </ContentPage>

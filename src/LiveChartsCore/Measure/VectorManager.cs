@@ -46,7 +46,7 @@ public class VectorManager<TSegment, TDrawingContext>
     public VectorManager(IVectorGeometry<TSegment, TDrawingContext> areaGeometry)
     {
         AreaGeometry = areaGeometry;
-        _nextNode = areaGeometry.FirstCommand;
+        _nextNode = areaGeometry.Commands.First;
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class VectorManager<TSegment, TDrawingContext>
         {
             _nextNode = _nextNode.Next;
             if (_nextNode.Previous is null) continue;
-            AreaGeometry.RemoveCommand(_nextNode.Previous);
+            AreaGeometry.Commands.Remove(_nextNode.Previous);
         }
 
         // at this points "_nextNode" is:
@@ -79,7 +79,7 @@ public class VectorManager<TSegment, TDrawingContext>
         if (_nextNode is null)
         {
             if (_currentNode is not null && followsPrevious) segment.Follows(_currentNode.Value);
-            _currentNode = AreaGeometry.AddLast(segment);
+            _currentNode = AreaGeometry.Commands.AddLast(segment);
             return;
         }
 
@@ -95,10 +95,10 @@ public class VectorManager<TSegment, TDrawingContext>
             return;
         }
 
-        if (_currentNode is null) _currentNode = _nextNode;
+        _currentNode ??= _nextNode;
 
         if (followsPrevious) segment.Follows(_currentNode.Value);
-        _currentNode = AreaGeometry.AddBefore(_nextNode, segment);
+        _currentNode = AreaGeometry.Commands.AddBefore(_nextNode, segment);
         _nextNode = _currentNode.Next;
     }
 
@@ -107,7 +107,7 @@ public class VectorManager<TSegment, TDrawingContext>
     /// </summary>
     public void Clear()
     {
-        AreaGeometry.ClearCommands();
+        AreaGeometry.Commands.Clear();
     }
 
     /// <summary>
@@ -117,8 +117,10 @@ public class VectorManager<TSegment, TDrawingContext>
     {
         while (_currentNode?.Next is not null)
         {
-            AreaGeometry.RemoveCommand(_currentNode.Next);
+            AreaGeometry.Commands.Remove(_currentNode.Next);
         }
+
+        AreaGeometry.IsValid = false;
     }
 
     /// <summary>
@@ -127,7 +129,7 @@ public class VectorManager<TSegment, TDrawingContext>
     public void LogPath()
     {
         var a = "";
-        var c = AreaGeometry.FirstCommand;
+        var c = AreaGeometry.Commands.First;
 
         while (c != null)
         {

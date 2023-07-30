@@ -35,6 +35,11 @@ public interface IVectorGeometry<TSegment, TDrawingContext> : IDrawable<TDrawing
     where TDrawingContext : DrawingContext
 {
     /// <summary>
+    /// Gets or sets the commands.
+    /// </summary>
+    LinkedList<TSegment> Commands { get; }
+
+    /// <summary>
     /// Defines the closing method.
     /// </summary>
     VectorClosingMethod ClosingMethod { get; set; }
@@ -43,75 +48,4 @@ public interface IVectorGeometry<TSegment, TDrawingContext> : IDrawable<TDrawing
     /// Gets or sets the pivot.
     /// </summary>
     float Pivot { get; set; }
-
-    /// <summary>
-    /// Gets the first linked node.
-    /// </summary>
-    LinkedListNode<TSegment>? FirstCommand { get; }
-
-    /// <summary>
-    /// Gets the last linked node.
-    /// </summary>
-    LinkedListNode<TSegment>? LastCommand { get; }
-
-    /// <summary>
-    /// Gets current commands count.
-    /// </summary>
-    int CountCommands { get; }
-
-    /// <summary>
-    /// Adds a path command at the end.
-    /// </summary>
-    /// <param name="command">The command.</param>
-    /// <returns>The linked node.</returns>
-    LinkedListNode<TSegment> AddLast(TSegment command);
-
-    /// <summary>
-    /// Adds a path command at the beginning.
-    /// </summary>
-    /// <param name="command">The command.</param>
-    /// <returns>The linked node.</returns>
-    LinkedListNode<TSegment> AddFirst(TSegment command);
-
-    /// <summary>
-    /// Adds a command after the given liked node.
-    /// </summary>
-    /// <param name="node">The linked node.</param>
-    /// <param name="command"></param>
-    /// <returns>The linked node.</returns>
-    LinkedListNode<TSegment> AddAfter(LinkedListNode<TSegment> node, TSegment command);
-
-    /// <summary>
-    /// Adds a path command before the given linked node.
-    /// </summary>
-    /// <param name="node">The linked node.</param>
-    /// <param name="command"></param>
-    /// <returns>The linked node.</returns>
-    LinkedListNode<TSegment> AddBefore(LinkedListNode<TSegment> node, TSegment command);
-
-    /// <summary>
-    /// Removes a path command.
-    /// </summary>
-    /// <param name="command">The command.</param>
-    bool RemoveCommand(TSegment command);
-
-    /// <summary>
-    /// Removes the specified node.
-    /// </summary>
-    /// <param name="node">The node.</param>
-    void RemoveCommand(LinkedListNode<TSegment> node);
-
-    /// <summary>
-    /// Determines whether the specified command is contained in the current path.
-    /// </summary>
-    /// <param name="command">The command.</param>
-    /// <returns>
-    ///   <c>true</c> if the specified command contains command; otherwise, <c>false</c>.
-    /// </returns>
-    bool ContainsCommand(TSegment command);
-
-    /// <summary>
-    /// Clears the commands.
-    /// </summary>
-    void ClearCommands();
 }

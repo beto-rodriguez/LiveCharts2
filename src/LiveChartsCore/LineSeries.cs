@@ -166,67 +166,76 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         var tooltipPositon = chart.TooltipPosition;
 
         var segmentI = 0;
+        var hasSvg = this.HasSvgGeometry();
 
         foreach (var segment in segments)
         {
-            TPathGeometry fillPath;
-            TPathGeometry strokePath;
-            var isNew = false;
-
-            if (segmentI >= fillPathHelperContainer.Count)
-            {
-                isNew = true;
-                fillPath = new TPathGeometry { ClosingMethod = VectorClosingMethod.CloseToPivot };
-                fillPathHelperContainer.Add(fillPath);
-            }
-            else
-            {
-                fillPath = fillPathHelperContainer[segmentI];
-            }
-
-            if (segmentI >= strokePathHelperContainer.Count)
-            {
-                isNew = true;
-                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
-                strokePathHelperContainer.Add(strokePath);
-            }
-            else
-            {
-                strokePath = strokePathHelperContainer[segmentI];
-            }
-
-            var strokeVector = new VectorManager<CubicBezierSegment, TDrawingContext>(strokePath);
-            var fillVector = new VectorManager<CubicBezierSegment, TDrawingContext>(fillPath);
-
-            if (Fill is not null)
-            {
-                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
-                cartesianChart.Canvas.AddDrawableTask(Fill);
-                Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-                fillPath.Pivot = p;
-                if (isNew)
-                {
-                    fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
-                }
-            }
-            if (Stroke is not null)
-            {
-                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
-                cartesianChart.Canvas.AddDrawableTask(Stroke);
-                Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-                strokePath.Pivot = p;
-                if (isNew)
-                {
-                    strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
-                }
-            }
-
+            var hasPaths = false;
             var isSegmentEmpty = true;
+            VectorManager<CubicBezierSegment, TDrawingContext>? strokeVector = null, fillVector = null;
 
-            foreach (var data in GetSpline(segment, stacker))
+            var line = GetSpline(segment, stacker).ToArray();
+
+            foreach (var data in line)
             {
+                if (!hasPaths)
+                {
+                    hasPaths = true;
+
+                    var fillLookup = GetSegmentVisual(segmentI, fillPathHelperContainer, VectorClosingMethod.CloseToPivot);
+                    var strokeLookup = GetSegmentVisual(segmentI, strokePathHelperContainer, VectorClosingMethod.NotClosed);
+
+                    if (fillLookup.Path.Commands.Count == 1 && !data.IsNextEmpty)
+                    {
+                        Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillLookup.Path);
+                        fillLookup.Path.Commands.Clear();
+                        fillPathHelperContainer.RemoveAt(segmentI);
+
+                        fillLookup = GetSegmentVisual(segmentI, fillPathHelperContainer, VectorClosingMethod.CloseToPivot);
+                    }
+
+                    if (strokeLookup.Path.Commands.Count == 1 && !data.IsNextEmpty)
+                    {
+                        Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeLookup.Path);
+                        strokeLookup.Path.Commands.Clear();
+                        strokePathHelperContainer.RemoveAt(segmentI);
+
+                        strokeLookup = GetSegmentVisual(segmentI, strokePathHelperContainer, VectorClosingMethod.NotClosed);
+                    }
+
+                    var isNew = fillLookup.IsNew || strokeLookup.IsNew;
+                    var fillPath = fillLookup.Path;
+                    var strokePath = strokeLookup.Path;
+
+                    strokeVector = new VectorManager<CubicBezierSegment, TDrawingContext>(strokePath);
+                    fillVector = new VectorManager<CubicBezierSegment, TDrawingContext>(fillPath);
+
+                    if (Fill is not null)
+                    {
+                        Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
+                        cartesianChart.Canvas.AddDrawableTask(Fill);
+                        Fill.ZIndex = actualZIndex + 0.1;
+                        Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                        fillPath.Pivot = p;
+                        if (isNew)
+                        {
+                            fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                        }
+                    }
+                    if (Stroke is not null)
+                    {
+                        Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
+                        cartesianChart.Canvas.AddDrawableTask(Stroke);
+                        Stroke.ZIndex = actualZIndex + 0.2;
+                        Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                        strokePath.Pivot = p;
+                        if (isNew)
+                        {
+                            strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                        }
+                    }
+                }
+
                 var coordinate = data.TargetPoint.Coordinate;
 
                 isSegmentEmpty = false;
@@ -263,6 +272,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                     OnPointCreated(data.TargetPoint);
                 }
 
+                if (hasSvg && _geometrySvgChanged)
+                {
+                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
+                }
+
                 _ = everFetched.Add(data.TargetPoint);
 
                 GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
@@ -270,8 +285,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
 
                 visual.Bezier.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
-                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
 
                 visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
                 visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
@@ -293,8 +308,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                visual.FillPath = fillPath;
-                visual.StrokePath = strokePath;
+                visual.FillPath = fillVector!.AreaGeometry;
+                visual.StrokePath = strokeVector!.AreaGeometry;
 
                 var hags = gs < 8 ? 8 : gs;
 
@@ -305,7 +320,9 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                     .SetDimensions(x - uwx * 0.5f, y - hgs, uwx, gs)
                     .CenterXToolTip();
 
-                _ = coordinate.PrimaryValue >= pivot ? ha.CenterYToolTip() : ha.CenterYToolTip().IsLessThanPivot();
+                _ = coordinate.PrimaryValue >= pivot
+                    ? ha.StartYToolTip()
+                    : ha.EndYToolTip().IsLessThanPivot();
 
                 pointsCleanup.Clean(data.TargetPoint);
 
@@ -339,8 +356,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                 OnPointMeasured(data.TargetPoint);
             }
 
-            strokeVector.End();
-            fillVector.End();
+            strokeVector?.End();
+            fillVector?.End();
 
             if (GeometryFill is not null)
             {
@@ -368,7 +385,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
             {
                 var segmentFill = fillPathHelperContainer[i];
                 Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentFill);
-                segmentFill.ClearCommands();
+                segmentFill.Commands.Clear();
                 fillPathHelperContainer.RemoveAt(i);
             }
 
@@ -376,7 +393,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
             {
                 var segmentStroke = strokePathHelperContainer[i];
                 Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentStroke);
-                segmentStroke.ClearCommands();
+                segmentStroke.Commands.Clear();
                 strokePathHelperContainer.RemoveAt(i);
             }
         }
@@ -392,6 +409,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         IsFirstDraw = false;
+        _geometrySvgChanged = false;
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
@@ -399,7 +417,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     {
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null) return;
-        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
+        visual.ScaleTransform = new LvcPoint(1.35f, 1.35f);
 
         base.OnPointerEnter(point);
     }
@@ -420,15 +438,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         return (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry> lineSeries &&
-            Name == series.Name &&
-            Fill == lineSeries.Fill && Stroke == lineSeries.Stroke &&
-            GeometryFill == lineSeries.GeometryFill && GeometryStroke == lineSeries.GeometryStroke;
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
@@ -440,10 +449,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
         else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }
@@ -517,7 +524,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
                     X1 = c.SecondaryValue,
                     Y1 = c.PrimaryValue + sc,
                     X2 = c.SecondaryValue,
-                    Y2 = c.PrimaryValue + sc
+                    Y2 = c.PrimaryValue + sc,
+                    IsNextEmpty = item.IsNextEmpty
                 };
 
                 continue;
@@ -621,8 +629,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         var x = secondaryScale.ToPixels(c.SecondaryValue);
         var y = primaryScale.ToPixels(c.PrimaryValue);
 
-        visual.Geometry.X = x;
-        visual.Geometry.Y = y;
+        visual.Geometry.X = x + visual.Geometry.Width * 0.5f;
+        visual.Geometry.Y = y + visual.Geometry.Height * 0.5f;
         visual.Geometry.Height = 0;
         visual.Geometry.Width = 0;
         visual.Geometry.RemoveOnCompleted = true;
@@ -654,6 +662,25 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         point.Context.Visual = null;
     }
 
+    private SegmentVisual GetSegmentVisual(int index, List<TPathGeometry> container, VectorClosingMethod method)
+    {
+        var isNew = false;
+        TPathGeometry? path;
+
+        if (index >= container.Count)
+        {
+            isNew = true;
+            path = new TPathGeometry { ClosingMethod = method };
+            container.Add(path);
+        }
+        else
+        {
+            path = container[index];
+        }
+
+        return new SegmentVisual(isNew, path);
+    }
+
     private class SplineData
     {
         public SplineData(ChartPoint start)
@@ -681,5 +708,18 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
             Next = AfterNext;
             AfterNext = point;
         }
+    }
+
+    private class SegmentVisual
+    {
+        public SegmentVisual(bool isNew, TPathGeometry path)
+        {
+            IsNew = isNew;
+            Path = path;
+        }
+
+        public bool IsNew { get; set; }
+
+        public TPathGeometry Path { get; set; }
     }
 }

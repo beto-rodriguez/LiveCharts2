@@ -89,6 +89,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected Action<Chart<TDrawingContext>>? _customMeasureHandler = null;
 
     /// <summary>
+    /// Indicates whether the geometry svg changed.
+    /// </summary>
+    protected bool _geometrySvgChanged = false;
+
+    /// <summary>
     /// Will be deleted on future versions
     /// </summary>
     [Obsolete]
@@ -105,9 +110,10 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
     private bool _isVisibleAtLegend = true;
     private double _miniatureShapeSize = 12;
-    private Sketch<TDrawingContext> _miniatureSketch = new();
+    private Sketch<TDrawingContext> _miniatureSketch = new(0, 0, null);
     private Func<float, float>? _easingFunction;
     private TimeSpan? _animationsSpeed;
+    private string? _geometrySvg;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -116,6 +122,12 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected Series(SeriesProperties properties)
     {
         SeriesProperties = properties;
+
+        if (typeof(ISizedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
+        {
+            SeriesProperties |= SeriesProperties.IsSVGPath;
+        }
+
         _observer = new CollectionDeepObserver<TModel>(
             (sender, e) => NotifySubscribers(),
             (sender, e) => NotifySubscribers());
@@ -152,6 +164,24 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// then the <see cref="ChartPoint"/> will be drawn as a point in the chart.
     /// </summary>
     public Action<TModel, ChartPoint>? Mapping { get => _mapping; set => SetProperty(ref _mapping, value); }
+
+    /// <inheritdoc cref="ISeries.GeometrySvg"/>
+    public string? GeometrySvg
+    {
+        get => _geometrySvg;
+        set
+        {
+            _geometrySvgChanged = true;
+            SetProperty(ref _geometrySvg, value);
+
+            if (!this.HasSvgGeometry())
+            {
+                throw new Exception(
+                    $"You must use a geometry that implements {nameof(ISvgPath<TDrawingContext>)}, " +
+                    $"{nameof(TVisual)} does not satisfies the constrait.");
+            }
+        }
+    }
 
     int ISeries.SeriesId { get; set; } = -1;
 

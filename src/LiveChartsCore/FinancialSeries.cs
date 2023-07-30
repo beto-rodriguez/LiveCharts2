@@ -379,19 +379,6 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
             VisibleTertiaryBounds = rawBaseBounds.VisibleTertiaryBounds
         };
 
-        if (GetIsInvertedBounds())
-        {
-            var tempSb = dimensionalBounds.SecondaryBounds;
-            var tempPb = dimensionalBounds.PrimaryBounds;
-            var tempVsb = dimensionalBounds.VisibleSecondaryBounds;
-            var tempVpb = dimensionalBounds.VisiblePrimaryBounds;
-
-            dimensionalBounds.SecondaryBounds = tempPb;
-            dimensionalBounds.PrimaryBounds = tempSb;
-            dimensionalBounds.VisibleSecondaryBounds = tempVpb;
-            dimensionalBounds.VisiblePrimaryBounds = tempVsb;
-        }
-
         return new SeriesBounds(dimensionalBounds, false);
     }
 
@@ -485,15 +472,6 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
         OnPropertyChanged();
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-    public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
-    {
-        return series is FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext> financial &&
-            Name == series.Name &&
-            UpFill == financial.UpFill && UpStroke == financial.UpStroke &&
-            DownFill == financial.DownFill && DownStroke == financial.DownStroke;
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
@@ -501,10 +479,8 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
 
         if (UpStroke is not null) schedules.Add(BuildMiniatureSchedule(UpStroke, new TMiniatureGeometry()));
 
-        return new Sketch<TDrawingContext>()
+        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
-            Height = MiniatureShapeSize,
-            Width = MiniatureShapeSize,
             PaintSchedules = schedules
         };
     }
