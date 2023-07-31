@@ -13,8 +13,7 @@ public partial class ViewModel : ObservableObject
     public ViewModel()
     {
         var outer = 1d;
-        //var data = new[] { 6, 5, 4, 3 };
-        var data = new[] { 6 };
+        var data = new[] { 6, 5, 4, 3 };
 
         // you can convert any array, list or IEnumerable<T> to a pie series collection:
         Series = data.AsPieSeries((value, series) =>
