@@ -48,17 +48,22 @@ public partial class ViewModel : ObservableObject
         // create {readTasks} parallel tasks that will add a point every {_delay} milliseconds
         for (var i = 0; i < readTasks; i++)
         {
-            ReadData();
+            _ = Task.Run(ReadData);
         }
     }
 
     public ISeries[] Series { get; set; }
 
-    public async void ReadData()
+    public bool IsReading { get; set; } = true;
+
+    public async Task ReadData()
     {
         await Task.Delay(1000);
 
-        while (true)
+        // to keep this sample simple, we run the next infinite loop
+        // in a real application you should stop the loop/task when the view is disposed
+
+        while (IsReading)
         {
             await Task.Delay(_delay);
 
