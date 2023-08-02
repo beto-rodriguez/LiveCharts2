@@ -35,8 +35,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <seealso cref="SizedGeometry" />
 public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
 {
-    public static Dictionary<string, SKPath> _cache = new();
-    private readonly Func<SKPath> _pathSource = () => throw new NotImplementedException("There is no path to render.");
+    private readonly Func<SKPath>? _pathSource;
+    private string? _svgPath;
 
     /// <summary>
     /// Inieializes a new instance of the <see cref="SVGPathGeometry"/> class.
@@ -64,6 +64,14 @@ public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
     }
 
     /// <summary>
+    /// Svg paths are cached in this dictionary to prevent parsing multiple times the same path,
+    /// when you use the <see cref="SVGPathGeometry"/> class, keep in mind that the parsed paths are living in
+    /// memory, this has no secondary effects in most of the cases, but if you are parsing a lot of paths
+    /// (maybe over 500) then you must consider cleaning the cache when you no longer need a path.
+    /// </summary>
+    public static readonly Dictionary<string, SKPath> Cache = new();
+
+    /// <summary>
     /// Gets or sets the path.
     /// </summary>
     public SKPath? Path { get; set; }
@@ -73,18 +81,40 @@ public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
     /// </summary>
     public bool FitToSize { get; set; } = false;
 
+    /// <inheritdoc cref="ISvgPath{TDrawingContext}.SVGPath"/>
+    public string? SVGPath
+    {
+        get => _svgPath;
+        set
+        {
+            if (value == _svgPath) return;
+
+            _svgPath = value;
+            OnPathChanged(value);
+        }
+    }
+
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        DrawPath(context, paint, Path ?? _pathSource()!);
+        var path = Path ?? _pathSource?.Invoke();
+        if (path is null) return;
+
+        DrawPath(context, paint, path);
     }
 
-    public void OnPathChanged(string path)
+    private void OnPathChanged(string? path)
     {
-        if (!_cache.TryGetValue(path, out var skPath))
+        if (path is null)
+        {
+            Path = null;
+            return;
+        }
+
+        if (!Cache.TryGetValue(path, out var skPath))
         {
             skPath = SKPath.ParseSvgPathData(path);
-            _cache[path] = skPath;
+            Cache[path] = skPath;
         }
 
         Path = skPath;

@@ -172,10 +172,11 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                 _ = everFetched.Add(point);
             }
 
-            if (hasSvg && _geometrySvgChanged)
+            if (hasSvg)
             {
                 var svgVisual = (ISvgPath<TDrawingContext>)visual;
-                svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
+                if (_geometrySvgChanged || svgVisual.SVGPath is null)
+                    svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
 
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
