@@ -66,7 +66,7 @@ public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
     /// <summary>
     /// Svg paths are cached in this dictionary to prevent parsing multiple times the same path,
     /// when you use the <see cref="SVGPathGeometry"/> class, keep in mind that the parsed paths are living in
-    /// memory, this has no secondary effects in most of the cases, but if you are parshing a lot of paths
+    /// memory, this has no secondary effects in most of the cases, but if you are parsing a lot of paths
     /// (maybe over 500) then you must consider cleaning the cache when you no longer need a path.
     /// </summary>
     public static readonly Dictionary<string, SKPath> Cache = new();
