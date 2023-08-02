@@ -123,10 +123,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     {
         SeriesProperties = properties;
 
-        if (typeof(ISizedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
-        {
+        if (typeof(ISvgPath<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
             SeriesProperties |= SeriesProperties.IsSVGPath;
-        }
 
         _observer = new CollectionDeepObserver<TModel>(
             (sender, e) => NotifySubscribers(),
