@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>LiveChartsCore.SkiaSharpView.WinUI</id>
-    <version>2.0.0-beta.900</version>
+    <version>2.0.0-beta.910</version>
     <title>LiveChartsCore.SkiaSharpView.WinUI</title>
     <authors>BetoRodriguez</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -18,8 +18,8 @@
     <dependencies>
       <group targetFramework="net6.0-windows10.0.19041">
         <dependency id="SkiaSharp.Views.WinUI" version="2.88.4-preview.84" />
-        <dependency id="LiveChartsCore" version="2.0.0-beta.900" />
-        <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.900" />
+        <dependency id="LiveChartsCore" version="2.0.0-beta.910" />
+        <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.910" />
       </group>
   </dependencies>
   </metadata>
