@@ -31,17 +31,5 @@ public partial class View : UserControl
         };
 
         Controls.Add(cartesianChart);
-
-        UpdateViewModel();
-    }
-
-    public async void UpdateViewModel()
-    {
-        while (true)
-        {
-            viewModel.RandomIncrement();
-            cartesianChart.Series = viewModel.Series;
-            await Task.Delay(100);
-        }
     }
 }

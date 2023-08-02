@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -62,7 +61,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
 
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return Array.Empty<IPaint<TDrawingContext>>();
+        return new[] { _backgroundPaint };
     }
 
     internal override IAnimatable?[] GetDrawnGeometries()
