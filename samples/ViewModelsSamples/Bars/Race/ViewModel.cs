@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -26,6 +26,13 @@ public partial class ViewModel : ObservableObject
         ("Hamilton", 1000)
     };
 
+    public ViewModel()
+    {
+        _ = StartRace();
+    }
+
+    public bool IsReading { get; set; } = true;
+
     [ObservableProperty]
     private ISeries[] _series =
         s_initialData
@@ -49,16 +56,28 @@ public partial class ViewModel : ObservableObject
     [ObservableProperty]
     private Axis[] _yAxes = { new Axis { IsVisible = false } };
 
-    public void RandomIncrement()
+    public async Task StartRace()
     {
-        foreach (var item in Series)
+        await Task.Delay(1000);
+
+        // to keep this sample simple, we run the next infinite loop
+        // in a real application you should stop the loop/task when the view is disposed
+
+        while (IsReading)
         {
-            if (item.Values is null) continue;
+            foreach (var item in Series)
+            {
+                if (item.Values is null) continue;
 
-            var i = ((ObservableValue[])item.Values)[0];
-            i.Value += _r.Next(0, 100);
+                var i = ((ObservableValue[])item.Values)[0];
+                i.Value += _r.Next(0, 100);
+            }
+
+            Series = Series
+                .OrderByDescending(x => ((ObservableValue[])x.Values!)[0].Value)
+                .ToArray();
+
+            await Task.Delay(100);
         }
-
-        Series = Series.OrderByDescending(x => ((ObservableValue[])x.Values!)[0].Value).ToArray();
     }
 }

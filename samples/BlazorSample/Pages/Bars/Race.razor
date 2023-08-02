@@ -13,18 +13,7 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-
-        Update();
     }
 
     public ViewModel ViewModel { get; set; } = new();
-
-    public async void Update()
-    {
-        while (true)
-        {
-            ViewModel.RandomIncrement();
-            await Task.Delay(100);
-		}
-	}
 }
