@@ -35,7 +35,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <seealso cref="SizedGeometry" />
 public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
 {
-    private static readonly Dictionary<string, SKPath> s_cache = new();
     private readonly Func<SKPath>? _pathSource;
     private string? _svgPath;
 
@@ -63,6 +62,14 @@ public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
     {
         _pathSource = pathSource;
     }
+
+    /// <summary>
+    /// Svg paths are cached in this dictionary to prevent parsing multiple times the same path,
+    /// when you use the <see cref="SVGPathGeometry"/> class, keep in mind that the parsed paths are living in
+    /// memory, this has no secondary effects in most of the cases, but if you are parshing a lot of paths
+    /// (maybe over 500) then you must consider cleaning the cache when you no longer need a path.
+    /// </summary>
+    public static readonly Dictionary<string, SKPath> Cache = new();
 
     /// <summary>
     /// Gets or sets the path.
@@ -104,10 +111,10 @@ public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
             return;
         }
 
-        if (!s_cache.TryGetValue(path, out var skPath))
+        if (!Cache.TryGetValue(path, out var skPath))
         {
             skPath = SKPath.ParseSvgPathData(path);
-            s_cache[path] = skPath;
+            Cache[path] = skPath;
         }
 
         Path = skPath;
