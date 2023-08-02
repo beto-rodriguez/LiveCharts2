@@ -55,11 +55,16 @@ public partial class ViewModel : ObservableObject
 
     public object Sync { get; } = new object();
 
-    private async void ReadData()
+    public bool IsReading { get; set; } = true;
+
+    private async Task ReadData()
     {
         await Task.Delay(1000);
 
-        while (true)
+        // to keep this sample simple, we run the next infinite loop
+        // in a real application you should stop the loop/task when the view is disposed
+
+        while (IsReading)
         {
             await Task.Delay(_delay);
 
