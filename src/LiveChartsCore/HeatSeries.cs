@@ -201,10 +201,11 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 _ = everFetched.Add(point);
             }
 
-            if (hasSvg && _geometrySvgChanged)
+            if (hasSvg)
             {
                 var svgVisual = (ISvgPath<TDrawingContext>)visual;
-                svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
+                if (_geometrySvgChanged || svgVisual.SVGPath is null)
+                    svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
 
             _paintTaks?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);

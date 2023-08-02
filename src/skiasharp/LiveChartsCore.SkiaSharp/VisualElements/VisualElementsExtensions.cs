@@ -56,9 +56,10 @@ public static class VisualElementsExtensions
                     Height = sizedGeometry.Height,
                 };
 
-                if (g is ISvgPath<SkiaSharpDrawingContext> svgPath)
+                if (g is ISvgPath<SkiaSharpDrawingContext> svgGeometry)
                 {
-                    svgPath.OnPathChanged(sketch.Svg ?? throw new NullReferenceException("sketch.Svg can not be null at this point."));
+                    svgGeometry.SVGPath =
+                        sketch.Svg ?? throw new NullReferenceException("sketch.Svg can not be null at this point.");
                 }
 
                 schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + baseZIndex;

@@ -29,8 +29,7 @@ public interface ISvgPath<TDrawingContext> : ISizedGeometry<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Called when the path changed.
+    /// Gets or sets the svg path.
     /// </summary>
-    /// <param name="path">the path.</param>
-    void OnPathChanged(string path);
+    string? SVGPath { get; set; }
 }

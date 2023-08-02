@@ -35,8 +35,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <seealso cref="SizedGeometry" />
 public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
 {
-    public static Dictionary<string, SKPath> _cache = new();
-    private readonly Func<SKPath> _pathSource = () => throw new NotImplementedException("There is no path to render.");
+    private static readonly Dictionary<string, SKPath> s_cache = new();
+    private readonly Func<SKPath>? _pathSource;
+    private string? _svgPath;
 
     /// <summary>
     /// Inieializes a new instance of the <see cref="SVGPathGeometry"/> class.
@@ -73,18 +74,40 @@ public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
     /// </summary>
     public bool FitToSize { get; set; } = false;
 
+    /// <inheritdoc cref="ISvgPath{TDrawingContext}.SVGPath"/>
+    public string? SVGPath
+    {
+        get => _svgPath;
+        set
+        {
+            if (value == _svgPath) return;
+
+            _svgPath = value;
+            OnPathChanged(value);
+        }
+    }
+
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        DrawPath(context, paint, Path ?? _pathSource()!);
+        var path = Path ?? _pathSource?.Invoke();
+        if (path is null) return;
+
+        DrawPath(context, paint, path);
     }
 
-    public void OnPathChanged(string path)
+    private void OnPathChanged(string? path)
     {
-        if (!_cache.TryGetValue(path, out var skPath))
+        if (path is null)
+        {
+            Path = null;
+            return;
+        }
+
+        if (!s_cache.TryGetValue(path, out var skPath))
         {
             skPath = SKPath.ParseSvgPathData(path);
-            _cache[path] = skPath;
+            s_cache[path] = skPath;
         }
 
         Path = skPath;

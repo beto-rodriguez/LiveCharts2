@@ -229,10 +229,11 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     OnPointCreated(point);
                 }
 
-                if (hasSvg && _geometrySvgChanged)
+                if (hasSvg)
                 {
                     var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
-                    svgVisual.OnPathChanged(GeometrySvg ?? throw new Exception("svg path is not defined"));
+                    if (_geometrySvgChanged || svgVisual.SVGPath is null)
+                        svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
                 }
 
                 _ = everFetched.Add(point);
