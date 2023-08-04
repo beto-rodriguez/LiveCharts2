@@ -421,6 +421,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
         var u = new Scaler(); // dummy scaler, this is not used in the SoftDeleteOrDisposePoint method.
         pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
+        IsFirstDraw = false;
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
