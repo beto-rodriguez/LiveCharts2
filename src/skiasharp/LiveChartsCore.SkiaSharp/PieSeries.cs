@@ -42,6 +42,12 @@ public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeomet
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
     /// </summary>
+    public PieSeries() : base(false, false)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+    /// </summary>
     /// <param name="isGauge"></param>
     /// <param name="isGaugeFill"></param>
     public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
@@ -64,6 +70,12 @@ public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeomet
 public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeometry>
     where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+    /// </summary>
+    public PieSeries() : base(false, false)
+    { }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual}"/> class.
     /// </summary>
@@ -93,6 +105,12 @@ public class PieSeries<TModel, TVisual, TLabel> : PieSeries<TModel, TVisual, TLa
     where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+    /// </summary>
+    public PieSeries() : base(false, false)
+    { }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>
