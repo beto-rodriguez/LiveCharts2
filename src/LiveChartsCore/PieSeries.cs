@@ -407,6 +407,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
+
+                if (IsFirstDraw)
+                    label.CompleteTransition(
+                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
             }
 
             OnPointMeasured(point);
@@ -578,8 +582,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                     + 0.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
                 break;
             case PolarLabelsPosition.Middle:
+                var f = (SeriesProperties & SeriesProperties.Gauge) != 0 ? 0.5f : 0.65f;
                 angle = startAngle + sweepAngle * 0.5f;
-                radius = innerRadius + (outerRadius - innerRadius) * 0.65f;
+                radius = innerRadius + (outerRadius - innerRadius) * f;
                 break;
             case PolarLabelsPosition.ChartCenter:
                 return new LvcPoint(centerX, centerY);
