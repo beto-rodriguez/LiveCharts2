@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.NightingaleRose;
 

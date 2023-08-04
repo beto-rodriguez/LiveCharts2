@@ -3,23 +3,31 @@ using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore.SkiaSharpView.Extensions;
+using LiveChartsCore.Defaults;
 
 namespace ViewModelsSamples.Pies.Gauge4;
 
 public partial class ViewModel : ObservableObject
 {
-    public IEnumerable<ISeries> Series { get; set; }
-        = new GaugeBuilder()
-        .WithLabelsSize(20)
-        .WithLabelsPosition(PolarLabelsPosition.End)
-        .WithLabelFormatter(point => point.Coordinate.PrimaryValue.ToString())
-        .WithInnerRadius(20)
-        .WithMaxColumnWidth(5)
-        .WithBackground(null)
+    public IEnumerable<ISeries> Series { get; set; } =
+        GaugeGenerator.Build(
+                new GaugeItem(50, series => SetStyle("Vanessa", series)),
+                new GaugeItem(80, series => SetStyle("Charles", series)),
+                new GaugeItem(95, series => SetStyle("Ana", series)),
+                new GaugeItem(GaugeItem.Background, series =>
+                {
+                    series.Fill = null;
+                }));
 
-        .AddValue(50, "Vanessa")
-        .AddValue(80, "Charles")
-        .AddValue(95, "Ana")
-
-        .BuildSeries();
+    public static void SetStyle(string name, PieSeries<ObservableValue> series)
+    {
+        series.Name = name;
+        series.DataLabelsSize = 20;
+        series.DataLabelsPosition = PolarLabelsPosition.End;
+        series.DataLabelsFormatter =
+                point => point.Coordinate.PrimaryValue.ToString();
+        series.InnerRadius = 20;
+        series.MaxRadialColumnWidth = 5;
+    }
 }
