@@ -55,32 +55,31 @@ public static class GaugeGenerator
         var count = seriesRules.Count;
         var i = 0;
 
-        var series = new ObservableCollection<PieSeries<ObservableValue>>(
-            seriesRules.Select(item =>
-            {
-                Action<ObservableValue, PieSeries<ObservableValue>>? l =
-                    item.Builder is null ? null : (m, s) => { item.Builder?.Invoke(s); };
+        var series = seriesRules.Select(item =>
+        {
+            Action<ObservableValue, PieSeries<ObservableValue>>? l =
+                item.Builder is null ? null : (m, s) => { item.Builder?.Invoke(s); };
 
-                return PieChartExtensions.AsSeries<ObservableValue, PieSeries<ObservableValue>>(
-                    item.Value,
-                    l ?? ((x, x1) => { }),
-                    i++,
-                    count,
-                    GaugeOptions.Gauge);
-            }));
+            return PieChartExtensions.AsSeries(
+                item.Value,
+                l ?? ((x, x1) => { }),
+                i++,
+                count,
+                GaugeOptions.Gauge);
+        });
+
+        var fillSeriesValues = new List<ObservableValue>();
+        while (fillSeriesValues.Count < items.Length - 1) fillSeriesValues.Add(new ObservableValue(0));
 
         var backgroundSeries = new PieSeries<ObservableValue>(true, true)
         {
             ZIndex = -1,
             IsFillSeries = true,
-            Values = new ObservableValue[] { new(0) }
+            Values = fillSeriesValues
         };
 
-        foreach (var rule in backgroundRules)
-            rule.Builder?.Invoke(backgroundSeries);
+        foreach (var rule in backgroundRules) rule.Builder?.Invoke(backgroundSeries);
 
-        series.Add(backgroundSeries);
-
-        return series;
+        return new ObservableCollection<PieSeries<ObservableValue>>(series.Concat(new[] { backgroundSeries }));
     }
 }
