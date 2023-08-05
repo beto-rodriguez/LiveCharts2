@@ -31,15 +31,38 @@ namespace LiveChartsCore.SkiaSharpView.Extensions;
 public static class GaugeGenerator
 {
     /// <summary>
-    /// Builds a Gauge, it generates a series collectio of
+    /// Builds a solid Gauge, it generates a series collectio of
     /// <see cref="PieSeries{ObservableValue, DoughnutGeometry, LabelGeometry}"/>, these series
     /// are ready to be plotted in a pie chart, and will render the gauge, this reuses all the power and
     /// functionality of the <see cref="PieChart{TDrawingContext}"/> class.
     /// </summary>
-    /// <param name="items"></param>
-    /// <returns></returns>
-    public static ObservableCollection<PieSeries<ObservableValue>> Build(
+    /// <param name="items">The items.</param>
+    /// <returns>A series collection of pie seires.</returns>
+    public static ObservableCollection<PieSeries<ObservableValue>> BuildSolidGauge(
         params GaugeItem[] items)
+    {
+        if (!items.Any(x => x.IsFillSeriesBuilder))
+            items = items.Concat(new[] { new GaugeItem(GaugeItem.Background) }).ToArray();
+
+        return Build(GaugeOptions.Solid, items);
+    }
+
+    /// <summary>
+    /// Builds an angular Gauge, it generates a series collectio of
+    /// <see cref="PieSeries{ObservableValue, DoughnutGeometry, LabelGeometry}"/>, these series
+    /// are ready to be plotted in a pie chart, and will render the gauge, this reuses all the power and
+    /// functionality of the <see cref="PieChart{TDrawingContext}"/> class.
+    /// </summary>
+    /// <param name="items">The items.</param>
+    /// <returns>A series collection of pie seires.</returns>
+    public static ObservableCollection<PieSeries<ObservableValue>> BuildAngularGauge(
+        params GaugeItem[] items)
+    {
+        return Build(GaugeOptions.Angular, items);
+    }
+
+    private static ObservableCollection<PieSeries<ObservableValue>> Build(
+        GaugeOptions options, params GaugeItem[] items)
     {
         List<GaugeItem> seriesRules = new();
         List<GaugeItem> backgroundRules = new();
@@ -65,7 +88,7 @@ public static class GaugeGenerator
                 l ?? ((x, x1) => { }),
                 i++,
                 count,
-                GaugeOptions.Gauge);
+                options);
         });
 
         var fillSeriesValues = new List<ObservableValue>();

@@ -18,7 +18,7 @@ public partial class ViewModel : ObservableObject
         ObservableValue1 = new ObservableValue { Value = 50 };
         ObservableValue2 = new ObservableValue { Value = 80 };
 
-        Series = GaugeGenerator.Build(
+        Series = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(ObservableValue1, series =>
             {
                 series.Name = "North";

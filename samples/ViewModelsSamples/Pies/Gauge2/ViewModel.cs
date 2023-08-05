@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Pies.Gauge2;
 public partial class ViewModel : ObservableObject
 {
     public IEnumerable<ISeries> Series { get; set; } =
-        GaugeGenerator.Build(
+        GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.Fill = new SolidColorPaint(SKColors.YellowGreen);

@@ -33,12 +33,14 @@ public enum GaugeOptions
     /// Not a gauge.
     /// </summary>
     None,
+
     /// <summary>
-    /// A gauge.
+    /// A solid gauge.
     /// </summary>
-    Gauge,
+    Solid,
+
     /// <summary>
     /// An angular gauge.
     /// </summary>
-    AngularGauge
+    Angular
 }

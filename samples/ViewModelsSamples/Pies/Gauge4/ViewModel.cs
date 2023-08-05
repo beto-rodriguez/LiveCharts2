@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Pies.Gauge4;
 public partial class ViewModel : ObservableObject
 {
     public IEnumerable<ISeries> Series { get; set; } =
-        GaugeGenerator.Build(
+        GaugeGenerator.BuildSolidGauge(
                 new GaugeItem(50, series => SetStyle("Vanessa", series)),
                 new GaugeItem(80, series => SetStyle("Charles", series)),
                 new GaugeItem(95, series => SetStyle("Ana", series)),

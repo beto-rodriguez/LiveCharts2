@@ -17,7 +17,7 @@ public partial class ViewModel : ObservableObject
     public ViewModel()
     {
         GaugeTotal1 = 100;
-        Series1 = GaugeGenerator.Build(
+        Series1 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.DataLabelsSize = 80;
@@ -31,7 +31,7 @@ public partial class ViewModel : ObservableObject
 
         GaugeTotal2 = 100;
         InitialRotation2 = -90;
-        Series2 = GaugeGenerator.Build(
+        Series2 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.DataLabelsSize = 80;
@@ -45,7 +45,7 @@ public partial class ViewModel : ObservableObject
 
         GaugeTotal3 = 100;
         InitialRotation3 = -90;
-        Series3 = GaugeGenerator.Build(
+        Series3 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.DataLabelsSize = 60;
@@ -54,7 +54,7 @@ public partial class ViewModel : ObservableObject
 
         GaugeTotal4 = 100;
         InitialRotation4 = -90;
-        Series4 = GaugeGenerator.Build(
+        Series4 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.DataLabelsSize = 50;
@@ -69,7 +69,7 @@ public partial class ViewModel : ObservableObject
 
         GaugeTotal5 = 100;
         InitialRotation5 = -90;
-        Series5 = GaugeGenerator.Build(
+        Series5 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.DataLabelsSize = 50;
@@ -84,7 +84,7 @@ public partial class ViewModel : ObservableObject
 
         GaugeTotal6 = 100;
         InitialRotation6 = -90;
-        Series6 = GaugeGenerator.Build(
+        Series6 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
@@ -99,7 +99,7 @@ public partial class ViewModel : ObservableObject
 
         GaugeTotal7 = 100;
         InitialRotation7 = -90;
-        Series7 = GaugeGenerator.Build(
+        Series7 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
@@ -115,7 +115,7 @@ public partial class ViewModel : ObservableObject
         GaugeTotal8 = 100;
         InitialRotation8 = -225;
         MaxAngle8 = 270;
-        Series8 = GaugeGenerator.Build(
+        Series8 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
@@ -131,7 +131,7 @@ public partial class ViewModel : ObservableObject
         GaugeTotal9 = 100;
         InitialRotation9 = 315;
         MaxAngle9 = 270;
-        Series9 = GaugeGenerator.Build(
+        Series9 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
@@ -147,7 +147,7 @@ public partial class ViewModel : ObservableObject
         GaugeTotal10 = 100;
         InitialRotation10 = -200;
         MaxAngle10 = 220;
-        Series10 = GaugeGenerator.Build(
+        Series10 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series =>
             {
                 series.Fill = new SolidColorPaint(new SKColor(30, 33, 45));
@@ -176,7 +176,7 @@ public partial class ViewModel : ObservableObject
             series.InnerRadius = 20;
         }
 
-        Series11 = GaugeGenerator.Build(
+        Series11 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series => SetStyle11("Vanessa", series)),
             new GaugeItem(50, series => SetStyle11("Charles", series)),
             new GaugeItem(70, series => SetStyle11("Ana", series)),
@@ -198,7 +198,7 @@ public partial class ViewModel : ObservableObject
             series.RelativeOuterRadius = 8;
         }
 
-        Series12 = GaugeGenerator.Build(
+        Series12 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series => SetStyle12("Vanessa", series)),
             new GaugeItem(50, series => SetStyle12("Charles", series)),
             new GaugeItem(70, series => SetStyle12("Ana", series)),
@@ -220,7 +220,7 @@ public partial class ViewModel : ObservableObject
             series.RelativeOuterRadius = 4;
         }
 
-        Series13 = GaugeGenerator.Build(
+        Series13 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series => SetStyle13("Vanessa", series)),
             new GaugeItem(50, series => SetStyle13("Charles", series)),
             new GaugeItem(70, series => SetStyle13("Ana", series)),
@@ -245,7 +245,7 @@ public partial class ViewModel : ObservableObject
             series.MaxRadialColumnWidth = 5;
         }
 
-        Series14 = GaugeGenerator.Build(
+        Series14 = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(30, series => SetStyle14("Vanessa", series)),
             new GaugeItem(50, series => SetStyle14("Charles", series)),
             new GaugeItem(70, series => SetStyle14("Ana", series)),

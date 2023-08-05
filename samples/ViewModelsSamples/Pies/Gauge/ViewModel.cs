@@ -26,7 +26,7 @@ public class ViewModel : INotifyPropertyChanged
         GaugeTotal = 60;
         _initialRotation = 135;
 
-        Series = GaugeGenerator.Build(
+        Series = GaugeGenerator.BuildSolidGauge(
             new GaugeItem(10, SetStyle),
             new GaugeItem(25, SetStyle),
             new GaugeItem(50, SetStyle),

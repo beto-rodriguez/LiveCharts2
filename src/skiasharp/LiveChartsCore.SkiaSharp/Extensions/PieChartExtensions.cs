@@ -130,7 +130,7 @@ public static class PieChartExtensions
         }
 
         ObservableCollection<TModel> values;
-        if (gaugeOptions == GaugeOptions.Gauge)
+        if (gaugeOptions == GaugeOptions.Solid)
         {
             values = new ObservableCollection<TModel>();
             while (values.Count < count - 1)
@@ -138,7 +138,9 @@ public static class PieChartExtensions
             values.Insert(i, instance);
         }
         else
+        {
             values = new ObservableCollection<TModel> { instance };
+        }
 
         series.Values = values;
 
