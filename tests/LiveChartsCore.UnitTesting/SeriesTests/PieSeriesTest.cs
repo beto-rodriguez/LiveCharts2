@@ -379,7 +379,7 @@ public class PieSeriesTest
         #region outer
 
         foreach (var series in seriesCollection) series.InnerRadius = 0;
-        foreach (var series in seriesCollection) series.MaxOuterRadius = 0.5;
+        foreach (var series in seriesCollection) series.OuterRadiusOffset = 10;
 
         foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
         _ = chart.GetImage();
@@ -482,7 +482,7 @@ public class PieSeriesTest
         #region inner and outer
 
         foreach (var series in seriesCollection) series.InnerRadius = 50;
-        foreach (var series in seriesCollection) series.MaxOuterRadius = 0.75;
+        foreach (var series in seriesCollection) series.OuterRadiusOffset = 10;
 
         foreach (var series in seriesCollection) series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
         _ = chart.GetImage();

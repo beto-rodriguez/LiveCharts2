@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
@@ -50,11 +51,20 @@ public interface IPieSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IS
     double InnerRadius { get; set; }
 
     /// <summary>
-    /// Gets or sets the maximum outer, the value goes from 0 to 1, where 1 is the full available radius and 0 is none.
+    /// Gets or sets the outer radius offset, it is the distance from the maximum radius available to the end of the slice [in pixels].
     /// </summary>
     /// <value>
     /// The maximum outer radius.
     /// </value>
+    double OuterRadiusOffset { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum outer radius, the value goes from 0 to 1, where 1 is the full available radius and 0 is none.
+    /// </summary>
+    /// <value>
+    /// The maximum outer radius.
+    /// </value>
+    [Obsolete($"Replaced by {nameof(OuterRadiusOffset)}")]
     double MaxOuterRadius { get; set; }
 
     /// <summary>
@@ -108,7 +118,7 @@ public interface IPieSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IS
     RadialAlignment RadialAlign { get; set; }
 
     /// <summary>
-    /// Gets or sets the relative inner radius, it is the extra inner radius for every stacked slice.
+    /// Gets or sets the relative inner radius, it is the extra inner radius for every stacked slice in pixels.
     /// </summary>
     /// <value>
     /// The inner padding.
@@ -116,7 +126,7 @@ public interface IPieSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IS
     double RelativeInnerRadius { get; set; }
 
     /// <summary>
-    /// Gets or sets the relative outer radius, it is the decrement in the outer radius for every stacked slice.
+    /// Gets or sets the relative outer radius, it is the decrement in the outer radius for every stacked slice in pixels.
     /// </summary>
     /// <value>
     /// The inner padding.

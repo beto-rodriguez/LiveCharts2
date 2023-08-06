@@ -53,6 +53,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     private double _pushout = 0;
     private double _innerRadius = 0;
     private double _maxOuterRadius = 1;
+    private double _outerRadiusOffset = 0;
     private double _hoverPushout = 20;
     private double _innerPadding = 0;
     private double _outerPadding = 0;
@@ -102,7 +103,11 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.InnerRadius"/>
     public double InnerRadius { get => _innerRadius; set => SetProperty(ref _innerRadius, value); }
 
+    /// <inheritdoc cref="IPieSeries{TDrawingContext}.OuterRadiusOffset"/>
+    public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
+
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxOuterRadius"/>
+    [Obsolete($"Use {nameof(OuterRadiusOffset)} instead.")]
     public double MaxOuterRadius { get => _maxOuterRadius; set => SetProperty(ref _maxOuterRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
@@ -157,10 +162,14 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var maxPushout = (float)pieChart.PushoutBounds.Max;
         var pushout = (float)Pushout;
         var innerRadius = (float)InnerRadius;
-        var maxOuterRadius = (float)MaxOuterRadius;
 
         minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
+
+        var maxOuterRadius = (float)MaxOuterRadius;
         minDimension *= maxOuterRadius;
+
+        var outerRadiusOffset = (float)OuterRadiusOffset;
+        minDimension += outerRadiusOffset;
 
         var view = (IPieChartView<TDrawingContext>)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
