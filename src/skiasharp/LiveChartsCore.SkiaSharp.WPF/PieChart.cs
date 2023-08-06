@@ -113,6 +113,13 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         DependencyProperty.Register(
             nameof(Total), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
+    /// <summary>
+    /// The start property
+    /// </summary>
+    public static readonly DependencyProperty StartProperty =
+        DependencyProperty.Register(
+            nameof(Start), typeof(double), typeof(PieChart), new PropertyMetadata(0, OnDependencyPropertyChanged));
+
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
@@ -148,6 +155,13 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         get => (double?)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
+    public double Start
+    {
+        get => (double)GetValue(StartProperty);
+        set => SetValue(StartProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>

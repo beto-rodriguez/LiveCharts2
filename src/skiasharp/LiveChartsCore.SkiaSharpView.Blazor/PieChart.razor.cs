@@ -41,6 +41,7 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     private bool _isClockwise = true;
     private double _maxAngle = 360;
     private double? _total;
+    private double _start;
 
     /// <summary>
     /// Called when the control is initialized.
@@ -87,6 +88,10 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
     [Parameter]
     public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
+    [Parameter]
+    public double Start { get => _start; set { _start = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)

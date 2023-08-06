@@ -45,6 +45,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     private double _initialRotation;
     private double _maxAngle = 360;
     private double? _total;
+    private double _start;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
@@ -99,6 +100,9 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
     public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
+    public double Start { get => _start; set { _start = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)

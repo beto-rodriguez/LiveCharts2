@@ -160,6 +160,13 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
             nameof(Total), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
+    /// The start property
+    /// </summary>
+    public static readonly DependencyProperty StartProperty =
+        DependencyProperty.Register(
+            nameof(Start), typeof(double), typeof(PieChart), new PropertyMetadata(, OnDependencyPropertyChanged));
+
+    /// <summary>
     /// The draw margin property
     /// </summary>
     public static readonly DependencyProperty DrawMarginProperty =
@@ -396,6 +403,13 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     {
         get => (double?)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
+    public double Start
+    {
+        get => (double)GetValue(StartProperty);
+        set => SetValue(StartProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />

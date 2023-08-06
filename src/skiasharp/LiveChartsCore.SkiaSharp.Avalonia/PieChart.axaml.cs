@@ -160,6 +160,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         AvaloniaProperty.Register<PieChart, double?>(nameof(Total), null, inherits: true);
 
     /// <summary>
+    /// The start property
+    /// </summary>
+    public static readonly AvaloniaProperty<double> StartProperty =
+        AvaloniaProperty.Register<PieChart, double>(nameof(Start), 0, inherits: true);
+
+    /// <summary>
     /// The animations speed property
     /// </summary>
     public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
@@ -385,6 +391,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     {
         get => (double?)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
+    public double Start
+    {
+        get => (double)GetValue(StartProperty)!;
+        set => SetValue(StartProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />

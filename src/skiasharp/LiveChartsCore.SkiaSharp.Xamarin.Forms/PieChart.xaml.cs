@@ -174,6 +174,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             nameof(Total), typeof(double?), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
+    /// The start property
+    /// </summary>
+    public static readonly BindableProperty StartProperty =
+        BindableProperty.Create(
+            nameof(Start), typeof(double), typeof(PieChart), 0, BindingMode.Default, null, OnBindablePropertyChanged);
+
+    /// <summary>
     /// The draw margin property
     /// </summary>
     public static readonly BindableProperty DrawMarginProperty =
@@ -408,6 +415,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         get => (double?)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
+    public double Start
+    {
+        get => (double)GetValue(StartProperty);
+        set => SetValue(StartProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
