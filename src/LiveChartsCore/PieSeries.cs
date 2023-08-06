@@ -174,6 +174,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var view = (IPieChartView<TDrawingContext>)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
+
+        var startValue = (float)view.Start;
         var chartTotal = (float?)view.Total;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
@@ -302,7 +304,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             else
             {
                 start = stackedValue / total * completeAngle;
-                sweep = (stackedValue + coordinate.PrimaryValue) / total * completeAngle - start;
+                var p = (stackedValue + coordinate.PrimaryValue - startValue) / (total - startValue);
+                sweep = p * completeAngle - start;
                 if (!isClockWise) start = completeAngle - start - sweep;
             }
 
@@ -374,7 +377,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null && coordinate.PrimaryValue >= 0)
+            var hasValue = Math.Abs(coordinate.PrimaryValue) > 0.00001; // <- this will improved in the future
+            if (DataLabelsPaint is not null && hasValue)
             {
                 var label = (TLabel?)point.Context.Label;
 
