@@ -78,9 +78,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
            (object sender, NotifyCollectionChangedEventArgs e) => core?.Update(),
            (object sender, PropertyChangedEventArgs e) => core?.Update());
 
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
-        SyncContext = new();
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new object());
 
         canvas.SkCanvasView.EnableTouchEvents = true;
         canvas.SkCanvasView.Touch += OnSkCanvasTouched;

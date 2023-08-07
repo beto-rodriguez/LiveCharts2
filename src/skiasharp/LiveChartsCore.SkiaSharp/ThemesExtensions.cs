@@ -63,12 +63,14 @@ public static class ThemesExtensions
                         axis.TextSize = 16;
                         axis.ShowSeparatorLines = true;
                         axis.NamePaint = new SolidColorPaint(new SKColor(35, 35, 35));
-                        axis.LabelsPaint = new SolidColorPaint(new SKColor(70, 70, 70));
+                        axis.LabelsPaint = new SolidColorPaint(new SKColor(70, 70, 70, 70))
+                        {
+                            SKTypeface = SKTypeface.FromFamilyName("Segoe UI", SKFontStyle.Bold)
+                        };
                         if (axis is ICartesianAxis cartesian)
                         {
-                            axis.SeparatorsPaint = cartesian.Orientation == AxisOrientation.X
-                                ? null
-                                : new SolidColorPaint(new SKColor(235, 235, 235));
+                            axis.SeparatorsPaint =
+                                new SolidColorPaint(new SKColor(100, 100, 10));
                             cartesian.Padding = new Padding(12);
                         }
                         else
