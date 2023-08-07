@@ -71,6 +71,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new object());
     }
 
     #region dependency properties
@@ -119,7 +120,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
-            nameof(SyncContext), typeof(object), typeof(PieChart), new PropertyMetadata(new(),
+            nameof(SyncContext), typeof(object), typeof(PieChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (PieChart)o;

@@ -73,6 +73,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetCurrentValue(SyncContextProperty, new object());
 
         MouseWheel += OnMouseWheel;
         MouseDown += OnMouseDown;

@@ -99,6 +99,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        SyncContext = new();
 
         canvas.SkCanvasView.EnableTouchEvents = true;
         canvas.SkCanvasView.Touch += OnSkCanvasTouched;
@@ -116,7 +117,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(CartesianChart), new(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(CartesianChart), null, BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (CartesianChart)o;

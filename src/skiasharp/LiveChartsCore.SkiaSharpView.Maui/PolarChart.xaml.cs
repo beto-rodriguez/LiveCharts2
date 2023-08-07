@@ -88,6 +88,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
             };
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        SyncContext = new();
 
         if (_core is null) throw new Exception("Core not found!");
         _core.Measuring += OnCoreMeasuring;
@@ -102,7 +103,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(PolarChart), new(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(PolarChart), null, BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (PolarChart)o;
