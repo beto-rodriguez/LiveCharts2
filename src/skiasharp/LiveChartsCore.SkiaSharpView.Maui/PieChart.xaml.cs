@@ -77,9 +77,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
           (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
-        SyncContext = new();
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new object());
 
         if (_core is null) throw new Exception("Core not found!");
         _core.Measuring += OnCoreMeasuring;
