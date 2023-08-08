@@ -90,6 +90,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new());
     }
 
     #region dependency properties
@@ -186,7 +187,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
-            nameof(SyncContext), typeof(object), typeof(CartesianChart), new PropertyMetadata(new(),
+            nameof(SyncContext), typeof(object), typeof(CartesianChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (CartesianChart)o;

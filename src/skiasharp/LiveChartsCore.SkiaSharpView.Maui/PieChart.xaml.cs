@@ -79,6 +79,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        SyncContext = new();
 
         if (_core is null) throw new Exception("Core not found!");
         _core.Measuring += OnCoreMeasuring;
@@ -93,7 +94,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(PieChart), new(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(PieChart), null, BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (PieChart)o;

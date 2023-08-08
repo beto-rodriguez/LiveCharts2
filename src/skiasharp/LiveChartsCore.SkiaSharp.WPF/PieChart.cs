@@ -60,6 +60,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetCurrentValue(SyncContextProperty, new object());
         MouseDown += OnMouseDown;
 
         tooltip = new SKDefaultTooltip();

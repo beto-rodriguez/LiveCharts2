@@ -84,6 +84,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
             });
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new object());
     }
 
     #region dependency properties
@@ -196,7 +197,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// </summary>
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
-            nameof(SyncContext), typeof(object), typeof(PolarChart), new PropertyMetadata(new(),
+            nameof(SyncContext), typeof(object), typeof(PolarChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (PolarChart)o;
