@@ -119,7 +119,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly DependencyProperty StartProperty =
         DependencyProperty.Register(
-            nameof(Start), typeof(double), typeof(PieChart), new PropertyMetadata(0, OnDependencyPropertyChanged));
+            nameof(Start), typeof(double), typeof(PieChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
 
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
