@@ -21,7 +21,7 @@ public partial class ViewModel : ObservableObject
 
             series.InnerRadius = 50;
             series.OuterRadiusOffset = outer;
-            outer -= 50;
+            outer += 50;
         });
     }
 

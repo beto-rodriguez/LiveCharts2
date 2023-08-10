@@ -169,7 +169,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         minDimension *= maxOuterRadius;
 
         var outerRadiusOffset = (float)OuterRadiusOffset;
-        minDimension += outerRadiusOffset;
+        minDimension -= outerRadiusOffset;
 
         var view = (IPieChartView<TDrawingContext>)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
@@ -349,11 +349,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             var md = minDimension;
             var stackedOuterRadius = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
 
-            var x = (drawMarginSize.Width - stackedOuterRadius) * 0.5f;
-
             dougnutGeometry.CenterX = cx;
             dougnutGeometry.CenterY = cy;
-            dougnutGeometry.X = drawLocation.X + x;
+            dougnutGeometry.X = drawLocation.X + (drawMarginSize.Width - stackedOuterRadius) * 0.5f;
             dougnutGeometry.Y = drawLocation.Y + (drawMarginSize.Height - stackedOuterRadius) * 0.5f;
             dougnutGeometry.Width = stackedOuterRadius;
             dougnutGeometry.Height = stackedOuterRadius;

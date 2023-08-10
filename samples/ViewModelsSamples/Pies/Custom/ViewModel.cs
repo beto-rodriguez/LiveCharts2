@@ -29,7 +29,7 @@ public partial class ViewModel : ObservableObject
             // 0 to 1, where 1 is the full available radius and 0 is none.
 
             series.OuterRadiusOffset = outer;
-            outer -= 50;
+            outer += 50;
 
             series.DataLabelsPaint = new SolidColorPaint(SKColors.White)
             {
