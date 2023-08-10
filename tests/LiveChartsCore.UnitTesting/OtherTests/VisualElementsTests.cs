@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -44,12 +45,22 @@ public class VisualElementsTests
             new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>(),
             new GeometryVisual<RectangleGeometry>(),
             new VariableGeometryVisual<SkiaSharpDrawingContext>(new RectangleGeometry()),
+            new NeedleVisual
+            {
+                Fill = new SolidColorPaint(SKColors.Red)
+            },
+            new AngularTicksVisual
+            {
+                Stroke = new SolidColorPaint(SKColors.Black),
+                LabelsPaint = new SolidColorPaint(SKColors.Blue)
+            }
         };
 
-        var chart = new SKCartesianChart
+        var chart = new SKPieChart
         {
             Width = 1000,
-            Height = 1000
+            Height = 1000,
+            Total = 100
         };
 
         void Draw()
