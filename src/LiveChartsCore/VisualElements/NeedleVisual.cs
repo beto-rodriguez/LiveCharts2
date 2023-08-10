@@ -39,7 +39,13 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _fill;
+    private double _value;
     private TGeometry? _geometry;
+
+    /// <summary>
+    /// Gets or sets the value.
+    /// </summary>
+    public double Value { get => _value; set => SetProperty(ref _value, value); }
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -53,7 +59,8 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
-        var pieChart = (PieChart<TDrawingContext>)chart;
+        if (chart is not PieChart<TDrawingContext> pieChart)
+            throw new Exception("The needle visual can only be added to a pie chart");
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
@@ -67,6 +74,15 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
 
         var h = minDimension * 0.45f;
 
+        var view = (IPieChartView<TDrawingContext>)pieChart.View;
+        var initialRotation = (float)Math.Truncate(view.InitialRotation);
+        var completeAngle = (float)view.MaxAngle;
+
+        if (view.Total is null) throw new Exception("The total property is required.");
+
+        var startValue = view.Start;
+        var endValue = view.Total.Value;
+
         if (_geometry is null)
         {
             _geometry = new()
@@ -74,7 +90,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
                 X = cx,
                 Y = cy,
                 Radius = h,
-                RotateTransform = 90
+                RotateTransform = initialRotation - 90
             };
             _geometry.Animate(chart);
         }
@@ -83,7 +99,8 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         _geometry.Y = cy;
         _geometry.Radius = h;
 
-        _geometry.RotateTransform = (float)Rotation;
+        var p = (Value - startValue) / (endValue - startValue);
+        _geometry.RotateTransform = (float)(initialRotation + p * completeAngle - 90); // -90 to match the pie start angle
         _geometry.TranslateTransform = Translate;
 
         if (Fill is not null)

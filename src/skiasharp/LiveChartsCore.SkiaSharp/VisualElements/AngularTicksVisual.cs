@@ -26,6 +26,8 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <inheritdoc cref="NeedleVisual{TGeometry, TLabelGeometry, TDrawingContext}"/>
-public class NeedleVisual : NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>
+/// <summary>
+/// Defines the angulaar ticks visual.
+/// </summary>
+public class AngularTicksVisual : AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>
 { }
