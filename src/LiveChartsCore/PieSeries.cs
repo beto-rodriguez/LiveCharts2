@@ -303,9 +303,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             }
             else
             {
+                var h = total - startValue;
+                var h1 = stackedValue + coordinate.PrimaryValue - startValue;
                 start = stackedValue / total * completeAngle;
-                var p = (stackedValue + coordinate.PrimaryValue - startValue) / (total - startValue);
-                sweep = p * completeAngle - start;
+                sweep = h1 / h * completeAngle - start;
                 if (!isClockWise) start = completeAngle - start - sweep;
             }
 
