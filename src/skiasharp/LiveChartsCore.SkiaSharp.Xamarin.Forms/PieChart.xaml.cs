@@ -659,6 +659,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
         core.InvokePointerDown(location, false);
         core.InvokePointerMove(location);
+        _closeTooltipTimer.Stop();
+        _closeTooltipTimer.Start();
 
         Touched?.Invoke(this, e);
     }

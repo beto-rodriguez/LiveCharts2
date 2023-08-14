@@ -753,6 +753,8 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
         core.InvokePointerDown(location, false);
         core.InvokePointerMove(location);
+        _closeTooltipTimer.Stop();
+        _closeTooltipTimer.Start();
 
         Touched?.Invoke(this, e);
     }
