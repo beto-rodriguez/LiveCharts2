@@ -156,14 +156,14 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The total property
     /// </summary>
-    public static readonly AvaloniaProperty<double?> TotalProperty =
-        AvaloniaProperty.Register<PieChart, double?>(nameof(Total), null, inherits: true);
+    public static readonly AvaloniaProperty<double?> MaxValueProperty =
+        AvaloniaProperty.Register<PieChart, double?>(nameof(MaxValue), null, inherits: true);
 
     /// <summary>
     /// The start property
     /// </summary>
-    public static readonly AvaloniaProperty<double> StartProperty =
-        AvaloniaProperty.Register<PieChart, double>(nameof(Start), 0, inherits: true);
+    public static readonly AvaloniaProperty<double> MinValueProperty =
+        AvaloniaProperty.Register<PieChart, double>(nameof(MinValue), 0, inherits: true);
 
     /// <summary>
     /// The animations speed property
@@ -387,17 +387,25 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+    [Obsolete($"Use {nameof(MaxValue)} instead.")]
     public double? Total
     {
-        get => (double?)GetValue(TotalProperty);
-        set => SetValue(TotalProperty, value);
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
-    public double Start
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    public double MinValue
     {
-        get => (double)GetValue(StartProperty)!;
-        set => SetValue(StartProperty, value);
+        get => (double)GetValue(MinValueProperty)!;
+        set => SetValue(MinValueProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    public double? MaxValue
+    {
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />

@@ -110,16 +110,16 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The total property
     /// </summary>
-    public static readonly DependencyProperty TotalProperty =
+    public static readonly DependencyProperty MaxValueProperty =
         DependencyProperty.Register(
-            nameof(Total), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(MaxValue), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The start property
     /// </summary>
-    public static readonly DependencyProperty StartProperty =
+    public static readonly DependencyProperty MinValueProperty =
         DependencyProperty.Register(
-            nameof(Start), typeof(double), typeof(PieChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+            nameof(MinValue), typeof(double), typeof(PieChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
 
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
@@ -152,17 +152,25 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+    [Obsolete($"Use {nameof(MaxValue)} instead.")]
     public double? Total
     {
-        get => (double?)GetValue(TotalProperty);
-        set => SetValue(TotalProperty, value);
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
-    public double Start
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    public double? MaxValue
     {
-        get => (double)GetValue(StartProperty);
-        set => SetValue(StartProperty, value);
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    public double MinValue
+    {
+        get => (double)GetValue(MinValueProperty);
+        set => SetValue(MinValueProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>

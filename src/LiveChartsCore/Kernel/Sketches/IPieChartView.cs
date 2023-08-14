@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
@@ -70,12 +71,20 @@ public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
     /// Gets or sets the total, it is the maximum value a pie slice can represent, when this property is null, the <see cref="Total"/> property
     /// will be calculated automatically based on the series data. Default value is null.
     /// </summary>
+    [Obsolete($"Use {nameof(MaxValue)} instead.")]
     double? Total { get; set; }
 
     /// <summary>
-    /// Gets or sets the start value, it is the minimum value a pie slice can represent, default is 0.
+    /// Gets or sets the minimum valu, normally used in gauges to set the minimum value a pie slice can represent,
+    /// default is 0.
     /// </summary>
-    double Start { get; set; }
+    double MinValue { get; set; }
+
+    /// <summary>
+    /// Gets or sets the end value, normally used in gauges to set the maximum value a pie slice can represent,
+    /// default is null, and means the pie chart total sum.
+    /// </summary>
+    double? MaxValue { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the pie slices will be drawn clockwise, default is true.

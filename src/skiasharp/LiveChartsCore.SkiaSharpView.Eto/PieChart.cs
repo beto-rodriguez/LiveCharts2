@@ -43,8 +43,8 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     private bool _isClockwise = true;
     private double _initialRotation;
     private double _maxAngle = 360;
-    private double? _total;
-    private double _start;
+    private double? _maxValue;
+    private double _minValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
@@ -93,10 +93,14 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     public double MaxAngle { get => _maxAngle; set { _maxAngle = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
-    public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
+    [Obsolete($"Use {nameof(MaxValue)} instead.")]
+    public double? Total { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start" />
-    public double Start { get => _start; set { _start = value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    public double? MaxValue { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    public double Start { get => _minValue; set { _minValue = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
