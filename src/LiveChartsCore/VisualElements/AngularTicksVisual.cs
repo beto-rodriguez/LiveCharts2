@@ -92,7 +92,29 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
-        var pieChart = (PieChart<TDrawingContext>)chart;
+        if (chart is not PieChart<TDrawingContext> pieChart)
+            throw new Exception("The AngularThicksVisual can only be added to a pie chart");
+
+        _isInternalSet = true;
+        if (!_isThemeSet)
+        {
+            if (CanSetProperty(nameof(Stroke)))
+            {
+                Stroke = LiveCharts.DefaultSettings
+                    .GetProvider<TDrawingContext>()
+                    .GetSolidColorPaint(new LvcColor(30, 30, 30, 255));
+            }
+
+            if (CanSetProperty(nameof(LabelsPaint)))
+            {
+                LabelsPaint = LiveCharts.DefaultSettings
+                    .GetProvider<TDrawingContext>()
+                    .GetSolidColorPaint(new LvcColor(30, 30, 30, 255));
+            }
+
+            _isThemeSet = true;
+        }
+        _isInternalSet = false;
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
@@ -211,7 +233,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
 
         if (Stroke is not null)
         {
-            Stroke.ZIndex = Stroke.ZIndex == 0 ? 999 : Stroke.ZIndex;
+            Stroke.ZIndex = Stroke.ZIndex == 0 ? 998 : Stroke.ZIndex;
             Stroke.AddGeometryToPaintTask(chart.Canvas, _arc);
             pieChart.Canvas.AddDrawableTask(Stroke);
         }
