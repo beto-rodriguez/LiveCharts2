@@ -140,6 +140,14 @@ public static class PieChartExtensions
         else
         {
             values = new ObservableCollection<TModel> { instance };
+            if (gaugeOptions == GaugeOptions.Angular)
+            {
+                series.HoverPushout = 0;
+                series.IsHoverable = false;
+                series.HoverPushout = 0;
+                series.DataLabelsPaint = null;
+                series.AnimationsSpeed = TimeSpan.FromSeconds(0);
+            }
         }
 
         series.Values = values;

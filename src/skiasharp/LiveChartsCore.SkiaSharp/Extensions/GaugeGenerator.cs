@@ -28,6 +28,9 @@ using LiveChartsCore.Defaults;
 
 namespace LiveChartsCore.SkiaSharpView.Extensions;
 
+/// <summary>
+/// The gauge generator class.
+/// </summary>
 public static class GaugeGenerator
 {
     /// <summary>
@@ -55,9 +58,12 @@ public static class GaugeGenerator
     /// </summary>
     /// <param name="items">The items.</param>
     /// <returns>A series collection of pie seires.</returns>
-    public static ObservableCollection<PieSeries<ObservableValue>> BuildAngularGauge(
+    public static ObservableCollection<PieSeries<ObservableValue>> BuildAngularGaugeSections(
         params GaugeItem[] items)
     {
+        if (!items.Any(x => x.IsFillSeriesBuilder))
+            items = items.Concat(new[] { new GaugeItem(GaugeItem.Background) }).ToArray();
+
         return Build(GaugeOptions.Angular, items);
     }
 
@@ -100,6 +106,14 @@ public static class GaugeGenerator
             IsFillSeries = true,
             Values = fillSeriesValues
         };
+
+        if (options == GaugeOptions.Angular)
+        {
+            backgroundSeries.HoverPushout = 0;
+            backgroundSeries.IsHoverable = false;
+            backgroundSeries.HoverPushout = 0;
+            backgroundSeries.DataLabelsPaint = null;
+        }
 
         foreach (var rule in backgroundRules) rule.Builder?.Invoke(backgroundSeries);
 
