@@ -49,6 +49,7 @@ public partial class ViewModel : ObservableObject
                 Color = s_gray2,
                 StrokeThickness = 0.5f
             },
+            SubseparatorsCount = 9,
             ZeroPaint = new SolidColorPaint
             {
                 Color = s_gray1,
@@ -99,6 +100,7 @@ public partial class ViewModel : ObservableObject
                 Color = s_gray2,
                 StrokeThickness = 0.5f
             },
+            SubseparatorsCount = 9,
             ZeroPaint = new SolidColorPaint
             {
                 Color = s_gray1,

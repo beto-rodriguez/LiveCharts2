@@ -145,6 +145,11 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     IPaint<TDrawingContext>? SubseparatorsPaint { get; set; }
 
     /// <summary>
+    /// Gets or sets the number of subseparators to draw.
+    /// </summary>
+    int SubseparatorsCount { get; set; }
+
+    /// <summary>
     /// Gets or sets whether the ticks path should be drawn.
     /// </summary>
     bool DrawTicksPath { get; set; }
