@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Timers;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -65,6 +66,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private DateTime _panLocketUntil;
     private double _lastPanX = 0;
     private double _lastPanY = 0;
+    private TimeSpan _tooltipCloseInterval = TimeSpan.FromMilliseconds(3500);
+    private readonly Timer _closeTooltipTimer = new();
 
     #endregion
 
@@ -108,6 +111,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         core.Measuring += OnCoreMeasuring;
         core.UpdateStarted += OnCoreUpdateStarted;
         core.UpdateFinished += OnCoreUpdateFinished;
+
+        _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
+        _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
     }
 
     #region bindable properties 
@@ -633,6 +639,14 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the interval to close a tooltip once the tooltip was opened.
+    /// </summary>
+    public TimeSpan TooltipCloseInterval
+    {
+        get => _tooltipCloseInterval;
+        set { _tooltipCloseInterval = value; _closeTooltipTimer.Interval = value.TotalMilliseconds; }
+    }
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -843,8 +857,21 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
         core.InvokePointerDown(location, false);
         core.InvokePointerMove(location);
+        _closeTooltipTimer.Stop();
+        _closeTooltipTimer.Start();
 
         Touched?.Invoke(this, e);
+    }
+
+    private void OnTooltipTimerEllapsed(object sender, ElapsedEventArgs e)
+    {
+        if (core is null) return;
+        MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Tooltip?.Hide(core);
+                core.Canvas.Invalidate();
+                _closeTooltipTimer.Stop();
+            });
     }
 
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
