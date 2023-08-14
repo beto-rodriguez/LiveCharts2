@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="WPFSample.Pies.AngularGauge.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AngularGauge;assembly=ViewModelsSamples"
+             MaxHeight="400"
+             MaxWidth="400">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Command="{Binding DoRandomChangeCommand}">Change Value</Button>
+
+        <lvc:PieChart
+            Grid.Row="1"
+            Series="{Binding Series}"
+            VisualElements="{Binding VisualElements}"
+            InitialRotation="-225"
+            MaxAngle="270"
+            MinValue="0"
+            MaxValue="100">
+        </lvc:PieChart>
+    </Grid>
+</UserControl>

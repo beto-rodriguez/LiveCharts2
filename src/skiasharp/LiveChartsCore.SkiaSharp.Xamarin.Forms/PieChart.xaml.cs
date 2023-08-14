@@ -78,8 +78,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
            (object sender, NotifyCollectionChangedEventArgs e) => core?.Update(),
            (object sender, PropertyChangedEventArgs e) => core?.Update());
 
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new object());
 
         canvas.SkCanvasView.EnableTouchEvents = true;
         canvas.SkCanvasView.Touch += OnSkCanvasTouched;
@@ -97,7 +98,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(PieChart), new(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(PieChart), null, BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (PieChart)o;
@@ -169,9 +170,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <summary>
     /// The total property
     /// </summary>
-    public static readonly BindableProperty TotalProperty =
+    public static readonly BindableProperty MaxValueProperty =
         BindableProperty.Create(
-            nameof(Total), typeof(double?), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+            nameof(MaxValue), typeof(double?), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+
+    /// <summary>
+    /// The start property
+    /// </summary>
+    public static readonly BindableProperty MinValueProperty =
+        BindableProperty.Create(
+            nameof(MinValue), typeof(double), typeof(PieChart), 0d, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
     /// The draw margin property
@@ -404,10 +412,25 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+    [Obsolete($"Use {nameof(MaxValue)} instead.")]
     public double? Total
     {
-        get => (double?)GetValue(TotalProperty);
-        set => SetValue(TotalProperty, value);
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    public double? MaxValue
+    {
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    public double MinValue
+    {
+        get => (double)GetValue(MinValueProperty);
+        set => SetValue(MinValueProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />

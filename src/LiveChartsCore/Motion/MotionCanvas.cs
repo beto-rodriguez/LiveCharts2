@@ -106,7 +106,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
             var toRemoveGeometries = new List<Tuple<IPaint<TDrawingContext>, IDrawable<TDrawingContext>>>();
 
-            foreach (var task in _paintTasks.OrderBy(x => x.ZIndex))
+            foreach (var task in _paintTasks.Where(x => x is not null).OrderBy(x => x.ZIndex))
             {
                 if (DisableAnimations) task.CompleteTransition(null);
                 task.IsValid = true;

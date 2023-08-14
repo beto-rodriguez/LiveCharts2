@@ -21,7 +21,8 @@
             Grid.Row="1"
             Series="{Binding Series}"
             InitialRotation="-90"
-            Total="100"
+            MinValue="0"
+            MaxValue="100"
             MaxAngle="270"
             LegendPosition="Bottom">
         </lvc:PieChart>

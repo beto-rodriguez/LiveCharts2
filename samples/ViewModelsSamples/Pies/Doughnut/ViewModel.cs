@@ -1,7 +1,7 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Doughnut;
 

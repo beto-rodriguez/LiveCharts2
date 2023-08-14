@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Basic;
 

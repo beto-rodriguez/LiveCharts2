@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSample.Pies.AngularGauge.View"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.XamarinForms"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AngularGauge;assembly=ViewModelsSamples">
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Command="{Binding DoRandomChangeCommand}">Change Value</Button>
+
+        <lvc:PieChart
+            Grid.Row="1"
+            Series="{Binding Series}"
+            VisualElements="{Binding VisualElements}"
+            InitialRotation="-225"
+            MaxAngle="270"
+            MinValue="0"
+            Total="100">
+        </lvc:PieChart>
+    </Grid>
+</ContentPage>

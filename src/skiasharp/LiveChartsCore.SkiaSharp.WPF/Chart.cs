@@ -105,7 +105,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly DependencyProperty SyncContextProperty =
        DependencyProperty.Register(
-           nameof(SyncContext), typeof(object), typeof(Chart), new PropertyMetadata(new(),
+           nameof(SyncContext), typeof(object), typeof(Chart), new PropertyMetadata(null,
                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                {
                    var chart = (Chart)o;

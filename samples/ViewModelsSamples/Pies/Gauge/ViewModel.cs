@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -12,7 +13,6 @@ namespace ViewModelsSamples.Pies.Gauge;
 
 public class ViewModel : INotifyPropertyChanged
 {
-    private readonly GaugeBuilder _gaugeBuilder;
     private double _initialRotation;
     private double _maxAngle;
     private double _innerRadius = 100;
@@ -26,26 +26,33 @@ public class ViewModel : INotifyPropertyChanged
         GaugeTotal = 60;
         _initialRotation = 135;
 
-        _gaugeBuilder = new GaugeBuilder
-        {
-            InnerRadius = _innerRadius,
-            OffsetRadius = _offsetRadius,
-            Background = new SolidColorPaint(new SKColor(0, 0, 0, 10)),
-            BackgroundInnerRadius = _backgroundInnerRadius,
-            BackgroundOffsetRadius = _backgroundOffsetRadius,
-            LabelFormatter = point => $"{point.Context.Series.Name} {point.Coordinate.PrimaryValue}",
-            LabelsPosition = PolarLabelsPosition.Start,
-            LabelsSize = 30
-        }
-        .AddValue(new ObservableValue(10))
-        .AddValue(new ObservableValue(25))
-        .AddValue(new ObservableValue(40))
-        .AddValue(new ObservableValue(50));
-
-        Series = _gaugeBuilder.BuildSeries();
+        Series = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(10, SetStyle),
+            new GaugeItem(25, SetStyle),
+            new GaugeItem(50, SetStyle),
+            new GaugeItem(50, SetStyle),
+            new GaugeItem(GaugeItem.Background, SetBackgroundStyle));
     }
 
-    public IEnumerable<ISeries> Series { get; set; }
+    private void SetStyle(PieSeries<ObservableValue> series)
+    {
+        series.InnerRadius = InnerRadius;
+        series.RelativeInnerRadius = OffsetRadius;
+        series.RelativeOuterRadius = OffsetRadius;
+        series.DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString();
+        series.DataLabelsPosition = PolarLabelsPosition.Start;
+        series.DataLabelsSize = 30;
+    }
+
+    private void SetBackgroundStyle(PieSeries<ObservableValue> series)
+    {
+        series.Fill = new SolidColorPaint(new SKColor(0, 0, 0, 10));
+        series.InnerRadius = BackgroundInnerRadius;
+        series.RelativeInnerRadius = BackgroundOffsetRadius;
+        series.RelativeOuterRadius = BackgroundOffsetRadius;
+    }
+
+    public IEnumerable<PieSeries<ObservableValue>> Series { get; set; }
 
     public double GaugeTotal { get; set; }
 
@@ -59,7 +66,8 @@ public class ViewModel : INotifyPropertyChanged
         set
         {
             _backgroundInnerRadius = value;
-            _gaugeBuilder.BackgroundInnerRadius = value;
+            foreach (var item in Series.Where(x => x.IsFillSeries))
+                item.InnerRadius = value;
             OnPropertyChanged();
         }
     }
@@ -70,7 +78,11 @@ public class ViewModel : INotifyPropertyChanged
         set
         {
             _backgroundOffsetRadius = value;
-            _gaugeBuilder.BackgroundOffsetRadius = value;
+            foreach (var item in Series.Where(x => x.IsFillSeries))
+            {
+                item.RelativeInnerRadius = value;
+                item.RelativeOuterRadius = value;
+            }
             OnPropertyChanged();
         }
     }
@@ -81,7 +93,8 @@ public class ViewModel : INotifyPropertyChanged
         set
         {
             _innerRadius = value;
-            _gaugeBuilder.InnerRadius = value;
+            foreach (var item in Series.Where(x => !x.IsFillSeries))
+                item.InnerRadius = value;
             OnPropertyChanged();
         }
     }
@@ -92,7 +105,11 @@ public class ViewModel : INotifyPropertyChanged
         set
         {
             _offsetRadius = value;
-            _gaugeBuilder.OffsetRadius = value;
+            foreach (var item in Series.Where(x => !x.IsFillSeries))
+            {
+                item.RelativeInnerRadius = value;
+                item.RelativeOuterRadius = value;
+            }
             OnPropertyChanged();
         }
     }

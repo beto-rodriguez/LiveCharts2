@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Gauge1;
 
 public partial class ViewModel : ObservableObject
 {
-    public IEnumerable<ISeries> Series { get; set; }
-        = new GaugeBuilder()
-        .WithMaxColumnWidth(30)
-        .AddValue(30)
-        .BuildSeries();
+    public IEnumerable<ISeries> Series { get; set; } =
+        GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(
+                30,          // the gauge value
+                series =>    // the series style
+                {
+                    series.MaxRadialColumnWidth = 50;
+                    series.DataLabelsSize = 50;
+                }));
 }

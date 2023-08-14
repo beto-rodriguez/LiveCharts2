@@ -78,16 +78,19 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        AngleAxes = new List<IPolarAxis>()
+        SetValue(AngleAxesProperty,
+            new List<IPolarAxis>()
             {
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
-            };
-        RadiusAxes = new List<IPolarAxis>()
+            });
+        SetValue(RadiusAxesProperty,
+            new List<IPolarAxis>()
             {
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
-            };
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+            });
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new object());
 
         if (_core is null) throw new Exception("Core not found!");
         _core.Measuring += OnCoreMeasuring;
@@ -102,7 +105,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty SyncContextProperty =
         BindableProperty.Create(
-            nameof(SyncContext), typeof(object), typeof(PolarChart), new(), BindingMode.Default, null,
+            nameof(SyncContext), typeof(object), typeof(PolarChart), null, BindingMode.Default, null,
             (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (PolarChart)o;

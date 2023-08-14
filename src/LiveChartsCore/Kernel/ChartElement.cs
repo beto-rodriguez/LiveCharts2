@@ -142,7 +142,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     protected bool CanSetProperty(string propertyName)
     {
         return                                  // a property can be set if:
-            !_isInternalSet                        // 1. it is an user action (not set by a theme).
+            !_isInternalSet                     // 1. it is an user action (not set by a theme).
             ||                                  // or
             !_userSets.Contains(propertyName);  // 2. the user has not set the property.
     }

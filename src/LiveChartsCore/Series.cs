@@ -48,7 +48,7 @@ namespace LiveChartsCore;
 /// <seealso cref="IDisposable" />
 /// <seealso cref="INotifyPropertyChanged" />
 public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
-    : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
+    : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, IInternalSeries, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TVisual : class, IGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -132,7 +132,13 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ISeries.SeriesProperties"/>
-    public SeriesProperties SeriesProperties { get; }
+    public SeriesProperties SeriesProperties { get; internal set; }
+
+    SeriesProperties IInternalSeries.SeriesProperties
+    {
+        get => SeriesProperties;
+        set => SeriesProperties = value;
+    }
 
     /// <inheritdoc cref="ISeries.Name"/>
     public string? Name { get => _name; set => SetProperty(ref _name, value); }

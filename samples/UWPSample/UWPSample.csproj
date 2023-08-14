@@ -292,6 +292,9 @@
     <Compile Include="Maps\World\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pies\AngularGauge\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pies\AutoUpdate\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
@@ -644,6 +647,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Maps\World\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pies\AngularGauge\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -40,7 +40,8 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     private double _initialRotation;
     private bool _isClockwise = true;
     private double _maxAngle = 360;
-    private double? _total;
+    private double? _maxValue;
+    private double _minValue;
 
     /// <summary>
     /// Called when the control is initialized.
@@ -86,7 +87,16 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
     [Parameter]
-    public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
+    [Obsolete($"Use {nameof(MaxValue)} instead.")]
+    public double? Total { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    [Parameter]
+    public double? MaxValue { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    [Parameter]
+    public double MinValue { get => _minValue; set { _minValue = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)

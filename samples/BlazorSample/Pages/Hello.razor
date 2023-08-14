@@ -479,13 +479,13 @@ values.Add(new(5));");
         PieChart.EasingFunction = EasingFunctions.BounceOut;
         PieChart.AnimationsSpeed = TimeSpan.FromSeconds(1.5);
 
-        var outer = 1.0;
+        var outer = 10;
         PieChart.Series = new[] { 30, 20, 15, 10, 8, 4 }
             .AsLiveChartsPieSeries((value, series) =>
             {
                 series.InnerRadius = 50;
-                series.MaxOuterRadius = outer;
-                outer = outer - 0.1;
+                series.OuterRadiusOffset = outer;
+                outer = outer - 25;
             });
 
         await JS.InvokeVoidAsync("hlElements",

@@ -20,7 +20,8 @@ public partial class View : UserControl
             Series = viewModel.Series,
             InitialRotation = -90,
             MaxAngle = 270,
-            Total = 100,
+            MinValue = 0,
+            MaxValue = 100,
             LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom,
 
             // out of livecharts properties...
