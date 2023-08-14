@@ -88,10 +88,10 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
-        if (view.Total is null) throw new Exception("The total property is required.");
+        if (view.MaxValue is null) throw new Exception("The total property is required.");
 
-        var startValue = view.Start;
-        var endValue = view.Total.Value;
+        var startValue = view.MinValue;
+        var endValue = view.MaxValue.Value;
 
         if (_geometry is null)
         {

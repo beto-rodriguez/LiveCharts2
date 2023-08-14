@@ -16,7 +16,7 @@ public class View : Panel
         {
             Series = viewModel.Series,
             InitialRotation = -90,
-            Total = 100,
+            MaxValue = 100,
         };
 
         Content = pieChart;

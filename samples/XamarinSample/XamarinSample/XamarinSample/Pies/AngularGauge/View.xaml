@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿
+    <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="XamarinSample.Pies.AngularGauge.View"
@@ -21,8 +22,8 @@
             VisualElements="{Binding VisualElements}"
             InitialRotation="-225"
             MaxAngle="270"
-            Start="0"
-            Total="100">
+            MinValue="0"
+            MaxValue="100">
         </lvc:PieChart>
     </Grid>
 </ContentPage>

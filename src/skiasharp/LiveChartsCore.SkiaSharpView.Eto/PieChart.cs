@@ -100,7 +100,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     public double? MaxValue { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
-    public double Start { get => _minValue; set { _minValue = value; OnPropertyChanged(); } }
+    public double MinValue { get => _minValue; set { _minValue = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)

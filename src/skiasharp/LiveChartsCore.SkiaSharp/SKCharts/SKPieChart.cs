@@ -65,8 +65,8 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
         Series = view.Series;
         InitialRotation = view.InitialRotation;
         MaxAngle = view.MaxAngle;
-        Total = view.Total;
-        Start = view.Start;
+        MaxValue = view.MaxValue;
+        MinValue = view.MinValue;
         LegendPosition = view.LegendPosition;
         Title = view.Title;
         DrawMargin = view.DrawMargin;
@@ -95,10 +95,14 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     public double MaxAngle { get; set; } = 360;
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total"/>
-    public double? Total { get; set; }
+    [Obsolete($"Renamed to {nameof(MaxValue)}")]
+    public double? Total { get => MaxValue; set => MaxValue = value; }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Start"/>
-    public double Start { get; set; }
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue"/>
+    public double? MaxValue { get; set; }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue"/>
+    public double MinValue { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }

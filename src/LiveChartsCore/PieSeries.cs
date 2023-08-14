@@ -175,8 +175,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
-        var startValue = (float)view.Start;
-        var chartTotal = (float?)view.Total;
+        var startValue = (float)view.MinValue;
+        var chartTotal = (float?)view.MaxValue;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)

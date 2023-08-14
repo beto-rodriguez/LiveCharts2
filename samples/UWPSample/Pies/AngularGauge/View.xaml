@@ -23,8 +23,8 @@
             VisualElements="{Binding VisualElements}"
             InitialRotation="-225"
             MaxAngle="270"
-            Start="0"
-            Total="100">
+            MinValue="0"
+            MaxValue="100">
         </lvc:PieChart>
     </Grid>
 </UserControl>

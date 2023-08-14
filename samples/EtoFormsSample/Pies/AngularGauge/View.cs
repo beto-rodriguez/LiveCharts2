@@ -18,8 +18,8 @@ public class View : Panel
             VisualElements = viewModel.VisualElements,
             InitialRotation = -225,
             MaxAngle = 270,
-            Start = 0,
-            Total = 100
+            MinValue = 0,
+            MaxValue = 100
         };
 
         var b1 = new Button { Text = "Update" };
