@@ -54,6 +54,7 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
     /// Gets or sets the unit of the <see cref="Height"/> and <see cref="Width"/> properties.
     /// </summary>
     public MeasureUnit SizeUnit { get => _sizeUnit; set => SetProperty(ref _sizeUnit, value); }
+
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>

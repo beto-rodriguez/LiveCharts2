@@ -1,0 +1,30 @@
+﻿@page "/Pies/AngularGauge"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Pies.AngularGauge
+
+<style>
+	.sample-wrap {
+		display: inline-block;
+		width: 600px;
+		height: 600px;
+	}
+</style>
+
+<button class="btn btn-primary" @onclick="ViewModel.DoRandomChange">
+	Update Value
+</button>
+
+<div class="sample-wrap">
+	<PieChart
+		Series="ViewModel.Series"
+        VisualElements="ViewModel.VisualElements"
+		InitialRotation="-225"
+        MaxAngle="270"
+        MinValue="0"
+        MaxValue="100">
+	</PieChart>
+</div>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

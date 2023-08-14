@@ -20,7 +20,8 @@ public partial class View : UserControl
             Series = viewModel.Series,
             InitialRotation = -225,
             MaxAngle = 270,
-            Total = 100,
+            MinValue = 0,
+            MaxValue = 100,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

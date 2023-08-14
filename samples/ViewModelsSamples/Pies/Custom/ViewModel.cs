@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Custom;
 
@@ -12,7 +12,7 @@ public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {
-        var outer = 1d;
+        var outer = 0;
         var data = new[] { 6, 5, 4, 3 };
 
         // you can convert any array, list or IEnumerable<T> to a pie series collection:
@@ -28,8 +28,8 @@ public partial class ViewModel : ObservableObject
             // The MaxOuterRadius property sets the maximum outer, the value goes from
             // 0 to 1, where 1 is the full available radius and 0 is none.
 
-            series.MaxOuterRadius = outer;
-            outer -= 0.1;
+            series.OuterRadiusOffset = outer;
+            outer += 50;
 
             series.DataLabelsPaint = new SolidColorPaint(SKColors.White)
             {

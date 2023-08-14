@@ -31,8 +31,6 @@ public partial record MainModel
 
     public IState<string> Name { get; }
 
-    public IEnumerable<ISeries> Series { get; set; } = new[] { 10, 8, 4 }.AsPieSeries();
-
     public MainModel(
         INavigator navigator,
         IStringLocalizer localizer)

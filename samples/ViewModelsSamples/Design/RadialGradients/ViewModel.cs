@@ -33,7 +33,7 @@ public partial class ViewModel : ObservableObject
             Stroke = null,
             Fill = new RadialGradientPaint(s_colors),
             Pushout = 10,
-            MaxOuterRadius = 0.9
+            OuterRadiusOffset = 20
         },
         new PieSeries<int>
         {

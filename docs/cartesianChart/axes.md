@@ -19,7 +19,7 @@ not cover all of them, if you need to know more about this type then use the [AP
 
 Both of these features are directly related to the <a href="#MaxLimit and MinLimit properties">MaxLimit and MinLimit properties</a>,
 zooming occurs when the mouse wheel moves or when the pinch gesture occurs, the panning is called when the pointer goes down,
-moves and then goes up or when the pinch gesture occurs.
+moves and then goes up or when the pan gesture occurs.
 
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
 [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) and the options are:

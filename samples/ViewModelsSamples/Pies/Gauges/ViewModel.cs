@@ -8,6 +8,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Gauges;
 
@@ -16,178 +17,242 @@ public partial class ViewModel : ObservableObject
     public ViewModel()
     {
         GaugeTotal1 = 100;
-        Series1 = new GaugeBuilder()
-        {
-            LabelsSize = 80,
-            Background = new RadialGradientPaint(new SKColor(167, 192, 205, 0), new SKColor(167, 192, 205))
-        }
-        .AddValue(new ObservableValue(30))
-        .BuildSeries();
+        Series1 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.DataLabelsSize = 80;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.Fill = new RadialGradientPaint(
+                    new SKColor(167, 192, 205, 0),
+                    new SKColor(167, 192, 205));
+            }));
 
         GaugeTotal2 = 100;
         InitialRotation2 = -90;
-        Series2 = new GaugeBuilder()
-        {
-            LabelsSize = 80,
-            Background = new RadialGradientPaint(new SKColor(167, 192, 205, 0), new SKColor(167, 192, 205))
-        }
-        .AddValue(new ObservableValue(30))
-        .BuildSeries();
+        Series2 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.DataLabelsSize = 80;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.Fill = new RadialGradientPaint(
+                    new SKColor(167, 192, 205, 0),
+                    new SKColor(167, 192, 205));
+            }));
 
         GaugeTotal3 = 100;
         InitialRotation3 = -90;
-        Series3 = new GaugeBuilder() { LabelsSize = 60, InnerRadius = 50 }
-           .AddValue(new ObservableValue(30))
-           .BuildSeries();
+        Series3 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.DataLabelsSize = 60;
+                series.InnerRadius = 50;
+            }));
 
         GaugeTotal4 = 100;
         InitialRotation4 = -90;
-        Series4 = new GaugeBuilder()
-        {
-            LabelsSize = 50,
-            InnerRadius = 50,
-            BackgroundInnerRadius = 50,
-            BackgroundOffsetRadius = 10
-        }
-        .AddValue(new ObservableValue(30))
-        .BuildSeries();
+        Series4 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.DataLabelsSize = 50;
+                series.InnerRadius = 50;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 50;
+                series.RelativeInnerRadius = 10;
+                series.RelativeOuterRadius = 10;
+            }));
 
         GaugeTotal5 = 100;
         InitialRotation5 = -90;
-        Series5 = new GaugeBuilder() { LabelsSize = 50, InnerRadius = 50, OffsetRadius = 10, BackgroundInnerRadius = 50 }
-           .AddValue(new ObservableValue(30))
-           .BuildSeries();
+        Series5 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.DataLabelsSize = 50;
+                series.InnerRadius = 50;
+                series.RelativeOuterRadius = 10;
+                series.RelativeInnerRadius = 10;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 50;
+            }));
 
         GaugeTotal6 = 100;
         InitialRotation6 = -90;
-        Series6 = new GaugeBuilder()
-        {
-            LabelsSize = 50,
-            InnerRadius = 50,
-            BackgroundInnerRadius = 50,
-            Background = new SolidColorPaint(new SKColor(100, 181, 246))
-        }
-        .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
-        .BuildSeries();
+        Series6 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
+                series.DataLabelsSize = 50;
+                series.InnerRadius = 50;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 50;
+                series.Fill = new SolidColorPaint(new SKColor(100, 181, 246));
+            }));
 
         GaugeTotal7 = 100;
         InitialRotation7 = -90;
-        Series7 = new GaugeBuilder()
-        {
-            LabelsSize = 50,
-            InnerRadius = 75,
-            BackgroundInnerRadius = 50,
-            Background = new SolidColorPaint(new SKColor(100, 181, 246, 90))
-        }
-        .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
-        .BuildSeries();
+        Series7 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
+                series.DataLabelsSize = 50;
+                series.InnerRadius = 75;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 50;
+                series.Fill = new SolidColorPaint(new SKColor(100, 181, 246, 90));
+            }));
 
         GaugeTotal8 = 100;
         InitialRotation8 = -225;
         MaxAngle8 = 270;
-        Series8 = new GaugeBuilder()
-        {
-            LabelsSize = 50,
-            InnerRadius = 75,
-            BackgroundInnerRadius = 50,
-            Background = new SolidColorPaint(new SKColor(100, 181, 246, 90))
-        }
-        .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
-        .BuildSeries();
+        Series8 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
+                series.DataLabelsSize = 50;
+                series.InnerRadius = 75;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 50;
+                series.Fill = new SolidColorPaint(new SKColor(100, 181, 246, 90));
+            }));
 
         GaugeTotal9 = 100;
         InitialRotation9 = 315;
         MaxAngle9 = 270;
-        Series9 = new GaugeBuilder()
-        {
-            LabelsSize = 50,
-            InnerRadius = 75,
-            BackgroundInnerRadius = 50,
-            Background = new SolidColorPaint(new SKColor(100, 181, 246, 90))
-        }
-        .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
-        .BuildSeries();
+        Series9 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.Fill = new SolidColorPaint(new SKColor(21, 101, 192));
+                series.DataLabelsSize = 50;
+                series.InnerRadius = 75;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 50;
+                series.Fill = new SolidColorPaint(new SKColor(100, 181, 246, 90));
+            }));
 
         GaugeTotal10 = 100;
         InitialRotation10 = -200;
         MaxAngle10 = 220;
-        Series10 = new GaugeBuilder()
-        {
-            LabelsSize = 30,
-            InnerRadius = 75,
-            BackgroundInnerRadius = 50,
-            Background = new LinearGradientPaint(new SKColor(250, 243, 224), new SKColor(182, 137, 115))
-        }
-        .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(30, 33, 45)), new SolidColorPaint(new SKColor(30, 33, 45)))
-        .BuildSeries();
+        Series10 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series =>
+            {
+                series.Fill = new SolidColorPaint(new SKColor(30, 33, 45));
+                series.DataLabelsSize = 50;
+                series.InnerRadius = 75;
+            }),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 50;
+                series.Fill = new LinearGradientPaint(
+                    new SKColor(250, 243, 224),
+                    new SKColor(182, 137, 115));
+            }));
 
         GaugeTotal11 = 100;
         InitialRotation11 = -90;
         MaxAngle11 = 270;
-        Series11 = new GaugeBuilder()
+
+        void SetStyle11(string name, PieSeries<ObservableValue> series)
         {
-            LabelsPosition = PolarLabelsPosition.Start,
-            LabelFormatter = point => point.Context.Series.Name + " " + point.Coordinate.PrimaryValue,
-            LabelsSize = 20,
-            InnerRadius = 20,
-            BackgroundInnerRadius = 20
+            series.Name = name;
+            series.DataLabelsPosition = PolarLabelsPosition.Start;
+            series.DataLabelsFormatter =
+                point => $"{point.Context.Series.Name} {point.Coordinate.PrimaryValue}";
+            series.DataLabelsSize = 20;
+            series.InnerRadius = 20;
         }
-        .AddValue(new ObservableValue(30), "Vanessa")
-        .AddValue(new ObservableValue(50), "Charles")
-        .AddValue(new ObservableValue(70), "Ana")
-        .BuildSeries();
+
+        Series11 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series => SetStyle11("Vanessa", series)),
+            new GaugeItem(50, series => SetStyle11("Charles", series)),
+            new GaugeItem(70, series => SetStyle11("Ana", series)),
+            new GaugeItem(GaugeItem.Background, series => series.InnerRadius = 20));
 
         GaugeTotal12 = 100;
         InitialRotation12 = 45;
         MaxAngle12 = 270;
-        Series12 = new GaugeBuilder()
+
+        void SetStyle12(string name, PieSeries<ObservableValue> series)
         {
-            LabelsPosition = PolarLabelsPosition.Start,
-            LabelFormatter = point => point.Coordinate.PrimaryValue + " " + point.Context.Series.Name,
-            LabelsSize = 20,
-            InnerRadius = 20,
-            OffsetRadius = 8,
-            BackgroundInnerRadius = 20
+            series.Name = name;
+            series.DataLabelsPosition = PolarLabelsPosition.Start;
+            series.DataLabelsFormatter =
+                point => $"{point.Context.Series.Name} {point.Coordinate.PrimaryValue}";
+            series.DataLabelsSize = 20;
+            series.InnerRadius = 20;
+            series.RelativeInnerRadius = 8;
+            series.RelativeOuterRadius = 8;
         }
-        .AddValue(new ObservableValue(30), "Vanessa")
-        .AddValue(new ObservableValue(50), "Charles")
-        .AddValue(new ObservableValue(70), "Ana")
-        .BuildSeries();
+
+        Series12 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series => SetStyle12("Vanessa", series)),
+            new GaugeItem(50, series => SetStyle12("Charles", series)),
+            new GaugeItem(70, series => SetStyle12("Ana", series)),
+            new GaugeItem(GaugeItem.Background, series => series.InnerRadius = 20));
 
         GaugeTotal13 = 100;
         InitialRotation13 = 90;
         MaxAngle13 = 270;
-        Series13 = new GaugeBuilder()
+
+        void SetStyle13(string name, PieSeries<ObservableValue> series)
         {
-            LabelsPosition = PolarLabelsPosition.Start,
-            LabelFormatter = point => point.Coordinate.PrimaryValue + " " + point.Context.Series.Name,
-            LabelsSize = 20,
-            InnerRadius = 20,
-            OffsetRadius = 4,
-            BackgroundInnerRadius = 20,
-            BackgroundOffsetRadius = 10
+            series.Name = name;
+            series.DataLabelsPosition = PolarLabelsPosition.Start;
+            series.DataLabelsFormatter =
+                point => $"{point.Context.Series.Name} {point.Coordinate.PrimaryValue}";
+            series.DataLabelsSize = 20;
+            series.InnerRadius = 20;
+            series.RelativeInnerRadius = 4;
+            series.RelativeOuterRadius = 4;
         }
-        .AddValue(new ObservableValue(30), "Vanessa")
-        .AddValue(new ObservableValue(50), "Charles")
-        .AddValue(new ObservableValue(70), "Ana")
-        .BuildSeries();
+
+        Series13 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series => SetStyle13("Vanessa", series)),
+            new GaugeItem(50, series => SetStyle13("Charles", series)),
+            new GaugeItem(70, series => SetStyle13("Ana", series)),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 20;
+                series.RelativeInnerRadius = 10;
+                series.RelativeOuterRadius = 10;
+            }));
 
         GaugeTotal14 = 100;
         InitialRotation14 = -90;
         MaxAngle14 = 350;
-        Series14 = new GaugeBuilder()
+
+        void SetStyle14(string name, PieSeries<ObservableValue> series)
         {
-            LabelsPosition = PolarLabelsPosition.End,
-            LabelFormatter = point => point.Coordinate.PrimaryValue.ToString(),
-            LabelsSize = 20,
-            InnerRadius = 20,
-            MaxColumnWidth = 5,
-            Background = null
+            series.Name = name;
+            series.DataLabelsPosition = PolarLabelsPosition.End;
+            series.DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString();
+            series.DataLabelsSize = 20;
+            series.InnerRadius = 20;
+            series.MaxRadialColumnWidth = 5;
         }
-        .AddValue(new ObservableValue(50), "Vanessa")
-        .AddValue(new ObservableValue(80), "Charles")
-        .AddValue(new ObservableValue(95), "Ana")
-        .BuildSeries();
+
+        Series14 = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series => SetStyle14("Vanessa", series)),
+            new GaugeItem(50, series => SetStyle14("Charles", series)),
+            new GaugeItem(70, series => SetStyle14("Ana", series)),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.Fill = null;
+            }));
     }
 
     public IEnumerable<ISeries> Series1 { get; set; }

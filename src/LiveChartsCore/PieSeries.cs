@@ -53,6 +53,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     private double _pushout = 0;
     private double _innerRadius = 0;
     private double _maxOuterRadius = 1;
+    private double _outerRadiusOffset = 0;
     private double _hoverPushout = 20;
     private double _innerPadding = 0;
     private double _outerPadding = 0;
@@ -102,7 +103,11 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.InnerRadius"/>
     public double InnerRadius { get => _innerRadius; set => SetProperty(ref _innerRadius, value); }
 
+    /// <inheritdoc cref="IPieSeries{TDrawingContext}.OuterRadiusOffset"/>
+    public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
+
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxOuterRadius"/>
+    [Obsolete($"Use {nameof(OuterRadiusOffset)} instead.")]
     public double MaxOuterRadius { get => _maxOuterRadius; set => SetProperty(ref _maxOuterRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
@@ -157,15 +162,21 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var maxPushout = (float)pieChart.PushoutBounds.Max;
         var pushout = (float)Pushout;
         var innerRadius = (float)InnerRadius;
-        var maxOuterRadius = (float)MaxOuterRadius;
 
         minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
+
+        var maxOuterRadius = (float)MaxOuterRadius;
         minDimension *= maxOuterRadius;
+
+        var outerRadiusOffset = (float)OuterRadiusOffset;
+        minDimension -= outerRadiusOffset;
 
         var view = (IPieChartView<TDrawingContext>)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
-        var chartTotal = (float?)view.Total;
+
+        var startValue = (float)view.MinValue;
+        var chartTotal = (float?)view.MaxValue;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)
@@ -292,8 +303,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             }
             else
             {
+                var h = total - startValue;
+                var h1 = stackedValue + coordinate.PrimaryValue - startValue;
                 start = stackedValue / total * completeAngle;
-                sweep = (stackedValue + coordinate.PrimaryValue) / total * completeAngle - start;
+                sweep = h1 / h * completeAngle - start;
                 if (!isClockWise) start = completeAngle - start - sweep;
             }
 
@@ -337,11 +350,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             var md = minDimension;
             var stackedOuterRadius = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
 
-            var x = (drawMarginSize.Width - stackedOuterRadius) * 0.5f;
-
             dougnutGeometry.CenterX = cx;
             dougnutGeometry.CenterY = cy;
-            dougnutGeometry.X = drawLocation.X + x;
+            dougnutGeometry.X = drawLocation.X + (drawMarginSize.Width - stackedOuterRadius) * 0.5f;
             dougnutGeometry.Y = drawLocation.Y + (drawMarginSize.Height - stackedOuterRadius) * 0.5f;
             dougnutGeometry.Width = stackedOuterRadius;
             dougnutGeometry.Height = stackedOuterRadius;
@@ -365,7 +376,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null && coordinate.PrimaryValue >= 0)
+            var hasValue = Math.Abs(coordinate.PrimaryValue) > 0.00001; // <- this will improved in the future
+            if (DataLabelsPaint is not null && hasValue)
             {
                 var label = (TLabel?)point.Context.Label;
 
@@ -407,6 +419,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
+
+                if (IsFirstDraw)
+                    label.CompleteTransition(
+                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
             }
 
             OnPointMeasured(point);
@@ -417,6 +433,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
         var u = new Scaler(); // dummy scaler, this is not used in the SoftDeleteOrDisposePoint method.
         pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
+        IsFirstDraw = false;
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
@@ -578,8 +595,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                     + 0.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
                 break;
             case PolarLabelsPosition.Middle:
+                var f = (SeriesProperties & SeriesProperties.Gauge) != 0 ? 0.5f : 0.65f;
                 angle = startAngle + sweepAngle * 0.5f;
-                radius = innerRadius + (outerRadius - innerRadius) * 0.65f;
+                radius = innerRadius + (outerRadius - innerRadius) * f;
                 break;
             case PolarLabelsPosition.ChartCenter:
                 return new LvcPoint(centerX, centerY);

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.NightingaleRose;
 
@@ -9,7 +9,7 @@ public partial class ViewModel : ObservableObject
 {
     public ViewModel()
     {
-        var outer = 1d;
+        var outer = 0;
         var data = new[] { 6, 5, 4, 3, 2 };
 
         // you can convert any array, list or IEnumerable<T> to a pie series collection:
@@ -20,8 +20,8 @@ public partial class ViewModel : ObservableObject
             // on every element in the array.
 
             series.InnerRadius = 50;
-            series.MaxOuterRadius = outer;
-            outer -= 0.1;
+            series.OuterRadiusOffset = outer;
+            outer += 50;
         });
     }
 

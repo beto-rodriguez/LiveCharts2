@@ -27,6 +27,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -35,6 +36,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// <summary>
 /// Defines a helper class to build gauges.
 /// </summary>
+[Obsolete($"Use {nameof(GaugeGenerator)}.{nameof(GaugeGenerator.BuildSolidGauge)} instead.")]
 public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
 {
     private readonly Dictionary<ISeries, Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>> _keyValuePairs = new();

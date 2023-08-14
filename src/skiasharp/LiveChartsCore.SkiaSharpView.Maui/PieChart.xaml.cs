@@ -77,9 +77,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
           (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
-        SyncContext = new();
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(SyncContextProperty, new object());
 
         if (_core is null) throw new Exception("Core not found!");
         _core.Measuring += OnCoreMeasuring;
@@ -166,9 +166,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <summary>
     /// The total property
     /// </summary>
-    public static readonly BindableProperty TotalProperty =
+    public static readonly BindableProperty MaxValueProperty =
         BindableProperty.Create(
-            nameof(Total), typeof(double?), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+            nameof(MaxValue), typeof(double?), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+
+    /// <summary>
+    /// The start property
+    /// </summary>
+    public static readonly BindableProperty MinValueProperty =
+        BindableProperty.Create(
+            nameof(MinValue), typeof(double), typeof(PieChart), 0d, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
     /// The draw margin property
@@ -403,11 +410,26 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(MaxAngleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    [Obsolete($"Use {nameof(MaxValue)} instead.")]
     public double? Total
     {
-        get => (double?)GetValue(TotalProperty);
-        set => SetValue(TotalProperty, value);
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    public double? MaxValue
+    {
+        get => (double?)GetValue(MaxValueProperty);
+        set => SetValue(MaxValueProperty, value);
+    }
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    public double MinValue
+    {
+        get => (double)GetValue(MinValueProperty);
+        set => SetValue(MinValueProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
