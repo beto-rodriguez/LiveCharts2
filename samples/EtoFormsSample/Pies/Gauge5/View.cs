@@ -17,6 +17,7 @@ public class View : Panel
             Series = viewModel.Series,
             InitialRotation = -90,
             MaxAngle = 270,
+            MinValue = 0,
             MaxValue = 100,
             LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom,
         };

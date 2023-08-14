@@ -12,6 +12,7 @@
         Series="{Binding Series}"
         InitialRotation="-90"
         MaxAngle="350"
+        MinValue="0"
         MaxValue="100">
     </lvc:PieChart>
 </UserControl>

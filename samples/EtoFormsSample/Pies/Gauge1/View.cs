@@ -16,6 +16,7 @@ public class View : Panel
         {
             Series = viewModel.Series,
             InitialRotation = -90,
+            MinValue = 0,
             MaxValue = 100,
         };
 

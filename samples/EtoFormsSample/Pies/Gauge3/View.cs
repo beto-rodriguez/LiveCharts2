@@ -17,6 +17,7 @@ public class View : Panel
             Series = viewModel.Series,
             InitialRotation = 45,
             MaxAngle = 270,
+            MinValue = 0,
             MaxValue = 100,
         };
 
