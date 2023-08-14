@@ -647,6 +647,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         get => _tooltipCloseInterval;
         set { _tooltipCloseInterval = value; _closeTooltipTimer.Interval = value.TotalMilliseconds; }
     }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
