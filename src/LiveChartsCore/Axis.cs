@@ -102,6 +102,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
     private int _stepCount;
+    internal double? _logBase;
 
     #endregion
 
@@ -1162,6 +1163,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         {
             var subseparator = subseparators[j];
             var kl = (j + 1) / (double)(_subseparatorsCount + 1);
+
+            if (_logBase is not null) kl = Math.Log(kl, _logBase.Value);
 
             float xs = 0f, ys = 0f;
             if (_orientation == AxisOrientation.X)
