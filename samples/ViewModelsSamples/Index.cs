@@ -54,6 +54,7 @@ public static class Index
         "Pies/Gauge3",
         "Pies/Gauge4",
         "Pies/Gauge5",
+        "Pies/AngularGauge",
 
         "Scatter/Basic",
         "Scatter/Bubbles",

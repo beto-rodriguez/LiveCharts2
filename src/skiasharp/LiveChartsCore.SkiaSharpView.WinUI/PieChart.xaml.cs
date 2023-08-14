@@ -124,7 +124,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (PieChart)o;
-                    chart.CoreCanvas.Sync = args.NewValue;
+                    if (chart._canvas != null) chart.CoreCanvas.Sync = args.NewValue;
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -162,7 +162,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty StartProperty =
         DependencyProperty.Register(
-            nameof(Start), typeof(double), typeof(PieChart), new PropertyMetadata(0, OnDependencyPropertyChanged));
+            nameof(Start), typeof(double), typeof(PieChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The draw margin property

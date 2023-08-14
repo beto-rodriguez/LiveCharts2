@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using ViewModelsSamples.Bars.Race;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 
-namespace UWPSample.Bars.Race
+namespace UWPSample.Pies.AngularGauge
 {
     public sealed partial class View : UserControl
     {

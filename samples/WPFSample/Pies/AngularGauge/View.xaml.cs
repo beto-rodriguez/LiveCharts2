@@ -1,4 +1,4 @@
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -20,31 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using Uno.Extensions.Reactive;
+using System.Windows.Controls;
 
-namespace UnoPlatformSample.Presentation;
-public partial record MainModel
+namespace WPFSample.Pies.AngularGauge;
+
+/// <summary>
+/// Interaction logic for View.xaml
+/// </summary>
+public partial class View : UserControl
 {
-    public string? Title { get; }
-
-    public IState<string> Name { get; }
-
-    public MainModel(
-        INavigator navigator,
-        IStringLocalizer localizer)
+    public View()
     {
-        _navigator = navigator;
-        Title = $"Main - {localizer["ApplicationName"]}";
-        Name = State<string>.Value(this, () => string.Empty);
+        InitializeComponent();
     }
-
-    public async Task GoToSecond()
-    {
-        var name = await Name;
-        await _navigator.NavigateViewModelAsync<SecondModel>(this, data: new Entity(name!));
-    }
-
-    private INavigator _navigator;
 }
