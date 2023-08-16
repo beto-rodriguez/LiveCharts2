@@ -205,7 +205,7 @@ public class SeriesContext<TDrawingContext>
 
             if (item.IsRowSeries())
             {
-                if (!item.IsRowSeries())
+                if (!item.IsStackedSeries())
                 {
                     _rowPositions[item] = _rowsCount++;
                     continue;
