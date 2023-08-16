@@ -262,7 +262,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 if (visual is null)
                 {
                     var v = new BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>();
-                    if (ErrorPaint is not null) v.ErrorGeometry = new TErrorGeometry();
+                    if (ErrorPaint is not null)
+                    {
+                        v.YError = new TErrorGeometry();
+                        v.XError = new TErrorGeometry();
+                    }
 
                     visual = v;
 
@@ -281,12 +285,20 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         v.Bezier.Yj = p;
                     }
 
-                    if (v.ErrorGeometry is not null)
+                    if (v.YError is not null)
                     {
-                        v.ErrorGeometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        v.ErrorGeometry.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        v.ErrorGeometry.Y = p;
-                        v.ErrorGeometry.Y1 = p;
+                        v.YError.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.YError.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.YError.Y = p;
+                        v.YError.Y1 = p;
+                    }
+
+                    if (v.XError is not null)
+                    {
+                        v.XError.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.XError.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.XError.Y = p;
+                        v.XError.Y1 = p;
                     }
 
                     data.TargetPoint.Context.Visual = v.Geometry;
@@ -305,7 +317,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 GeometryStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
-                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.ErrorGeometry!);
+                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.YError!);
+                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.XError!);
 
                 visual.Bezier.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
@@ -332,15 +345,21 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                if (!coordinate.PointError.IsEmpty && visual.ErrorGeometry is not null)
+                if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
                 {
                     var e = coordinate.PointError;
 
-                    visual.ErrorGeometry.X = secondaryScale.ToPixels(data.X2);
-                    visual.ErrorGeometry.X1 = secondaryScale.ToPixels(data.X2);
-                    visual.ErrorGeometry.Y = primaryScale.ToPixels(data.Y2 + e.Yi);
-                    visual.ErrorGeometry.Y1 = primaryScale.ToPixels(data.Y2 - e.Yj);
-                    visual.ErrorGeometry.RemoveOnCompleted = false;
+                    visual.YError!.X = secondaryScale.ToPixels(data.X2);
+                    visual.YError.X1 = secondaryScale.ToPixels(data.X2);
+                    visual.YError.Y = primaryScale.ToPixels(data.Y2 + e.Yi);
+                    visual.YError.Y1 = primaryScale.ToPixels(data.Y2 - e.Yj);
+                    visual.YError.RemoveOnCompleted = false;
+
+                    visual.XError!.X = secondaryScale.ToPixels(data.X2 - e.Xi);
+                    visual.XError.X1 = secondaryScale.ToPixels(data.X2 + e.Xj);
+                    visual.XError.Y = primaryScale.ToPixels(data.Y2);
+                    visual.XError.Y1 = primaryScale.ToPixels(data.Y2);
+                    visual.XError.RemoveOnCompleted = false;
                 }
 
                 visual.FillPath = fillVector!.AreaGeometry;
@@ -659,7 +678,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         visual.Geometry.Animate(easing, speed);
         visual.Bezier.Animate(easing, speed);
-        visual.ErrorGeometry?.Animate(easing, speed);
+        visual.YError?.Animate(easing, speed);
+        visual.XError?.Animate(easing, speed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -680,11 +700,18 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         visual.Geometry.Width = 0;
         visual.Geometry.RemoveOnCompleted = true;
 
-        if (visual.ErrorGeometry is not null)
+        if (visual.YError is not null)
         {
-            visual.ErrorGeometry.Y = y;
-            visual.ErrorGeometry.Y1 = y;
-            visual.ErrorGeometry.RemoveOnCompleted = true;
+            visual.YError.Y = y;
+            visual.YError.Y1 = y;
+            visual.YError.RemoveOnCompleted = true;
+        }
+
+        if (visual.XError is not null)
+        {
+            visual.XError.X = x;
+            visual.XError.X1 = x;
+            visual.XError.RemoveOnCompleted = true;
         }
 
         DataFactory.DisposePoint(point);

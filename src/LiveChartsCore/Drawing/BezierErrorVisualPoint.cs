@@ -34,7 +34,12 @@ public class BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>
         where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets or sets the error geometry.
+    /// Gets or sets the y error geometry.
     /// </summary>
-    public TErrorGeometry? ErrorGeometry { get; set; }
+    public TErrorGeometry? YError { get; set; }
+
+    /// <summary>
+    /// Gets or sets the x error geometry.
+    /// </summary>
+    public TErrorGeometry? XError { get; set; }
 }

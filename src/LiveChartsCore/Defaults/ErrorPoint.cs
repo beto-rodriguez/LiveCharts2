@@ -31,6 +31,7 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class ErrorPoint : IChartEntity, INotifyPropertyChanged
 {
+    private double? _x;
     private double? _y;
     private double _exi;
     private double _exj;
@@ -38,24 +39,17 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     private double _eyj;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
-    /// </summary>
-    public ErrorPoint()
-    {
-        MetaData = new ChartEntityMetaData(OnCoordinateChanged);
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="ErrorValue"/> class.
     /// </summary>
+    /// <param name="x">The X coordinate.</param>
     /// <param name="y">The Y coordinate.</param>
     /// <param name="xErrorI">The left error.</param>
     /// <param name="xErrorJ">The right error.</param>
     /// <param name="yErrorI">The top error.</param>
     /// <param name="yErrorJ">The bottom error.</param>
-    public ErrorPoint(double y, double xErrorI, double xErrorJ, double yErrorI, double yErrorJ)
-        : this()
+    public ErrorPoint(double x, double y, double xErrorI, double xErrorJ, double yErrorI, double yErrorJ)
     {
+        X = x;
         Y = y;
         XErrorI = xErrorI;
         XErrorJ = xErrorJ;
@@ -66,12 +60,21 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Initializes a new instance of the <see cref="ErrorValue"/> class.
     /// </summary>
+    /// <param name="x">The X coordinate.</param>
     /// <param name="y">The Y coordinate.</param>
     /// <param name="xError">The error in X.</param>
     /// <param name="yError">The error in Y.</param>
-    public ErrorPoint(double y, double xError, double yError)
-        : this(y, xError, xError, yError, yError)
+    public ErrorPoint(double x, double y, double xError, double yError)
+        : this(x, y, xError, xError, yError, yError)
     { }
+
+    /// <summary>
+    /// Gets or sets the X coordinate.
+    /// </summary>
+    /// <value>
+    /// The high.
+    /// </value>
+    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the Y coordinate.
@@ -141,17 +144,10 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        if (MetaData is not null) OnCoordinateChanged(MetaData.EntityIndex);
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    /// <summary>
-    /// Called when the coordinate changed.
-    /// </summary>
-    protected virtual void OnCoordinateChanged(int index)
-    {
-        Coordinate = _y is null
+        Coordinate = _y is null || _x is null
             ? Coordinate.Empty
-            : new(_y.Value, index, 0, 0, 0, 0, new(_exi, _exj, _eyi, _eyj));
+            : new(_y.Value, _x.Value, 0, 0, 0, 0, new(_exi, _exj, _eyi, _eyj));
+
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
