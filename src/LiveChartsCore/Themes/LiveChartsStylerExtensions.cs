@@ -176,6 +176,22 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
+    ///  Defines a style builder for stacked <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="styler">The styler.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <returns></returns>
+    public static Theme<TDrawingContext> HasRuleForBoxSeries<TDrawingContext>(
+        this Theme<TDrawingContext> styler,
+        Action<IBoxSeries<TDrawingContext>> predicate)
+        where TDrawingContext : DrawingContext
+    {
+        styler.BoxSeriesBuilder.Add(predicate);
+        return styler;
+    }
+
+    /// <summary>
     ///  Defines a style builder for tacked <see cref="ILineSeries{TDrawingContext}"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
