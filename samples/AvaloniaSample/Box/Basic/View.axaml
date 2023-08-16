@@ -1,0 +1,14 @@
+<UserControl x:Class="AvaloniaSample.Box.Basic.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Box.Basic">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <lvc:CartesianChart
+      Series="{Binding Series}"
+      XAxes="{Binding XAxes}"
+      LegendPosition="Right">
+  </lvc:CartesianChart>
+</UserControl>
