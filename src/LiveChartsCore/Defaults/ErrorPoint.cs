@@ -152,6 +152,6 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     {
         Coordinate = _y is null
             ? Coordinate.Empty
-            : new(index, _y.Value, 0, 0, 0, 0, new(_exi, _exj, _eyi, _eyj));
+            : new(_y.Value, index, 0, 0, 0, 0, new(_exi, _exj, _eyi, _eyj));
     }
 }

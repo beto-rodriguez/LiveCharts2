@@ -129,6 +129,6 @@ public class ErrorValue : IChartEntity, INotifyPropertyChanged
     {
         Coordinate = _y is null
             ? Coordinate.Empty
-            : new(index, _y.Value, 0, 0, 0, 0, new(0, 0, _eyi, _eyj));
+            : new(_y.Value, index, 0, 0, 0, 0, new(0, 0, _eyi, _eyj));
     }
 }
