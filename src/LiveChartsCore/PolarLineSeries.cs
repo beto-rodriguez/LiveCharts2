@@ -40,10 +40,8 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
-public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
+public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
-        where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -66,7 +64,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _radiusTooltipLabelFormatter;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     public PolarLineSeries(bool isStacked = false)
@@ -299,11 +297,12 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 var x = cp.X;
                 var y = cp.Y;
 
-                var visual = (TVisualPoint?)data.TargetPoint.Context.AdditionalVisuals;
+                var visual =
+                    (BezierVisualPoint<TDrawingContext, TVisual>?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {
-                    var v = new TVisualPoint();
+                    var v = new BezierVisualPoint<TDrawingContext, TVisual>();
 
                     visual = v;
 
@@ -686,7 +685,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not TVisualPoint visual)
+        if (chartPoint.Context.AdditionalVisuals is not BezierVisualPoint<TDrawingContext, TVisual> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
@@ -700,7 +699,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     /// <param name="scaler">The scaler.</param>
     protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, PolarScaler scaler)
     {
-        var visual = (TVisualPoint?)point.Context.AdditionalVisuals;
+        var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -868,7 +867,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         {
             if (point.IsEmpty)
             {
-                if (point.Context.Visual is TVisualPoint visual)
+                if (point.Context.Visual is BezierVisualPoint<TDrawingContext, TVisual> visual)
                 {
                     var s = scaler.ToPixels(point);
                     var x = s.X;
