@@ -71,14 +71,17 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
         var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
 
-        var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
-            cartesianChart.DrawMarginLocation.X, cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked);
+        var helper = new MeasureHelper(
+            secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
+            cartesianChart.DrawMarginLocation.X,
+            cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked, true);
 
         var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
             ? null
             : new MeasureHelper(
                 previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
-                cartesianChart.DrawMarginLocation.X, cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked);
+                cartesianChart.DrawMarginLocation.X,
+                cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked, true);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)

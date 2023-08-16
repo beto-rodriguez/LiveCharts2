@@ -71,13 +71,16 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
         var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
 
-        var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
-            cartesianChart.DrawMarginLocation.Y, cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked);
+        var helper = new MeasureHelper(
+            secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
+            cartesianChart.DrawMarginLocation.Y,
+            cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
         var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
             ? null
             : new MeasureHelper(
                 previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
-                cartesianChart.DrawMarginLocation.Y, cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked);
+                cartesianChart.DrawMarginLocation.Y,
+                cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)
@@ -254,10 +257,6 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
-            }
-            else
-            {
-                // ....
             }
 
             OnPointMeasured(point);

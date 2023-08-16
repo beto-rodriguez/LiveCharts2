@@ -108,6 +108,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         /// <param name="minP">The min pivot allowed.</param>
         /// <param name="maxP">The max pivot allowed.</param>
         /// <param name="isStacked">Indicates whether the series is stacked or not.</param>
+        /// <param name="isRow">Indicates whether the serie is row or not.</param>
         public MeasureHelper(
             Scaler scaler,
             CartesianChart<TDrawingContext> cartesianChart,
@@ -116,7 +117,8 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
             float p,
             float minP,
             float maxP,
-            bool isStacked)
+            bool isStacked,
+            bool isRow)
         {
             this.p = p;
             if (p < minP) this.p = minP;
@@ -136,13 +138,21 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (isStacked)
             {
-                pos = cartesianChart.SeriesContext.GetStackedColumnPostion(barSeries);
-                count = cartesianChart.SeriesContext.GetStackedColumnSeriesCount();
+                pos = isRow
+                    ? cartesianChart.SeriesContext.GetStackedRowPostion(barSeries)
+                    : cartesianChart.SeriesContext.GetStackedColumnPostion(barSeries);
+                count = isRow
+                    ? cartesianChart.SeriesContext.GetStackedRowSeriesCount()
+                    : cartesianChart.SeriesContext.GetStackedColumnSeriesCount();
             }
             else
             {
-                pos = cartesianChart.SeriesContext.GetColumnPostion(barSeries);
-                count = cartesianChart.SeriesContext.GetColumnSeriesCount();
+                pos = isRow
+                    ? cartesianChart.SeriesContext.GetRowPostion(barSeries)
+                    : cartesianChart.SeriesContext.GetColumnPostion(barSeries);
+                count = isRow
+                    ? cartesianChart.SeriesContext.GetRowSeriesCount()
+                    : cartesianChart.SeriesContext.GetColumnSeriesCount();
             }
 
             cp = 0f;

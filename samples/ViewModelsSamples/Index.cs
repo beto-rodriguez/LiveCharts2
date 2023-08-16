@@ -63,6 +63,8 @@ public static class Index
 
         "Financial/BasicCandlesticks",
 
+        "Box/Basic",
+
         "Heat/Basic",
 
         "Polar/Basic",
