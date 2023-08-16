@@ -11,10 +11,10 @@ public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {
-        new BoxSeries<BoxPoint>
+        new BoxSeries<BoxValue>
         {
             Name = "Year 2023",
-            Values = new BoxPoint[]
+            Values = new BoxValue[]
             {
                 // max, upper quartile, median, lower quartile, min
                 new(100, 80, 60, 20, 70),
@@ -22,20 +22,20 @@ public partial class ViewModel : ObservableObject
                 new(80, 60, 40, 10, 50)
             }
         },
-        new BoxSeries<BoxPoint>
+        new BoxSeries<BoxValue>
         {
             Name = "Year 2024",
-            Values = new BoxPoint[]
+            Values = new BoxValue[]
             {
                 new(90, 70, 50, 30, 60),
                 new(80, 60, 40, 10, 50),
                 new(70, 50, 30, 20, 40)
             }
         },
-        new BoxSeries<BoxPoint>
+        new BoxSeries<BoxValue>
         {
             Name = "Year 2025",
-            Values = new BoxPoint[]
+            Values = new BoxValue[]
             {
                 new(80, 60, 40, 10, 50),
                 new(70, 50, 30, 20, 40),
