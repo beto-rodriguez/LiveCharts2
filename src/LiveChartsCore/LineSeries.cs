@@ -279,14 +279,14 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         v.Bezier.Yi = p;
                         v.Bezier.Ym = p;
                         v.Bezier.Yj = p;
+                    }
 
-                        if (v.ErrorGeometry is not null)
-                        {
-                            v.ErrorGeometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                            v.ErrorGeometry.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                            v.ErrorGeometry.Y = p;
-                            v.ErrorGeometry.Y1 = p;
-                        }
+                    if (v.ErrorGeometry is not null)
+                    {
+                        v.ErrorGeometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.ErrorGeometry.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.ErrorGeometry.Y = p;
+                        v.ErrorGeometry.Y1 = p;
                     }
 
                     data.TargetPoint.Context.Visual = v.Geometry;
@@ -340,6 +340,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     visual.ErrorGeometry.X1 = secondaryScale.ToPixels(data.X2);
                     visual.ErrorGeometry.Y = primaryScale.ToPixels(data.Y2 + e.Yi);
                     visual.ErrorGeometry.Y1 = primaryScale.ToPixels(data.Y2 - e.Yj);
+                    visual.ErrorGeometry.RemoveOnCompleted = false;
                 }
 
                 visual.FillPath = fillVector!.AreaGeometry;
@@ -678,6 +679,13 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         visual.Geometry.Height = 0;
         visual.Geometry.Width = 0;
         visual.Geometry.RemoveOnCompleted = true;
+
+        if (visual.ErrorGeometry is not null)
+        {
+            visual.ErrorGeometry.Y = y;
+            visual.ErrorGeometry.Y1 = y;
+            visual.ErrorGeometry.RemoveOnCompleted = true;
+        }
 
         DataFactory.DisposePoint(point);
 
