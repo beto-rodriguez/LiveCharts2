@@ -121,10 +121,11 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
 
         foreach (var point in Fetch(cartesianChart))
         {
+            var coordinate = point.Coordinate;
+
             var visual = point.Context.Visual as TVisual;
             var e = point.Context.AdditionalVisuals as ErrorVisual<TErrorGeometry>;
 
-            var coordinate = point.Coordinate;
             var primary = primaryScale.ToPixels(coordinate.PrimaryValue);
             var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var b = Math.Abs(primary - helper.p);

@@ -73,7 +73,8 @@ public class StackedRowSeries<TModel, TVisual> : StackedRowSeries<TModel, TVisua
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class StackedRowSeries<TModel, TVisual, TLabel> : StackedRowSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+public class StackedRowSeries<TModel, TVisual, TLabel>
+    : StackedRowSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }
