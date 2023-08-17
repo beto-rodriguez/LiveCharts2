@@ -50,6 +50,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     private bool _ignoresBarPosition = false;
     private double _rx;
     private double _ry;
+    private IPaint<TDrawingContext>? _errorPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -77,6 +78,13 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
+
+    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
+    public IPaint<TDrawingContext>? ErrorPaint
+    {
+        get => _errorPaint;
+        set => SetPaintProperty(ref _errorPaint, value, true);
+    }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
@@ -203,5 +211,10 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         visual.Opacity = 1;
 
         base.OnPointerLeft(point);
+    }
+
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    {
+        return new[] { Stroke, Fill, DataLabelsPaint, _errorPaint };
     }
 }

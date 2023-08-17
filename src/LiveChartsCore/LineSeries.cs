@@ -266,6 +266,16 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     {
                         v.YError = new TErrorGeometry();
                         v.XError = new TErrorGeometry();
+
+                        v.YError.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.YError.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.YError.Y = p;
+                        v.YError.Y1 = p;
+
+                        v.XError.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.XError.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.XError.Y = p;
+                        v.XError.Y1 = p;
                     }
 
                     visual = v;
@@ -283,22 +293,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         v.Bezier.Yi = p;
                         v.Bezier.Ym = p;
                         v.Bezier.Yj = p;
-                    }
-
-                    if (v.YError is not null)
-                    {
-                        v.YError.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        v.YError.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        v.YError.Y = p;
-                        v.YError.Y1 = p;
-                    }
-
-                    if (v.XError is not null)
-                    {
-                        v.XError.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        v.XError.X1 = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        v.XError.Y = p;
-                        v.XError.Y1 = p;
                     }
 
                     data.TargetPoint.Context.Visual = v.Geometry;

@@ -36,15 +36,17 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">the type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+/// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
+public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     where TVisual : class, ISizedGeometry<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
     private readonly bool _isRounded = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
     protected ColumnSeries(bool isStacked = false)
         : base(
@@ -95,9 +97,15 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
+        if (ErrorPaint is not null)
+        {
+            ErrorPaint.ZIndex = actualZIndex + 0.3;
+            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
+        }
         if (DataLabelsPaint is not null)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
+            DataLabelsPaint.ZIndex = actualZIndex + 0.4;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
@@ -114,6 +122,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         foreach (var point in Fetch(cartesianChart))
         {
             var visual = point.Context.Visual as TVisual;
+            var e = point.Context.AdditionalVisuals as ErrorVisual<TErrorGeometry>;
+
             var coordinate = point.Coordinate;
             var primary = primaryScale.ToPixels(coordinate.PrimaryValue);
             var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
@@ -166,6 +176,23 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                     rounded.BorderRadius = new LvcPoint(rx, ry);
                 }
 
+                if (ErrorPaint is not null)
+                {
+                    e = new ErrorVisual<TErrorGeometry>();
+
+                    e.YError.X = xi;
+                    e.YError.X1 = xi;
+                    e.YError.Y = pi;
+                    e.YError.Y1 = pi;
+
+                    e.XError.X = xi;
+                    e.XError.X1 = xi;
+                    e.XError.Y = pi;
+                    e.XError.Y1 = pi;
+
+                    point.Context.AdditionalVisuals = e;
+                }
+
                 visual = r;
                 point.Context.Visual = visual;
                 OnPointCreated(point);
@@ -182,6 +209,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
+            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
 
             var cy = primaryAxis.IsInverted
                 ? (coordinate.PrimaryValue > pivot ? primary - b : primary)
@@ -212,6 +241,24 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
             visual.Y = cy;
             visual.Width = helper.uw;
             visual.Height = b;
+
+            if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
+            {
+                var pe = coordinate.PointError;
+                var xe = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+
+                e!.YError!.X = xe;
+                e.YError.X1 = xe;
+                e.YError.Y = primary + primaryScale.MeasureInPixels(pe.Yi);
+                e.YError.Y1 = primary - primaryScale.MeasureInPixels(pe.Yj);
+                e.YError.RemoveOnCompleted = false;
+
+                e.XError!.X = xe - secondaryScale.MeasureInPixels(pe.Xi);
+                e.XError.X1 = xe + secondaryScale.MeasureInPixels(pe.Xj);
+                e.XError.Y = primary;
+                e.XError.Y1 = primary;
+                e.XError.RemoveOnCompleted = false;
+            }
 
             if (_isRounded)
             {
@@ -278,7 +325,18 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
     {
         var chart = chartPoint.Context.Chart;
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+
+        var easing = EasingFunction ?? chart.EasingFunction;
+        var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
+
+        visual.Animate(easing, speed);
+
+        if (chartPoint.Context.AdditionalVisuals is not null)
+        {
+            var e = (ErrorVisual<TErrorGeometry>)chartPoint.Context.AdditionalVisuals;
+            e.YError.Animate(easing, speed);
+            e.XError.Animate(easing, speed);
+        }
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -304,6 +362,19 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         visual.Y = p;
         visual.Height = 0;
         visual.RemoveOnCompleted = true;
+
+        if (point.Context.AdditionalVisuals is not null)
+        {
+            var e = (ErrorVisual<TErrorGeometry>)point.Context.AdditionalVisuals;
+
+            e.YError.Y = p;
+            e.YError.Y1 = p;
+            e.YError.RemoveOnCompleted = true;
+
+            e.XError.X = secondary - visual.Width * 0.5f;
+            e.XError.X1 = secondary - visual.Width * 0.5f;
+            e.XError.RemoveOnCompleted = true;
+        }
 
         DataFactory.DisposePoint(point);
 
