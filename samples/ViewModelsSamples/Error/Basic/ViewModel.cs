@@ -12,7 +12,7 @@ public partial class ViewModel : ObservableObject
     public ISeries[] Series { get; set; } =
     {
         // use the ErrorValue type to define the error in Y
-        new LineSeries<ErrorValue>
+        new ColumnSeries<ErrorValue>
         {
             Values = new ErrorValue[]
             {
@@ -26,14 +26,11 @@ public partial class ViewModel : ObservableObject
                 new(60, 4, 16),
                 new(65, 6)
             },
-            ErrorPaint = new SolidColorPaint(SKColors.Black),
-            GeometryFill = null,
-            GeometryStroke = null,
-            Fill = null
+            ErrorPaint = new SolidColorPaint(SKColors.Black)
         },
 
         // When you need to define the error in X and Y use the ErrorPoint type
-        new LineSeries<ErrorPoint>
+        new ColumnSeries<ErrorPoint>
         {
             Values = new ErrorPoint[]
             {
@@ -47,10 +44,9 @@ public partial class ViewModel : ObservableObject
                 new(5, 30, 0.4, 4),
                 new(6, 50, 0.3, 6)
             },
-            ErrorPaint = new SolidColorPaint(SKColors.Black),
-            GeometryFill = null,
-            GeometryStroke = null,
-            Fill = null
-        },
+            ErrorPaint = new SolidColorPaint(SKColors.Black)
+        }
+
+        // Error marks are also supported in LineSeries<T> and RowSeries<T> // mark
     };
 }
