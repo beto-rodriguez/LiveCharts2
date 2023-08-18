@@ -751,5 +751,4 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         CoreCanvas.Invalidate();
     }
-
 }
