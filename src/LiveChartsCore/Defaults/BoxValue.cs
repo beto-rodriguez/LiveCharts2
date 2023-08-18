@@ -29,7 +29,7 @@ namespace LiveChartsCore.Defaults;
 /// <summary>
 /// Defines a point for box plots.
 /// </summary>
-public class BoxPoint : IChartEntity, INotifyPropertyChanged
+public class BoxValue : IChartEntity, INotifyPropertyChanged
 {
     private double _max;
     private double _third;
@@ -40,7 +40,7 @@ public class BoxPoint : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
     /// </summary>
-    public BoxPoint()
+    public BoxValue()
     {
         MetaData = new ChartEntityMetaData(OnCoordinateChanged);
     }
@@ -53,7 +53,7 @@ public class BoxPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="firstQuartile">The first quartile.</param>
     /// <param name="min">The min.</param>
     /// <param name="median">The median.</param>
-    public BoxPoint(
+    public BoxValue(
         double max, double thirdQuartile, double firstQuartile, double min, double median)
             : this()
     {
@@ -73,7 +73,7 @@ public class BoxPoint : IChartEntity, INotifyPropertyChanged
     public double Max { get => _max; set { _max = value; OnPropertyChanged(); } }
 
     /// <summary>
-    /// Gets or sets the open.
+    /// Gets or sets the max quiadrile value.
     /// </summary>
     /// <value>
     /// The open.
@@ -81,7 +81,7 @@ public class BoxPoint : IChartEntity, INotifyPropertyChanged
     public double ThirdQuartile { get => _third; set { _third = value; OnPropertyChanged(); } }
 
     /// <summary>
-    /// Gets or sets the close.
+    /// Gets or sets the min quadrile value.
     /// </summary>
     /// <value>
     /// The close.
@@ -89,7 +89,7 @@ public class BoxPoint : IChartEntity, INotifyPropertyChanged
     public double FirtQuartile { get => _first; set { _first = value; OnPropertyChanged(); } }
 
     /// <summary>
-    /// Gets or sets the low.
+    /// Gets or sets the min value.
     /// </summary>
     /// <value>
     /// The low.
@@ -97,7 +97,7 @@ public class BoxPoint : IChartEntity, INotifyPropertyChanged
     public double Min { get => _min; set { _min = value; OnPropertyChanged(); } }
 
     /// <summary>
-    /// Gets or sets the low.
+    /// Gets or sets the median value.
     /// </summary>
     /// <value>
     /// The low.

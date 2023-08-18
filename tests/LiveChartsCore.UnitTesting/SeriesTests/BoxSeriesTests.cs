@@ -40,9 +40,9 @@ public class BoxSeriesTest
     [TestMethod]
     public void ShouldScale()
     {
-        var sutSeries = new BoxSeries<BoxPoint>
+        var sutSeries = new BoxSeries<BoxValue>
         {
-            Values = new BoxPoint[]
+            Values = new BoxValue[]
             {
                 new (1, 0.75, 0.25, 0, 0.5),
                 new (64, 32, 64, 32, 40),
@@ -108,9 +108,9 @@ public class BoxSeriesTest
     [TestMethod]
     public void ShouldPlaceToolTips()
     {
-        var sutSeries = new BoxSeries<BoxPoint>
+        var sutSeries = new BoxSeries<BoxValue>
         {
-            Values = new BoxPoint[]
+            Values = new BoxValue[]
             {
                 new(1,0.75,0.25,0, 0.5),
                 new(2,1.75,1.25,1, 1.5),
@@ -213,9 +213,9 @@ public class BoxSeriesTest
     [TestMethod]
     public void ShouldPlaceDataLabel()
     {
-        var sutSeries = new BoxSeries<BoxPoint, BoxGeometry, TestLabel>
+        var sutSeries = new BoxSeries<BoxValue, BoxGeometry, TestLabel>
         {
-            Values = new BoxPoint[]
+            Values = new BoxValue[]
             {
                 new(-9, -9.25, -9.75, -10, -9.5),
                 new(1, .75, 0.25, 0, 0.5),

@@ -64,7 +64,7 @@ public struct LvcPoint
     /// </summary>
     /// <param name="obj">The instance to compare to.</param>
     /// <returns>The comparision result.</returns>
-    public override bool Equals(object? obj)
+    public override readonly bool Equals(object? obj)
     {
         return obj is LvcPoint point &&
             X == point.X &&
@@ -75,7 +75,7 @@ public struct LvcPoint
     /// Gets the object hash code.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         var hashCode = 1861411795;
         hashCode = hashCode * -1521134295 + X.GetHashCode();

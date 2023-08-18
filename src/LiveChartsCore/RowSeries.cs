@@ -37,15 +37,17 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+/// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
+public class RowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     where TVisual : class, ISizedGeometry<TDrawingContext>, new()
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
     private readonly bool _isRounded = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
     public RowSeries(bool isStacked = false)
         : base(
@@ -96,9 +98,15 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
+        if (ErrorPaint is not null)
+        {
+            ErrorPaint.ZIndex = actualZIndex + 0.3;
+            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
+        }
         if (DataLabelsPaint is not null)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
+            DataLabelsPaint.ZIndex = actualZIndex + 0.4;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
@@ -117,6 +125,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             var coordinate = point.Coordinate;
 
             var visual = point.Context.Visual as TVisual;
+            var e = point.Context.AdditionalVisuals as ErrorVisual<TErrorGeometry>;
+
             var primary = primaryScale.ToPixels(coordinate.PrimaryValue);
             var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var b = Math.Abs(primary - helper.p);
@@ -168,6 +178,23 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                     rounded.BorderRadius = new LvcPoint(rx, ry);
                 }
 
+                if (ErrorPaint is not null)
+                {
+                    e = new ErrorVisual<TErrorGeometry>();
+
+                    e.YError.X = pi;
+                    e.YError.X1 = pi;
+                    e.YError.Y = yi;
+                    e.YError.Y1 = yi;
+
+                    e.XError.X = pi;
+                    e.XError.X1 = pi;
+                    e.XError.Y = yi;
+                    e.XError.Y1 = yi;
+
+                    point.Context.AdditionalVisuals = e;
+                }
+
                 visual = r;
                 point.Context.Visual = visual;
                 OnPointCreated(point);
@@ -184,6 +211,8 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
 
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
+            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
 
             var cx = secondaryAxis.IsInverted
                 ? (coordinate.PrimaryValue > pivot ? primary : primary - b)
@@ -214,6 +243,29 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
             visual.Y = y;
             visual.Width = b;
             visual.Height = helper.uw;
+
+            if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
+            {
+                var pe = coordinate.PointError;
+                var ye = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+
+                // Note #20231608
+                // Because coordinates are inverted in the row series
+                // we use the XError as the YError and vice versa
+                // strange.. this should be improved.
+
+                e!.YError!.X = primary + primaryScale.MeasureInPixels(pe.Yi);
+                e.YError.X1 = primary - primaryScale.MeasureInPixels(pe.Yi);
+                e.YError.Y = ye;
+                e.YError.Y1 = ye;
+                e.YError.RemoveOnCompleted = false;
+
+                e.XError!.X = primary;
+                e.XError.X1 = primary;
+                e.XError.Y = ye - secondaryScale.MeasureInPixels(pe.Xi);
+                e.XError.Y1 = ye + secondaryScale.MeasureInPixels(pe.Xj);
+                e.XError.RemoveOnCompleted = false;
+            }
 
             if (_isRounded)
             {
@@ -277,7 +329,18 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
     {
         var chart = chartPoint.Context.Chart;
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+
+        var easing = EasingFunction ?? chart.EasingFunction;
+        var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
+
+        visual.Animate(easing, speed);
+
+        if (chartPoint.Context.AdditionalVisuals is not null)
+        {
+            var e = (ErrorVisual<TErrorGeometry>)chartPoint.Context.AdditionalVisuals;
+            e.YError.Animate(easing, speed);
+            e.XError.Animate(easing, speed);
+        }
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -303,6 +366,19 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         visual.Y = secondary - visual.Height * 0.5f;
         visual.Width = 0;
         visual.RemoveOnCompleted = true;
+
+        if (point.Context.AdditionalVisuals is not null)
+        {
+            var e = (ErrorVisual<TErrorGeometry>)point.Context.AdditionalVisuals;
+
+            e.YError.Y = secondary - visual.Height * 0.5f;
+            e.YError.Y1 = secondary - visual.Height * 0.5f;
+            e.YError.RemoveOnCompleted = true;
+
+            e.XError.X = p;
+            e.XError.X1 = p;
+            e.XError.RemoveOnCompleted = true;
+        }
 
         DataFactory.DisposePoint(point);
 
