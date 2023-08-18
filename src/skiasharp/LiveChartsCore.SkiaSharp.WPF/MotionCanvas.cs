@@ -86,7 +86,7 @@ public class MotionCanvas : Control
     /// <value>
     /// The frames per second.
     /// </value>
-    public double MaxFPS { get; set; } = 65;
+    public double MaxFPS { get; set; } = 60;
 
     /// <summary>
     /// Gets the canvas core.

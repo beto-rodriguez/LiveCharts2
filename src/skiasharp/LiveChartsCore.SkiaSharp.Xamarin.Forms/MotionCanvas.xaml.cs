@@ -78,7 +78,7 @@ public partial class MotionCanvas : ContentView
     /// <value>
     /// The frames per second.
     /// </value>
-    public double FramesPerSecond { get; set; } = 90;
+    public double FramesPerSecond { get; set; } = 60;
 
     /// <summary>
     /// Gets or sets the paint tasks.

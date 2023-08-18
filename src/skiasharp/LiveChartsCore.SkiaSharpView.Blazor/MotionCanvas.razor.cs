@@ -62,7 +62,7 @@ public partial class MotionCanvas : IDisposable
     /// Gets or sets the FPS.
     /// </summary>
     [Parameter]
-    public double MaxFps { get; set; } = 65;
+    public double MaxFps { get; set; } = 60;
 
     /// <summary>
     /// Gets or sets the paint tasks.
