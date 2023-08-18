@@ -33,7 +33,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.4-preview.84" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.4-preview.96" />
   </ItemGroup>
 
   <ItemGroup>

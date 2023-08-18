@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.4-preview.84" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.4-preview.96" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
   </ItemGroup>

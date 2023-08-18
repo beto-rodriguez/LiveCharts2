@@ -27,8 +27,8 @@
 		<PackageReference Include="Uno.Extensions.Navigation.WinUI" Version="2.3.6" />
 		<PackageReference Include="Uno.Extensions.Reactive.WinUI" Version="2.3.6" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
-		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.4-preview.84" />
-		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.4-preview.84" />
+		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.4-preview.96" />
+		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.4-preview.96" />
 		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.8.24" Condition="'$(Configuration)'=='Debug'" />
 		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.8.24" />
 	</ItemGroup>
