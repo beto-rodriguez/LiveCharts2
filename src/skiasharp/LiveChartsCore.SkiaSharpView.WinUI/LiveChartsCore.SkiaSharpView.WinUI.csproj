@@ -9,7 +9,7 @@
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
 
-    <Version>2.0.0-beta.911</Version>
+    <Version>2.0.0-beta.920</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsAppSDK.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
