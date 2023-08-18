@@ -92,7 +92,7 @@ public sealed partial class MotionCanvas : UserControl
     /// <value>
     /// The frames per second.
     /// </value>
-    public double MaxFps { get; set; } = 35;
+    public double MaxFps { get; set; } = 60;
 
     /// <summary>
     /// Gets the canvas core.

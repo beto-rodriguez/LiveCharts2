@@ -372,7 +372,8 @@ public static class Extensions
     /// </returns>
     public static bool IsColumnSeries(this ISeries series)
     {
-        return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation)) != 0;
+        return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation)) ==
+            (SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation);
     }
 
     /// <summary>
@@ -384,7 +385,20 @@ public static class Extensions
     /// </returns>
     public static bool IsRowSeries(this ISeries series)
     {
-        return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation)) != 0;
+        return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation)) ==
+            (SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation);
+    }
+
+    /// <summary>
+    /// Determines whether is box series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    /// <returns>
+    ///   <c>true</c> if [is box series] [the specified series]; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool IsBoxSeries(this ISeries series)
+    {
+        return (series.SeriesProperties & (SeriesProperties.BoxSeries)) == SeriesProperties.BoxSeries;
     }
 
     /// <summary>

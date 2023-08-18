@@ -115,6 +115,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             : null;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
+        var clipping = GetClipRectangle(cartesianChart);
 
         if (stacker is not null)
         {
@@ -173,7 +174,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
                 cartesianChart.Canvas.AddDrawableTask(Fill);
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
                 fillPath.Pivot = p;
                 if (isNew)
                 {
@@ -185,7 +186,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
                 strokePath.Pivot = p;
                 if (isNew)
                 {
@@ -318,13 +319,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             if (GeometryFill is not null)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryFill);
-                GeometryFill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                GeometryFill.SetClipRectangle(cartesianChart.Canvas, clipping);
                 GeometryFill.ZIndex = actualZIndex + 0.3;
             }
             if (GeometryStroke is not null)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryStroke);
-                GeometryStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                GeometryStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
                 GeometryStroke.ZIndex = actualZIndex + 0.4;
             }
             segmentI++;
@@ -346,7 +347,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         if (DataLabelsPaint is not null)
         {
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 

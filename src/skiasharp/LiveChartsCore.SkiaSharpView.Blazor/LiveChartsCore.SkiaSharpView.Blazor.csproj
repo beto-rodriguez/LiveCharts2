@@ -17,7 +17,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>2.0.0-beta.911</Version>
+    <Version>2.0.0-beta.920</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Blazor.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -45,7 +45,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.4-preview.84" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.4-preview.96" />
   </ItemGroup>
 
   <ItemGroup>

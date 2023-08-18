@@ -72,7 +72,7 @@ public class MotionCanvas : SkiaDrawable
     /// <value>
     /// The frames per second.
     /// </value>
-    public double MaxFps { get; set; } = 65;
+    public double MaxFps { get; set; } = 60;
 
     /// <summary>
     /// Gets the canvas core.

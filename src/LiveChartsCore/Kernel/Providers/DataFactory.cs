@@ -153,11 +153,29 @@ public class DataFactory<TModel, TDrawingContext>
             bounds.SecondaryBounds.AppendValue(secondary);
             bounds.TertiaryBounds.AppendValue(tertiary);
 
+            if (!coordinate.PointError.IsEmpty)
+            {
+                var e = coordinate.PointError;
+                bounds.PrimaryBounds.AppendValue(primary + e.Yi);
+                bounds.PrimaryBounds.AppendValue(primary - e.Yj);
+                bounds.SecondaryBounds.AppendValue(secondary - e.Xi);
+                bounds.SecondaryBounds.AppendValue(secondary + e.Xj);
+            }
+
             if (primary >= yMin && primary <= yMax && secondary >= xMin && secondary <= xMax)
             {
                 bounds.VisiblePrimaryBounds.AppendValue(primary);
                 bounds.VisibleSecondaryBounds.AppendValue(secondary);
                 bounds.VisibleTertiaryBounds.AppendValue(tertiary);
+
+                if (!coordinate.PointError.IsEmpty)
+                {
+                    var e = coordinate.PointError;
+                    bounds.VisiblePrimaryBounds.AppendValue(primary + e.Yi);
+                    bounds.VisiblePrimaryBounds.AppendValue(primary - e.Yj);
+                    bounds.VisibleSecondaryBounds.AppendValue(secondary - e.Xi);
+                    bounds.VisibleSecondaryBounds.AppendValue(secondary + e.Xj);
+                }
             }
 
             if (previous is not null)

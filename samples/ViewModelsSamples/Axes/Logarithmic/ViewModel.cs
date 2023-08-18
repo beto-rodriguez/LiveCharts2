@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Logarithmic;
 
@@ -23,26 +25,33 @@ public partial class ViewModel : ObservableObject
             },
             Values = new LogarithmicPoint[]
             {
-                new() { X = 1, Y = 10 },
-                new() { X = 2, Y = 100 },
-                new() { X = 3, Y = 1000 },
-                new() { X = 4, Y = 10000 },
-                new() { X = 5, Y = 100000 },
-                new() { X = 6, Y = 1000000 },
-                new() { X = 7, Y = 10000000 }
+                new() { X = 1, Y = 1 },
+                new() { X = 2, Y = 10 },
+                new() { X = 3, Y = 100 },
+                new() { X = 4, Y = 1000 },
+                new() { X = 5, Y = 10000 },
+                new() { X = 6, Y = 100000 },
+                new() { X = 7, Y = 1000000 },
+                new() { X = 8, Y = 10000000 }
             }
         }
     };
 
     public Axis[] YAxes { get; set; } =
     {
-        new Axis
+        new LogaritmicAxis(s_logBase)
         {
-            // forces the step of the axis to be at least 1
-            MinStep = 1,
-
-            // converts the log scale back for the label
-            Labeler = value => Math.Pow(s_logBase, value).ToString("N2") // mark
+            SeparatorsPaint = new SolidColorPaint
+            {
+                Color = SKColors.Black.WithAlpha(100),
+                StrokeThickness = 1,
+            },
+            SubseparatorsPaint = new SolidColorPaint
+            {
+                Color = SKColors.Black.WithAlpha(50),
+                StrokeThickness = 0.5f
+            },
+            SubseparatorsCount = 9,
         }
     };
 }

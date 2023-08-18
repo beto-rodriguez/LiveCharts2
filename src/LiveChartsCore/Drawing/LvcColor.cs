@@ -95,7 +95,7 @@ public struct LvcColor
     /// </summary>
     /// <param name="obj">The instance to compare to.</param>
     /// <returns>The comparision result.</returns>
-    public override bool Equals(object? obj)
+    public override readonly bool Equals(object? obj)
     {
         return obj is LvcColor color &&
             R == color.R && G == color.G && B == color.B && A == color.A && IsEmpty == color.IsEmpty;
@@ -105,7 +105,7 @@ public struct LvcColor
     /// Gets the object hash code.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         var hashCode = 1960784236;
         hashCode = hashCode * -1521134295 + R.GetHashCode();

@@ -41,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
-    private static readonly int s_zIndex = 10050;
+    private static readonly int s_zIndex = 10100;
     private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
 
     /// <summary>
@@ -159,7 +159,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(), i, ltr ? 3 : 0);
+                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(s_zIndex), i, ltr ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
                     tableLayout.AddChild(

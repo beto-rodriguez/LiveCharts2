@@ -227,6 +227,14 @@ public class Theme<TDrawingContext>
     public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new();
 
     /// <summary>
+    /// Gets or sets the error series builder.
+    /// </summary>
+    /// <value>
+    /// The pie series builder.
+    /// </value>
+    public List<Action<IBoxSeries<TDrawingContext>>> BoxSeriesBuilder { get; set; } = new();
+
+    /// <summary>
     /// Applies the theme to an axis.
     /// </summary>
     /// <param name="axis">The axis.</param>
@@ -315,6 +323,11 @@ public class Theme<TDrawingContext>
             {
                 foreach (var rule in StackedStepLineSeriesBuilder) rule(stepSeries);
             }
+        }
+
+        if ((series.SeriesProperties & SeriesProperties.BoxSeries) == SeriesProperties.BoxSeries)
+        {
+            foreach (var rule in BoxSeriesBuilder) rule((IBoxSeries<TDrawingContext>)series);
         }
 
         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)

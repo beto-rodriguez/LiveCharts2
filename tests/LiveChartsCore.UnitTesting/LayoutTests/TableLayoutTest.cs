@@ -488,4 +488,84 @@ public class TableLayoutTest
             // 10 padding + rows width + 10 padding
             tableSize.Height == py + 20 + 30 + py);
     }
+
+    [TestMethod]
+    public void UnevenColumns()
+    {
+        var px = 0;
+        var py = 0;
+
+        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        {
+            Padding = new Drawing.Padding(px, py),
+            X = 100,
+            Y = 200,
+            VerticalAlignment = Drawing.Align.Start,
+            HorizontalAlignment = Drawing.Align.Start
+        };
+
+        LabelVisual g00, g01, g10, g11;
+
+        table.AddChild(g00 = new LabelVisual
+        {
+            Text = "xxxx",
+            Paint = new SolidColorPaint(SKColors.Red)
+        }, 0, 0);
+
+        table.AddChild(g01 = new LabelVisual
+        {
+            Text = "xxxxxxxxxxxxxxxxxxxxxxxx",
+            Paint = new SolidColorPaint(SKColors.Green)
+        }, 0, 1);
+
+        table.AddChild(g10 = new LabelVisual
+        {
+            Text = "xxxxxxxxxxxxxxxxxxxxxxxx",
+            Paint = new SolidColorPaint(SKColors.Yellow)
+        }, 1, 0);
+
+        table.AddChild(g11 = new LabelVisual
+        {
+            Text = "xxxx",
+            Paint = new SolidColorPaint(SKColors.Blue)
+        }, 1, 1);
+
+        var chart = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = new ISeries[]
+            {
+                new LineSeries<double>
+                {
+                    Values = new double[] { 1, 2, 3 }
+                }
+            },
+            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            {
+                table
+            }
+        };
+
+        _ = chart.GetImage();
+
+        var g00g = (LabelGeometry)g00.GetDrawnGeometries()[0];
+        var g01g = (LabelGeometry)g01.GetDrawnGeometries()[0];
+        var g10g = (LabelGeometry)g10.GetDrawnGeometries()[0];
+        var g11g = (LabelGeometry)g11.GetDrawnGeometries()[0];
+
+        var g00m = g00g.Measure(g00.Paint);
+        var g01m = g01g.Measure(g01.Paint);
+        var g10m = g10g.Measure(g10.Paint);
+        var g11m = g11g.Measure(g11.Paint);
+
+        var wc0 = g00m.Width > g01m.Width ? g00m.Width : g10m.Width;
+        var wc1 = g10m.Width > g11m.Width ? g01m.Width : g11m.Width;
+
+        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+
+        Assert.IsTrue(
+            // 10 padding + columns width + 10 padding
+            tableSize.Width == wc0 + wc1);
+    }
 }

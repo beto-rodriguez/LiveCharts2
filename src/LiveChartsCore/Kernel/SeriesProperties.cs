@@ -39,18 +39,23 @@ public enum SeriesProperties
     /// The Cartesian series
     /// </summary>
     CartesianSeries = 1 << 1,
+
     /// <summary>
     /// The bar series
     /// </summary>
+    /// 
     Bar = 1 << 2,
+
     /// <summary>
     /// The line series
     /// </summary>
     Line = 1 << 3,
+
     /// <summary>
     /// The stepline series
     /// </summary>
     StepLine = 1 << 4,
+
     /// <summary>
     /// The scatter series
     /// </summary>
@@ -135,4 +140,9 @@ public enum SeriesProperties
     /// Sepcifies that the series visual comes from a svg path.
     /// </summary>
     IsSVGPath = 1 << 21,
+
+    /// <summary>
+    /// The box series.
+    /// </summary>
+    BoxSeries = 1 << 22
 }

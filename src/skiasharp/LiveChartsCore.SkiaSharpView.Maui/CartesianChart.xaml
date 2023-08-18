@@ -9,7 +9,8 @@
                 <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
                 <PanGestureRecognizer PanUpdated="OnPanUpdated"/>
                 <TapGestureRecognizer Tapped="OnTapped"/>
-                <PointerGestureRecognizer PointerMoved="OnPointerMoved"/>
+                <PointerGestureRecognizer PointerMoved="OnPointerMoved"
+                                          PointerExited="OnPointerExited"/>
             </lvc:MotionCanvas.GestureRecognizers>
         </lvc:MotionCanvas>
     </ContentView.Content>

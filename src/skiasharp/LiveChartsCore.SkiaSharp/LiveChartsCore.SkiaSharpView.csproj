@@ -17,7 +17,7 @@
 
     <AssemblyName>LiveChartsCore.SkiaSharpView</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView</RootNamespace>
-    <Version>2.0.0-beta.911</Version>
+    <Version>2.0.0-beta.920</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for .Net, this package contains the SkiaSharp backend.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -37,8 +37,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.4-preview.84" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.4-preview.84" />
+    <PackageReference Include="SkiaSharp" Version="2.88.4-preview.96" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.4-preview.96" />
   </ItemGroup>
 
   <ItemGroup>

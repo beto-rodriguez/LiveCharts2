@@ -138,6 +138,14 @@ public static class ThemesExtensions
                         stackedStep.Stroke = null;
                         stackedStep.Fill = new SolidColorPaint(color);
                     })
+                    .HasRuleForBoxSeries(boxSeries =>
+                    {
+                        var color = theme.GetSeriesColor(boxSeries).AsSKColor();
+
+                        boxSeries.MaxBarWidth = 60;
+                        boxSeries.Stroke = new SolidColorPaint(new SKColor(30, 30, 30), 2);
+                        boxSeries.Fill = new SolidColorPaint(color);
+                    })
                     .HasRuleForHeatSeries(heatSeries =>
                     {
                         // ... rules here
@@ -300,6 +308,14 @@ public static class ThemesExtensions
                         stackedStep.GeometryFill = null;
                         stackedStep.Stroke = null;
                         stackedStep.Fill = new SolidColorPaint(color);
+                    })
+                    .HasRuleForBoxSeries(boxSeries =>
+                    {
+                        var color = theme.GetSeriesColor(boxSeries).AsSKColor();
+
+                        boxSeries.MaxBarWidth = 60;
+                        boxSeries.Stroke = new SolidColorPaint(new SKColor(220, 220, 220), 2);
+                        boxSeries.Fill = new SolidColorPaint(color);
                     })
                     .HasRuleForHeatSeries(heatSeries =>
                     {

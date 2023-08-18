@@ -38,12 +38,14 @@ public class SeriesContext<TDrawingContext>
 
     private int _columnsCount = 0;
     private int _rowsCount = 0;
+    private int _boxCount = 0;
     private int _stackedColumnsCount = 0;
     private int _stackedRowsCount = 0;
     private bool _areBarsIndexed = false;
 
     private readonly Dictionary<IChartSeries<TDrawingContext>, int> _columnPositions = new();
     private readonly Dictionary<IChartSeries<TDrawingContext>, int> _rowPositions = new();
+    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _boxPositions = new();
     private readonly Dictionary<int, int> _stackColumnPositions = new();
     private readonly Dictionary<int, int> _stackRowsPositions = new();
 
@@ -107,6 +109,29 @@ public class SeriesContext<TDrawingContext>
     }
 
     /// <summary>
+    /// Gets the box position.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    /// <returns></returns>
+    public int GetBoxPostion(IChartSeries<TDrawingContext> series)
+    {
+        if (_areBarsIndexed) return _boxPositions[series];
+        IndexBars();
+        return _boxPositions[series];
+    }
+
+    /// <summary>
+    /// Gets the box series count.
+    /// </summary>
+    /// <returns></returns>
+    public int GetBoxSeriesCount()
+    {
+        if (_areBarsIndexed) return _boxCount;
+        IndexBars();
+        return _boxCount;
+    }
+
+    /// <summary>
     /// Gets the stacked column position.
     /// </summary>
     /// <param name="series">The series.</param>
@@ -156,12 +181,13 @@ public class SeriesContext<TDrawingContext>
     {
         _columnsCount = 0;
         _rowsCount = 0;
+        _boxCount = 0;
         _stackedColumnsCount = 0;
         _stackedRowsCount = 0;
 
         foreach (var item in _series)
         {
-            if (!item.IsBarSeries()) continue;
+            if (!item.IsBarSeries() && !item.IsBoxSeries()) continue;
 
             if (item.IsColumnSeries())
             {
@@ -179,7 +205,7 @@ public class SeriesContext<TDrawingContext>
 
             if (item.IsRowSeries())
             {
-                if (!item.IsRowSeries())
+                if (!item.IsStackedSeries())
                 {
                     _rowPositions[item] = _rowsCount++;
                     continue;
@@ -189,6 +215,11 @@ public class SeriesContext<TDrawingContext>
                     _stackRowsPositions[item.GetStackGroup()] = _stackedRowsCount++;
 
                 continue;
+            }
+
+            if (item.IsBoxSeries())
+            {
+                _boxPositions[item] = _boxCount++;
             }
         }
 

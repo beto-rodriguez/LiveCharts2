@@ -27,6 +27,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Timers;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -43,7 +44,6 @@ using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -66,6 +66,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private double _lastPanY = 0;
     private IChartLegend<SkiaSharpDrawingContext>? _legend = new SKDefaultLegend();
     private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
+    private TimeSpan _tooltipCloseInterval = TimeSpan.FromMilliseconds(3500);
+    private readonly Timer _closeTooltipTimer = new();
 
     #endregion
 
@@ -108,6 +110,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
+
+        _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
+        _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
     }
 
     #region bindable properties 
@@ -642,6 +647,17 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the interval to close a tooltip once the tooltip was opened,
+    /// this propery has only effect on mobile devices, on desktop devices, the tooltip is
+    /// closed when the pointer leaves the chart.
+    /// </summary>
+    public TimeSpan TooltipCloseInterval
+    {
+        get => _tooltipCloseInterval;
+        set { _tooltipCloseInterval = value; _closeTooltipTimer.Interval = value.TotalMilliseconds; }
+    }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -837,6 +853,22 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         var location = new LvcPoint(p.Value.X, p.Value.Y);
         _core.InvokePointerDown(location, false);
         _core.InvokePointerMove(location);
+
+#if __MOBILE__
+        _closeTooltipTimer.Stop();
+        _closeTooltipTimer.Start();
+#endif
+    }
+
+    private void OnTooltipTimerEllapsed(object sender, ElapsedEventArgs e)
+    {
+        if (_core is null) return;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Tooltip?.Hide(_core);
+            _core.Canvas.Invalidate();
+            _closeTooltipTimer.Stop();
+        });
     }
 
     private void OnPointerMoved(object sender, PointerEventArgs e)
@@ -872,6 +904,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
+    }
+
+    private void OnPointerExited(object sender, PointerEventArgs e)
+    {
+        _core?.InvokePointerLeft();
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)

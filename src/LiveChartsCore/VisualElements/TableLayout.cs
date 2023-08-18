@@ -86,19 +86,13 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         {
             if (!_positions.TryGetValue(r, out var row)) continue;
 
-            var w = Padding.Left;
             for (var c = 0; c <= _maxColumn; c++)
             {
                 var cellSize = _measuredSizes[r, c];
                 var rowSize = _measuredSizes[r, mc];
-                var tableSize = _measuredSizes[mr, mc];
                 var columnSize = _measuredSizes[mr, c];
 
-                if (!row.TryGetValue(c, out var cell))
-                {
-                    w += columnSize.Width;
-                    continue;
-                }
+                if (!row.TryGetValue(c, out var cell)) continue;
 
                 var childSize = cell.VisualElement.Measure(chart);
 
@@ -110,17 +104,16 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
                     _measuredSizes[r, mc] = new(0, childSize.Height);
                 if (columnSize.Width < childSize.Width)
                     _measuredSizes[mr, c] = new(childSize.Width, 0);
-
-                w += _measuredSizes[r, c].Width;
-
-                if (tableSize.Width < w)
-                    _measuredSizes[mr, mc] = new(w, _measuredSizes[mr, mc].Height);
             }
 
             maxH += _measuredSizes[r, _maxColumn + 1].Height;
         }
 
-        return new(_measuredSizes[mr, mc].Width + Padding.Right, maxH + Padding.Bottom);
+        var maxW = Padding.Left;
+        for (var c = 0; c <= _maxColumn; c++)
+            maxW += _measuredSizes[_maxRow + 1, c].Width;
+
+        return new(maxW + Padding.Right, maxH + Padding.Bottom);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>

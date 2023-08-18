@@ -97,11 +97,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _forceStepToMin;
     private bool _crosshairSnapEnabled;
     private readonly float _tickLength = 6f;
-    private readonly int _subSections = 3;
+    private int _subseparatorsCount = 3;
     private Align? _labelsAlignment;
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
     private int _stepCount;
+    internal double? _logBase;
 
     #endregion
 
@@ -214,6 +215,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         get => _subseparatorsPaint;
         set => SetPaintProperty(ref _subseparatorsPaint, value, true);
     }
+
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsCount"/>
+    public int SubseparatorsCount { get => _subseparatorsCount; set => SetProperty(ref _subseparatorsCount, value); }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
     public bool DrawTicksPath { get => _drawTicksPath; set => SetProperty(ref _drawTicksPath, value); }
@@ -539,7 +543,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 InitializeTick(visualSeparator, cartesianChart);
                 UpdateTick(visualSeparator.Tick!, _tickLength, xc + txco, yc + tyco, UpdateMode.UpdateAndComplete);
             }
-            if (SubticksPaint is not null && _subSections > 0 &&
+            if (SubticksPaint is not null && _subseparatorsCount > 0 &&
                 (visualSeparator.Subticks is null || visualSeparator.Subticks.Length == 0))
             {
                 InitializeSubticks(visualSeparator, cartesianChart);
@@ -880,7 +884,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public override void RemoveFromUI(Chart<TDrawingContext> chart)
     {
         base.RemoveFromUI(chart);
-        _animatableBounds = null!;
+        _animatableBounds = new();
         _ = activeSeparators.Remove(chart);
     }
 
@@ -1039,9 +1043,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private void InitializeSubseparators(
         AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
     {
-        visualSeparator.Subseparators = new TLineGeometry[_subSections];
+        visualSeparator.Subseparators = new TLineGeometry[_subseparatorsCount];
 
-        for (var j = 0; j < _subSections; j++)
+        for (var j = 0; j < _subseparatorsCount; j++)
         {
             var subSeparator = new TLineGeometry();
             visualSeparator.Subseparators[j] = subSeparator;
@@ -1075,9 +1079,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private void InitializeSubticks(
         AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
     {
-        visualSeparator.Subticks = new TLineGeometry[_subSections];
+        visualSeparator.Subticks = new TLineGeometry[_subseparatorsCount];
 
-        for (var j = 0; j < _subSections; j++)
+        for (var j = 0; j < _subseparatorsCount; j++)
         {
             var subTick = new TLineGeometry();
             visualSeparator.Subticks[j] = subTick;
@@ -1158,7 +1162,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         for (var j = 0; j < subseparators.Length; j++)
         {
             var subseparator = subseparators[j];
-            var kl = (j + 1) / (double)(_subSections + 1);
+            var kl = (j + 1) / (double)(_subseparatorsCount + 1);
+
+            if (_logBase is not null) kl = Math.Log(kl, _logBase.Value);
 
             float xs = 0f, ys = 0f;
             if (_orientation == AxisOrientation.X)
@@ -1182,7 +1188,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             var subtick = subticks[j];
 
             var k = 0.5f;
-            var kl = (j + 1) / (double)(_subSections + 1);
+            var kl = (j + 1) / (double)(_subseparatorsCount + 1);
             if (Math.Abs(kl - 0.5f) < 0.01) k += 0.25f;
 
             float xs = 0f, ys = 0f;

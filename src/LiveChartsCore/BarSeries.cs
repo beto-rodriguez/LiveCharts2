@@ -50,6 +50,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     private bool _ignoresBarPosition = false;
     private double _rx;
     private double _ry;
+    private IPaint<TDrawingContext>? _errorPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -77,6 +78,13 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
+
+    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
+    public IPaint<TDrawingContext>? ErrorPaint
+    {
+        get => _errorPaint;
+        set => SetPaintProperty(ref _errorPaint, value, true);
+    }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
@@ -108,6 +116,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         /// <param name="minP">The min pivot allowed.</param>
         /// <param name="maxP">The max pivot allowed.</param>
         /// <param name="isStacked">Indicates whether the series is stacked or not.</param>
+        /// <param name="isRow">Indicates whether the serie is row or not.</param>
         public MeasureHelper(
             Scaler scaler,
             CartesianChart<TDrawingContext> cartesianChart,
@@ -116,7 +125,8 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
             float p,
             float minP,
             float maxP,
-            bool isStacked)
+            bool isStacked,
+            bool isRow)
         {
             this.p = p;
             if (p < minP) this.p = minP;
@@ -136,13 +146,21 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (isStacked)
             {
-                pos = cartesianChart.SeriesContext.GetStackedColumnPostion(barSeries);
-                count = cartesianChart.SeriesContext.GetStackedColumnSeriesCount();
+                pos = isRow
+                    ? cartesianChart.SeriesContext.GetStackedRowPostion(barSeries)
+                    : cartesianChart.SeriesContext.GetStackedColumnPostion(barSeries);
+                count = isRow
+                    ? cartesianChart.SeriesContext.GetStackedRowSeriesCount()
+                    : cartesianChart.SeriesContext.GetStackedColumnSeriesCount();
             }
             else
             {
-                pos = cartesianChart.SeriesContext.GetColumnPostion(barSeries);
-                count = cartesianChart.SeriesContext.GetColumnSeriesCount();
+                pos = isRow
+                    ? cartesianChart.SeriesContext.GetRowPostion(barSeries)
+                    : cartesianChart.SeriesContext.GetColumnPostion(barSeries);
+                count = isRow
+                    ? cartesianChart.SeriesContext.GetRowSeriesCount()
+                    : cartesianChart.SeriesContext.GetColumnSeriesCount();
             }
 
             cp = 0f;
@@ -193,5 +211,10 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         visual.Opacity = 1;
 
         base.OnPointerLeft(point);
+    }
+
+    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    {
+        return new[] { Stroke, Fill, DataLabelsPaint, _errorPaint };
     }
 }
