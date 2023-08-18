@@ -72,6 +72,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
         var previousSecondaryScale = primaryAxis.GetActualScaler(cartesianChart);
 
         var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
+        var clipping = GetClipRectangle(cartesianChart);
 
         var helper = new MeasureHelper(
             secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
@@ -89,25 +90,25 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
         if (Fill is not null)
         {
             Fill.ZIndex = actualZIndex + 0.1;
-            Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Fill);
         }
         if (Stroke is not null)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
-            Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
         if (ErrorPaint is not null)
         {
             ErrorPaint.ZIndex = actualZIndex + 0.3;
-            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
         }
         if (DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.4;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
 

@@ -139,35 +139,36 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
         }
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
+        var clipping = GetClipRectangle(cartesianChart);
 
         if (UpFill is not null)
         {
             UpFill.ZIndex = actualZIndex + 0.1;
-            UpFill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            UpFill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(UpFill);
         }
         if (DownFill is not null)
         {
             DownFill.ZIndex = actualZIndex + 0.1;
-            DownFill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DownFill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DownFill);
         }
         if (UpStroke is not null)
         {
             UpStroke.ZIndex = actualZIndex + 0.2;
-            UpStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            UpStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(UpStroke);
         }
         if (DownStroke is not null)
         {
             DownStroke.ZIndex = actualZIndex + 0.2;
-            DownStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DownStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DownStroke);
         }
         if (DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
 

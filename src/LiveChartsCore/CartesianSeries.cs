@@ -51,6 +51,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     private LvcPoint? _labelsTranslate = null;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _xTooltipLabelFormatter;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _yTooltipLabelFormatter;
+    private ClipMode _clippingMode = ClipMode.XY;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -95,6 +96,9 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         get => _yTooltipLabelFormatter;
         set { SetProperty(ref _yTooltipLabelFormatter, value); _obsolete_formatter = value; }
     }
+
+    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ClippingMode"/>
+    public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(
@@ -210,6 +214,32 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         }
 
         return label;
+    }
+
+    /// <summary>
+    /// Gets the clip rectangle for the series.
+    /// </summary>
+    /// <param name="cartesianChart">The cartesian chart.</param>
+    /// <returns></returns>
+    protected virtual LvcRectangle GetClipRectangle(CartesianChart<TDrawingContext> cartesianChart)
+    {
+        return ClippingMode switch
+        {
+            ClipMode.None =>
+                new LvcRectangle(new LvcPoint(), cartesianChart.ControlSize),
+            ClipMode.X =>
+                new LvcRectangle(
+                    new LvcPoint(cartesianChart.DrawMarginLocation.X, 0),
+                    new LvcSize(cartesianChart.DrawMarginSize.Width, cartesianChart.ControlSize.Height)),
+            ClipMode.Y =>
+                new LvcRectangle(
+                    new LvcPoint(0, cartesianChart.DrawMarginLocation.Y),
+                    new LvcSize(cartesianChart.ControlSize.Width, cartesianChart.DrawMarginSize.Height)),
+            ClipMode.XY =>
+                new LvcRectangle(cartesianChart.DrawMarginLocation, cartesianChart.DrawMarginSize),
+
+            _ => throw new NotImplementedException(),
+        };
     }
 
     /// <summary>

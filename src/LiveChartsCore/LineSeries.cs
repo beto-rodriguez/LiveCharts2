@@ -144,6 +144,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             : null;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
+        var clipping = GetClipRectangle(cartesianChart);
 
         if (stacker is not null)
         {
@@ -225,7 +226,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
                         cartesianChart.Canvas.AddDrawableTask(Fill);
                         Fill.ZIndex = actualZIndex + 0.1;
-                        Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                        Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
                         fillPath.Pivot = p;
                         if (isNew)
                         {
@@ -237,7 +238,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
                         cartesianChart.Canvas.AddDrawableTask(Stroke);
                         Stroke.ZIndex = actualZIndex + 0.2;
-                        Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                        Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
                         strokePath.Pivot = p;
                         if (isNew)
                         {
@@ -410,13 +411,13 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             if (GeometryFill is not null)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryFill);
-                GeometryFill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                GeometryFill.SetClipRectangle(cartesianChart.Canvas, clipping);
                 GeometryFill.ZIndex = actualZIndex + 0.4;
             }
             if (GeometryStroke is not null)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryStroke);
-                GeometryStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                GeometryStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
                 GeometryStroke.ZIndex = actualZIndex + 0.5;
             }
 
@@ -449,14 +450,14 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         if (DataLabelsPaint is not null)
         {
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
         if (ErrorPaint is not null)
         {
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
             ErrorPaint.ZIndex = actualZIndex + 0.3;
-            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
         }
 
         pointsCleanup.CollectPoints(

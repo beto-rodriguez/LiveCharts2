@@ -118,16 +118,18 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         var uwp = primaryScale.MeasureInPixels(primaryAxis.UnitWidth);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
+        var clipping = GetClipRectangle(cartesianChart);
+
         if (_paintTaks is not null)
         {
             _paintTaks.ZIndex = actualZIndex + 0.2;
-            _paintTaks.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            _paintTaks.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(_paintTaks);
         }
         if (DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
 

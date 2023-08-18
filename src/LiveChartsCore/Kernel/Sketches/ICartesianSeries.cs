@@ -70,6 +70,12 @@ public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContex
     LvcPoint? DataLabelsTranslate { get; set; }
 
     /// <summary>
+    /// Gets or sets the clipping mode, clipping restricts the series and labels for being drawn outside of the chart area (DrawMargin),
+    /// default is <see cref="ClipMode.XY"/>, and means that anything outside the chart bounds will be ignored.
+    /// </summary>
+    ClipMode ClippingMode { get; set; }
+
+    /// <summary>
     /// Gets the series bounds.
     /// </summary>
     /// <param name="chart">The chart.</param>
