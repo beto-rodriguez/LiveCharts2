@@ -34,17 +34,17 @@ public partial class ViewModel
             SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
         }; // mark
 
-    public SolidColorPaint LedgendBackgroundPaint { get; set; } = // mark
+    public SolidColorPaint LegendBackgroundPaint { get; set; } = // mark
         new SolidColorPaint(new SKColor(240, 240, 240)); // mark
 }
 ```
 
 ![custom]({{ assets_url }}/docs/_assets/legend-custom-style.png)
 
-## Tooltip control from scratch
+## Legend control from scratch
 
 You can also create your own legend, the recommended way is to use the LiveCharts API (example bellow) but you can
-use anything as tooltip as soon as it implements the `IChartLegend<T>` interface. At the following example we build
+use anything as legend as soon as it implements the `IChartLegend<T>` interface. At the following example we build
 a custom control to render legends in our charts using the LiveCharts API.
 
 ## CustomLegend.cs
@@ -55,4 +55,4 @@ a custom control to render legends in our charts using the LiveCharts API.
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedLegends/$PlatformViewFile" ~}}
 
-![custom tooltip]({{ assets_url }}/docs/_assets/legend-custom-template.png)
+![custom legend]({{ assets_url }}/docs/_assets/legend-custom-template.png)
