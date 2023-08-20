@@ -16,9 +16,9 @@ public partial class ViewModel : ObservableObject
         {
             Values = new ErrorValue[]
             {
-                // (y, y error)
+                // (Y, Y+- error) // mark
                 new(65, 6),
-                // (y, top y error, bottom y error)
+                // (Y, Y+ error, Y- error) // mark
                 new(70, 15, 4),
                 new(35, 4),
                 new(70, 6),
@@ -29,14 +29,14 @@ public partial class ViewModel : ObservableObject
             ErrorPaint = new SolidColorPaint(SKColors.Black)
         },
 
-        // When you need to define the error in X and Y use the ErrorPoint type
+        // When you need to define the error in X and Y use the ErrorPoint type // mark
         new ColumnSeries<ErrorPoint>
         {
             Values = new ErrorPoint[]
             {
-                // (x, y, x error, y error)
+                // (X, Y, Y+- error, Y+- error) // mark
                 new(0, 50, 0.2, 8),
-                // (x, y, left x error, right x erorr, top y error, bottom y error)
+                // (X, Y, X- error, X+ erorr, Y+ error, Y- error) // mark
                 new(1, 45, 0.1, 0.3, 15, 4),
                 new(2, 25, 0.3, 4),
                 new(3, 30, 0.2, 6),

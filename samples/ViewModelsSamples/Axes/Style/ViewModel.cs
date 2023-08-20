@@ -16,7 +16,6 @@ public partial class ViewModel : ObservableObject
     private static readonly SKColor s_gray1 = new(160, 160, 160);
     private static readonly SKColor s_gray2 = new(90, 90, 90);
     private static readonly SKColor s_dark3 = new(60, 60, 60);
-    private static readonly SKColor s_crosshair = new(255, 171, 145);
 
     public ISeries[] Series { get; set; } =
     {
@@ -64,19 +63,7 @@ public partial class ViewModel : ObservableObject
             {
                 Color = s_gray,
                 StrokeThickness = 1
-            },
-            CrosshairPaint = new SolidColorPaint
-            {
-                Color = s_crosshair,
-                StrokeThickness = 3
-            },
-            CrosshairLabelsPaint = new SolidColorPaint
-            {
-                Color = SKColors.Black,
-                SKFontStyle =  new SKFontStyle(SKFontStyleWeight.SemiBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright),
-            },
-            CrosshairLabelsBackground = s_crosshair.AsLvcColor(),
-            CrosshairPadding = new Padding(10, 20, 10, 10)
+            }
         }
     };
 
@@ -115,19 +102,7 @@ public partial class ViewModel : ObservableObject
             {
                 Color = s_gray,
                 StrokeThickness = 1
-            },
-            CrosshairPaint = new SolidColorPaint
-            {
-                Color = s_crosshair,
-                StrokeThickness = 3
-            },
-            CrosshairLabelsPaint = new SolidColorPaint
-            {
-                Color = SKColors.Black,
-                SKFontStyle =  new SKFontStyle(SKFontStyleWeight.SemiBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright)
-            },
-            CrosshairLabelsBackground = s_crosshair.AsLvcColor(),
-            CrosshairPadding = new Padding(10, 10, 30, 10)
+            }
         }
     };
 

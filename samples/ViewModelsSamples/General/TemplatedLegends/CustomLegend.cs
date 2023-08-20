@@ -64,7 +64,10 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
                         Path = SKPath.ParseSvgPathData(SVGPoints.Star),
                         Width = 25,
                         Height = 25,
-                        Fill = new SolidColorPaint(theme.GetSeriesColor(series).AsSKColor()) {ZIndex = s_zIndex + 1 }
+                        Fill = new SolidColorPaint(theme.GetSeriesColor(series).AsSKColor())
+                        {
+                            ZIndex = s_zIndex + 1
+                        }
                     },
                     new LabelVisual
                     {

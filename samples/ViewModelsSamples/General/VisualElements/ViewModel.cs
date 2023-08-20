@@ -19,8 +19,8 @@ public partial class ViewModel : ObservableObject
     {
          new GeometryVisual<RectangleGeometry>
          {
-             X = 2.5,
-             Y = 3.5,
+             X = 5.5,
+             Y = 2.5,
              LocationUnit = MeasureUnit.ChartValues,
              Width = 4,
              Height = 2,
@@ -31,21 +31,10 @@ public partial class ViewModel : ObservableObject
              LabelPaint = new SolidColorPaint(new SKColor(220, 220, 220)) { ZIndex = 11 },
              LabelSize = 12
          },
-         new GeometryVisual<OvalGeometry>
-         {
-             X = 5.5,
-             Y = 6,
-             LocationUnit = MeasureUnit.ChartValues,
-             Width = 4,
-             Height = 5,
-             SizeUnit = MeasureUnit.ChartValues,
-             Fill = new SolidColorPaint(new SKColor(100, 221, 23, 50)) { ZIndex = - 10 },
-             Stroke = new SolidColorPaint(new SKColor(100, 221, 23)) { ZIndex = -10, StrokeThickness = 1.5f },
-         },
          new LabelVisual
          {
              Text = "What happened here?",
-             X = 11,
+             X = 15,
              Y = 1,
              TextSize = 16,
              Paint = new SolidColorPaint(new SKColor(250, 250, 250)) { ZIndex = 11 },

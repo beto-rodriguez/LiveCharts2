@@ -22,7 +22,8 @@ public partial class ViewModel : ObservableObject
             // calculating them based on the date of the chart
             CustomSeparators = new double[] { 0, 10, 25, 50, 100 },
             MinLimit = 0, // forces the axis to start at 0
-            MaxLimit = 100 // forces the axis to end at 100
+            MaxLimit = 100, // forces the axis to end at 100
+            SeparatorsPaint = new SolidColorPaint(SKColors.Black.WithAlpha(100))
         }
     };
 }
