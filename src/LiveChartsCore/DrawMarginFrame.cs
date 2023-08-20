@@ -104,7 +104,7 @@ public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMar
 
         if (Fill is not null)
         {
-            Fill.ZIndex = -3;
+            if (Fill.ZIndex == 0) Fill.ZIndex = -3;
 
             _fillSizedGeometry ??= new TSizedGeometry();
 
@@ -119,7 +119,7 @@ public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMar
 
         if (Stroke is not null)
         {
-            Stroke.ZIndex = -2;
+            if (Stroke.ZIndex == 0) Stroke.ZIndex = -0.9;
 
             _strokeSizedGeometry ??= new TSizedGeometry();
 

@@ -183,13 +183,13 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
-                    e.YError.X = xi;
-                    e.YError.X1 = xi;
+                    e.YError.X = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+                    e.YError.X1 = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
                     e.YError.Y = pi;
                     e.YError.Y1 = pi;
 
-                    e.XError.X = xi;
-                    e.XError.X1 = xi;
+                    e.XError.X = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+                    e.XError.X1 = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
                     e.XError.Y = pi;
                     e.XError.Y1 = pi;
 
