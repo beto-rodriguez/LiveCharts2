@@ -109,7 +109,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
     public event ChartPointsHandler DataPointerDown;
     public event ChartPointHandler ChartPointPointerDown;
-    public event VisualElementHandler<SkiaSharpDrawingContext> VisualElementsPointerDown;
+    public event VisualElementsHandler<SkiaSharpDrawingContext> VisualElementsPointerDown;
 
     public void DummyRaiseEvents()
     {

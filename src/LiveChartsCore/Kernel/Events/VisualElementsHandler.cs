@@ -31,7 +31,7 @@ namespace LiveChartsCore.Kernel.Events;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <param name="chart">The sender chart.</param>
 /// <param name="visualElementsArgs">The visual elements arguments.</param>
-public delegate void VisualElementHandler<TDrawingContext>(
+public delegate void VisualElementsHandler<TDrawingContext>(
     IChartView chart,
     VisualElementsEventArgs<TDrawingContext> visualElementsArgs)
         where TDrawingContext : DrawingContext;
