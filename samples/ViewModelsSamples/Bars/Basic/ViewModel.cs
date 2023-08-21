@@ -31,7 +31,12 @@ public partial class ViewModel : ObservableObject
             SeparatorsPaint = new SolidColorPaint(new SKColor(200, 200, 200)),
             SeparatorsAtCenter = false,
             TicksPaint = new SolidColorPaint(new SKColor(35, 35, 35)),
-            TicksAtCenter = true
+            TicksAtCenter = true,
+            // By default the axis tries to optimize the number of // mark
+            // labels to fit the available space, // mark
+            // when you neeed to force the axis to show all the labels then you must: // mark
+            ForceStepToMin = true, // mark
+            MinStep = 1 // mark
         }
     };
 }

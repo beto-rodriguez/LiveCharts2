@@ -58,4 +58,4 @@ a custom control to render tooltips in our charts using the LiveCharts API.
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
 
-![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.png)
+![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)

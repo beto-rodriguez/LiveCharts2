@@ -343,21 +343,29 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = -0.9;
             cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
         }
+
+        var o = SeparatorsPaint?.StrokeThickness ?? 0;
+        var clipping = new LvcRectangle(
+            new LvcPoint(drawLocation.X - o, drawLocation.Y - o),
+            new LvcSize(drawMarginSize.Width + o * 2, drawMarginSize.Height + o * 2));
+
         if (SubseparatorsPaint is not null)
         {
             if (SubseparatorsPaint.ZIndex == 0) SubseparatorsPaint.ZIndex = -1;
-            SubseparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            SubseparatorsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(SubseparatorsPaint);
         }
         if (SeparatorsPaint is not null)
         {
             if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = -1;
-            SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
         }
+
         var ticksClipRectangle = _orientation == AxisOrientation.X
                 ? new LvcRectangle(new LvcPoint(drawLocation.X, 0), new LvcSize(drawMarginSize.Width, controlSize.Height))
                 : new LvcRectangle(new LvcPoint(0, drawLocation.Y), new LvcSize(controlSize.Width, drawMarginSize.Height));
+
         if (TicksPaint is not null)
         {
             if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = -1;

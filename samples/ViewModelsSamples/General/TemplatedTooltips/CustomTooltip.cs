@@ -16,7 +16,7 @@ namespace ViewModelsSamples.General.TemplatedTooltips;
 public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
-    private static readonly int s_zIndex = 10050;
+    private static readonly int s_zIndex = 10100;
     private readonly SolidColorPaint _backgroundPaint = new(new SKColor(28, 49, 58)) { ZIndex = s_zIndex };
     private readonly SolidColorPaint _fontPaint = new(new SKColor(230, 230, 230)) { ZIndex = s_zIndex + 1 };
 
@@ -50,11 +50,11 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
         foreach (var point in foundPoints)
         {
             var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniaturesSketch();
-            var relativePanel = sketch.AsDrawnControl();
+            var relativePanel = sketch.AsDrawnControl(s_zIndex);
 
             var label = new LabelVisual
             {
-                Text = point.SecondaryValue.ToString("C2"),
+                Text = point.Coordinate.PrimaryValue.ToString("C2"),
                 Paint = _fontPaint,
                 TextSize = 15,
                 Padding = new Padding(8, 0, 0, 0),
