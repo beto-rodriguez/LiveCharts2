@@ -17,8 +17,8 @@ public partial class ViewModel : ObservableObject
         {
             Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
             DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
-            GeometrySize = 30,
-            DataLabelsSize = 15,
+            GeometrySize = 15,
+            DataLabelsSize = 8,
             DataLabelsPosition = PolarLabelsPosition.Middle,
             DataLabelsRotation = LiveCharts.CotangentAngle,
             IsClosed = true

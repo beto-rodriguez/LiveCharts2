@@ -1,10 +1,12 @@
 {{ render this "~/shared/genericSampleJustGifHeader.md" }}
 
 {{~ if maui ~}}
-:::warning
-Currently zooming is not working on MAUI on desktop devices, due a MAUI limitation, please show your interest on this feature to the MAUI team at
+
+:::tip
+Currently zooming is not working on desktop devices due a MAUI limitation, please show your interest on this feature to the MAUI team at
 https://github.com/dotnet/maui/issues/16130.
 :::
+
 {{~ end ~}}
 
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
