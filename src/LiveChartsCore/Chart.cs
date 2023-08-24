@@ -369,6 +369,11 @@ public abstract class Chart<TDrawingContext> : IChart
                     .Cast<VisualElement<TDrawingContext>>()
                     .SelectMany(x => x.IsHitBy(this, point));
 
+            foreach (var ve in iterableVisualElements)
+            {
+                ve.InvokePointerDown(new VisualElementEventArgs<TDrawingContext>(this, ve, point));
+            }
+
             View.OnVisualElementPointerDown(iterableVisualElements, point);
         }
     }
