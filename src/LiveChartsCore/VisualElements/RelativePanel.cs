@@ -103,6 +103,28 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         BackgroundGeometry.Parent = parent;
     }
 
+    internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    {
+        var location = GetActualCoordinate();
+        var size = Measure(chart);
+
+        // it returns an enumerable because there are more complex types where a visual can contain more than one element
+        if (point.X >= location.X && point.X <= location.X + size.Width &&
+            point.Y >= location.Y && point.Y <= location.Y + size.Height)
+        {
+            yield return this;
+        }
+
+        var relativePoint = new LvcPoint(point.X - location.X, point.Y - location.Y);
+        foreach (var child in Children)
+        {
+            foreach (var element in child.IsHitBy(chart, relativePoint))
+            {
+                yield return element;
+            }
+        }
+    }
+
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override LvcSize Measure(Chart<TDrawingContext> chart)
     {

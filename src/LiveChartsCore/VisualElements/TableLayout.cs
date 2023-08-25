@@ -250,6 +250,28 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         return new[] { _backgroundPaint };
     }
 
+    internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    {
+        var location = GetActualCoordinate();
+        var size = Measure(chart);
+
+        // it returns an enumerable because there are more complex types where a visual can contain more than one element
+        if (point.X >= location.X && point.X <= location.X + size.Width &&
+            point.Y >= location.Y && point.Y <= location.Y + size.Height)
+        {
+            yield return this;
+        }
+
+        var relativePoint = new LvcPoint(point.X - location.X, point.Y - location.Y);
+        foreach (var child in EnumerateChildren())
+        {
+            foreach (var element in child.VisualElement.IsHitBy(chart, relativePoint))
+            {
+                yield return element;
+            }
+        }
+    }
+
     /// <summary>
     /// Defines a cell in the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/>.
     /// </summary>
