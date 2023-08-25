@@ -209,7 +209,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Occurs when the pointer goes down over a visual element.
     /// </summary>
-    event VisualElementHandler<TDrawingContext> VisualElementsPointerDown;
+    event VisualElementsHandler<TDrawingContext> VisualElementsPointerDown;
 
     /// <summary>
     /// Gets or sets a value indicating whether the automatic updates are enabled.

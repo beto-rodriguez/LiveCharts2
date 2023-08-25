@@ -681,7 +681,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             {
                 var axisIndex = Array.IndexOf(cartesianChart.XAxes, this);
                 var closestPoint = FindClosestPoint(
-                    pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesXAt == axisIndex));
+                    pointerPosition, cartesianChart,
+                    cartesianChart.VisibleSeries
+                        .Cast<ICartesianSeries<TDrawingContext>>()
+                        .Where(s => s.ScalesXAt == axisIndex));
 
                 var c = closestPoint?.Coordinate;
 
@@ -704,7 +707,10 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             {
                 var axisIndex = Array.IndexOf(cartesianChart.YAxes, this);
                 var closestPoint = FindClosestPoint(
-                    pointerPosition, cartesianChart, cartesianChart.Series.Where(s => s.ScalesYAt == axisIndex));
+                    pointerPosition, cartesianChart,
+                    cartesianChart.VisibleSeries
+                        .Cast<ICartesianSeries<TDrawingContext>>()
+                        .Where(s => s.ScalesYAt == axisIndex));
 
                 var c = closestPoint?.Coordinate;
 

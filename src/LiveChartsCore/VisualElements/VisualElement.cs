@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
@@ -96,6 +97,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The index of the axis.
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
+
+    /// <summary>
+    /// Called when the pointer goes down on the visual.
+    /// </summary>
+    public event VisualElementHandler<TDrawingContext>? PointerDown;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -178,6 +184,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
         {
             yield return this;
         }
+    }
+
+    internal void InvokePointerDown(VisualElementEventArgs<TDrawingContext> args)
+    {
+        PointerDown?.Invoke(this, args);
     }
 
     internal abstract IAnimatable?[] GetDrawnGeometries();

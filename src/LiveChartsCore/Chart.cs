@@ -177,12 +177,20 @@ public abstract class Chart<TDrawingContext> : IChart
     public MotionCanvas<TDrawingContext> Canvas { get; private set; }
 
     /// <summary>
-    /// Gets the drawable series.
+    /// Gets the visible series.
     /// </summary>
     /// <value>
     /// The drawable series.
     /// </value>
-    public abstract IEnumerable<IChartSeries<TDrawingContext>> ChartSeries { get; }
+    public abstract IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries { get; }
+
+    /// <summary>
+    /// Gets the series.
+    /// </summary>
+    /// <value>
+    /// The drawable series.
+    /// </value>
+    public abstract IEnumerable<IChartSeries<TDrawingContext>> Series { get; }
 
     /// <summary>
     /// Gets the view.
@@ -285,7 +293,8 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The visual elements.
     /// </value>
-    public ChartElement<TDrawingContext>[] VisualElements { get; protected set; } = Array.Empty<ChartElement<TDrawingContext>>();
+    public IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; protected set; } =
+        Array.Empty<ChartElement<TDrawingContext>>();
 
     object IChart.Canvas => Canvas;
 
@@ -344,10 +353,10 @@ public abstract class Chart<TDrawingContext> : IChart
 
         lock (View.SyncContext)
         {
-            var strategy = ChartSeries.GetTooltipFindingStrategy();
+            var strategy = VisibleSeries.GetTooltipFindingStrategy();
 
             // fire the series event.
-            foreach (var series in ChartSeries)
+            foreach (var series in VisibleSeries)
             {
                 if (!series.RequiresFindClosestOnPointerDown) continue;
 
@@ -358,18 +367,19 @@ public abstract class Chart<TDrawingContext> : IChart
             }
 
             // fire the chart event.
-            var iterablePoints = ChartSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
+            var iterablePoints = VisibleSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
             View.OnDataPointerDown(iterablePoints, point);
 
             // fire the visual elements event.
-            // ToDo: VisualElements should be of type VisualElement<T>
-
-            var iterableVisualElements =
-                VisualElements
+            var hitElements =
+                _everMeasuredElements.OfType<VisualElement<TDrawingContext>>()
                     .Cast<VisualElement<TDrawingContext>>()
                     .SelectMany(x => x.IsHitBy(this, point));
 
-            View.OnVisualElementPointerDown(iterableVisualElements, point);
+            foreach (var ve in hitElements)
+                ve.InvokePointerDown(new VisualElementEventArgs<TDrawingContext>(this, ve, point));
+
+            View.OnVisualElementPointerDown(hitElements, point);
         }
     }
 

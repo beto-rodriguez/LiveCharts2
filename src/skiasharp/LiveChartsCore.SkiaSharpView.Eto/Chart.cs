@@ -160,7 +160,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 

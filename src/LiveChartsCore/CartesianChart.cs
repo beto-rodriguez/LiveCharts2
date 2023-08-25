@@ -78,7 +78,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The x axes.
     /// </value>
-    public ICartesianAxis<TDrawingContext>[] XAxes { get; private set; } = Array.Empty<ICartesianAxis<TDrawingContext>>();
+    public ICartesianAxis<TDrawingContext>[] XAxes { get; private set; } =
+        Array.Empty<ICartesianAxis<TDrawingContext>>();
 
     /// <summary>
     /// Gets the y axes.
@@ -86,15 +87,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The y axes.
     /// </value>
-    public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } = Array.Empty<ICartesianAxis<TDrawingContext>>();
-
-    /// <summary>
-    /// Gets the visible series.
-    /// </summary>
-    /// <value>
-    /// The series.
-    /// </value>
-    public ICartesianSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<ICartesianSeries<TDrawingContext>>();
+    public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } =
+        Array.Empty<ICartesianAxis<TDrawingContext>>();
 
     /// <summary>
     /// Gets the sections.
@@ -102,15 +96,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The sections.
     /// </value>
-    public Section<TDrawingContext>[] Sections { get; private set; } = Array.Empty<Section<TDrawingContext>>();
+    public IEnumerable<Section<TDrawingContext>> Sections { get; private set; } =
+        Array.Empty<Section<TDrawingContext>>();
 
-    /// <summary>
-    /// Gets the drawable series.
-    /// </summary>
-    /// <value>
-    /// The drawable series.
-    /// </value>
-    public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries => Series;
+    ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
+    public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
+        _chartView.Series.Cast<IChartSeries<TDrawingContext>>();
+
+    ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
+    public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
+        Series.Where(x => x.IsVisible);
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is zooming or panning.
@@ -138,9 +133,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var actualStrategy = TooltipFindingStrategy;
 
         if (actualStrategy == TooltipFindingStrategy.Automatic)
-            actualStrategy = Series.GetTooltipFindingStrategy();
+            actualStrategy = VisibleSeries.GetTooltipFindingStrategy();
 
-        return ChartSeries
+        return VisibleSeries
             .Where(series => series.IsHoverable)
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, actualStrategy));
     }
@@ -405,13 +400,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         MeasureWork = new object();
 
-        #region copy the current data in the view
+        #region shallow copy the current data in the view
 
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        YAxes = _chartView.YAxes.Cast<ICartesianAxis<TDrawingContext>>().Select(x => x).ToArray();
-        XAxes = _chartView.XAxes.Cast<ICartesianAxis<TDrawingContext>>().Select(x => x).ToArray();
+        YAxes = _chartView.YAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
+        XAxes = _chartView.XAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
 
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
@@ -428,18 +423,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         AnimationsSpeed = _chartView.AnimationsSpeed;
         EasingFunction = _chartView.EasingFunction;
 
-        var actualSeries = (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
-
-        Series = actualSeries
-            .Cast<ICartesianSeries<TDrawingContext>>()
-            .ToArray();
-
-        Sections = _chartView.Sections?.Where(x => x.IsVisible).ToArray() ?? Array.Empty<Section<TDrawingContext>>();
-        VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
+        Sections = _chartView.Sections?.Where(x => x.IsVisible) ?? Array.Empty<Section<TDrawingContext>>();
+        VisualElements = _chartView.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(Series);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
@@ -472,7 +461,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
-        foreach (var series in Series)
+        foreach (var series in VisibleSeries.Cast<ICartesianSeries<TDrawingContext>>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
@@ -764,7 +753,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             AddVisual(title);
         }
 
-        var totalAxes = XAxes.Concat(YAxes).ToArray();
+        var totalAxes = XAxes.Concat(YAxes);
 
         foreach (var axis in totalAxes)
         {
@@ -809,7 +798,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         foreach (var section in Sections) AddVisual(section);
         foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
+        foreach (var series in VisibleSeries) AddVisual((ChartElement<TDrawingContext>)series);
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
