@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Linq;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -113,11 +113,9 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
             chart.RemoveVisual(visual);
         }
 
-        foreach (var series in chart.ChartSeries)
+        foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
-            if (!series.IsVisibleAtLegend) continue;
-
-            var panel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+            _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,
@@ -135,18 +133,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
                         HorizontalAlignment = Align.Start
                     }
                 }
-            };
-
-            _stackPanel.Children.Add(panel);
-
-            panel.PointerDown += PanelPointerDown;
+            });
         }
-    }
-
-    private void PanelPointerDown(
-        VisualElement<SkiaSharpDrawingContext> visual,
-        VisualElementEventArgs<SkiaSharpDrawingContext> visualElementsArgs)
-    {
-        throw new System.NotImplementedException();
     }
 }
