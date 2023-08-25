@@ -371,32 +371,15 @@ public abstract class Chart<TDrawingContext> : IChart
             View.OnDataPointerDown(iterablePoints, point);
 
             // fire the visual elements event.
-            // ToDo: VisualElements should be of type VisualElement<T>
-
-
-            var a = _everMeasuredElements.OfType<VisualElement<TDrawingContext>>()
-                    .Cast<VisualElement<TDrawingContext>>().ToArray();
-
-            foreach (var item in a)
-            {
-                var isHit = item.IsHitBy(this, point).ToArray();
-            }
-
-            var b = _everMeasuredElements.OfType<VisualElement<TDrawingContext>>()
-                    .Cast<VisualElement<TDrawingContext>>()
-                    .SelectMany(x => x.IsHitBy(this, point)).ToArray();
-
-            var iterableVisualElements =
+            var hitElements =
                 _everMeasuredElements.OfType<VisualElement<TDrawingContext>>()
                     .Cast<VisualElement<TDrawingContext>>()
                     .SelectMany(x => x.IsHitBy(this, point));
 
-            foreach (var ve in iterableVisualElements)
-            {
+            foreach (var ve in hitElements)
                 ve.InvokePointerDown(new VisualElementEventArgs<TDrawingContext>(this, ve, point));
-            }
 
-            View.OnVisualElementPointerDown(iterableVisualElements, point);
+            View.OnVisualElementPointerDown(hitElements, point);
         }
     }
 
