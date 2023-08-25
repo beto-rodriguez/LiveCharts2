@@ -42,7 +42,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 {
     private readonly IPieChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
-    private readonly bool _requiresLegendMeasureAlways = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
@@ -59,25 +58,17 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
-        _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
     }
 
-    /// <summary>
-    /// Gets the series.
-    /// </summary>
-    /// <value>
-    /// The series.
-    /// </value>
-    public IPieSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPieSeries<TDrawingContext>>();
+    ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
+    public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
+        _chartView.Series
+            .Where(x => (x is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
+            .Cast<IChartSeries<TDrawingContext>>();
 
-    /// <summary>
-    /// Gets the drawable series.
-    /// </summary>
-    /// <value>
-    /// The drawable series.
-    /// </value>
-    public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries
-        => Series.Where(x => (x is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries);
+    ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
+    public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
+        Series.Where(x => x.IsVisible);
 
     /// <summary>
     /// Gets the view.
@@ -156,13 +147,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        var actualSeries = (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
-
-        Series = actualSeries
-            .Cast<IPieSeries<TDrawingContext>>()
-            .ToArray();
-
-        VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
+        VisualElements = _chartView.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         LegendPosition = _chartView.LegendPosition;
         Legend = _chartView.Legend;
@@ -173,7 +158,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         AnimationsSpeed = _chartView.AnimationsSpeed;
         EasingFunction = _chartView.EasingFunction;
 
-        SeriesContext = new SeriesContext<TDrawingContext>(Series);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
@@ -182,7 +167,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         IndexBounds = new Bounds();
         PushoutBounds = new Bounds();
 
-        foreach (var series in Series)
+        foreach (var series in VisibleSeries.Cast<IPieSeries<TDrawingContext>>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
@@ -251,7 +236,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         }
 
         foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
+        foreach (var series in VisibleSeries) AddVisual((ChartElement<TDrawingContext>)series);
 
         CollectVisuals();
 
