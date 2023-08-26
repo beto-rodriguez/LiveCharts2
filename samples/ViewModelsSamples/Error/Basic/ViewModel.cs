@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -85,14 +86,14 @@ public partial class ViewModel : ObservableObject
             new(now.AddDays(6), 50, 0.3, 6)
         };
 
+        // ScatterSeries also supports error bars // mark
         Series2 = new ISeries[]
         {
-            new LineSeries<ErrorDateTimePoint>
+            new ScatterSeries<ErrorDateTimePoint>
             {
                 Values = values2,
                 ErrorPaint = new SolidColorPaint(SKColors.Black),
-                GeometryFill = null,
-                GeometryStroke = null
+                GeometrySize = 10
             }
         };
     }
