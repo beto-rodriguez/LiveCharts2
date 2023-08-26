@@ -30,7 +30,7 @@ public partial class App : Application
 
                 // finally register your own mappers
                 // you can learn more about mappers at:
-                // https://lvcharts.com/docs/{{ platform }}/{{ version }}/Overview.Mappers
+                // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
                 .HasMap<City>((city, point) => // mark
                 { // mark
                     // here we use the index as X, and the population as Y // mark
