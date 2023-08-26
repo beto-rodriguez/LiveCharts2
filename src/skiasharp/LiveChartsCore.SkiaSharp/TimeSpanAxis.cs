@@ -25,18 +25,19 @@ using System;
 namespace LiveChartsCore.SkiaSharpView;
 
 /// <summary>
-/// Defines a logarithmic axis.
+/// Defines a TimeSpan axis.
 /// </summary>
-public class LogaritmicAxis : Axis
+public class TimeSpanAxis : Axis
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="LogaritmicAxis"/> class.
+    /// Initializes a new instance of the <see cref="DateTimeAxis"/> class.
     /// </summary>
-    /// <param name="base">The log base.</param>
-    public LogaritmicAxis(double @base)
+    /// <param name="unit">The unit of the axis (hours, days, months, years).</param>
+    /// <param name="formatter">The labels formatter.</param>
+    public TimeSpanAxis(TimeSpan unit, Func<TimeSpan, string> formatter)
     {
-        MinStep = 1;
-        Labeler = value => Math.Pow(@base, value).ToString("N2");
-        _logBase = @base;
+        UnitWidth = unit.Ticks;
+        Labeler = value => formatter(value.AsTimeSpan());
+        MinStep = unit.Ticks;
     }
 }
