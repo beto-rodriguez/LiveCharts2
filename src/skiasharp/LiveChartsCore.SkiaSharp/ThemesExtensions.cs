@@ -116,8 +116,8 @@ public static class ThemesExtensions
 
                         barSeries.Stroke = null;
                         barSeries.Fill = new SolidColorPaint(color);
-                        barSeries.Rx = 4;
-                        barSeries.Ry = 4;
+                        barSeries.Rx = 3;
+                        barSeries.Ry = 3;
                     })
                     .HasRuleForStackedBarSeries(stackedBarSeries =>
                     {
@@ -280,8 +280,8 @@ public static class ThemesExtensions
 
                         barSeries.Stroke = null;
                         barSeries.Fill = new SolidColorPaint(color);
-                        barSeries.Rx = 4;
-                        barSeries.Ry = 4;
+                        barSeries.Rx = 3;
+                        barSeries.Ry = 3;
                     })
                     .HasRuleForStackedBarSeries(stackedBarSeries =>
                     {

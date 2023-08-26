@@ -45,7 +45,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private double _pading = 5;
+    private double _pading = 2;
     private double _maxBarWidth = 50;
     private bool _ignoresBarPosition = false;
     private double _rx;
