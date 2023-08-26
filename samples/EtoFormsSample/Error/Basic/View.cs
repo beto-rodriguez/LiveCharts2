@@ -15,8 +15,25 @@ public class View : Panel
 
         var cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series
+            Series = viewModel.Series0
         };
+
+        var cartesianChart2 = new CartesianChart
+        {
+            Series = viewModel.Series1
+        };
+
+        var cartesianChart3 = new CartesianChart
+        {
+            Series = viewModel.Series1,
+            XAxes = viewModel.DateTimeAxis
+        };
+
+        Content = new DynamicLayout(
+            new DynamicRow(new DynamicControl() { Control = cartesianChart, YScale = true }),
+            new DynamicRow(new DynamicControl() { Control = cartesianChart2, YScale = true }),
+            new DynamicRow(new DynamicControl() { Control = cartesianChart3, YScale = true })
+            );
 
         Content = cartesianChart;
     }
