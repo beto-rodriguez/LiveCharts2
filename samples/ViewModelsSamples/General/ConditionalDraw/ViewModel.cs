@@ -17,20 +17,27 @@ public partial class ViewModel : ObservableObject
 
     public ViewModel()
     {
+        var dangerPaint = new SolidColorPaint(SKColors.Red);
+
         _values = new ObservableCollection<ObservableValue>
         {
             new(2), new(5), new(4), new(6), new(8), new(3), new(2), new(4), new(6)
         };
 
-        var series1 = new ColumnSeries<ObservableValue>
+        var series = new ColumnSeries<ObservableValue>
         {
             Name = "Mary",
             Values = _values
         }
-        .WithConditionalPaint(new SolidColorPaint(SKColors.Red))
-        .When(point => point.Model?.Value > 5);
+        .MapPoints(point =>
+        {
+            // do not set the danger paint if the visual is null or the value is less than 5
+            if (point.Visual is null || point.Model?.Value <= 5) return;
 
-        Series = new ISeries[] { series1 };
+            point.Visual.Fill = dangerPaint;
+        });
+
+        Series = new ISeries[] { series };
 
         Randomize();
     }
