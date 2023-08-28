@@ -28,12 +28,18 @@ public partial class ViewModel : ObservableObject
         SeriesCollection1 = new ISeries[] { new LineSeries<int> { Values = values1 } };
         SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
 
-        // sharing the same instance for both charts will keep the zooming and panning synced // mark
-        SharedXAxis = new Axis[] { new Axis() };
+        // ideally, when sharing an axis, you should set the initial limits for all the axes involved. // mark
+        var start = 0 - 5;
+        var end = 50 + 5;
 
-        // Force the chart to use 70px margin on the left, this way we can align both charts. // mark
+        X1 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
+        X2 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
+
+        X1[0].SharedWith = X2;
+        X2[0].SharedWith = X1;
+
+        // Force the chart to use 70px margin on the left, this way we can align both charts Y axes. // mark
         DrawMargin = new Margin(70, Margin.Auto, Margin.Auto, Margin.Auto);
-        // and thats it!
 
         // Advanced alternative:
         // you can also ask an axis its posible dimensions to determine the margin you need.
@@ -55,6 +61,7 @@ public partial class ViewModel : ObservableObject
 
     public ISeries[] SeriesCollection1 { get; set; }
     public ISeries[] SeriesCollection2 { get; set; }
-    public Axis[] SharedXAxis { get; set; }
+    public Axis[] X1 { get; set; }
+    public Axis[] X2 { get; set; }
     public Margin DrawMargin { get; set; }
 }
