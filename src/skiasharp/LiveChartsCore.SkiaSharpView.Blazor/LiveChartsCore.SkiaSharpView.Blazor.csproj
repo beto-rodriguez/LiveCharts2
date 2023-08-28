@@ -45,7 +45,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.4-preview.96" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.5" />
   </ItemGroup>
 
   <ItemGroup>
