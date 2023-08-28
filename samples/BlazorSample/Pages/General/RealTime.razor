@@ -1,0 +1,13 @@
+﻿@page "/General/RealTime"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.RealTime
+
+<CartesianChart
+	Series="ViewModel.Series"
+	SyncContext="ViewModel.Sync"
+    XAxes="ViewModel.XAxes">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

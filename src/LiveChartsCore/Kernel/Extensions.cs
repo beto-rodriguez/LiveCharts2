@@ -202,6 +202,11 @@ public static class Extensions
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
+        var unit = axis.UnitWidth;
+
+        max /= unit;
+        min /= unit;
+
         var range = max - min;
         if (range == 0) range = min;
 
@@ -216,7 +221,7 @@ public static class Extensions
         var residual = minimum / magnitude;
         var tick = residual > 5 ? 10 * magnitude : residual > 2 ? 5 * magnitude : residual > 1 ? 2 * magnitude : magnitude;
 
-        return new AxisTick { Value = tick, Magnitude = magnitude };
+        return new AxisTick { Value = tick * unit, Magnitude = magnitude * unit };
     }
 
     /// <summary>
