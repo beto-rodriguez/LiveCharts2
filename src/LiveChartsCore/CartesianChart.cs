@@ -187,8 +187,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var xi = XAxes[index];
                 var px = new Scaler(DrawMarginLocation, DrawMarginSize, xi).ToChartValues(pivot.X);
 
-                var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
-                var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
+                var limits = xi.GetLimits();
+
+                var max = limits.Max;
+                var min = limits.Min;
 
                 double mint, maxt;
                 var l = max - min;
@@ -224,15 +226,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     maxt = max + ld * 0.5 * dir;
                 }
 
-                var minZoomDelta = xi.MinZoomDelta ?? xi.DataBounds.MinDelta * 3;
-                if (direction == ZoomDirection.ZoomIn && maxt - mint < minZoomDelta) continue;
+                if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta) continue;
 
                 var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
-                if (maxt > xi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = xi.DataBounds.Max + xm;
-                if (mint < xi.DataBounds.Min && direction == ZoomDirection.ZoomOut) mint = xi.DataBounds.Min - xm;
+                if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + xm;
+                if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - xm;
 
-                xi.MaxLimit = maxt;
-                xi.MinLimit = mint;
+                xi.SetLimits(mint, maxt);
             }
         }
 
@@ -243,8 +243,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var yi = YAxes[index];
                 var px = new Scaler(DrawMarginLocation, DrawMarginSize, yi).ToChartValues(pivot.Y);
 
-                var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
-                var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
+                var limits = yi.GetLimits();
+
+                var max = limits.Max;
+                var min = limits.Min;
 
                 double mint, maxt;
                 var l = max - min;
@@ -279,15 +281,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     maxt = max + ld * 0.5 * dir;
                 }
 
-                var minZoomDelta = yi.MinZoomDelta ?? yi.DataBounds.MinDelta * 3;
-                if (direction == ZoomDirection.ZoomIn && maxt - mint < minZoomDelta) continue;
+                if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta) continue;
 
                 var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
-                if (maxt > yi.DataBounds.Max && direction == ZoomDirection.ZoomOut) maxt = yi.DataBounds.Max + ym;
-                if (mint < yi.DataBounds.Min && direction == ZoomDirection.ZoomOut) mint = yi.DataBounds.Min - ym;
+                if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + ym;
+                if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - ym;
 
-                yi.MaxLimit = maxt;
-                yi.MinLimit = mint;
+                yi.SetLimits(mint, maxt);
             }
         }
 
@@ -310,28 +310,27 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var scale = new Scaler(DrawMarginLocation, DrawMarginSize, xi);
                 var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
 
-                var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
-                var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
+                var limits = xi.GetLimits();
+
+                var max = limits.Max;
+                var min = limits.Min;
 
                 var xm = max - min;
                 xm = isActive ? xm * MaxAxisActiveBound : xm * MaxAxisBound;
 
-                if (max + dx > xi.DataBounds.Max && delta.X < 0)
+                if (max + dx > limits.DataMax && delta.X < 0)
                 {
-                    xi.MaxLimit = xi.DataBounds.Max + xm;
-                    xi.MinLimit = xi.DataBounds.Max - (max - xm - min);
+                    xi.SetLimits(limits.DataMax - (max - xm - min), limits.DataMax + xm);
                     continue;
                 }
 
-                if (min + dx < xi.DataBounds.Min && delta.X > 0)
+                if (min + dx < limits.DataMin && delta.X > 0)
                 {
-                    xi.MinLimit = xi.DataBounds.Min - xm;
-                    xi.MaxLimit = xi.DataBounds.Min + max - min - xm;
+                    xi.SetLimits(limits.DataMin - xm, limits.DataMin + max - min - xm);
                     continue;
                 }
 
-                xi.MaxLimit = max + dx;
-                xi.MinLimit = min + dx;
+                xi.SetLimits(min + dx, max + dx);
             }
         }
 
@@ -343,28 +342,27 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var scale = new Scaler(DrawMarginLocation, DrawMarginSize, yi);
                 var dy = -(scale.ToChartValues(delta.Y) - scale.ToChartValues(0));
 
-                var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
-                var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
+                var limits = yi.GetLimits();
+
+                var max = limits.Max;
+                var min = limits.Min;
 
                 var ym = max - min;
                 ym = isActive ? ym * MaxAxisActiveBound : ym * MaxAxisBound;
 
-                if (max + dy > yi.DataBounds.Max)
+                if (max + dy > limits.DataMax)
                 {
-                    yi.MaxLimit = yi.DataBounds.Max + ym;
-                    yi.MinLimit = yi.DataBounds.Max - (max - ym - min);
+                    yi.SetLimits(limits.DataMax - (max - ym - min), limits.DataMax + ym);
                     continue;
                 }
 
-                if (min + dy < yi.DataBounds.Min)
+                if (min + dy < limits.DataMin)
                 {
-                    yi.MinLimit = yi.DataBounds.Min - ym;
-                    yi.MaxLimit = yi.DataBounds.Min + max - min - ym;
+                    yi.SetLimits(limits.DataMin + max - min - ym, limits.DataMin - ym);
                     continue;
                 }
 
-                yi.MaxLimit = max + dy;
-                yi.MinLimit = min + dy;
+                yi.SetLimits(min + dy, max + dy);
             }
         }
 
@@ -461,6 +459,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
+
         foreach (var series in VisibleSeries.Cast<ICartesianSeries<TDrawingContext>>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
@@ -479,10 +478,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
             if (seriesBounds.IsEmpty) continue;
 
-            xAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds);
-            yAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
-            xAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds);
-            yAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
+            AppendLimits(xAxis, yAxis, seriesBounds);
 
             ce._isInternalSet = false;
         }
@@ -1049,5 +1045,25 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
 
         base.InvokePointerUp(point, isSecondaryAction);
+    }
+
+    private static void AppendLimits(ICartesianAxis x, ICartesianAxis y, DimensionalBounds bounds)
+    {
+        x.DataBounds.AppendValue(bounds.SecondaryBounds);
+        x.VisibleDataBounds.AppendValue(bounds.VisibleSecondaryBounds);
+        y.DataBounds.AppendValue(bounds.PrimaryBounds);
+        y.VisibleDataBounds.AppendValue(bounds.VisiblePrimaryBounds);
+
+        foreach (var sharedX in x.SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        {
+            sharedX.DataBounds.AppendValue(bounds.SecondaryBounds);
+            sharedX.VisibleDataBounds.AppendValue(bounds.VisibleSecondaryBounds);
+        }
+
+        foreach (var sharedY in y.SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        {
+            sharedY.DataBounds.AppendValue(bounds.PrimaryBounds);
+            sharedY.VisibleDataBounds.AppendValue(bounds.VisiblePrimaryBounds);
+        }
     }
 }
