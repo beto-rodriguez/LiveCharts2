@@ -324,14 +324,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var scale = this.GetNextScaler(cartesianChart);
         var actualScale = this.GetActualScaler(cartesianChart) ?? scale;
-
-        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
-
         var labeler = GetActualLabeler();
-
-        var s = axisTick.Value;
-        if (s < _minStep) s = _minStep;
-        if (_forceStepToMin) s = _minStep;
 
         if (NamePaint is not null)
         {
@@ -403,7 +396,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var r = (float)_labelsRotation;
         var hasRotation = Math.Abs(r) > 0.01f;
 
-        var start = Math.Truncate(min / s) * s;
         if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
         {
             separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
@@ -490,6 +482,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (!_separatorsAtCenter && _orientation == AxisOrientation.X) sxco = uw * 0.5f;
         if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) sxco = uw * 0.5f;
 
+        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
+        var s = axisTick.Value;
+        if (s < _minStep) s = _minStep;
+        if (_forceStepToMin) s = _minStep;
+
+        var start = Math.Truncate(min / s) * s;
         var separatorsSource = CustomSeparators ?? EnumerateSeparators(start, s, max);
 
         foreach (var i in separatorsSource)
