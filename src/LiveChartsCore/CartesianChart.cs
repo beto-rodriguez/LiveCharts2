@@ -358,7 +358,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                 if (min + dy < limits.DataMin)
                 {
-                    yi.SetLimits(limits.DataMin + max - min - ym, limits.DataMin - ym);
+                    yi.SetLimits(limits.DataMin - ym, limits.DataMin + max - min - ym);
                     continue;
                 }
 
