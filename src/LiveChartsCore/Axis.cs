@@ -294,6 +294,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
     public bool InLineNamePlacement { get => _inLineNamePlacement; set => SetProperty(ref _inLineNamePlacement, value); }
 
+    /// <inheritdoc cref="ICartesianAxis.SharedWith"/>
+    public IEnumerable<ICartesianAxis>? SharedWith { get; set; }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianAxis.Initialized"/>
@@ -312,6 +315,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+
+        AxisLimit.ValidateLimits(ref min, ref max);
 
         _animatableBounds.MaxVisibleBound = max;
         _animatableBounds.MinVisibleBound = min;
@@ -488,7 +493,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (_forceStepToMin) s = _minStep;
 
         var start = Math.Truncate(min / s) * s;
-        var separatorsSource = CustomSeparators ?? EnumerateSeparators(start, s, max);
+        var separatorsSource = CustomSeparators ?? Axis<TDrawingContext, TTextGeometry, TLineGeometry>.EnumerateSeparators(start, s, max);
 
         foreach (var i in separatorsSource)
         {
@@ -776,7 +781,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         chart.Canvas.Invalidate();
     }
 
-    private IEnumerable<double> EnumerateSeparators(double start, double s, double max)
+    private static IEnumerable<double> EnumerateSeparators(double start, double s, double max)
     {
         for (var i = start - s; i <= max + s; i += s) yield return i;
     }
@@ -836,6 +841,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
+        AxisLimit.ValidateLimits(ref min, ref max);
+
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
@@ -862,6 +869,48 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         return new LvcSize(w, h);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis.GetLimits"/>
+    public AxisLimit GetLimits()
+    {
+        var max = MaxLimit is null ? DataBounds.Max : MaxLimit.Value;
+        var min = MinLimit is null ? DataBounds.Min : MinLimit.Value;
+
+        AxisLimit.ValidateLimits(ref min, ref max);
+
+        var maxd = DataBounds.Max;
+        var mind = DataBounds.Min;
+        var minZoomDelta = MinZoomDelta ?? DataBounds.MinDelta * 3;
+
+        foreach (var axis in SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        {
+            var maxI = axis.MaxLimit is null ? axis.DataBounds.Max : axis.MaxLimit.Value;
+            var minI = axis.MinLimit is null ? axis.DataBounds.Min : axis.MinLimit.Value;
+            var maxDI = axis.DataBounds.Max;
+            var minDI = axis.DataBounds.Min;
+            var minZoomDeltaI = axis.MinZoomDelta ?? axis.DataBounds.MinDelta * 3;
+
+            if (maxI > max) max = maxI;
+            if (minI < min) min = minI;
+            if (maxDI > maxd) maxd = maxDI;
+            if (minDI < mind) mind = minDI;
+        }
+
+        return new(min, max, minZoomDelta, mind, maxd);
+    }
+
+    /// <inheritdoc cref="ICartesianAxis.SetLimits(double, double)"/>
+    public void SetLimits(double min, double max)
+    {
+        foreach (var axis in SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        {
+            axis.MinLimit = min;
+            axis.MaxLimit = max;
+        }
+
+        MinLimit = min;
+        MaxLimit = max;
     }
 
     /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>
@@ -944,6 +993,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+
+        AxisLimit.ValidateLimits(ref min, ref max);
 
         if (s == 0) s = 1;
         if (s < _minStep) s = _minStep;
