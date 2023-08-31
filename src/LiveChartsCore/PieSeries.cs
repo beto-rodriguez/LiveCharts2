@@ -376,8 +376,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             pointsCleanup.Clean(point);
 
-            var hasValue = Math.Abs(coordinate.PrimaryValue) > 0.00001; // <- this will improved in the future
-            if (DataLabelsPaint is not null && hasValue)
+            if (DataLabelsPaint is not null)
             {
                 var label = (TLabel?)point.Context.Label;
 
