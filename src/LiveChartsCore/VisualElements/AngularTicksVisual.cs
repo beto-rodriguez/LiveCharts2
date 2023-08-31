@@ -145,7 +145,6 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         var subtickInnerRadius = ticksDiameter * 0.5f - (float)TicksLength * .5f;
         var labelsRadius = outerRadius - (float)LabelsOuterOffset;
 
-        var start = 0;
         var sweep = completeAngle - 0.1f;
 
         _arc ??= new();
@@ -156,7 +155,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         _arc.Y = drawLocation.Y + (drawMarginSize.Height - ticksDiameter) * 0.5f;
         _arc.Width = ticksDiameter;
         _arc.Height = ticksDiameter;
-        _arc.StartAngle = start + initialRotation;
+        _arc.StartAngle = initialRotation;
         _arc.SweepAngle = sweep;
 
         var max = endValue;
@@ -186,11 +185,11 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
 
         for (var i = Math.Truncate(min / tick) * tick - tick; i <= max; i += tick)
         {
-            var beta = start + i / max * (sweep - start);
+            var beta = (i - min) / range * sweep;
             beta += initialRotation;
             beta *= toRadians;
 
-            var nextBeta = start + (i + tick) / max * (sweep - start);
+            var nextBeta = (i - min + tick) / range * sweep;
             nextBeta += initialRotation;
             nextBeta *= toRadians;
 
