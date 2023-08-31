@@ -183,7 +183,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
 
         var updateId = new object();
         const double toRadians = Math.PI / 180d;
-        for (var i = min; i <= max; i += tick)
+
+        for (var i = Math.Truncate(min / tick) * tick; i <= max; i += tick)
         {
             var beta = start + i / max * (sweep - start);
             beta += initialRotation;
