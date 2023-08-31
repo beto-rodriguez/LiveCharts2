@@ -7,10 +7,8 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <Grid>
-        <lvc:CartesianChart
-            Series="{Binding SeriesCollection}"
-            ZoomMode="X">
-        </lvc:CartesianChart>
-    </Grid>
+    <lvc:CartesianChart
+        Series="{Binding SeriesCollection}"
+        ZoomMode="X">
+    </lvc:CartesianChart>
 </ContentPage>

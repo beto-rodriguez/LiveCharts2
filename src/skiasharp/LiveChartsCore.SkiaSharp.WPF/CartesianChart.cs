@@ -405,6 +405,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         var p = e.GetPosition(this);
         c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
+
     private void OnManipulationDelta(object sender, ManipulationDeltaEventArgs e)
     {
         if (core is null) throw new Exception("core not found");

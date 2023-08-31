@@ -1,14 +1,5 @@
 {{ render this "~/shared/genericSampleJustGifHeader.md" }}
 
-{{~ if maui ~}}
-
-:::tip
-Currently zooming is not working on desktop devices due a MAUI limitation, please show your interest on this feature to the MAUI team at
-https://github.com/dotnet/maui/issues/16130.
-:::
-
-{{~ end ~}}
-
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
 [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) and the options are:
 
@@ -34,18 +25,19 @@ You can learn more about zooming an panning [here](https://lvcharts.com/docs/{{ 
 {{~ if desktop ~}}
 
 :::tip
-In desktop, use the mouse wheel to zoom in/out, hold click and drag to move the view (panning).
+On **Windows**, use the mouse wheel to zoom in/out, hold click and drag to move the view (panning). On **MacOS**
+pinch the trackpad in/out or slide vertically a finger(s) on a magic mouse to zoom in/out, hold click and drag to move the view (panning).
 :::
 
 {{~ end ~}}
 
 {{~ if mobile ~}}
 
-:::info
-In touch devices, pinch the screen in/out to zoom, hold tap and drag to move the view (panning).
+:::tip
+On touch devices, pinch the screen in/out to zoom, hold tap and drag to move the view (panning).
 :::
 
-{{~ end ~}} 
+{{~ end ~}}
 
 ## View model
 
