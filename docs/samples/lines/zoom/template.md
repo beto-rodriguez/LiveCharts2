@@ -1,14 +1,5 @@
 {{ render this "~/shared/genericSampleJustGifHeader.md" }}
 
-{{~ if maui ~}}
-
-:::tip
-Currently zooming is not working on desktop devices due a MAUI limitation, please show your interest on this feature to the MAUI team at
-https://github.com/dotnet/maui/issues/16130.
-:::
-
-{{~ end ~}}
-
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
 [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) and the options are:
 
