@@ -974,6 +974,10 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             AllowedScrollTypesMask = UIScrollTypeMask.Discrete | UIScrollTypeMask.Continuous,
             MinimumNumberOfTouches = 0
         });
+
+        var pointerGesture = new PointerGestureRecognizer();
+        pointerGesture.PointerExited += OnPointerExited;
+        canvas.GestureRecognizers.Add(pointerGesture);
     }
 
     private Action<UIHoverGestureRecognizer> GetOnHover(UIView view)
@@ -1009,6 +1013,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
             _last = l;
         };
+    }
+
+    private void OnPointerExited(object? sender, PointerEventArgs e)
+    {
+        _core?.InvokePointerLeft();
     }
 
 #endif
