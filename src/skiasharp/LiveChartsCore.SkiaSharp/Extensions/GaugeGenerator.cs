@@ -104,6 +104,7 @@ public static class GaugeGenerator
         {
             ZIndex = -1,
             IsFillSeries = true,
+            IsVisibleAtLegend = false,
             Values = fillSeriesValues
         };
 
