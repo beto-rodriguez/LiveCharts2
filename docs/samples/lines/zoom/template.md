@@ -25,18 +25,19 @@ You can learn more about zooming an panning [here](https://lvcharts.com/docs/{{ 
 {{~ if desktop ~}}
 
 :::tip
-In desktop, use the mouse wheel to zoom in/out, hold click and drag to move the view (panning).
+On **Windows**, use the mouse wheel to zoom in/out, hold click and drag to move the view (panning). On **MacOS**
+pinch the trackpad in/out or slide vertically a finger(s) on a magic mouse to zoom in/out, hold click and drag to move the view (panning).
 :::
 
 {{~ end ~}}
 
 {{~ if mobile ~}}
 
-:::info
-In touch devices, pinch the screen in/out to zoom, hold tap and drag to move the view (panning).
+:::tip
+On touch devices, pinch the screen in/out to zoom, hold tap and drag to move the view (panning).
 :::
 
-{{~ end ~}} 
+{{~ end ~}}
 
 ## View model
 

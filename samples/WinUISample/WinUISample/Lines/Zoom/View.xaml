@@ -11,12 +11,8 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            Grid.Row="1"
-            Series="{Binding SeriesCollection}"
-            ZoomMode="X"> <!-- mark -->
-        </lvc:CartesianChart>
-    </Grid>
-
+    <lvc:CartesianChart
+        Series="{Binding SeriesCollection}"
+        ZoomMode="X"><!-- mark -->
+    </lvc:CartesianChart>
 </UserControl>

@@ -7,7 +7,6 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <lvc:CartesianChart
-        Grid.Row="1"
         Series="{Binding SeriesCollection}"
         ZoomMode="X"> <!-- mark -->
     </lvc:CartesianChart>
