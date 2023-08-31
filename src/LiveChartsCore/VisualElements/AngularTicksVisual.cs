@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -247,14 +248,16 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         foreach (var key in _visuals.Keys.ToArray())
         {
             var visual = _visuals[key];
-            if (visual.UpdateId == updateId) return;
+            if (visual.UpdateId == updateId) continue;
 
-            LabelsPaint?.AddGeometryToPaintTask(chart.Canvas, visual.Label);
-            Stroke?.AddGeometryToPaintTask(chart.Canvas, visual.Tick);
+            LabelsPaint?.RemoveGeometryFromPainTask(chart.Canvas, visual.Label);
+            Stroke?.RemoveGeometryFromPainTask(chart.Canvas, visual.Tick);
             foreach (var subtick in visual.Subseparator)
-                Stroke?.AddGeometryToPaintTask(chart.Canvas, subtick);
+                Stroke?.RemoveGeometryFromPainTask(chart.Canvas, subtick);
             _ = _visuals.Remove(key);
         }
+
+        Trace.WriteLine(_visuals.Count);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
