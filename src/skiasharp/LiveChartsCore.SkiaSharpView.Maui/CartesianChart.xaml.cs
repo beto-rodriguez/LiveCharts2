@@ -119,6 +119,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
 
 #if __MOBILE__
+
         var pinchGesture = new PinchGestureRecognizer();
         var panGesture = new PanGestureRecognizer();
         var tapGesture = new TapGestureRecognizer();
@@ -130,14 +131,19 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         canvas.GestureRecognizers.Add(pinchGesture);
         canvas.GestureRecognizers.Add(panGesture);
         canvas.GestureRecognizers.Add(tapGesture);
+
 #endif
 
 #if WINDOWS
+
         canvas.HandlerChanged += OnHandlerChanged;
+
 #endif
 
 #if MACCATALYST
+
         canvas.HandlerChanged += OnHandlerChanged;
+
 #endif
     }
 
@@ -805,6 +811,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
 #if __MOBILE__
+
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         if (_core is null) return;
@@ -888,9 +895,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             _closeTooltipTimer.Start();
         }
     }
+
 #endif
 
 #if WINDOWS
+
     private void OnHandlerChanged(object? sender, EventArgs e)
     {
         var panel = (Microsoft.Maui.Platform.ContentPanel?)canvas.Handler?.PlatformView
@@ -949,9 +958,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         _core?.InvokePointerLeft();
     }
+
 #endif
 
 #if MACCATALYST
+
     private void OnHandlerChanged(object? sender, EventArgs e)
     {
         var view = (Microsoft.Maui.Platform.ContentView?)canvas.Handler?.PlatformView
@@ -999,6 +1010,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             _last = l;
         };
     }
+
 #endif
 
     private void OnTooltipTimerEllapsed(object? sender, ElapsedEventArgs e)
