@@ -18,7 +18,7 @@ Here is a preview (1.4MB gif, wait for it to load if you see a blank space bello
 
 ### Get started
 
-Live charts is a cross platforms charting library .Net, to get started go to https://lvcharts.com and take a look at the instalation guide of your target platform,
+Live charts is a cross platforms charting library for .Net, to get started go to https://livecharts.dev and take a look at the instalation guide of your target platform,
 the web site contains all the samples provided in this repo, docs and more.
 
 LiveCharts supports:
