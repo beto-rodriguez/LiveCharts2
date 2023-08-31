@@ -184,7 +184,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         var updateId = new object();
         const double toRadians = Math.PI / 180d;
 
-        for (var i = Math.Truncate(min / tick) * tick; i <= max; i += tick)
+        for (var i = Math.Truncate(min / tick) * tick - tick; i <= max; i += tick)
         {
             var beta = start + i / max * (sweep - start);
             beta += initialRotation;
@@ -225,11 +225,17 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
                     subtick.Y1 = cy + (float)Math.Sin(alpha) * subtickInnerRadius;
 
                     Stroke?.AddGeometryToPaintTask(chart.Canvas, subtick);
+                    subtick.Opacity = i + tick * (j + 1) / visual.Subseparator.Length >= min ? 1 : 0;
                 }
             }
 
             LabelsPaint?.AddGeometryToPaintTask(chart.Canvas, visual.Label);
             Stroke?.AddGeometryToPaintTask(chart.Canvas, visual.Tick);
+
+            var opacity = i >= min ? 1 : 0;
+            visual.Label.Opacity = opacity;
+            visual.Tick.Opacity = opacity;
+
             visual.UpdateId = updateId;
         }
 
