@@ -50,17 +50,17 @@ public partial class ViewModel : ObservableObject
 
     public NeedleVisual Needle { get; set; }
 
-    private static void SetStyle(
-        double sectionsOuter, double sectionsWidth, PieSeries<ObservableValue> series)
-    {
-        series.OuterRadiusOffset = sectionsOuter;
-        series.MaxRadialColumnWidth = sectionsWidth;
-    }
-
     [RelayCommand]
     public void DoRandomChange()
     {
         // modifying the Value property updates and animates the chart automatically
         Needle.Value = _random.Next(0, 100);
+    }
+
+    private static void SetStyle(
+        double sectionsOuter, double sectionsWidth, PieSeries<ObservableValue> series)
+    {
+        series.OuterRadiusOffset = sectionsOuter;
+        series.MaxRadialColumnWidth = sectionsWidth;
     }
 }

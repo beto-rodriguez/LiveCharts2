@@ -143,6 +143,12 @@ public interface IPieSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IS
     bool IsFillSeries { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the values in this series are relative to the
+    /// <see cref="IPieChartView{TDrawingContext}.MinValue"/> property in the chart.
+    /// </summary>
+    bool IsRelativeToMinValue { get; set; }
+
+    /// <summary>
     /// Gets the series bounds.
     /// </summary>
     /// <param name="chart">The chart.</param>
