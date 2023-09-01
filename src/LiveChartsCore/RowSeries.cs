@@ -54,7 +54,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
               SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
               SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
-        DataPadding = new LvcPoint(0, 1);
+        DataPadding = new LvcPoint(1, 0);
         _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
