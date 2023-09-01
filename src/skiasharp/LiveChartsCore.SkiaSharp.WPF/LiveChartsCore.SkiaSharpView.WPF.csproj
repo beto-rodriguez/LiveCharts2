@@ -7,7 +7,7 @@
     <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WPF</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WPF</RootNamespace>
-    <Version>2.0.0-beta.920</Version>
+    <Version>2.0.0-beta.950</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WPF.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
