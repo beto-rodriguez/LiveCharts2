@@ -54,6 +54,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
               SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
               SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
+        DataPadding = new LvcPoint(0, 1);
         _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
@@ -393,7 +394,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
-        var rawBounds = DataFactory.GetCartesianBounds(chart, this, secondaryAxis, primaryAxis);
+        var rawBounds = DataFactory.GetCartesianBounds(chart, this, primaryAxis, secondaryAxis);
         if (rawBounds.HasData) return rawBounds;
 
         var rawBaseBounds = rawBounds.Bounds;
