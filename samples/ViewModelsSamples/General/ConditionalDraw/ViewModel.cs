@@ -31,10 +31,13 @@ public partial class ViewModel : ObservableObject
         }
         .OnPointMeasured(point =>
         {
-            // do not set the danger paint if the visual is null or the value is less than 5
-            if (point.Visual is null || point.Model?.Value <= 5) return;
+            if (point.Visual is null) return;
 
-            point.Visual.Fill = dangerPaint;
+            var isDanger = point.Model?.Value > 5;
+
+            point.Visual.Fill = isDanger
+                ? dangerPaint
+                : null; // when null, the series fill is used // mark
         });
 
         Series = new ISeries[] { series };
