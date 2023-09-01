@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.ConditionalDraw;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -21,17 +22,19 @@ public partial class ViewModel : ObservableObject
 
         var series = new ColumnSeries<int>
         {
-            Name = "Mary",
-            Values = new[] { 2, 5, 4, 6, 8, 3, 2, 4, 6 }
+            Values = new[] { 2, 5, 4, 6, 8, 3, 2, 4, 6 },
+            DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
+            DataLabelsPosition = DataLabelsPosition.Top
         }
         .OnPointMeasured(point =>
         {
-            // skip the points with null visuals
+            // this method is called for each point in the series
+            // we can customize the visual here
+
             if (point.Visual is null) return;
 
             // get a paint from the array
             var paint = paints[point.Index % paints.Length];
-
             // set the paint to the visual
             point.Visual.Fill = paint;
         });
