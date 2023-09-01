@@ -24,7 +24,7 @@ public partial class ViewModel : ObservableObject
             Name = "Mary",
             Values = new[] { 2, 5, 4, 6, 8, 3, 2, 4, 6 }
         }
-        .MapPoints(point =>
+        .OnPointMeasured(point =>
         {
             // skip the points with null visuals
             if (point.Visual is null) return;

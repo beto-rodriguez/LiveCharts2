@@ -45,7 +45,7 @@ public static class ConditionalDrawExtensions
     /// <remarks>
     /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event.
     /// </remarks>
-    public static Series<TModel, TVisual, TLabel, TDrawingContext> MapPoints<TModel, TVisual, TLabel, TDrawingContext>(
+    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointMeasured<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry<TDrawingContext>, new()
@@ -65,7 +65,7 @@ public static class ConditionalDrawExtensions
     /// <param name="series">The series.</param>
     /// <param name="paint">The paint.</param>
     /// <returns></returns>
-    [Obsolete($"Use {nameof(MapPoints)} instead.")]
+    [Obsolete($"Use {nameof(OnPointMeasured)} instead.")]
     public static ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext> WithConditionalPaint<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
             where TDrawingContext : DrawingContext

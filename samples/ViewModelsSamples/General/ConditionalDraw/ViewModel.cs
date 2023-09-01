@@ -29,7 +29,7 @@ public partial class ViewModel : ObservableObject
             Name = "Mary",
             Values = _values
         }
-        .MapPoints(point =>
+        .OnPointMeasured(point =>
         {
             // do not set the danger paint if the visual is null or the value is less than 5
             if (point.Visual is null || point.Model?.Value <= 5) return;
