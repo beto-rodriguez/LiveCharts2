@@ -1,12 +1,66 @@
-{{ render this "~/shared/genericSampleSimple.md" }}
+# {{ name | to_title_case }}
 
-### Error bard in line series
+{{~ if xaml ~}}
 
-In the previous sample you can replace the `ColumnSeries<ErrorValue>` with `LineSeries<ErrorValue>` to create 
-a line chart with error bars:
+:::info
+The `[ObservableObject]`, `[ObservableProperty]` and `[ICommand]` attributes come from the 
+[CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm/) package, you can read more about it 
+[here]({{ website_url }}/docs/{{ platform }}/{{ version }}/About.About%20this%20samples).
+:::
 
-<div class="position-relative text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/result2.png" alt="sample image 2" />
+{{~ end ~}}
+
+{{~ if wpf || avalonia || uno || winui  ~}}
+
+:::info
+This web site wraps every sample using a `UserControl` instance, but LiveCharts controls can be used inside any container.
+:::
+
+{{~ end ~}}
+
+
+{{~ if xamarin || maui ~}}
+
+:::info
+This web site wraps every sample using a `ContentPage` instance, but LiveCharts controls can be used inside any container.
+:::
+
+{{~ end ~}}
+
+
+{{~ if winforms ~}}
+
+:::info
+This web site builds the control from code behind but you could also grab it from the toolbox,
+this sample also uses a ViewModel to populate the properties of the control(s) in this sample.
+:::
+
+{{~ end ~}}
+
+<div class="text-center">
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/all.png" alt="sample image" />
 </div>
 
-In the previous image, the `Fill`, `GeometryFill` and `GeometryStroke` properties are `null`.
+## View model
+
+```
+{{ full_name | get_vm_from_docs }}
+```
+
+{{~ if xaml ~}}
+## XAML
+{{~ end ~}}
+
+{{~ if winforms ~}}
+## Form code behind
+{{~ end ~}}
+
+{{~ if blazor~}}
+## HTML
+{{~ end~}}
+
+```
+{{ full_name | get_view_from_docs }}
+```
+
+{{ render this "~/shared/relatedTo.md" }}
