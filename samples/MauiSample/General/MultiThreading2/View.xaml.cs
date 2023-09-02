@@ -19,8 +19,6 @@ public partial class View : ContentPage
     // to invoke an action in the UI thred.
     private void InvokeOnUIThread(Action action)
     {
-        // throws on win ui
-        // https://github.com/dotnet/maui/issues/2451
         MainThread.BeginInvokeOnMainThread(action);
     }
 }
