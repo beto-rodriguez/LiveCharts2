@@ -40,8 +40,8 @@ namespace LiveChartsCore;
 public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
+    internal readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private readonly ICartesianChartView<TDrawingContext> _chartView;
-    private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;
@@ -62,7 +62,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
         ISizedGeometry<TDrawingContext>? zoomingSection)
-        : base(canvas, defaultPlatformConfig, view)
+            : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
         _zoomingSection = zoomingSection ?? throw new Exception($"{nameof(zoomingSection)} is required.");

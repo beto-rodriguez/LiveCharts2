@@ -753,15 +753,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     protected void InitializeCore()
     {
         var zoomingSection = new RectangleGeometry();
-        var zoomingSectionPaint = new SolidColorPaint
-        {
-            IsFill = true,
-            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-            ZIndex = int.MaxValue
-        };
-        zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
-        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
         _core = new CartesianChart<SkiaSharpDrawingContext>(
             this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
         _core.Update();
@@ -899,6 +890,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 #endif
 
 #if WINDOWS
+    private bool _isZoomingSectionAttached = false;
 
     private void OnHandlerChanged(object? sender, EventArgs e)
     {
@@ -931,6 +923,20 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         // not implemented yet?
         // https://github.com/dotnet/maui/issues/16202
         //if (Keyboard.Modifiers > 0) return;
+
+        if (!_isZoomingSectionAttached)
+        {
+            var zoomingSectionPaint = new SolidColorPaint
+            {
+                IsFill = true,
+                Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+                ZIndex = int.MaxValue
+            };
+            var zoomingSection = ((CartesianChart<SkiaSharpDrawingContext>)CoreChart)._zoomingSection;
+            zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+            canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+            _isZoomingSectionAttached = true;
+        }
 
         var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel);
         _core?.InvokePointerDown(
