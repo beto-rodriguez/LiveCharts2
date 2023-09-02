@@ -118,7 +118,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         core.UpdateStarted += OnCoreUpdateStarted;
         core.UpdateFinished += OnCoreUpdateFinished;
 
-        var c = Controls[0].Controls[0];
+        var c = GetDrawnControl();
         c.MouseMove += OnMouseMove;
         c.MouseLeave += Chart_MouseLeave;
 
@@ -263,6 +263,15 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
     public abstract IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point);
+
+    /// <summary>
+    /// Gets the drawn control.
+    /// </summary>
+    /// <returns></returns>
+    public Control GetDrawnControl()
+    {
+        return Controls[0].Controls[0];
+    }
 
     internal Point GetCanvasPosition()
     {
