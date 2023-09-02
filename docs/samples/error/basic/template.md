@@ -3,7 +3,7 @@
 {{~ if xaml ~}}
 
 :::info
-The `[ObservableObject]`, `[ObservableProperty]` and `[ICommand]` attributes come from the 
+The `[ObservableObject]`, `[ObservableProperty]` and `[RelayCommand]` attributes come from the 
 [CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm/) package, you can read more about it 
 [here]({{ website_url }}/docs/{{ platform }}/{{ version }}/About.About%20this%20samples).
 :::
