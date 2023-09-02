@@ -119,7 +119,7 @@ any image bellow is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Step%20line%20Series%20props">
 <div class="series-miniature">
-<img src="{{ assets_url }}/docs/samples/stepline/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/steplines/basic/result.png" alt="series"/>
 <div class="text-center"><b>Step line series</b></div>
 </div>
 </a>
@@ -154,8 +154,29 @@ any image bellow is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Step%20Line%20Series%20props">
 <div class="series-miniature">
-<img src="{{ assets_url }}/docs/samples/stackedStepLine/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/stackedArea/stepArea/result.png" alt="series"/>
 <div class="text-center"><b>Stacked step line series</b></div>
+</div>
+</a>
+
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/samples.box.basic">
+<div class="series-miniature">
+<img src="{{ assets_url }}/docs/samples/box/basic/result.png" alt="series"/>
+<div class="text-center"><b>Box series</b></div>
+</div>
+</a>
+
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/samples.error.basic">
+<div class="series-miniature">
+<img src="{{ assets_url }}/docs/samples/error/basic/result.png" alt="series"/>
+<div class="text-center"><b>Error series</b></div>
+</div>
+</a>
+
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/samples.scatter.bubbles">
+<div class="series-miniature">
+<img src="{{ assets_url }}/docs/samples/scatter/bubbles/result.png" alt="series"/>
+<div class="text-center"><b>Bubble series</b></div>
 </div>
 </a>
 
