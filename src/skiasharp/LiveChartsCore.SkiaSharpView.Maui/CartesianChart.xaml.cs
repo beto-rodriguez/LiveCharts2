@@ -44,7 +44,11 @@ using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
+#if MACCATALYST
+using UIKit;
+#endif
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -113,6 +117,34 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
         _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
         _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
+
+#if __MOBILE__
+
+        var pinchGesture = new PinchGestureRecognizer();
+        var panGesture = new PanGestureRecognizer();
+        var tapGesture = new TapGestureRecognizer();
+
+        pinchGesture.PinchUpdated += OnPinchUpdated;
+        panGesture.PanUpdated += OnPanUpdated;
+        tapGesture.Tapped += OnTapped;
+
+        canvas.GestureRecognizers.Add(pinchGesture);
+        canvas.GestureRecognizers.Add(panGesture);
+        canvas.GestureRecognizers.Add(tapGesture);
+
+#endif
+
+#if WINDOWS
+
+        canvas.HandlerChanged += OnHandlerChanged;
+
+#endif
+
+#if MACCATALYST
+
+        canvas.HandlerChanged += OnHandlerChanged;
+
+#endif
     }
 
     #region bindable properties 
@@ -398,7 +430,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
@@ -778,6 +810,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _core?.Update();
     }
 
+#if __MOBILE__
+
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         if (_core is null) return;
@@ -838,7 +872,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, _lastScale < 1 ? 0.99999 : 1.00001, false);
     }
 
-    private void OnTapped(object sender, TappedEventArgs e)
+    private void OnTapped(object? sender, TappedEventArgs e)
     {
         if (_core is null) return;
         var p = e.GetPosition(this);
@@ -853,27 +887,34 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         var location = new LvcPoint(p.Value.X, p.Value.Y);
         _core.InvokePointerDown(location, false);
         _core.InvokePointerMove(location);
+        _core.InvokePointerUp(location, false);
 
-#if __MOBILE__
-        _closeTooltipTimer.Stop();
-        _closeTooltipTimer.Start();
-#endif
-    }
-
-    private void OnTooltipTimerEllapsed(object sender, ElapsedEventArgs e)
-    {
-        if (_core is null) return;
-        MainThread.BeginInvokeOnMainThread(() =>
+        if (DeviceInfo.Platform != DevicePlatform.macOS)
         {
-            Tooltip?.Hide(_core);
-            _core.Canvas.Invalidate();
             _closeTooltipTimer.Stop();
-        });
+            _closeTooltipTimer.Start();
+        }
     }
 
-    private void OnPointerMoved(object sender, PointerEventArgs e)
+#endif
+
+#if WINDOWS
+
+    private void OnHandlerChanged(object? sender, EventArgs e)
     {
-        var p = e.GetPosition(this);
+        var panel = (Microsoft.Maui.Platform.ContentPanel?)canvas.Handler?.PlatformView
+            ?? throw new Exception("Unable to cast to ContentPanel");
+
+        panel.PointerWheelChanged += OnPointerWheelChanged;
+        panel.PointerPressed += OnPointerPressed;
+        panel.PointerReleased += OnPointerReleased;
+        panel.PointerMoved += OnPointerMoved;
+        panel.PointerExited += OnPointerExited;
+    }
+
+    private void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel)?.Position;
         if (p is null) return;
 
         if (PointerMoveCommand is not null)
@@ -883,6 +924,113 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         }
 
         _core?.InvokePointerMove(new LvcPoint((float)p.Value.X, (float)p.Value.Y));
+    }
+
+    private void OnPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        // not implemented yet?
+        // https://github.com/dotnet/maui/issues/16202
+        //if (Keyboard.Modifiers > 0) return;
+
+        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel);
+        _core?.InvokePointerDown(
+            new LvcPoint((float)p.Position.X, (float)p.Position.Y), p.Properties.IsRightButtonPressed);
+    }
+
+    private void OnPointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel);
+        _core?.InvokePointerUp(
+            new LvcPoint((float)p.Position.X, (float)p.Position.Y), p.Properties.IsRightButtonPressed);
+    }
+
+    private void OnPointerWheelChanged(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel);
+        c.Zoom(
+            new LvcPoint((float)p.Position.X, (float)p.Position.Y),
+            p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        _core?.InvokePointerLeft();
+    }
+
+#endif
+
+#if MACCATALYST
+
+    private void OnHandlerChanged(object? sender, EventArgs e)
+    {
+        var view = (Microsoft.Maui.Platform.ContentView?)canvas.Handler?.PlatformView
+            ?? throw new Exception("Unable to cast to ContentView");
+
+        view.AddGestureRecognizer(new UIHoverGestureRecognizer(GetOnHover(view)));
+        view.AddGestureRecognizer(new UIPanGestureRecognizer(GetOnPan(view))
+        {
+            AllowedScrollTypesMask = UIScrollTypeMask.Discrete | UIScrollTypeMask.Continuous,
+            MinimumNumberOfTouches = 0
+        });
+
+        var pointerGesture = new PointerGestureRecognizer();
+        pointerGesture.PointerExited += OnPointerExited;
+        canvas.GestureRecognizers.Add(pointerGesture);
+    }
+
+    private Action<UIHoverGestureRecognizer> GetOnHover(UIView view)
+    {
+        return (UIHoverGestureRecognizer e) =>
+        {
+            var p = e.LocationInView(view);
+
+            if (PointerMoveCommand is not null)
+            {
+                var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
+                if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
+            }
+
+            _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
+        };
+    }
+
+    private CoreGraphics.CGPoint? _last;
+    private Action<UIPanGestureRecognizer> GetOnPan(UIView view)
+    {
+        return (UIPanGestureRecognizer e) =>
+        {
+            var l = e.LocationInView(view);
+            _last ??= l;
+            var delta = _last.Value.Y - l.Y;
+            var isZoom = e.NumberOfTouches == 0;
+
+            if (e.State == UIGestureRecognizerState.Ended || !isZoom || delta == 0) return;
+
+            var c = (CartesianChart<SkiaSharpDrawingContext>)CoreChart;
+            c.Zoom(new(l.X, l.Y), delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+
+            _last = l;
+        };
+    }
+
+    private void OnPointerExited(object? sender, PointerEventArgs e)
+    {
+        _core?.InvokePointerLeft();
+    }
+
+#endif
+
+    private void OnTooltipTimerEllapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (_core is null) return;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Tooltip?.Hide(_core);
+            _core.Canvas.Invalidate();
+            _closeTooltipTimer.Stop();
+        });
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -904,11 +1052,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
-    }
-
-    private void OnPointerExited(object sender, PointerEventArgs e)
-    {
-        _core?.InvokePointerLeft();
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)

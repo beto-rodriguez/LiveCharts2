@@ -42,7 +42,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 {
     private readonly IPolarChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
-    private readonly bool _requiresLegendMeasureAlways = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarChart{TDrawingContext}"/> class.
@@ -59,7 +58,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
-        _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
     }
 
     /// <summary>
@@ -78,13 +76,13 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     /// </value>
     public IPolarAxis[] RadiusAxes { get; private set; } = Array.Empty<IPolarAxis>();
 
-    /// <summary>
-    /// Gets the series.
-    /// </summary>
-    /// <value>
-    /// The series.
-    /// </value>
-    public IPolarSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPolarSeries<TDrawingContext>>();
+    ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
+    public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
+        _chartView.Series.Cast<IChartSeries<TDrawingContext>>();
+
+    ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
+    public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
+        Series.Where(x => x.IsVisible);
 
     /// <summary>
     /// Gets whether the series fit to bounds or not.
@@ -116,14 +114,6 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     public float InitialRotation { get; private set; }
 
     /// <summary>
-    /// Gets the drawable series.
-    /// </summary>
-    /// <value>
-    /// The drawable series.
-    /// </value>
-    public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries => Series;
-
-    /// <summary>
     /// Gets the view.
     /// </summary>
     /// <value>
@@ -138,7 +128,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     /// <returns></returns>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
-        return ChartSeries
+        return VisibleSeries
             .Where(series => series.IsHoverable)
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
     }
@@ -176,8 +166,8 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        AngleAxes = _chartView.AngleAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
-        RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().Select(x => x).ToArray();
+        AngleAxes = _chartView.AngleAxes.Cast<IPolarAxis>().ToArray();
+        RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().ToArray();
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
@@ -195,17 +185,11 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         InnerRadius = (float)_chartView.InnerRadius;
         InitialRotation = (float)_chartView.InitialRotation;
 
-        var actualSeries = (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
-
-        Series = actualSeries
-            .Cast<IPolarSeries<TDrawingContext>>()
-            .ToArray();
-
-        VisualElements = _chartView.VisualElements?.ToArray() ?? Array.Empty<ChartElement<TDrawingContext>>();
+        VisualElements = _chartView.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(Series);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
@@ -236,7 +220,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
-        foreach (var series in Series)
+        foreach (var series in VisibleSeries.Cast<IPolarSeries<TDrawingContext>>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
@@ -320,7 +304,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         {
             float mt = 0, mb = 0, ml = 0, mr = 0;
 
-            foreach (var series in Series)
+            foreach (var series in VisibleSeries.Cast<IPolarSeries<TDrawingContext>>())
             {
                 var scaler = new PolarScaler(
                     DrawMarginLocation, DrawMarginSize, AngleAxes[series.ScalesAngleAt], RadiusAxes[series.ScalesRadiusAt],
@@ -511,7 +495,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         }
 
         foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in Series) AddVisual((ChartElement<TDrawingContext>)series);
+        foreach (var series in VisibleSeries) AddVisual((ChartElement<TDrawingContext>)series);
 
         CollectVisuals();
 

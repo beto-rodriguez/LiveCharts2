@@ -16,39 +16,24 @@ public partial class ViewModel : ObservableObject
             Values = new ObservableCollection<DateTimePoint>
             {
                 new DateTimePoint(new DateTime(2021, 1, 1), 3),
-                // notice we are missing the day new DateTime(2021, 1, 2)
-                new DateTimePoint(new DateTime(2021, 1, 3), 6),
-                new DateTimePoint(new DateTime(2021, 1, 4), 5),
-                new DateTimePoint(new DateTime(2021, 1, 5), 3),
-                new DateTimePoint(new DateTime(2021, 1, 6), 5),
-                new DateTimePoint(new DateTime(2021, 1, 7), 8),
-                new DateTimePoint(new DateTime(2021, 1, 8), 6)
+                new DateTimePoint(new DateTime(2021, 1, 2), 6),
+                new DateTimePoint(new DateTime(2021, 1, 3), 5),
+                new DateTimePoint(new DateTime(2021, 1, 4), 3),
+                new DateTimePoint(new DateTime(2021, 1, 5), 5),
+                new DateTimePoint(new DateTime(2021, 1, 6), 8),
+                new DateTimePoint(new DateTime(2021, 1, 7), 6)
             }
         }
     };
 
+    // You can use the DateTimeAxis class to define a date time based axis // mark
+
+    // The first parameter is the time between each point, in this case 1 day // mark
+    // you can also use 1 year, 1 month, 1 hour, 1 minute, 1 second, 1 millisecond, etc // mark
+
+    // The second parameter is a function that receives the value and returns the label // mark
     public Axis[] XAxes { get; set; } =
     {
-        new Axis
-        {
-            Labeler = value => value.AsDate().ToString("MMMM dd"),
-            LabelsRotation = 80,
-
-            // when using a date time type, let the library know your unit // mark
-            // where "unit" means the distance between your points, this will improve
-            // how tooltips are triggered.
-            UnitWidth = TimeSpan.FromDays(1).Ticks, // mark
-
-            // if the difference between our points is in hours then we would:
-            // UnitWidth = TimeSpan.FromHours(1).Ticks,
-
-            // since all the months and years have a different number of days
-            // we can use the average, it would not cause any visible error in the user interface
-            // Months: TimeSpan.FromDays(30.4375).Ticks
-            // Years: TimeSpan.FromDays(365.25).Ticks
-
-            // The MinStep property forces the separator to be greater than 1 day.
-            MinStep = TimeSpan.FromDays(1).Ticks // mark
-        }
+        new DateTimeAxis(TimeSpan.FromDays(1), date => date.ToString("MMMM dd"))
     };
 }

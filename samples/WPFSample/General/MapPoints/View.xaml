@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="WPFSample.General.MapPoints.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.MapPoints;assembly=ViewModelsSamples">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    
+    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" />
+    
+</UserControl>

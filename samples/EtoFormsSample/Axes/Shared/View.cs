@@ -15,7 +15,7 @@ public class View : Panel
             Series = viewModel.SeriesCollection1,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
             DrawMargin = viewModel.DrawMargin,
-            XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
+            XAxes = viewModel.X1
         };
 
         var cartesianChart2 = new CartesianChart
@@ -23,7 +23,7 @@ public class View : Panel
             Series = viewModel.SeriesCollection2,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
             DrawMargin = viewModel.DrawMargin,
-            XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
+            XAxes = viewModel.X2
         };
 
         Content = new DynamicLayout(

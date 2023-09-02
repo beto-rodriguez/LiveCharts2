@@ -9,7 +9,27 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}">
-    </lvc:CartesianChart>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            Series="{Binding Series0}">
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Series="{Binding Series1}">
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+        Grid.Row="2"
+            Series="{Binding Series2}"
+            XAxes="{Binding DateTimeAxis}">
+        </lvc:CartesianChart>
+    </Grid>
 </UserControl>

@@ -303,7 +303,10 @@ public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> :
                     Padding = new Padding(6)
                 };
 
-                _labelGeometry.Animate(cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed);
+                _labelGeometry.Animate(
+                    cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed,
+                    nameof(_labelGeometry.X), nameof(_labelGeometry.Y));
+
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;
             }

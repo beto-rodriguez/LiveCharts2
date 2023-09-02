@@ -93,6 +93,8 @@ public static class Index
         "Events/Pie",
         "Events/Polar",
 
+        "General/MapPoints",
+        "General/RealTime",
         "General/Scrollable",
         "General/Sections",
         "General/Sections2",

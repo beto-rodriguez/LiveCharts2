@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.ConditionalDraw;
 
@@ -29,6 +31,30 @@ namespace LiveChartsCore.ConditionalDraw;
 /// </summary>
 public static class ConditionalDrawExtensions
 {
+    /// <summary>
+    /// Executes the given action when a point is measured, this metod just subscribes to the
+    /// <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event, but with a simple syntax.
+    /// </summary>
+    /// <typeparam name="TModel">TThe type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="series">The target series.</param>
+    /// <param name="predicate">The action to execute.</param>
+    /// <returns>The series.</returns>
+    /// <remarks>
+    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event.
+    /// </remarks>
+    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointMeasured<TModel, TVisual, TLabel, TDrawingContext>(
+        this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    {
+        series.PointMeasured += predicate;
+        return series;
+    }
+
     /// <summary>
     /// Returns a <see cref="ConditionalPaintBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> for the given paint.
     /// </summary>
@@ -39,6 +65,7 @@ public static class ConditionalDrawExtensions
     /// <param name="series">The series.</param>
     /// <param name="paint">The paint.</param>
     /// <returns></returns>
+    [Obsolete($"Use {nameof(OnPointMeasured)} instead.")]
     public static ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext> WithConditionalPaint<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
             where TDrawingContext : DrawingContext

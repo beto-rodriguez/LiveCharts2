@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -112,10 +113,8 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
             chart.RemoveVisual(visual);
         }
 
-        foreach (var series in chart.ChartSeries)
+        foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
-            if (!series.IsVisibleAtLegend) continue;
-
             _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 6),

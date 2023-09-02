@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
@@ -118,6 +119,11 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     AxisPosition Position { get; set; }
 
     /// <summary>
+    /// Gets or sets the shared axes collection, useful to share the zooming an panning between several charts.
+    /// </summary>
+    public IEnumerable<ICartesianAxis>? SharedWith { get; set; }
+
+    /// <summary>
     /// Initializes the axis for the specified orientation.
     /// </summary>
     /// <param name="orientation">The orientation.</param>
@@ -127,6 +133,19 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// Occurs when the axis is initialized.
     /// </summary>
     event Action<ICartesianAxis>? Initialized;
+
+    /// <summary>
+    /// Gets the axis limits considering its own and the <see cref="SharedWith"/> axes.
+    /// </summary>
+    /// <returns>The limits.</returns>
+    AxisLimit GetLimits();
+
+    /// <summary>
+    /// Sets the axis limits (own and shared).
+    /// </summary>
+    /// <param name="min">The min limit.</param>
+    /// <param name="max">The max limit.</param>
+    void SetLimits(double min, double max);
 }
 
 /// <summary>

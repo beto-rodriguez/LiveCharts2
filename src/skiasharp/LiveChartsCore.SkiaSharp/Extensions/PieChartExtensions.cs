@@ -147,6 +147,7 @@ public static class PieChartExtensions
                 series.HoverPushout = 0;
                 series.DataLabelsPaint = null;
                 series.AnimationsSpeed = TimeSpan.FromSeconds(0);
+                series.IsRelativeToMinValue = true;
             }
         }
 

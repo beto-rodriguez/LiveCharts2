@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -144,7 +145,6 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         var subtickInnerRadius = ticksDiameter * 0.5f - (float)TicksLength * .5f;
         var labelsRadius = outerRadius - (float)LabelsOuterOffset;
 
-        var start = 0;
         var sweep = completeAngle - 0.1f;
 
         _arc ??= new();
@@ -155,7 +155,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         _arc.Y = drawLocation.Y + (drawMarginSize.Height - ticksDiameter) * 0.5f;
         _arc.Width = ticksDiameter;
         _arc.Height = ticksDiameter;
-        _arc.StartAngle = start + initialRotation;
+        _arc.StartAngle = initialRotation;
         _arc.SweepAngle = sweep;
 
         var max = endValue;
@@ -182,13 +182,14 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
 
         var updateId = new object();
         const double toRadians = Math.PI / 180d;
-        for (var i = min; i <= max; i += tick)
+
+        for (var i = Math.Truncate(min / tick) * tick - tick; i <= max; i += tick)
         {
-            var beta = start + i / max * (sweep - start);
+            var beta = (i - min) / range * sweep;
             beta += initialRotation;
             beta *= toRadians;
 
-            var nextBeta = start + (i + tick) / max * (sweep - start);
+            var nextBeta = (i - min + tick) / range * sweep;
             nextBeta += initialRotation;
             nextBeta *= toRadians;
 
@@ -223,11 +224,17 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
                     subtick.Y1 = cy + (float)Math.Sin(alpha) * subtickInnerRadius;
 
                     Stroke?.AddGeometryToPaintTask(chart.Canvas, subtick);
+                    subtick.Opacity = i + tick * (j + 1) / visual.Subseparator.Length >= min ? 1 : 0;
                 }
             }
 
             LabelsPaint?.AddGeometryToPaintTask(chart.Canvas, visual.Label);
             Stroke?.AddGeometryToPaintTask(chart.Canvas, visual.Tick);
+
+            var opacity = i >= min ? 1 : 0;
+            visual.Label.Opacity = opacity;
+            visual.Tick.Opacity = opacity;
+
             visual.UpdateId = updateId;
         }
 
@@ -247,14 +254,16 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         foreach (var key in _visuals.Keys.ToArray())
         {
             var visual = _visuals[key];
-            if (visual.UpdateId == updateId) return;
+            if (visual.UpdateId == updateId) continue;
 
-            LabelsPaint?.AddGeometryToPaintTask(chart.Canvas, visual.Label);
-            Stroke?.AddGeometryToPaintTask(chart.Canvas, visual.Tick);
+            LabelsPaint?.RemoveGeometryFromPainTask(chart.Canvas, visual.Label);
+            Stroke?.RemoveGeometryFromPainTask(chart.Canvas, visual.Tick);
             foreach (var subtick in visual.Subseparator)
-                Stroke?.AddGeometryToPaintTask(chart.Canvas, subtick);
+                Stroke?.RemoveGeometryFromPainTask(chart.Canvas, subtick);
             _ = _visuals.Remove(key);
         }
+
+        Trace.WriteLine(_visuals.Count);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>

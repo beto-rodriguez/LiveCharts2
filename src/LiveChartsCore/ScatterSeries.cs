@@ -37,18 +37,21 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="IScatterSeries{TDrawingContext}" />
-public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
+public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
+        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
     private Bounds _weightBounds = new();
+    private IPaint<TDrawingContext>? _errorPaint;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
     public ScatterSeries()
         : base(SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
@@ -58,7 +61,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         DataLabelsFormatter = (point) => $"{point.Coordinate.PrimaryValue}";
         YToolTipLabelFormatter = point =>
         {
-            var series = (ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>)point.Context.Series;
+            var series = (ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>)point.Context.Series;
             var c = point.Coordinate;
             return series.IsWeighted
                 ? $"X = {c.SecondaryValue}{Environment.NewLine}" +
@@ -90,6 +93,13 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     public bool IsWeighted { get; private set; }
 
+    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
+    public IPaint<TDrawingContext>? ErrorPaint
+    {
+        get => _errorPaint;
+        set => SetPaintProperty(ref _errorPaint, value, true);
+    }
+
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
@@ -117,9 +127,15 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
+        if (ErrorPaint is not null)
+        {
+            ErrorPaint.ZIndex = actualZIndex + 0.3;
+            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
+            cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
+        }
         if (DataLabelsPaint is not null)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
+            DataLabelsPaint.ZIndex = actualZIndex + 0.4;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
@@ -147,6 +163,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             var coordinate = point.Coordinate;
 
             var visual = (TVisual?)point.Context.Visual;
+            var e = point.Context.AdditionalVisuals as ErrorVisual<TErrorGeometry>;
 
             var x = xScale.ToPixels(coordinate.SecondaryValue);
             var y = yScale.ToPixels(coordinate.PrimaryValue);
@@ -181,6 +198,23 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                     Height = 0
                 };
 
+                if (ErrorPaint is not null)
+                {
+                    e = new ErrorVisual<TErrorGeometry>();
+
+                    e.YError.X = x;
+                    e.YError.X1 = x;
+                    e.YError.Y = y;
+                    e.YError.Y1 = y;
+
+                    e.XError.X = x;
+                    e.XError.X1 = x;
+                    e.XError.Y = y;
+                    e.XError.Y1 = y;
+
+                    point.Context.AdditionalVisuals = e;
+                }
+
                 visual = r;
                 point.Context.Visual = visual;
                 OnPointCreated(point);
@@ -197,6 +231,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
             Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
+            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
 
             var sizedGeometry = visual;
 
@@ -204,6 +240,23 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
             sizedGeometry.Y = y - hgs;
             sizedGeometry.Width = gs;
             sizedGeometry.Height = gs;
+
+            if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
+            {
+                var pe = coordinate.PointError;
+
+                e!.YError!.X = x;
+                e.YError.X1 = x;
+                e.YError.Y = y + yScale.MeasureInPixels(pe.Yi);
+                e.YError.Y1 = y - yScale.MeasureInPixels(pe.Yj);
+                e.YError.RemoveOnCompleted = false;
+
+                e.XError!.X = x - xScale.MeasureInPixels(pe.Xi);
+                e.XError.X1 = x + xScale.MeasureInPixels(pe.Xj);
+                e.XError.Y = y;
+                e.XError.Y1 = y;
+                e.XError.RemoveOnCompleted = false;
+            }
 
             sizedGeometry.RemoveOnCompleted = false;
 
@@ -296,7 +349,17 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         if (visual is null) throw new Exception("Unable to initialize the point instance.");
 
-        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        var easing = EasingFunction ?? chart.EasingFunction;
+        var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
+
+        visual.Animate(easing, speed);
+
+        if (chartPoint.Context.AdditionalVisuals is not null)
+        {
+            var e = (ErrorVisual<TErrorGeometry>)chartPoint.Context.AdditionalVisuals;
+            e.YError.Animate(easing, speed);
+            e.XError.Animate(easing, speed);
+        }
     }
 
     /// <inheritdoc cref="SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -325,6 +388,19 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
         visual.Height = 0;
         visual.Width = 0;
         visual.RemoveOnCompleted = true;
+
+        if (point.Context.AdditionalVisuals is not null)
+        {
+            var e = (ErrorVisual<TErrorGeometry>)point.Context.AdditionalVisuals;
+
+            e.YError.Y = y;
+            e.YError.Y1 = y;
+            e.YError.RemoveOnCompleted = true;
+
+            e.XError.X = x;
+            e.XError.X1 = x;
+            e.XError.RemoveOnCompleted = true;
+        }
 
         DataFactory.DisposePoint(point);
 

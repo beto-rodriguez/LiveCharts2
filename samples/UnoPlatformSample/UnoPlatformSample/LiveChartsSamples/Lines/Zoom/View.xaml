@@ -11,19 +11,8 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <TextBlock Text="Use the mouse wheel to zoom in/out, click hold and drag to move panning"/>
-        <lvc:CartesianChart
-            Grid.Row="1"
-            Series="{Binding SeriesCollection}"
-            ZoomMode="X"> <!-- mark -->
-        </lvc:CartesianChart>
-    </Grid>
-
+    <lvc:CartesianChart
+        Series="{Binding SeriesCollection}"
+        ZoomMode="X"><!-- mark -->
+    </lvc:CartesianChart>
 </UserControl>

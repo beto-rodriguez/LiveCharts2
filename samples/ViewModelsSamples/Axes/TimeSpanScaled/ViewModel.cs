@@ -17,32 +17,21 @@ public partial class ViewModel : ObservableObject
             {
                 new TimeSpanPoint(TimeSpan.FromMilliseconds(1), 10),
                 new TimeSpanPoint(TimeSpan.FromMilliseconds(2), 6),
-             // new TimeSpanPoint(TimeSpan.FromMilliseconds(3), 3),
+                new TimeSpanPoint(TimeSpan.FromMilliseconds(3), 3),
                 new TimeSpanPoint(TimeSpan.FromMilliseconds(4), 12),
                 new TimeSpanPoint(TimeSpan.FromMilliseconds(5), 8),
             },
         }
     };
 
+    // You can use the TimeSpanAxis class to define a time span based axis // mark
+
+    // The first parameter is the time between each point, in this case 1 day // mark
+    // you can also use 1 year, 1 month, 1 hour, 1 minute, 1 second, 1 millisecond, etc // mark
+
+    // The second parameter is a function that receives the value and returns the label // mark
     public Axis[] XAxes { get; set; } =
     {
-        new Axis
-        {
-            Labeler = value => value.AsTimeSpan().ToString("fff") + " ms",
-
-            // when using a date time type, let the library know your unit // mark
-            UnitWidth = TimeSpan.FromMilliseconds(1).Ticks, //mark
-
-            // if the difference between our points is in hours then we would:
-            // UnitWidth = TimeSpan.FromHours(1).Ticks,
-
-            // since all the months and years have a different number of days
-            // we can use the average, it would not cause any visible error in the user interface
-            // Months: TimeSpan.FromDays(30.4375).Ticks
-            // Years: TimeSpan.FromDays(365.25).Ticks
-
-            // The MinStep property forces the separator to be greater than 1 ms.
-            MinStep = TimeSpan.FromMilliseconds(1).Ticks, // mark
-        }
+        new TimeSpanAxis(TimeSpan.FromMilliseconds(1), date => date.ToString("fff") + "ms")
     };
 }

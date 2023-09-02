@@ -1,5 +1,7 @@
-﻿using LiveChartsCore;
+﻿using System.Linq;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
@@ -48,11 +50,9 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
 
         var theme = LiveCharts.DefaultSettings.GetTheme<SkiaSharpDrawingContext>();
 
-        foreach (var series in chart.ChartSeries)
+        foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
-            if (!series.IsVisibleAtLegend) continue;
-
-            _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+            var panel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
             {
                 Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,
@@ -79,9 +79,21 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
                         HorizontalAlignment = Align.Start
                     }
                 }
-            });
+            };
+
+            panel.PointerDown += GetPointerDownHandler(series);
+            _stackPanel.Children.Add(panel);
         }
 
         return _stackPanel.Measure(chart);
+    }
+
+    private static VisualElementHandler<SkiaSharpDrawingContext> GetPointerDownHandler(
+        IChartSeries<SkiaSharpDrawingContext> series)
+    {
+        return (visual, args) =>
+        {
+            series.IsVisible = !series.IsVisible;
+        };
     }
 }

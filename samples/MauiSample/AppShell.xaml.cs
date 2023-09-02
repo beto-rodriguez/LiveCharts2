@@ -11,7 +11,7 @@ public partial class AppShell : Shell
         PropertyChanged += AppShell_PropertyChanged;
     }
 
-    private void AppShell_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void AppShell_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (_isLoaded) return;
         _isLoaded = true;
@@ -54,16 +54,18 @@ public partial class AppShell : Shell
         Navigating += AppShell_Navigating;
     }
 
-    private void AppShell_Navigating(object sender, ShellNavigatingEventArgs e)
+    private void AppShell_Navigating(object? sender, ShellNavigatingEventArgs e)
     {
-        var shell = (AppShell)sender;
+        var shell = (AppShell?)sender ?? throw new Exception("Sell not found");
+
         var r = shell.Items.Select(x => x.CurrentItem.CurrentItem.Route).ToArray();
         var next = Items.FirstOrDefault(x => "//" + x.CurrentItem.CurrentItem.Route == e.Target.Location.OriginalString);
 
         var item = _routesSamples[e.Target.Location.OriginalString];
         var t = Type.GetType($"MauiSample.{item.Replace('/', '.')}.View");
-        var i = Activator.CreateInstance(t);
-        var c = next.Items[0].Items[0];
+        var i = Activator.CreateInstance(t!);
+        var c = next!.Items[0].Items[0];
+
         c.Content = i;
     }
 }

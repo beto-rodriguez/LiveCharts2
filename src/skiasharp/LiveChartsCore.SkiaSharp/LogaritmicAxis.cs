@@ -29,6 +29,10 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public class LogaritmicAxis : Axis
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LogaritmicAxis"/> class.
+    /// </summary>
+    /// <param name="base">The log base.</param>
     public LogaritmicAxis(double @base)
     {
         MinStep = 1;

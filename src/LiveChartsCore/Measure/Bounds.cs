@@ -56,12 +56,12 @@ public class Bounds
     /// <summary>
     /// Gets the maximum value in the data set.
     /// </summary>
-    public double Max { get; internal set; } = float.MinValue;
+    public double Max { get; internal set; } = double.MinValue;
 
     /// <summary>
     /// Gets the minimum value in the data set.
     /// </summary>
-    public double Min { get; internal set; } = float.MaxValue;
+    public double Min { get; internal set; } = double.MaxValue;
 
     /// <summary>
     /// Gets the padding, the distance from the edge to the first point in the series.
@@ -115,21 +115,12 @@ public class Bounds
     /// <param name="bounds">the bounds to append</param>
     internal void AppendValue(Bounds bounds)
     {
-        if (Max <= bounds.Max) Max = bounds.Max;
-        if (Min >= bounds.Min) Min = bounds.Min;
+        if (Max < bounds.Max) Max = bounds.Max;
+        if (Min > bounds.Min) Min = bounds.Min;
         if (bounds.MinDelta < MinDelta) MinDelta = bounds.MinDelta;
         if (RequestedGeometrySize < bounds.RequestedGeometrySize) RequestedGeometrySize = bounds.RequestedGeometrySize;
         if (PaddingMin < bounds.PaddingMin) PaddingMin = bounds.PaddingMin;
         if (PaddingMax < bounds.PaddingMax) PaddingMax = bounds.PaddingMax;
         IsEmpty = false;
-    }
-
-    /// <summary>
-    /// Determines whether the current instance has the same limit to the given instance.
-    /// </summary>
-    /// <param name="bounds">The bounds to compate.</param>
-    internal bool HasSameLimitTo(Bounds bounds)
-    {
-        return Max == bounds.Max && Min == bounds.Min;
     }
 }

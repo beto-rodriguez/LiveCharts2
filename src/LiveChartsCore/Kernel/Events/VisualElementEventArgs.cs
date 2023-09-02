@@ -20,9 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.VisualElements;
@@ -32,22 +29,21 @@ namespace LiveChartsCore.Kernel.Events;
 /// <summary>
 /// Defines the visual elements event arguments.
 /// </summary>
-public class VisualElementsEventArgs<TDrawingContext>
+public class VisualElementEventArgs<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private VisualElement<TDrawingContext>? _closer;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="VisualElementsEventArgs{TDrawingContext}"/> class.
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <param name="pointerLocation">The pointer location.</param>
-    /// <param name="visualElements">The visual elements.</param>
-    public VisualElementsEventArgs(Chart<TDrawingContext> chart, IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointerLocation)
+    /// <param name="visualElement">The visual elements.</param>
+    public VisualElementEventArgs(
+        Chart<TDrawingContext> chart, VisualElement<TDrawingContext> visualElement, LvcPoint pointerLocation)
     {
         Chart = chart;
         PointerLocation = pointerLocation;
-        VisualElements = visualElements;
+        VisualElement = visualElement;
     }
 
     /// <summary>
@@ -55,12 +51,13 @@ public class VisualElementsEventArgs<TDrawingContext>
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <param name="pointerLocation">The pointer location.</param>
-    /// <param name="visualElements">The visual elements.</param>
-    public VisualElementsEventArgs(IChart chart, IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointerLocation)
+    /// <param name="visualElement">The visual element.</param>
+    public VisualElementEventArgs(
+        IChart chart, VisualElement<TDrawingContext> visualElement, LvcPoint pointerLocation)
     {
         Chart = (Chart<TDrawingContext>)chart;
         PointerLocation = pointerLocation;
-        VisualElements = visualElements;
+        VisualElement = visualElement;
     }
 
     /// <summary>
@@ -74,30 +71,7 @@ public class VisualElementsEventArgs<TDrawingContext>
     public LvcPoint PointerLocation { get; }
 
     /// <summary>
-    /// Gets the closest visual element to the pointer position.
+    /// Gets the visual elements found.
     /// </summary>
-    public VisualElement<TDrawingContext>? ClosestToPointerVisualElement => _closer ??= FindClosest();
-
-    /// <summary>
-    /// Gets all the visual elements that were found.
-    /// </summary>
-    public IEnumerable<VisualElement<TDrawingContext>> VisualElements { get; }
-
-    private VisualElement<TDrawingContext>? FindClosest()
-    {
-        return VisualElements.Select(visual =>
-        {
-            var size = visual.Measure(Chart);
-
-            return new
-            {
-                distance = Math.Sqrt(
-                    Math.Pow(PointerLocation.X - (visual.X + size.Width * 0.5), 2) +
-                    Math.Pow(PointerLocation.Y - (visual.Y + size.Height * 0.5), 2)),
-                visual
-            };
-        })
-       .OrderBy(p => p.distance)
-       .FirstOrDefault()?.visual;
-    }
+    public VisualElement<TDrawingContext> VisualElement { get; }
 }

@@ -20,6 +20,7 @@ public partial class ViewModel : ObservableObject
 
     public ViewModel(Action<Action> uiThreadInvoker)
     {
+        // lets create some initial data. // mark
         var items = new List<int>();
         for (var i = 0; i < 1500; i++)
         {
@@ -29,6 +30,7 @@ public partial class ViewModel : ObservableObject
 
         _values = new ObservableCollection<int>(items);
 
+        // create a series with the data // mark
         Series = new ISeries[]
         {
             new LineSeries<int>
@@ -41,11 +43,15 @@ public partial class ViewModel : ObservableObject
             }
         };
 
+        // There are simplier ways to do this, but since we are using a MVVM pattern, // mark
+        // we need to inject a delegate that will run an action in the UI thread. // mark
         _uiThreadInvoker = uiThreadInvoker;
         _delay = 1;
         var readTasks = 10;
 
-        // create {readTasks} parallel tasks that will add a point every {_delay} milliseconds
+        // Finally, we need to start the tasks that will add points to the series. // mark
+        // we are creating {readTasks} tasks // mark
+        // that will add a point every {_delay} milliseconds // mark
         for (var i = 0; i < readTasks; i++)
         {
             _ = Task.Run(ReadData);
@@ -60,14 +66,14 @@ public partial class ViewModel : ObservableObject
     {
         await Task.Delay(1000);
 
-        // to keep this sample simple, we run the next infinite loop
-        // in a real application you should stop the loop/task when the view is disposed
+        // to keep this sample simple, we run the next infinite loop // mark
+        // in a real application you should stop the loop/task when the view is disposed // mark
 
         while (IsReading)
         {
             await Task.Delay(_delay);
 
-            // force the change to happen in the UI thread.
+            // force the change to happen in the UI thread. // mark
             _uiThreadInvoker(() =>
             {
                 s_current += _r.Next(-9, 10);

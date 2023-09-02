@@ -9,7 +9,7 @@
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
 
-    <Version>2.0.0-beta.920</Version>
+    <Version>2.0.0-beta.950</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsAppSDK.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.4-preview.96" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.5" />
   </ItemGroup>
 
   <ItemGroup>

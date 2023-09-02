@@ -29,6 +29,7 @@ namespace LiveChartsCore.ConditionalDraw;
 /// <summary>
 /// Defines a <see cref="ConditionalPaintBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> instance.
 /// </summary>
+[Obsolete("Replaced by MaPoints extensiion.")]
 public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
     where TDrawingContext : DrawingContext
     where TVisual : class, IGeometry<TDrawingContext>, new()

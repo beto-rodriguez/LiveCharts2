@@ -62,6 +62,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     private RadialAlignment _radialAlign = RadialAlignment.Outer;
     private bool _invertedCornerRadius = false;
     private bool _isFillSeries;
+    private bool _isRelativeToMin;
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
 
@@ -133,6 +134,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
     public bool IsFillSeries { get => _isFillSeries; set => SetProperty(ref _isFillSeries, value); }
+
+    /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsRelativeToMinValue"/>
+    public bool IsRelativeToMinValue { get => _isRelativeToMin; set => SetProperty(ref _isRelativeToMin, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
@@ -303,11 +307,25 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
             }
             else
             {
-                var h = total - startValue;
-                var h1 = stackedValue + coordinate.PrimaryValue - startValue;
-                start = stackedValue / total * completeAngle;
-                sweep = h1 / h * completeAngle - start;
-                if (!isClockWise) start = completeAngle - start - sweep;
+                if (_isRelativeToMin)
+                {
+                    // when the series is relative to min value,
+                    // the start value is always the PieChart.MinValue
+                    // this is normally used on angular gauge series.
+                    var h = total - startValue;
+                    var h1 = stackedValue + coordinate.PrimaryValue;
+                    start = stackedValue / (total - startValue) * completeAngle;
+                    sweep = h1 / h * completeAngle - start;
+                    if (!isClockWise) start = completeAngle - start - sweep;
+                }
+                else
+                {
+                    var h = total - startValue;
+                    var h1 = stackedValue + coordinate.PrimaryValue - startValue;
+                    start = stackedValue / total * completeAngle;
+                    sweep = h1 / h * completeAngle - start;
+                    if (!isClockWise) start = completeAngle - start - sweep;
+                }
             }
 
             if (IsFillSeries)
@@ -376,8 +394,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             pointsCleanup.Clean(point);
 
-            var hasValue = Math.Abs(coordinate.PrimaryValue) > 0.00001; // <- this will improved in the future
-            if (DataLabelsPaint is not null && hasValue)
+            if (DataLabelsPaint is not null)
             {
                 var label = (TLabel?)point.Context.Label;
 

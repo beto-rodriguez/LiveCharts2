@@ -316,7 +316,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
     #endregion
 
