@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<!-- Suppress Compiler warnings for elements without XML Docs -->
-		<NoWarn>$(NoWarn);CS1591</NoWarn>
-	</PropertyGroup>
-</Project>
