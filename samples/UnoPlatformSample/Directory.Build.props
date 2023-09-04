@@ -1,0 +1,55 @@
+<Project>
+	<PropertyGroup>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<DebugType>portable</DebugType>
+		<DebugSymbols>True</DebugSymbols>
+
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+		<NoWarn>$(NoWarn);CA1416;NU1507</NoWarn>
+
+		<DefaultLanguage>en</DefaultLanguage>
+
+		<IsAndroid>false</IsAndroid>
+		<IsIOS>false</IsIOS>
+		<IsMac>false</IsMac>
+		<IsMacCatalyst>false</IsMacCatalyst>
+		<IsWinAppSdk>false</IsWinAppSdk>
+	</PropertyGroup>
+
+	<Choose>
+		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+			<PropertyGroup>
+				<IsAndroid>true</IsAndroid>
+				<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+			</PropertyGroup>
+		</When>
+		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+			<PropertyGroup>
+				<IsIOS>true</IsIOS>
+				<SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+			</PropertyGroup>
+		</When>
+		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+			<PropertyGroup>
+				<IsMac>true</IsMac>
+				<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+			</PropertyGroup>
+		</When>
+		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+			<PropertyGroup>
+				<IsMacCatalyst>true</IsMacCatalyst>
+				<SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
+			</PropertyGroup>
+		</When>
+		<When Condition="$(TargetFramework.Contains('windows10'))">
+			<PropertyGroup>
+				<IsWinAppSdk>true</IsWinAppSdk>
+				<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+			</PropertyGroup>
+		</When>
+	</Choose>
+</Project>
