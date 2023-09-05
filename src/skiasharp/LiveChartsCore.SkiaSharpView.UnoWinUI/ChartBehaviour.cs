@@ -57,6 +57,16 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 
 #endif
 
+#if WINDOWS
+
+            element.PointerPressed += OnWindowsPointerPressed;
+            element.PointerMoved += OnWindowsPointerMoved;
+            element.PointerReleased += OnWindowsPointerReleased;
+            element.PointerWheelChanged += OnWindowsPointerWheelChanged;
+            element.PointerExited += OnWindowsPointerExited;
+
+#endif
+
         };
     }
 }

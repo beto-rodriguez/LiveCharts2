@@ -22,7 +22,6 @@
 
 using System;
 using Microsoft.Maui.Devices;
-using Microsoft.Maui.Platform;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -43,7 +42,7 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 
 #if ANDROID
 
-            var contentViewGroup = (ContentViewGroup?)element.Handler?.PlatformView
+            var contentViewGroup = (Microsoft.Maui.Platform.ContentViewGroup?)element.Handler?.PlatformView
                 ?? throw new Exception("Unable to cast to ContentViewGroup");
 
             contentViewGroup.Touch += OnAndroidTouched;
@@ -53,7 +52,7 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 
 #if MACCATALYST || IOS
 
-            var contentView = (ContentView?)element.Handler?.PlatformView
+            var contentView = (Microsoft.Maui.Platform.ContentView?)element.Handler?.PlatformView
                 ?? throw new Exception("Unable to cast to ContentView");
 
             contentView.UserInteractionEnabled = true;
@@ -62,6 +61,19 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
             contentView.AddGestureRecognizer(GetLongPress(contentView));
             contentView.AddGestureRecognizer(GetPinch(contentView));
             contentView.AddGestureRecognizer(GetOnPan(contentView));
+
+#endif
+
+#if WINDOWS
+
+            var contentPanel = (Microsoft.UI.Xaml.UIElement?)element.Handler?.PlatformView
+                ?? throw new Exception("Unable to cast to ContentPanel");
+
+            contentPanel.PointerPressed += OnWindowsPointerPressed;
+            contentPanel.PointerMoved += OnWindowsPointerMoved;
+            contentPanel.PointerReleased += OnWindowsPointerReleased;
+            contentPanel.PointerWheelChanged += OnWindowsPointerWheelChanged;
+            contentPanel.PointerExited += OnWindowsPointerExited;
 
 #endif
 
