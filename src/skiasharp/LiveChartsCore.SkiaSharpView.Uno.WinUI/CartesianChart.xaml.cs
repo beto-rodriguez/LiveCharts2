@@ -778,6 +778,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             chartBehaviour.Moved += OnMoved;
             chartBehaviour.Released += OnReleased;
             chartBehaviour.Scrolled += OnScrolled;
+            chartBehaviour.Pinched += OnPinched;
             chartBehaviour.Exited += OnExited;
 
             chartBehaviour.On(this);
@@ -837,6 +838,17 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         if (_core is null) throw new Exception("core not found");
         var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
         c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args)
+    {
+        if (_core is null) return;
+
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        var p = args.PinchStart;
+        var s = c.ControlSize;
+        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
+        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
     }
 
     private void OnExited(object? sender, Behaviours.Events.EventArgs args)
