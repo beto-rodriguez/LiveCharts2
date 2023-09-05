@@ -62,7 +62,7 @@
 	</Choose>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.UnoWinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
+		<ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
 		<ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
 		<ProjectReference Include="..\UnoPlatformSample.DataContracts\UnoPlatformSample.DataContracts.csproj" />
 	</ItemGroup>
