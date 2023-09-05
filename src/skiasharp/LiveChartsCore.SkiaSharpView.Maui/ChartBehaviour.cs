@@ -31,18 +31,40 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class ChartBehaviour : Behaviours.ChartBehaviour
 {
+    /// <summary>
+    /// Attaches the native events on the specified element.
+    /// </summary>
+    /// <param name="element">The element.</param>
     public void On(Microsoft.Maui.Controls.VisualElement element)
     {
-        Density = DeviceDisplay.MainDisplayInfo.Density;
+        element.HandlerChanged += (sender, e) =>
+        {
+            Density = DeviceDisplay.MainDisplayInfo.Density;
 
 #if ANDROID
 
-        var contentViewGroup = (ContentViewGroup?)element.Handler?.PlatformView
-            ?? throw new Exception("Unable to cast to ContentViewGroup");
+            var contentViewGroup = (ContentViewGroup?)element.Handler?.PlatformView
+                ?? throw new Exception("Unable to cast to ContentViewGroup");
 
-        contentViewGroup.Touch += OnAndroidTouched;
-        contentViewGroup.Hover += OnAndroidHover;
+            contentViewGroup.Touch += OnAndroidTouched;
+            contentViewGroup.Hover += OnAndroidHover;
 
 #endif
+
+#if MACCATALYST || IOS
+
+            var contentView = (ContentView?)element.Handler?.PlatformView
+                ?? throw new Exception("Unable to cast to ContentView");
+
+            contentView.UserInteractionEnabled = true;
+
+            contentView.AddGestureRecognizer(GetHover(contentView));
+            contentView.AddGestureRecognizer(GetLongPress(contentView));
+            contentView.AddGestureRecognizer(GetPinch(contentView));
+            contentView.AddGestureRecognizer(GetOnPan(contentView));
+
+#endif
+
+        };
     }
 }

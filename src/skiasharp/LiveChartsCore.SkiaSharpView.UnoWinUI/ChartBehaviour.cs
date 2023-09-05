@@ -29,15 +29,34 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// </summary>
 public class ChartBehaviour : Behaviours.ChartBehaviour
 {
+    /// <summary>
+    /// Attaches the native events on the specified element.
+    /// </summary>
+    /// <param name="element">The element.</param>
     public void On(FrameworkElement element)
     {
         Density = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
 
+        element.Loaded += (sender, e) =>
+        {
+
 #if ANDROID
 
-        element.Touch += OnAndroidTouched;
-        element.Hover += OnAndroidHover;
+            element.Touch += OnAndroidTouched;
+            element.Hover += OnAndroidHover;
 
 #endif
+
+#if MACCATALYST || IOS
+
+            element.UserInteractionEnabled = true;
+            element.AddGestureRecognizer(GetHover(element));
+            element.AddGestureRecognizer(GetLongPress(element));
+            element.AddGestureRecognizer(GetPinch(element));
+            element.AddGestureRecognizer(GetOnPan(element));
+
+#endif
+
+        };
     }
 }
