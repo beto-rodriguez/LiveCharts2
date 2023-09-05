@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModelsSamples", "..\Vie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Uno.WinUI", "..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", "{2D5903B0-DBD3-4F49-A94C-AF44D2193C8A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.Behaviours", "..\..\src\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj", "{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -275,6 +277,22 @@ Global
 		{2D5903B0-DBD3-4F49-A94C-AF44D2193C8A}.Release|x64.Build.0 = Release|Any CPU
 		{2D5903B0-DBD3-4F49-A94C-AF44D2193C8A}.Release|x86.ActiveCfg = Release|Any CPU
 		{2D5903B0-DBD3-4F49-A94C-AF44D2193C8A}.Release|x86.Build.0 = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|arm64.Build.0 = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|x64.Build.0 = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Debug|x86.Build.0 = Debug|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|arm64.ActiveCfg = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|arm64.Build.0 = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|x64.ActiveCfg = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|x64.Build.0 = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|x86.ActiveCfg = Release|Any CPU
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -295,6 +313,7 @@ Global
 		{C3C321D8-3CA3-4714-AFF3-B71A3B819E08} = {98754DD8-C793-49EF-A506-F120FEBA666A}
 		{EE2EB14F-01BB-4A01-89F4-0CF88CBD0669} = {B9B91410-6F69-4DB0-A917-646B729F2467}
 		{2D5903B0-DBD3-4F49-A94C-AF44D2193C8A} = {98754DD8-C793-49EF-A506-F120FEBA666A}
+		{55278FF8-FED3-4A60-8AC2-0AB5BA6F84B9} = {98754DD8-C793-49EF-A506-F120FEBA666A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4C6F8CF1-CF97-4BED-9F5B-F97F15C166EC}

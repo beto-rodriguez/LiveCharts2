@@ -37,11 +37,9 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 using LiveChartsCore.SkiaSharpView.Painting;
-using Microsoft.UI.Input;
 using LiveChartsCore.VisualElements;
 using System.Linq;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -62,7 +60,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
-    private DateTime _panLocketUntil;
 
     #endregion
 
@@ -772,7 +769,18 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             _core.Measuring += OnCoreMeasuring;
             _core.UpdateStarted += OnCoreUpdateStarted;
             _core.UpdateFinished += OnCoreUpdateFinished;
+
             SizeChanged += OnSizeChanged;
+
+            var chartBehaviour = new ChartBehaviour();
+
+            chartBehaviour.Pressed += OnPressed;
+            chartBehaviour.Moved += OnMoved;
+            chartBehaviour.Released += OnReleased;
+            chartBehaviour.Scrolled += OnScrolled;
+            chartBehaviour.Exited += OnExited;
+
+            chartBehaviour.On(this);
         }
 
         _core.Load();
@@ -789,12 +797,51 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         _core?.Update();
     }
 
-
-
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         if (_core == null) throw new Exception("Core not found!");
         _core.Update();
+    }
+
+    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        // is this working on all platforms?
+        //if (args.KeyModifiers > 0) return;
+
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PointerPressedCommand?.CanExecute(cArgs) == true) PointerPressedCommand.Execute(cArgs);
+
+        _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    {
+        var location = args.Location;
+
+        var cArgs = new PointerCommandArgs(this, new(location.X, location.Y), args.OriginalEvent);
+        if (PointerMoveCommand?.CanExecute(cArgs) == true) PointerMoveCommand.Execute(cArgs);
+
+        _core?.InvokePointerMove(location);
+    }
+
+    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PointerReleasedCommand?.CanExecute(cArgs) == true) PointerReleasedCommand.Execute(cArgs);
+
+        _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
+        _core?.InvokePointerLeft();
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

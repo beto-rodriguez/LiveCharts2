@@ -35,38 +35,37 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
     /// <param name="element">The element.</param>
     public void On(FrameworkElement element)
     {
+#if HAS_UNO_WINUI
         Density = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
-
-        element.Loaded += (sender, e) =>
-        {
+#else
+        Density = element.XamlRoot.RasterizationScale;
+#endif
 
 #if ANDROID
 
-            element.Touch += OnAndroidTouched;
-            element.Hover += OnAndroidHover;
+        element.Touch += OnAndroidTouched;
+        element.Hover += OnAndroidHover;
 
 #endif
 
 #if MACCATALYST || IOS
 
-            element.UserInteractionEnabled = true;
-            element.AddGestureRecognizer(GetMacCatalystHover(element));
-            element.AddGestureRecognizer(GetMacCatalystLongPress(element));
-            element.AddGestureRecognizer(GetMacCatalystPinch(element));
-            element.AddGestureRecognizer(GetMacCatalystOnPan(element));
+        element.UserInteractionEnabled = true;
+        element.AddGestureRecognizer(GetMacCatalystHover(element));
+        element.AddGestureRecognizer(GetMacCatalystLongPress(element));
+        element.AddGestureRecognizer(GetMacCatalystPinch(element));
+        element.AddGestureRecognizer(GetMacCatalystOnPan(element));
 
 #endif
 
 #if WINDOWS
 
-            element.PointerPressed += OnWindowsPointerPressed;
-            element.PointerMoved += OnWindowsPointerMoved;
-            element.PointerReleased += OnWindowsPointerReleased;
-            element.PointerWheelChanged += OnWindowsPointerWheelChanged;
-            element.PointerExited += OnWindowsPointerExited;
+        element.PointerPressed += OnWindowsPointerPressed;
+        element.PointerMoved += OnWindowsPointerMoved;
+        element.PointerReleased += OnWindowsPointerReleased;
+        element.PointerWheelChanged += OnWindowsPointerWheelChanged;
+        element.PointerExited += OnWindowsPointerExited;
 
 #endif
-
-        };
     }
 }
