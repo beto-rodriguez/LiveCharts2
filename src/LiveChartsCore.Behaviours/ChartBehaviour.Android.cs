@@ -34,7 +34,6 @@ public abstract partial class ChartBehaviour
 {
     private bool _isPinching;
     private bool _isDown;
-    private LvcPoint _lastTouch = new();
     private readonly ScaleGestureDetector _scaleDetector = null!;
 
     protected void OnAndroidHover(object? sender, View.HoverEventArgs e)
@@ -70,7 +69,7 @@ public abstract partial class ChartBehaviour
             case MotionEventActions.Move:
             case MotionEventActions.HoverMove:
                 // the Moved event is only raised when the pointer is down,
-                // it is also fired frorm the hover event when the pointer is not down.
+                // it is also fired from the hover handler when the pointer is not down.
                 if (!_isPinching && _isDown)
                     Moved?.Invoke(sender, new(p, e.Event));
                 break;
@@ -95,8 +94,6 @@ public abstract partial class ChartBehaviour
             default:
                 break;
         }
-
-        _lastTouch = p;
     }
 
     private class CustomScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener

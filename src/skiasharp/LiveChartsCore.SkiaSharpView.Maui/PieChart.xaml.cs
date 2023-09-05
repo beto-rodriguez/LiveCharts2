@@ -91,6 +91,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
         _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
         _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
+
+        var chartBehaviour = new ChartBehaviour();
+
+        chartBehaviour.Pressed += OnPressed;
+        chartBehaviour.Moved += OnMoved;
+        chartBehaviour.Released += OnReleased;
+        chartBehaviour.Scrolled += OnScrolled;
+        chartBehaviour.Exited += OnExited;
+
+        chartBehaviour.On(this);
     }
 
     #region bindable properties
@@ -276,18 +286,25 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             nameof(UpdateStartedCommand), typeof(ICommand), typeof(PieChart), null);
 
     /// <summary>
-    /// The tapped command.
+    /// The pressed command.
     /// </summary>
-    public static readonly BindableProperty TappedCommandProperty =
+    public static readonly BindableProperty PressedCommandProperty =
         BindableProperty.Create(
-            nameof(TappedCommand), typeof(ICommand), typeof(PieChart), null);
+            nameof(PressedCommand), typeof(ICommand), typeof(PieChart), null);
+
+    /// <summary>
+    /// The released command.
+    /// </summary>
+    public static readonly BindableProperty ReleasedCommandProperty =
+        BindableProperty.Create(
+            nameof(ReleasedCommand), typeof(ICommand), typeof(PieChart), null);
 
     /// <summary>
     /// The pointer move command.
     /// </summary>
-    public static readonly BindableProperty PointerMoveCommandProperty =
+    public static readonly BindableProperty MovedCommandProperty =
         BindableProperty.Create(
-            nameof(PointerMoveCommand), typeof(ICommand), typeof(PieChart), null);
+            nameof(MovedCommand), typeof(ICommand), typeof(PieChart), null);
 
     /// <summary>
     /// The data pointer down command property
@@ -532,19 +549,48 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <summary>
     /// Gets or sets a command to execute when the users taped the chart.
     /// </summary>
+    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
     public ICommand? TappedCommand
     {
-        get => (ICommand?)GetValue(TappedCommandProperty);
-        set => SetValue(TappedCommandProperty, value);
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the prressed the chart.
+    /// </summary>
+    public ICommand? PressedCommand
+    {
+        get => (ICommand?)GetValue(PressedCommandProperty);
+        set => SetValue(PressedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users released thhe press on the chart.
+    /// </summary>
+    public ICommand? ReleasedCommand
+    {
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer/finger moves over the chart.
+    /// </summary>
+    public ICommand? MovedCommand
+    {
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer moves over the chart.
     /// </summary>
+    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
     public ICommand? PointerMoveCommand
     {
-        get => (ICommand?)GetValue(PointerMoveCommandProperty);
-        set => SetValue(PointerMoveCommandProperty, value);
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
@@ -646,6 +692,45 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         }
 
         _core?.Load();
+    }
+
+    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        // not implemented yet?
+        // https://github.com/dotnet/maui/issues/16202
+        //if (Keyboard.Modifiers > 0) return;
+
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PressedCommand?.CanExecute(cArgs) == true) PressedCommand.Execute(cArgs);
+
+        _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    {
+        var location = args.Location;
+
+        var cArgs = new PointerCommandArgs(this, new(location.X, location.Y), args.OriginalEvent);
+        if (MovedCommand?.CanExecute(cArgs) == true) MovedCommand.Execute(cArgs);
+
+        _core?.InvokePointerMove(location);
+    }
+
+    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
+        _core?.InvokePointerLeft();
     }
 
     private void OnSizeChanged(object? sender, EventArgs e)

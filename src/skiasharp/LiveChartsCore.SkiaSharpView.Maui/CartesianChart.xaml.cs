@@ -37,6 +37,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 using Microsoft.Maui.ApplicationModel;
@@ -62,6 +63,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
     private TimeSpan _tooltipCloseInterval = TimeSpan.FromMilliseconds(3500);
     private readonly Timer _closeTooltipTimer = new();
+    private bool _isZoomingSectionAttached;
 
     #endregion
 
@@ -107,6 +109,16 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
         _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
         _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
+
+        var chartBehaviour = new ChartBehaviour();
+
+        chartBehaviour.Pressed += OnPressed;
+        chartBehaviour.Moved += OnMoved;
+        chartBehaviour.Released += OnReleased;
+        chartBehaviour.Scrolled += OnScrolled;
+        chartBehaviour.Exited += OnExited;
+
+        chartBehaviour.On(this);
     }
 
     #region bindable properties 
@@ -338,18 +350,25 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             nameof(UpdateStartedCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
-    /// The tapped command.
+    /// The pressed command.
     /// </summary>
-    public static readonly BindableProperty TappedCommandProperty =
+    public static readonly BindableProperty PressedCommandProperty =
         BindableProperty.Create(
-            nameof(TappedCommand), typeof(ICommand), typeof(CartesianChart), null);
+            nameof(PressedCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
+    /// The released command.
+    /// </summary>
+    public static readonly BindableProperty ReleasedCommandProperty =
+        BindableProperty.Create(
+            nameof(ReleasedCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The pointer move command.
     /// </summary>
-    public static readonly BindableProperty PointerMoveCommandProperty =
+    public static readonly BindableProperty MovedCommandProperty =
         BindableProperty.Create(
-            nameof(PointerMoveCommand), typeof(ICommand), typeof(CartesianChart), null);
+            nameof(MovedCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The data pointer down command property
@@ -599,19 +618,48 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <summary>
     /// Gets or sets a command to execute when the users taped the chart.
     /// </summary>
+    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
     public ICommand? TappedCommand
     {
-        get => (ICommand?)GetValue(TappedCommandProperty);
-        set => SetValue(TappedCommandProperty, value);
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the prressed the chart.
+    /// </summary>
+    public ICommand? PressedCommand
+    {
+        get => (ICommand?)GetValue(PressedCommandProperty);
+        set => SetValue(PressedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users released thhe press on the chart.
+    /// </summary>
+    public ICommand? ReleasedCommand
+    {
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer/finger moves over the chart.
+    /// </summary>
+    public ICommand? MovedCommand
+    {
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer moves over the chart.
     /// </summary>
+    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
     public ICommand? PointerMoveCommand
     {
-        get => (ICommand?)GetValue(PointerMoveCommandProperty);
-        set => SetValue(PointerMoveCommandProperty, value);
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
@@ -746,6 +794,59 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         }
 
         _core?.Load();
+    }
+
+    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        // not implemented yet?
+        // https://github.com/dotnet/maui/issues/16202
+        //if (Keyboard.Modifiers > 0) return;
+
+        if (!_isZoomingSectionAttached)
+        {
+            var zoomingSectionPaint = new SolidColorPaint
+            {
+                IsFill = true,
+                Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+                ZIndex = int.MaxValue
+            };
+            var zoomingSection = ((CartesianChart<SkiaSharpDrawingContext>)CoreChart)._zoomingSection;
+            zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+            canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+            _isZoomingSectionAttached = true;
+        }
+
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PressedCommand?.CanExecute(cArgs) == true) PressedCommand.Execute(cArgs);
+
+        _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    {
+        var location = args.Location;
+
+        var cArgs = new PointerCommandArgs(this, new(location.X, location.Y), args.OriginalEvent);
+        if (MovedCommand?.CanExecute(cArgs) == true) MovedCommand.Execute(cArgs);
+
+        _core?.InvokePointerMove(location);
+    }
+
+    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
+        _core?.InvokePointerLeft();
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

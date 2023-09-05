@@ -20,13 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using Microsoft.Maui.Devices;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <summary>
-/// The chart behaviour for Uno Platform.
+/// The chart behaviour for MAUI.
 /// </summary>
 public class ChartBehaviour : Behaviours.ChartBehaviour
 {
@@ -43,7 +42,7 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 #if ANDROID
 
             var contentViewGroup = (Microsoft.Maui.Platform.ContentViewGroup?)element.Handler?.PlatformView
-                ?? throw new Exception("Unable to cast to ContentViewGroup");
+                ?? throw new System.Exception("Unable to cast to ContentViewGroup");
 
             contentViewGroup.Touch += OnAndroidTouched;
             contentViewGroup.Hover += OnAndroidHover;
@@ -53,7 +52,7 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 #if MACCATALYST || IOS
 
             var contentView = (Microsoft.Maui.Platform.ContentView?)element.Handler?.PlatformView
-                ?? throw new Exception("Unable to cast to ContentView");
+                ?? throw new System.Exception("Unable to cast to ContentView");
 
             contentView.UserInteractionEnabled = true;
 
@@ -67,7 +66,7 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 #if WINDOWS
 
             var contentPanel = (Microsoft.UI.Xaml.UIElement?)element.Handler?.PlatformView
-                ?? throw new Exception("Unable to cast to ContentPanel");
+                ?? throw new System.Exception("Unable to cast to ContentPanel");
 
             contentPanel.PointerPressed += OnWindowsPointerPressed;
             contentPanel.PointerMoved += OnWindowsPointerMoved;
