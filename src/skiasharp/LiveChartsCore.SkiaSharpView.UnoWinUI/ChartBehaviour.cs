@@ -50,10 +50,10 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 #if MACCATALYST || IOS
 
             element.UserInteractionEnabled = true;
-            element.AddGestureRecognizer(GetHover(element));
-            element.AddGestureRecognizer(GetLongPress(element));
-            element.AddGestureRecognizer(GetPinch(element));
-            element.AddGestureRecognizer(GetOnPan(element));
+            element.AddGestureRecognizer(GetMacCatalystHover(element));
+            element.AddGestureRecognizer(GetMacCatalystLongPress(element));
+            element.AddGestureRecognizer(GetMacCatalystPinch(element));
+            element.AddGestureRecognizer(GetMacCatalystOnPan(element));
 
 #endif
 

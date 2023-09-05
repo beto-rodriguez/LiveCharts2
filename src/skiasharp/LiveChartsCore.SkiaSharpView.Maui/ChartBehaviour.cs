@@ -57,10 +57,10 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 
             contentView.UserInteractionEnabled = true;
 
-            contentView.AddGestureRecognizer(GetHover(contentView));
-            contentView.AddGestureRecognizer(GetLongPress(contentView));
-            contentView.AddGestureRecognizer(GetPinch(contentView));
-            contentView.AddGestureRecognizer(GetOnPan(contentView));
+            contentView.AddGestureRecognizer(GetMacCatalystHover(contentView));
+            contentView.AddGestureRecognizer(GetMacCatalystLongPress(contentView));
+            contentView.AddGestureRecognizer(GetMacCatalystPinch(contentView));
+            contentView.AddGestureRecognizer(GetMacCatalystOnPan(contentView));
 
 #endif
 

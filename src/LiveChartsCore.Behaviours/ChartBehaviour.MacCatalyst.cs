@@ -29,11 +29,11 @@ using UIKit;
 namespace LiveChartsCore.Behaviours;
 
 /// <summary>
-/// Add some custom events to a given MAUI visual element.
+/// A class that adds platform-specific events to the chart.
 /// </summary>
 public partial class ChartBehaviour
 {
-    protected UIHoverGestureRecognizer GetHover(UIView view)
+    protected UIHoverGestureRecognizer GetMacCatalystHover(UIView view)
     {
         return new UIHoverGestureRecognizer((UIHoverGestureRecognizer e) =>
         {
@@ -56,7 +56,7 @@ public partial class ChartBehaviour
         });
     }
 
-    protected UILongPressGestureRecognizer GetLongPress(UIView view)
+    protected UILongPressGestureRecognizer GetMacCatalystLongPress(UIView view)
     {
         return new UILongPressGestureRecognizer((UILongPressGestureRecognizer e) =>
         {
@@ -90,7 +90,7 @@ public partial class ChartBehaviour
     }
 
     private float _previousScale = 1;
-    protected UIPinchGestureRecognizer GetPinch(UIView view)
+    protected UIPinchGestureRecognizer GetMacCatalystPinch(UIView view)
     {
         return new UIPinchGestureRecognizer((UIPinchGestureRecognizer e) =>
         {
@@ -122,7 +122,7 @@ public partial class ChartBehaviour
     }
 
     private CGPoint? _last;
-    protected UIPanGestureRecognizer GetOnPan(UIView view)
+    protected UIPanGestureRecognizer GetMacCatalystOnPan(UIView view)
     {
         return new UIPanGestureRecognizer((UIPanGestureRecognizer e) =>
         {
