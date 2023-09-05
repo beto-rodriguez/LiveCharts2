@@ -771,16 +771,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             _core.Measuring += OnCoreMeasuring;
             _core.UpdateStarted += OnCoreUpdateStarted;
             _core.UpdateFinished += OnCoreUpdateFinished;
-
-            PointerPressed += OnPointerPressed;
-            PointerMoved += OnPointerMoved;
-            PointerReleased += OnPointerReleased;
-            PointerWheelChanged += OnWheelChanged;
-            PointerExited += OnPointerExited;
-
             SizeChanged += OnSizeChanged;
-
-            _motionCanvas.Pinched += OnCanvasPinched;
         }
 
         _core.Load();
@@ -796,6 +787,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     {
         _core?.Update();
     }
+
+
 
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
@@ -822,89 +815,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
-    }
-
-    private void OnPointerPressed(object? sender, PointerRoutedEventArgs e)
-    {
-        if (e.KeyModifiers > 0) return;
-        _ = CapturePointer(e.Pointer);
-        var p = e.GetCurrentPoint(this);
-
-        if (PointerPressedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
-        }
-
-        var isRight = false;
-        if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-        {
-            var properties = e.GetCurrentPoint(this).Properties;
-            isRight = properties.IsRightButtonPressed;
-        }
-        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), isRight);
-    }
-
-    private void OnPointerMoved(object? sender, PointerRoutedEventArgs e)
-    {
-        if (DateTime.Now < _panLocketUntil) return;
-
-        var p = e.GetCurrentPoint(motionCanvas);
-
-        if (PointerMoveCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-        }
-
-        _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
-    }
-
-    private void OnPointerReleased(object? sender, PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(this);
-
-        if (PointerReleasedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
-        }
-
-        var isRight = false;
-        if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-        {
-            var properties = e.GetCurrentPoint(this).Properties;
-            isRight = properties.IsRightButtonPressed;
-        }
-        _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y), isRight);
-        ReleasePointerCapture(e.Pointer);
-    }
-
-    private void OnPointerExited(object? sender, PointerRoutedEventArgs e)
-    {
-        _core?.InvokePointerLeft();
-    }
-
-    private void OnWheelChanged(object? sender, PointerRoutedEventArgs e)
-    {
-        if (_core == null) throw new Exception("core not found");
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        var p = e.GetCurrentPoint(this);
-
-        c.Zoom(
-            new LvcPoint(
-                (float)p.Position.X, (float)p.Position.Y),
-                p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    private void OnCanvasPinched(object? sender, LiveChartsPinchEventArgs eventArgs)
-    {
-        if (_core == null) throw new Exception("core not found");
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-
-        c.Zoom(eventArgs.PinchStart, ZoomDirection.DefinedByScaleFactor, eventArgs.Scale, true);
-        _panLocketUntil = DateTime.Now.AddMilliseconds(500);
-        //_lastScale = eventArgs.Scale;
     }
 
     private void OnUnloaded(object? sender, RoutedEventArgs e)

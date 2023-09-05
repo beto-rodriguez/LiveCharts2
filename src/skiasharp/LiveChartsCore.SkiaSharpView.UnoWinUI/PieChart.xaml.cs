@@ -642,12 +642,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
             _core.Measuring += OnCoreMeasuring;
             _core.UpdateStarted += OnCoreUpdateStarted;
             _core.UpdateFinished += OnCoreUpdateFinished;
-
-            PointerPressed += OnPointerPressed;
-            PointerReleased += PieChart_PointerReleased;
-            SizeChanged += OnSizeChanged;
-            PointerMoved += OnPointerMoved;
-            PointerExited += OnPointerExited;
         }
 
         _core.Load();
@@ -658,42 +652,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     {
         if (_core == null) throw new Exception("Core not found!");
         _core.Update();
-    }
-
-    private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(this);
-
-        if (PointerPressedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
-        }
-
-        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
-    }
-
-    private void PieChart_PointerReleased(object sender, PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(this);
-        if (PointerReleasedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
-        }
-    }
-
-    private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(motionCanvas);
-
-        if (PointerMoveCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-        }
-
-        _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -715,11 +673,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
-    }
-
-    private void OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        _core?.InvokePointerLeft();
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

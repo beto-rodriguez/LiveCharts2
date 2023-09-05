@@ -713,12 +713,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
             _core.UpdateStarted += OnCoreUpdateStarted;
             _core.UpdateFinished += OnCoreUpdateFinished;
 
-            PointerWheelChanged += OnWheelChanged;
-            PointerPressed += OnPointerPressed;
-            PointerReleased += OnPointerReleased;
             SizeChanged += OnSizeChanged;
-            PointerMoved += OnPointerMoved;
-            PointerExited += OnPointerExited;
         }
 
         _core.Load();
@@ -741,19 +736,6 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         _core.Update();
     }
 
-    private void OnPointerMoved(object? sender, PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(motionCanvas);
-
-        if (PointerMoveCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-        }
-
-        _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
-    }
-
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
     {
         UpdateFinished?.Invoke(this);
@@ -773,49 +755,6 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
-    }
-
-    private void OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        _core?.InvokePointerLeft();
-    }
-
-    private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(this);
-
-        if (PointerReleasedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
-        }
-
-        _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
-    }
-
-    private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(this);
-
-        if (PointerPressedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
-        }
-
-        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
-    }
-
-    private void OnWheelChanged(object sender, PointerRoutedEventArgs e)
-    {
-        //if (_core == null) throw new Exception("core not found");
-        //var c = (PolarChart<SkiaSharpDrawingContext>)_core;
-        //var p = e.GetCurrentPoint(this);
-
-        //c.Zoom(
-        //    new System.Drawing.PointF(
-        //        (float)p.Position.X, (float)p.Position.Y),
-        //        p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
