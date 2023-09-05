@@ -746,28 +746,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnTapped(object sender, TappedEventArgs e)
-    {
-        if (_core is null) return;
-        var p = e.GetPosition(this);
-        if (p is null) return;
-
-        if (TappedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
-            if (TappedCommand.CanExecute(args)) TappedCommand.Execute(args);
-        }
-
-        var location = new LvcPoint(p.Value.X, p.Value.Y);
-        _core.InvokePointerDown(location, false);
-        _core.InvokePointerMove(location);
-
-#if __MOBILE__
-        _closeTooltipTimer.Stop();
-        _closeTooltipTimer.Start();
-#endif
-    }
-
     private void OnTooltipTimerEllapsed(object sender, ElapsedEventArgs e)
     {
         if (_core is null) return;
@@ -779,28 +757,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         });
     }
 
-    private void OnPointerMoved(object sender, PointerEventArgs e)
-    {
-        var p = e.GetPosition(this);
-        if (p is null) return;
-
-        if (PointerMoveCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
-            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-        }
-
-        _core?.InvokePointerMove(new LvcPoint((float)p.Value.X, (float)p.Value.Y));
-    }
-
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
-    }
-
-    private void OnPointerExited(object sender, PointerEventArgs e)
-    {
-        _core?.InvokePointerLeft();
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
