@@ -34,7 +34,8 @@ public abstract partial class ChartBehaviour
 {
     private bool _isPinching;
     private bool _isDown;
-    private readonly ScaleGestureDetector _scaleDetector = null!;
+    private LvcPoint _lastTouch;
+    private ScaleGestureDetector _scaleDetector = null!;
 
     protected void OnAndroidHover(object? sender, View.HoverEventArgs e)
     {
@@ -51,6 +52,12 @@ public abstract partial class ChartBehaviour
         var p = new LvcPoint(e.Event.GetX() / Density, e.Event.GetY() / Density);
         var isRightClick = false; // can we detect this?
         var isPinch = e.Event.PointerCount > 1;
+
+        _scaleDetector ??= new ScaleGestureDetector(
+            ((View)sender!).Context!, new CustomScaleListener(scale =>
+            {
+                Pinched?.Invoke(sender, new(scale, _lastTouch, _scaleDetector!));
+            }));
 
         _ = _scaleDetector.OnTouchEvent(e.Event);
 
@@ -94,6 +101,8 @@ public abstract partial class ChartBehaviour
             default:
                 break;
         }
+
+        _lastTouch = p;
     }
 
     private class CustomScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener
