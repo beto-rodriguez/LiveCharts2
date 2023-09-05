@@ -96,11 +96,6 @@ public sealed partial class MotionCanvas : UserControl
 
     #endregion
 
-    /// <summary>
-    /// Called when the canvas detects a pinch gesture.
-    /// </summary>
-    public event PinchHandler? Pinched;
-
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
