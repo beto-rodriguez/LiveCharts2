@@ -834,6 +834,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
     {
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (ReleasedCommand?.CanExecute(cArgs) == true) ReleasedCommand.Execute(cArgs);
+
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
     }
 
