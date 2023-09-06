@@ -35,7 +35,7 @@ public abstract partial class ChartBehaviour
     private bool _isPinching;
     private bool _isDown;
     private LvcPoint _lastTouch;
-    private ScaleGestureDetector _scaleDetector = null!;
+    private ScaleGestureDetector? _scaleDetector;
 
     protected void OnAndroidHover(object? sender, View.HoverEventArgs e)
     {
