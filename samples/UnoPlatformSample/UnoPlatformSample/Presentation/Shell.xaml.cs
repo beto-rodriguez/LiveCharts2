@@ -20,15 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Uno.Toolkit.UI;
-
 namespace UnoPlatformSample.Presentation;
+
 public sealed partial class Shell : UserControl, IContentControlProvider
 {
     public Shell()
     {
         this.InitializeComponent();
     }
-
     public ContentControl ContentControl => Splash;
 }

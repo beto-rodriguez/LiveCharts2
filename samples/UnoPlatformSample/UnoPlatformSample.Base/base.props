@@ -1,5 +1,6 @@
 <Project>
 	<ItemGroup>
+		<PackageReference Include="Uno.Resizetizer" />
 	</ItemGroup>
 
 	<ItemGroup>

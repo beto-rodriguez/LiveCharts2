@@ -32,9 +32,9 @@ public class AppInfoTests
     [Test]
     public void AppInfoCreation()
     {
-        var appInfo = new AppConfig { Title = "Test" };
+        var appInfo = new AppConfig { Environment = "Test" };
 
         appInfo.Should().NotBeNull();
-        appInfo.Title.Should().Be("Test");
+        appInfo.Environment.Should().Be("Test");
     }
 }

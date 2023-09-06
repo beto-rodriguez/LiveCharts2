@@ -1,6 +1,7 @@
-<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows10.0.18362;netstandard2.0;net6.0-ios;net6.0-macos;net6.0-maccatalyst;net6.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);net6.0;net6.0-ios;net6.0-maccatalyst;net6.0-android</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
@@ -23,64 +24,45 @@
   <ItemGroup>
     <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.5" />
     <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.5" />
-    <PackageReference Include="Uno.WinUI" Version="4.8.24" />
+    <PackageReference Include="Uno.WinUI" Version="4.9.17" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
-    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
-    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.18362'">
-    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-    <Compile Update="**\*.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
+  <Choose>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+      <ItemGroup>
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+      </ItemGroup>
+      <ItemGroup>
+        <!--
+				If you encounter this error message:
+
+					error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
+					Please update to a newer .NET SDK in order to reference this assembly.
+
+				This means that the two packages below must be aligned with the "build" version number of
+				the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
+				must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
+				-->
+        <!-- <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
+				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Content Include="Assets\**" />
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+        <Compile Update="**\*.xaml.cs">
+          <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+        <PriResource Include="**\*.resw" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Remove="images\icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="CartesianChart.xaml" />
-    <None Remove="GeoMap.xaml" />
-    <None Remove="MotionCanvas.xaml" />
-    <None Remove="PieChart.xaml" />
-    <None Remove="PolarChart.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Remove="CartesianChart.xaml" />
-    <UpToDateCheckInput Remove="GeoMap.xaml" />
-    <UpToDateCheckInput Remove="MotionCanvas.xaml" />
-    <UpToDateCheckInput Remove="PieChart.xaml" />
-    <UpToDateCheckInput Remove="PolarChart.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="images\icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="CartesianChart.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="GeoMap.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="MotionCanvas.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="PieChart.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="PolarChart.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

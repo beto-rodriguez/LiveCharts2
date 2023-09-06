@@ -24,17 +24,17 @@ namespace UnoPlatformSample.Presentation;
 
 public class ShellModel
 {
-    private INavigator Navigator { get; }
+    private readonly INavigator _navigator;
 
-    public ShellModel(INavigator navigator)
+    public ShellModel(
+        INavigator navigator)
     {
-        Navigator = navigator;
-
+        _navigator = navigator;
         _ = Start();
     }
 
     public async Task Start()
     {
-        await Navigator.NavigateViewModelAsync<MainModel>(this);
+        await _navigator.NavigateViewModelAsync<MainModel>(this);
     }
 }

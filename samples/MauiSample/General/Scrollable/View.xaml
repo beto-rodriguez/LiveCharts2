@@ -27,7 +27,7 @@
                 XAxes="{Binding ScrollableAxes}"
                 ZoomMode="X"
                 DrawMargin="{Binding Margin}"
-                UpdateStarted="OnChart_Updated">
+                UpdateStartedCommand="{Binding ChartUpdatedCommand}">
             </lvc:CartesianChart>
 
             <lvc:CartesianChart
@@ -38,15 +38,10 @@
                 Sections="{Binding Thumbs}"
                 XAxes="{Binding InvisibleX}"
                 YAxes="{Binding InvisibleY}"
-                TooltipPosition="Hidden"
-                >
-                <lvc:CartesianChart.GestureRecognizers>
-                    <PointerGestureRecognizer
-                        PointerEntered="OnPointerEntered"
-                        PointerMoved="OnPointerMoved"
-                        PointerExited="OnPointerExited">
-                    </PointerGestureRecognizer>
-                </lvc:CartesianChart.GestureRecognizers>
+                PressedCommand="{Binding PointerDownCommand}"
+                MovedCommand="{Binding PointerMoveCommand}"
+                ReleasedCommand="{Binding PointerUpCommand}"
+                TooltipPosition="Hidden">
             </lvc:CartesianChart>
         </Grid>
     </ContentPage.Content>
