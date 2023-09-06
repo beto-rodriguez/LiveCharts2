@@ -31,8 +31,10 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="0 8" PointerPressed="Border_PointerPressed">
-                            <TextBlock Text="{Binding}" Foreground="#303030" FontSize="15" FontFamily="Trebuchet MS" FontWeight="Normal"></TextBlock>
+                        <Border Padding="0 8">
+                            <Button Click="Button_Click_1">
+                                <TextBlock Text="{Binding}" Foreground="#303030" FontSize="15" FontFamily="Trebuchet MS" FontWeight="Normal"></TextBlock>
+                            </Button>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

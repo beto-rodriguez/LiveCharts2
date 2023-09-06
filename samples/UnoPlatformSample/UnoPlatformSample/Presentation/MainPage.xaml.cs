@@ -19,14 +19,6 @@ public sealed partial class MainPage : Page
 
     public string[] Samples { get; set; }
 
-    private void Border_PointerPressed(object sender, PointerRoutedEventArgs e)
-    {
-        grid.ColumnDefinitions[0].Width = new GridLength(0);
-
-        var ctx = (string)((FrameworkElement)sender).DataContext;
-        LoadSample(ctx);
-    }
-
     private void LoadSample(string route)
     {
         route = route.Replace('/', '.');
@@ -38,5 +30,13 @@ public sealed partial class MainPage : Page
     {
         grid.ColumnDefinitions[0].Width = _isMenuOpen ? new GridLength(0) : new GridLength(250);
         _isMenuOpen = !_isMenuOpen;
+    }
+
+    private void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+        grid.ColumnDefinitions[0].Width = new GridLength(0);
+
+        var ctx = (string)((FrameworkElement)sender).DataContext;
+        LoadSample(ctx);
     }
 }
