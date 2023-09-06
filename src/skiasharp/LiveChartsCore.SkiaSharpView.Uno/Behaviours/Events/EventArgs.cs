@@ -20,13 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+namespace LiveChartsCore.SkiaSharpView.Uno.Behaviours.Events;
 
-namespace LiveChartsCore.SkiaSharpView.Uno.Helpers;
-
-public class LiveChartsPinchEventArgs
+/// <summary>
+/// Defines the screen event args.
+/// </summary>
+public class EventArgs
 {
-    public float Scale { get; set; }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EventArgs"/> class.
+    /// </summary>
+    /// <param name="originalEvent">The original event.</param>
+    public EventArgs(object originalEvent)
+    {
+        OriginalEvent = originalEvent;
+    }
 
-    public LvcPoint PinchStart { get; set; }
+    /// <summary>
+    /// Gets the original event.
+    /// </summary>
+    public object OriginalEvent { get; }
 }

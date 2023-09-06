@@ -20,38 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Runtime.InteropServices;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-
-namespace LiveChartsCore.SkiaSharpView.Uno.Helpers;
-
-// based on https://youtu.be/RInO5Jqru4s?t=4083
+namespace LiveChartsCore.SkiaSharpView.Uno.Behaviours.Events;
 
 /// <summary>
-/// Defines Uno platform helpers.
+/// Defines the pinch event handler.
 /// </summary>
-public static class UnoPlatformHelpers
-{
-    /// <summary>
-    /// Determines whether the assembly is running in web assembly.
-    /// </summary>
-    public static bool IsWebAssembly { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
-
-    /// <summary>
-    /// Invokes a given acction in the UI thread.
-    /// </summary>
-    /// <param name="action">The action.</param>
-    public static void InvokeOnUIThread(Action action)
-    {
-        if (IsWebAssembly)
-        {
-            action();
-            return;
-        }
-
-        _ = CoreApplication.MainView.CoreWindow.Dispatcher
-            .RunAsync(CoreDispatcherPriority.High, () => action());
-    }
-}
+/// <param name="sender">The sender.</param>
+/// <param name="args">The args.</param>
+public delegate void PinchHandler(object? sender, PinchEventArgs args);
