@@ -6,7 +6,7 @@ using LiveChartsCore.SkiaSharpView.Avalonia;
 
 namespace AvaloniaSample.Test.MotionCanvasDispose;
 
-public class UserControl1 : UserControl
+public partial class UserControl1 : UserControl
 {
     public UserControl1()
     {

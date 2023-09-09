@@ -1,27 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
     <LangVersion>11.0</LangVersion>
   </PropertyGroup>
-  <PropertyGroup>
-    <AvaloniaNameGeneratorIsEnabled>false</AvaloniaNameGeneratorIsEnabled>
-  </PropertyGroup>
+
   <ItemGroup>
-    <AvaloniaResource Include="Assets\livecharts.png" />
+    <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0" />
+    <AvaloniaXaml Remove="Platforms\**" />
+    <Compile Remove="Platforms\**" />
+    <EmbeddedResource Remove="Platforms\**" />
+    <None Remove="Platforms\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.0" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.0" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0" />
    </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Avalonia\LiveChartsCore.SkiaSharpView.Avalonia.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\livecharts.png" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace AvaloniaSample.Pies.Processing;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {

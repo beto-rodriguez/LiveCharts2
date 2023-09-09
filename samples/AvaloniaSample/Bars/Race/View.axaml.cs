@@ -6,7 +6,7 @@ using ViewModelsSamples.Bars.Race;
 
 namespace AvaloniaSample.Bars.Race;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {

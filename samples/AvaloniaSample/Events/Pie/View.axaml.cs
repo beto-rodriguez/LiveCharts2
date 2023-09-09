@@ -8,7 +8,7 @@ using ViewModelsSamples.Events.Pie;
 
 namespace AvaloniaSample.Events.Pie;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {

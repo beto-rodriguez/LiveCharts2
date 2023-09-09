@@ -4,7 +4,7 @@ using LiveChartsCore.SkiaSharpView.Avalonia;
 
 namespace AvaloniaSample.VisualTest.ReattachVisual;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     private bool _isInVisualTree = true;
 

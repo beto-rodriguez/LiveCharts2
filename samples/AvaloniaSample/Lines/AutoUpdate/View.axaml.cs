@@ -5,7 +5,7 @@ using ViewModelsSamples.Lines.AutoUpdate;
 
 namespace AvaloniaSample.Lines.AutoUpdate;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     private bool? isStreaming = false;
 
