@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -56,13 +55,14 @@ public abstract class Chart<TDrawingContext> : IChart
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;
+    private bool _isTooltipCanceled;
     private LvcPoint _pointerPanningStartPosition = new(-10, -10);
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
-    private DateTime _tooltipClosesAt = DateTime.MaxValue;
+    private readonly bool _isMobile;
 
     #endregion
 
@@ -90,17 +90,11 @@ public abstract class Chart<TDrawingContext> : IChart
         _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
 
-        _ = new Timer(o =>
-        {
-            if (DateTime.Now < _tooltipClosesAt) return;
+#if NET5_0_OR_GREATER
 
-            _tooltipClosesAt = DateTime.MaxValue;
-            view.InvokeOnUIThread(() =>
-            {
-                Tooltip?.Hide(this);
-                canvas.Invalidate();
-            });
-        }, null, 2000, 2000);
+        _isMobile = OperatingSystem.IsOSPlatform("Android") || OperatingSystem.IsOSPlatform("iOS");
+
+#endif
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
@@ -338,8 +332,10 @@ public abstract class Chart<TDrawingContext> : IChart
         _pointerPreviousPanningPosition = point;
         _pointerPanningStartPosition = point;
 
-        lock (View.SyncContext)
+        lock (Canvas.Sync)
         {
+            if (_isMobile) _isTooltipCanceled = false;
+
             var strategy = VisibleSeries.GetTooltipFindingStrategy();
 
             // fire the series event.
@@ -375,6 +371,7 @@ public abstract class Chart<TDrawingContext> : IChart
         _pointerPosition = point;
         _isPointerIn = true;
         _tooltipThrottler.Call();
+
         if (!_isPanning) return;
         _pointerPanningPosition = point;
         _panningThrottler.Call();
@@ -382,6 +379,16 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
     {
+        if (_isMobile)
+        {
+            lock (Canvas.Sync)
+            {
+                _isTooltipCanceled = true;
+            }
+
+            View.InvokeOnUIThread(CloseTooltip);
+        }
+
         if (!_isPanning) return;
         _isPanning = false;
         _pointerPanningPosition = point;
@@ -390,10 +397,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal void InvokePointerLeft()
     {
-        _isToolTipOpen = false;
-        Tooltip?.Hide(this);
-        CleanHoveredPoints(new());
-
+        View.InvokeOnUIThread(CloseTooltip);
         _isPointerIn = false;
     }
 
@@ -484,7 +488,7 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    /// Updates thhe bounds tracker.
+    /// Updates the bounds tracker.
     /// </summary>
     protected void UpdateBounds()
     {
@@ -624,7 +628,6 @@ public abstract class Chart<TDrawingContext> : IChart
             x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
             y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
         {
-            _tooltipClosesAt = DateTime.Now.AddSeconds(1.5);
             return;
         }
 
@@ -641,15 +644,10 @@ public abstract class Chart<TDrawingContext> : IChart
 
         CleanHoveredPoints(o);
 
-        if (isEmpty)
-        {
-            _tooltipClosesAt = DateTime.Now.AddSeconds(1.5);
-            return;
-        }
+        if (isEmpty) return;
 
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
-        _tooltipClosesAt = DateTime.MaxValue;
     }
 
     private void CleanHoveredPoints(object comparer)
@@ -670,6 +668,7 @@ public abstract class Chart<TDrawingContext> : IChart
              {
                  lock (Canvas.Sync)
                  {
+                     if (_isTooltipCanceled) return;
                      DrawToolTip();
                      Canvas.Invalidate();
                  }
@@ -697,6 +696,13 @@ public abstract class Chart<TDrawingContext> : IChart
                     _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                 }
             }));
+    }
+
+    private void CloseTooltip()
+    {
+        _isToolTipOpen = false;
+        Tooltip?.Hide(this);
+        CleanHoveredPoints(new());
     }
 
     private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
