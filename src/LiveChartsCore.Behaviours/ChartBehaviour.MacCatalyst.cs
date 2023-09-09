@@ -33,6 +33,8 @@ namespace LiveChartsCore.Behaviours;
 /// </summary>
 public partial class ChartBehaviour
 {
+    private DateTime _previousPress = DateTime.MinValue;
+
     protected UIHoverGestureRecognizer GetMacCatalystHover(UIView view)
     {
         return new UIHoverGestureRecognizer((UIHoverGestureRecognizer e) =>
@@ -62,13 +64,14 @@ public partial class ChartBehaviour
         {
             var location = e.LocationInView(view);
             var p = new LvcPoint((float)location.X, (float)location.Y);
-            var isRightClick = false; // can we detect this?
+            var isRightClick = (DateTime.Now - _previousPress).TotalMilliseconds < 500;
             var isPinch = e.NumberOfTouches > 1;
 
             switch (e.State)
             {
                 case UIGestureRecognizerState.Began:
                     Pressed?.Invoke(view, new(p, isRightClick, e));
+                    _previousPress = DateTime.Now;
                     break;
                 case UIGestureRecognizerState.Changed:
                     Moved?.Invoke(view, new(p, e));

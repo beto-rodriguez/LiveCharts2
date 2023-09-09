@@ -36,6 +36,8 @@ public abstract partial class ChartBehaviour
     private bool _isDown;
     private LvcPoint _lastTouch;
     private ScaleGestureDetector? _scaleDetector;
+    private CustomScaleListener _customScaleListener = null!;
+    private DateTime _previousPress = DateTime.MinValue;
 
     protected void OnAndroidHover(object? sender, View.HoverEventArgs e)
     {
@@ -54,7 +56,7 @@ public abstract partial class ChartBehaviour
         var isPinch = e.Event.PointerCount > 1;
 
         _scaleDetector ??= new ScaleGestureDetector(
-            ((View)sender!).Context!, new CustomScaleListener(scale =>
+            ((View)sender!).Context!, _customScaleListener = new CustomScaleListener(scale =>
             {
                 Pinched?.Invoke(sender, new(scale, _lastTouch, _scaleDetector!));
             }));
@@ -72,6 +74,8 @@ public abstract partial class ChartBehaviour
                 _isDown = true;
                 if (!_isPinching)
                     Pressed?.Invoke(sender, new(p, isRightClick, e.Event));
+                _previousPress = DateTime.Now;
+                _customScaleListener.Paused = isRightClick && !isPinch;
                 break;
             case MotionEventActions.Move:
             case MotionEventActions.HoverMove:
@@ -91,6 +95,7 @@ public abstract partial class ChartBehaviour
                 else
                     _isPinching = false;
                 _isDown = false;
+                _customScaleListener.Paused = false;
                 break;
             case MotionEventActions.HoverEnter:
             case MotionEventActions.HoverExit:
@@ -113,6 +118,8 @@ public abstract partial class ChartBehaviour
         {
             _onScaled = onSacaled;
         }
+
+        public bool Paused { get; set; }
 
         public override bool OnScale(ScaleGestureDetector? detector)
         {
