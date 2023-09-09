@@ -748,8 +748,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     }
 
     private DateTime _lastPresed;
-    private readonly int _tolearance = 100;
-
+    private readonly int _tolearance = 50;
     private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.KeyModifiers > 0) return;
@@ -761,7 +760,11 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
             if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
         }
 
-        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.GetCurrentPoint(this).Properties.IsRightButtonPressed);
+        var isSecondary =
+            e.GetCurrentPoint(this).Properties.IsRightButtonPressed ||
+            (DateTime.Now - _lastPresed).TotalMilliseconds < 500;
+
+        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), isSecondary);
         _lastPresed = DateTime.Now;
     }
 
