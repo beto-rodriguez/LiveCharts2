@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.Uno.Behaviours;
 /// <summary>
 /// A class that adds platform-specific events to the chart.
 /// </summary>
-public abstract partial class ChartBehaviour
+public partial class ChartBehaviour
 {
     private bool _isPinching;
     private bool _isDown;
