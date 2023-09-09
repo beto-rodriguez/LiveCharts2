@@ -33,6 +33,8 @@ namespace LiveChartsCore.SkiaSharpView.Uno.Behaviours;
 /// </summary>
 public partial class ChartBehaviour
 {
+    private DateTime _previousPress = DateTime.MinValue;
+
     protected UIHoverGestureRecognizer GetMacCatalystHover(UIView view)
     {
         return new UIHoverGestureRecognizer((UIHoverGestureRecognizer e) =>
@@ -62,13 +64,14 @@ public partial class ChartBehaviour
         {
             var location = e.LocationInView(view);
             var p = new LvcPoint((float)location.X, (float)location.Y);
-            var isRightClick = false; // can we detect this?
+            var isRightClick = (DateTime.Now - _previousPress).TotalMilliseconds < 500;
             var isPinch = e.NumberOfTouches > 1;
 
             switch (e.State)
             {
                 case UIGestureRecognizerState.Began:
                     Pressed?.Invoke(view, new(p, isRightClick, e));
+                    _previousPress = DateTime.Now;
                     break;
                 case UIGestureRecognizerState.Changed:
                     Moved?.Invoke(view, new(p, e));
@@ -130,7 +133,7 @@ public partial class ChartBehaviour
             _last ??= l;
             var delta = _last.Value.Y - l.Y;
             var isZoom = e.NumberOfTouches == 0;
-            var tolerance = 10; // just a fator to avoid multiple calls.
+            var tolerance = 5; // just a fator to avoid multiple calls.
 
             if (e.State == UIGestureRecognizerState.Ended || !isZoom || Math.Abs(delta) < tolerance) return;
             Scrolled?.Invoke(view, new(new(l.X, l.Y), delta, e));
