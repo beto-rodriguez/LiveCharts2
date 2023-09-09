@@ -130,7 +130,7 @@ public partial class ChartBehaviour
             _last ??= l;
             var delta = _last.Value.Y - l.Y;
             var isZoom = e.NumberOfTouches == 0;
-            var tolerance = 10; // just a fator to avoid multiple calls.
+            var tolerance = 5; // just a fator to avoid multiple calls.
 
             if (e.State == UIGestureRecognizerState.Ended || !isZoom || Math.Abs(delta) < tolerance) return;
             Scrolled?.Invoke(view, new(new(l.X, l.Y), delta, e));
