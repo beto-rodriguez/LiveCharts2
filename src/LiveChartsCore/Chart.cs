@@ -87,11 +87,6 @@ public abstract class Chart<TDrawingContext> : IChart
                 : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _updateThrottler.ThrottlerTimeSpan = view.UpdaterThrottler;
 
-        PointerDown += Chart_PointerDown;
-        PointerMove += Chart_PointerMove;
-        PointerUp += Chart_PointerUp;
-        PointerLeft += Chart_PointerLeft;
-
         _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
 
@@ -116,16 +111,6 @@ public abstract class Chart<TDrawingContext> : IChart
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
     public event ChartEventHandler<TDrawingContext>? UpdateFinished;
-
-    internal event Action<LvcPoint> PointerDown;
-
-    internal event Action<LvcPoint> PointerMove;
-
-    internal event Action<LvcPoint> PointerUp;
-
-    internal event Action PointerLeft;
-
-    internal event Action<PanGestureEventArgs>? PanGesture;
 
     #region properties
 
@@ -349,7 +334,9 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
-        PointerDown?.Invoke(point);
+        _isPanning = true;
+        _pointerPreviousPanningPosition = point;
+        _pointerPanningStartPosition = point;
 
         lock (View.SyncContext)
         {
@@ -385,12 +372,20 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal virtual void InvokePointerMove(LvcPoint point)
     {
-        PointerMove?.Invoke(point);
+        _pointerPosition = point;
+        _isPointerIn = true;
+        _tooltipThrottler.Call();
+        if (!_isPanning) return;
+        _pointerPanningPosition = point;
+        _panningThrottler.Call();
     }
 
     internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
     {
-        PointerUp?.Invoke(point);
+        if (!_isPanning) return;
+        _isPanning = false;
+        _pointerPanningPosition = point;
+        _panningThrottler.Call();
     }
 
     internal void InvokePointerLeft()
@@ -398,12 +393,8 @@ public abstract class Chart<TDrawingContext> : IChart
         _isToolTipOpen = false;
         Tooltip?.Hide(this);
         CleanHoveredPoints(new());
-        PointerLeft?.Invoke();
-    }
 
-    internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
-    {
-        PanGesture?.Invoke(eventArgs);
+        _isPointerIn = false;
     }
 
     /// <summary>
@@ -711,35 +702,5 @@ public abstract class Chart<TDrawingContext> : IChart
     private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
     {
         InvokeOnUpdateFinished();
-    }
-
-    private void Chart_PointerDown(LvcPoint pointerPosition)
-    {
-        _isPanning = true;
-        _pointerPreviousPanningPosition = pointerPosition;
-        _pointerPanningStartPosition = pointerPosition;
-    }
-
-    private void Chart_PointerMove(LvcPoint pointerPosition)
-    {
-        _pointerPosition = pointerPosition;
-        _isPointerIn = true;
-        _tooltipThrottler.Call();
-        if (!_isPanning) return;
-        _pointerPanningPosition = pointerPosition;
-        _panningThrottler.Call();
-    }
-
-    private void Chart_PointerLeft()
-    {
-        _isPointerIn = false;
-    }
-
-    private void Chart_PointerUp(LvcPoint pointerPosition)
-    {
-        if (!_isPanning) return;
-        _isPanning = false;
-        _pointerPanningPosition = pointerPosition;
-        _panningThrottler.Call();
     }
 }
