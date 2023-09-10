@@ -52,7 +52,7 @@ public abstract partial class ChartBehaviour
         if (e.Event is null) return;
 
         var p = new LvcPoint(e.Event.GetX() / Density, e.Event.GetY() / Density);
-        var isRightClick = false; // can we detect this?
+        var isRightClick = (DateTime.Now - _previousPress).TotalMilliseconds < 500;
         var isPinch = e.Event.PointerCount > 1;
 
         _scaleDetector ??= new ScaleGestureDetector(
@@ -123,7 +123,7 @@ public abstract partial class ChartBehaviour
 
         public override bool OnScale(ScaleGestureDetector? detector)
         {
-            if (detector is null || detector.ScaleFactor == 1) return false;
+            if (detector is null || detector.ScaleFactor == 1 || Paused) return false;
             _onScaled(detector.ScaleFactor);
             return true;
         }
