@@ -8,8 +8,6 @@ Tooltips are popups that help the user to read a chart as the pointer moves.
 
 ![tooltips]({{ assets_url }}/docs/_assets/tooltips.gif)
 
-{{~if !xamarin ~}}
-
 ## Behaviour
 
 On **Windows** or **MacOS** you can move the pointer over the chart to display the tooltip, tooltips will be closed when the
@@ -17,8 +15,6 @@ pointer leaves the chart area.
 
 On **Android** or **iOS** slide your finger over the chart to display the tooltip, the tooltip will be closed when the finger
 goes up.
-
-{{~ end ~}}
 
 ## TooltipPosition property
 
