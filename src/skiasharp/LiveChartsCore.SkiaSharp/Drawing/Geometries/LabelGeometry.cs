@@ -34,6 +34,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _textSizeProperty;
     private readonly ColorMotionProperty _backgroundProperty;
+    private float _maxTextHeight = 0f;
+    private int _lines;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -75,7 +77,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     public Padding Padding { get; set; } = new();
 
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
-    public float LineHeight { get; set; } = 1.75f;
+    public float LineHeight { get; set; } = 1.45f;
 
 #if DEBUG
     /// <summary>
@@ -87,30 +89,37 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        // it seems that skia allocates a lot of memory when drawing text
-        // for now we are not focused on performance, but this should be improved in the future
-
-        // for a reason the text size is not set on the InitializeTask() method.
         context.Paint.TextSize = TextSize;
 
         var p = Padding;
         var bg = Background;
 
+        var size = OnMeasure(context.PaintTask);
+
         var isFirstLine = true;
-        var verticalPos = 0f;
+        var verticalPos =
+            _lines > 1
+                ? VerticalAlign switch // respect alignment on multiline labels
+                {
+                    Align.Start => 0,
+                    Align.Middle => -_lines * _maxTextHeight * 0.5f,
+                    Align.End => -_lines * _maxTextHeight,
+                    _ => 0
+                }
+                : 0;
+
+        var textBounds = new SKRect();
         var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
         foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
         {
-            var textBounds = new SKRect();
             _ = context.Paint.MeasureText(line, ref textBounds);
 
-            var lhd = (textBounds.Height * LineHeight - textBounds.Height) * 0.5f;
+            var lhd = (textBounds.Height * LineHeight - _maxTextHeight) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);
 
             if (isFirstLine && bg != LvcColor.Empty)
             {
-                var size = OnMeasure(context.PaintTask);
                 var c = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity));
                 using var bgPaint = new SKPaint { Color = c };
 
@@ -152,7 +161,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             }
 #endif
 
-            verticalPos += textBounds.Height * LineHeight;
+            verticalPos += _maxTextHeight * LineHeight;
             isFirstLine = false;
         }
 
@@ -178,14 +187,19 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         var w = 0f;
         var h = 0f;
 
+        var bounds = new SKRect();
+        _maxTextHeight = 0f;
+        _lines = 0;
+
         foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
         {
-            var bounds = new SKRect();
             _ = p.MeasureText(line, ref bounds);
-
             if (bounds.Width > w) w = bounds.Width;
-            h += bounds.Height * LineHeight;
+            if (bounds.Height > _maxTextHeight) _maxTextHeight = bounds.Height;
+            _lines++;
         }
+
+        h = _maxTextHeight * _lines * LineHeight;
 
         // Note #301222
         // Disposing typefaces could cause render issues (Blazor) at least on SkiaSharp (2.88.3)
