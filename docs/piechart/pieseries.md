@@ -201,7 +201,7 @@ Sets the maximum value a radial column can take in pixels.
     MaxRadialColumnWidth = 50 // mark
 };</code></pre>
 
-![image]({{ assets_url }}/docs/_assets/pieInnerRadius.png)
+![image]({{ assets_url }}/docs/_assets/pieMaxRadialCW.png)
 
 ## InnerRadius property
 
