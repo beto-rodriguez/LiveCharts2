@@ -15,7 +15,7 @@ Use the mouse wheel to zoom in/out, hold click and drag to move the view (pannin
 {{~ end ~}}
 
 
-{{~ maui || uno || avalonia ~}}
+{{~ if maui || uno || avalonia ~}}
 
 :::tip
 On **Windows**, use the mouse wheel to zoom in/out, hold click and drag to move the view (panning).
@@ -48,7 +48,7 @@ On the **Browser**, use the mouse wheel to zoom in/out, hold click and drag to m
 ## Form code behind
 {{~ end ~}}
 
-{{~ if blazor~}}
+{{~ if blazor ~}}
 ## HTML
 {{~ end~}}
 
@@ -75,7 +75,7 @@ Right click on the chart, hold and drag to select an area on the chart.
 {{~ end ~}}
 
 
-{{~ maui || uno || avalonia ~}}
+{{~ if maui || uno || avalonia ~}}
 
 :::tip
 On **Windows**, right click on the chart, hold and drag to select an area on the chart.
@@ -88,7 +88,7 @@ On **MacOS**, **Android** or **iOS** double click/tap the chart, hold the last c
 {{~ end ~}}
 
 
-{{~ uno || avalonia || blazor ~}}
+{{~ if uno || avalonia || blazor ~}}
 
 :::tip
 On the **Browser**, right click on the chart, hold and drag to select an area on the chart (no touch devices yet).
