@@ -781,11 +781,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
                 (float)(e.TotalX - _lastPanX),
                 (float)(e.TotalY - _lastPanY));
 
-            var args = new PanGestureEventArgs(delta);
-            c.InvokePanGestrue(args);
-
-            if (args.Handled) return;
-
             c.Pan(delta, true);
             _lastPanX = e.TotalX;
             _lastPanY = e.TotalY;
