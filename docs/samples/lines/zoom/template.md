@@ -32,7 +32,7 @@ On **Android** or **iOS**, pinch the screen in/out to zoom, hold tap and drag to
 {{~ end ~}}
 
 
-{{~ uno || avalonia || blazor ~}}
+{{~ if uno || avalonia || blazor ~}}
 
 :::tip
 On the **Browser**, use the mouse wheel to zoom in/out, hold click and drag to move the view (panning) (no touch devices yet).
