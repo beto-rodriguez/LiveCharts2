@@ -191,28 +191,42 @@ It is the distance in pixels between the center of the control and the pie slice
 
 ![image]({{ assets_url }}/docs/_assets/piepushout.png)
 
-## InnerRadius property
+## MaxRadialColumnWidth
 
-The inner radius of the slice in pixels.
+Sets the maximum value a radial column can take in pixels.
 
 <pre><code>var pieSeries = new PieSeries&lt;int>
 {
     Values = new [] { ... },
-    InnerRadius = 50 // mark 
+    MaxRadialColumnWidth = 50 // mark
 };</code></pre>
 
 ![image]({{ assets_url }}/docs/_assets/pieInnerRadius.png)
 
-## MaxOuterRadius property
+## InnerRadius property
 
-Specifies the max radius (in percentage) the slice can take, the value goes from 0 to 1, where 1 is the full available radius and 0 is none, default is 1.
+The inner radius of the slice in pixels, it is similar to the `MaxRadialColumnWidth` property,
+both are useful to create doughnut charts, the difference is that `MaxRadialColumnWidth` is more flexible
+on different screen sizes.
 
 <pre><code>var pieSeries = new PieSeries&lt;int>
 {
     Values = new [] { ... },
-    MaxOuterRadius = 0.8 // mark
+    InnerRadius = 50 // mark
 };</code></pre>
 
-![image]({{ assets_url }}/docs/_assets/piemaxoutter.png)
+![image]({{ assets_url }}/docs/_assets/pieInnerRadius.png)
+
+## OuterRadiusOffset property
+
+It is the distance from the maximum radius available to the end of the slice in pixels.
+
+<pre><code>var pieSeries = new PieSeries&lt;int>
+{
+    Values = new [] { ... },
+    OuterRadiusOffset = 20 // mark
+};</code></pre>
+
+![image]({{ assets_url }}/docs/_assets/pieOuterRadiusOffset.png)
 
 {{ render this "~/shared/series2.md" }}

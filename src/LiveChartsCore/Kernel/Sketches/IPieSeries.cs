@@ -43,7 +43,8 @@ public interface IPieSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IS
     double Pushout { get; set; }
 
     /// <summary>
-    /// Gets or sets the inner radius of the slice in pixels.
+    /// Gets or sets the inner radius of the slice in pixels, in most cases the <see cref="MaxRadialColumnWidth"/>
+    /// is preferred, because it is more flexible on different chart sizes.
     /// </summary>
     /// <value>
     /// The inner radius.
