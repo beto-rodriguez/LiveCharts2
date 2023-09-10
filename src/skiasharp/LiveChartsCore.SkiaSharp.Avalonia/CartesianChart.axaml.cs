@@ -770,7 +770,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
     {
-
         if ((DateTime.Now - _lastPresed).TotalMilliseconds < _tolearance) return;
         var p = e.GetPosition(_avaloniaCanvas);
 

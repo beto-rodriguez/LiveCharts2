@@ -5,7 +5,7 @@ using ViewModelsSamples.Scatter.AutoUpdate;
 
 namespace AvaloniaSample.Scatter.AutoUpdate;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     private bool? isStreaming = false;
 

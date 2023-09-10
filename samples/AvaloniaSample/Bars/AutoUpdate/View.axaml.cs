@@ -5,7 +5,7 @@ using ViewModelsSamples.Bars.AutoUpdate;
 
 namespace AvaloniaSample.Bars.AutoUpdate;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     private bool? isStreaming = false;
 

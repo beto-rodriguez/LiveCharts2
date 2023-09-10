@@ -26,7 +26,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Timers;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -57,8 +56,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IChartLegend<SkiaSharpDrawingContext>? _legend = new SKDefaultLegend();
     private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
-    private TimeSpan _tooltipCloseInterval = TimeSpan.FromMilliseconds(3500);
-    private readonly Timer _closeTooltipTimer = new();
 
     #endregion
 
@@ -99,9 +96,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
-
-        _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
-        _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
 
         var chartBehaviour = new ChartBehaviour();
 
@@ -597,7 +591,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     }
 
     /// <summary>
-    /// Gets or sets a command to execute when the prressed the chart.
+    /// Gets or sets a command to execute when the pressed the chart.
     /// </summary>
     public ICommand? PressedCommand
     {
@@ -606,7 +600,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     }
 
     /// <summary>
-    /// Gets or sets a command to execute when the users released thhe press on the chart.
+    /// Gets or sets a command to execute when the users released the press on the chart.
     /// </summary>
     public ICommand? ReleasedCommand
     {
@@ -658,17 +652,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     {
         get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the interval to close a tooltip once the tooltip was opened,
-    /// this propery has only effect on mobile devices, on desktop devices, the tooltip is
-    /// closed when the pointer leaves the chart.
-    /// </summary>
-    public TimeSpan TooltipCloseInterval
-    {
-        get => _tooltipCloseInterval;
-        set { _tooltipCloseInterval = value; _closeTooltipTimer.Interval = value.TotalMilliseconds; }
     }
 
     #endregion
@@ -829,17 +812,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         }
 
         UpdateStarted?.Invoke(this);
-    }
-
-    private void OnTooltipTimerEllapsed(object? sender, ElapsedEventArgs e)
-    {
-        if (_core is null) return;
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Tooltip?.Hide(_core);
-            _core.Canvas.Invalidate();
-            _closeTooltipTimer.Stop();
-        });
     }
 
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)

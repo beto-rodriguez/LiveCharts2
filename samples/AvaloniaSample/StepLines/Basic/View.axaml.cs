@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 
 namespace AvaloniaSample.StepLines.Basic;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {
