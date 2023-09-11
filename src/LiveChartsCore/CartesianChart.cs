@@ -426,7 +426,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, _isFirstDraw);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
@@ -840,6 +840,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
+        _isFirstDraw = false;
     }
 
     /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>

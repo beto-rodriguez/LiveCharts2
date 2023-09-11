@@ -69,9 +69,6 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
     public Padding DataLabelsPadding { get => _dataLabelsPadding; set => SetProperty(ref _dataLabelsPadding, value); }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.IsFirstDraw"/>
-    public bool IsFirstDraw { get; protected set; } = true;
-
     void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         OnDataPointerDown(chart, points, pointer);

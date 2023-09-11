@@ -301,6 +301,11 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+
+                if (chart.SeriesContext.IsFirstDraw)
+                    label.CompleteTransition(
+                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
                     cx, y, b, helper.uw, label.Measure(DataLabelsPaint),

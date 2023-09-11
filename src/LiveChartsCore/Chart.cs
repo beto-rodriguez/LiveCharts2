@@ -63,6 +63,7 @@ public abstract class Chart<TDrawingContext> : IChart
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
     private readonly bool _isMobile;
+    internal bool _isFirstDraw = true;
 
     #endregion
 
@@ -184,7 +185,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// The series context
     /// </summary>
-    public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>());
+    public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>(), true);
 
     /// <summary>
     /// Gets the size of the control.

@@ -395,6 +395,10 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
                     var rad = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
 
+                    if (chart.SeriesContext.IsFirstDraw)
+                        label.CompleteTransition(
+                            nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+
                     var labelPosition = GetLabelPolarPosition(
                         scaler.CenterX, scaler.CenterY, (float)rad, scaler.GetAngle(coordinate.SecondaryValue),
                         label.Measure(DataLabelsPaint), (float)GeometrySize, DataLabelsPosition);

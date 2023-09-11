@@ -156,7 +156,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         AnimationsSpeed = _chartView.AnimationsSpeed;
         EasingFunction = _chartView.EasingFunction;
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, _isFirstDraw);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
@@ -244,6 +244,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
+        _isFirstDraw = false;
     }
 
     /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>

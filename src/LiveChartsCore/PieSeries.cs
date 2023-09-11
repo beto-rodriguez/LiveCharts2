@@ -198,7 +198,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         if (DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            // this does not require clipping...
+            //DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             pieChart.Canvas.AddDrawableTask(DataLabelsPaint);
         }
 
@@ -424,6 +425,10 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 AlignLabel(label, (float)start, initialRotation, sweep);
 
+                if (chart.SeriesContext.IsFirstDraw)
+                    label.CompleteTransition(
+                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+
                 var labelPosition = GetLabelPolarPosition(
                     cx,
                     cy,
@@ -436,10 +441,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
-
-                if (IsFirstDraw)
-                    label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
             }
 
             OnPointMeasured(point);
@@ -450,7 +451,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
         var u = new Scaler(); // dummy scaler, this is not used in the SoftDeleteOrDisposePoint method.
         pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
-        IsFirstDraw = false;
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
@@ -664,6 +664,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         {
             case PolarLabelsPosition.Middle:
             case PolarLabelsPosition.ChartCenter:
+            case PolarLabelsPosition.Outer:
                 label.HorizontalAlign = Align.Middle;
                 label.VerticalAlign = Align.Middle;
                 break;
@@ -684,11 +685,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 if (a1 > 180) c1 = -90;
                 label.HorizontalAlign = a1 > 180 ? Align.End : Align.Start;
                 label.RotateTransform = (float)(a1 - c1);
-                break;
-            case PolarLabelsPosition.Outer:
-                var a2 = start + initialRotation + sweep * 0.5;
-                var isStart = a2 % 360 is < 90 or (> 270 and < 360);
-                label.HorizontalAlign = label.HorizontalAlign = isStart ? Align.Start : Align.End;
                 break;
             default:
                 break;
