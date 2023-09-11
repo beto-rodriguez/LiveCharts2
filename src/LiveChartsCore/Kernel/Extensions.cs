@@ -455,6 +455,15 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Determines whether is a pie series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public static bool IsPieSeries(this ISeries series)
+    {
+        return (series.SeriesProperties & SeriesProperties.PieSeries) != 0;
+    }
+
+    /// <summary>
     /// Determines whether is bar series.
     /// </summary>
     /// <param name="series">The series.</param>

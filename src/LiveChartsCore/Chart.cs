@@ -141,14 +141,6 @@ public abstract class Chart<TDrawingContext> : IChart
     public bool IsLoaded { get; internal set; } = false;
 
     /// <summary>
-    /// Gets or sets a value indicating whether this it is the first draw of this instance.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this it is the first draw; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsFirstDraw { get; internal set; } = true;
-
-    /// <summary>
     /// Gets the canvas.
     /// </summary>
     /// <value>
@@ -185,7 +177,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// The series context
     /// </summary>
-    public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>(), true);
+    public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>(), true, null!);
 
     /// <summary>
     /// Gets the size of the control.
@@ -311,7 +303,7 @@ public abstract class Chart<TDrawingContext> : IChart
     public virtual void Load()
     {
         IsLoaded = true;
-        IsFirstDraw = true;
+        _isFirstDraw = true;
         Update();
     }
 
@@ -496,7 +488,7 @@ public abstract class Chart<TDrawingContext> : IChart
         ActualBounds.Location = DrawMarginLocation;
         ActualBounds.Size = DrawMarginSize;
 
-        if (IsFirstDraw)
+        if (_isFirstDraw)
         {
             ActualBounds.Animate(EasingFunction, AnimationsSpeed);
             _ = Canvas.Trackers.Add(ActualBounds);
@@ -613,8 +605,7 @@ public abstract class Chart<TDrawingContext> : IChart
         }
 
         Legend.Draw(this);
-
-        _preserveFirstDraw = IsFirstDraw;
+        _preserveFirstDraw = _isFirstDraw;
     }
 
     /// <summary>

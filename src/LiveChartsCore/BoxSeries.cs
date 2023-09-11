@@ -475,7 +475,7 @@ public abstract class BoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
             int pos, count;
 
-            pos = cartesianChart.SeriesContext.GetBoxPostion(boxSeries);
+            pos = cartesianChart.SeriesContext.GetBoxPosition(boxSeries);
             count = cartesianChart.SeriesContext.GetBoxSeriesCount();
 
             cp = 0f;

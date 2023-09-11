@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -42,6 +44,8 @@ public class SeriesContext<TDrawingContext>
     private int _stackedColumnsCount = 0;
     private int _stackedRowsCount = 0;
     private bool _areBarsIndexed = false;
+    private bool _arePieLabeleMeasured = false;
+    private float _pieLabelsSize = 0f;
 
     private readonly Dictionary<IChartSeries<TDrawingContext>, int> _columnPositions = new();
     private readonly Dictionary<IChartSeries<TDrawingContext>, int> _rowPositions = new();
@@ -51,15 +55,19 @@ public class SeriesContext<TDrawingContext>
 
     private readonly Dictionary<string, Stacker<TDrawingContext>> _stackers = new();
 
+    private readonly IChart _chart;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
     /// </summary>
     /// <param name="series">The series.</param>
-    /// <param name="isFirstDraw">Indicates wether is the first timet he chart is drawn.</param>
-    public SeriesContext(IEnumerable<IChartSeries<TDrawingContext>> series, bool isFirstDraw)
+    /// <param name="isFirstDraw">Indicates whether is the first time the chart is drawn.</param>
+    /// <param name="chart">The chart</param>
+    public SeriesContext(IEnumerable<IChartSeries<TDrawingContext>> series, bool isFirstDraw, IChart chart)
     {
         _series = series;
         IsFirstDraw = isFirstDraw;
+        _chart = chart;
     }
 
     #region columns and rows
@@ -68,7 +76,6 @@ public class SeriesContext<TDrawingContext>
     /// Gets the column position.
     /// </summary>
     /// <param name="series">The series.</param>
-    /// <returns></returns>
     public int GetColumnPostion(IChartSeries<TDrawingContext> series)
     {
         if (_areBarsIndexed) return _columnPositions[series];
@@ -79,7 +86,6 @@ public class SeriesContext<TDrawingContext>
     /// <summary>
     /// Gets the column series count.
     /// </summary>
-    /// <returns></returns>
     public int GetColumnSeriesCount()
     {
         if (_areBarsIndexed) return _columnsCount;
@@ -88,11 +94,22 @@ public class SeriesContext<TDrawingContext>
     }
 
     /// <summary>
+    /// Gets the required space by the labels to the outer side of the pie chart.
+    /// </summary>
+    public float GetPieOuterLabelsSpace<TLabel>()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    {
+        if (_arePieLabeleMeasured) return _pieLabelsSize;
+        CalculatePieLabelsOuterSpace<TLabel>();
+        return _pieLabelsSize;
+    }
+
+    /// <summary>
     /// Gets the row position.
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetRowPostion(IChartSeries<TDrawingContext> series)
+    public int GetRowPosition(IChartSeries<TDrawingContext> series)
     {
         if (_areBarsIndexed) return _rowPositions[series];
         IndexBars();
@@ -115,7 +132,7 @@ public class SeriesContext<TDrawingContext>
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetBoxPostion(IChartSeries<TDrawingContext> series)
+    public int GetBoxPosition(IChartSeries<TDrawingContext> series)
     {
         if (_areBarsIndexed) return _boxPositions[series];
         IndexBars();
@@ -264,6 +281,45 @@ public class SeriesContext<TDrawingContext>
         }
 
         return stacker;
+    }
+
+    #endregion
+
+    #region Pie
+
+    private void CalculatePieLabelsOuterSpace<TLabel>()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    {
+        foreach (var series in _series)
+        {
+            if (!series.IsPieSeries()) continue;
+            var pieSeries = (IPieSeries<TDrawingContext>)series;
+            if (pieSeries.DataLabelsPosition != PolarLabelsPosition.Outer) continue;
+            if (series.DataLabelsPaint is null) continue;
+
+            var r = (float)series.DataLabelsRotation;
+            var label = new TLabel { RotateTransform = r };
+            // TODO: what about with tangent and cotangent angles?
+
+            var stacker = GetStackPosition(series, series.GetStackGroup())
+                ?? throw new NullReferenceException("Unexpected null stacker");
+
+            foreach (var point in pieSeries.Fetch(_chart))
+            {
+                _ = stacker.GetStack(point); // builds the stacked value for the point.
+
+                label.Text = pieSeries.GetDataLabelText(point) ?? string.Empty;
+                label.TextSize = (float)series.DataLabelsSize;
+                label.Padding = series.DataLabelsPadding;
+                label.RotateTransform = r;
+                var labelSize = label.Measure(series.DataLabelsPaint);
+
+                var h = 1.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
+                if (h > _pieLabelsSize) _pieLabelsSize = h;
+            }
+        }
+
+        _arePieLabeleMeasured = true;
     }
 
     #endregion

@@ -136,7 +136,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         if (_preserveFirstDraw)
         {
-            IsFirstDraw = true;
+            _isFirstDraw = true;
             _preserveFirstDraw = false;
         }
 
@@ -156,7 +156,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         AnimationsSpeed = _chartView.AnimationsSpeed;
         EasingFunction = _chartView.EasingFunction;
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, _isFirstDraw);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, _isFirstDraw, this);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
@@ -240,7 +240,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         if (_isToolTipOpen) DrawToolTip();
         InvokeOnUpdateStarted();
-        IsFirstDraw = false;
+        _isFirstDraw = false;
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
@@ -251,6 +251,6 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     public override void Unload()
     {
         base.Unload();
-        IsFirstDraw = true;
+        _isFirstDraw = true;
     }
 }

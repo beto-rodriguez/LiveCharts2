@@ -172,6 +172,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var maxOuterRadius = (float)MaxOuterRadius;
         minDimension *= maxOuterRadius;
 
+        var pieLabelsCorrection = chart.SeriesContext.GetPieOuterLabelsSpace<TLabel>();
+        minDimension -= pieLabelsCorrection;
+
         var outerRadiusOffset = (float)OuterRadiusOffset;
         minDimension -= outerRadiusOffset;
 
@@ -345,7 +348,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                     Y = cy,
                     Width = 0,
                     Height = 0,
-                    StartAngle = (float)(pieChart.IsFirstDraw ? initialRotation : start + initialRotation),
+                    StartAngle = (float)(chart.SeriesContext.IsFirstDraw ? initialRotation : start + initialRotation),
                     SweepAngle = 0,
                     PushOut = 0,
                     InnerRadius = 0,
@@ -608,8 +611,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                 break;
             case PolarLabelsPosition.Outer:
                 angle = startAngle + sweepAngle * 0.5f;
-                radius = outerRadius
-                    + 0.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
+                radius = outerRadius + 0.45f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
                 break;
             case PolarLabelsPosition.Middle:
                 var f = (SeriesProperties & SeriesProperties.Gauge) != 0 ? 0.5f : 0.65f;
