@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -78,6 +80,9 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
     public float LineHeight { get; set; } = 1.45f;
+
+    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.MaxWidth" />
+    public float MaxWidth { get; set; } = float.MaxValue;
 
 #if DEBUG
     /// <summary>
@@ -188,7 +193,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         _maxTextHeight = 0f;
         _lines = 0;
 
-        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        foreach (var line in GetLines(p))
         {
             var bounds = new SKRect();
             _ = p.MeasureText(line, ref bounds);
@@ -209,6 +214,11 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         return new LvcSize(
             w + Padding.Left + Padding.Right,
             h + Padding.Top + Padding.Bottom);
+    }
+
+    private string[] GetLines(SKPaint paint)
+    {
+        return Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
     }
 
     private LvcPoint GetAlignmentOffset(SKRect bounds)
