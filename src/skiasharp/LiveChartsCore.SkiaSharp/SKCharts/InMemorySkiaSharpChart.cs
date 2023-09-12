@@ -126,7 +126,7 @@ public abstract class InMemorySkiaSharpChart
         skiaChart.Canvas.DisableAnimations = true;
 
         skiaChart.IsLoaded = true;
-        skiaChart.IsFirstDraw = true;
+        skiaChart._isFirstDraw = true;
         skiaChart.Measure();
 
         skiaChart.Canvas.DrawFrame(

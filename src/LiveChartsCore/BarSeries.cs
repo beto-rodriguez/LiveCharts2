@@ -156,7 +156,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
             else
             {
                 pos = isRow
-                    ? cartesianChart.SeriesContext.GetRowPostion(barSeries)
+                    ? cartesianChart.SeriesContext.GetRowPosition(barSeries)
                     : cartesianChart.SeriesContext.GetColumnPostion(barSeries);
                 count = isRow
                     ? cartesianChart.SeriesContext.GetRowSeriesCount()

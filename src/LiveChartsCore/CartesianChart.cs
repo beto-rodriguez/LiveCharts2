@@ -392,7 +392,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         if (_preserveFirstDraw)
         {
-            IsFirstDraw = true;
+            _isFirstDraw = true;
             _preserveFirstDraw = false;
         }
 
@@ -426,7 +426,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, _isFirstDraw, this);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
@@ -836,10 +836,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         InvokeOnUpdateStarted();
 
         if (_isToolTipOpen) DrawToolTip();
-        IsFirstDraw = false;
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
+        _isFirstDraw = false;
     }
 
     /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
@@ -847,7 +847,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     {
         base.Unload();
         _crosshair = new();
-        IsFirstDraw = true;
+        _isFirstDraw = true;
     }
 
     private LvcPoint? _sectionZoomingStart = null;

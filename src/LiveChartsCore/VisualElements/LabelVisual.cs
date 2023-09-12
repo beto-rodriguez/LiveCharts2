@@ -44,7 +44,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     internal Align _horizontalAlignment = Align.Middle;
     internal LvcColor _backgroundColor;
     internal Padding _padding = new(0);
-    internal float _lineHeight = 1.75f;
+    internal float _lineHeight = 1.45f;
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -163,6 +163,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         _labelGeometry.HorizontalAlign = HorizontalAlignment;
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
+        _labelGeometry.LineHeight = LineHeight;
 
         return _paint is null
             ? new LvcSize()
