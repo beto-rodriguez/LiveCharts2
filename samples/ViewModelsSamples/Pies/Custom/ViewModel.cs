@@ -20,13 +20,10 @@ public partial class ViewModel : ObservableObject
         {
             // this method is called once per element in the array, so:
 
-            // for the series with the value 6, we set the outer radius to 1
-            // for the series with the value 5, the outer radius is 0.9
-            // for the series with the value 4, the outer radius is 0.8
-            // for the series with the value 3, the outer radius is 0.7
-
-            // The MaxOuterRadius property sets the maximum outer, the value goes from
-            // 0 to 1, where 1 is the full available radius and 0 is none.
+            // for the series with the value 6, we set the OuterRadiusOffset to 0
+            // for the series with the value 5, the OuterRadiusOffset is 50
+            // for the series with the value 4, the OuterRadiusOffset is 100
+            // for the series with the value 3, the OuterRadiusOffset is 150
 
             series.OuterRadiusOffset = outer;
             outer += 50;
