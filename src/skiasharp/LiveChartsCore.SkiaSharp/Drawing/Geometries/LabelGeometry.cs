@@ -185,21 +185,20 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         };
 
         var w = 0f;
-        var h = 0f;
-
-        var bounds = new SKRect();
         _maxTextHeight = 0f;
         _lines = 0;
 
         foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
         {
+            var bounds = new SKRect();
             _ = p.MeasureText(line, ref bounds);
+
             if (bounds.Width > w) w = bounds.Width;
             if (bounds.Height > _maxTextHeight) _maxTextHeight = bounds.Height;
             _lines++;
         }
 
-        h = _maxTextHeight * _lines * LineHeight;
+        var h = _maxTextHeight * _lines * LineHeight;
 
         // Note #301222
         // Disposing typefaces could cause render issues (Blazor) at least on SkiaSharp (2.88.3)

@@ -69,7 +69,7 @@ public class VisualElementsTests
 
             chart.CoreCanvas.DisableAnimations = true;
             coreChart.IsLoaded = true;
-            coreChart.IsFirstDraw = true;
+            coreChart._isFirstDraw = true;
             coreChart.Measure();
 
             using var surface = SKSurface.Create(new SKImageInfo(chart.Width, chart.Height));
