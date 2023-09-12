@@ -126,6 +126,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
             VerticalAlignment = Align.Middle
         };
 
+        var lw = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
+
         var i = 0;
         foreach (var point in foundPoints)
         {
@@ -144,6 +146,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                             Paint = FontPaint,
                             TextSize = TextSize,
                             Padding = new Padding(0, 0, 0, 0),
+                            MaxWidth = lw,
                             VerticalAlignment = Align.Start,
                             HorizontalAlignment = Align.Start
                         });
@@ -169,6 +172,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                             Paint = FontPaint,
                             TextSize = TextSize,
                             Padding = new Padding(10, 0, 0, 0),
+                            MaxWidth = lw,
                             VerticalAlignment = Align.Start,
                             HorizontalAlignment = Align.Start
                         }, i, 1, horizontalAlign: Align.Start);
@@ -180,6 +184,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Paint = FontPaint,
                         TextSize = TextSize,
                         Padding = new Padding(10, 0, 0, 0),
+                        MaxWidth = lw,
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start
                     }, i, ltr ? 0 : 2, horizontalAlign: Align.End);

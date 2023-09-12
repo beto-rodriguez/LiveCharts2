@@ -45,6 +45,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     internal LvcColor _backgroundColor;
     internal Padding _padding = new(0);
     internal float _lineHeight = 1.45f;
+    internal float _maxWidth = float.MaxValue;
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -89,6 +90,11 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// Gets or sets the line height [times the text measured height].
     /// </summary>
     public float LineHeight { get => _lineHeight; set => SetProperty(ref _lineHeight, value); }
+
+    /// <summary>
+    /// Gets or sets the maximum width.
+    /// </summary>
+    public float MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
 
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
@@ -135,6 +141,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
         _labelGeometry.LineHeight = LineHeight;
+        _labelGeometry.MaxWidth = MaxWidth;
 
         if (Paint is not null)
         {
@@ -164,6 +171,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
         _labelGeometry.LineHeight = LineHeight;
+        _labelGeometry.MaxWidth = MaxWidth;
 
         return _paint is null
             ? new LvcSize()

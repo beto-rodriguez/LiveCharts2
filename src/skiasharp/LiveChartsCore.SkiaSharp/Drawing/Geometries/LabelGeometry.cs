@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -116,7 +116,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         var textBounds = new SKRect();
         var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
-        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        foreach (var line in GetLines(context.Paint))
         {
             _ = context.Paint.MeasureText(line, ref textBounds);
 
@@ -216,9 +216,44 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             h + Padding.Top + Padding.Bottom);
     }
 
-    private string[] GetLines(SKPaint paint)
+    private IEnumerable<string> GetLines(SKPaint paint)
     {
-        return Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+        return MaxWidth == float.MaxValue
+            ? Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+            : GetLinesByMaxWidth(paint);
+    }
+
+    private IEnumerable<string> GetLinesByMaxWidth(SKPaint paint)
+    {
+        var sb = new StringBuilder();
+        var lineWidth = 0.0f;
+        var words = Text.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
+        var spaceSize = paint.MeasureText(" ");
+        var bounds = new SKRect();
+        var mw = MaxWidth;
+
+        foreach (var word in words)
+        {
+            _ = paint.MeasureText(word, ref bounds);
+
+            if (lineWidth + spaceSize + bounds.Width > mw)
+            {
+                yield return sb.ToString();
+                _ = sb.Clear();
+                lineWidth = 0.0f;
+            }
+
+            if (sb.Length > 0)
+            {
+                _ = sb.Append(' ');
+                lineWidth += spaceSize;
+            }
+
+            _ = sb.Append(word);
+            lineWidth += bounds.Width;
+        }
+
+        yield return sb.ToString();
     }
 
     private LvcPoint GetAlignmentOffset(SKRect bounds)

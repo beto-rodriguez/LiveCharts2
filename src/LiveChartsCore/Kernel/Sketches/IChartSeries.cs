@@ -67,6 +67,14 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     Padding DataLabelsPadding { get; set; }
 
     /// <summary>
+    /// Gets or sets the max width of the data labels.
+    /// </summary>
+    /// <value>
+    /// The max with of the data labels.
+    /// </value>
+    double DataLabelsMaxWidth { get; set; }
+
+    /// <summary>
     /// Gets the paint schedule, normally handled internally to display tool tips and legends.
     /// </summary>
     /// <value>

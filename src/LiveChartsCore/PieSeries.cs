@@ -413,7 +413,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 if (label is null)
                 {
-                    var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation };
+                    var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation, MaxWidth = (float)DataLabelsMaxWidth };
                     l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
