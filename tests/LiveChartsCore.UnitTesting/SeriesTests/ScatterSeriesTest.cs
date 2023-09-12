@@ -130,6 +130,7 @@ public class ScatterSeriesTest
             YToolTipLabelFormatter = x =>
                 $"{x.Coordinate.PrimaryValue}" +
                 $"{Environment.NewLine}{x.Coordinate.PrimaryValue}" +
+                $"{Environment.NewLine}{x.Coordinate.PrimaryValue}" +
                 $"{Environment.NewLine}{x.Coordinate.PrimaryValue}",
         };
 
@@ -196,7 +197,6 @@ public class ScatterSeriesTest
 
         chart.Core._pointerPosition = new(300 * 4 / 5d, 300 * 1 / 5d);
         _ = chart.GetImage();
-        chart.SaveImage("testme.png");
         Assert.IsTrue(
             Math.Abs(tp.X - (300 * 3 / 4d - tp.Width * 0.5f)) < 0.1 &&
             Math.Abs(tp.Y - 300 * 1 / 4d) < 0.1 &&
