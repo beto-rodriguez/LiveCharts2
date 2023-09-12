@@ -281,7 +281,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     void IChartView.InvokeOnUIThread(Action action)
     {
         if (!IsHandleCreated) return;
-        _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
+        _ = BeginInvoke(action);
     }
 
     /// <summary>
