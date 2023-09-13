@@ -36,8 +36,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _textSizeProperty;
     private readonly ColorMotionProperty _backgroundProperty;
-    private float _maxTextHeight = 0f;
-    private int _lines;
+    internal float _maxTextHeight = 0f;
+    internal int _lines;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -216,41 +216,56 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             h + Padding.Top + Padding.Bottom);
     }
 
-    private IEnumerable<string> GetLines(SKPaint paint)
+    internal IEnumerable<string> GetLines(SKPaint paint)
     {
         return MaxWidth == float.MaxValue
             ? Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
             : GetLinesByMaxWidth(paint);
     }
 
-    private IEnumerable<string> GetLinesByMaxWidth(SKPaint paint)
+    internal IEnumerable<string> GetLinesByMaxWidth(SKPaint paint)
     {
+        // DISCLAIM
+        // WE ARE USING A DOUBLE STRING BUILDER, AND MEASURE THE REAL STRING EVERY TIME
+        // BECAUSE IT SEEMS THAT THE SKIA MEASURE TEXT IS INCONSISTENT, FOR EXAMPLE:
+
+        //using var p = new SKPaint() { Color = SKColors.Black, TextSize = 15 };
+        //var b = new SKRect();
+        //_ = p.MeasureText("nullam. Ut tellus", ref b);
+
+        //var w1 = b.Width;
+
+        //var w2 = 0f;
+        //_ = p.MeasureText("nullam.", ref b);
+        //w2 += b.Width;
+        //_ = p.MeasureText(" Ut", ref b);
+        //w2 += b.Width;
+        //_ = p.MeasureText(" tellus", ref b);
+        //w2 += b.Width;
+
+        //Assert.IsTrue(w1 == w2);
+
         var sb = new StringBuilder();
-        var lineWidth = 0.0f;
+        var sb2 = new StringBuilder();
         var words = Text.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
-        var spaceSize = paint.MeasureText(" ");
         var bounds = new SKRect();
         var mw = MaxWidth;
 
         foreach (var word in words)
         {
-            _ = paint.MeasureText(word, ref bounds);
+            _ = sb2.Append(sb.ToString());
+            _ = sb2.Append(" ");
+            _ = sb2.Append(word);
+            _ = paint.MeasureText(sb2.ToString(), ref bounds);
 
-            if (lineWidth + spaceSize + bounds.Width > mw)
+            if (bounds.Width > mw)
             {
                 yield return sb.ToString();
                 _ = sb.Clear();
-                lineWidth = 0.0f;
             }
 
-            if (sb.Length > 0)
-            {
-                _ = sb.Append(' ');
-                lineWidth += spaceSize;
-            }
-
+            if (sb.Length > 0) _ = sb.Append(' ');
             _ = sb.Append(word);
-            lineWidth += bounds.Width;
         }
 
         yield return sb.ToString();
