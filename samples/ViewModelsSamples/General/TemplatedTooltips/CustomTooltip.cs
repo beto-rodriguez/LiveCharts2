@@ -4,6 +4,7 @@ using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -58,6 +59,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 Paint = _fontPaint,
                 TextSize = 15,
                 Padding = new Padding(8, 0, 0, 0),
+                ClippingMode = ClipMode.None, // required on tooltips // mark
                 VerticalAlignment = Align.Start,
                 HorizontalAlignment = Align.Start
             };

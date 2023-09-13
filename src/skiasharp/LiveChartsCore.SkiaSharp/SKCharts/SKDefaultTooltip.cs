@@ -148,7 +148,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                             Padding = new Padding(0, 0, 0, 0),
                             MaxWidth = lw,
                             VerticalAlignment = Align.Start,
-                            HorizontalAlignment = Align.Start
+                            HorizontalAlignment = Align.Start,
+                            ClippingMode = Measure.ClipMode.None
                         });
 
                     _panel.Children.Add(
@@ -174,7 +175,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                             Padding = new Padding(10, 0, 0, 0),
                             MaxWidth = lw,
                             VerticalAlignment = Align.Start,
-                            HorizontalAlignment = Align.Start
+                            HorizontalAlignment = Align.Start,
+                            ClippingMode = Measure.ClipMode.None
                         }, i, 1, horizontalAlign: Align.Start);
 
                 tableLayout.AddChild(
@@ -186,7 +188,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Padding = new Padding(10, 0, 0, 0),
                         MaxWidth = lw,
                         VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start
+                        HorizontalAlignment = Align.Start,
+                        ClippingMode = Measure.ClipMode.None
                     }, i, ltr ? 0 : 2, horizontalAlign: Align.End);
 
                 i++;

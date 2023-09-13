@@ -117,6 +117,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     {
         var x = (float)X;
         var y = (float)Y;
+        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -146,6 +147,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         if (Paint is not null)
         {
             chart.Canvas.AddDrawableTask(Paint);
+            Paint.SetClipRectangle(chart.Canvas, clipping);
             Paint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
         }
     }

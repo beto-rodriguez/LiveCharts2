@@ -76,6 +76,7 @@ public class VariableGeometryVisual<TDrawingContext> : BaseGeometryVisual<TDrawi
     {
         var x = (float)X;
         var y = (float)Y;
+        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -112,12 +113,14 @@ public class VariableGeometryVisual<TDrawingContext> : BaseGeometryVisual<TDrawi
         {
             chart.Canvas.AddDrawableTask(Fill);
             Fill.AddGeometryToPaintTask(chart.Canvas, Geometry);
+            Fill.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (Stroke is not null)
         {
             chart.Canvas.AddDrawableTask(Stroke);
             Stroke.AddGeometryToPaintTask(chart.Canvas, Geometry);
+            Stroke.SetClipRectangle(chart.Canvas, clipping);
         }
     }
 

@@ -25,7 +25,7 @@ using System;
 namespace LiveChartsCore.Measure;
 
 /// <summary>
-/// Defines the clip mode in the draw margin of a cartesian chart.
+/// Defines the clip mode in the draw margin of a chart.
 /// </summary>
 [Flags]
 public enum ClipMode
@@ -36,19 +36,19 @@ public enum ClipMode
     None = 0,
 
     /// <summary>
-    /// Enables clipping in the x axis, it meas that anthing outside the DrawMargin
+    /// Enables clipping in the x axis, it means that anything outside the DrawMargin
     /// in the X axis will no be rendered.
     /// </summary>
     X = 1 << 0,
 
     /// <summary>
-    /// Enables clipping in the y axis, it meas that anthing outside the DrawMargin
+    /// Enables clipping in the y axis, it means that anything outside the DrawMargin
     /// in the Y axis will not be rendered.
     /// </summary>
     Y = 1 << 1,
 
     /// <summary>
-    /// Enables clipping in the x and y axis, it meas that anthing outside the DrawMargin
+    /// Enables clipping in the x and y axis, it means that anything outside the DrawMargin
     /// will not be rendered.
     /// </summary>
     XY = X | Y
