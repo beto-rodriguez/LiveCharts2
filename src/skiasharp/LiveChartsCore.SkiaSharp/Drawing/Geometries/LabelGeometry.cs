@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
@@ -218,14 +219,17 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
     internal IEnumerable<string> GetLines(SKPaint paint)
     {
-        return MaxWidth == float.MaxValue
-            ? Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
-            : GetLinesByMaxWidth(paint);
+        IEnumerable<string> lines = Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+        if (MaxWidth != float.MaxValue)
+            lines = lines.SelectMany(x => GetLinesByMaxWidth(x, paint));
+
+        return lines;
     }
 
-    internal IEnumerable<string> GetLinesByMaxWidth(SKPaint paint)
+    private IEnumerable<string> GetLinesByMaxWidth(string source, SKPaint paint)
     {
-        // DISCLAIM
+        // DISCLAIM ====================================================================
         // WE ARE USING A DOUBLE STRING BUILDER, AND MEASURE THE REAL STRING EVERY TIME
         // BECAUSE IT SEEMS THAT THE SKIA MEASURE TEXT IS INCONSISTENT, FOR EXAMPLE:
 
@@ -243,11 +247,11 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         //_ = p.MeasureText(" tellus", ref b);
         //w2 += b.Width;
 
-        //Assert.IsTrue(w1 == w2);
+        //Assert.IsTrue(w1 == w2); THIS IS FALSE!!!!
 
         var sb = new StringBuilder();
         var sb2 = new StringBuilder();
-        var words = Text.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
+        var words = source.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
         var bounds = new SKRect();
         var mw = MaxWidth - Padding.Left - Padding.Right;
 

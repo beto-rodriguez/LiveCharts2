@@ -151,7 +151,7 @@ public class LabelsMeasureTest
             Padding = new(10, 0),
         };
 
-        var lines = label.GetLinesByMaxWidth(paint._skiaPaint).ToArray();
+        var lines = label.GetLines(paint._skiaPaint).ToArray();
         var b = new SKRect();
         var l = 0;
         foreach (var line in lines)
@@ -180,5 +180,16 @@ public class LabelsMeasureTest
 
         Assert.IsTrue(label2._lines == 5);
         Assert.IsTrue(size2.Width > label2.MaxWidth); // the text is too long, this is allowed.
+
+        var label3 = new LabelGeometry
+        {
+            Text = $"hello hello hello hello hello {Environment.NewLine} hello hello hello hello hello",
+            TextSize = 15,
+            MaxWidth = 100
+        };
+        var size3 = label3.Measure(paint);
+        var lines3 = label3.GetLines(paint._skiaPaint).ToArray();
+
+        Assert.IsTrue(label3._lines == 6);
     }
 }
