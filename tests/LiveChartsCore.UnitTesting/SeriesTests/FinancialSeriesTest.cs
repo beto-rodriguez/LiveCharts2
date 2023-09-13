@@ -142,7 +142,7 @@ public class FinancialSeriesTest
             },
             Name = "A",
             MaxBarWidth = 1000,
-            YToolTipLabelFormatter = x => $"{x.Coordinate.PrimaryValue}{Environment.NewLine}{x.Coordinate.PrimaryValue}{Environment.NewLine}",
+            YToolTipLabelFormatter = x => $"{x.Coordinate.PrimaryValue}{Environment.NewLine}{x.Coordinate.PrimaryValue}{Environment.NewLine}{x.Coordinate.PrimaryValue}{Environment.NewLine}",
             DataPadding = new Drawing.LvcPoint(0, 0)
         };
 
