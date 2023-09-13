@@ -273,7 +273,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             _ = sb.Append(word);
         }
 
-        yield return sb.ToString();
+        if (sb.Length > 0) yield return sb.ToString();
     }
 
     private LvcPoint GetAlignmentOffset(SKRect bounds)
