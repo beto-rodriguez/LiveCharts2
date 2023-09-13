@@ -249,10 +249,11 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         var sb2 = new StringBuilder();
         var words = Text.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
         var bounds = new SKRect();
-        var mw = MaxWidth;
+        var mw = MaxWidth - Padding.Left - Padding.Right;
 
         foreach (var word in words)
         {
+            _ = sb2.Clear();
             _ = sb2.Append(sb.ToString());
             _ = sb2.Append(" ");
             _ = sb2.Append(word);
