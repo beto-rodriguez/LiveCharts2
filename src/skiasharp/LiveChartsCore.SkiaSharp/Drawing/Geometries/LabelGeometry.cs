@@ -258,8 +258,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         foreach (var word in words)
         {
             _ = sb2.Clear();
-            _ = sb2.Append(sb.ToString());
-            _ = sb2.Append(" ");
+            _ = sb2.Append(sb);
+            _ = sb2.Append(' ');
             _ = sb2.Append(word);
             _ = paint.MeasureText(sb2.ToString(), ref bounds);
 
