@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -34,8 +37,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _textSizeProperty;
     private readonly ColorMotionProperty _backgroundProperty;
-    private float _maxTextHeight = 0f;
-    private int _lines;
+    internal float _maxTextHeight = 0f;
+    internal int _lines;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -79,6 +82,9 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
     public float LineHeight { get; set; } = 1.45f;
 
+    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.MaxWidth" />
+    public float MaxWidth { get; set; } = float.MaxValue;
+
 #if DEBUG
     /// <summary>
     /// This property is only available on debug mode, it indicates if the debug lines should be shown.
@@ -111,7 +117,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         var textBounds = new SKRect();
         var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
-        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        foreach (var line in GetLines(context.Paint))
         {
             _ = context.Paint.MeasureText(line, ref textBounds);
 
@@ -188,7 +194,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         _maxTextHeight = 0f;
         _lines = 0;
 
-        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        foreach (var line in GetLines(p))
         {
             var bounds = new SKRect();
             _ = p.MeasureText(line, ref bounds);
@@ -209,6 +215,65 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         return new LvcSize(
             w + Padding.Left + Padding.Right,
             h + Padding.Top + Padding.Bottom);
+    }
+
+    internal IEnumerable<string> GetLines(SKPaint paint)
+    {
+        IEnumerable<string> lines = Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+        if (MaxWidth != float.MaxValue)
+            lines = lines.SelectMany(x => GetLinesByMaxWidth(x, paint));
+
+        return lines;
+    }
+
+    private IEnumerable<string> GetLinesByMaxWidth(string source, SKPaint paint)
+    {
+        // DISCLAIM ====================================================================
+        // WE ARE USING A DOUBLE STRING BUILDER, AND MEASURE THE REAL STRING EVERY TIME
+        // BECAUSE IT SEEMS THAT THE SKIA MEASURE TEXT IS INCONSISTENT, FOR EXAMPLE:
+
+        //using var p = new SKPaint() { Color = SKColors.Black, TextSize = 15 };
+        //var b = new SKRect();
+        //_ = p.MeasureText("nullam. Ut tellus", ref b);
+
+        //var w1 = b.Width;
+
+        //var w2 = 0f;
+        //_ = p.MeasureText("nullam.", ref b);
+        //w2 += b.Width;
+        //_ = p.MeasureText(" Ut", ref b);
+        //w2 += b.Width;
+        //_ = p.MeasureText(" tellus", ref b);
+        //w2 += b.Width;
+
+        //Assert.IsTrue(w1 == w2); THIS IS FALSE!!!!
+
+        var sb = new StringBuilder();
+        var sb2 = new StringBuilder();
+        var words = source.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
+        var bounds = new SKRect();
+        var mw = MaxWidth - Padding.Left - Padding.Right;
+
+        foreach (var word in words)
+        {
+            _ = sb2.Clear();
+            _ = sb2.Append(sb.ToString());
+            _ = sb2.Append(" ");
+            _ = sb2.Append(word);
+            _ = paint.MeasureText(sb2.ToString(), ref bounds);
+
+            if (bounds.Width > mw)
+            {
+                yield return sb.ToString();
+                _ = sb.Clear();
+            }
+
+            if (sb.Length > 0) _ = sb.Append(' ');
+            _ = sb.Append(word);
+        }
+
+        yield return sb.ToString();
     }
 
     private LvcPoint GetAlignmentOffset(SKRect bounds)

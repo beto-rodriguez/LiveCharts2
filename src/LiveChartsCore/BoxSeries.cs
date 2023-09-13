@@ -1,5 +1,4 @@
-﻿
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -247,7 +246,7 @@ public abstract class BoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 if (label is null)
                 {
-                    var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = high, RotateTransform = (float)DataLabelsRotation };
+                    var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = high, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
                     l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;

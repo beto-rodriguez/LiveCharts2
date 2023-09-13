@@ -128,6 +128,11 @@ public class LiveChartsSettings
     public double? TooltipTextSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the default max with for labels inside tooltips and legends.
+    /// </summary>
+    public double MaxTooltipsAndLegendsLabelsWidth { get; set; } = 170;
+
+    /// <summary>
     /// Gets or sets the default tooltip finding strategy.
     /// </summary>
     /// <value>

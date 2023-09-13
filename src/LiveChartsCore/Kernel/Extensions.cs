@@ -57,9 +57,18 @@ public static class Extensions
         Chart<TDrawingContext> chart)
             where TDrawingContext : DrawingContext
     {
-        return chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
+        var location = chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
             ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
             : _getPieTooltipLocation(foundPoints, chart, tooltipSize);
+
+        var controlSize = chart.ControlSize;
+
+        if (location.Y < 0) location.Y = 0;
+        if (location.X < 0) location.X = 0;
+        if (location.Y + tooltipSize.Height > controlSize.Height) location.Y = controlSize.Height - tooltipSize.Height;
+        if (location.X + tooltipSize.Width > controlSize.Width) location.X = controlSize.Width - tooltipSize.Width;
+
+        return location;
     }
 
     private static LvcPoint _getCartesianTooltipLocation<TDrawingContext>(
