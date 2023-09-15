@@ -44,6 +44,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     private int _scalesXAt;
     private int _scalesYAt;
     private MeasureUnit _locationUnit = MeasureUnit.Pixels;
+    private ClipMode _clippingMode = ClipMode.XY;
 
     /// <summary>
     /// Gets the primary scaler.
@@ -97,6 +98,12 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// The index of the axis.
     /// </value>
     public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
+
+    /// <summary>
+    /// Gets or sets the clipping mode, clipping restricts the visual element for being drawn outside of the chart area (DrawMargin),
+    /// default is <see cref="ClipMode.XY"/>, and means that anything outside the chart bounds will be ignored.
+    /// </summary>
+    public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
 
     /// <summary>
     /// Called when the pointer goes down on the visual.

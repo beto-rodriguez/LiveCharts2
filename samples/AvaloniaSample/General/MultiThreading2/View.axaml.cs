@@ -6,7 +6,7 @@ using ViewModelsSamples.General.MultiThreading2;
 
 namespace AvaloniaSample.General.MultiThreading2;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {

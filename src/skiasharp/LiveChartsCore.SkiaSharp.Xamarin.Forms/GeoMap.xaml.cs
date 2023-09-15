@@ -248,10 +248,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         if (e.StatusType != GestureStatus.Running) return;
 
         var delta = new LvcPoint((float)e.TotalX, (float)e.TotalY);
-        var args = new PanGestureEventArgs(delta);
-
-        _core.InvokePanGestrue(args);
-        if (!args.Handled) _core.Pan(delta);
+        _core.Pan(delta);
     }
 
     private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)

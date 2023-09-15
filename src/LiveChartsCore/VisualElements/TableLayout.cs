@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -43,6 +44,14 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     private Padding _padding = new();
     private Align _horizontalAlignment = Align.Middle;
     private Align _verticalAlignment = Align.Middle;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// </summary>
+    public TableLayout()
+    {
+        ClippingMode = ClipMode.None;
+    }
 
     /// <summary>
     /// Gets or sets the padding.
@@ -173,6 +182,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
         var controlSize = Measure(chart);
+        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
+
         float w, h = Padding.Top;
 
         for (var r = 0; r <= _maxRow; r++)
@@ -231,6 +242,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         BackgroundGeometry.TranslateTransform = Translate;
 
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
+        BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>

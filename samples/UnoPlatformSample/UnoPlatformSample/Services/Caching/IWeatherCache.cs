@@ -20,10 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Immutable;
-using UnoPlatformSample.DataContracts;
-
 namespace UnoPlatformSample.Services.Caching;
+
 public interface IWeatherCache
 {
     ValueTask<IImmutableList<WeatherForecast>> GetForecast(CancellationToken token);

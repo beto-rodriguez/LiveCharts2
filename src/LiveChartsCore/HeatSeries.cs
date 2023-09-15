@@ -234,7 +234,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
                 if (label is null)
                 {
-                    var l = new TLabel { X = secondary - uws * 0.5f, Y = primary - uws * 0.5f, RotateTransform = (float)DataLabelsRotation };
+                    var l = new TLabel { X = secondary - uws * 0.5f, Y = primary - uws * 0.5f, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
                     l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
@@ -245,6 +245,11 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+
+                if (chart.SeriesContext.IsFirstDraw)
+                    label.CompleteTransition(
+                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+
                 var labelPosition = GetLabelPosition(
                      secondary - uws * 0.5f + p.Left, primary - uwp * 0.5f + p.Top, uws - p.Left - p.Right, uwp - p.Top - p.Bottom,
                      label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);

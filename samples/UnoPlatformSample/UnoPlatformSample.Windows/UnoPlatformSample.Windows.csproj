@@ -3,18 +3,21 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-		<RootNamespace>UnoWinUIQuickStart</RootNamespace>
+		<RootNamespace>UnoPlatformSample.Windows</RootNamespace>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;arm64</Platforms>
 		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
+		<!-- Uncomment for Unpackaged builds -->
+		<!-- <WindowsPackageType>None</WindowsPackageType> -->
+    	<!-- For Unpackaged builds, change version of SDK to previous stable release https://github.com/microsoft/WindowsAppSDK/issues/3591 -->
 	</PropertyGroup>
 	<PropertyGroup>
 		<!-- Bundles the WinAppSDK binaries (Uncomment for unpackaged builds) -->
 		<!-- <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained> -->
-		<!-- This bundles the .NET Core libraries (Uncomment for packaged builds)  -->
-		<SelfContained>true</SelfContained>
+		<!-- <SelfContained>true</SelfContained> -->
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,28 +26,27 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Uno.Resizetizer" Version="1.0.2" />
-		<PackageReference Include="Uno.WinUI" Version="4.8.24" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
-		<PackageReference Include="Uno.Extensions.Configuration" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Http" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Http.Refit" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Logging.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Serialization.Http" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Serialization.Refit" Version="2.3.6" />
-		<PackageReference Include="Uno.Material.WinUI" Version="2.5.3" />
-		<PackageReference Include="Uno.Toolkit.WinUI.Material" Version="2.5.5" />
-		<PackageReference Include="Uno.Toolkit.WinUI" Version="2.5.5" />
-		<PackageReference Include="Uno.Extensions.Authentication.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Hosting.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Localization.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Navigation.Toolkit.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Navigation.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Reactive.WinUI" Version="2.3.6" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
-		<PackageReference Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.8.24" />
+		<PackageReference Include="Uno.WinUI" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+		<PackageReference Include="Uno.Extensions.Configuration" />
+		<PackageReference Include="Uno.Extensions.Http" />
+		<PackageReference Include="Uno.Extensions.Http.Refit" />
+		<PackageReference Include="Uno.Extensions.Logging.WinUI" />
+		<PackageReference Include="Uno.Extensions.Serialization.Http" />
+		<PackageReference Include="Uno.Extensions.Serialization.Refit" />
+		<PackageReference Include="Uno.Material.WinUI" />
+		<PackageReference Include="Uno.Toolkit.WinUI.Material" />
+		<PackageReference Include="Uno.Extensions.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Hosting.WinUI" />
+		<PackageReference Include="Uno.Extensions.Localization.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.WinUI" />
+		<PackageReference Include="Uno.Extensions.Reactive.WinUI" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+		<PackageReference Include="Uno.Core.Extensions.Logging.Singleton" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,14 +60,32 @@
 		the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
 		must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
 		-->
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" />
+		<!-- <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\UnoPlatformSample\UnoPlatformSample.csproj" />
 		<ProjectReference Include="..\UnoPlatformSample.DataContracts\UnoPlatformSample.DataContracts.csproj" />
 	</ItemGroup>
+
+	<!-- 
+		Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+		Tools extension to be activated for this project even if the Windows App SDK Nuget
+		package has not yet been restored.
+	-->
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix"/>
+	</ItemGroup>
+
+	<!-- 
+		Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
+		Explorer "Package and Publish" context menu entry to be enabled for this project even if 
+		the Windows App SDK Nuget package has not yet been restored.
+	-->
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+	</PropertyGroup>
 
 	<Import Project="..\UnoPlatformSample.Base\base.props" />
 </Project>

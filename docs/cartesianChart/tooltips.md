@@ -8,6 +8,14 @@ Tooltips are popups that help the user to read a chart as the pointer moves.
 
 ![tooltips]({{ assets_url }}/docs/_assets/tooltips.gif)
 
+## Behaviour
+
+On **Windows** or **MacOS** you can move the pointer over the chart to display the tooltip, tooltips will be closed when the
+pointer leaves the chart area.
+
+On **Android** or **iOS** slide your finger over the chart to display the tooltip, the tooltip will be closed when the finger
+goes up.
+
 ## TooltipPosition property
 
 You can place a tooltip at `Top`, `Bottom`, `Left`, `Right`, `Center` or `Hidden` positions, for now 
@@ -249,4 +257,4 @@ a custom control to render tooltips in out charts using the LiveCharts API.
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
 
-![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.png)
+![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)

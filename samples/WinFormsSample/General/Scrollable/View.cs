@@ -57,8 +57,10 @@ public partial class View : UserControl
             Dock = DockStyle.Fill
         };
 
+        _scrollBarChart = cartesianChart2;
+
         cartesianChart2.MouseDown += CartesianChart2_MouseDown;
-        cartesianChart2.MouseMove += CartesianChart2_MouseMove;
+        cartesianChart2.GetDrawnControl().MouseMove += CartesianChart2_MouseMove;
         cartesianChart2.MouseUp += CartesianChart2_MouseUp;
 
         var splitContainer = new SplitContainer
@@ -88,12 +90,12 @@ public partial class View : UserControl
         thumb.Xj = x.MaxLimit;
     }
 
-    private void CartesianChart2_MouseDown(object sender, MouseEventArgs e)
+    private void CartesianChart2_MouseDown(object? sender, MouseEventArgs e)
     {
         _isDown = true;
     }
 
-    private void CartesianChart2_MouseMove(object sender, MouseEventArgs e)
+    private void CartesianChart2_MouseMove(object? sender, MouseEventArgs e)
     {
         if (!_isDown) return;
 
@@ -114,8 +116,8 @@ public partial class View : UserControl
         vm.ScrollableAxes[0].MaxLimit = thumb.Xj;
     }
 
-    private void CartesianChart2_MouseUp(object sender, MouseEventArgs e)
+    private void CartesianChart2_MouseUp(object? sender, MouseEventArgs e)
     {
-        _isDown = true;
+        _isDown = false;
     }
 }

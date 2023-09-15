@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -42,6 +43,14 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     private double _maxWidth = double.MaxValue;
     private double _maxHeight = double.MaxValue;
     private ContainerOrientation _orientation;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackPanel{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// </summary>
+    public StackPanel()
+    {
+        ClippingMode = ClipMode.None;
+    }
 
     /// <summary>
     /// Gets the children collection.
@@ -137,6 +146,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                 .GetProvider<TDrawingContext>()
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
+        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
+
         chart.Canvas.AddDrawableTask(BackgroundPaint);
         BackgroundGeometry.X = (float)X;
         BackgroundGeometry.Y = (float)Y;
@@ -145,6 +156,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         BackgroundGeometry.RotateTransform = (float)Rotation;
         BackgroundGeometry.TranslateTransform = Translate;
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
+        BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>

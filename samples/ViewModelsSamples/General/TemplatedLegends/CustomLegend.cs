@@ -64,6 +64,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
                         Path = SKPath.ParseSvgPathData(SVGPoints.Star),
                         Width = 25,
                         Height = 25,
+                        ClippingMode = ClipMode.None, // required on legends // mark
                         Fill = new SolidColorPaint(theme.GetSeriesColor(series).AsSKColor())
                         {
                             ZIndex = s_zIndex + 1
@@ -74,6 +75,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
                         Text = series.Name ?? string.Empty,
                         Paint = _fontPaint,
                         TextSize = 15,
+                        ClippingMode = ClipMode.None, // required on legends // mark
                         Padding = new Padding(8, 0, 0, 0),
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start

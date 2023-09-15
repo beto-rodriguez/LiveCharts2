@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 
 namespace AvaloniaSample.Bars.Spacing;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {

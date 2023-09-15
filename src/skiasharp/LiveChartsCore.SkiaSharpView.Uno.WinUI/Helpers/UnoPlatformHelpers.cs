@@ -53,10 +53,3 @@ public static class UnoPlatformHelpers
             DispatcherQueuePriority.Normal, () => action());
     }
 }
-
-/// <summary>
-/// Defines a custom pinch event handler.
-/// </summary>
-/// <param name="sender"></param>
-/// <param name="eventArgs"></param>
-public delegate void PinchHandler(object sender, LiveChartsPinchEventArgs eventArgs);

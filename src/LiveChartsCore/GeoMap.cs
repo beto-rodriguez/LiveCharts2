@@ -77,7 +77,6 @@ public class GeoMap<TDrawingContext>
     internal event Action<LvcPoint> PointerMove;
     internal event Action<LvcPoint> PointerUp;
     internal event Action PointerLeft;
-    internal event Action<PanGestureEventArgs>? PanGesture;
 
     /// <summary>
     /// Gets the chart view.
@@ -155,11 +154,6 @@ public class GeoMap<TDrawingContext>
     internal void InvokePointerLeft()
     {
         PointerLeft?.Invoke();
-    }
-
-    internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
-    {
-        PanGesture?.Invoke(eventArgs);
     }
 
     /// <summary>

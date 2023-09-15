@@ -76,7 +76,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     {
         var l = GetActualCoordinate();
         var size = Measure(chart);
-        var clipArea = new LvcRectangle(chart.DrawMarginLocation, chart.DrawMarginSize);
+        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (_geometry is null)
         {
@@ -101,14 +101,14 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         {
             chart.Canvas.AddDrawableTask(Fill);
             Fill.AddGeometryToPaintTask(chart.Canvas, _geometry);
-            Fill.SetClipRectangle(chart.Canvas, clipArea);
+            Fill.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (Stroke is not null)
         {
             chart.Canvas.AddDrawableTask(Stroke);
             Stroke.AddGeometryToPaintTask(chart.Canvas, _geometry);
-            Stroke.SetClipRectangle(chart.Canvas, clipArea);
+            Stroke.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (LabelPaint is not null)
@@ -140,7 +140,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
 
             chart.Canvas.AddDrawableTask(LabelPaint);
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
-            LabelPaint.SetClipRectangle(chart.Canvas, clipArea);
+            LabelPaint.SetClipRectangle(chart.Canvas, clipping);
         }
     }
 

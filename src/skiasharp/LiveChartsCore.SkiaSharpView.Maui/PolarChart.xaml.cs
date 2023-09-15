@@ -26,7 +26,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Timers;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -57,8 +56,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IChartLegend<SkiaSharpDrawingContext>? _legend = new SKDefaultLegend();
     private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
-    private TimeSpan _tooltipCloseInterval = TimeSpan.FromMilliseconds(3500);
-    private readonly Timer _closeTooltipTimer = new();
 
     #endregion
 
@@ -100,8 +97,15 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
-        _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
+        var chartBehaviour = new ChartBehaviour();
+
+        chartBehaviour.Pressed += OnPressed;
+        chartBehaviour.Moved += OnMoved;
+        chartBehaviour.Released += OnReleased;
+        chartBehaviour.Scrolled += OnScrolled;
+        chartBehaviour.Exited += OnExited;
+
+        chartBehaviour.On(this);
     }
 
     #region bindable properties 
@@ -318,18 +322,25 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
             nameof(UpdateStartedCommand), typeof(ICommand), typeof(PolarChart), null);
 
     /// <summary>
-    /// The tapped command.
+    /// The pressed command.
     /// </summary>
-    public static readonly BindableProperty TappedCommandProperty =
+    public static readonly BindableProperty PressedCommandProperty =
         BindableProperty.Create(
-            nameof(TappedCommand), typeof(ICommand), typeof(PolarChart), null);
+            nameof(PressedCommand), typeof(ICommand), typeof(PolarChart), null);
+
+    /// <summary>
+    /// The released command.
+    /// </summary>
+    public static readonly BindableProperty ReleasedCommandProperty =
+        BindableProperty.Create(
+            nameof(ReleasedCommand), typeof(ICommand), typeof(PolarChart), null);
 
     /// <summary>
     /// The pointer move command.
     /// </summary>
-    public static readonly BindableProperty PointerMoveCommandProperty =
+    public static readonly BindableProperty MovedCommandProperty =
         BindableProperty.Create(
-            nameof(PointerMoveCommand), typeof(ICommand), typeof(CartesianChart), null);
+            nameof(MovedCommand), typeof(ICommand), typeof(PolarChart), null);
 
     /// <summary>
     /// The data pointer down command property
@@ -572,19 +583,48 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// <summary>
     /// Gets or sets a command to execute when the users taped the chart.
     /// </summary>
+    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
     public ICommand? TappedCommand
     {
-        get => (ICommand?)GetValue(TappedCommandProperty);
-        set => SetValue(TappedCommandProperty, value);
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pressed the chart.
+    /// </summary>
+    public ICommand? PressedCommand
+    {
+        get => (ICommand?)GetValue(PressedCommandProperty);
+        set => SetValue(PressedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users released the press on the chart.
+    /// </summary>
+    public ICommand? ReleasedCommand
+    {
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer/finger moves over the chart.
+    /// </summary>
+    public ICommand? MovedCommand
+    {
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer moves over the chart.
     /// </summary>
+    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
     public ICommand? PointerMoveCommand
     {
-        get => (ICommand?)GetValue(PointerMoveCommandProperty);
-        set => SetValue(PointerMoveCommandProperty, value);
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
@@ -612,17 +652,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     {
         get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the interval to close a tooltip once the tooltip was opened,
-    /// this propery has only effect on mobile devices, on desktop devices, the tooltip is
-    /// closed when the pointer leaves the chart.
-    /// </summary>
-    public TimeSpan TooltipCloseInterval
-    {
-        get => _tooltipCloseInterval;
-        set { _tooltipCloseInterval = value; _closeTooltipTimer.Interval = value.TotalMilliseconds; }
     }
 
     #endregion
@@ -724,6 +753,45 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         _core?.Update();
     }
 
+    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        // not implemented yet?
+        // https://github.com/dotnet/maui/issues/16202
+        //if (Keyboard.Modifiers > 0) return;
+
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PressedCommand?.CanExecute(cArgs) == true) PressedCommand.Execute(cArgs);
+
+        _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    {
+        var location = args.Location;
+
+        var cArgs = new PointerCommandArgs(this, new(location.X, location.Y), args.OriginalEvent);
+        if (MovedCommand?.CanExecute(cArgs) == true) MovedCommand.Execute(cArgs);
+
+        _core?.InvokePointerMove(location);
+    }
+
+    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
+        _core?.InvokePointerLeft();
+    }
+
     private void OnSizeChanged(object? sender, EventArgs e)
     {
         if (_core is null) return;
@@ -746,61 +814,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnTapped(object sender, TappedEventArgs e)
-    {
-        if (_core is null) return;
-        var p = e.GetPosition(this);
-        if (p is null) return;
-
-        if (TappedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
-            if (TappedCommand.CanExecute(args)) TappedCommand.Execute(args);
-        }
-
-        var location = new LvcPoint(p.Value.X, p.Value.Y);
-        _core.InvokePointerDown(location, false);
-        _core.InvokePointerMove(location);
-
-#if __MOBILE__
-        _closeTooltipTimer.Stop();
-        _closeTooltipTimer.Start();
-#endif
-    }
-
-    private void OnTooltipTimerEllapsed(object sender, ElapsedEventArgs e)
-    {
-        if (_core is null) return;
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Tooltip?.Hide(_core);
-            _core.Canvas.Invalidate();
-            _closeTooltipTimer.Stop();
-        });
-    }
-
-    private void OnPointerMoved(object sender, PointerEventArgs e)
-    {
-        var p = e.GetPosition(this);
-        if (p is null) return;
-
-        if (PointerMoveCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
-            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-        }
-
-        _core?.InvokePointerMove(new LvcPoint((float)p.Value.X, (float)p.Value.Y));
-    }
-
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
-    }
-
-    private void OnPointerExited(object sender, PointerEventArgs e)
-    {
-        _core?.InvokePointerLeft();
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)

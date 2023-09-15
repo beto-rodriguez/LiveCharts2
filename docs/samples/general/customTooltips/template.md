@@ -1,5 +1,12 @@
 # Customize default tooltips
 
+The next article is a quick guide on how to customize the default tooltip,if you want to learn more you can read the full
+article:
+
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips" class="btn btn-light btn-lg text-primary shadow-sm mb-3">
+<b>Go to the full tooltips article</b>
+</a>
+
 You can quickly change the position, the font, the text size or the background color:
 
 ## View

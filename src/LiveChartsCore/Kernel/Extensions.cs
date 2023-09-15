@@ -57,9 +57,18 @@ public static class Extensions
         Chart<TDrawingContext> chart)
             where TDrawingContext : DrawingContext
     {
-        return chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
+        var location = chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
             ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
             : _getPieTooltipLocation(foundPoints, chart, tooltipSize);
+
+        var controlSize = chart.ControlSize;
+
+        if (location.Y < 0) location.Y = 0;
+        if (location.X < 0) location.X = 0;
+        if (location.Y + tooltipSize.Height > controlSize.Height) location.Y = controlSize.Height - tooltipSize.Height;
+        if (location.X + tooltipSize.Width > controlSize.Width) location.X = controlSize.Width - tooltipSize.Width;
+
+        return location;
     }
 
     private static LvcPoint _getCartesianTooltipLocation<TDrawingContext>(
@@ -452,6 +461,15 @@ public static class Extensions
     public static bool IsFinancialSeries(this ISeries series)
     {
         return (series.SeriesProperties & SeriesProperties.Financial) != 0;
+    }
+
+    /// <summary>
+    /// Determines whether is a pie series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public static bool IsPieSeries(this ISeries series)
+    {
+        return (series.SeriesProperties & SeriesProperties.PieSeries) != 0;
     }
 
     /// <summary>

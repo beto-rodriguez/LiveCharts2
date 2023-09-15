@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -212,7 +213,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var v = new StepLineVisualPoint<TDrawingContext, TVisual>();
                     visual = v;
 
-                    if (IsFirstDraw)
+                    if (chart.SeriesContext.IsFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
                         v.Geometry.Y = p;
@@ -244,8 +245,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 visual.StepSegment.Id = point.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
-                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !IsFirstDraw);
+                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !chart.SeriesContext.IsFirstDraw);
+                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !chart.SeriesContext.IsFirstDraw);
 
                 visual.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
                 visual.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
@@ -287,7 +288,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                     if (label is null)
                     {
-                        var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation };
+                        var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
                         l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                         label = l;
                         point.Context.Label = l;
@@ -297,6 +298,11 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
+
+                    if (chart.SeriesContext.IsFirstDraw)
+                        label.CompleteTransition(
+                            nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+
                     var m = label.Measure(DataLabelsPaint);
                     var labelPosition = GetLabelPosition(
                         x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
@@ -354,7 +360,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         pointsCleanup.CollectPoints(
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
-        IsFirstDraw = false;
         _geometrySvgChanged = false;
     }
 

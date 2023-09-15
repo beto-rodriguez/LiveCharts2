@@ -46,6 +46,7 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
+    private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -69,8 +70,8 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
     public Padding DataLabelsPadding { get => _dataLabelsPadding; set => SetProperty(ref _dataLabelsPadding, value); }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.IsFirstDraw"/>
-    public bool IsFirstDraw { get; protected set; } = true;
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsMaxWidth"/>
+    public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
 
     void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {

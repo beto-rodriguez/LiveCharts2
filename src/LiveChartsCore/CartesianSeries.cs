@@ -223,23 +223,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <returns></returns>
     protected virtual LvcRectangle GetClipRectangle(CartesianChart<TDrawingContext> cartesianChart)
     {
-        return ClippingMode switch
-        {
-            ClipMode.None =>
-                new LvcRectangle(new LvcPoint(), cartesianChart.ControlSize),
-            ClipMode.X =>
-                new LvcRectangle(
-                    new LvcPoint(cartesianChart.DrawMarginLocation.X, 0),
-                    new LvcSize(cartesianChart.DrawMarginSize.Width, cartesianChart.ControlSize.Height)),
-            ClipMode.Y =>
-                new LvcRectangle(
-                    new LvcPoint(0, cartesianChart.DrawMarginLocation.Y),
-                    new LvcSize(cartesianChart.ControlSize.Width, cartesianChart.DrawMarginSize.Height)),
-            ClipMode.XY =>
-                new LvcRectangle(cartesianChart.DrawMarginLocation, cartesianChart.DrawMarginSize),
-
-            _ => throw new NotImplementedException(),
-        };
+        return Clipping.GetClipRectangle(ClippingMode, cartesianChart);
     }
 
     /// <summary>

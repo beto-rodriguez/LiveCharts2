@@ -8,7 +8,7 @@ using ViewModelsSamples.Events.Polar;
 
 namespace AvaloniaSample.Events.Polar;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {

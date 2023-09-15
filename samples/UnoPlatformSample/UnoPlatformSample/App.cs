@@ -6,17 +6,16 @@ namespace UnoPlatformSample;
 
 public class App : Application
 {
-    private static Window? _window;
-    public static IHost? Host { get; private set; }
-
+    protected Window? MainWindow { get; private set; }
+    protected IHost? Host { get; private set; }
     public record City(string Name, double Population);
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         LiveCharts.Configure(config => // mark
             config // mark
-                // you can override the theme 
-                // .AddDarkTheme() // mark 
+                   // you can override the theme 
+                   // .AddDarkTheme() // mark 
 
                 // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark
@@ -39,8 +38,8 @@ public class App : Application
                    // .HasMap<Bar>( .... ) // mark
         ); // mark
 
-        var builder = this.CreateBuilder(args)
 
+        var builder = this.CreateBuilder(args)
             // Add navigation support for toolkit controls such as TabBar and NavigationView
             .UseToolkitNavigation()
             .Configure(host => host
@@ -51,10 +50,32 @@ public class App : Application
                 .UseLogging(configure: (context, logBuilder) =>
                 {
                     // Configure log levels for different categories of logging
-                    logBuilder.SetMinimumLevel(
-                        context.HostingEnvironment.IsDevelopment() ?
-                            LogLevel.Information :
-                            LogLevel.Warning);
+                    logBuilder
+                        .SetMinimumLevel(
+                            context.HostingEnvironment.IsDevelopment() ?
+                                LogLevel.Information :
+                                LogLevel.Warning)
+
+                        // Default filters for core Uno Platform namespaces
+                        .CoreLogLevel(LogLevel.Warning);
+
+                    // Uno Platform namespace filter groups
+                    // Uncomment individual methods to see more detailed logging
+                    //// Generic Xaml events
+                    //logBuilder.XamlLogLevel(LogLevel.Debug);
+                    //// Layouter specific messages
+                    //logBuilder.XamlLayoutLogLevel(LogLevel.Debug);
+                    //// Storage messages
+                    //logBuilder.StorageLogLevel(LogLevel.Debug);
+                    //// Binding related messages
+                    //logBuilder.XamlBindingLogLevel(LogLevel.Debug);
+                    //// Binder memory references tracking
+                    //logBuilder.BinderMemoryReferenceLogLevel(LogLevel.Debug);
+                    //// RemoteControl and HotReload related
+                    //logBuilder.HotReloadCoreLogLevel(LogLevel.Information);
+                    //// Debug JS interop
+                    //logBuilder.WebAssemblyLogLevel(LogLevel.Debug);
+
                 }, enableUnoLogging: true)
                 .UseConfiguration(configure: configBuilder =>
                     configBuilder
@@ -82,7 +103,7 @@ public class App : Application
                 })
                 .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
             );
-        _window = builder.Window;
+        MainWindow = builder.Window;
 
         Host = await builder.NavigateAsync<Shell>();
     }

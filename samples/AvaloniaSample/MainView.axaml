@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaSample.MainView">
+    <Border BorderBrush="#eeeeee" BorderThickness="1">
+        <Grid Margin="25 0 0 0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="0 20 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0">
+                    <Image Source="/Assets/livecharts.png" MaxWidth="200" HorizontalAlignment="Left" />
+                </Border>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 20">
+
+                    <ItemsControl Name="items" ItemsSource="{Binding Samples}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="0 6" Cursor="Hand"  PointerPressed="OnPointerPressed">
+                                    <TextBlock Text="{Binding}"
+                                               Foreground="#ffffff"
+                                               FontSize="16"
+                                               FontFamily="Open Sans"></TextBlock>
+
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </ScrollViewer>
+            </Grid>
+
+            <Border Grid.Column="1"
+                    Background="#ffffff"
+                    Margin="20 35 0 0"
+                    Padding="25"
+                    BoxShadow="0 0 10 0 #15000000, 0 0 10 0 #15000000, 0 0 10 0 #15000000, 0 0 10 0 #15000000">
+                <!--<Border Background="White" Margin="20 80 20 20" Padding="20" CornerRadius="8"
+                BoxShadow="0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000"
+                MaxWidth="900" MaxHeight="600">-->
+                <ContentControl x:Name="content"></ContentControl>
+                <!--</Border>-->
+            </Border>
+
+        </Grid>
+    </Border>
+</UserControl>

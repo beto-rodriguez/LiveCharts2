@@ -29,7 +29,6 @@ using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -111,8 +110,13 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         PointerPressed += CartesianChart_PointerPressed;
         PointerMoved += CartesianChart_PointerMoved;
+        PointerReleased += CartesianChart_PointerReleased;
         PointerWheelChanged += CartesianChart_PointerWheelChanged;
         PointerExited += CartesianChart_PointerLeave;
+
+        var pinchGesture = new PinchGestureRecognizer();
+        GestureRecognizers.Add(pinchGesture);
+        AddHandler(Gestures.PinchEvent, CartesianChart_Pinched);
 
         DetachedFromVisualTree += CartesianChart_DetachedFromVisualTree;
     }
@@ -743,9 +747,10 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         _core?.Update();
     }
 
+    private DateTime _lastPresed;
+    private readonly int _tolearance = 50;
     private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         if (e.KeyModifiers > 0) return;
         var p = e.GetPosition(this);
 
@@ -755,12 +760,17 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
             if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
         }
 
-        foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
-        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.GetCurrentPoint(this).Properties.IsRightButtonPressed);
+        var isSecondary =
+            e.GetCurrentPoint(this).Properties.IsRightButtonPressed ||
+            (DateTime.Now - _lastPresed).TotalMilliseconds < 500;
+
+        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), isSecondary);
+        _lastPresed = DateTime.Now;
     }
 
     private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
     {
+        if ((DateTime.Now - _lastPresed).TotalMilliseconds < _tolearance) return;
         var p = e.GetPosition(_avaloniaCanvas);
 
         if (PointerMoveCommand is not null)
@@ -772,10 +782,9 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
-    private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    private void CartesianChart_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
-        foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
+        if ((DateTime.Now - _lastPresed).TotalMilliseconds < _tolearance) return;
         var p = e.GetPosition(this);
 
         if (PointerReleasedCommand is not null)
@@ -800,6 +809,24 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         var p = e.GetPosition(this);
 
         c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private float _previousScale = 1;
+    private void CartesianChart_Pinched(object? sender, PinchEventArgs e)
+    {
+        if (_core is null) return;
+
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        var p = e.ScaleOrigin;
+        var s = c.ControlSize;
+        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
+
+        var scale = (float)e.Scale;
+        var delta = _previousScale - scale;
+        if (Math.Abs(delta) > 0.05) delta = 0; // ignore the first call.
+        _previousScale = scale;
+
+        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, 1 - delta, true);
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

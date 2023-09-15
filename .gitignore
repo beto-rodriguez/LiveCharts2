@@ -350,3 +350,4 @@ nuget.exe
 # https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/strong-naming#create-strong-named-net-libraries
 *LiveCharts.snk
 build/pack.singed.ps1
+/src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/wwwroot/domInterop.js

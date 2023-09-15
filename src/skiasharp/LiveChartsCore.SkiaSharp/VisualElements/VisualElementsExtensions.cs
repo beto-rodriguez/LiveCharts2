@@ -54,6 +54,7 @@ public static class VisualElementsExtensions
                 {
                     Width = sizedGeometry.Width,
                     Height = sizedGeometry.Height,
+                    ClippingMode = Measure.ClipMode.None
                 };
 
                 if (g is ISvgPath<SkiaSharpDrawingContext> svgGeometry)

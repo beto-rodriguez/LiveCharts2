@@ -27,7 +27,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Timers;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -40,15 +39,10 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
-using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
-#if MACCATALYST
-using UIKit;
-#endif
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -64,14 +58,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
-    private double _lastScale = 0;
-    private DateTime _panLocketUntil;
-    private double _lastPanX = 0;
-    private double _lastPanY = 0;
     private IChartLegend<SkiaSharpDrawingContext>? _legend = new SKDefaultLegend();
     private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
-    private TimeSpan _tooltipCloseInterval = TimeSpan.FromMilliseconds(3500);
-    private readonly Timer _closeTooltipTimer = new();
+    private bool _isZoomingSectionAttached;
 
     #endregion
 
@@ -115,36 +104,16 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        _closeTooltipTimer.Interval = TooltipCloseInterval.TotalMilliseconds;
-        _closeTooltipTimer.Elapsed += OnTooltipTimerEllapsed;
+        var chartBehaviour = new ChartBehaviour();
 
-#if __MOBILE__
+        chartBehaviour.Pressed += OnPressed;
+        chartBehaviour.Moved += OnMoved;
+        chartBehaviour.Released += OnReleased;
+        chartBehaviour.Scrolled += OnScrolled;
+        chartBehaviour.Pinched += OnPinched;
+        chartBehaviour.Exited += OnExited;
 
-        var pinchGesture = new PinchGestureRecognizer();
-        var panGesture = new PanGestureRecognizer();
-        var tapGesture = new TapGestureRecognizer();
-
-        pinchGesture.PinchUpdated += OnPinchUpdated;
-        panGesture.PanUpdated += OnPanUpdated;
-        tapGesture.Tapped += OnTapped;
-
-        canvas.GestureRecognizers.Add(pinchGesture);
-        canvas.GestureRecognizers.Add(panGesture);
-        canvas.GestureRecognizers.Add(tapGesture);
-
-#endif
-
-#if WINDOWS
-
-        canvas.HandlerChanged += OnHandlerChanged;
-
-#endif
-
-#if MACCATALYST
-
-        canvas.HandlerChanged += OnHandlerChanged;
-
-#endif
+        chartBehaviour.On(this);
     }
 
     #region bindable properties 
@@ -376,18 +345,25 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             nameof(UpdateStartedCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
-    /// The tapped command.
+    /// The pressed command.
     /// </summary>
-    public static readonly BindableProperty TappedCommandProperty =
+    public static readonly BindableProperty PressedCommandProperty =
         BindableProperty.Create(
-            nameof(TappedCommand), typeof(ICommand), typeof(CartesianChart), null);
+            nameof(PressedCommand), typeof(ICommand), typeof(CartesianChart), null);
+
+    /// <summary>
+    /// The released command.
+    /// </summary>
+    public static readonly BindableProperty ReleasedCommandProperty =
+        BindableProperty.Create(
+            nameof(ReleasedCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The pointer move command.
     /// </summary>
-    public static readonly BindableProperty PointerMoveCommandProperty =
+    public static readonly BindableProperty MovedCommandProperty =
         BindableProperty.Create(
-            nameof(PointerMoveCommand), typeof(ICommand), typeof(CartesianChart), null);
+            nameof(MovedCommand), typeof(ICommand), typeof(CartesianChart), null);
 
     /// <summary>
     /// The data pointer down command property
@@ -637,19 +613,48 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <summary>
     /// Gets or sets a command to execute when the users taped the chart.
     /// </summary>
+    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
     public ICommand? TappedCommand
     {
-        get => (ICommand?)GetValue(TappedCommandProperty);
-        set => SetValue(TappedCommandProperty, value);
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the prressed the chart.
+    /// </summary>
+    public ICommand? PressedCommand
+    {
+        get => (ICommand?)GetValue(PressedCommandProperty);
+        set => SetValue(PressedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the users released thhe press on the chart.
+    /// </summary>
+    public ICommand? ReleasedCommand
+    {
+        get => (ICommand?)GetValue(ReleasedCommandProperty);
+        set => SetValue(ReleasedCommandProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer/finger moves over the chart.
+    /// </summary>
+    public ICommand? MovedCommand
+    {
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
     /// Gets or sets a command to execute when the pointer moves over the chart.
     /// </summary>
+    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
     public ICommand? PointerMoveCommand
     {
-        get => (ICommand?)GetValue(PointerMoveCommandProperty);
-        set => SetValue(PointerMoveCommandProperty, value);
+        get => (ICommand?)GetValue(MovedCommandProperty);
+        set => SetValue(MovedCommandProperty, value);
     }
 
     /// <summary>
@@ -677,17 +682,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets the interval to close a tooltip once the tooltip was opened,
-    /// this propery has only effect on mobile devices, on desktop devices, the tooltip is
-    /// closed when the pointer leaves the chart.
-    /// </summary>
-    public TimeSpan TooltipCloseInterval
-    {
-        get => _tooltipCloseInterval;
-        set { _tooltipCloseInterval = value; _closeTooltipTimer.Interval = value.TotalMilliseconds; }
     }
 
     #endregion
@@ -753,15 +747,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     protected void InitializeCore()
     {
         var zoomingSection = new RectangleGeometry();
-        var zoomingSectionPaint = new SolidColorPaint
-        {
-            IsFill = true,
-            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-            ZIndex = int.MaxValue
-        };
-        zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
-        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
         _core = new CartesianChart<SkiaSharpDrawingContext>(
             this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
         _core.Update();
@@ -795,6 +780,73 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _core?.Load();
     }
 
+    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        // not implemented yet?
+        // https://github.com/dotnet/maui/issues/16202
+        //if (Keyboard.Modifiers > 0) return;
+
+        if (!_isZoomingSectionAttached)
+        {
+            var zoomingSectionPaint = new SolidColorPaint
+            {
+                IsFill = true,
+                Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+                ZIndex = int.MaxValue
+            };
+            var zoomingSection = ((CartesianChart<SkiaSharpDrawingContext>)CoreChart)._zoomingSection;
+            zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
+            canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+            _isZoomingSectionAttached = true;
+        }
+
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PressedCommand?.CanExecute(cArgs) == true) PressedCommand.Execute(cArgs);
+
+        _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    {
+        var location = args.Location;
+
+        var cArgs = new PointerCommandArgs(this, new(location.X, location.Y), args.OriginalEvent);
+        if (MovedCommand?.CanExecute(cArgs) == true) MovedCommand.Execute(cArgs);
+
+        _core?.InvokePointerMove(location);
+    }
+
+    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (ReleasedCommand?.CanExecute(cArgs) == true) ReleasedCommand.Execute(cArgs);
+
+        _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
+    }
+
+    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args)
+    {
+        if (_core is null) return;
+
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        var p = args.PinchStart;
+        var s = c.ControlSize;
+        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
+        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
+    }
+
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
+        _core?.InvokePointerLeft();
+    }
+
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         _core?.Update();
@@ -808,229 +860,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private void OnSizeChanged(object? sender, EventArgs e)
     {
         _core?.Update();
-    }
-
-#if __MOBILE__
-
-    private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
-    {
-        if (_core is null) return;
-        if (e.StatusType is not GestureStatus.Running and not GestureStatus.Completed) return;
-        if (DateTime.Now < _panLocketUntil) return;
-
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-
-        if (e.StatusType == GestureStatus.Running)
-        {
-            var delta = new LvcPoint(
-                (float)(e.TotalX - _lastPanX),
-                (float)(e.TotalY - _lastPanY));
-
-            var args = new PanGestureEventArgs(delta);
-            c.InvokePanGestrue(args);
-
-            if (args.Handled) return;
-
-            c.Pan(delta, true);
-            _lastPanX = e.TotalX;
-            _lastPanY = e.TotalY;
-
-            return;
-        }
-
-        // lets just let the core know that the pan finished,
-        // so the core is able to bounce back the plot in case it exceeded the allowed limits
-        // this is a dummy request of += 0.01 pixels just in the corresponding direction
-        c.Pan(new LvcPoint(_lastPanX > 0 ? 0.01f : -0.01f, _lastPanY > 0 ? 0.01f : -0.01f), false);
-
-        _lastPanX = 0;
-        _lastPanY = 0;
-    }
-
-    private void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
-    {
-        if (_core is null) return;
-        if (e.Status is not GestureStatus.Running and not GestureStatus.Completed) return;
-
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        var p = e.ScaleOrigin;
-        var s = c.ControlSize;
-
-        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
-
-        if (e.Status == GestureStatus.Running)
-        {
-            c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, e.Scale, true);
-            _panLocketUntil = DateTime.Now.AddMilliseconds(500);
-            _lastScale = e.Scale;
-            return;
-        }
-
-        // lets just let the core know that the zoom finished,
-        // so the core is able to bounce back the plot in case it exceeded the allowed limits
-        // this is a dummy request of += .001 percent just in the corresponding direction
-        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, _lastScale < 1 ? 0.99999 : 1.00001, false);
-    }
-
-    private void OnTapped(object? sender, TappedEventArgs e)
-    {
-        if (_core is null) return;
-        var p = e.GetPosition(this);
-        if (p is null) return;
-
-        if (TappedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
-            if (TappedCommand.CanExecute(args)) TappedCommand.Execute(args);
-        }
-
-        var location = new LvcPoint(p.Value.X, p.Value.Y);
-        _core.InvokePointerDown(location, false);
-        _core.InvokePointerMove(location);
-        _core.InvokePointerUp(location, false);
-
-        if (DeviceInfo.Platform != DevicePlatform.macOS)
-        {
-            _closeTooltipTimer.Stop();
-            _closeTooltipTimer.Start();
-        }
-    }
-
-#endif
-
-#if WINDOWS
-
-    private void OnHandlerChanged(object? sender, EventArgs e)
-    {
-        var panel = (Microsoft.Maui.Platform.ContentPanel?)canvas.Handler?.PlatformView
-            ?? throw new Exception("Unable to cast to ContentPanel");
-
-        panel.PointerWheelChanged += OnPointerWheelChanged;
-        panel.PointerPressed += OnPointerPressed;
-        panel.PointerReleased += OnPointerReleased;
-        panel.PointerMoved += OnPointerMoved;
-        panel.PointerExited += OnPointerExited;
-    }
-
-    private void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel)?.Position;
-        if (p is null) return;
-
-        if (PointerMoveCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Value.X, p.Value.Y), e);
-            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-        }
-
-        _core?.InvokePointerMove(new LvcPoint((float)p.Value.X, (float)p.Value.Y));
-    }
-
-    private void OnPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        // not implemented yet?
-        // https://github.com/dotnet/maui/issues/16202
-        //if (Keyboard.Modifiers > 0) return;
-
-        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel);
-        _core?.InvokePointerDown(
-            new LvcPoint((float)p.Position.X, (float)p.Position.Y), p.Properties.IsRightButtonPressed);
-    }
-
-    private void OnPointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel);
-        _core?.InvokePointerUp(
-            new LvcPoint((float)p.Position.X, (float)p.Position.Y), p.Properties.IsRightButtonPressed);
-    }
-
-    private void OnPointerWheelChanged(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        if (_core is null) throw new Exception("core not found");
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        var p = e.GetCurrentPoint(sender as Microsoft.Maui.Platform.ContentPanel);
-        c.Zoom(
-            new LvcPoint((float)p.Position.X, (float)p.Position.Y),
-            p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    private void OnPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        _core?.InvokePointerLeft();
-    }
-
-#endif
-
-#if MACCATALYST
-
-    private void OnHandlerChanged(object? sender, EventArgs e)
-    {
-        var view = (Microsoft.Maui.Platform.ContentView?)canvas.Handler?.PlatformView
-            ?? throw new Exception("Unable to cast to ContentView");
-
-        view.AddGestureRecognizer(new UIHoverGestureRecognizer(GetOnHover(view)));
-        view.AddGestureRecognizer(new UIPanGestureRecognizer(GetOnPan(view))
-        {
-            AllowedScrollTypesMask = UIScrollTypeMask.Discrete | UIScrollTypeMask.Continuous,
-            MinimumNumberOfTouches = 0
-        });
-
-        var pointerGesture = new PointerGestureRecognizer();
-        pointerGesture.PointerExited += OnPointerExited;
-        canvas.GestureRecognizers.Add(pointerGesture);
-    }
-
-    private Action<UIHoverGestureRecognizer> GetOnHover(UIView view)
-    {
-        return (UIHoverGestureRecognizer e) =>
-        {
-            var p = e.LocationInView(view);
-
-            if (PointerMoveCommand is not null)
-            {
-                var args = new PointerCommandArgs(this, new(p.X, p.Y), e);
-                if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-            }
-
-            _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
-        };
-    }
-
-    private CoreGraphics.CGPoint? _last;
-    private Action<UIPanGestureRecognizer> GetOnPan(UIView view)
-    {
-        return (UIPanGestureRecognizer e) =>
-        {
-            var l = e.LocationInView(view);
-            _last ??= l;
-            var delta = _last.Value.Y - l.Y;
-            var isZoom = e.NumberOfTouches == 0;
-
-            if (e.State == UIGestureRecognizerState.Ended || !isZoom || delta == 0) return;
-
-            var c = (CartesianChart<SkiaSharpDrawingContext>)CoreChart;
-            c.Zoom(new(l.X, l.Y), delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-
-            _last = l;
-        };
-    }
-
-    private void OnPointerExited(object? sender, PointerEventArgs e)
-    {
-        _core?.InvokePointerLeft();
-    }
-
-#endif
-
-    private void OnTooltipTimerEllapsed(object? sender, ElapsedEventArgs e)
-    {
-        if (_core is null) return;
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Tooltip?.Hide(_core);
-            _core.Canvas.Invalidate();
-            _closeTooltipTimer.Stop();
-        });
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

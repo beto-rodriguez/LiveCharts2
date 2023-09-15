@@ -7,7 +7,7 @@
 		<ApplicationTitle>UnoPlatformSample</ApplicationTitle>
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.UnoPlatformSample</ApplicationId>
-		<ApplicationIdGuid>2D6DC555-C58F-43A5-ACD9-3FECEB6ED3FD</ApplicationIdGuid>
+		<ApplicationIdGuid>6A5D2EB4-48BB-4C7D-A232-1FB6EA4B61BA</ApplicationIdGuid>
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
@@ -22,33 +22,32 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Uno.Resizetizer" Version="1.0.2" />
-		<PackageReference Include="Uno.WinUI" Version="4.8.24" />
-		<PackageReference Include="Uno.Extensions.Configuration" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Http" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Http.Refit" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Logging.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Serialization.Http" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Serialization.Refit" Version="2.3.6" />
-		<PackageReference Include="Uno.Material.WinUI" Version="2.5.3" />
-		<PackageReference Include="Uno.Toolkit.WinUI.Material" Version="2.5.5" />
-		<PackageReference Include="Uno.Toolkit.WinUI" Version="2.5.5" />
-		<PackageReference Include="Uno.Extensions.Authentication.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Hosting.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Localization.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Navigation.Toolkit.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Navigation.WinUI" Version="2.3.6" />
-		<PackageReference Include="Uno.Extensions.Reactive.WinUI" Version="2.3.6" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
-		<PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.4.0" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.8.24" />
-		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.8.24" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.WinUI" />
+		<PackageReference Include="Uno.Extensions.Configuration" />
+		<PackageReference Include="Uno.Extensions.Http" />
+		<PackageReference Include="Uno.Extensions.Http.Refit" />
+		<PackageReference Include="Uno.Extensions.Logging.WinUI" />
+		<PackageReference Include="Uno.Extensions.Serialization.Http" />
+		<PackageReference Include="Uno.Extensions.Serialization.Refit" />
+		<PackageReference Include="Uno.Material.WinUI" />
+		<PackageReference Include="Uno.Toolkit.WinUI.Material" />
+		<PackageReference Include="Uno.Extensions.Toolkit.WinUI"/>
+		<PackageReference Include="Uno.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Hosting.WinUI" />
+		<PackageReference Include="Uno.Extensions.Localization.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.Toolkit.WinUI" />
+		<PackageReference Include="Uno.Extensions.Navigation.WinUI" />
+		<PackageReference Include="Uno.Extensions.Reactive.WinUI" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+		<PackageReference Include="Uno.Extensions.Logging.OSLog" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" />
+		<PackageReference Include="Uno.WinUI.RemoteControl" Condition="'$(Configuration)'=='Debug'" />
 	</ItemGroup>
 	<Choose>
 		<When Condition="$(IsAndroid)">
 			<ItemGroup>
-				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.8.0" />
-				<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
+				<PackageReference Include="Xamarin.Google.Android.Material" />
+				<PackageReference Include="Uno.UniversalImageLoader" />
 			</ItemGroup>
 			<ItemGroup>
 				<AndroidEnvironment Include="Android/environment.conf" />
@@ -59,6 +58,9 @@
 				<MtouchExtraArgs>$(MtouchExtraArgs) --setenv=MONO_GC_PARAMS=soft-heap-limit=512m,nursery-size=64m,evacuation-threshold=66,major=marksweep,concurrent-sweep</MtouchExtraArgs>
 				<!-- See https://github.com/unoplatform/uno/issues/9430 for more details. -->
 				<MtouchExtraArgs>$(MtouchExtraArgs) --registrar:static</MtouchExtraArgs>
+				<RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">iossimulator-x64</RuntimeIdentifier>
+			</PropertyGroup>
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
 				<!-- https://github.com/xamarin/xamarin-macios/issues/14812 -->
 				<MtouchExtraArgs>$(MtouchExtraArgs) --marshal-objectivec-exceptions:disable</MtouchExtraArgs>
 			</PropertyGroup>
@@ -69,10 +71,13 @@
 				<MtouchExtraArgs>$(MtouchExtraArgs) --setenv=MONO_GC_PARAMS=soft-heap-limit=512m,nursery-size=64m,evacuation-threshold=66,major=marksweep,concurrent-sweep</MtouchExtraArgs>
 				<!-- Required for unknown crash as of .NET 6 Mobile Preview 13 -->
 				<MtouchExtraArgs>$(MtouchExtraArgs) --registrar:static</MtouchExtraArgs>
-				<!-- https://github.com/xamarin/xamarin-macios/issues/14812 -->
-				<MtouchExtraArgs>$(MtouchExtraArgs) --marshal-objectivec-exceptions:disable</MtouchExtraArgs>
 				<!-- Full globalization is required for Uno -->
 				<InvariantGlobalization>false</InvariantGlobalization>
+				<RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">maccatalyst-x64</RuntimeIdentifier>
+			</PropertyGroup>
+			<PropertyGroup Condition="'$(Configuration)'=='Release'">
+				<!-- https://github.com/xamarin/xamarin-macios/issues/14812 -->
+				<MtouchExtraArgs>$(MtouchExtraArgs) --marshal-objectivec-exceptions:disable</MtouchExtraArgs>
 			</PropertyGroup>
 		</When>
 	</Choose>

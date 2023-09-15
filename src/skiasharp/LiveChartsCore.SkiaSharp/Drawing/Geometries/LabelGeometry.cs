@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -34,6 +37,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _textSizeProperty;
     private readonly ColorMotionProperty _backgroundProperty;
+    internal float _maxTextHeight = 0f;
+    internal int _lines;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -75,7 +80,10 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     public Padding Padding { get; set; } = new();
 
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
-    public float LineHeight { get; set; } = 1.75f;
+    public float LineHeight { get; set; } = 1.45f;
+
+    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.MaxWidth" />
+    public float MaxWidth { get; set; } = float.MaxValue;
 
 #if DEBUG
     /// <summary>
@@ -87,30 +95,37 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        // it seems that skia allocates a lot of memory when drawing text
-        // for now we are not focused on performance, but this should be improved in the future
-
-        // for a reason the text size is not set on the InitializeTask() method.
         context.Paint.TextSize = TextSize;
 
         var p = Padding;
         var bg = Background;
 
+        var size = OnMeasure(context.PaintTask);
+
         var isFirstLine = true;
-        var verticalPos = 0f;
+        var verticalPos =
+            _lines > 1
+                ? VerticalAlign switch // respect alignment on multiline labels
+                {
+                    Align.Start => 0,
+                    Align.Middle => -_lines * _maxTextHeight * 0.5f,
+                    Align.End => -_lines * _maxTextHeight,
+                    _ => 0
+                }
+                : 0;
+
+        var textBounds = new SKRect();
         var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
-        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        foreach (var line in GetLines(context.Paint))
         {
-            var textBounds = new SKRect();
             _ = context.Paint.MeasureText(line, ref textBounds);
 
-            var lhd = (textBounds.Height * LineHeight - textBounds.Height) * 0.5f;
+            var lhd = (textBounds.Height * LineHeight - _maxTextHeight) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);
 
             if (isFirstLine && bg != LvcColor.Empty)
             {
-                var size = OnMeasure(context.PaintTask);
                 var c = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity));
                 using var bgPaint = new SKPaint { Color = c };
 
@@ -152,7 +167,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             }
 #endif
 
-            verticalPos += textBounds.Height * LineHeight;
+            verticalPos += _maxTextHeight * LineHeight;
             isFirstLine = false;
         }
 
@@ -176,16 +191,20 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         };
 
         var w = 0f;
-        var h = 0f;
+        _maxTextHeight = 0f;
+        _lines = 0;
 
-        foreach (var line in Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+        foreach (var line in GetLines(p))
         {
             var bounds = new SKRect();
             _ = p.MeasureText(line, ref bounds);
 
             if (bounds.Width > w) w = bounds.Width;
-            h += bounds.Height * LineHeight;
+            if (bounds.Height > _maxTextHeight) _maxTextHeight = bounds.Height;
+            _lines++;
         }
+
+        var h = _maxTextHeight * _lines * LineHeight;
 
         // Note #301222
         // Disposing typefaces could cause render issues (Blazor) at least on SkiaSharp (2.88.3)
@@ -196,6 +215,65 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         return new LvcSize(
             w + Padding.Left + Padding.Right,
             h + Padding.Top + Padding.Bottom);
+    }
+
+    internal IEnumerable<string> GetLines(SKPaint paint)
+    {
+        IEnumerable<string> lines = Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+        if (MaxWidth != float.MaxValue)
+            lines = lines.SelectMany(x => GetLinesByMaxWidth(x, paint));
+
+        return lines;
+    }
+
+    private IEnumerable<string> GetLinesByMaxWidth(string source, SKPaint paint)
+    {
+        // DISCLAIM ====================================================================
+        // WE ARE USING A DOUBLE STRING BUILDER, AND MEASURE THE REAL STRING EVERY TIME
+        // BECAUSE IT SEEMS THAT THE SKIA MEASURE TEXT IS INCONSISTENT, FOR EXAMPLE:
+
+        //using var p = new SKPaint() { Color = SKColors.Black, TextSize = 15 };
+        //var b = new SKRect();
+        //_ = p.MeasureText("nullam. Ut tellus", ref b);
+
+        //var w1 = b.Width;
+
+        //var w2 = 0f;
+        //_ = p.MeasureText("nullam.", ref b);
+        //w2 += b.Width;
+        //_ = p.MeasureText(" Ut", ref b);
+        //w2 += b.Width;
+        //_ = p.MeasureText(" tellus", ref b);
+        //w2 += b.Width;
+
+        //Assert.IsTrue(w1 == w2); THIS IS FALSE!!!!
+
+        var sb = new StringBuilder();
+        var sb2 = new StringBuilder();
+        var words = source.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
+        var bounds = new SKRect();
+        var mw = MaxWidth - Padding.Left - Padding.Right;
+
+        foreach (var word in words)
+        {
+            _ = sb2.Clear();
+            _ = sb2.Append(sb);
+            _ = sb2.Append(' ');
+            _ = sb2.Append(word);
+            _ = paint.MeasureText(sb2.ToString(), ref bounds);
+
+            if (bounds.Width > mw)
+            {
+                yield return sb.ToString();
+                _ = sb.Clear();
+            }
+
+            if (sb.Length > 0) _ = sb.Append(' ');
+            _ = sb.Append(word);
+        }
+
+        if (sb.Length > 0) yield return sb.ToString();
     }
 
     private LvcPoint GetAlignmentOffset(SKRect bounds)

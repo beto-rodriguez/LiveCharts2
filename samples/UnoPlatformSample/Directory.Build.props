@@ -1,15 +1,14 @@
-<Project ToolsVersion="15.0">
+<Project>
 	<PropertyGroup>
-		<LangVersion>11</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
 		<DebugType>portable</DebugType>
 		<DebugSymbols>True</DebugSymbols>
-		<SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>
 
-		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<NoWarn>$(NoWarn);Uno0001;CS1998;CA1416;NU1507</NoWarn>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+		<NoWarn>$(NoWarn);CA1416;NU1507</NoWarn>
 
 		<DefaultLanguage>en</DefaultLanguage>
 
@@ -31,21 +30,18 @@
 			<PropertyGroup>
 				<IsIOS>true</IsIOS>
 				<SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
-				<RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">iossimulator-x64</RuntimeIdentifier>
 			</PropertyGroup>
 		</When>
 		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
 			<PropertyGroup>
 				<IsMac>true</IsMac>
 				<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
-				<RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">osx-x64</RuntimeIdentifier>
 			</PropertyGroup>
 		</When>
 		<When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
 			<PropertyGroup>
 				<IsMacCatalyst>true</IsMacCatalyst>
 				<SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
-				<RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">maccatalyst-x64</RuntimeIdentifier>
 			</PropertyGroup>
 		</When>
 		<When Condition="$(TargetFramework.Contains('windows10'))">

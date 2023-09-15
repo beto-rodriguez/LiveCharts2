@@ -267,7 +267,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        Application.Instance.InvokeAsync(action).Wait();
+        _ = Application.Instance.InvokeAsync(action);
     }
 
     /// <summary>

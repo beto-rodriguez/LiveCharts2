@@ -5,7 +5,7 @@ using ViewModelsSamples.StepLines.AutoUpdate;
 
 namespace AvaloniaSample.StepLines.AutoUpdate;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     private bool? isStreaming = false;
 

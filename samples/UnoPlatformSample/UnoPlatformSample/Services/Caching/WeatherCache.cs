@@ -20,11 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Uno.Extensions.Serialization;
-using Windows.Networking.Connectivity;
-using Windows.Storage;
-
 namespace UnoPlatformSample.Services.Caching;
+
 public sealed class WeatherCache : IWeatherCache
 {
     private readonly IApiClient _api;

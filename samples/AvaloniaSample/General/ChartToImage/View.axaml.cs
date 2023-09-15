@@ -5,7 +5,7 @@ using LiveChartsCore.SkiaSharpView.SKCharts;
 
 namespace AvaloniaSample.General.ChartToImage;
 
-public class View : UserControl
+public partial class View : UserControl
 {
     public View()
     {

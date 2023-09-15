@@ -39,7 +39,6 @@ using LiveChartsCore.SkiaSharpView.Uno.Helpers;
 using LiveChartsCore.VisualElements;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
 namespace LiveChartsCore.SkiaSharpView.Uno;
@@ -62,11 +61,11 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         InitializeComponent();
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(
-            (object sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object sender, PropertyChangedEventArgs e) => _core?.Update());
+            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
         _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
-            (object sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object sender, PropertyChangedEventArgs e) => _core?.Update());
+            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
@@ -642,11 +641,18 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
             _core.UpdateStarted += OnCoreUpdateStarted;
             _core.UpdateFinished += OnCoreUpdateFinished;
 
-            PointerPressed += OnPointerPressed;
-            PointerReleased += PieChart_PointerReleased;
             SizeChanged += OnSizeChanged;
-            PointerMoved += OnPointerMoved;
-            PointerExited += OnPointerExited;
+
+            var chartBehaviour = new Behaviours.ChartBehaviour();
+
+            chartBehaviour.Pressed += OnPressed;
+            chartBehaviour.Moved += OnMoved;
+            chartBehaviour.Released += OnReleased;
+            chartBehaviour.Scrolled += OnScrolled;
+            chartBehaviour.Pinched += OnPinched;
+            chartBehaviour.Exited += OnExited;
+
+            chartBehaviour.On(this);
         }
 
         _core.Load();
@@ -659,41 +665,56 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         _core.Update();
     }
 
-    private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
     {
-        var p = e.GetCurrentPoint(this);
+        // is this working on all platforms?
+        //if (args.KeyModifiers > 0) return;
 
-        if (PointerPressedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerPressedCommand.CanExecute(args)) PointerPressedCommand.Execute(args);
-        }
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PointerPressedCommand?.CanExecute(cArgs) == true) PointerPressedCommand.Execute(cArgs);
 
-        _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y), false);
+        _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
     }
 
-    private void PieChart_PointerReleased(object sender, PointerRoutedEventArgs e)
+    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
     {
-        var p = e.GetCurrentPoint(this);
+        var location = args.Location;
 
-        if (PointerReleasedCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerReleasedCommand.CanExecute(args)) PointerReleasedCommand.Execute(args);
-        }
+        var cArgs = new PointerCommandArgs(this, new(location.X, location.Y), args.OriginalEvent);
+        if (PointerMoveCommand?.CanExecute(cArgs) == true) PointerMoveCommand.Execute(cArgs);
+
+        _core?.InvokePointerMove(location);
     }
 
-    private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
     {
-        var p = e.GetCurrentPoint(motionCanvas);
+        var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
+        if (PointerReleasedCommand?.CanExecute(cArgs) == true) PointerReleasedCommand.Execute(cArgs);
 
-        if (PointerMoveCommand is not null)
-        {
-            var args = new PointerCommandArgs(this, new(p.Position.X, p.Position.Y), e);
-            if (PointerMoveCommand.CanExecute(args)) PointerMoveCommand.Execute(args);
-        }
+        _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
+    }
 
-        _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    private void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args)
+    {
+        if (_core is null) return;
+
+        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        var p = args.PinchStart;
+        var s = c.ControlSize;
+        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
+        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
+    }
+
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
+        _core?.InvokePointerLeft();
     }
 
     private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -715,11 +736,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
     {
         Measuring?.Invoke(this);
-    }
-
-    private void OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        _core?.InvokePointerLeft();
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

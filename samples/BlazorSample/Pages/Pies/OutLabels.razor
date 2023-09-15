@@ -1,0 +1,13 @@
+﻿@page "/Pies/OutLabels"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Pies.OutLabels
+
+<PieChart
+	Series="ViewModel.Series"
+    IsClockwise="false"
+    InitialRotation="-90">
+</PieChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

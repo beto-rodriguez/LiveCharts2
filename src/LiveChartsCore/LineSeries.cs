@@ -281,7 +281,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                     visual = v;
 
-                    if (IsFirstDraw)
+                    if (chart.SeriesContext.IsFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
                         v.Geometry.Y = p;
@@ -317,8 +317,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 visual.Bezier.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
-                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Bezier, !IsFirstDraw);
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Bezier, !chart.SeriesContext.IsFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Bezier, !chart.SeriesContext.IsFirstDraw);
 
                 visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
                 visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
@@ -381,7 +381,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                     if (label is null)
                     {
-                        var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation };
+                        var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
                         l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                         label = l;
                         data.TargetPoint.Context.Label = l;
@@ -391,6 +391,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
+
+                    if (chart.SeriesContext.IsFirstDraw)
+                        label.CompleteTransition(
+                            nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+
                     var m = label.Measure(DataLabelsPaint);
                     var labelPosition = GetLabelPosition(
                         x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
@@ -463,7 +468,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         pointsCleanup.CollectPoints(
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
-        IsFirstDraw = false;
         _geometrySvgChanged = false;
     }
 

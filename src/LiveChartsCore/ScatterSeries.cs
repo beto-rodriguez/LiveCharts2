@@ -270,7 +270,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
             {
                 if (point.Context.Label is not TLabel label)
                 {
-                    var l = new TLabel { X = x - hgs, Y = y - hgs, RotateTransform = (float)DataLabelsRotation };
+                    var l = new TLabel { X = x - hgs, Y = y - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
                     l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
@@ -280,6 +280,11 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+
+                if (chart.SeriesContext.IsFirstDraw)
+                    label.CompleteTransition(
+                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
                     x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,

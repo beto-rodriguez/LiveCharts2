@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 
 namespace AvaloniaSample.Test.Dispose;
 
-public class UserControl1 : UserControl
+public partial class UserControl1 : UserControl
 {
     public UserControl1()
     {

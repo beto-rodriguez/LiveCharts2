@@ -44,7 +44,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     internal Align _horizontalAlignment = Align.Middle;
     internal LvcColor _backgroundColor;
     internal Padding _padding = new(0);
-    internal float _lineHeight = 1.75f;
+    internal float _lineHeight = 1.45f;
+    internal float _maxWidth = float.MaxValue;
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -90,6 +91,11 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// </summary>
     public float LineHeight { get => _lineHeight; set => SetProperty(ref _lineHeight, value); }
 
+    /// <summary>
+    /// Gets or sets the maximum width.
+    /// </summary>
+    public float MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
+
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paint };
@@ -111,6 +117,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     {
         var x = (float)X;
         var y = (float)Y;
+        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -135,10 +142,12 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
         _labelGeometry.LineHeight = LineHeight;
+        _labelGeometry.MaxWidth = MaxWidth;
 
         if (Paint is not null)
         {
             chart.Canvas.AddDrawableTask(Paint);
+            Paint.SetClipRectangle(chart.Canvas, clipping);
             Paint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
         }
     }
@@ -163,6 +172,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         _labelGeometry.HorizontalAlign = HorizontalAlignment;
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
+        _labelGeometry.LineHeight = LineHeight;
+        _labelGeometry.MaxWidth = MaxWidth;
 
         return _paint is null
             ? new LvcSize()

@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace AvaloniaSample;
 
-public class App : Application
+public partial class App : Application
 {
     public override void Initialize()
     {
@@ -46,6 +46,10 @@ public class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();
+        }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        {
+            singleViewPlatform.MainView = new MainView();
         }
 
         base.OnFrameworkInitializationCompleted();

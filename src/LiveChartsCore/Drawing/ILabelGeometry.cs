@@ -79,6 +79,11 @@ public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
     float TextSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the maximum width.
+    /// </summary>
+    float MaxWidth { get; set; }
+
+    /// <summary>
     /// Gets or sets the background color.
     /// </summary>
     LvcColor Background { get; set; }

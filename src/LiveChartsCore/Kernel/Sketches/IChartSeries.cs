@@ -67,17 +67,20 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     Padding DataLabelsPadding { get; set; }
 
     /// <summary>
+    /// Gets or sets the max width of the data labels.
+    /// </summary>
+    /// <value>
+    /// The max with of the data labels.
+    /// </value>
+    double DataLabelsMaxWidth { get; set; }
+
+    /// <summary>
     /// Gets the paint schedule, normally handled internally to display tool tips and legends.
     /// </summary>
     /// <value>
     /// The default paint context.
     /// </value>
     Sketch<TDrawingContext> CanvasSchedule { get; }
-
-    /// <summary>
-    /// Gets  a value indicating if this is the first time the series is drawn.
-    /// </summary>
-    bool IsFirstDraw { get; }
 
     /// <summary>
     /// Gets the stack group, normally used internally to handled the stacked series.

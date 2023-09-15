@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Pies.Basic;
 
 public partial class ViewModel : ObservableObject
 {
-    // you can convert any array, list or IEnnumerable<T> to a pie series collection:
+    // you can convert any array, list or IEnumerable<T> to a pie series collection:
     public IEnumerable<ISeries> Series { get; set; } =
         new[] { 2, 4, 1, 4, 3 }.AsPieSeries();
 
