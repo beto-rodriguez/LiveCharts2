@@ -222,34 +222,48 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
             }
         }
 
-        SKPaint? originalStroke = null;
-        if (context.PaintTask.IsStroke && Stroke is not null)
-        {
-            Stroke.IsStroke = true;
-            originalStroke = context.Paint;
-            Stroke.InitializeTask(context);
-        }
-        SKPaint? originalFill = null;
-        if (!context.PaintTask.IsStroke && Fill is not null)
-        {
-            Fill.IsStroke = false;
-            originalFill = context.Paint;
-            Fill.InitializeTask(context);
-        }
+        var hasGeometryOpacity = Opacity < 1;
 
-        if (Opacity != 1) context.PaintTask.ApplyOpacityMask(context, this);
-        OnDraw(context, context.Paint);
-        if (Opacity != 1) context.PaintTask.RestoreOpacityMask(context, this);
-
-        if (context.PaintTask.IsStroke && Stroke is not null)
+        if (Fill is null && Stroke is null)
         {
-            Stroke.Dispose();
-            if (originalStroke != null) context.Paint = originalStroke;
+            if (hasGeometryOpacity) context.PaintTask.ApplyOpacityMask(context, this);
+            OnDraw(context, context.Paint);
+            if (hasGeometryOpacity) context.PaintTask.RestoreOpacityMask(context, this);
         }
-        if (!context.PaintTask.IsStroke && Fill is not null)
+        else
         {
-            Fill.Dispose();
-            if (originalFill != null) context.Paint = originalFill;
+            var originalPaint = context.Paint;
+            var originalTask = context.PaintTask;
+
+            // using fill and stroke on each geometry has a performance penalty, but allows
+            // to use different paints for each geometry.
+
+            if (Fill is not null)
+            {
+                Fill.IsStroke = false;
+                Fill.InitializeTask(context);
+
+                if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, this);
+                OnDraw(context, context.Paint);
+                if (hasGeometryOpacity) Fill.RestoreOpacityMask(context, this);
+
+                Fill.Dispose();
+            }
+
+            if (Stroke is not null)
+            {
+                Stroke.IsStroke = true;
+                Stroke.InitializeTask(context);
+
+                if (hasGeometryOpacity) Stroke.ApplyOpacityMask(context, this);
+                OnDraw(context, context.Paint);
+                if (hasGeometryOpacity) Stroke.RestoreOpacityMask(context, this);
+
+                Stroke.Dispose();
+            }
+
+            context.Paint = originalPaint;
+            context.PaintTask = originalTask;
         }
 
         if (HasTransform) context.Canvas.Restore();
