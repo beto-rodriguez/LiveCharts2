@@ -89,16 +89,28 @@ public abstract class InMemorySkiaSharpChart
     /// <summary>
     /// Saves the image to the specified path.
     /// </summary>
+    /// <param name="stream">The stream.</param>
+    /// <param name="format">The format.</param>
+    /// <param name="quality">The quality, an integer from 0 to 100.</param>
+    /// <returns></returns>
+    public virtual void SaveImage(Stream stream, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
+    {
+        using var image = GetImage();
+        using var data = image.Encode(format, quality);
+        data.SaveTo(stream);
+    }
+
+    /// <summary>
+    /// Saves the image to the specified path.
+    /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="format">The format.</param>
     /// <param name="quality">The quality, an integer from 0 to 100.</param>
     /// <returns></returns>
     public virtual void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
     {
-        using var image = GetImage();
-        using var data = image.Encode(format, quality);
         using var stream = File.OpenWrite(path);
-        data.SaveTo(stream);
+        SaveImage(stream, format, quality);
     }
 
     /// <summary>
