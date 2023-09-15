@@ -493,9 +493,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (_forceStepToMin) s = _minStep;
 
         var start = Math.Truncate(min / s) * s;
-        var separatorsSource = CustomSeparators ?? Axis<TDrawingContext, TTextGeometry, TLineGeometry>.EnumerateSeparators(start, s, max);
 
-        foreach (var i in separatorsSource)
+        foreach (var i in EnumerateSeparators(start, max, s))
         {
             var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
             var labelContent = i < min || i > max ? string.Empty : TryGetLabelOrLogError(labeler, i - 1d + 1d);
@@ -781,9 +780,16 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         chart.Canvas.Invalidate();
     }
 
-    private static IEnumerable<double> EnumerateSeparators(double start, double s, double max)
+    private IEnumerable<double> EnumerateSeparators(double start, double end, double step)
     {
-        for (var i = start - s; i <= max + s; i += s) yield return i;
+        if (CustomSeparators is not null)
+        {
+            foreach (var s in CustomSeparators) yield return s;
+            yield break;
+        }
+
+        var relativeEnd = end - start;
+        for (var i = 0d; i <= relativeEnd; i += step) yield return start + i;
     }
 
     private static ChartPoint? FindClosestPoint(
@@ -852,7 +858,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var h = 0f;
         var r = (float)LabelsRotation;
 
-        for (var i = start; i <= max; i += s)
+        foreach (var i in EnumerateSeparators(start, max, s))
         {
             var textGeometry = new TTextGeometry
             {
@@ -1004,7 +1010,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (max - min == 0) return maxLabelSize;
 
-        for (var i = min; i <= max; i += s)
+        foreach (var i in EnumerateSeparators(min, max, s))
         {
             var textGeometry = new TTextGeometry
             {
