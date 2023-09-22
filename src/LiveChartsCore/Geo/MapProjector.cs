@@ -52,5 +52,5 @@ public abstract class MapProjector
     /// </summary>
     /// <param name="point">The point.</param>
     /// <returns></returns>
-    public abstract float[] ToMap(double[] point);
+    public abstract LvcPoint ToMap(LvcPointD point);
 }
