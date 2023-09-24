@@ -91,7 +91,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         chartBehaviour.Pressed += OnPressed;
         chartBehaviour.Moved += OnMoved;
         chartBehaviour.Released += OnReleased;
-        chartBehaviour.Scrolled += OnScrolled;
         chartBehaviour.Exited += OnExited;
 
         chartBehaviour.On(this);
@@ -702,13 +701,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
     {
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
-    }
-
-    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
-    {
-        if (_core is null) throw new Exception("core not found");
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
     private void OnExited(object? sender, Behaviours.Events.EventArgs args)

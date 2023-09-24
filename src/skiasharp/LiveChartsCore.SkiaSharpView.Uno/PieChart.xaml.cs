@@ -648,7 +648,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
             chartBehaviour.Pressed += OnPressed;
             chartBehaviour.Moved += OnMoved;
             chartBehaviour.Released += OnReleased;
-            chartBehaviour.Scrolled += OnScrolled;
             chartBehaviour.Pinched += OnPinched;
             chartBehaviour.Exited += OnExited;
 
@@ -692,13 +691,6 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         if (PointerReleasedCommand?.CanExecute(cArgs) == true) PointerReleasedCommand.Execute(cArgs);
 
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
-    }
-
-    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
-    {
-        if (_core is null) throw new Exception("core not found");
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
     private void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args)
