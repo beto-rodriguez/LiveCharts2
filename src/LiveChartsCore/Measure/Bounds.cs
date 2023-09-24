@@ -34,6 +34,17 @@ public class Bounds
     { }
 
     /// <summary>
+    /// Creates a new instance of the <see cref="Bounds"/> class.
+    /// </summary>
+    /// <param name="max">The maximum value.</param>
+    /// <param name="min">The minimum value.</param>
+    public Bounds(double min, double max)
+    {
+        Max = max;
+        Min = min;
+    }
+
+    /// <summary>
     /// Creates a new instance of the <see cref="Bounds"/> class. based on the given <see cref="Bounds"/>.
     /// </summary>
     /// <param name="bounds"></param>
