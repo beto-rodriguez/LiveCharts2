@@ -25,7 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.88.5" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.88.6" />
   </ItemGroup>
 
   <ItemGroup>
