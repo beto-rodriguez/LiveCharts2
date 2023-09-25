@@ -24,4 +24,3 @@
 using System.Reflection;
 [assembly: AssemblyKeyFile("./../../LiveCharts.snk")]
 #endif
-
