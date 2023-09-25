@@ -14,7 +14,7 @@
 
     <AssemblyName>LiveChartsCore.Behaviours</AssemblyName>
     <RootNamespace>LiveChartsCore.Behaviours</RootNamespace>
-    <Version>2.0.0-rc1</Version>
+    <Version>2.0.0-rc1.1</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Adds user interaction for touch screens, touch pads and mouse.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
