@@ -43,7 +43,7 @@ public partial class ChartBehaviour
             {
                 case UIGestureRecognizerState.Changed:
                     var p = e.LocationInView(view);
-                    Moved!.Invoke(view, new(new(p.X, p.Y), e));
+                    Moved?.Invoke(view, new(new(p.X, p.Y), e));
                     break;
                 case UIGestureRecognizerState.Cancelled:
                 case UIGestureRecognizerState.Failed:
