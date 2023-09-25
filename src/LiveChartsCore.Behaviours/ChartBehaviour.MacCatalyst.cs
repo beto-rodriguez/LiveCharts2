@@ -23,6 +23,7 @@
 #if MACCATALYST || IOS
 
 using System;
+using CoreGraphics;
 using LiveChartsCore.Drawing;
 using UIKit;
 

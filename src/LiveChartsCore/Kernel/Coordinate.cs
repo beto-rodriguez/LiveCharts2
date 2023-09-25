@@ -154,4 +154,13 @@ public readonly struct Coordinate
     /// Gets or sets the coordinate error.
     /// </summary>
     public readonly Error PointError { get; }
+
+    /// <summary>
+    /// Builds a string that represents the current coordinate.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        return $"({SecondaryValue}, {PrimaryValue})";
+    }
 }

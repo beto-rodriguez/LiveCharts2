@@ -22,6 +22,7 @@
 
 #if ANDROID
 
+using System;
 using Android.Views;
 using LiveChartsCore.Drawing;
 

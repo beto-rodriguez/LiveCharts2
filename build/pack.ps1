@@ -9,7 +9,8 @@ param([string]$configuration = "Debug", [string]$nupkgOutputPath = "./nupkg")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/LiveChartsCore.SkiaSharpView.Blazor.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Eto/LiveChartsCore.SkiaSharpView.Eto.csproj")
-    [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/LiveChartsCore.SkiaSharpView.Maui.csproj")
+    [Project]::new("./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj", $true)
+    [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/LiveChartsCore.SkiaSharpView.Maui.csproj", $true)
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/LiveChartsCore.SkiaSharpView.Uno.csproj", $true)
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", $true)
     [Project]::new(
@@ -102,7 +103,7 @@ function Add-Pack {
     }
 
     if ($project.packingMethod -eq "msbuild") {
-        & $msbuild $project.src -t:pack /p:configuration=$configuration
+        & $msbuild $project.src -t:pack /p:configuration=$configuration /restore
         
         $folder = $project.GetFolder()
 
