@@ -45,7 +45,7 @@ public abstract partial class ChartBehaviour
         if (e.Event is null) return;
 
         var p = new LvcPoint(e.Event.GetX() / Density, e.Event.GetY() / Density);
-        Moved!.Invoke(sender, new(p, e.Event));
+        Moved?.Invoke(sender, new(p, e.Event));
     }
 
     protected void OnAndroidTouched(object? sender, View.TouchEventArgs e)
@@ -115,9 +115,9 @@ public abstract partial class ChartBehaviour
     {
         private readonly Action<float> _onScaled;
 
-        public CustomScaleListener(Action<float> onSacaled)
+        public CustomScaleListener(Action<float> onScaled)
         {
-            _onScaled = onSacaled;
+            _onScaled = onScaled;
         }
 
         public bool Paused { get; set; }

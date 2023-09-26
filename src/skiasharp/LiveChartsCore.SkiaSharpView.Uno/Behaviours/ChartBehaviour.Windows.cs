@@ -37,7 +37,7 @@ public partial class ChartBehaviour
         var p = e.GetCurrentPoint(sender as UIElement);
         if (p is null) return;
 
-        Pressed!.Invoke(
+        Pressed?.Invoke(
             sender,
             new(new(p.Position.X, p.Position.Y), p.Properties.IsRightButtonPressed, e));
     }
@@ -47,7 +47,7 @@ public partial class ChartBehaviour
         var p = e.GetCurrentPoint(sender as UIElement);
         if (p is null) return;
 
-        Moved!.Invoke(
+        Moved?.Invoke(
             sender,
             new(new(p.Position.X, p.Position.Y), e));
     }
@@ -57,7 +57,7 @@ public partial class ChartBehaviour
         var p = e.GetCurrentPoint(sender as UIElement);
         if (p is null) return;
 
-        Released!.Invoke(
+        Released?.Invoke(
             sender,
             new(new(p.Position.X, p.Position.Y), p.Properties.IsRightButtonPressed, e));
     }
@@ -65,7 +65,7 @@ public partial class ChartBehaviour
     protected void OnWindowsPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(sender as UIElement);
-        Scrolled!.Invoke(sender, new(new(p.Position.X, p.Position.Y), p.Properties.MouseWheelDelta, e));
+        Scrolled?.Invoke(sender, new(new(p.Position.X, p.Position.Y), p.Properties.MouseWheelDelta, e));
     }
 
     protected void OnWindowsPointerExited(object sender, PointerRoutedEventArgs e)

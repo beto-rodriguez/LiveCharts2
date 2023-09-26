@@ -44,7 +44,7 @@ public partial class ChartBehaviour
         if (e.Event is null) return;
 
         var p = new LvcPoint(e.Event.GetX() / Density, e.Event.GetY() / Density);
-        Moved!.Invoke(sender, new(p, e.Event));
+        Moved?.Invoke(sender, new(p, e.Event));
     }
 
     protected void OnAndroidTouched(object? sender, View.TouchEventArgs e)
