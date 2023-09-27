@@ -147,6 +147,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         uwx = uwx < gs ? gs : uwx;
         var hasSvg = this.HasSvgGeometry();
 
+        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+
         foreach (var segment in segments)
         {
             TPathGeometry fillPath;
@@ -213,7 +215,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var v = new StepLineVisualPoint<TDrawingContext, TVisual>();
                     visual = v;
 
-                    if (chart.SeriesContext.IsFirstDraw)
+                    if (isFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
                         v.Geometry.Y = p;
@@ -245,8 +247,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 visual.StepSegment.Id = point.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !chart.SeriesContext.IsFirstDraw);
-                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !chart.SeriesContext.IsFirstDraw);
+                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
+                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
 
                 visual.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
                 visual.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
@@ -299,7 +301,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
 
-                    if (chart.SeriesContext.IsFirstDraw)
+                    if (isFirstDraw)
                         label.CompleteTransition(
                             nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 

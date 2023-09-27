@@ -158,6 +158,8 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         var hy = chart.ControlSize.Height * .5f;
         var hasSvg = this.HasSvgGeometry();
 
+        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+
         foreach (var point in Fetch(cartesianChart))
         {
             var coordinate = point.Coordinate;
@@ -281,7 +283,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
 
-                if (chart.SeriesContext.IsFirstDraw)
+                if (isFirstDraw)
                     label.CompleteTransition(
                         nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 

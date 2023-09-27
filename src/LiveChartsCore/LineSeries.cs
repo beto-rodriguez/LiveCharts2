@@ -179,6 +179,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var segmentI = 0;
         var hasSvg = this.HasSvgGeometry();
 
+        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+
         foreach (var segment in segments)
         {
             var hasPaths = false;
@@ -281,7 +283,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                     visual = v;
 
-                    if (chart.SeriesContext.IsFirstDraw)
+                    if (isFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
                         v.Geometry.Y = p;
@@ -317,8 +319,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 visual.Bezier.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Bezier, !chart.SeriesContext.IsFirstDraw);
-                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Bezier, !chart.SeriesContext.IsFirstDraw);
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Bezier, !isFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Bezier, !isFirstDraw);
 
                 visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
                 visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
@@ -392,7 +394,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
 
-                    if (chart.SeriesContext.IsFirstDraw)
+                    if (isFirstDraw)
                         label.CompleteTransition(
                             nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 

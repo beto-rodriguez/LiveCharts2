@@ -52,6 +52,8 @@ public abstract class Chart<TDrawingContext> : IChart
     internal float _titleHeight = 0f;
     internal LvcSize _legendSize;
     internal bool _preserveFirstDraw = false;
+    internal readonly HashSet<int> _drawnSeries = new();
+    internal bool _isFirstDraw = true;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;
@@ -63,7 +65,6 @@ public abstract class Chart<TDrawingContext> : IChart
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
     private LvcSize _previousSize = new();
     private readonly bool _isMobile;
-    internal bool _isFirstDraw = true;
 
     #endregion
 
@@ -177,7 +178,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// The series context
     /// </summary>
-    public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>(), true, null!);
+    public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>(), null!);
 
     /// <summary>
     /// Gets the size of the control.

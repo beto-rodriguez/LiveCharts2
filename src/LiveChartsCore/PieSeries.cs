@@ -267,6 +267,8 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
         var i = 1f;
         var isClockWise = view.IsClockwise;
 
+        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+
         foreach (var point in fetched)
         {
             var coordinate = point.Coordinate;
@@ -348,7 +350,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
                     Y = cy,
                     Width = 0,
                     Height = 0,
-                    StartAngle = (float)(chart.SeriesContext.IsFirstDraw ? initialRotation : start + initialRotation),
+                    StartAngle = (float)(isFirstDraw ? initialRotation : start + initialRotation),
                     SweepAngle = 0,
                     PushOut = 0,
                     InnerRadius = 0,
@@ -428,7 +430,7 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
 
                 AlignLabel(label, (float)start, initialRotation, sweep);
 
-                if (chart.SeriesContext.IsFirstDraw)
+                if (isFirstDraw)
                     label.CompleteTransition(
                         nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 

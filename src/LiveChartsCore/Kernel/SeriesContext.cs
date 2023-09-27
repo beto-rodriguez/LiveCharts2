@@ -61,12 +61,10 @@ public class SeriesContext<TDrawingContext>
     /// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
     /// </summary>
     /// <param name="series">The series.</param>
-    /// <param name="isFirstDraw">Indicates whether is the first time the chart is drawn.</param>
     /// <param name="chart">The chart</param>
-    public SeriesContext(IEnumerable<IChartSeries<TDrawingContext>> series, bool isFirstDraw, IChart chart)
+    public SeriesContext(IEnumerable<IChartSeries<TDrawingContext>> series, IChart chart)
     {
         _series = series;
-        IsFirstDraw = isFirstDraw;
         _chart = chart;
     }
 
@@ -323,9 +321,4 @@ public class SeriesContext<TDrawingContext>
     }
 
     #endregion
-
-    /// <summary>
-    /// Gets or sets a value indicating whether is first draw of the chart.
-    /// </summary>
-    public bool IsFirstDraw { get; set; } = true;
 }

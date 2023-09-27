@@ -121,6 +121,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
         var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
         var hasSvg = this.HasSvgGeometry();
 
+        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+
         foreach (var point in Fetch(cartesianChart))
         {
             var coordinate = point.Coordinate;
@@ -299,7 +301,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
 
-                if (chart.SeriesContext.IsFirstDraw)
+                if (isFirstDraw)
                     label.CompleteTransition(
                         nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 

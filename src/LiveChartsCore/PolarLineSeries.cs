@@ -249,6 +249,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
         var hasSvg = this.HasSvgGeometry();
 
+        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+
         foreach (var segment in segments)
         {
             TPathGeometry fillPath;
@@ -395,7 +397,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
                     var rad = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
 
-                    if (chart.SeriesContext.IsFirstDraw)
+                    if (isFirstDraw)
                         label.CompleteTransition(
                             nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 

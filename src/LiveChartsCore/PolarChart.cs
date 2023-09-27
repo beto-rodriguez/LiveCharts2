@@ -189,7 +189,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, _isFirstDraw, this);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
@@ -495,7 +495,11 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         }
 
         foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in VisibleSeries) AddVisual((ChartElement<TDrawingContext>)series);
+        foreach (var series in VisibleSeries)
+        {
+            AddVisual((ChartElement<TDrawingContext>)series);
+            _drawnSeries.Add(series.SeriesId);
+        }
 
         CollectVisuals();
 
