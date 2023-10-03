@@ -60,6 +60,7 @@ public partial class MotionCanvas : ContentView
         skiaElement.PaintSurface += OnCanvasViewPaintSurface;
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
         Unloaded += MotionCanvas_Unloaded;
+        Loaded += MotionCanvas_Loaded;
     }
 
     /// <summary>
@@ -167,6 +168,11 @@ public partial class MotionCanvas : ContentView
         }
 
         motionCanvas.CanvasCore.SetPaintTasks(tasks);
+    }
+
+    private void MotionCanvas_Loaded(object? sender, EventArgs e)
+    {
+        _isLoaded = true;
     }
 
     private void MotionCanvas_Unloaded(object? sender, EventArgs e)
