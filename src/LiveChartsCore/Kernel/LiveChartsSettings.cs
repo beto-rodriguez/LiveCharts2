@@ -162,13 +162,13 @@ public class LiveChartsSettings
     public bool IsRightToLeft { get; set; }
 
     /// <summary>
-    /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
-    /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
+    /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="Coordinate"/>
+    /// in the chart.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <param name="mapper">The mapper.</param>
     /// <returns></returns>
-    public LiveChartsSettings HasMap<TModel>(Action<TModel, ChartPoint> mapper)
+    public LiveChartsSettings HasMap<TModel>(Func<TModel, int, Coordinate> mapper)
     {
         var t = typeof(TModel);
         _mappers[t] = mapper;
@@ -186,14 +186,14 @@ public class LiveChartsSettings
         return this;
     }
 
-    internal Action<TModel, ChartPoint> GetMap<TModel>()
+    internal Func<TModel, int, Coordinate> GetMap<TModel>()
     {
         return !_mappers.TryGetValue(typeof(TModel), out var mapper)
             ? throw new NotImplementedException(
                 $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
                 $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
                 $"method to call {nameof(HasMap)}() with the type you are trying to plot.")
-            : (Action<TModel, ChartPoint>)mapper;
+            : (Func<TModel, int, Coordinate>)mapper;
     }
 
     internal LiveChartsSettings HasProvider<TDrawingContext>(ChartEngine<TDrawingContext> factory)
@@ -390,22 +390,17 @@ public class LiveChartsSettings
     public LiveChartsSettings AddDefaultMappers()
     {
         return
-            HasMap<short>((model, point) => point.Coordinate = new(point.Index, model))
-            .HasMap<int>((model, point) => point.Coordinate = new(point.Index, model))
-            .HasMap<long>((model, point) => point.Coordinate = new(point.Index, model))
-            .HasMap<float>((model, point) => point.Coordinate = new(point.Index, model))
-            .HasMap<double>((model, point) => point.Coordinate = new(point.Index, model))
-            .HasMap<decimal>((model, point) => point.Coordinate = new(point.Index, (double)model))
-            .HasMap<short?>((model, point) =>
-            {
-                // model can not be null at this point.
-                // LiveCharts will return Coordinate.Empty if the model was null.
-                point.Coordinate = new(point.Index, model!.Value);
-            })
-            .HasMap<int?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
-            .HasMap<long?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
-            .HasMap<float?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
-            .HasMap<double?>((model, point) => point.Coordinate = new(point.Index, model!.Value))
-            .HasMap<decimal?>((model, point) => point.Coordinate = new(point.Index, (double)model!.Value));
+            HasMap<short>((model, index) => new(index, model))
+            .HasMap<int>((model, index) => new(index, model))
+            .HasMap<long>((model, index) => new(index, model))
+            .HasMap<float>((model, index) => new(index, model))
+            .HasMap<double>((model, index) => new(index, model))
+            .HasMap<decimal>((model, index) => new(index, (double)model))
+            .HasMap<short?>((model, index) => new(index, model!.Value))
+            .HasMap<int?>((model, index) => new(index, model!.Value))
+            .HasMap<long?>((model, index) => new(index, model!.Value))
+            .HasMap<float?>((model, index) => new(index, model!.Value))
+            .HasMap<double?>((model, index) => new(index, model!.Value))
+            .HasMap<decimal?>((model, index) => new(index, (double)model!.Value));
     }
 }

@@ -102,7 +102,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private readonly CollectionDeepObserver<TModel> _observer;
     private IEnumerable<TModel>? _values;
     private string? _name;
-    private Action<TModel, ChartPoint>? _mapping;
+    private Func<TModel, int, Coordinate>? _mapping;
     private int _zIndex;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
     private bool _isVisible = true;
@@ -163,11 +163,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ISeries.Pivot"/>
     public double Pivot { get => pivot; set => SetProperty(ref pivot, (float)value); }
 
-    /// <summary>
-    /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
-    /// then the <see cref="ChartPoint"/> will be drawn as a point in the chart.
-    /// </summary>
-    public Action<TModel, ChartPoint>? Mapping { get => _mapping; set => SetProperty(ref _mapping, value); }
+    /// <inheritdoc cref="ISeries{TModel}.Mapping"/>
+    public Func<TModel, int, Coordinate>? Mapping { get => _mapping; set => SetProperty(ref _mapping, value); }
 
     /// <inheritdoc cref="ISeries.GeometrySvg"/>
     public string? GeometrySvg
