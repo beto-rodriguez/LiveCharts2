@@ -10,12 +10,12 @@ public class App : Application
     protected IHost? Host { get; private set; }
     public record City(string Name, double Population);
 
-    protected async override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
         LiveCharts.Configure(config => // mark
             config // mark
-                   // you can override the theme 
-                   // .AddDarkTheme() // mark 
+                // you can override the theme 
+                // .AddDarkTheme() // mark 
 
                 // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark
@@ -29,13 +29,11 @@ public class App : Application
                 // finally register your own mappers
                 // you can learn more about mappers at:
                 // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
-                .HasMap<City>((city, point) => // mark
-                { // mark
-                    // here we use the index as X, and the population as Y // mark
-                    point.Coordinate = new(point.Index, city.Population); // mark
-                }) // mark
-                   // .HasMap<Foo>( .... ) // mark
-                   // .HasMap<Bar>( .... ) // mark
+
+                // here we use the index as X, and the population as Y // mark
+                .HasMap<City>((city, index) => new(index, city.Population)) // mark
+                // .HasMap<Foo>( .... ) // mark
+                // .HasMap<Bar>( .... ) // mark
         ); // mark
 
 

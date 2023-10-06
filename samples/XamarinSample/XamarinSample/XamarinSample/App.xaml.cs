@@ -35,11 +35,9 @@ public partial class App : Application
                 // finally register your own mappers
                 // you can learn more about mappers at:
                 // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
-                //.HasMap<City>((city, point) => // mark
-                //{ // mark
-                //    // here we use the index as X, and the population as Y // mark
-                //point.Coordinate = new(point.Index, city.Population); // mark
-                //}) // mark
+
+                // here we use the index as X, and the population as Y // mark
+                //.HasMap<City>((city, index) => new(index, city.Population) // mark
                 // .HasMap<Foo>( .... ) // mark
                 // .HasMap<Bar>( .... ) // mark
                 ); // mark

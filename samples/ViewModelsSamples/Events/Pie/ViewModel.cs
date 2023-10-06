@@ -32,12 +32,9 @@ public partial class ViewModel : ObservableObject
             (city, series) =>
             {
                 series.Name = city.Name;
-                series.Mapping = (cityMapper, point) =>
-                {
-                    // use the population property in the Y axis // mark
-                    // and the index of the city in the array in the X axis // mark
-                    point.Coordinate = new(point.Index, cityMapper.Population);
-                };
+                // use the population property in the Y axis // mark
+                // and the index of the city in the array in the X axis // mark
+                series.Mapping = (cityMapper, index) => new(index, cityMapper.Population);
                 series.DataPointerDown += Series_DataPointerDown;
             });
 

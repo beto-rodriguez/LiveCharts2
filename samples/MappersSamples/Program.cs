@@ -23,12 +23,9 @@ var chart = new SKCartesianChart
     {
         new LineSeries<TempSample>
         {
-            Mapping = (tempSample, chartPoint) =>
-            {
-                // we set the X coordinate to the Time property
-                // and the Y coordinate to the Temperature property
-                chartPoint.Coordinate = new(tempSample.Time, tempSample.Temperature);
-            },
+            // we set the X coordinate to the Time property
+            // and the Y coordinate to the Temperature property
+            Mapping = (tempSample, index) => new(tempSample.Time, tempSample.Temperature),
             Values = samples
         }
     },
@@ -68,12 +65,9 @@ var citiesChart = new SKCartesianChart
     {
         new ColumnSeries<City>
         {
-            Mapping = (city, chartPoint) =>
-            {
-                // we set the X coordinate to the index of the item in the array
-                // and the Y coordinate to the Population property
-                chartPoint.Coordinate = new(chartPoint.Index, city.Population);
-            },
+            // we set the X coordinate to the index of the item in the array
+            // and the Y coordinate to the Population property
+            Mapping = (city, index) => new(index, city.Population),
             Values = cities
         }
     },
@@ -100,14 +94,8 @@ citiesChart.SaveImage("cities.png");
 // this is useful when you have a lot of series and you don't want to repeat the mapping for each series.
 LiveCharts.Configure(config =>
     config
-        .HasMap<TempSample>((tempSample, chartPoint) =>
-        {
-            chartPoint.Coordinate = new(tempSample.Time, tempSample.Temperature);
-        })
-        .HasMap<City>((city, chartPoint) =>
-        {
-            chartPoint.Coordinate = new(chartPoint.Index, city.Population);
-        }));
+        .HasMap<TempSample>((tempSample, index) => new(tempSample.Time, tempSample.Temperature))
+        .HasMap<City>((city, index) => new(index, city.Population)));
 
 Console.WriteLine("chart saved");
 

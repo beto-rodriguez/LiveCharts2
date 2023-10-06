@@ -26,12 +26,9 @@ public partial class ViewModel : ObservableObject
         {
             Values = data,
             RadiusToolTipLabelFormatter = point => $"{point.Model?.Name} {point.Model?.Population} Million",
-            Mapping = (city, point) =>
-            {
-                // use the Popuplation property in the Y axis
-                // and the index of the city in the array as the X axis
-                point.Coordinate = new(point.Index, city.Population);
-            }
+            // use the Population property in the Y axis
+            // and the index of the city in the array as the X axis
+            Mapping = (city, index) => new(index, city.Population)
         };
 
         Series = new ISeries[]
