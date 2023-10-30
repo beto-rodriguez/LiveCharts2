@@ -37,7 +37,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
     private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
-    private readonly Dictionary<object, LvcRectangle> _clipRectangles = new();
+    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, LvcRectangle> _clipRectangles = new();
     private char? _matchesChar = null;
     internal SKPaint? _skiaPaint;
     internal FloatMotionProperty _strokeWidthTransition;
@@ -235,13 +235,13 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
     public LvcRectangle GetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {
-        return _clipRectangles.TryGetValue(canvas.Sync, out var clip) ? clip : LvcRectangle.Empty;
+        return _clipRectangles.TryGetValue(canvas, out var clip) ? clip : LvcRectangle.Empty;
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, LvcRectangle)" />
     public void SetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas, LvcRectangle value)
     {
-        _clipRectangles[canvas.Sync] = value;
+        _clipRectangles[canvas] = value;
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
