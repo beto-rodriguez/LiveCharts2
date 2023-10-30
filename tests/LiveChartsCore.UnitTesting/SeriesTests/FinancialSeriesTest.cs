@@ -62,7 +62,8 @@ public class FinancialSeriesTest
             Height = 1000,
             Series = new[] { sutSeries },
             XAxes = new[] { new Axis { UnitWidth = TimeSpan.FromDays(1).Ticks } },
-            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
+            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } },
+            ExplicitDisposing = true
         };
 
         _ = chart.GetImage();
