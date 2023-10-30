@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
-    private readonly Dictionary<object, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
+    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = new();
     private char? _matchesChar = null;
     internal SKPaint? _skiaPaint;
@@ -195,7 +195,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     /// <inheritdoc cref="IPaint{TDrawingContext}.SetGeometries(MotionCanvas{TDrawingContext}, HashSet{IDrawable{TDrawingContext}})" />
     public void SetGeometries(MotionCanvas<SkiaSharpDrawingContext> canvas, HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
     {
-        _geometriesByCanvas[canvas.Sync] = geometries;
+        _geometriesByCanvas[canvas] = geometries;
         IsValid = false;
     }
 
@@ -206,7 +206,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
         if (g is null)
         {
             g = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
-            _geometriesByCanvas[canvas.Sync] = g;
+            _geometriesByCanvas[canvas] = g;
         }
         _ = g.Add(geometry);
         IsValid = false;
@@ -271,7 +271,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
         // return the defined typeface.
         if (SKTypeface is not null) return SKTypeface;
 
-        // Obsolete method used in older versions of LiveCahrts...
+        // Obsolete method used in older versions of LiveCharts...
         if (_matchesChar is not null) return SKFontManager.Default.MatchCharacter(_matchesChar.Value);
 
         // create one from the font family.
@@ -283,7 +283,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
 
     private HashSet<IDrawable<SkiaSharpDrawingContext>>? GetGeometriesByCanvas(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {
-        return _geometriesByCanvas.TryGetValue(canvas.Sync, out var geometries)
+        return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
             ? geometries
             : null;
     }
