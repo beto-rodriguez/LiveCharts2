@@ -372,6 +372,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
             float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
             if (View.Title is not null)
             {
+                View.Title.ClippingMode = ClipMode.None;
                 var titleSize = View.Title.Measure(this);
                 m.Top = titleSize.Height;
                 ts = titleSize.Height;

@@ -196,6 +196,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         if (title is not null)
         {
+            title.ClippingMode = ClipMode.None;
             var titleSize = title.Measure(this);
             m.Top = titleSize.Height;
             ts = titleSize.Height;
