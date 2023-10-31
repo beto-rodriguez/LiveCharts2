@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public static class Extensions
 {
-    private const double Cf = 3d;
+    private const double MinLabelSize = 10; // Assume the label size is at least 10px
 
     private static readonly Type s_nullableType = typeof(Nullable<>);
 
@@ -202,11 +202,11 @@ public static class Extensions
     {
         bounds ??= axis.VisibleDataBounds;
 
-        var w = (maxLabelSize?.Width ?? 0d) * 0.60;
-        if (w < 20 * Cf) w = 20 * Cf;
+        var w = (maxLabelSize?.Width ?? 0d) * 0.90;
+        if (w < MinLabelSize) w = MinLabelSize;
 
         var h = maxLabelSize?.Height ?? 0d;
-        if (h < 12 * Cf) h = 12 * Cf;
+        if (h < MinLabelSize) h = MinLabelSize;
 
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
@@ -257,8 +257,8 @@ public static class Extensions
 
         var range = max - min;
         var separations = axis.Orientation == PolarAxisOrientation.Angle
-            ? Math.Round(c / (10 * Cf), 0)
-            : Math.Round(radius / (30 * Cf), 0);
+            ? Math.Round(c / MinLabelSize, 0)
+            : Math.Round(radius / MinLabelSize, 0);
         var minimum = range / separations;
 
         var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));
