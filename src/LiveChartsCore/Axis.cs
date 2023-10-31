@@ -789,6 +789,16 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         chart.Canvas.Invalidate();
     }
 
+    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ClearCrosshair(Chart{TDrawingContext})"/>
+    public void ClearCrosshair(Chart<TDrawingContext> chart)
+    {
+        if (_crosshairLine is not null)
+            CrosshairPaint?.RemoveGeometryFromPainTask(chart.Canvas, _crosshairLine);
+
+        if (_crosshairLabel is not null)
+            CrosshairLabelsPaint?.RemoveGeometryFromPainTask(chart.Canvas, _crosshairLabel);
+    }
+
     private IEnumerable<double> EnumerateSeparators(double start, double end, double step)
     {
         if (CustomSeparators is not null)

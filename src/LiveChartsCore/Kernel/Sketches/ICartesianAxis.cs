@@ -237,4 +237,10 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <param name="chart">The chart.</param>
     /// <param name="pointerPosition">The pointer position</param>
     void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition);
+
+    /// <summary>
+    /// Clears the crosshair visual.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    void ClearCrosshair(Chart<TDrawingContext> chart);
 }

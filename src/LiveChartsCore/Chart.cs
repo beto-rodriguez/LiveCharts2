@@ -696,6 +696,12 @@ public abstract class Chart<TDrawingContext> : IChart
         _isToolTipOpen = false;
         Tooltip?.Hide(this);
         CleanHoveredPoints(new());
+
+        if (this is CartesianChart<TDrawingContext> cartesianChart)
+        {
+            foreach (var ax in cartesianChart.XAxes) ax.ClearCrosshair(cartesianChart);
+            foreach (var ay in cartesianChart.YAxes) ay.ClearCrosshair(cartesianChart);
+        }
     }
 
     private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
