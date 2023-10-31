@@ -649,6 +649,15 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         if (CrosshairPaint is null || chart is not CartesianChart<TDrawingContext> cartesianChart) return;
 
+        var location = chart.DrawMarginLocation;
+        var size = chart.DrawMarginSize;
+
+        if (pointerPosition.X < location.X || pointerPosition.X > location.X + size.Width ||
+            pointerPosition.Y < location.Y || pointerPosition.Y > location.Y + size.Height)
+        {
+            return;
+        }
+
         var scale = this.GetNextScaler(cartesianChart);
         var controlSize = cartesianChart.ControlSize;
         var drawLocation = cartesianChart.DrawMarginLocation;
