@@ -36,7 +36,7 @@ namespace LiveChartsCore;
 /// Defines the heat land series class.
 /// </summary>
 /// <typeparam name="TDrawingContext"></typeparam>
-public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
+public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
     private IPaint<TDrawingContext>? _heatPaint;
@@ -50,9 +50,9 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
     private readonly HashSet<LandDefinition> _everUsed = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HeatLandSeries{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TDrawingContext}"/> class.
     /// </summary>
-    public HeatLandSeries()
+    public CoreHeatLandSeries()
     {
         _observer = new CollectionDeepObserver<IWeigthedMapLand>(
             (sender, e) => NotifySubscribers(),

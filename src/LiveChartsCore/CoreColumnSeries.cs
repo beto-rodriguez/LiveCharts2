@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -31,73 +30,31 @@ using LiveChartsCore.Measure;
 namespace LiveChartsCore;
 
 /// <summary>
-/// Defines a scatter series.
+/// Defines a column series.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TLabel">The type of the label.</typeparam>
+/// <typeparam name="TLabel">the type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-/// <seealso cref="IScatterSeries{TDrawingContext}" />
-public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+    where TVisual : class, ISizedGeometry<TDrawingContext>, new()
+    where TDrawingContext : DrawingContext
+    where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
-    private Bounds _weightBounds = new();
-    private IPaint<TDrawingContext>? _errorPaint;
+    private readonly bool _isRounded = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    public ScatterSeries()
-        : base(SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
+    protected CoreColumnSeries(bool isStacked = false)
+        : base(
+              SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
+              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
-        DataPadding = new LvcPoint(1, 1);
-
-        DataLabelsFormatter = (point) => $"{point.Coordinate.PrimaryValue}";
-        YToolTipLabelFormatter = point =>
-        {
-            var series = (ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>)point.Context.Series;
-            var c = point.Coordinate;
-            return series.IsWeighted
-                ? $"X = {c.SecondaryValue}{Environment.NewLine}" +
-                  $"Y = {c.PrimaryValue}{Environment.NewLine}" +
-                  $"W = {c.TertiaryValue}"
-                : $"X = {c.SecondaryValue}{Environment.NewLine}" +
-                  $"Y = {c.PrimaryValue}";
-        };
-    }
-
-    /// <summary>
-    /// Gets or sets the minimum size of the geometry.
-    /// </summary>
-    /// <value>
-    /// The minimum size of the geometry.
-    /// </value>
-    public double MinGeometrySize { get; set; } = 6d;
-
-    /// <summary>
-    /// Gets or sets the size of the geometry.
-    /// </summary>
-    /// <value>
-    /// The size of the geometry.
-    /// </value>
-    public double GeometrySize { get; set; } = 24d;
-
-    /// <summary>
-    /// Gets a value indicating whether the points in this series use weight.
-    /// </summary>
-    public bool IsWeighted { get; private set; }
-
-    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint<TDrawingContext>? ErrorPaint
-    {
-        get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, true);
+        DataPadding = new LvcPoint(0, 1);
+        _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
@@ -109,8 +66,23 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var xScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-        var yScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
+        var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
+        var previousPrimaryScale = primaryAxis.GetActualScaler(cartesianChart);
+        var previousSecondaryScale = secondaryAxis.GetActualScaler(cartesianChart);
+
+        var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
+
+        var helper = new MeasureHelper(
+            secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
+            cartesianChart.DrawMarginLocation.Y,
+            cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
+        var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
+            ? null
+            : new MeasureHelper(
+                previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
+                cartesianChart.DrawMarginLocation.Y,
+                cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         var clipping = GetClipRectangle(cartesianChart);
@@ -143,19 +115,10 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         var dls = (float)DataLabelsSize;
         var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
-        var gs = (float)GeometrySize;
-        var hgs = gs / 2f;
-        var sw = Stroke?.StrokeThickness ?? 0;
-        IsWeighted = _weightBounds.Max - _weightBounds.Min > 0;
-        var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.Max - _weightBounds.Min);
+        var rx = (float)Rx;
+        var ry = (float)Ry;
 
-        var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
-        var uwy = yScale.MeasureInPixels(secondaryAxis.UnitWidth);
-
-        uwx = uwx < gs ? gs : uwx;
-        uwy = uwy < gs ? gs : uwy;
-
-        var hy = chart.ControlSize.Height * .5f;
+        var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
         var hasSvg = this.HasSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
@@ -164,19 +127,20 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         {
             var coordinate = point.Coordinate;
 
-            var visual = (TVisual?)point.Context.Visual;
+            var visual = point.Context.Visual as TVisual;
             var e = point.Context.AdditionalVisuals as ErrorVisual<TErrorGeometry>;
 
-            var x = xScale.ToPixels(coordinate.SecondaryValue);
-            var y = yScale.ToPixels(coordinate.PrimaryValue);
+            var primary = primaryScale.ToPixels(coordinate.PrimaryValue);
+            var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
+            var b = Math.Abs(primary - helper.p);
 
             if (point.IsEmpty)
             {
                 if (visual is not null)
                 {
-                    visual.X = x - hgs;
-                    visual.Y = y - hgs;
-                    visual.Width = 0;
+                    visual.X = secondary - helper.uwm + helper.cp;
+                    visual.Y = helper.p;
+                    visual.Width = helper.uw;
                     visual.Height = 0;
                     visual.RemoveOnCompleted = true;
                     point.Context.Visual = null;
@@ -184,35 +148,52 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
                 continue;
             }
 
-            if (IsWeighted)
-            {
-                gs = (float)(wm * (_weightBounds.Max - coordinate.TertiaryValue) + GeometrySize);
-                hgs = gs / 2f;
-            }
-
             if (visual is null)
             {
+                var xi = secondary - helper.uwm + helper.cp;
+                var pi = helper.p;
+                var uwi = helper.uw;
+                var hi = 0f;
+
+                if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
+                {
+                    var previousPrimary = previousPrimaryScale.ToPixels(coordinate.PrimaryValue);
+                    var bp = Math.Abs(previousPrimary - pHelper.p);
+                    var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
+
+                    xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - pHelper.uwm + pHelper.cp;
+                    pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
+                    uwi = pHelper.uw;
+                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
+                }
+
                 var r = new TVisual
                 {
-                    X = x,
-                    Y = y,
-                    Width = 0,
-                    Height = 0
+                    X = xi,
+                    Y = pi,
+                    Width = uwi,
+                    Height = hi
                 };
+
+                if (_isRounded)
+                {
+                    var rounded = (IRoundedGeometry<TDrawingContext>)r;
+                    rounded.BorderRadius = new LvcPoint(rx, ry);
+                }
 
                 if (ErrorPaint is not null)
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
-                    e.YError.X = x;
-                    e.YError.X1 = x;
-                    e.YError.Y = y;
-                    e.YError.Y1 = y;
+                    e.YError.X = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+                    e.YError.X1 = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+                    e.YError.Y = pi;
+                    e.YError.Y1 = pi;
 
-                    e.XError.X = x;
-                    e.XError.X1 = x;
-                    e.XError.Y = y;
-                    e.XError.Y1 = y;
+                    e.XError.X = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+                    e.XError.X1 = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+                    e.XError.Y = pi;
+                    e.XError.Y1 = pi;
 
                     point.Context.AdditionalVisuals = e;
                 }
@@ -236,49 +217,86 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
             ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
             ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
 
-            var sizedGeometry = visual;
+            var cy = primaryAxis.IsInverted
+                ? (coordinate.PrimaryValue > pivot ? primary - b : primary)
+                : (coordinate.PrimaryValue > pivot ? primary : primary - b);
+            var x = secondary - helper.uwm + helper.cp;
 
-            sizedGeometry.X = x - hgs;
-            sizedGeometry.Y = y - hgs;
-            sizedGeometry.Width = gs;
-            sizedGeometry.Height = gs;
+            if (stacker is not null)
+            {
+                var sy = stacker.GetStack(point);
+
+                float primaryI, primaryJ;
+                if (coordinate.PrimaryValue >= 0)
+                {
+                    primaryI = primaryScale.ToPixels(sy.Start);
+                    primaryJ = primaryScale.ToPixels(sy.End);
+                }
+                else
+                {
+                    primaryI = primaryScale.ToPixels(sy.NegativeStart);
+                    primaryJ = primaryScale.ToPixels(sy.NegativeEnd);
+                }
+
+                cy = primaryJ;
+                b = primaryI - primaryJ;
+            }
+
+            visual.X = x;
+            visual.Y = cy;
+            visual.Width = helper.uw;
+            visual.Height = b;
 
             if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
             {
                 var pe = coordinate.PointError;
+                var xe = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
 
-                e!.YError!.X = x;
-                e.YError.X1 = x;
-                e.YError.Y = y + yScale.MeasureInPixels(pe.Yi);
-                e.YError.Y1 = y - yScale.MeasureInPixels(pe.Yj);
+                e!.YError!.X = xe;
+                e.YError.X1 = xe;
+                e.YError.Y = primary + primaryScale.MeasureInPixels(pe.Yi);
+                e.YError.Y1 = primary - primaryScale.MeasureInPixels(pe.Yj);
                 e.YError.RemoveOnCompleted = false;
 
-                e.XError!.X = x - xScale.MeasureInPixels(pe.Xi);
-                e.XError.X1 = x + xScale.MeasureInPixels(pe.Xj);
-                e.XError.Y = y;
-                e.XError.Y1 = y;
+                e.XError!.X = xe - secondaryScale.MeasureInPixels(pe.Xi);
+                e.XError.X1 = xe + secondaryScale.MeasureInPixels(pe.Xj);
+                e.XError.Y = primary;
+                e.XError.Y1 = primary;
                 e.XError.RemoveOnCompleted = false;
             }
 
-            sizedGeometry.RemoveOnCompleted = false;
+            if (_isRounded)
+            {
+                var rounded = (IRoundedGeometry<TDrawingContext>)visual;
+                rounded.BorderRadius = new LvcPoint(rx, ry);
+            }
+            visual.RemoveOnCompleted = false;
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy).CenterXToolTip().CenterYToolTip();
+
+            _ = ha
+                .SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b)
+                .CenterXToolTip();
+
+            _ = coordinate.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
 
             pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
             {
-                if (point.Context.Label is not TLabel label)
+                var label = (TLabel?)point.Context.Label;
+
+                if (label is null)
                 {
-                    var l = new TLabel { X = x - hgs, Y = y - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
+                    var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = helper.p, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
                     l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
 
                 DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
+
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
@@ -289,10 +307,11 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
 
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
-                    x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
-                    SeriesProperties, coordinate.PrimaryValue > 0, drawLocation, drawMarginSize);
+                    x, cy, helper.uw, b, m,
+                    DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
+
                 label.X = labelPosition.X;
                 label.Y = labelPosition.Y;
             }
@@ -300,61 +319,22 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
             OnPointMeasured(point);
         }
 
-        pointsCleanup.CollectPoints(everFetched, cartesianChart.View, yScale, xScale, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(
+            everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
+    protected override double GetRequestedSecondaryOffset()
     {
-        var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-        _weightBounds = seriesBounds.Bounds.TertiaryBounds;
-        return seriesBounds;
+        return 0.5f;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
-
-        if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
-        if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
-
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 0.8f;
-        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1.1f, 1.1f);
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 1;
-        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1f, 1f);
-
-        base.OnPointerLeft(point);
-    }
-
-    /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
-        var visual = (TVisual?)chartPoint.Context.Visual;
         var chart = chartPoint.Context.Chart;
-
-        if (visual is null) throw new Exception("Unable to initialize the point instance.");
+        if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
         var easing = EasingFunction ?? chart.EasingFunction;
         var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
@@ -369,7 +349,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         }
     }
 
-    /// <inheritdoc cref="SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -385,27 +365,24 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
             return;
         }
 
-        var c = point.Coordinate;
+        var p = primaryScale.ToPixels(pivot);
+        var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
-        var x = secondaryScale.ToPixels(c.SecondaryValue);
-        var y = primaryScale.ToPixels(c.PrimaryValue);
-
-        visual.X = x;
-        visual.Y = y;
+        visual.X = secondary - visual.Width * 0.5f;
+        visual.Y = p;
         visual.Height = 0;
-        visual.Width = 0;
         visual.RemoveOnCompleted = true;
 
         if (point.Context.AdditionalVisuals is not null)
         {
             var e = (ErrorVisual<TErrorGeometry>)point.Context.AdditionalVisuals;
 
-            e.YError.Y = y;
-            e.YError.Y1 = y;
+            e.YError.Y = p;
+            e.YError.Y1 = p;
             e.YError.RemoveOnCompleted = true;
 
-            e.XError.X = x;
-            e.XError.X1 = x;
+            e.XError.X = secondary - visual.Width * 0.5f;
+            e.XError.X1 = secondary - visual.Width * 0.5f;
             e.XError.RemoveOnCompleted = true;
         }
 

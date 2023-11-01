@@ -25,8 +25,8 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView;
 
-/// <inheritdoc cref="HeatLandSeries{TDrawingContext}"/>
-public class HeatLandSeries : HeatLandSeries<SkiaSharpDrawingContext>
+/// <inheritdoc cref="CoreHeatLandSeries{TDrawingContext}"/>
+public class HeatLandSeries : CoreHeatLandSeries<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.

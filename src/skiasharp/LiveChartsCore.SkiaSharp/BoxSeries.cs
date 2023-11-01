@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// or at the series level 
 /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
 /// </typeparam>
-public class BoxSeries<TModel> : BoxSeries<TModel, BoxGeometry, LabelGeometry, CircleGeometry, SkiaSharpDrawingContext>
+public class BoxSeries<TModel> : CoreBoxSeries<TModel, BoxGeometry, LabelGeometry, CircleGeometry, SkiaSharpDrawingContext>
 { }
 
 /// <summary>
@@ -53,7 +53,7 @@ public class BoxSeries<TModel> : BoxSeries<TModel, BoxGeometry, LabelGeometry, C
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
-public class BoxSeries<TModel, TVisual> : BoxSeries<TModel, TVisual, LabelGeometry, CircleGeometry, SkiaSharpDrawingContext>
+public class BoxSeries<TModel, TVisual> : CoreBoxSeries<TModel, TVisual, LabelGeometry, CircleGeometry, SkiaSharpDrawingContext>
     where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
 { }
 
@@ -73,7 +73,7 @@ public class BoxSeries<TModel, TVisual> : BoxSeries<TModel, TVisual, LabelGeomet
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class BoxSeries<TModel, TVisual, TLabel> : BoxSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
+public class BoxSeries<TModel, TVisual, TLabel> : CoreBoxSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
     where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

@@ -73,7 +73,7 @@ public class HeatSeries<TModel, TVisual> : HeatSeries<TModel, TVisual, LabelGeom
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class HeatSeries<TModel, TVisual, TLabel> : HeatSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
+public class HeatSeries<TModel, TVisual, TLabel> : CoreHeatSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
     where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, IColoredGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {

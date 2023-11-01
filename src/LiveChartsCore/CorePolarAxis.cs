@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
 /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry>
+public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry>
     : ChartElement<TDrawingContext>, IPolarAxis, IPlane<TDrawingContext>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()

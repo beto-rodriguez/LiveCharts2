@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
+public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     : ChartElement<TDrawingContext>, ICartesianAxis<TDrawingContext>, IPlane<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
@@ -1424,15 +1424,15 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         switch (mode)
         {
-            case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndComplete:
+            case CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndComplete:
                 if (_animatableBounds.HasPreviousState) geometry.Opacity = 0;
                 geometry.CompleteTransition(null);
                 break;
-            case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndRemove:
+            case CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndRemove:
                 geometry.Opacity = 0;
                 geometry.RemoveOnCompleted = true;
                 break;
-            case Axis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.Update:
+            case CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.Update:
             default:
                 geometry.Opacity = 1;
                 break;

@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="ICartesianSeries{TDrawingContext}" />
 /// <seealso cref="IHeatSeries{TDrawingContext}" />
-public abstract class BoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
+public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBoxSeries<TDrawingContext>
         where TVisual : class, IBoxGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -52,9 +52,9 @@ public abstract class BoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     private double _maxBarWidth = 25;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreBoxSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected BoxSeries()
+    protected CoreBoxSeries()
         : base(
              SeriesProperties.BoxSeries | SeriesProperties.PrimaryAxisVerticalOrientation |
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)

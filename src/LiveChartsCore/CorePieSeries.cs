@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
+public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
@@ -67,9 +67,9 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDr
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected PieSeries(bool isGauge = false, bool isGaugeFill = false)
+    protected CorePieSeries(bool isGauge = false, bool isGaugeFill = false)
         : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
               (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
     { }

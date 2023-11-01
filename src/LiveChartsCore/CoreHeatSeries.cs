@@ -37,7 +37,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
+public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
         where TVisual : class, ISizedGeometry<TDrawingContext>, IColoredGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -56,9 +56,9 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     private Padding _pointPadding = new(4);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreHeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
-    protected HeatSeries()
+    protected CoreHeatSeries()
         : base(
              SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
              SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)

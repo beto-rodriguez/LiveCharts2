@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
+public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
@@ -60,11 +60,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry}"/>
+    /// <see cref="CoreLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry}"/>
     /// class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
-    public LineSeries(bool isStacked = false)
+    public CoreLineSeries(bool isStacked = false)
         : base(
               SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
               (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)

@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
@@ -56,10 +56,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     private bool _enableNullSplitting = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CoreStepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
-    public StepLineSeries(bool isStacked = false)
+    public CoreStepLineSeries(bool isStacked = false)
         : base(
               SeriesProperties.StepLine | SeriesProperties.PrimaryAxisVerticalOrientation |
               (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)

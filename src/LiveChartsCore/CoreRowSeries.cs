@@ -30,30 +30,31 @@ using LiveChartsCore.Measure;
 namespace LiveChartsCore;
 
 /// <summary>
-/// Defines a column series.
+/// Defines the row series 
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TLabel">the type of the label.</typeparam>
+/// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-    where TDrawingContext : DrawingContext
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+    where TDrawingContext : DrawingContext
 {
     private readonly bool _isRounded = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CoreRowSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    protected ColumnSeries(bool isStacked = false)
+    public CoreRowSeries(bool isStacked = false)
         : base(
-              SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
-              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
+              SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
+              SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
     {
-        DataPadding = new LvcPoint(0, 1);
+        DataPadding = new LvcPoint(1, 0);
         _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
@@ -66,27 +67,27 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
-        var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
-        var previousPrimaryScale = primaryAxis.GetActualScaler(cartesianChart);
-        var previousSecondaryScale = secondaryAxis.GetActualScaler(cartesianChart);
+        var secondaryScale = primaryAxis.GetNextScaler(cartesianChart);
+        var primaryScale = secondaryAxis.GetNextScaler(cartesianChart);
+        var previousPrimaryScale = secondaryAxis.GetActualScaler(cartesianChart);
+        var previousSecondaryScale = primaryAxis.GetActualScaler(cartesianChart);
 
         var isStacked = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked;
+        var clipping = GetClipRectangle(cartesianChart);
 
         var helper = new MeasureHelper(
             secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
-            cartesianChart.DrawMarginLocation.Y,
-            cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
+            cartesianChart.DrawMarginLocation.X,
+            cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked, true);
+
         var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
             ? null
             : new MeasureHelper(
                 previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
-                cartesianChart.DrawMarginLocation.Y,
-                cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
+                cartesianChart.DrawMarginLocation.X,
+                cartesianChart.DrawMarginLocation.X + cartesianChart.DrawMarginSize.Width, isStacked, true);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
-
         if (Fill is not null)
         {
             Fill.ZIndex = actualZIndex + 0.1;
@@ -150,7 +151,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
 
             if (visual is null)
             {
-                var xi = secondary - helper.uwm + helper.cp;
+                var yi = secondary - helper.uwm + helper.cp;
                 var pi = helper.p;
                 var uwi = helper.uw;
                 var hi = 0f;
@@ -161,7 +162,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
                     var bp = Math.Abs(previousPrimary - pHelper.p);
                     var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
-                    xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - pHelper.uwm + pHelper.cp;
+                    yi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - pHelper.uwm + pHelper.cp;
                     pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
                     uwi = pHelper.uw;
                     hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
@@ -169,10 +170,10 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
 
                 var r = new TVisual
                 {
-                    X = xi,
-                    Y = pi,
-                    Width = uwi,
-                    Height = hi
+                    X = pi,
+                    Y = yi,
+                    Width = hi,
+                    Height = uwi
                 };
 
                 if (_isRounded)
@@ -185,15 +186,15 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
-                    e.YError.X = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
-                    e.YError.X1 = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
-                    e.YError.Y = pi;
-                    e.YError.Y1 = pi;
+                    e.YError.X = pi;
+                    e.YError.X1 = pi;
+                    e.YError.Y = yi;
+                    e.YError.Y1 = yi;
 
-                    e.XError.X = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
-                    e.XError.X1 = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
-                    e.XError.Y = pi;
-                    e.XError.Y1 = pi;
+                    e.XError.X = pi;
+                    e.XError.X1 = pi;
+                    e.XError.Y = yi;
+                    e.XError.Y1 = yi;
 
                     point.Context.AdditionalVisuals = e;
                 }
@@ -217,51 +218,56 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
             ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
             ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
 
-            var cy = primaryAxis.IsInverted
-                ? (coordinate.PrimaryValue > pivot ? primary - b : primary)
-                : (coordinate.PrimaryValue > pivot ? primary : primary - b);
-            var x = secondary - helper.uwm + helper.cp;
+            var cx = secondaryAxis.IsInverted
+                ? (coordinate.PrimaryValue > pivot ? primary : primary - b)
+                : (coordinate.PrimaryValue > pivot ? primary - b : primary);
+            var y = secondary - helper.uwm + helper.cp;
 
             if (stacker is not null)
             {
-                var sy = stacker.GetStack(point);
+                var sx = stacker.GetStack(point);
 
                 float primaryI, primaryJ;
                 if (coordinate.PrimaryValue >= 0)
                 {
-                    primaryI = primaryScale.ToPixels(sy.Start);
-                    primaryJ = primaryScale.ToPixels(sy.End);
+                    primaryI = primaryScale.ToPixels(sx.Start);
+                    primaryJ = primaryScale.ToPixels(sx.End);
                 }
                 else
                 {
-                    primaryI = primaryScale.ToPixels(sy.NegativeStart);
-                    primaryJ = primaryScale.ToPixels(sy.NegativeEnd);
+                    primaryI = primaryScale.ToPixels(sx.NegativeStart);
+                    primaryJ = primaryScale.ToPixels(sx.NegativeEnd);
                 }
 
-                cy = primaryJ;
+                cx = primaryJ;
                 b = primaryI - primaryJ;
             }
 
-            visual.X = x;
-            visual.Y = cy;
-            visual.Width = helper.uw;
-            visual.Height = b;
+            visual.X = cx;
+            visual.Y = y;
+            visual.Width = b;
+            visual.Height = helper.uw;
 
             if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
             {
                 var pe = coordinate.PointError;
-                var xe = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
+                var ye = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
 
-                e!.YError!.X = xe;
-                e.YError.X1 = xe;
-                e.YError.Y = primary + primaryScale.MeasureInPixels(pe.Yi);
-                e.YError.Y1 = primary - primaryScale.MeasureInPixels(pe.Yj);
+                // Note #20231608
+                // Because coordinates are inverted in the row series
+                // we use the XError as the YError and vice versa
+                // strange.. this should be improved.
+
+                e!.YError!.X = primary + primaryScale.MeasureInPixels(pe.Yi);
+                e.YError.X1 = primary - primaryScale.MeasureInPixels(pe.Yi);
+                e.YError.Y = ye;
+                e.YError.Y1 = ye;
                 e.YError.RemoveOnCompleted = false;
 
-                e.XError!.X = xe - secondaryScale.MeasureInPixels(pe.Xi);
-                e.XError.X1 = xe + secondaryScale.MeasureInPixels(pe.Xj);
-                e.XError.Y = primary;
-                e.XError.Y1 = primary;
+                e.XError!.X = primary;
+                e.XError.X1 = primary;
+                e.XError.Y = ye - secondaryScale.MeasureInPixels(pe.Xi);
+                e.XError.Y1 = ye + secondaryScale.MeasureInPixels(pe.Xj);
                 e.XError.RemoveOnCompleted = false;
             }
 
@@ -275,11 +281,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
 
-            _ = ha
-                .SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b)
-                .CenterXToolTip();
-
-            _ = coordinate.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
+            _ = ha.SetDimensions(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw)
+                .CenterXToolTip().StartYToolTip();
 
             pointsCleanup.Clean(point);
 
@@ -289,7 +292,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
 
                 if (label is null)
                 {
-                    var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = helper.p, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
+                    var l = new TLabel { X = helper.p, Y = secondary - helper.uwm + helper.cp, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
                     l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
@@ -307,7 +310,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
 
                 var m = label.Measure(DataLabelsPaint);
                 var labelPosition = GetLabelPosition(
-                    x, cy, helper.uw, b, m,
+                    cx, y, b, helper.uw, label.Measure(DataLabelsPaint),
                     DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
@@ -368,21 +371,21 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
         var p = primaryScale.ToPixels(pivot);
         var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 
-        visual.X = secondary - visual.Width * 0.5f;
-        visual.Y = p;
-        visual.Height = 0;
+        visual.X = p;
+        visual.Y = secondary - visual.Height * 0.5f;
+        visual.Width = 0;
         visual.RemoveOnCompleted = true;
 
         if (point.Context.AdditionalVisuals is not null)
         {
             var e = (ErrorVisual<TErrorGeometry>)point.Context.AdditionalVisuals;
 
-            e.YError.Y = p;
-            e.YError.Y1 = p;
+            e.YError.Y = secondary - visual.Height * 0.5f;
+            e.YError.Y1 = secondary - visual.Height * 0.5f;
             e.YError.RemoveOnCompleted = true;
 
-            e.XError.X = secondary - visual.Width * 0.5f;
-            e.XError.X1 = secondary - visual.Width * 0.5f;
+            e.XError.X = p;
+            e.XError.X1 = p;
             e.XError.RemoveOnCompleted = true;
         }
 
@@ -393,5 +396,68 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TEr
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
+    }
+
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
+    public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    {
+        var rawBounds = DataFactory.GetCartesianBounds(chart, this, primaryAxis, secondaryAxis);
+        if (rawBounds.HasData) return rawBounds;
+
+        var rawBaseBounds = rawBounds.Bounds;
+
+        var tickPrimary = primaryAxis.GetTick(chart.ControlSize, rawBaseBounds.VisibleSecondaryBounds);
+        var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, rawBaseBounds.VisiblePrimaryBounds);
+
+        var ts = tickSecondary.Value * DataPadding.X;
+        var tp = tickPrimary.Value * DataPadding.Y;
+
+        // using different methods for both primary and secondary axis seems to be the best solution
+        // if this the following 2 lines needs to be changed again, please ensure that the following test passes:
+        // https://github.com/beto-rodriguez/LiveCharts2/issues/522
+        // https://github.com/beto-rodriguez/LiveCharts2/issues/642
+
+        if (rawBaseBounds.VisibleSecondaryBounds.Delta == 0) tp = secondaryAxis.UnitWidth * DataPadding.X;
+        if (rawBaseBounds.VisiblePrimaryBounds.Delta == 0) ts = rawBaseBounds.VisiblePrimaryBounds.Max * 0.25f;
+
+        var rgs = GetRequestedGeometrySize();
+        var rso = GetRequestedSecondaryOffset();
+        var rpo = GetRequestedPrimaryOffset();
+
+        var dimensionalBounds = new DimensionalBounds
+        {
+            SecondaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.PrimaryBounds.Max + rpo * secondaryAxis.UnitWidth,
+                Min = rawBaseBounds.PrimaryBounds.Min - rpo * secondaryAxis.UnitWidth,
+                MinDelta = rawBaseBounds.PrimaryBounds.MinDelta,
+                PaddingMax = ts,
+                PaddingMin = ts,
+                RequestedGeometrySize = rgs
+            },
+            PrimaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.SecondaryBounds.Max + rso * primaryAxis.UnitWidth,
+                Min = rawBaseBounds.SecondaryBounds.Min - rso * primaryAxis.UnitWidth,
+                MinDelta = rawBaseBounds.SecondaryBounds.MinDelta,
+                PaddingMax = tp,
+                PaddingMin = tp,
+                RequestedGeometrySize = rgs
+            },
+            VisibleSecondaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.VisiblePrimaryBounds.Max + rpo * secondaryAxis.UnitWidth,
+                Min = rawBaseBounds.VisiblePrimaryBounds.Min - rpo * secondaryAxis.UnitWidth
+            },
+            VisiblePrimaryBounds = new Bounds
+            {
+                Max = rawBaseBounds.VisibleSecondaryBounds.Max + rso * primaryAxis.UnitWidth,
+                Min = rawBaseBounds.VisibleSecondaryBounds.Min - rso * primaryAxis.UnitWidth,
+            },
+            TertiaryBounds = rawBaseBounds.TertiaryBounds,
+            VisibleTertiaryBounds = rawBaseBounds.VisibleTertiaryBounds
+        };
+
+        return new SeriesBounds(dimensionalBounds, false);
     }
 }

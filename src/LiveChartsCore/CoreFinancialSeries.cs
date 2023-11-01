@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="ICartesianSeries{TDrawingContext}" />
 /// <seealso cref="IHeatSeries{TDrawingContext}" />
-public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
+public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
         where TVisual : class, IFinancialGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -56,9 +56,9 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometr
     private double _maxBarWidth = 25;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected FinancialSeries()
+    protected CoreFinancialSeries()
         : base(
              SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)

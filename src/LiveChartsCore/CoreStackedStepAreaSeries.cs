@@ -33,18 +33,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <seealso cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}" />
-public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
-    : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+/// <seealso cref="CoreStepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}" />
+public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+    : CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
+    /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
     /// </summary>
-    public StackedStepAreaSeries()
+    public CoreStackedStepAreaSeries()
         : base(true)
     {
         GeometryFill = null;

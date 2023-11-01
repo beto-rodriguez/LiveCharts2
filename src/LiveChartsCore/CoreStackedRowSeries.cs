@@ -21,36 +21,43 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Segments;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore;
 
 /// <summary>
-/// Defines the stacked area series class.
+/// Defines a stacked row series.
 /// </summary>
-/// <typeparam name="TModel">The type of the model to plot.</typeparam>
-/// <typeparam name="TVisual">The type of the visual point.</typeparam>
-/// <typeparam name="TLabel">The type of the data label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
+/// <typeparam name="TModel">The type of the model.</typeparam>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <seealso cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry}" />
-public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
-    : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
-        where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class CoreStackedRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
+    : CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>, IStackedBarSeries<TDrawingContext>
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
+    private int _stackGroup = 0;
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TBezierVisual}"/> class.
+    /// Initializes a new instance of the <see cref="CoreStackedRowSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    public StackedAreaSeries()
-        : base(true)
+    public CoreStackedRowSeries() : base(true)
+    { }
+
+    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
+    public int StackGroup { get => _stackGroup; set { _stackGroup = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets the stack group.
+    /// </summary>
+    /// <returns></returns>
+    /// <inheritdoc />
+    public override int GetStackGroup()
     {
-        GeometryFill = null;
-        GeometryStroke = null;
-        GeometrySize = 0;
+        return _stackGroup;
     }
 }

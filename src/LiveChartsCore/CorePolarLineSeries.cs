@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
@@ -64,10 +64,10 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _radiusTooltipLabelFormatter;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CorePolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
-    public PolarLineSeries(bool isStacked = false)
+    public CorePolarLineSeries(bool isStacked = false)
         : base(
               SeriesProperties.Polar | SeriesProperties.PolarLine |
               (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
