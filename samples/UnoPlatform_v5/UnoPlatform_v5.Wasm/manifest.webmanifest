@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "UnoPlatform_v5",
+  "display": "standalone",
+  "name": "UnoPlatform_v5",
+  "short_name": "UnoPlatform_v5",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}
