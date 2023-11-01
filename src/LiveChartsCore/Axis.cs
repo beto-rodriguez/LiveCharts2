@@ -1457,7 +1457,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private void ThrowInfiniteSeparators()
     {
         throw new Exception(
-            $"The {_orientation} axis has an excesive number of separators. " +
+            $"The {_orientation} axis has an excessive number of separators. " +
             $"If you set the step manually, ensure the number of separators is less than 10,000. " +
             $"This could also be caused because you are zooming too deep, " +
             $"try to set a limit to the current chart zoom using the Axis.{nameof(MinZoomDelta)} property. " +
