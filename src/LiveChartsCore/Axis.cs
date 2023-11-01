@@ -64,6 +64,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private double _minStep = 0;
     private double _labelsRotation;
     private LvcRectangle _labelsDesiredSize = new(), _nameDesiredSize = new();
+    private LvcSize? _possibleMaxLabelsSize = new();
     private TTextGeometry? _nameGeometry;
     private AxisPosition _position = AxisPosition.Start;
     private Func<double, string> _labeler = Labelers.Default;
@@ -112,6 +113,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     float ICartesianAxis.Yo { get => _yo; set => _yo = value; }
     LvcSize ICartesianAxis.Size { get => _size; set => _size = value; }
     LvcRectangle ICartesianAxis.LabelsDesiredSize { get => _labelsDesiredSize; set => _labelsDesiredSize = value; }
+    LvcSize ICartesianAxis.PossibleMaxLabelSize => _possibleMaxLabelsSize ?? (_possibleMaxLabelsSize = GetPossibleMaxLabelSize()).Value;
     LvcRectangle ICartesianAxis.NameDesiredSize { get => _nameDesiredSize; set => _nameDesiredSize = value; }
 
     /// <inheritdoc cref="IPlane.DataBounds"/>
@@ -487,7 +489,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (!_separatorsAtCenter && _orientation == AxisOrientation.X) sxco = uw * 0.5f;
         if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) sxco = uw * 0.5f;
 
-        var axisTick = this.GetTick(drawMarginSize, null, GetPossibleMaxLabelSize(chart));
+        var axisTick = this.GetTick(drawMarginSize, null);
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
@@ -945,6 +947,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
         _animatableBounds ??= new();
+        _possibleMaxLabelsSize = null;
         Initialized?.Invoke(this);
     }
 
@@ -1007,20 +1010,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         return labeler;
     }
 
-    private LvcSize GetPossibleMaxLabelSize(Chart<TDrawingContext> chart)
+    private LvcSize GetPossibleMaxLabelSize()
     {
         if (LabelsPaint is null) return new LvcSize();
 
         var labeler = GetActualLabeler();
-
-        var axisTick = this.GetTick(chart.DrawMarginSize);
-        var s = axisTick.Value;
 
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
         AxisLimit.ValidateLimits(ref min, ref max);
 
+        const double testSeparators = 25;
+        var s = (max - min) / testSeparators;
         if (s == 0) s = 1;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;

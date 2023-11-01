@@ -95,6 +95,11 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     LvcRectangle LabelsDesiredSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the max label size, this value is used internally to measure the axis.
+    /// </summary>
+    LvcSize PossibleMaxLabelSize { get; }
+
+    /// <summary>
     /// Gets or sets the reserved area for the name.
     /// </summary>
     LvcRectangle NameDesiredSize { get; set; }

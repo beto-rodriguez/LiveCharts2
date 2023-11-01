@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public static class Extensions
 {
-    private const double MinLabelSize = 10; // Assume the label size is at least 10px
+    private const float MinLabelSize = 10; // Assume the label size is at least 10px
 
     private static readonly Type s_nullableType = typeof(Nullable<>);
 
@@ -196,16 +196,16 @@ public static class Extensions
     /// <param name="axis">The axis.</param>
     /// <param name="controlSize">Size of the control.</param>
     /// <param name="bounds">The bounds.</param>
-    /// <param name="maxLabelSize">The max label size.</param>
     /// <returns></returns>
-    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null, LvcSize? maxLabelSize = null)
+    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null)
     {
         bounds ??= axis.VisibleDataBounds;
+        var maxLabelSize = axis.PossibleMaxLabelSize;
 
-        var w = (maxLabelSize?.Width ?? 0d) * 0.90;
+        var w = maxLabelSize.Width * 0.90;
         if (w < MinLabelSize) w = MinLabelSize;
 
-        var h = maxLabelSize?.Height ?? 0d;
+        var h = maxLabelSize.Height * 2.0;
         if (h < MinLabelSize) h = MinLabelSize;
 
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
@@ -257,8 +257,8 @@ public static class Extensions
 
         var range = max - min;
         var separations = axis.Orientation == PolarAxisOrientation.Angle
-            ? Math.Round(c / MinLabelSize, 0)
-            : Math.Round(radius / MinLabelSize, 0);
+            ? Math.Round(c / 30, 0)
+            : Math.Round(radius / 90, 0);
         var minimum = range / separations;
 
         var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));
