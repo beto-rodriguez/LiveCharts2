@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.MergedDictionaries>
+    <!-- Load WinUI resources -->
+    <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+    <MaterialToolkitTheme xmlns="using:Uno.Toolkit.UI.Material"
+      ColorOverrideSource="ms-appx:///UnoPlatform_v5/Styles/ColorPaletteOverride.xaml"
+      FontOverrideSource="ms-appx:///UnoPlatform_v5/Styles/MaterialFontsOverride.xaml" />
+
+  </ResourceDictionary.MergedDictionaries>
+  <!-- Add resources here -->
+
+</ResourceDictionary>

@@ -1,0 +1,77 @@
+﻿<Project>
+
+  <!--
+    If working on a single target framework, copy solution-config.props.sample to solution-config.props
+    and uncomment the appropriate lines in solution-config.props to build for the desired platforms only.
+
+    https://platform.uno/docs/articles/guides/solution-building-single-targetframework.html
+  -->
+  <Import Project="solution-config.props" Condition="exists('solution-config.props')" />
+
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <DebugType>portable</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+    <!--
+      Adding NoWarn to remove build warnings
+      NU1507: Warning when there are multiple package sources when using CPM with no source mapping
+      NETSDK1201: Warning that specifying RID won't create self containing app
+      PRI257: Ignore default language (en) not being one of the included resources (eg en-us, en-uk)
+    -->
+    <NoWarn>$(NoWarn);NU1507;NETSDK1201;PRI257</NoWarn>
+
+    <DefaultLanguage>en</DefaultLanguage>
+
+    <IsAndroid>false</IsAndroid>
+    <IsIOS>false</IsIOS>
+    <IsMac>false</IsMac>
+    <IsMacCatalyst>false</IsMacCatalyst>
+    <IsWinAppSdk>false</IsWinAppSdk>
+
+    <!-- Required for Hot Reload (See https://github.com/unoplatform/uno.templates/issues/376) -->
+    <GenerateAssemblyInfo Condition="'$(Configuration)'=='Debug'">false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+      <PropertyGroup>
+        <IsAndroid>true</IsAndroid>
+        <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+      <PropertyGroup>
+        <IsIOS>true</IsIOS>
+        <SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+      <PropertyGroup>
+        <IsMac>true</IsMac>
+        <SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+      <PropertyGroup>
+        <IsMacCatalyst>true</IsMacCatalyst>
+        <SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFramework.Contains('windows10'))">
+      <PropertyGroup>
+        <IsWinAppSdk>true</IsWinAppSdk>
+        <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+        <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+        <EnableCoreMrtTooling Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+</Project>

@@ -1,0 +1,6 @@
+﻿<Project>
+  <ItemGroup>
+    <!-- Removes native usings to avoid Ambiguous reference -->
+    <Using Remove="@(Using->HasMetadata('Platform'))" />
+  </ItemGroup>
+</Project>

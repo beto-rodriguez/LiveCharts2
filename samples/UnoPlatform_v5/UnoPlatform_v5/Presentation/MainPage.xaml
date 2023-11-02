@@ -1,0 +1,58 @@
+﻿<Page x:Class="UnoPlatform_v5.Presentation.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:UnoPlatform_v5.Presentation"
+      xmlns:uen="using:Uno.Extensions.Navigation.UI"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:um="using:Uno.Material"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+
+  <Grid x:Name="grid" Background="#fafafa">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="0"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <Button Grid.Row="0" Grid.ColumnSpan="2" Click="Button_Click" Content="Show menu"></Button>
+
+    <ScrollViewer Grid.Row="1"  Grid.Column="0" VerticalScrollBarVisibility="Auto" Padding="10">
+      <ItemsControl ItemsSource="{Binding Samples}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Vertical"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border Padding="0 8">
+              <Button Click="Button_Click_1">
+                <TextBlock Text="{Binding}" Foreground="#303030" FontSize="15" FontFamily="Trebuchet MS" FontWeight="Normal"></TextBlock>
+              </Button>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+
+    <Border Name="contentBorder" Grid.Row="1" Grid.Column="1" Background="White">
+      <ContentControl x:Name="content"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Stretch">
+
+        <ContentControl.Resources>
+          <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="Black"></Setter>
+          </Style>
+        </ContentControl.Resources>
+
+      </ContentControl>
+    </Border>
+  </Grid>
+  
+</Page>
