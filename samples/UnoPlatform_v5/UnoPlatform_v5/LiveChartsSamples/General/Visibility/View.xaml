@@ -1,0 +1,27 @@
+﻿<UserControl
+    x:Class="UnoWinUISample.General.Visibility.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.General.Visibility"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Command="{Binding ToggleSeries0Command}" Margin="8 0">Toggle first</Button>
+            <Button Command="{Binding ToggleSeries1Command}" Margin="8 0">Toggle second</Button>
+            <Button Command="{Binding ToggleSeries2Command}" Margin="8 0">Toggle third</Button>
+        </StackPanel>
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" />
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="UnoWinUISample.General.Scrollable.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.General.Scrollable"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            Series="{Binding Series}"
+            XAxes="{Binding ScrollableAxes}"
+            ZoomMode="X"
+            DrawMargin="{Binding Margin}"
+            UpdateStartedCommand="{Binding ChartUpdatedCommand}">
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            x:Name="ScrollBarChart"
+            Grid.Row="1"
+            Series="{Binding ScrollbarSeries}"
+            DrawMargin="{Binding Margin}"
+            Sections="{Binding Thumbs}"
+            XAxes="{Binding InvisibleX}"
+            YAxes="{Binding InvisibleY}"
+            PointerPressedCommand="{Binding PointerDownCommand}"
+            PointerMoveCommand="{Binding PointerMoveCommand}"
+            PointerReleasedCommand="{Binding PointerUpCommand}"
+            TooltipPosition="Hidden">
+        </lvc:CartesianChart>
+    </Grid>
+
+</UserControl>
