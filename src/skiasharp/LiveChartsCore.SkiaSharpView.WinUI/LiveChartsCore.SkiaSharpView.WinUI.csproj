@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
 
