@@ -27,6 +27,7 @@
   <files>
     <file src="images\icon.png" target="\" />
 
+
     <file
       src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.dll"
       target="lib\net6.0-windows10.0.19041"/>
@@ -48,6 +49,29 @@
     <file
       src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes\*.*"
       target="lib\net6.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes"/>
+
+
+    <file
+     src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.dll"
+     target="lib\net7.0-windows10.0.19041"/>
+    <file
+      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.pdb"
+      target="lib\net7.0-windows10.0.19041"/>
+    <file
+      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.xml"
+      target="lib\net7.0-windows10.0.19041"/>
+    <file
+      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.pri"
+      target="lib\net7.0-windows10.0.19041"/>
+    <file
+      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\*.*"
+      target="lib\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI"/>
+    <file
+      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\images\*.*"
+      target="lib\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\images"/>
+    <file
+      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes\*.*"
+      target="lib\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes"/>
 
   </files>
 </package>
