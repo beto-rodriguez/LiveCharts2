@@ -21,9 +21,21 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.6" />
-    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.6" />
     <PackageReference Include="Uno.WinUI" Version="5.0.19" />
+    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+
+    <!-- if uno then add reference to uno dependencies -->
+    <ProjectReference
+      Condition="!$(TargetFramework.Contains('-windows'))"
+      Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
+    <PackageReference
+      Condition="!$(TargetFramework.Contains('-windows'))"
+      Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.6" />
+
+    <!-- in windows then use the winui package -->
+    <PackageReference
+      Condition="$(TargetFramework.Contains('-windows'))"
+      Include="SkiaSharp.Views.WinUI" Version="2.88.6" />
   </ItemGroup>
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
@@ -59,10 +71,6 @@
   </Choose>
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
-    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
