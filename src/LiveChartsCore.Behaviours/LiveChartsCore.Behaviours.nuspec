@@ -93,9 +93,6 @@
     <file
       src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.Behaviours\*.*"
       target="lib\net6.0-windows10.0.19041\LiveChartsCore.Behaviours"/>
-    <file
-      src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.Behaviours\images\*.*"
-      target="lib\net6.0-windows10.0.19041\LiveChartsCore.Behaviours\images"/>
 
     <file
      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.Behaviours.dll"
@@ -112,9 +109,6 @@
     <file
       src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.Behaviours\*.*"
       target="lib\net7.0-windows10.0.19041\LiveChartsCore.Behaviours"/>
-    <file
-      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.Behaviours\images\*.*"
-      target="lib\net7.0-windows10.0.19041\LiveChartsCore.Behaviours\images"/>
 
   </files>
 </package>
