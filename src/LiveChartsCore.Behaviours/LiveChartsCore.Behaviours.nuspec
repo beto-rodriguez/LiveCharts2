@@ -15,7 +15,6 @@
     <releaseNotes>https://github.com/beto-rodriguez/LiveCharts2/releases</releaseNotes>
     <copyright>BetoRodriguez</copyright>
     <tags>livechart chart charting plot plotting data</tags>
-    <icon>icon.png</icon>
     <repository type="git" url="https://github.com/beto-rodriguez/LiveCharts2.git"></repository>
 
     <dependencies>
