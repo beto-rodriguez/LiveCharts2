@@ -57,7 +57,6 @@
   </metadata>
 
   <files>
-    <file src="images\icon.png" target="\" />
 
     <file src="bin\Release\net6.0\LiveChartsCore.Behaviours.dll" target="lib\net6.0"/>
     <file src="bin\Release\net6.0\LiveChartsCore.Behaviours.xml" target="lib\net6.0"/>
