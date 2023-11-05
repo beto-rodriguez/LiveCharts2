@@ -21,7 +21,7 @@
         <dependency id="LiveChartsCore" version="2.0.0-rc1.2" />
         <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-rc1.2" />
       </group>
-  </dependencies>
+    </dependencies>
   </metadata>
 
   <files>
