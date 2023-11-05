@@ -21,6 +21,11 @@
         <dependency id="LiveChartsCore" version="2.0.0-rc1.2" />
         <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-rc1.2" />
       </group>
+      <group targetFramework="net7.0-windows10.0.19041">
+        <dependency id="SkiaSharp.Views.WinUI" version="2.88.6" />
+        <dependency id="LiveChartsCore" version="2.0.0-rc1.2" />
+        <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-rc1.2" />
+      </group>
     </dependencies>
   </metadata>
 
