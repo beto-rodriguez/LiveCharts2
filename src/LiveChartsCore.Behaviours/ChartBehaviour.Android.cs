@@ -111,13 +111,18 @@ public abstract partial class ChartBehaviour
                 break;
         }
 
-        //option 1, intercept events while the vertical movement is less than 20% of the chart height
+        _lastTouch = p;
+
         var yTolerance = 0.20 * viewGroup.Height / Density;
+        var screenTolerance = 0.25 * ScreenSize.Height / Density;
+        if (screenTolerance < yTolerance) yTolerance = screenTolerance;
+
         var yMovement = Math.Abs(p.Y - _touchStart.Y);
         var isChartInteraction = yMovement < yTolerance;
-        viewGroup.RequestDisallowInterceptTouchEvent(isChartInteraction);
 
-        _lastTouch = p;
+        // workaround for https://github.com/dotnet/maui/issues/18547
+        // intercept events while the vertical movement is less than the threshold
+        viewGroup.RequestDisallowInterceptTouchEvent(isChartInteraction);
     }
 
     private class CustomScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener

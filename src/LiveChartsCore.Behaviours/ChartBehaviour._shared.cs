@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Behaviours.Events;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Behaviours;
 
@@ -29,6 +30,12 @@ namespace LiveChartsCore.Behaviours;
 /// </summary>
 public abstract partial class ChartBehaviour
 {
+    /// <summary>
+    /// Gets or sets the screen size, only used internally by the Android handler, to implement a
+    /// workaround for https://github.com/dotnet/maui/issues/18547.
+    /// </summary>
+    public LvcSize ScreenSize { get; set; }
+
     /// <summary>
     /// Gets or sets the screen density.
     /// </summary>

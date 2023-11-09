@@ -35,9 +35,13 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
     /// <param name="element">The element.</param>
     public void On(FrameworkElement element)
     {
-
 #if HAS_UNO_WINUI
-        Density = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
+        var currentView = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
+
+        Density = currentView.LogicalDpi / 96.0f;
+        ScreenSize = new(
+            currentView.ScreenWidthInRawPixels,
+            currentView.ScreenHeightInRawPixels);
 #else
         Density = element.XamlRoot.RasterizationScale;
 #endif
