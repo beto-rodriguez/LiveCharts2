@@ -36,6 +36,7 @@ public abstract partial class ChartBehaviour
     private bool _isPinching;
     private bool _isDown;
     private LvcPoint _lastTouch;
+    private LvcPoint _touchStart;
     private ScaleGestureDetector? _scaleDetector;
     private CustomScaleListener _customScaleListener = null!;
     private DateTime _previousPress = DateTime.MinValue;
@@ -50,7 +51,8 @@ public abstract partial class ChartBehaviour
 
     protected void OnAndroidTouched(object? sender, View.TouchEventArgs e)
     {
-        if (e.Event is null) return;
+        var viewGroup = (ViewGroup?)sender;
+        if (e.Event is null || viewGroup is null) return;
 
         var p = new LvcPoint(e.Event.GetX() / Density, e.Event.GetY() / Density);
         var isRightClick = (DateTime.Now - _previousPress).TotalMilliseconds < 500;
@@ -77,6 +79,7 @@ public abstract partial class ChartBehaviour
                     Pressed?.Invoke(sender, new(p, isRightClick, e.Event));
                 _previousPress = DateTime.Now;
                 _customScaleListener.Paused = isRightClick && !isPinch;
+                _touchStart = p;
                 break;
             case MotionEventActions.Move:
             case MotionEventActions.HoverMove:
@@ -107,6 +110,12 @@ public abstract partial class ChartBehaviour
             default:
                 break;
         }
+
+        //option 1, intercept events while the vertical movement is less than 20% of the chart height
+        var yTolerance = 0.20 * viewGroup.Height / Density;
+        var yMovement = Math.Abs(p.Y - _touchStart.Y);
+        var isChartInteraction = yMovement < yTolerance;
+        viewGroup.RequestDisallowInterceptTouchEvent(isChartInteraction);
 
         _lastTouch = p;
     }

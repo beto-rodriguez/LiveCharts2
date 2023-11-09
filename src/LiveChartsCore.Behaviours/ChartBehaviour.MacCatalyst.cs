@@ -142,7 +142,8 @@ public partial class ChartBehaviour
         })
         {
             AllowedScrollTypesMask = UIScrollTypeMask.Discrete | UIScrollTypeMask.Continuous,
-            MinimumNumberOfTouches = 0
+            MinimumNumberOfTouches = 0,
+            ShouldRecognizeSimultaneously = (g1, g2) => true
         };
     }
 }
