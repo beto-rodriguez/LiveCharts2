@@ -10,7 +10,7 @@
 
     <Nullable>enable</Nullable>
     <LangVersion>11.0</LangVersion>
-    <Version>2.0.0-rc1.2</Version>
+    <Version>2.0.0-rc2</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
