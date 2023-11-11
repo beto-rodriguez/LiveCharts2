@@ -112,6 +112,7 @@ public static class Index
         "General/NullPoints",
         "General/MultiThreading",
         "General/MultiThreading2",
+        "General/DrawOnCanvas",
 
         "VisualTest/TwoChartsOneSeries",
         "VisualTest/ReattachVisual",

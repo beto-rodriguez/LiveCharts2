@@ -1,0 +1,22 @@
+﻿@page "/General/DrawOnCanvas"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.DrawOnCanvas
+
+<CartesianChart
+    @ref="chart">
+</CartesianChart>
+
+@code {
+    public CartesianChart chart = null!;
+    public ViewModel ViewModel { get; set; } = new();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        chart.UpdateStarted += chart =>
+        {
+            ViewModel.ChartUpdated(new(chart));
+        };
+    }
+}
