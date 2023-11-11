@@ -1,0 +1,13 @@
+<UserControl x:Class="AvaloniaSample.General.DrawOnCanvas.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.General.DrawOnCanvas">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <lvc:CartesianChart UpdateStartedCommand="{Binding ChartUpdatedCommand}"/>
+    </Grid>
+</UserControl>

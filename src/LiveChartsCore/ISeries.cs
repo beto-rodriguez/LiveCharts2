@@ -223,7 +223,7 @@ public interface ISeries<TModel> : ISeries
     /// <value>
     /// The mapping.
     /// </value>
-    Action<TModel, ChartPoint>? Mapping { get; set; }
+    Func<TModel, int, Coordinate>? Mapping { get; set; }
 
     /// <summary>
     /// Gets or sets the values.

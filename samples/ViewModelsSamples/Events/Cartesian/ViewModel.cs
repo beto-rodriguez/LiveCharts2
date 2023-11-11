@@ -32,12 +32,9 @@ public partial class ViewModel : ObservableObject
             DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
             DataLabelsFormatter = point => $"{point.Model?.SalesPerDay} {point.Model?.Name}",
             DataLabelsPosition = DataLabelsPosition.End,
-            Mapping = (fruit, point) =>
-            {
-                // use the SalesPerDay property in this in the Y axis // mark
-                // and the index of the fruit in the array in the X axis // mark
-                point.Coordinate = new(point.Index, fruit.SalesPerDay);
-            }
+            // use the SalesPerDay property in this in the Y axis // mark
+            // and the index of the fruit in the array in the X axis // mark
+            Mapping = (fruit, index) => new(index, fruit.SalesPerDay)
         };
 
         // notice that the event signature is different for every series

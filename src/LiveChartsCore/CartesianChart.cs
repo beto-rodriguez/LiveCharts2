@@ -426,7 +426,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, _isFirstDraw, this);
+        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
         // restart axes bounds and meta data
@@ -542,6 +542,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
         if (title is not null)
         {
+            title.ClippingMode = ClipMode.None;
             var titleSize = title.Measure(this);
             m.Top = titleSize.Height;
             ts = titleSize.Height;
@@ -794,7 +795,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         foreach (var section in Sections) AddVisual(section);
         foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in VisibleSeries) AddVisual((ChartElement<TDrawingContext>)series);
+        foreach (var series in VisibleSeries)
+        {
+            AddVisual((ChartElement<TDrawingContext>)series);
+            _drawnSeries.Add(series.SeriesId);
+        }
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {

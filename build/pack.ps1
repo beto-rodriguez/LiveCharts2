@@ -9,15 +9,15 @@ param([string]$configuration = "Debug", [string]$nupkgOutputPath = "./nupkg")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/LiveChartsCore.SkiaSharpView.Blazor.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Eto/LiveChartsCore.SkiaSharpView.Eto.csproj")
-    [Project]::new("./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj", $true)
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/LiveChartsCore.SkiaSharpView.Maui.csproj", $true)
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno/LiveChartsCore.SkiaSharpView.Uno.csproj", $true)
-    [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", $true)
+    [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", $true),
     [Project]::new(
-        "./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj", 
-        $true,
-        "nuget",
-        "./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.nuspec"
+        "./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj", $true,
+        "nuget", "./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.nuspec")
+    [Project]::new(
+        "./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj", $true,
+        "nuget", "./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.nuspec"
     )
 )
 

@@ -27,5 +27,5 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 namespace LiveChartsCore.SkiaSharpView;
 
 /// <inheritdoc cref="ICartesianAxis" />
-public class PolarAxis : PolarAxis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry, CircleGeometry>
+public class PolarAxis : CorePolarAxis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry, CircleGeometry>
 { }

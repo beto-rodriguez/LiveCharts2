@@ -1,0 +1,11 @@
+<linker>
+  <assembly fullname="UnoPlatform_v5" />
+  <assembly fullname="UnoPlatform_v5.Wasm" />
+
+  <!--
+  Uncomment this section when using JSON.NET
+  <assembly fullname="System.Core">
+    <type fullname="System.Linq.Expressions*" />
+  </assembly>
+   -->
+</linker>

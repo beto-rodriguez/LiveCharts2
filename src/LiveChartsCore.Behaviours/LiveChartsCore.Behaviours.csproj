@@ -1,8 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>
+      net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;
+      net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst
+    </TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
+      $(TargetFrameworks);net6.0-windows10.0.19041;net7.0-windows10.0.19041
+    </TargetFrameworks>
     <Nullable>enable</Nullable>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
@@ -14,7 +19,7 @@
 
     <AssemblyName>LiveChartsCore.Behaviours</AssemblyName>
     <RootNamespace>LiveChartsCore.Behaviours</RootNamespace>
-    <Version>2.0.0-rc1.2</Version>
+    <Version>2.0.0-rc2</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Adds user interaction for touch screens, touch pads and mouse.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -22,20 +27,16 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.19041.0'">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
-    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
-    <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LiveChartsCore\LiveChartsCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="images\icon.png" Pack="true" PackagePath="\" />
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
   </ItemGroup>
 
 </Project>

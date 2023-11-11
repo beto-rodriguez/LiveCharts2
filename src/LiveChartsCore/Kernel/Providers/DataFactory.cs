@@ -404,9 +404,8 @@ public class DataFactory<TModel, TDrawingContext>
             }
 
             point.Context.DataSource = item;
+            point.Coordinate = mapper(item, index);
             entity.MetaData.EntityIndex = index++;
-
-            mapper(item, point);
 
             yield return entity;
         }

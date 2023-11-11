@@ -34,7 +34,7 @@ public partial class ViewModel : ObservableObject
             TicksAtCenter = true,
             // By default the axis tries to optimize the number of // mark
             // labels to fit the available space, // mark
-            // when you neeed to force the axis to show all the labels then you must: // mark
+            // when you need to force the axis to show all the labels then you must: // mark
             ForceStepToMin = true, // mark
             MinStep = 1 // mark
         }

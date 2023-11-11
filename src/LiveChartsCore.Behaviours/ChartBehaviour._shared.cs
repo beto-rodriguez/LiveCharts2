@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Behaviours.Events;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Behaviours;
 
@@ -29,6 +30,12 @@ namespace LiveChartsCore.Behaviours;
 /// </summary>
 public abstract partial class ChartBehaviour
 {
+    /// <summary>
+    /// Gets or sets the screen size, only used internally by the Android handler, to implement a
+    /// workaround for https://github.com/dotnet/maui/issues/18547.
+    /// </summary>
+    public LvcSize ScreenSize { get; set; }
+
     /// <summary>
     /// Gets or sets the screen density.
     /// </summary>
@@ -63,4 +70,34 @@ public abstract partial class ChartBehaviour
     /// Called when the control is scrolled.
     /// </summary>
     public event ScrollHandler? Scrolled;
+
+    internal void InvokePressed(object sender, PressedEventArgs e)
+    {
+        Pressed?.Invoke(sender, e);
+    }
+
+    internal void InvokeReleased(object sender, PressedEventArgs e)
+    {
+        Released?.Invoke(sender, e);
+    }
+
+    internal void InvokeMoved(object sender, ScreenEventArgs e)
+    {
+        Moved?.Invoke(sender, e);
+    }
+
+    internal void InvokeExited(object sender, EventArgs e)
+    {
+        Exited?.Invoke(sender, e);
+    }
+
+    internal void InvokePinched(object sender, PinchEventArgs e)
+    {
+        Pinched?.Invoke(sender, e);
+    }
+
+    internal void InvokeScrolled(object sender, ScrollEventArgs e)
+    {
+        Scrolled?.Invoke(sender, e);
+    }
 }

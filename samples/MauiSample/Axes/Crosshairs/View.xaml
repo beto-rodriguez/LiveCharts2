@@ -15,7 +15,9 @@
             </Grid.RowDefinitions>
             
             <lvc:CartesianChart
-                Series="{Binding Series}">
+                Series="{Binding Series}"
+                XAxes="{Binding XAxes}"
+                YAxes="{Binding YAxes}">
             </lvc:CartesianChart>
         </Grid>
     </ContentPage.Content>

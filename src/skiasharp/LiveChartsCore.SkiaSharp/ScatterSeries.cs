@@ -73,7 +73,7 @@ public class ScatterSeries<TModel, TVisual> : ScatterSeries<TModel, TVisual, Lab
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class ScatterSeries<TModel, TVisual, TLabel> : ScatterSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
+public class ScatterSeries<TModel, TVisual, TLabel> : CoreScatterSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
     where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

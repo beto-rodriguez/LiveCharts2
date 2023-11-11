@@ -226,6 +226,9 @@
     <Compile Include="General\Legends\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
+    <Compile Include="General\DrawOnCanvas\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
     <Compile Include="General\RealTime\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
@@ -574,6 +577,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="General\Legends\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="General\DrawOnCanvas\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

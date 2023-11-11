@@ -27,7 +27,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <summary>
 /// The chart behaviour for Uno Platform.
 /// </summary>
-public class ChartBehaviour : Behaviours.ChartBehaviour
+public partial class ChartBehaviour : Behaviours.ChartBehaviour
 {
     /// <summary>
     /// Attaches the native events on the specified element.
@@ -36,7 +36,12 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
     public void On(FrameworkElement element)
     {
 #if HAS_UNO_WINUI
-        Density = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
+        var currentView = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
+
+        Density = currentView.LogicalDpi / 96.0f;
+        ScreenSize = new(
+            currentView.ScreenWidthInRawPixels,
+            currentView.ScreenHeightInRawPixels);
 #else
         Density = element.XamlRoot.RasterizationScale;
 #endif
@@ -46,9 +51,7 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
         element.Touch += OnAndroidTouched;
         element.Hover += OnAndroidHover;
 
-#endif
-
-#if MACCATALYST || IOS
+#elif MACCATALYST || IOS
 
         element.UserInteractionEnabled = true;
         element.AddGestureRecognizer(GetMacCatalystHover(element));
@@ -56,15 +59,21 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
         element.AddGestureRecognizer(GetMacCatalystPinch(element));
         element.AddGestureRecognizer(GetMacCatalystOnPan(element));
 
-#endif
-
-#if WINDOWS
+#elif WINDOWS
 
         element.PointerPressed += OnWindowsPointerPressed;
         element.PointerMoved += OnWindowsPointerMoved;
         element.PointerReleased += OnWindowsPointerReleased;
         element.PointerWheelChanged += OnWindowsPointerWheelChanged;
         element.PointerExited += OnWindowsPointerExited;
+
+#elif HAS_UNO || HAS_UNO_WINUI
+
+        element.PointerPressed += OnUnoPointerPressed;
+        element.PointerMoved += OnUnoPointerMoved;
+        element.PointerReleased += OnUnoPointerReleased;
+        element.PointerWheelChanged += OnUnoPointerWheelChanged;
+        element.PointerExited += OnUnoPointerExited;
 
 #endif
     }

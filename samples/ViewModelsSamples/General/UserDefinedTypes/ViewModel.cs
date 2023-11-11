@@ -11,12 +11,9 @@ public partial class ViewModel : ObservableObject
         new LineSeries<City>
         {
             Name = "Population",
-            Mapping = (city, point) =>
-            {
-                // use the Population property as the Y coordinate
-                // and the index of the city in our collection as the X coordinate
-                point.Coordinate = new(point.Index, city.Population);
-            },
+            // use the Population property as the Y coordinate
+            // and the index of the city in our collection as the X coordinate
+            Mapping = (city, index) => new(index, city.Population),
             Values = new[]
             {
                 new City { Name = "Tokyo", Population = 4 },

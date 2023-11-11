@@ -27,5 +27,5 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 namespace LiveChartsCore.SkiaSharpView;
 
 /// <inheritdoc cref="ICartesianAxis" />
-public class Axis : Axis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry>
+public class Axis : CoreAxis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry>
 { }

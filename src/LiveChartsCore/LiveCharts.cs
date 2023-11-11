@@ -104,17 +104,6 @@ public static class LiveCharts
     }
 
     /// <summary>
-    /// Defines a mapper for the given type.
-    /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <param name="mapper">The mapper.</param>
-    /// <returns></returns>
-    public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
-    {
-        return DefaultSettings.HasMap(mapper);
-    }
-
-    /// <summary>
     /// Converts ticks to Date, and prevents overflow exceptions.
     /// </summary>
     /// <param name="ticks">The ticks.</param>

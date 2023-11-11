@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public static class Extensions
 {
-    private const double Cf = 3d;
+    private const float MinLabelSize = 10; // Assume the label size is at least 10px
 
     private static readonly Type s_nullableType = typeof(Nullable<>);
 
@@ -196,17 +196,38 @@ public static class Extensions
     /// <param name="axis">The axis.</param>
     /// <param name="controlSize">Size of the control.</param>
     /// <param name="bounds">The bounds.</param>
-    /// <param name="maxLabelSize">The max label size.</param>
     /// <returns></returns>
-    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null, LvcSize? maxLabelSize = null)
+    public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds? bounds = null)
     {
         bounds ??= axis.VisibleDataBounds;
+        var maxLabelSize = axis.PossibleMaxLabelSize;
 
-        var w = (maxLabelSize?.Width ?? 0d) * 0.60;
-        if (w < 20 * Cf) w = 20 * Cf;
+        var w = maxLabelSize.Width;
+        var h = maxLabelSize.Height;
 
-        var h = maxLabelSize?.Height ?? 0d;
-        if (h < 12 * Cf) h = 12 * Cf;
+        var r = Math.Abs(axis.LabelsRotation % 90);
+
+        if (r is >= 20 and <= 70)
+        {
+            // if the labels are rotated, we assume that they can overlap.
+            var d = 0.35f * (float)Math.Sqrt(w * w + h * h);
+            w = d;
+            h = d;
+        }
+        else
+        {
+            // modify the size of the label to avoid overlapping
+            // and improve readability.
+
+            const float xGrowFactor = 1.10f;
+            if (axis.Orientation == AxisOrientation.X) w *= xGrowFactor;
+
+            const float yGrowFactor = 1.5f;
+            if (axis.Orientation == AxisOrientation.Y) h *= yGrowFactor;
+        }
+
+        if (w < MinLabelSize) w = MinLabelSize;
+        if (h < MinLabelSize) h = MinLabelSize;
 
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
@@ -257,8 +278,8 @@ public static class Extensions
 
         var range = max - min;
         var separations = axis.Orientation == PolarAxisOrientation.Angle
-            ? Math.Round(c / (10 * Cf), 0)
-            : Math.Round(radius / (30 * Cf), 0);
+            ? Math.Round(c / 30, 0)
+            : Math.Round(radius / 90, 0);
         var minimum = range / separations;
 
         var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));

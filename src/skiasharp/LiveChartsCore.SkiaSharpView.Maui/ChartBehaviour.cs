@@ -37,6 +37,9 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
     {
         element.HandlerChanged += (sender, e) =>
         {
+            ScreenSize = new(
+                (float)DeviceDisplay.MainDisplayInfo.Width,
+                (float)DeviceDisplay.MainDisplayInfo.Height);
             Density = DeviceDisplay.MainDisplayInfo.Density;
 
 #if ANDROID

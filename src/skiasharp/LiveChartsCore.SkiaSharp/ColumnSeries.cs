@@ -74,7 +74,7 @@ public class ColumnSeries<TModel, TVisual> : ColumnSeries<TModel, TVisual, Label
 /// The type of the data label of every point.
 /// </typeparam>
 public class ColumnSeries<TModel, TVisual, TLabel>
-    : ColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
+    : CoreColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
         where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

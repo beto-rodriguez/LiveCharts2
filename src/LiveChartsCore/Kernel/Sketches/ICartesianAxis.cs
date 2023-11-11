@@ -95,6 +95,11 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     LvcRectangle LabelsDesiredSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the max label size, this value is used internally to measure the axis.
+    /// </summary>
+    LvcSize PossibleMaxLabelSize { get; }
+
+    /// <summary>
     /// Gets or sets the reserved area for the name.
     /// </summary>
     LvcRectangle NameDesiredSize { get; set; }
@@ -237,4 +242,10 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <param name="chart">The chart.</param>
     /// <param name="pointerPosition">The pointer position</param>
     void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition);
+
+    /// <summary>
+    /// Clears the crosshair visual.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    void ClearCrosshair(Chart<TDrawingContext> chart);
 }

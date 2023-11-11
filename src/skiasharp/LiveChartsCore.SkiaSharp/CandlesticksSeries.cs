@@ -73,7 +73,7 @@ public class CandlesticksSeries<TModel, TVisual> : CandlesticksSeries<TModel, TV
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class CandlesticksSeries<TModel, TVisual, TLabel> : FinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
+public class CandlesticksSeries<TModel, TVisual, TLabel> : CoreFinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
     where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 { }

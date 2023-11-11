@@ -48,6 +48,8 @@ public abstract class InMemorySkiaSharpChart
     /// <inheritdoc cref="IChartView.CoreChart"/>
     public IChart CoreChart { get; protected set; } = null!;
 
+    internal bool ExplicitDisposing { get; set; }
+
     /// <summary>
     /// Gets or sets the background.
     /// </summary>
@@ -150,6 +152,6 @@ public abstract class InMemorySkiaSharpChart
                 Background,
                 clearCanvasOnBeginDraw));
 
-        skiaChart.Unload();
+        if (!ExplicitDisposing) skiaChart.Unload();
     }
 }

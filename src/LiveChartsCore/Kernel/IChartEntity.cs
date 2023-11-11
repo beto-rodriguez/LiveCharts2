@@ -30,7 +30,7 @@ public interface IChartEntity
     /// <summary>
     /// Gets or sets the meta data, the additional data required by LiveCharts to draw a point.
     /// </summary>
-    public ChartEntityMetaData? MetaData { get; set; }
+    ChartEntityMetaData? MetaData { get; set; }
 
     /// <summary>
     /// Gets or sets the coordinate, the position of the point in the chart.

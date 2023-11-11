@@ -263,7 +263,9 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
             _ = sb2.Append(word);
             _ = paint.MeasureText(sb2.ToString(), ref bounds);
 
-            if (bounds.Width > mw)
+            // if the line has already content and the new word exceeds the max width
+            // then we create a new line
+            if (sb.Length > 0 && bounds.Width > mw)
             {
                 yield return sb.ToString();
                 _ = sb.Clear();
