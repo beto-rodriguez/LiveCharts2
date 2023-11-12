@@ -18,6 +18,7 @@ public partial class ViewModel
     private SolidColorPaint? _paint;
     private SimpleGeometry? _simpleGeometry;
     private MotionGeometry? _motionGeometry;
+    private bool _isBigCircle = true;
 
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
@@ -48,7 +49,8 @@ public partial class ViewModel
 
         _motionGeometry.X = (float)locationInPixels.X;
         _motionGeometry.Y = (float)locationInPixels.Y;
-        _motionGeometry.Diameter = 70;
+        // lets toggle the diameter of the circle between 20 and 70
+        _motionGeometry.Diameter = (_isBigCircle = !_isBigCircle) ? 70 : 20;
 
         // if this is the first time we draw the geometry
         // we can complete the animations.
