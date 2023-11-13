@@ -262,10 +262,6 @@ public class LinearGradientPaint : Paint
 
     private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
     {
-        var clip = GetClipRectangle(drawingContext.MotionCanvas);
-
-        return clip == LvcRectangle.Empty
-            ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
-            : new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height);
+        return new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
     }
 }
