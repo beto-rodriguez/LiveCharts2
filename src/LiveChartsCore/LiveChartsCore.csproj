@@ -4,9 +4,17 @@
     <Nullable>enable</Nullable>
     <LangVersion>11.0</LangVersion>
 
-    <TargetFrameworks>netstandard2.0;netcoreapp2.0;net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks>
+      netstandard2.0;netcoreapp2.0.3;
+      net6.0;
+      net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;
+      net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
+    </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">
-      $(TargetFrameworks);net6.0-windows10.0.19041;net462
+      $(TargetFrameworks);
+      net462;
+      net7.0-windows10.0.19041;
+      net8.0-windows10.0.19041;
     </TargetFrameworks>
 
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
@@ -52,7 +60,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'" Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference
+      Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0.3'"
+      Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 
 </Project>
