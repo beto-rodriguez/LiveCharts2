@@ -13,9 +13,9 @@
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
       net462;
-      net6.0-windows10.0.19041;
-      net7.0-windows10.0.19041;
-      net8.0-windows10.0.19041;
+      net6.0-windows10.0.19041.0;
+      net7.0-windows10.0.19041.0;
+      net8.0-windows10.0.19041.0;
     </TargetFrameworks>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
