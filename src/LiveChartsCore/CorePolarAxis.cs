@@ -52,7 +52,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <summary>
     /// The active separators
     /// </summary>
-    protected readonly Dictionary<IChart, Dictionary<double, IVisualSeparator<TDrawingContext>>> activeSeparators = new();
+    protected readonly Dictionary<IChart, Dictionary<double, IVisualSeparator<TDrawingContext>>> activeSeparators = [];
 
     internal PolarAxisOrientation _orientation;
     private double _minStep = 0;
@@ -279,7 +279,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
 
         if (!activeSeparators.TryGetValue(polarChart, out var separators))
         {
-            separators = new Dictionary<double, IVisualSeparator<TDrawingContext>>();
+            separators = [];
             activeSeparators[polarChart] = separators;
         }
 

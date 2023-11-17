@@ -50,7 +50,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     private double _ticksLength;
     private double _labelsSize = 12;
     private readonly int _subSections = 5;
-    private readonly Dictionary<string, TickVisual> _visuals = new();
+    private readonly Dictionary<string, TickVisual> _visuals = [];
 
     /// <summary>
     /// Gets or sets the labels paint.

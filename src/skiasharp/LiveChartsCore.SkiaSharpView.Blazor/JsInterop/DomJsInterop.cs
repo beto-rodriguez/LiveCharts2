@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 public class DomJsInterop : IAsyncDisposable
 {
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
-    private static readonly Dictionary<string, List<Action<DOMRect>>> s_resizeEvent = new();
+    private static readonly Dictionary<string, List<Action<DOMRect>>> s_resizeEvent = [];
 
     /// <summary>
     /// Initialized a new instance of the <see cref="DomJsInterop"/> class.
@@ -86,7 +86,7 @@ public class DomJsInterop : IAsyncDisposable
     {
         if (!s_resizeEvent.TryGetValue(elementId, out var actions))
         {
-            actions = new List<Action<DOMRect>>();
+            actions = [];
             s_resizeEvent.Add(elementId, actions);
             var module = await _moduleTask.Value;
             await module.InvokeVoidAsync("DOMInterop.registerResizeListener", element, elementId);

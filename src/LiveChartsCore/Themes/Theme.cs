@@ -48,7 +48,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The axis builder.
     /// </value>
-    public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = new();
+    public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the draw margin frame builder.
@@ -56,7 +56,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The draw margin frame builder.
     /// </value>
-    public List<Action<DrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = new();
+    public List<Action<DrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the series builder.
@@ -64,7 +64,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IChartSeries<TDrawingContext>>> SeriesBuilder { get; set; } = new();
+    public List<Action<IChartSeries<TDrawingContext>>> SeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the pie series builder.
@@ -72,7 +72,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = new();
+    public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the gauge series builder.
@@ -80,7 +80,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = new();
+    public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the gauge fill series builder.
@@ -88,7 +88,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = new();
+    public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the Cartesian series builder.
@@ -96,7 +96,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = new();
+    public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stepline series builder.
@@ -104,7 +104,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = new();
+    public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the  stacked stepline series builder.
@@ -112,7 +112,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = new();
+    public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -120,7 +120,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = new();
+    public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -128,7 +128,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = new();
+    public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -136,7 +136,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarLineSeries<TDrawingContext>>> PolarLineSeriesBuilder { get; set; } = new();
+    public List<Action<IPolarLineSeries<TDrawingContext>>> PolarLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -144,7 +144,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = new();
+    public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -152,7 +152,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = new();
+    public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the financial series builder.
@@ -160,7 +160,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = new();
+    public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked line series builder.
@@ -168,7 +168,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = new();
+    public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the bar series builder.
@@ -176,7 +176,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = new();
+    public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the column series builder.
@@ -184,7 +184,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = new();
+    public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the row series builder.
@@ -192,7 +192,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = new();
+    public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked bar series builder.
@@ -200,7 +200,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = new();
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked column series builder.
@@ -208,7 +208,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = new();
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked row series builder.
@@ -216,7 +216,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = new();
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the scatter series builder.
@@ -224,7 +224,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new();
+    public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the error series builder.
@@ -232,7 +232,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBoxSeries<TDrawingContext>>> BoxSeriesBuilder { get; set; } = new();
+    public List<Action<IBoxSeries<TDrawingContext>>> BoxSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Applies the theme to an axis.

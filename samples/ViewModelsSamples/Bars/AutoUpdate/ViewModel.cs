@@ -18,8 +18,8 @@ public partial class ViewModel : ObservableObject
     public ViewModel()
     {
         // Use ObservableCollections to let the chart listen for changes (or any INotifyCollectionChanged). // mark
-        _observableValues = new ObservableCollection<ObservablePoint>
-        {
+        _observableValues =
+        [
             // Use the ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
             // or use any INotifyPropertyChanged implementation // mark
             new ObservablePoint(_index++, 2),
@@ -35,15 +35,15 @@ public partial class ViewModel : ObservableObject
             new(_index++, 3),
             new(_index++, 8),
             new(_index++, 3)
-        };
+        ];
 
-        Series = new ObservableCollection<ISeries>
-        {
+        Series =
+        [
             new ColumnSeries<ObservablePoint>
             {
                 Values = _observableValues
             }
-        };
+        ];
 
         // in the following sample notice that the type int does not implement INotifyPropertyChanged
         // and our Series.Values property is of type List<T>

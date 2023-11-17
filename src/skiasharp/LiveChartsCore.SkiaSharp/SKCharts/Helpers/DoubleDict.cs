@@ -29,8 +29,8 @@ internal class DoubleDict<T1, T2>
     where T1 : notnull
     where T2 : notnull
 {
-    private readonly Dictionary<T1, T2> _keys = new();
-    private readonly Dictionary<T2, T1> _values = new();
+    private readonly Dictionary<T1, T2> _keys = [];
+    private readonly Dictionary<T2, T1> _values = [];
 
     public void Add(T1 key, T2 value)
     {

@@ -39,8 +39,8 @@ namespace LiveChartsCore.SkiaSharpView;
 [Obsolete($"Use {nameof(GaugeGenerator)}.{nameof(GaugeGenerator.BuildSolidGauge)} instead.")]
 public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
 {
-    private readonly Dictionary<ISeries, Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>> _keyValuePairs = new();
-    private readonly List<Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>> _tuples = new();
+    private readonly Dictionary<ISeries, Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>> _keyValuePairs = [];
+    private readonly List<Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>> _tuples = [];
     private List<PieSeries<ObservableValue>>? _builtSeries;
 
     private RadialAlignment? _radialAlign = null;

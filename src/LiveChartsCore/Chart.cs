@@ -44,15 +44,15 @@ public abstract class Chart<TDrawingContext> : IChart
 {
     #region fields
 
-    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = new();
-    internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = new();
+    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = [];
+    internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = [];
     internal bool _isToolTipOpen = false;
     internal bool _isPointerIn;
     internal LvcPoint _pointerPosition = new(-10, -10);
     internal float _titleHeight = 0f;
     internal LvcSize _legendSize;
     internal bool _preserveFirstDraw = false;
-    internal readonly HashSet<int> _drawnSeries = new();
+    internal readonly HashSet<int> _drawnSeries = [];
     internal bool _isFirstDraw = true;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
@@ -62,7 +62,7 @@ public abstract class Chart<TDrawingContext> : IChart
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private readonly Dictionary<ChartPoint, object> _activePoints = new();
+    private readonly Dictionary<ChartPoint, object> _activePoints = [];
     private LvcSize _previousSize = new();
     private readonly bool _isMobile;
 
@@ -578,7 +578,7 @@ public abstract class Chart<TDrawingContext> : IChart
             _ = _everMeasuredElements.Remove(visual);
         }
 
-        _toDeleteElements = new HashSet<ChartElement<TDrawingContext>>();
+        _toDeleteElements = [];
     }
 
     /// <summary>

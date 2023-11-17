@@ -56,7 +56,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// The subscribed to
     /// </summary>
-    protected readonly HashSet<IChart> subscribedTo = new();
+    protected readonly HashSet<IChart> subscribedTo = [];
 
     /// <summary>
     /// The implements icp
@@ -76,7 +76,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// The ever fetched points.
     /// </summary>
-    protected internal HashSet<ChartPoint> everFetched = new();
+    protected internal HashSet<ChartPoint> everFetched = [];
 
     /// <summary>
     /// Indicates whether the custom measure handler was requested already.
@@ -92,12 +92,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Indicates whether the geometry svg changed.
     /// </summary>
     protected bool _geometrySvgChanged = false;
-
-    /// <summary>
-    /// Will be deleted on future versions
-    /// </summary>
-    [Obsolete]
-    protected Func<ChartPoint<TModel, TVisual, TLabel>, string>? _obsolete_formatter = null;
 
     private readonly CollectionDeepObserver<TModel> _observer;
     private IEnumerable<TModel>? _values;
@@ -232,22 +226,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="ISeries.ZIndex" />
     public int ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
-
-    /// <summary>
-    /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
-    /// is shown inside a tool tip.
-    /// </summary>
-    /// <value>
-    /// The tool tip label formatter.
-    /// </value>
-    [Obsolete(
-        $"You must now use {nameof(CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>.XToolTipLabelFormatter)} or " +
-        $"{nameof(CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>.YToolTipLabelFormatter)} instead.")]
-    public Func<ChartPoint<TModel, TVisual, TLabel>, string>? TooltipLabelFormatter
-    {
-        get => _obsolete_formatter;
-        set => _obsolete_formatter = value;
-    }
 
     /// <summary>
     /// Gets or sets the data label formatter, this function will build the label when a point in this series 
@@ -428,7 +406,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         base.RemoveFromUI(chart);
         DataFactory?.Dispose(chart);
         _dataFactory = null;
-        everFetched = new HashSet<ChartPoint>();
+        everFetched = [];
     }
 
     /// <summary>

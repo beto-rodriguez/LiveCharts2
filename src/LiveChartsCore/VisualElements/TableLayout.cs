@@ -37,7 +37,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _backgroundPaint;
-    private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = new();
+    private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = [];
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
     private int _maxColumn = 0;
@@ -149,7 +149,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         Align? verticalAlign = null)
     {
         if (!_positions.TryGetValue(row, out var r))
-            _positions.Add(row, r = new Dictionary<int, TableCell>());
+            _positions.Add(row, r = []);
         r[column] = new(row, column, child, verticalAlign, horizontalAlign);
 
         if (row > _maxRow) _maxRow = row;

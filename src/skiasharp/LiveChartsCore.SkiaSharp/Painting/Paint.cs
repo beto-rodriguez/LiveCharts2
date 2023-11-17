@@ -36,8 +36,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
-    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
-    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, LvcRectangle> _clipRectangles = new();
+    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = [];
+    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, LvcRectangle> _clipRectangles = [];
     private char? _matchesChar = null;
     internal SKPaint? _skiaPaint;
     internal FloatMotionProperty _strokeWidthTransition;
@@ -205,7 +205,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
         var g = GetGeometriesByCanvas(canvas);
         if (g is null)
         {
-            g = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
+            g = [];
             _geometriesByCanvas[canvas] = g;
         }
         _ = g.Add(geometry);

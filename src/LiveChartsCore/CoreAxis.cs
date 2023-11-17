@@ -52,7 +52,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <summary>
     /// The active separators
     /// </summary>
-    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = [];
 
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
@@ -405,7 +405,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
         {
-            separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
+            separators = [];
             activeSeparators[cartesianChart] = separators;
         }
 

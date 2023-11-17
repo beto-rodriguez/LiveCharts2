@@ -8,7 +8,7 @@ namespace XamarinSample;
 public partial class AppShell : Shell
 {
     private bool _isLoaded = false;
-    private readonly Dictionary<string, string> _routesSamples = new();
+    private readonly Dictionary<string, string> _routesSamples = [];
 
     public AppShell()
     {

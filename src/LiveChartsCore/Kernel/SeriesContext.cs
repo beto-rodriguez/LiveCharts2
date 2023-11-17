@@ -47,13 +47,13 @@ public class SeriesContext<TDrawingContext>
     private bool _arePieLabeleMeasured = false;
     private float _pieLabelsSize = 0f;
 
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _columnPositions = new();
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _rowPositions = new();
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _boxPositions = new();
-    private readonly Dictionary<int, int> _stackColumnPositions = new();
-    private readonly Dictionary<int, int> _stackRowsPositions = new();
+    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _columnPositions = [];
+    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _rowPositions = [];
+    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _boxPositions = [];
+    private readonly Dictionary<int, int> _stackColumnPositions = [];
+    private readonly Dictionary<int, int> _stackRowsPositions = [];
 
-    private readonly Dictionary<string, Stacker<TDrawingContext>> _stackers = new();
+    private readonly Dictionary<string, Stacker<TDrawingContext>> _stackers = [];
 
     private readonly IChart _chart;
 

@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel;
 public class LiveChartsSettings
 {
     private object? _currentProvider;
-    private readonly Dictionary<Type, object> _mappers = new();
+    private readonly Dictionary<Type, object> _mappers = [];
     private object _theme = new();
 
     /// <summary>

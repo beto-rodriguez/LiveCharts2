@@ -52,7 +52,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public HashSet<VisualElement<TDrawingContext>> Children { get; } = new();
+    public HashSet<VisualElement<TDrawingContext>> Children { get; } = [];
 
     /// <summary>
     /// Gets or sets the background paint.

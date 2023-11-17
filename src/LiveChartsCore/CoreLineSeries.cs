@@ -49,8 +49,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
-    internal readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = new();
-    internal readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = new();
+    internal readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
+    internal readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
@@ -162,13 +162,13 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
-            strokePathHelperContainer = new List<TPathGeometry>();
+            strokePathHelperContainer = [];
             _strokePathHelperDictionary[chart.Canvas.Sync] = strokePathHelperContainer;
         }
 
         if (!_fillPathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var fillPathHelperContainer))
         {
-            fillPathHelperContainer = new List<TPathGeometry>();
+            fillPathHelperContainer = [];
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 

@@ -45,9 +45,9 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
     private double[]? _colorStops;
     private IEnumerable<IWeigthedMapLand>? _lands;
     private bool _isVisible;
-    private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = new();
+    private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = [];
     private readonly CollectionDeepObserver<IWeigthedMapLand> _observer;
-    private readonly HashSet<LandDefinition> _everUsed = new();
+    private readonly HashSet<LandDefinition> _everUsed = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TDrawingContext}"/> class.

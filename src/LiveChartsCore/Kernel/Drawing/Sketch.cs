@@ -72,5 +72,5 @@ public class Sketch<TDrawingContext>
     /// <value>
     /// The paint tasks schedule.
     /// </value>
-    public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new();
+    public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = [];
 }
