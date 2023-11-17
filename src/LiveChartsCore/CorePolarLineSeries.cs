@@ -167,7 +167,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? RadiusToolTipLabelFormatter
     {
         get => _radiusTooltipLabelFormatter;
-        set { SetProperty(ref _radiusTooltipLabelFormatter, value); _obsolete_formatter = value; }
+        set => SetProperty(ref _radiusTooltipLabelFormatter, value);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>

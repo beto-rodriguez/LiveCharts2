@@ -151,7 +151,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? ToolTipLabelFormatter
     {
         get => _tooltipLabelFormatter;
-        set { SetProperty(ref _tooltipLabelFormatter, value); _obsolete_formatter = value; }
+        set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>

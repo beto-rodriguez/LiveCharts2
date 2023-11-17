@@ -94,7 +94,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? YToolTipLabelFormatter
     {
         get => _yTooltipLabelFormatter;
-        set { SetProperty(ref _yTooltipLabelFormatter, value); _obsolete_formatter = value; }
+        set => SetProperty(ref _yTooltipLabelFormatter, value);
     }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ClippingMode"/>
