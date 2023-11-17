@@ -3,12 +3,24 @@
     <LangVersion>11.0</LangVersion>
     <Nullable>enable</Nullable>
 
-    <TargetFrameworks>net6.0-windows10.0.19041;net7.0-windows10.0.19041</TargetFrameworks>
+    <TargetFrameworks>
+      net6.0-windows10.0.19041.0;
+      net7.0-windows10.0.19041.0;
+      net8.0-windows10.0.19041.0
+    </TargetFrameworks>
+    
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
-    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-    <UseWinUI>true</UseWinUI>
 
+    <!--
+    net 8 breaking changes:
+    https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/rid-graph
+    -->
+    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="!$(TargetFramework.Contains('8.0-windows'))">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    
+    <UseWinUI>true</UseWinUI>
+    
+    <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
     <Version>2.0.0-rc2</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsAppSDK.</Description>
