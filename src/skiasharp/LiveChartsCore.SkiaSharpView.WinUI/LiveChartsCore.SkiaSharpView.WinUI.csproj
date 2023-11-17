@@ -15,7 +15,7 @@
     net 8 breaking changes:
     https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/rid-graph
     -->
-    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <RuntimeIdentifiers Condition="!$(TargetFramework.Contains('8.0-windows'))">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     
     <UseWinUI>true</UseWinUI>

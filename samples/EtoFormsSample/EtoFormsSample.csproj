@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <!--
     <BuildPlatform>Windows</BuildPlatform>
     <BuildPlatform>Gtk</BuildPlatform>
