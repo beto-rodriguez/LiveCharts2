@@ -169,9 +169,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
         minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
 
-        var maxOuterRadius = (float)MaxOuterRadius;
-        minDimension *= maxOuterRadius;
-
         var pieLabelsCorrection = chart.SeriesContext.GetPieOuterLabelsSpace<TLabel>();
         minDimension -= pieLabelsCorrection;
 
@@ -505,7 +502,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _fill, _stroke, DataLabelsPaint };
+        return [_fill, _stroke, DataLabelsPaint];
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
