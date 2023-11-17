@@ -1,12 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
-	  <UseMaui>true</UseMaui>
-	  <SingleProject>true</SingleProject>
     <Nullable>enable</Nullable>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
+
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+
+    <TargetFrameworks>
+      <!-- net6 mobile is no longer supported https://dotnet.microsoft.com/en-us/platform/support/policy/maui -->
+      net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;
+      net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
+    </TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
+      $(TargetFrameworks);
+      net7.0-windows10.0.19041.0;
+      net8.0-windows10.0.19041.0
+    </TargetFrameworks>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
@@ -29,11 +39,19 @@
 
 	<ItemGroup>
 	  <PackageReference Include="SkiaSharp.Views.Maui.Controls.Compatibility" Version="2.88.6" />
+    <PackageReference
+      Condition="!$(TargetFramework.Contains('net7.0'))"
+      Include="Microsoft.Maui.Controls"
+      Version="$(MauiVersion)" />
+    <PackageReference
+      Condition="!$(TargetFramework.Contains('net7.0'))"
+      Include="Microsoft.Maui.Controls.Compatibility"
+      Version="$(MauiVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
-	  <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
 	  <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
 	</ItemGroup>
 
