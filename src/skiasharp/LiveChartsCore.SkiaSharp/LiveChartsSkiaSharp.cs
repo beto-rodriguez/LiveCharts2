@@ -117,23 +117,6 @@ public static class LiveChartsSkiaSharp
     }
 
     /// <summary>
-    /// Gets the <see cref="SkiaFontMatchChar"/> key.
-    /// </summary>
-    [Obsolete($"Use {nameof(Paint)}.{nameof(Paint.SKTypeface)} instead.")]
-    public const string SkiaFontMatchChar = "matchChar";
-
-    /// <summary>
-    /// Matches
-    /// </summary>
-    /// <param name="char"></param>
-    /// <returns></returns>
-    [Obsolete($"Use {nameof(Paint)}.{nameof(Paint.SKTypeface)} instead.")]
-    public static string MatchChar(char @char)
-    {
-        return $"{SkiaFontMatchChar}|{@char}";
-    }
-
-    /// <summary>
     /// Converts an IEnumerable to an ObservableCollection of pie series.
     /// </summary>
     /// <typeparam name="T">The type.</typeparam>

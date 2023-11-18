@@ -2,13 +2,8 @@
 
 namespace ViewModelsSamples.General.ConditionalDraw;
 
-public partial class City : ObservableObject
+public partial class City(double population) : ObservableObject
 {
-    public City(double population)
-    {
-        _population = population;
-    }
-
     [ObservableProperty]
-    private double _population;
+    private double _population = population;
 }

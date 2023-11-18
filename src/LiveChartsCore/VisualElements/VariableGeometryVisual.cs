@@ -31,31 +31,25 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a visual element that is useful to create series miniatures in the tool tips and legends.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class VariableGeometryVisual<TDrawingContext> : BaseGeometryVisual<TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of the <see cref="VariableGeometryVisual{TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="geometry"></param>
+public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingContext> geometry) : BaseGeometryVisual<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private ISizedGeometry<TDrawingContext> _geometry;
     private bool _isInitialized;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VariableGeometryVisual{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="geometry"></param>
-    public VariableGeometryVisual(ISizedGeometry<TDrawingContext> geometry)
-    {
-        _geometry = geometry;
-    }
 
     /// <summary>
     /// Gets or sets the geometry.
     /// </summary>
     public ISizedGeometry<TDrawingContext> Geometry
     {
-        get => _geometry;
+        get => geometry;
         set
         {
-            if (_geometry == value) return;
-            _geometry = value;
+            if (geometry == value) return;
+            geometry = value;
             _isInitialized = false;
             OnPropertyChanged();
         }
@@ -68,7 +62,7 @@ public class VariableGeometryVisual<TDrawingContext> : BaseGeometryVisual<TDrawi
 
     internal override IAnimatable?[] GetDrawnGeometries()
     {
-        return new IAnimatable?[] { _geometry };
+        return new IAnimatable?[] { geometry };
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
@@ -127,8 +121,8 @@ public class VariableGeometryVisual<TDrawingContext> : BaseGeometryVisual<TDrawi
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
     {
-        if (_geometry is null) return;
-        _geometry.Parent = parent;
+        if (geometry is null) return;
+        geometry.Parent = parent;
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>

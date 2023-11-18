@@ -27,21 +27,16 @@ namespace LiveChartsCore.Behaviours.Events;
 /// <summary>
 /// Defines the screen event args.
 /// </summary>
-public class ScreenEventArgs : EventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
+/// </remarks>
+/// <param name="location">The pointer location.</param>
+/// <param name="originalEvent">The original event.</param>
+public class ScreenEventArgs(LvcPoint location, object originalEvent) : EventArgs(originalEvent)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
-    /// </summary>
-    /// <param name="location">The pointer location.</param>
-    /// <param name="originalEvent">The original event.</param>
-    public ScreenEventArgs(LvcPoint location, object originalEvent)
-        : base(originalEvent)
-    {
-        Location = location;
-    }
 
     /// <summary>
     /// Gets the pointer location.
     /// </summary>
-    public LvcPoint Location { get; }
+    public LvcPoint Location { get; } = location;
 }

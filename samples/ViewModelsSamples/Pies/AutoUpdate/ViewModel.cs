@@ -15,8 +15,8 @@ public partial class ViewModel : ObservableObject
     public ViewModel()
     {
         // Use ObservableCollections to let the chart listen for changes (or any INotifyCollectionChanged). // mark
-        Series = new ObservableCollection<ISeries>
-        {
+        Series =
+        [
             // Use the ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
             // or use any INotifyPropertyChanged implementation // mark
             new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(2) } },
@@ -25,7 +25,7 @@ public partial class ViewModel : ObservableObject
             new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(7) } },
             new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(4) } },
             new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } }
-        };
+        ];
     }
 
     public ObservableCollection<ISeries> Series { get; set; }

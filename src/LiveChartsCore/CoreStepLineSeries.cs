@@ -48,8 +48,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
-    private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = new();
-    private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = new();
+    private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
+    private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _geometrySize = 14f;
     private IPaint<TDrawingContext>? _geometryFill;
     private IPaint<TDrawingContext>? _geometryStroke;
@@ -133,13 +133,13 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
-            strokePathHelperContainer = new List<TPathGeometry>();
+            strokePathHelperContainer = [];
             _strokePathHelperDictionary[chart.Canvas.Sync] = strokePathHelperContainer;
         }
 
         if (!_fillPathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var fillPathHelperContainer))
         {
-            fillPathHelperContainer = new List<TPathGeometry>();
+            fillPathHelperContainer = [];
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 

@@ -14,13 +14,13 @@ namespace ViewModelsSamples.General.RealTime;
 public partial class ViewModel : ObservableObject
 {
     private readonly Random _random = new();
-    private readonly List<DateTimePoint> _values = new();
+    private readonly List<DateTimePoint> _values = [];
     private readonly DateTimeAxis _customAxis;
 
     public ViewModel()
     {
-        Series = new ObservableCollection<ISeries>
-        {
+        Series =
+        [
             new LineSeries<DateTimePoint>
             {
                 Values = _values,
@@ -28,7 +28,7 @@ public partial class ViewModel : ObservableObject
                 GeometryFill = null,
                 GeometryStroke = null
             }
-        };
+        ];
 
         _customAxis = new DateTimeAxis(TimeSpan.FromSeconds(1), Formatter)
         {

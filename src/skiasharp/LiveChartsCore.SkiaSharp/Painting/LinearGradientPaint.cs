@@ -31,7 +31,30 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// Defines a set of geometries that will be painted using a linear gradient shader.
 /// </summary>
 /// <seealso cref="Paint" />
-public class LinearGradientPaint : Paint
+/// <remarks>
+/// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
+/// </remarks>
+/// <param name="gradientStops">The gradient stops.</param>
+/// <param name="startPoint">
+/// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+/// </param>
+/// <param name="endPoint">
+/// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+/// </param>
+/// <param name="colorPos">
+/// An array of integers in the range of 0 to 1.
+/// These integers indicate the relative positions of the colors, You can set that argument to null to equally
+/// space the colors, default is null.
+/// </param>
+/// <param name="tileMode">
+/// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
+/// </param>
+public class LinearGradientPaint(
+    SKColor[] gradientStops,
+    SKPoint startPoint,
+    SKPoint endPoint,
+    float[]? colorPos = null,
+    SKShaderTileMode tileMode = SKShaderTileMode.Repeat) : Paint
 {
     /// <summary>
     /// Default start point.
@@ -42,45 +65,7 @@ public class LinearGradientPaint : Paint
     /// Default end point.
     /// </summary>
     protected static readonly SKPoint s_defaultEndPoint = new(1, 0.5f);
-
-    private readonly SKColor[] _gradientStops;
-    private readonly SKPoint _startPoint;
-    private readonly SKPoint _endPoint;
-    private readonly float[]? _colorPos;
-    private readonly SKShaderTileMode _tileMode;
     private SkiaSharpDrawingContext? _drawingContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
-    /// </summary>
-    /// <param name="gradientStops">The gradient stops.</param>
-    /// <param name="startPoint">
-    /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-    /// </param>
-    /// <param name="endPoint">
-    /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-    /// </param>
-    /// <param name="colorPos">
-    /// An array of integers in the range of 0 to 1.
-    /// These integers indicate the relative positions of the colors, You can set that argument to null to equally
-    /// space the colors, default is null.
-    /// </param>
-    /// <param name="tileMode">
-    /// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
-    /// </param>
-    public LinearGradientPaint(
-        SKColor[] gradientStops,
-        SKPoint startPoint,
-        SKPoint endPoint,
-        float[]? colorPos = null,
-        SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
-    {
-        _gradientStops = gradientStops;
-        _startPoint = startPoint;
-        _endPoint = endPoint;
-        _colorPos = colorPos;
-        _tileMode = tileMode;
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
@@ -114,7 +99,7 @@ public class LinearGradientPaint : Paint
     /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
     public override IPaint<SkiaSharpDrawingContext> CloneTask()
     {
-        return new LinearGradientPaint(_gradientStops, _startPoint, _endPoint, _colorPos, _tileMode)
+        return new LinearGradientPaint(gradientStops, startPoint, endPoint, colorPos, tileMode)
         {
             Style = Style,
             IsStroke = IsStroke,
@@ -146,15 +131,15 @@ public class LinearGradientPaint : Paint
         var yf = size.Location.Y;
         var yt = yf + size.Height;
 
-        var start = new SKPoint(xf + (xt - xf) * _startPoint.X, yf + (yt - yf) * _startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * _endPoint.X, yf + (yt - yf) * _endPoint.Y);
+        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
 
         _skiaPaint.Shader = SKShader.CreateLinearGradient(
             start,
             end,
-            _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * geometry.Opacity))).ToArray(),
-            _colorPos,
-            _tileMode);
+            gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * geometry.Opacity))).ToArray(),
+            colorPos,
+            tileMode);
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
@@ -170,15 +155,15 @@ public class LinearGradientPaint : Paint
         var yf = size.Location.Y;
         var yt = yf + size.Height;
 
-        var start = new SKPoint(xf + (xt - xf) * _startPoint.X, yf + (yt - yf) * _startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * _endPoint.X, yf + (yt - yf) * _endPoint.Y);
+        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
 
         _skiaPaint.Shader = SKShader.CreateLinearGradient(
             start,
             end,
-            _gradientStops,
-            _colorPos,
-            _tileMode);
+            gradientStops,
+            colorPos,
+            tileMode);
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
@@ -194,15 +179,15 @@ public class LinearGradientPaint : Paint
         var yf = size.Location.Y;
         var yt = yf + size.Height;
 
-        var start = new SKPoint(xf + (xt - xf) * _startPoint.X, yf + (yt - yf) * _startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * _endPoint.X, yf + (yt - yf) * _endPoint.Y);
+        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
 
         _skiaPaint.Shader = SKShader.CreateLinearGradient(
                 start,
                 end,
-                _gradientStops,
-                _colorPos,
-                _tileMode);
+                gradientStops,
+                colorPos,
+                tileMode);
 
         _skiaPaint.IsAntialias = IsAntialias;
         _skiaPaint.IsStroke = true;

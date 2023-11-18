@@ -16,7 +16,7 @@ namespace ViewModelsSamples.General.Scrollable;
 public partial class ViewModel
 {
     private bool _isDown = false;
-    private readonly ObservableCollection<ObservablePoint> _values = new();
+    private readonly ObservableCollection<ObservablePoint> _values = [];
 
     public ViewModel()
     {

@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -59,7 +60,9 @@ public class ChartBehaviour : Behaviours.ChartBehaviour
 
             contentView.UserInteractionEnabled = true;
 
+#if MACCATALYST
             contentView.AddGestureRecognizer(GetMacCatalystHover(contentView));
+#endif
             contentView.AddGestureRecognizer(GetMacCatalystLongPress(contentView));
             contentView.AddGestureRecognizer(GetMacCatalystPinch(contentView));
             contentView.AddGestureRecognizer(GetMacCatalystOnPan(contentView));

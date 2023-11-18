@@ -20,6 +20,15 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!--
+    BL0007 tries to warn about using auto properties,
+    but LiveCharts updates automatically, and we need to let the core of the library
+    know about the change.
+    -->
+    <NoWarn>$(NoWarn);BL0007</NoWarn>
+  </PropertyGroup>
+
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
     <TypeScriptOutFile></TypeScriptOutFile>

@@ -132,14 +132,14 @@ public static class PieChartExtensions
         ObservableCollection<TModel> values;
         if (gaugeOptions == GaugeOptions.Solid)
         {
-            values = new ObservableCollection<TModel>();
+            values = [];
             while (values.Count < count - 1)
                 values.Add(default!);
             values.Insert(i, instance);
         }
         else
         {
-            values = new ObservableCollection<TModel> { instance };
+            values = [instance];
             if (gaugeOptions == GaugeOptions.Angular)
             {
                 series.HoverPushout = 0;

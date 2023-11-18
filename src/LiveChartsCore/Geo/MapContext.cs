@@ -28,41 +28,34 @@ namespace LiveChartsCore.Geo;
 /// Defines a map context.
 /// </summary>
 /// <typeparam name="TDrawingContext"></typeparam>
-public class MapContext<TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of <see cref="MapContext{TDrawingContext}"/> class.
+/// </remarks>
+public class MapContext<TDrawingContext>(
+    GeoMap<TDrawingContext> core,
+    IGeoMapView<TDrawingContext> view,
+    CoreMap<TDrawingContext> map,
+    MapProjector projector)
     where TDrawingContext : DrawingContext
 {
-    /// <summary>
-    /// Initializes a new instance of <see cref="MapContext{TDrawingContext}"/> class.
-    /// </summary>
-    public MapContext(
-        GeoMap<TDrawingContext> core,
-        IGeoMapView<TDrawingContext> view,
-        CoreMap<TDrawingContext> map,
-        MapProjector projector)
-    {
-        CoreMap = core;
-        MapFile = map;
-        Projector = projector;
-        View = view;
-    }
 
     /// <summary>
     /// Gets the core map.
     /// </summary>
-    public GeoMap<TDrawingContext> CoreMap { get; }
+    public GeoMap<TDrawingContext> CoreMap { get; } = core;
 
     /// <summary>
     /// Gets the map file.
     /// </summary>
-    public CoreMap<TDrawingContext> MapFile { get; }
+    public CoreMap<TDrawingContext> MapFile { get; } = map;
 
     /// <summary>
     /// Gets the map projector.
     /// </summary>
-    public MapProjector Projector { get; }
+    public MapProjector Projector { get; } = projector;
 
     /// <summary>
     /// Gets the map view.
     /// </summary>
-    public IGeoMapView<TDrawingContext> View { get; }
+    public IGeoMapView<TDrawingContext> View { get; } = view;
 }

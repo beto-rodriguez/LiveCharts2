@@ -33,7 +33,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a path geometry with a specified color.
 /// </summary>
 /// <seealso cref="PathGeometry" />
+#pragma warning disable CS0612 // Type or member is obsolete
 public class HeatPathShape : PathGeometry, IHeatPathShape
+#pragma warning restore CS0612 // Type or member is obsolete
 {
     private readonly ColorMotionProperty _fillProperty;
 

@@ -69,7 +69,7 @@ public class SVGPathGeometry : SizedGeometry, ISvgPath<SkiaSharpDrawingContext>
     /// memory, this has no secondary effects in most of the cases, but if you are parsing a lot of paths
     /// (maybe over 500) then you must consider cleaning the cache when you no longer need a path.
     /// </summary>
-    public static readonly Dictionary<string, SKPath> Cache = new();
+    public static readonly Dictionary<string, SKPath> Cache = [];
 
     /// <summary>
     /// Gets or sets the path.

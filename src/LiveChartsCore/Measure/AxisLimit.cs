@@ -25,49 +25,41 @@ namespace LiveChartsCore.Measure;
 /// <summary>
 /// Defines the axis limit structure.
 /// </summary>
-public struct AxisLimit
+/// <remarks>
+/// Initializes a new instance of the <see cref="AxisLimit"/> struct.
+/// </remarks>
+/// <param name="min">The min value.</param>
+/// <param name="max">The masx value.</param>
+/// <param name="minDelta">The min delta.</param>
+/// <param name="dataMin">The data min value.</param>
+/// <param name="dataMax">The data max value.</param>
+public struct AxisLimit(double min, double max, double minDelta, double dataMin, double dataMax)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AxisLimit"/> struct.
-    /// </summary>
-    /// <param name="min">The min value.</param>
-    /// <param name="max">The masx value.</param>
-    /// <param name="minDelta">The min delta.</param>
-    /// <param name="dataMin">The data min value.</param>
-    /// <param name="dataMax">The data max value.</param>
-    public AxisLimit(double min, double max, double minDelta, double dataMin, double dataMax)
-    {
-        Min = min;
-        Max = max;
-        MinDelta = minDelta;
-        DataMin = dataMin;
-        DataMax = dataMax;
-    }
 
     /// <summary>
     /// Gets or sets the minimum value.
     /// </summary>
-    public double Min { get; set; }
+    public double Min { get; set; } = min;
 
     /// <summary>
     /// Gets or sets the maximum value.
     /// </summary>
-    public double Max { get; set; }
+    public double Max { get; set; } = max;
 
     /// <summary>
     /// Gets or sets the minimum value.
     /// </summary>
-    public double DataMin { get; set; }
+    public double DataMin { get; set; } = dataMin;
 
     /// <summary>
     /// Gets or sets the maximum value.
     /// </summary>
-    public double DataMax { get; set; }
+    public double DataMax { get; set; } = dataMax;
 
     /// <summary>
     /// Gets or sets the min delta.
     /// </summary>
-    public double MinDelta { get; set; }
+    public double MinDelta { get; set; } = minDelta;
 
     internal static void ValidateLimits(ref double min, ref double max)
     {

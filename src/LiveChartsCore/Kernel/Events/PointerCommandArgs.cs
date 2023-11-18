@@ -29,31 +29,25 @@ namespace LiveChartsCore.Kernel.Events;
 /// <summary>
 /// Command arguments that describe a pointer event in a LiveChart view.
 /// </summary>
-public class PointerCommandArgs : ChartCommandArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="PointerCommandArgs"/> class.
+/// </remarks>
+/// <param name="chart">The chart that fired the event.</param>
+/// <param name="pointerPosition">The pointer position.</param>
+/// <param name="originalEventArgs">The original event args.</param>
+public class PointerCommandArgs(
+    IChartView chart,
+    LvcPointD pointerPosition,
+    object originalEventArgs) : ChartCommandArgs(chart)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PointerCommandArgs"/> class.
-    /// </summary>
-    /// <param name="chart">The chart that fired the event.</param>
-    /// <param name="pointerPosition">The pointer position.</param>
-    /// <param name="originalEventArgs">The original event args.</param>
-    public PointerCommandArgs(
-        IChartView chart,
-        LvcPointD pointerPosition,
-        object originalEventArgs)
-            : base(chart)
-    {
-        PointerPosition = pointerPosition;
-        OriginalEventArgs = originalEventArgs;
-    }
 
     /// <summary>
     /// Gets the pointer position relative to the chart.
     /// </summary>
-    public LvcPointD PointerPosition { get; set; }
+    public LvcPointD PointerPosition { get; set; } = pointerPosition;
 
     /// <summary>
     /// Gets the framework-specific event arguments.
     /// </summary>
-    public object OriginalEventArgs { get; set; }
+    public object OriginalEventArgs { get; set; } = originalEventArgs;
 }

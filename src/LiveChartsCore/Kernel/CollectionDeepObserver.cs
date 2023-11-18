@@ -36,7 +36,7 @@ public class CollectionDeepObserver<T>
 {
     private readonly NotifyCollectionChangedEventHandler _onCollectionChanged;
     private readonly PropertyChangedEventHandler _onItemPropertyChanged;
-    private readonly HashSet<INotifyPropertyChanged> _itemsListening = new();
+    private readonly HashSet<INotifyPropertyChanged> _itemsListening = [];
 
     /// <summary>
     /// The check i notify property changed

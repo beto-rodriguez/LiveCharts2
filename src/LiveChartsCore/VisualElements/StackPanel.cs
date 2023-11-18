@@ -55,7 +55,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public List<VisualElement<TDrawingContext>> Children { get; } = new();
+    public List<VisualElement<TDrawingContext>> Children { get; } = [];
 
     /// <summary>
     /// Gets or sets the panel orientation.
@@ -176,7 +176,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         var mx = 0f;
         var my = 0f;
 
-        List<MeasureResult> line = new();
+        List<MeasureResult> line = [];
 
         LvcSize alignCurrentLine()
         {
@@ -212,7 +212,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
                 if (child.Size.Height > my) my = child.Size.Height;
             }
 
-            line = new();
+            line = [];
             return new LvcSize(mx, my);
         }
 
@@ -287,15 +287,9 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         base.RemoveFromUI(chart);
     }
 
-    private class MeasureResult
+    private class MeasureResult(VisualElement<TDrawingContext> visual, LvcSize size)
     {
-        public MeasureResult(VisualElement<TDrawingContext> visual, LvcSize size)
-        {
-            Visual = visual;
-            Size = size;
-        }
-
-        public VisualElement<TDrawingContext> Visual { get; set; }
-        public LvcSize Size { get; set; }
+        public VisualElement<TDrawingContext> Visual { get; set; } = visual;
+        public LvcSize Size { get; set; } = size;
     }
 }

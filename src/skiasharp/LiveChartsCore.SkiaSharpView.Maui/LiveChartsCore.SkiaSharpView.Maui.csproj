@@ -25,6 +25,12 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 
+    <!--
+    net 8 breaking changes:
+    https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/rid-graph
+    -->
+    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+
     <Version>2.0.0-rc2</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Maui.</Description>
@@ -36,8 +42,8 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
-
-	<ItemGroup>
+  
+  <ItemGroup>
 	  <PackageReference Include="SkiaSharp.Views.Maui.Controls.Compatibility" Version="2.88.6" />
     <PackageReference
       Condition="!$(TargetFramework.Contains('net7.0'))"

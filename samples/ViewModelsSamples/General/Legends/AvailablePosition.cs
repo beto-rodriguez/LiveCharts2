@@ -2,14 +2,8 @@
 
 namespace ViewModelsSamples.General.Legends;
 
-public class AvailablePosition
+public class AvailablePosition(string name, LegendPosition position)
 {
-    public AvailablePosition(string name, LegendPosition position)
-    {
-        Name = name;
-        Position = position;
-    }
-
-    public string Name { get; set; }
-    public LegendPosition Position { get; set; }
+    public string Name { get; set; } = name;
+    public LegendPosition Position { get; set; } = position;
 }

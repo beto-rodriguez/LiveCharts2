@@ -37,8 +37,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
 {
     internal bool _isInternalSet = false;
     internal bool _isThemeSet = false;
-    internal readonly HashSet<string> _userSets = new();
-    private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
+    internal readonly HashSet<string> _userSets = [];
+    private readonly List<IPaint<TDrawingContext>> _deletingTasks = [];
 
     /// <summary>
     /// Occurs when a property value changes.

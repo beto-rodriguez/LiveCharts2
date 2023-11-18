@@ -37,7 +37,7 @@ public partial class MotionCanvas : IDisposable
     private SKCanvasView? _canvas;
     private bool _disposing = false;
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
+    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = [];
 
     /// <summary>
     /// Called when the control is initialized.

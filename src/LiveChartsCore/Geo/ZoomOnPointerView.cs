@@ -28,26 +28,21 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines the 
 /// </summary>
-public class ZoomOnPointerView
+/// <remarks>
+/// Initializes a new instance of the <see cref="ZoomOnPointerView"/> command.
+/// </remarks>
+/// <param name="pivot">The pivot.</param>
+/// <param name="direction">The direction.</param>
+public class ZoomOnPointerView(LvcPoint pivot, ZoomDirection direction)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ZoomOnPointerView"/> command.
-    /// </summary>
-    /// <param name="pivot">The pivot.</param>
-    /// <param name="direction">The direction.</param>
-    public ZoomOnPointerView(LvcPoint pivot, ZoomDirection direction)
-    {
-        Pivot = pivot;
-        Direction = direction;
-    }
 
     /// <summary>
     /// Gets the pivot.
     /// </summary>
-    public LvcPoint Pivot { get; }
+    public LvcPoint Pivot { get; } = pivot;
 
     /// <summary>
     /// Gets the direction.
     /// </summary>
-    public ZoomDirection Direction { get; }
+    public ZoomDirection Direction { get; } = direction;
 }

@@ -48,7 +48,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
-    private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = new();
+    private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
@@ -79,7 +79,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The x axes.
     /// </value>
     public ICartesianAxis<TDrawingContext>[] XAxes { get; private set; } =
-        Array.Empty<ICartesianAxis<TDrawingContext>>();
+        [];
 
     /// <summary>
     /// Gets the y axes.
@@ -88,7 +88,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The y axes.
     /// </value>
     public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } =
-        Array.Empty<ICartesianAxis<TDrawingContext>>();
+        [];
 
     /// <summary>
     /// Gets the sections.
@@ -851,7 +851,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public override void Unload()
     {
         base.Unload();
-        _crosshair = new();
+        _crosshair = [];
         _isFirstDraw = true;
     }
 

@@ -70,8 +70,8 @@ public static class GaugeGenerator
     private static ObservableCollection<PieSeries<ObservableValue>> Build(
         GaugeOptions options, params GaugeItem[] items)
     {
-        List<GaugeItem> seriesRules = new();
-        List<GaugeItem> backgroundRules = new();
+        List<GaugeItem> seriesRules = [];
+        List<GaugeItem> backgroundRules = [];
 
         foreach (var item in items)
         {
