@@ -43,12 +43,10 @@ namespace LiveChartsCore;
 /// <param name="view">The view.</param>
 /// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
-/// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
 public class PolarChart<TDrawingContext>(
     IPolarChartView<TDrawingContext> view,
     Action<LiveChartsSettings> defaultPlatformConfig,
-    MotionCanvas<TDrawingContext> canvas,
-    bool requiresLegendMeasureAlways = false) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
+    MotionCanvas<TDrawingContext> canvas) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
     where TDrawingContext : DrawingContext
 {
     private int _nextSeries = 0;
