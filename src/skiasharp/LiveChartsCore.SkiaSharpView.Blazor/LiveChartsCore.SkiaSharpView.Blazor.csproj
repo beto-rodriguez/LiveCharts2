@@ -26,7 +26,7 @@
     but LiveCharts updates automatically, and we need to let the core of the library
     know about the change.
     -->
-    <NoWarn>BL0007</NoWarn>
+    <NoWarn>$(NoWarn);BL0007</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
