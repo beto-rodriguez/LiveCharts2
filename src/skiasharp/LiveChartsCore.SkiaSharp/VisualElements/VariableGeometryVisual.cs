@@ -27,9 +27,6 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <inheritdoc cref="VariableGeometryVisual{TDrawingContext}"/>
-public class VariableGeometryVisual : VariableGeometryVisual<SkiaSharpDrawingContext>
+public class VariableGeometryVisual(ISizedGeometry<SkiaSharpDrawingContext> geometry) : VariableGeometryVisual<SkiaSharpDrawingContext>(geometry)
 {
-    public VariableGeometryVisual(ISizedGeometry<SkiaSharpDrawingContext> geometry)
-        : base(geometry)
-    { }
 }

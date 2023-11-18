@@ -27,22 +27,17 @@ namespace LiveChartsCore.Behaviours.Events;
 /// <summary>
 /// Defines the scroll event args.
 /// </summary>
-public class ScrollEventArgs : ScreenEventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
+/// </remarks>
+/// <param name="location">The pointer location.</param>
+/// <param name="scrollDelta">Indicates the scroll delta.</param>
+/// <param name="originalEvent">The original event.</param>
+public class ScrollEventArgs(LvcPoint location, double scrollDelta, object originalEvent) : ScreenEventArgs(location, originalEvent)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
-    /// </summary>
-    /// <param name="location">The pointer location.</param>
-    /// <param name="scrollDelta">Indicates the scroll delta.</param>
-    /// <param name="originalEvent">The original event.</param>
-    public ScrollEventArgs(LvcPoint location, double scrollDelta, object originalEvent)
-        : base(location, originalEvent)
-    {
-        ScrollDelta = scrollDelta;
-    }
 
     /// <summary>
     /// Gets the scroll delta.
     /// </summary>
-    public double ScrollDelta { get; }
+    public double ScrollDelta { get; } = scrollDelta;
 }

@@ -307,13 +307,8 @@ public class DataProviderTest
         Assert.IsTrue(emptyCount == 2);
     }
 
-    public class City
+    public class City(double? population)
     {
-        public City(double? population)
-        {
-            Population = population;
-        }
-
-        public double? Population { get; set; }
+        public double? Population { get; set; } = population;
     }
 }

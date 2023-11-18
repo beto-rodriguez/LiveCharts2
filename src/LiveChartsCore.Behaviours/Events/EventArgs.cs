@@ -25,19 +25,15 @@ namespace LiveChartsCore.Behaviours.Events;
 /// <summary>
 /// Defines the screen event args.
 /// </summary>
-public class EventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="EventArgs"/> class.
+/// </remarks>
+/// <param name="originalEvent">The original event.</param>
+public class EventArgs(object originalEvent)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EventArgs"/> class.
-    /// </summary>
-    /// <param name="originalEvent">The original event.</param>
-    public EventArgs(object originalEvent)
-    {
-        OriginalEvent = originalEvent;
-    }
 
     /// <summary>
     /// Gets the original event.
     /// </summary>
-    public object OriginalEvent { get; }
+    public object OriginalEvent { get; } = originalEvent;
 }

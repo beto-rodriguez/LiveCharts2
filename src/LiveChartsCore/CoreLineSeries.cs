@@ -761,23 +761,15 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         return new SegmentVisual(isNew, path);
     }
 
-    private class SplineData
+    private class SplineData(ChartPoint start)
     {
-        public SplineData(ChartPoint start)
-        {
-            Previous = start;
-            Current = start;
-            Next = start;
-            AfterNext = start;
-        }
+        public ChartPoint Previous { get; set; } = start;
 
-        public ChartPoint Previous { get; set; }
+        public ChartPoint Current { get; set; } = start;
 
-        public ChartPoint Current { get; set; }
+        public ChartPoint Next { get; set; } = start;
 
-        public ChartPoint Next { get; set; }
-
-        public ChartPoint AfterNext { get; set; }
+        public ChartPoint AfterNext { get; set; } = start;
 
         public bool IsFirst { get; set; } = true;
 
@@ -790,16 +782,10 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         }
     }
 
-    private class SegmentVisual
+    private class SegmentVisual(bool isNew, TPathGeometry path)
     {
-        public SegmentVisual(bool isNew, TPathGeometry path)
-        {
-            IsNew = isNew;
-            Path = path;
-        }
+        public bool IsNew { get; set; } = isNew;
 
-        public bool IsNew { get; set; }
-
-        public TPathGeometry Path { get; set; }
+        public TPathGeometry Path { get; set; } = path;
     }
 }

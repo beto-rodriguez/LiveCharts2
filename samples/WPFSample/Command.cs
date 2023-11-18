@@ -3,15 +3,9 @@ using System.Windows.Input;
 
 namespace WPFSample;
 
-public class Command : ICommand
+public class Command(Action<object> command) : ICommand
 {
-    private readonly Action<object> command;
     public event EventHandler CanExecuteChanged;
-
-    public Command(Action<object> command)
-    {
-        this.command = command;
-    }
 
     public bool CanExecute(object parameter)
     {

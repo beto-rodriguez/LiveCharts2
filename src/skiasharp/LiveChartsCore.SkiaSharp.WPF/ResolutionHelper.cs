@@ -25,26 +25,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <summary>
 /// A helper class to get the screen resolution.
 /// </summary>
-public class ResolutionHelper
+/// <remarks>
+/// Initializes a new instance of the <see cref="ResolutionHelper"/> class.
+/// </remarks>
+/// <param name="dpix">The horizontal resolution.</param>
+/// <param name="dpiy">The vertical resolution.</param>
+public class ResolutionHelper(float dpix, float dpiy)
 {
     /// <summary>
     /// Gets or sets the horizontal dpi.
     /// </summary>
-    public float dpix { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ResolutionHelper"/> class.
-    /// </summary>
-    /// <param name="dpix">The horizontal resolution.</param>
-    /// <param name="dpiy">The vertical resolution.</param>
-    public ResolutionHelper(float dpix, float dpiy)
-    {
-        this.dpix = dpix;
-        this.dpiy = dpiy;
-    }
+    public float dpix { get; set; } = dpix;
 
     /// <summary>
     /// Gets or sets the vertical dpi.
     /// </summary>
-    public float dpiy { get; set; }
+    public float dpiy { get; set; } = dpiy;
 }

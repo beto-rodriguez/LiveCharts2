@@ -140,22 +140,12 @@ public class MotionCanvas : UserControl
 
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0-preview1/samples/RenderDemo/Pages/CustomSkiaPage.cs
-    private class CustomDrawOp : ICustomDrawOperation
+    private class CustomDrawOp(
+        MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds) : ICustomDrawOperation
     {
-        private readonly MotionCanvas _avaloniaControl;
-        private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas;
-
-        public CustomDrawOp(
-            MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds)
-        {
-            _avaloniaControl = avaloniaControl;
-            _motionCanvas = motionCanvas;
-            Bounds = bounds;
-        }
-
         public void Dispose() { }
 
-        public Rect Bounds { get; }
+        public Rect Bounds { get; } = bounds;
 
         public bool HitTest(Point p)
         {
@@ -182,9 +172,9 @@ public class MotionCanvas : UserControl
                 $"tread: {Environment.CurrentManagedThreadId}");
             }
 #endif
-            _motionCanvas.DrawFrame(
+            motionCanvas.DrawFrame(
                 new SkiaSharpDrawingContext(
-                    _motionCanvas,
+                    motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
                     lease.SkSurface,
                     lease.SkCanvas,

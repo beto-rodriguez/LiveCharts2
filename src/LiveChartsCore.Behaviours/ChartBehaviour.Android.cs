@@ -125,21 +125,14 @@ public abstract partial class ChartBehaviour
         viewGroup.RequestDisallowInterceptTouchEvent(isChartInteraction);
     }
 
-    private class CustomScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener
+    private class CustomScaleListener(Action<float> onScaled) : ScaleGestureDetector.SimpleOnScaleGestureListener
     {
-        private readonly Action<float> _onScaled;
-
-        public CustomScaleListener(Action<float> onScaled)
-        {
-            _onScaled = onScaled;
-        }
-
         public bool Paused { get; set; }
 
         public override bool OnScale(ScaleGestureDetector? detector)
         {
             if (detector is null || detector.ScaleFactor == 1 || Paused) return false;
-            _onScaled(detector.ScaleFactor);
+            onScaled(detector.ScaleFactor);
             return true;
         }
     }

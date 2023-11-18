@@ -287,54 +287,46 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <summary>
     /// Defines a cell in the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/>.
     /// </summary>
-    public class TableCell
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="TableCell"/> class.
+    /// </remarks>
+    /// <param name="row">The row index.</param>
+    /// <param name="column">The column index.</param>
+    /// <param name="visualElement">The visual to add.</param>
+    /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
+    /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
+    public class TableCell(
+        int row,
+        int column,
+        VisualElement<TDrawingContext> visualElement,
+        Align? verticalAlign = null,
+        Align? horizontalAlign = null)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TableCell"/> class.
-        /// </summary>
-        /// <param name="row">The row index.</param>
-        /// <param name="column">The column index.</param>
-        /// <param name="visualElement">The visual to add.</param>
-        /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
-        /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
-        public TableCell(
-            int row,
-            int column,
-            VisualElement<TDrawingContext> visualElement,
-            Align? verticalAlign = null,
-            Align? horizontalAlign = null)
-        {
-            Row = row;
-            Column = column;
-            VisualElement = visualElement;
-            VerticalAlign = verticalAlign;
-            HorizontalAlign = horizontalAlign;
-        }
 
         /// <summary>
         /// Gets the row.
         /// </summary>
-        public int Row { get; }
+        public int Row { get; } = row;
 
         /// <summary>
         /// Gets the column.
         /// </summary>
-        public int Column { get; }
+        public int Column { get; } = column;
 
         /// <summary>
         /// Gets or sets the vertical alignment.
         /// </summary>
-        public Align? VerticalAlign { get; }
+        public Align? VerticalAlign { get; } = verticalAlign;
 
         /// <summary>
         /// Gets or sets the horizontal alignment.
         /// </summary>
-        public Align? HorizontalAlign { get; }
+        public Align? HorizontalAlign { get; } = horizontalAlign;
 
         /// <summary>
         /// Gets the visual element.
         /// </summary>
-        public VisualElement<TDrawingContext> VisualElement { get; }
+        public VisualElement<TDrawingContext> VisualElement { get; } = visualElement;
     }
 }
 

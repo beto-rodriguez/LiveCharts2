@@ -287,15 +287,9 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         base.RemoveFromUI(chart);
     }
 
-    private class MeasureResult
+    private class MeasureResult(VisualElement<TDrawingContext> visual, LvcSize size)
     {
-        public MeasureResult(VisualElement<TDrawingContext> visual, LvcSize size)
-        {
-            Visual = visual;
-            Size = size;
-        }
-
-        public VisualElement<TDrawingContext> Visual { get; set; }
-        public LvcSize Size { get; set; }
+        public VisualElement<TDrawingContext> Visual { get; set; } = visual;
+        public LvcSize Size { get; set; } = size;
     }
 }

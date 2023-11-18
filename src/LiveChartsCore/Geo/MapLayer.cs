@@ -30,21 +30,15 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a map layer.
 /// </summary>
-public class MapLayer<TDrawingContext>
+/// <remarks>
+/// Initializes a new <see cref="MapLayer{TDrawingContext}"/> from the given <see cref="GeoJsonFile"/>.
+/// </remarks>
+/// <param name="layerName">The layer name.</param>
+/// <param name="stroke">The stroke.</param>
+/// <param name="fill">The fill.</param>
+public class MapLayer<TDrawingContext>(string layerName, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill)
     where TDrawingContext : DrawingContext
 {
-    /// <summary>
-    /// Initializes a new <see cref="MapLayer{TDrawingContext}"/> from the given <see cref="GeoJsonFile"/>.
-    /// </summary>
-    /// <param name="layerName">The layer name.</param>
-    /// <param name="stroke">The stroke.</param>
-    /// <param name="fill">The fill.</param>
-    public MapLayer(string layerName, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill)
-    {
-        Name = layerName;
-        Stroke = stroke;
-        Fill = fill;
-    }
 
     /// <summary>
     /// Gets or sets the name.
@@ -52,7 +46,7 @@ public class MapLayer<TDrawingContext>
     /// <value>
     /// The name.
     /// </value>
-    public string Name { get; set; }
+    public string Name { get; set; } = layerName;
 
     /// <summary>
     /// Gets or sets the layer process index.
@@ -67,12 +61,12 @@ public class MapLayer<TDrawingContext>
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
-    public IPaint<TDrawingContext>? Stroke { get; set; }
+    public IPaint<TDrawingContext>? Stroke { get; set; } = stroke;
 
     /// <summary>
     /// Gets or sets the fill.
     /// </summary>
-    public IPaint<TDrawingContext>? Fill { get; set; }
+    public IPaint<TDrawingContext>? Fill { get; set; } = fill;
 
     /// <summary>
     /// Gets or sets the X bounds.

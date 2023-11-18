@@ -37,28 +37,21 @@ namespace LiveChartsCore;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Chart{TDrawingContext}" />
-public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of the <see cref="PolarChart{TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="view">The view.</param>
+/// <param name="defaultPlatformConfig">The default platform configuration.</param>
+/// <param name="canvas">The canvas.</param>
+/// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
+public class PolarChart<TDrawingContext>(
+    IPolarChartView<TDrawingContext> view,
+    Action<LiveChartsSettings> defaultPlatformConfig,
+    MotionCanvas<TDrawingContext> canvas,
+    bool requiresLegendMeasureAlways = false) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
     where TDrawingContext : DrawingContext
 {
-    private readonly IPolarChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PolarChart{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="view">The view.</param>
-    /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-    /// <param name="canvas">The canvas.</param>
-    /// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
-    public PolarChart(
-        IPolarChartView<TDrawingContext> view,
-        Action<LiveChartsSettings> defaultPlatformConfig,
-        MotionCanvas<TDrawingContext> canvas,
-        bool requiresLegendMeasureAlways = false)
-        : base(canvas, defaultPlatformConfig, view)
-    {
-        _chartView = view;
-    }
 
     /// <summary>
     /// Gets the angle axes.
@@ -78,7 +71,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        _chartView.Series.Cast<IChartSeries<TDrawingContext>>();
+        view.Series.Cast<IChartSeries<TDrawingContext>>();
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
@@ -119,7 +112,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The view.
     /// </value>
-    public override IChartView<TDrawingContext> View => _chartView;
+    public override IChartView<TDrawingContext> View => view;
 
     /// <summary>
     /// Finds the points near to the specified point.
@@ -163,29 +156,29 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         #region copy the current data in the view
 
-        var viewDrawMargin = _chartView.DrawMargin;
-        ControlSize = _chartView.ControlSize;
+        var viewDrawMargin = view.DrawMargin;
+        ControlSize = view.ControlSize;
 
-        AngleAxes = _chartView.AngleAxes.Cast<IPolarAxis>().ToArray();
-        RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis>().ToArray();
+        AngleAxes = view.AngleAxes.Cast<IPolarAxis>().ToArray();
+        RadiusAxes = view.RadiusAxes.Cast<IPolarAxis>().ToArray();
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
-        LegendPosition = _chartView.LegendPosition;
-        Legend = _chartView.Legend;
+        LegendPosition = view.LegendPosition;
+        Legend = view.Legend;
 
-        TooltipPosition = _chartView.TooltipPosition;
-        Tooltip = _chartView.Tooltip;
+        TooltipPosition = view.TooltipPosition;
+        Tooltip = view.Tooltip;
 
-        AnimationsSpeed = _chartView.AnimationsSpeed;
-        EasingFunction = _chartView.EasingFunction;
+        AnimationsSpeed = view.AnimationsSpeed;
+        EasingFunction = view.EasingFunction;
 
-        FitToBounds = _chartView.FitToBounds;
-        TotalAnge = (float)_chartView.TotalAngle;
-        InnerRadius = (float)_chartView.InnerRadius;
-        InitialRotation = (float)_chartView.InitialRotation;
+        FitToBounds = view.FitToBounds;
+        TotalAnge = (float)view.TotalAngle;
+        InnerRadius = (float)view.InnerRadius;
+        InitialRotation = (float)view.InitialRotation;
 
-        VisualElements = _chartView.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
+        VisualElements = view.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
 
         #endregion
 

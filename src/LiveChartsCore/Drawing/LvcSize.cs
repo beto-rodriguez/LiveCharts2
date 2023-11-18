@@ -25,28 +25,23 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a size.
 /// </summary>
-public struct LvcSize
+/// <remarks>
+/// Initializes a new instance of the <see cref="LvcSize"/> struct.
+/// </remarks>
+/// <param name="width">The width.</param>
+/// <param name="height">The height.</param>
+public struct LvcSize(float width, float height)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LvcSize"/> struct.
-    /// </summary>
-    /// <param name="width">The width.</param>
-    /// <param name="height">The height.</param>
-    public LvcSize(float width, float height)
-    {
-        Width = width;
-        Height = height;
-    }
 
     /// <summary>
     /// Gets or sets the width.
     /// </summary>
-    public float Width { get; set; }
+    public float Width { get; set; } = width;
 
     /// <summary>
     /// Gets or sets the height.
     /// </summary>
-    public float Height { get; set; }
+    public float Height { get; set; } = height;
 
     /// <summary>
     /// Determines whether the instance is equals to the given instance.

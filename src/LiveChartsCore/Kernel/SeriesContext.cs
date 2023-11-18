@@ -33,11 +33,14 @@ namespace LiveChartsCore.Kernel;
 /// Defines a series context.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class SeriesContext<TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="series">The series.</param>
+/// <param name="chart">The chart</param>
+public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingContext>> series, IChart chart)
     where TDrawingContext : DrawingContext
 {
-    private readonly IEnumerable<IChartSeries<TDrawingContext>> _series;
-
     private int _columnsCount = 0;
     private int _rowsCount = 0;
     private int _boxCount = 0;
@@ -54,19 +57,6 @@ public class SeriesContext<TDrawingContext>
     private readonly Dictionary<int, int> _stackRowsPositions = [];
 
     private readonly Dictionary<string, Stacker<TDrawingContext>> _stackers = [];
-
-    private readonly IChart _chart;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="series">The series.</param>
-    /// <param name="chart">The chart</param>
-    public SeriesContext(IEnumerable<IChartSeries<TDrawingContext>> series, IChart chart)
-    {
-        _series = series;
-        _chart = chart;
-    }
 
     #region columns and rows
 
@@ -202,7 +192,7 @@ public class SeriesContext<TDrawingContext>
         _stackedColumnsCount = 0;
         _stackedRowsCount = 0;
 
-        foreach (var item in _series)
+        foreach (var item in series)
         {
             if (!item.IsBarSeries() && !item.IsBoxSeries()) continue;
 
@@ -288,7 +278,7 @@ public class SeriesContext<TDrawingContext>
     private void CalculatePieLabelsOuterSpace<TLabel>()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        foreach (var series in _series)
+        foreach (var series in series)
         {
             if (!series.IsPieSeries()) continue;
             var pieSeries = (IPieSeries<TDrawingContext>)series;
@@ -302,7 +292,7 @@ public class SeriesContext<TDrawingContext>
             var stacker = GetStackPosition(series, series.GetStackGroup())
                 ?? throw new NullReferenceException("Unexpected null stacker");
 
-            foreach (var point in pieSeries.Fetch(_chart))
+            foreach (var point in pieSeries.Fetch(chart))
             {
                 _ = stacker.GetStack(point); // builds the stacked value for the point.
 

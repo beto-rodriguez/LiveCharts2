@@ -29,21 +29,15 @@ namespace LiveChartsCore.Kernel.Drawing;
 /// Defines the paint context.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class Sketch<TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of the <see cref="Sketch{TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="width">The widht.</param>
+/// <param name="height">The height.</param>
+/// <param name="svg">The svg path.</param>
+public class Sketch<TDrawingContext>(double width, double height, string? svg)
     where TDrawingContext : DrawingContext
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Sketch{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="width">The widht.</param>
-    /// <param name="height">The height.</param>
-    /// <param name="svg">The svg path.</param>
-    public Sketch(double width, double height, string? svg)
-    {
-        Svg = svg;
-        Width = width;
-        Height = height;
-    }
 
     /// <summary>
     /// Gets or sets the width.
@@ -51,7 +45,7 @@ public class Sketch<TDrawingContext>
     /// <value>
     /// The width.
     /// </value>kjio9
-    public double Width { get; set; }
+    public double Width { get; set; } = width;
 
     /// <summary>
     /// Gets or sets the height.
@@ -59,12 +53,12 @@ public class Sketch<TDrawingContext>
     /// <value>
     /// The height.
     /// </value>
-    public double Height { get; set; }
+    public double Height { get; set; } = height;
 
     /// <summary>
     /// Gets or sets the Svg.
     /// </summary>/
-    public string? Svg { get; set; }
+    public string? Svg { get; set; } = svg;
 
     /// <summary>
     /// Gets or sets the paint schedules.

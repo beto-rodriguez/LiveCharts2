@@ -29,36 +29,18 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// Creates a drop shadow image filter.
 /// </summary>
 /// <seealso cref="ImageFilter" />
-public class DropShadow : ImageFilter
+/// <remarks>
+/// Initializes a new instance of the <see cref="DropShadow"/> class.
+/// </remarks>
+/// <param name="dx">The dx.</param>
+/// <param name="dy">The dy.</param>
+/// <param name="sigmaX">The sigma x.</param>
+/// <param name="sigmaY">The sigma y.</param>
+/// <param name="color">The color.</param>
+/// <param name="input">The input.</param>
+/// <param name="cropRect">The crop rect.</param>
+public class DropShadow(float dx, float dy, float sigmaX, float sigmaY, SKColor color, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null) : ImageFilter
 {
-    private readonly float _dx;
-    private readonly float _dy;
-    private readonly float _sigmaX;
-    private readonly float _sigmaY;
-    private readonly SKColor _color;
-    private readonly SKImageFilter? _filter = null;
-    private readonly SKImageFilter.CropRect? _cropRect = null;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DropShadow"/> class.
-    /// </summary>
-    /// <param name="dx">The dx.</param>
-    /// <param name="dy">The dy.</param>
-    /// <param name="sigmaX">The sigma x.</param>
-    /// <param name="sigmaY">The sigma y.</param>
-    /// <param name="color">The color.</param>
-    /// <param name="input">The input.</param>
-    /// <param name="cropRect">The crop rect.</param>
-    public DropShadow(float dx, float dy, float sigmaX, float sigmaY, SKColor color, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null)
-    {
-        _dx = dx;
-        _dy = dy;
-        _sigmaX = sigmaX;
-        _sigmaY = sigmaY;
-        _color = color;
-        _filter = input;
-        _cropRect = cropRect;
-    }
 
     /// <summary>
     /// Clones this instance.
@@ -67,7 +49,7 @@ public class DropShadow : ImageFilter
     /// <exception cref="System.NotImplementedException"></exception>
     public override ImageFilter Clone()
     {
-        return new DropShadow(_dx, _dy, _sigmaX, _sigmaY, _color, _filter, _cropRect);
+        return new DropShadow(dx, dy, sigmaX, sigmaY, color, input, cropRect);
     }
 
     /// <summary>
@@ -76,6 +58,6 @@ public class DropShadow : ImageFilter
     /// <param name="drawingContext">The drawing context.</param>
     public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
     {
-        SKImageFilter = SKImageFilter.CreateDropShadow(_dx, _dy, _sigmaX, _sigmaY, _color, _filter, _cropRect);
+        SKImageFilter = SKImageFilter.CreateDropShadow(dx, dy, sigmaX, sigmaY, color, input, cropRect);
     }
 }

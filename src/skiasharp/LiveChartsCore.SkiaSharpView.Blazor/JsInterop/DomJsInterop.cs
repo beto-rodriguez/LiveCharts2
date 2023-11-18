@@ -29,23 +29,18 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <summary>
 /// An object that handles the comminication with the DOM.
 /// </summary>
-public class DomJsInterop : IAsyncDisposable
+/// <remarks>
+/// Initialized a new instance of the <see cref="DomJsInterop"/> class.
+/// </remarks>
+/// <param name="jsRuntime"></param>
+public class DomJsInterop(IJSRuntime jsRuntime) : IAsyncDisposable
 {
-    private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
-    private static readonly Dictionary<string, List<Action<DOMRect>>> s_resizeEvent = [];
-
-    /// <summary>
-    /// Initialized a new instance of the <see cref="DomJsInterop"/> class.
-    /// </summary>
-    /// <param name="jsRuntime"></param>
-    public DomJsInterop(IJSRuntime jsRuntime)
-    {
-        _moduleTask = new Lazy<Task<IJSObjectReference>>(() =>
+    private readonly Lazy<Task<IJSObjectReference>> _moduleTask = new Lazy<Task<IJSObjectReference>>(() =>
             jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import",
                 "./_content/LiveChartsCore.SkiaSharpView.Blazor/domInterop.js")
             .AsTask());
-    }
+    private static readonly Dictionary<string, List<Action<DOMRect>>> s_resizeEvent = [];
 
     /// <summary>
     /// Gets the bounding client rectangle of the given element.

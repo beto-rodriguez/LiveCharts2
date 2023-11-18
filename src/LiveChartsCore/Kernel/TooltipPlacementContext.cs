@@ -27,21 +27,17 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines the tooltip placement context class.
 /// </summary>
-public class TooltipPlacementContext
+/// <remarks>
+/// Intializes a new instance of the <see cref="TooltipPlacementContext"/> class.
+/// </remarks>
+/// <param name="position"></param>
+public class TooltipPlacementContext(TooltipPosition position)
 {
-    /// <summary>
-    /// Intializes a new instance of the <see cref="TooltipPlacementContext"/> class.
-    /// </summary>
-    /// <param name="position"></param>
-    public TooltipPlacementContext(TooltipPosition position)
-    {
-        Position = position;
-    }
 
     /// <summary>
     /// Gets the tool tip position.
     /// </summary>
-    public TooltipPosition Position { get; set; }
+    public TooltipPosition Position { get; set; } = position;
 
     /// <summary>
     /// Gets or sets the value for the pop-up placement.
