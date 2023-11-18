@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 public class SkiaSharpDrawingContext(
     MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
     SKImageInfo info,
-    SKSurface surface,
+    SKSurface? surface,
     SKCanvas canvas,
     bool clearOnBeginDraw = true) : DrawingContext
 {
@@ -59,7 +59,7 @@ public class SkiaSharpDrawingContext(
     public SkiaSharpDrawingContext(
         MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
         SKImageInfo info,
-        SKSurface surface,
+        SKSurface? surface,
         SKCanvas canvas,
         SKColor background,
         bool clearOnBeginDraw = true)
@@ -90,7 +90,7 @@ public class SkiaSharpDrawingContext(
     /// <value>
     /// The surface.
     /// </value>
-    public SKSurface Surface { get; set; } = surface;
+    public SKSurface? Surface { get; set; } = surface;
 
     /// <summary>
     /// Gets or sets the canvas.

@@ -274,7 +274,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core?.InvokePointerLeft();
     }
 
-    private void GeoMap_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void GeoMap_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         if (_core is null) return;
         _core.Unload();

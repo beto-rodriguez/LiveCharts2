@@ -646,7 +646,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
-    private void Chart_PointerPressed(object sender, PointerPressedEventArgs e)
+    private void Chart_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var p = e.GetPosition(this);
 
@@ -659,7 +659,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), false);
     }
 
-    private void PieChart_PointerReleased(object sender, PointerReleasedEventArgs e)
+    private void PieChart_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         var p = e.GetPosition(this);
 
@@ -696,12 +696,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         _core?.InvokePointerLeft();
     }
 
-    private void OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Load();
     }
 
-    private void PieChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void PieChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
     }

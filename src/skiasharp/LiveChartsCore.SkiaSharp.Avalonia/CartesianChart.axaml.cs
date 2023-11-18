@@ -850,12 +850,12 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         Measuring?.Invoke(this);
     }
 
-    private void CartesianChart_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void CartesianChart_AttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Load();
     }
 
-    private void CartesianChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void CartesianChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
     }
