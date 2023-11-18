@@ -21,6 +21,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- SkiaSharp.WinForms warning, lets disable it at our level -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
