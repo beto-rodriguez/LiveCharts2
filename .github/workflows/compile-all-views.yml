@@ -23,6 +23,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        vs-version: '17.8'
+
     - uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
