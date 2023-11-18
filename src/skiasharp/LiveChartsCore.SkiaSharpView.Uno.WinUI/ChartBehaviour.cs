@@ -54,7 +54,9 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
 #elif MACCATALYST || IOS
 
         element.UserInteractionEnabled = true;
+#if MACCATALYST
         element.AddGestureRecognizer(GetMacCatalystHover(element));
+#endif
         element.AddGestureRecognizer(GetMacCatalystLongPress(element));
         element.AddGestureRecognizer(GetMacCatalystPinch(element));
         element.AddGestureRecognizer(GetMacCatalystOnPan(element));
