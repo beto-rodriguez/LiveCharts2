@@ -15,11 +15,6 @@ $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.
     /p:configuration=$configuration `
     /restore
 
-dotnet workload install macos
-dotnet workload install ios
-dotnet workload install maccatalyst 
-dotnet workload install android
-
 & $msbuild `
     ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj `
     /p:configuration=$configuration `
