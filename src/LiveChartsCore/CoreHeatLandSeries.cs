@@ -41,7 +41,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
 {
     private IPaint<TDrawingContext>? _heatPaint;
     private bool _isHeatInCanvas = false;
-    private LvcColor[] _heatMap = Array.Empty<LvcColor>();
+    private LvcColor[] _heatMap = [];
     private double[]? _colorStops;
     private IEnumerable<IWeigthedMapLand>? _lands;
     private bool _isVisible;

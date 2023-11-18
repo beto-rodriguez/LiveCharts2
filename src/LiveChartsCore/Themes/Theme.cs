@@ -40,7 +40,7 @@ public class Theme<TDrawingContext>
     /// <summary>
     /// Gets or sets the theme colors.
     /// </summary>
-    public LvcColor[] Colors { get; set; } = Array.Empty<LvcColor>();
+    public LvcColor[] Colors { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the axis builder.

@@ -79,7 +79,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The x axes.
     /// </value>
     public ICartesianAxis<TDrawingContext>[] XAxes { get; private set; } =
-        Array.Empty<ICartesianAxis<TDrawingContext>>();
+        [];
 
     /// <summary>
     /// Gets the y axes.
@@ -88,7 +88,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The y axes.
     /// </value>
     public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } =
-        Array.Empty<ICartesianAxis<TDrawingContext>>();
+        [];
 
     /// <summary>
     /// Gets the sections.

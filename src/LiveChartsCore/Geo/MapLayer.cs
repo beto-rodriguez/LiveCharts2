@@ -71,12 +71,12 @@ public class MapLayer<TDrawingContext>(string layerName, IPaint<TDrawingContext>
     /// <summary>
     /// Gets or sets the X bounds.
     /// </summary>
-    public double[] Max { get; set; } = Array.Empty<double>();
+    public double[] Max { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the Y bounds.
     /// </summary>
-    public double[] Min { get; set; } = Array.Empty<double>();
+    public double[] Min { get; set; } = [];
 
     /// <summary>
     /// Gets the lands.

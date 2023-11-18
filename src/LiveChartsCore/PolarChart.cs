@@ -57,7 +57,7 @@ public class PolarChart<TDrawingContext>(
     /// <value>
     /// The x axes.
     /// </value>
-    public IPolarAxis[] AngleAxes { get; private set; } = Array.Empty<IPolarAxis>();
+    public IPolarAxis[] AngleAxes { get; private set; } = [];
 
     /// <summary>
     /// Gets the radius axes.
@@ -65,7 +65,7 @@ public class PolarChart<TDrawingContext>(
     /// <value>
     /// The y axes.
     /// </value>
-    public IPolarAxis[] RadiusAxes { get; private set; } = Array.Empty<IPolarAxis>();
+    public IPolarAxis[] RadiusAxes { get; private set; } = [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> Series =>

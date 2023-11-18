@@ -80,5 +80,5 @@ public class LandDefinition(string shortName, string name, string setOf)
     /// <summary>
     /// Gets or sets the data.
     /// </summary>
-    public LandData[] Data { get; set; } = Array.Empty<LandData>();
+    public LandData[] Data { get; set; } = [];
 }
