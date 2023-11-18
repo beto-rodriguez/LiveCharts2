@@ -78,7 +78,8 @@ public abstract partial class ChartBehaviour
 
         // MotionEventActions.ButtonPress
         // is supported from API 23, the min target it 21
-        // we are intentionally ignoring the warning here.
+        // we are intentionally ignoring the warning here
+        // because the switch should never reach the case from api 21 or 22
 
 #pragma warning disable CA1416
         switch (e.Event.ActionMasked)
