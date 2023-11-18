@@ -41,6 +41,11 @@ public abstract partial class ChartBehaviour
     private CustomScaleListener _customScaleListener = null!;
     private DateTime _previousPress = DateTime.MinValue;
 
+    /// <summary>
+    /// Called on android hover events.
+    /// </summary>
+    /// <param name="sender">the sender.</param>
+    /// <param name="e">the event args.</param>
     protected void OnAndroidHover(object? sender, View.HoverEventArgs e)
     {
         if (e.Event is null) return;
@@ -49,6 +54,11 @@ public abstract partial class ChartBehaviour
         Moved?.Invoke(sender, new(p, e.Event));
     }
 
+    /// <summary>
+    /// Called on android touch events.
+    /// </summary>
+    /// <param name="sender">the sender.</param>
+    /// <param name="e">the event args.</param>
     protected void OnAndroidTouched(object? sender, View.TouchEventArgs e)
     {
         var viewGroup = (ViewGroup?)sender;
@@ -66,6 +76,11 @@ public abstract partial class ChartBehaviour
 
         _ = _scaleDetector.OnTouchEvent(e.Event);
 
+        // MotionEventActions.ButtonPress
+        // is supported from API 23, the min target it 21
+        // we are intentionally ignoring the warning here.
+
+#pragma warning disable CA1416
         switch (e.Event.ActionMasked)
         {
             case MotionEventActions.ButtonPress:
@@ -110,6 +125,7 @@ public abstract partial class ChartBehaviour
             default:
                 break;
         }
+#pragma warning restore CA1416
 
         _lastTouch = p;
 

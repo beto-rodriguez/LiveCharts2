@@ -36,6 +36,13 @@ public partial class ChartBehaviour
 {
     private DateTime _previousPress = DateTime.MinValue;
 
+#if MACCATALYST
+
+    /// <summary>
+    /// Builds a mac catalyst gesture recognizer.
+    /// </summary>
+    /// <param name="view">the view.</param>
+    /// <returns>the recognizer.</returns>
     protected UIHoverGestureRecognizer GetMacCatalystHover(UIView view)
     {
         return new UIHoverGestureRecognizer((UIHoverGestureRecognizer e) =>
@@ -58,7 +65,13 @@ public partial class ChartBehaviour
             }
         });
     }
+#endif
 
+    /// <summary>
+    /// Builds a mac catalyst gesture recognizer.
+    /// </summary>
+    /// <param name="view">the view.</param>
+    /// <returns>the recognizer.</returns>
     protected UILongPressGestureRecognizer GetMacCatalystLongPress(UIView view)
     {
         return new UILongPressGestureRecognizer((UILongPressGestureRecognizer e) =>
@@ -94,6 +107,12 @@ public partial class ChartBehaviour
     }
 
     private float _previousScale = 1;
+
+    /// <summary>
+    /// Builds a mac catalyst gesture recognizer.
+    /// </summary>
+    /// <param name="view">the view.</param>
+    /// <returns>the recognizer.</returns>
     protected UIPinchGestureRecognizer GetMacCatalystPinch(UIView view)
     {
         return new UIPinchGestureRecognizer((UIPinchGestureRecognizer e) =>
@@ -126,6 +145,12 @@ public partial class ChartBehaviour
     }
 
     private CGPoint? _last;
+
+    /// <summary>
+    /// Builds a mac catalyst gesture recognizer.
+    /// </summary>
+    /// <param name="view">The view.</param>
+    /// <returns>The recognizer.</returns>
     protected UIPanGestureRecognizer GetMacCatalystOnPan(UIView view)
     {
         return new UIPanGestureRecognizer((UIPanGestureRecognizer e) =>
@@ -141,7 +166,9 @@ public partial class ChartBehaviour
             _last = l;
         })
         {
+#if MACCATALYST
             AllowedScrollTypesMask = UIScrollTypeMask.Discrete | UIScrollTypeMask.Continuous,
+#endif
             MinimumNumberOfTouches = 0,
             ShouldRecognizeSimultaneously = (g1, g2) => true
         };
