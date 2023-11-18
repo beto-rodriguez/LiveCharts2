@@ -27,6 +27,10 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Extensions;
 
+/// <summary>
+/// Defines an item for a gauge series.
+/// </summary>
+/// <typeparam name="TSeries">The type of the series.</typeparam>
 public class BaseGaugeItem<TSeries>
     where TSeries : IPieSeries<SkiaSharpDrawingContext>, new()
 {

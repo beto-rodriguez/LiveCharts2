@@ -50,7 +50,6 @@ public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
     /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
     public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
     {
-        currentTime = currentTime;
         path.MoveTo(X, Y);
     }
 }
