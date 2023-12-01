@@ -71,7 +71,7 @@ public class CollectionDeepObserver<T>
     /// </summary>
     /// <param name="instance">The instance.</param>
     /// <returns></returns>
-    public void Initialize(IEnumerable<T>? instance)
+    public void Initialize(IEnumerable? instance)
     {
         if (instance is null) return;
 
@@ -90,7 +90,7 @@ public class CollectionDeepObserver<T>
     /// </summary>
     /// <param name="instance">The instance.</param>
     /// <returns></returns>
-    public void Dispose(IEnumerable<T>? instance)
+    public void Dispose(IEnumerable? instance)
     {
         if (instance is null) return;
 

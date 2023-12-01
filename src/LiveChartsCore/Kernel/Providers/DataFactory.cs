@@ -385,7 +385,7 @@ public class DataFactory<TModel, TDrawingContext>
         }
         var IndexEntityMap = d;
 
-        foreach (var item in series.Values)
+        foreach (var item in series.Values.Cast<TModel>())
         {
             if (item is null)
             {
