@@ -476,7 +476,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var yAxis = YAxes[series.ScalesYAt];
 
             var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
-            if (seriesBounds.IsEmpty) continue;
+            if (seriesBounds.IsEmpty)
+            {
+                ce._isInternalSet = false;
+                continue;
+            }
 
             AppendLimits(xAxis, yAxis, seriesBounds);
 
