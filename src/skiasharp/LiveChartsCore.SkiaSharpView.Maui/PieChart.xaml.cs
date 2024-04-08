@@ -321,6 +321,9 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         BindableProperty.Create(
             nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PieChart), null);
 
+    public static readonly BindableProperty ResetSeriesProperty =
+        BindableProperty.Create(nameof(ResetSeries), typeof(bool), typeof(PieChart), false);
+
     #endregion
 
     #region events
@@ -611,6 +614,13 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     {
         get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
+    /// <inheritdoc cref="IChartView.ResetSeries">
+    public bool ResetSeries
+    {
+        get => (bool)GetValue(ResetSeriesProperty);
+        set => SetValue(ResetSeriesProperty, value);
     }
 
     #endregion

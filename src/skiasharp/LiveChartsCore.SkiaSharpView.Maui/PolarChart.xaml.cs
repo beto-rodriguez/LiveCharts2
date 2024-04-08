@@ -107,7 +107,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         chartBehaviour.On(this);
     }
 
-    #region bindable properties 
+    #region bindable properties
 
     /// <summary>
     /// The sync context property.
@@ -362,6 +362,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         BindableProperty.Create(
             nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(PolarChart), null);
 
+    public static readonly BindableProperty ResetSeriesProperty =
+        BindableProperty.Create(nameof(ResetSeries), typeof(bool), typeof(PolarChart), false);
+
     #endregion
 
     #region events
@@ -390,6 +393,13 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
+
+    /// <inheritdoc cref="IChartView.ResetSeries">
+    public bool ResetSeries
+    {
+        get => (bool)GetValue(ResetSeriesProperty);
+        set => SetValue(ResetSeriesProperty, value);
+    }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");

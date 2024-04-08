@@ -460,6 +460,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
 
+        if (_chartView.ResetSeries)
+        {
+            _nextSeries = 0;
+        }
         foreach (var series in VisibleSeries.Cast<ICartesianSeries<TDrawingContext>>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;

@@ -73,6 +73,9 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
         VisualElements = view.VisualElements;
     }
 
+    /// <inheritdoc cref="IChartView.ResetSeries">
+    public bool ResetSeries { get; set; }
+
     /// <inheritdoc cref="IChartView.DesignerMode" />
     public bool DesignerMode => false;
 
