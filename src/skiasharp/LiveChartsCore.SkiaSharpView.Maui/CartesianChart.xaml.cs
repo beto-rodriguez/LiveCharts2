@@ -116,7 +116,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         chartBehaviour.On(this);
     }
 
-    #region bindable properties 
+    #region bindable properties
 
     /// <summary>
     /// The sync context property.
@@ -386,7 +386,10 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         BindableProperty.Create(
             nameof(VisualElementsPointerDownCommand), typeof(ICommand), typeof(CartesianChart), null);
 
-    #endregion
+    public static readonly BindableProperty ResetSeriesProperty =
+        BindableProperty.Create(nameof(ResetSeries), typeof(bool), typeof(CartesianChart), false);
+
+#endregion
 
     #region events
 
@@ -414,6 +417,12 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
+
+    public bool ResetSeries
+    {
+        get => (bool)GetValue(ResetSeriesProperty);
+        set => SetValue(ResetSeriesProperty, value);
+    }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
