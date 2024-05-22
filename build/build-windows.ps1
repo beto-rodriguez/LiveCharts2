@@ -1,5 +1,10 @@
 param([string]$configuration = "Release")
 
+dotnet workload install macos
+dotnet workload install ios
+dotnet workload install maccatalyst 
+dotnet workload install android
+
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/LiveChartsCore.SkiaSharpView.Avalonia.csproj -c $configuration
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms/LiveChartsCore.SkiaSharpView.WinForms.csproj -c $configuration
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/LiveChartsCore.SkiaSharpView.Wpf.csproj -c $configuration
@@ -14,11 +19,6 @@ $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.
     ./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj `
     /p:configuration=$configuration `
     /restore
-
-dotnet workload install macos
-dotnet workload install ios
-dotnet workload install maccatalyst 
-dotnet workload install android
 
 & $msbuild `
     ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj `
