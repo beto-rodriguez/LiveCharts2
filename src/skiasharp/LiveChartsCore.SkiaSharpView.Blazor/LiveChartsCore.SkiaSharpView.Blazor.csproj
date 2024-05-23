@@ -1,21 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile></TypeScriptOutFile>
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile></TypeScriptOutFile>
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-  </PropertyGroup>
-  
   <PropertyGroup>
-    <LangVersion>11.0</LangVersion>
-    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
+
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+
     <ImplicitUsings>enable</ImplicitUsings>
     <Version>2.0.0-rc2</Version>
     <PackageIcon>icon.png</PackageIcon>
@@ -30,6 +20,27 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!--
+    BL0007 tries to warn about using auto properties,
+    but LiveCharts updates automatically, and we need to let the core of the library
+    know about the change.
+    -->
+    <NoWarn>$(NoWarn);BL0007</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+    <TypeScriptOutFile></TypeScriptOutFile>
+    <TypeScriptTarget>ES6</TypeScriptTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+    <TypeScriptOutFile></TypeScriptOutFile>
+    <TypeScriptTarget>ES6</TypeScriptTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
@@ -39,13 +50,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="2.8.2.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.6" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="7.3.0" />
+
+    <PackageReference
+      Condition="$(TargetFramework) == 'net6.0'"
+      Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+    <PackageReference
+      Condition="$(TargetFramework) == 'net7.0'"
+      Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
+    <PackageReference
+      Condition="$(TargetFramework) == 'net8.0'"
+      Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.6" />
   </ItemGroup>
 
   <ItemGroup>

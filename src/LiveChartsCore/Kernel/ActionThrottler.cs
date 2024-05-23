@@ -28,22 +28,15 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// An object that is able to throttle an action.
 /// </summary>
-public class ActionThrottler
+/// <remarks>
+/// Initializes a new instance of the <see cref="ActionThrottler"/> class.
+/// </remarks>
+/// <param name="targetAction">The target action to throttle.</param>
+/// <param name="time">The throttling time.</param>
+public class ActionThrottler(Func<Task> targetAction, TimeSpan time)
 {
     private readonly object _sync = new();
-    private readonly Func<Task> _action;
     private bool _isWaiting = false;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ActionThrottler"/> class.
-    /// </summary>
-    /// <param name="targetAction">The target action to throttle.</param>
-    /// <param name="time">The throttling time.</param>
-    public ActionThrottler(Func<Task> targetAction, TimeSpan time)
-    {
-        _action = targetAction;
-        ThrottlerTimeSpan = time;
-    }
 
 #if DEBUG
     /// <summary>
@@ -61,7 +54,7 @@ public class ActionThrottler
     /// <value>
     /// The throttler time span.
     /// </value>
-    public TimeSpan ThrottlerTimeSpan { get; set; }
+    public TimeSpan ThrottlerTimeSpan { get; set; } = time;
 
     /// <summary>
     /// Schedules a call to the target action.
@@ -89,7 +82,7 @@ public class ActionThrottler
             _isWaiting = false;
         }
 
-        await Task.WhenAny(_action());
+        await Task.WhenAny(targetAction());
     }
 
     /// <summary>
@@ -98,6 +91,6 @@ public class ActionThrottler
     /// <returns></returns>
     public void ForceCall()
     {
-        _ = _action();
+        _ = targetAction();
     }
 }

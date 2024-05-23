@@ -53,7 +53,6 @@ public class ArcGeometry : Geometry, IArcGeometry<SkiaSharpDrawingContext>
         using var path = new SKPath();
         var cx = CenterX;
         var cy = CenterY;
-        var wedge = 20;
         var r = Width * 0.5f;
         var startAngle = StartAngle;
         var sweepAngle = SweepAngle;

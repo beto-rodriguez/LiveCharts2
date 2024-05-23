@@ -709,14 +709,9 @@ public static class Extensions
         builder.Finished = true;
     }
 
-    private class GapsBuilder : IDisposable
+    private class GapsBuilder(IEnumerator<ChartPoint> enumerator) : IDisposable
     {
-        public GapsBuilder(IEnumerator<ChartPoint> enumerator)
-        {
-            Enumerator = enumerator;
-        }
-
-        public IEnumerator<ChartPoint> Enumerator { get; }
+        public IEnumerator<ChartPoint> Enumerator { get; } = enumerator;
 
         public bool IsEmpty { get; set; } = true;
 
@@ -728,23 +723,15 @@ public static class Extensions
         }
     }
 
-    internal class SplineData
+    internal class SplineData(ChartPoint start)
     {
-        public SplineData(ChartPoint start)
-        {
-            Previous = start;
-            Current = start;
-            Next = start;
-            AfterNext = start;
-        }
+        public ChartPoint Previous { get; set; } = start;
 
-        public ChartPoint Previous { get; set; }
+        public ChartPoint Current { get; set; } = start;
 
-        public ChartPoint Current { get; set; }
+        public ChartPoint Next { get; set; } = start;
 
-        public ChartPoint Next { get; set; }
-
-        public ChartPoint AfterNext { get; set; }
+        public ChartPoint AfterNext { get; set; } = start;
 
         public bool IsFirst { get; set; } = true;
         public bool IsNextEmpty { get; set; }

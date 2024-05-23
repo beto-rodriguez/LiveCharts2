@@ -29,21 +29,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// Merges multiple image filters.
 /// </summary>
 /// <seealso cref="ImageFilter" />
-public class ImageFiltersMergeOperation : ImageFilter
+/// <remarks>
+/// Initializes a new instance of the <see cref="ImageFiltersMergeOperation"/> class.
+/// </remarks>
+/// <param name="imageFilters">The image filters.</param>
+/// <param name="cropRect">The crop rect.</param>
+public class ImageFiltersMergeOperation(ImageFilter[] imageFilters, SKImageFilter.CropRect? cropRect = null) : ImageFilter
 {
-    private readonly ImageFilter[] _filters;
-    private readonly SKImageFilter.CropRect? _cropRect = null;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ImageFiltersMergeOperation"/> class.
-    /// </summary>
-    /// <param name="imageFilters">The image filters.</param>
-    /// <param name="cropRect">The crop rect.</param>
-    public ImageFiltersMergeOperation(ImageFilter[] imageFilters, SKImageFilter.CropRect? cropRect = null)
-    {
-        _filters = imageFilters;
-        _cropRect = cropRect;
-    }
+    private readonly ImageFilter[] _filters = imageFilters;
 
     /// <summary>
     /// Clones this instance.
@@ -52,7 +45,7 @@ public class ImageFiltersMergeOperation : ImageFilter
     /// <exception cref="System.NotImplementedException"></exception>
     public override ImageFilter Clone()
     {
-        return new ImageFiltersMergeOperation(_filters, _cropRect);
+        return new ImageFiltersMergeOperation(_filters, cropRect);
     }
 
     /// <summary>
@@ -72,7 +65,7 @@ public class ImageFiltersMergeOperation : ImageFilter
             imageFilters[i++] = item.SKImageFilter;
         }
 
-        SKImageFilter = SKImageFilter.CreateMerge(imageFilters, _cropRect);
+        SKImageFilter = SKImageFilter.CreateMerge(imageFilters, cropRect);
     }
 
     /// <summary>

@@ -29,19 +29,13 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Represents additional data required by LiveCharts to draw a point.
 /// </summary>
-public class ChartEntityMetaData
+/// <remarks>
+/// Initializes a new instance of the <see cref="ChartEntityMetaData"/> class.
+/// </remarks>
+/// <param name="onEntityIndexChanged">The callback to call when the entity index changes.</param>
+public class ChartEntityMetaData(Action<int>? onEntityIndexChanged = null)
 {
-    private readonly Action<int>? _entityIndexChangedCallback;
     private int _entityIndex;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ChartEntityMetaData"/> class.
-    /// </summary>
-    /// <param name="onEntityIndexChanged">The callback to call when the entity index changes.</param>
-    public ChartEntityMetaData(Action<int>? onEntityIndexChanged = null)
-    {
-        _entityIndexChangedCallback = onEntityIndexChanged;
-    }
 
     /// <summary>
     /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.
@@ -53,12 +47,12 @@ public class ChartEntityMetaData
         {
             if (value == _entityIndex) return;
             _entityIndex = value;
-            _entityIndexChangedCallback?.Invoke(value);
+            onEntityIndexChanged?.Invoke(value);
         }
     }
 
     /// <summary>
     /// Gets the chart points dictionary.
     /// </summary>
-    public Dictionary<IChartView, ChartPoint> ChartPoints { get; set; } = new();
+    public Dictionary<IChartView, ChartPoint> ChartPoints { get; set; } = [];
 }

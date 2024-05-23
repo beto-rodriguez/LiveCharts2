@@ -8,7 +8,7 @@
 
 ## MyGeometry.cs
 
-{{~ "~/../samples/ViewModelsSamples/Lines/Custom/MyGeometry.cs" | render_file_as_code ~}}
+{{~ "~/../samples/ViewModelsSamples/Bars/Custom/MyGeometry.cs" | render_file_as_code ~}}
 
 {{~ if xaml ~}}
 ## XAML

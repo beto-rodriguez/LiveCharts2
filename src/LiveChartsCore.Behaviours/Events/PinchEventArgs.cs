@@ -27,28 +27,22 @@ namespace LiveChartsCore.Behaviours.Events;
 /// <summary>
 /// Defines the pinch event args.
 /// </summary>
-public class PinchEventArgs : EventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
+/// </remarks>
+/// <param name="scale">The scale.</param>
+/// <param name="pinchStart">The start.</param>
+/// <param name="originalEvent">The original event.</param>
+public class PinchEventArgs(float scale, LvcPoint pinchStart, object originalEvent) : EventArgs(originalEvent)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
-    /// </summary>
-    /// <param name="scale">The scale.</param>
-    /// <param name="pinchStart">The start.</param>
-    /// <param name="originalEvent">The original event.</param>
-    public PinchEventArgs(float scale, LvcPoint pinchStart, object originalEvent)
-        : base(originalEvent)
-    {
-        Scale = scale;
-        PinchStart = pinchStart;
-    }
 
     /// <summary>
     /// Gets the scale.
     /// </summary>
-    public float Scale { get; }
+    public float Scale { get; } = scale;
 
     /// <summary>
     /// Gets the pinch star location.
     /// </summary>
-    public LvcPoint PinchStart { get; set; }
+    public LvcPoint PinchStart { get; set; } = pinchStart;
 }

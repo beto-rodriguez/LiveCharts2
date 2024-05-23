@@ -62,7 +62,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <summary>
     /// Gets the map layers dictionary.
     /// </summary>
-    public Dictionary<string, MapLayer<TDrawingContext>> Layers { get; protected set; } = new();
+    public Dictionary<string, MapLayer<TDrawingContext>> Layers { get; protected set; } = [];
 
     /// <summary>
     /// Finds a land by short name.

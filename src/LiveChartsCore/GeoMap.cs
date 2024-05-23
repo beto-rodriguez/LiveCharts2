@@ -38,7 +38,7 @@ namespace LiveChartsCore;
 public class GeoMap<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly HashSet<IGeoSeries<TDrawingContext>> _everMeasuredSeries = new();
+    private readonly HashSet<IGeoSeries<TDrawingContext>> _everMeasuredSeries = [];
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _panningThrottler;
     private bool _isHeatInCanvas = false;

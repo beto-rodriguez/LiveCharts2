@@ -27,35 +27,29 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines the data of a lane in a map.
 /// </summary>
-public class LandDefinition
+/// <remarks>
+/// Initializes a new instance of the <see cref="LandDefinition"/> class.
+/// </remarks>
+/// <param name="shortName">The short name.</param>
+/// <param name="name">The name.</param>
+/// <param name="setOf">The set of.</param>
+public class LandDefinition(string shortName, string name, string setOf)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LandDefinition"/> class.
-    /// </summary>
-    /// <param name="shortName">The short name.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="setOf">The set of.</param>
-    public LandDefinition(string shortName, string name, string setOf)
-    {
-        Name = name;
-        ShortName = shortName;
-        SetOf = setOf;
-    }
 
     /// <summary>
     /// Gets the short name.
     /// </summary>
-    public string ShortName { get; }
+    public string ShortName { get; } = shortName;
 
     /// <summary>
     /// Gets the name.
     /// </summary>
-    public string Name { get; }
+    public string Name { get; } = name;
 
     /// <summary>
     /// Gets or sets the set of reference.
     /// </summary>
-    public string SetOf { get; set; }
+    public string SetOf { get; set; } = setOf;
 
     /// <summary>
     /// Gets the HSize.
@@ -86,5 +80,5 @@ public class LandDefinition
     /// <summary>
     /// Gets or sets the data.
     /// </summary>
-    public LandData[] Data { get; set; } = Array.Empty<LandData>();
+    public LandData[] Data { get; set; } = [];
 }

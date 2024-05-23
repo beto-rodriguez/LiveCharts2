@@ -43,7 +43,7 @@ public partial class ViewModel : ObservableObject
         columnSeries1.PointMeasured += OnPointMeasured;
         columnSeries2.PointMeasured += OnPointMeasured;
 
-        Series = new List<ISeries> { columnSeries1, columnSeries2 };
+        Series = [columnSeries1, columnSeries2];
     }
 
     private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)

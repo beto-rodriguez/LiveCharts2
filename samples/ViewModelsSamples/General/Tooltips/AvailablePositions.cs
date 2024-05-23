@@ -2,14 +2,8 @@
 
 namespace ViewModelsSamples.General.Tooltips;
 
-public class AvailablePositions
+public class AvailablePositions(string name, TooltipPosition position)
 {
-    public AvailablePositions(string name, TooltipPosition position)
-    {
-        Name = name;
-        Position = position;
-    }
-
-    public string Name { get; set; }
-    public TooltipPosition Position { get; set; }
+    public string Name { get; set; } = name;
+    public TooltipPosition Position { get; set; } = position;
 }

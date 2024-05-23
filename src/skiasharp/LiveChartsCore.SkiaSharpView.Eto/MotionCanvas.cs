@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 public class MotionCanvas : SkiaDrawable
 {
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
+    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.

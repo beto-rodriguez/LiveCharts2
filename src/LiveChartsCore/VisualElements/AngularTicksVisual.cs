@@ -50,7 +50,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     private double _ticksLength;
     private double _labelsSize = 12;
     private readonly int _subSections = 5;
-    private readonly Dictionary<string, TickVisual> _visuals = new();
+    private readonly Dictionary<string, TickVisual> _visuals = [];
 
     /// <summary>
     /// Gets or sets the labels paint.
@@ -305,18 +305,11 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         return new[] { _stroke, _labelsPaint };
     }
 
-    private class TickVisual
+    private class TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)
     {
-        public TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)
-        {
-            Label = label;
-            Tick = line;
-            Subseparator = subseparator;
-        }
-
-        public TLabelGeometry Label { get; set; }
-        public TLineGeometry Tick { get; set; }
-        public TLineGeometry[] Subseparator { get; set; }
+        public TLabelGeometry Label { get; set; } = label;
+        public TLineGeometry Tick { get; set; } = line;
+        public TLineGeometry[] Subseparator { get; set; } = subseparator;
         public object UpdateId { get; set; } = new();
     }
 }

@@ -28,19 +28,15 @@ namespace LiveChartsCore.Kernel.Events;
 /// <summary>
 /// Command arguments that describe when a chart event occurs.
 /// </summary>
-public class ChartCommandArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="PointerCommandArgs"/> class.
+/// </remarks>
+/// <param name="chart">The chart that fired the event.</param>
+public class ChartCommandArgs(IChartView chart)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PointerCommandArgs"/> class.
-    /// </summary>
-    /// <param name="chart">The chart that fired the event.</param>
-    public ChartCommandArgs(IChartView chart)
-    {
-        Chart = chart;
-    }
 
     /// <summary> 
     /// Gets the sender chart.
     /// </summary>
-    public IChartView Chart { get; }
+    public IChartView Chart { get; } = chart;
 }

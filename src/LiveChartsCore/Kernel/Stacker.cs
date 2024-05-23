@@ -33,9 +33,9 @@ namespace LiveChartsCore.Kernel;
 public class Stacker<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = new();
-    private readonly List<Dictionary<double, StackedValue>> _stack = new();
-    private readonly Dictionary<double, StackedTotal> _totals = new();
+    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = [];
+    private readonly List<Dictionary<double, StackedValue>> _stack = [];
+    private readonly Dictionary<double, StackedTotal> _totals = [];
     private int _stackCount = 0;
     private int _knownMaxLenght = 0;
 

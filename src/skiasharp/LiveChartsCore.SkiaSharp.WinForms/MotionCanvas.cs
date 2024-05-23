@@ -40,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 public partial class MotionCanvas : UserControl
 {
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
+    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
