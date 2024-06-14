@@ -338,7 +338,7 @@ namespace ViewModelsSamples.Bars.Basic
             {
                 new PolarLineSeries&lt;double>
                 {
-                    Values = new ObservableCollection&lt;double> { 5, 2, 1, 4, 3, 3 },
+                    Values = new ObservableCollection&lt;double> { 5, 2, 1, 4, 3, 3,2, 3, 4, 5  },
                     GeometryFill = null,
                     GeometryStroke = null,
                     LineSmoothness = 0.2,
@@ -347,7 +347,7 @@ namespace ViewModelsSamples.Bars.Basic
                 },
                 new PolarLineSeries&lt;double>
                 {
-                    Values = new ObservableCollection&lt;double> { 3, 5, 2, 3, 4, 5 },
+                    Values = new ObservableCollection&lt;double> { 3, 5, 2, 3, 4, 5,2, 3, 4, 5  },
                     GeometryFill = null,
                     GeometryStroke = null,
                     LineSmoothness = 0.2,
@@ -371,7 +371,7 @@ namespace ViewModelsSamples.Bars.Basic
             {
                 new PolarAxis
                 {
-                    Labels = new[] { "strength", "stamina", "resistance", "power", "hit points", "mana" },
+                    Labels = new[] { "strength", "stamina", "resistance", "power", "hit points", "mana",p1,p2,p3,p10 },
                     MinStep = 1,
                     ForceStepToMin = true
                 }
