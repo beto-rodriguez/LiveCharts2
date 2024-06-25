@@ -1,4 +1,4 @@
-﻿// The MIT License(MIT)
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -307,8 +307,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
-        _stepCount = 0;
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
         var controlSize = cartesianChart.ControlSize;
@@ -496,6 +494,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var start = Math.Truncate(min / s) * s;
 
+        _stepCount = 0;
         foreach (var i in EnumerateSeparators(start, max, s))
         {
             var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
@@ -879,6 +878,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         var h = 0f;
         var r = (float)LabelsRotation;
 
+        _stepCount = 0;
         foreach (var i in EnumerateSeparators(start, max, s))
         {
             var textGeometry = new TTextGeometry
@@ -1031,6 +1031,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (max - min == 0) return maxLabelSize;
 
+        _stepCount = 0;
         foreach (var i in EnumerateSeparators(min, max, s))
         {
             var textGeometry = new TTextGeometry
