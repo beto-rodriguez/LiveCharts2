@@ -45,7 +45,10 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.WinUI" Version="5.0.19" />
+    <PackageReference 
+      Condition="!$(TargetFramework.Contains('-windows'))" 
+      Include="Uno.WinUI" Version="5.0.19" />
+
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
     
