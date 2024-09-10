@@ -1406,6 +1406,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         label.Text = text;
+        label.TextSize = (float)_textSize;
         label.Padding = _padding;
         label.X = x;
         label.Y = y;
