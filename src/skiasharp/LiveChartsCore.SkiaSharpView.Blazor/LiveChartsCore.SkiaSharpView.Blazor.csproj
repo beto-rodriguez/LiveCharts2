@@ -4,7 +4,7 @@
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
 
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
 
     <ImplicitUsings>enable</ImplicitUsings>
     <Version>2.0.0-rc2</Version>
@@ -56,9 +56,6 @@
     <PackageReference
       Condition="$(TargetFramework) == 'net6.0'"
       Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-    <PackageReference
-      Condition="$(TargetFramework) == 'net7.0'"
-      Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
     <PackageReference
       Condition="$(TargetFramework) == 'net8.0'"
       Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />

@@ -8,13 +8,10 @@
     <SingleProject>true</SingleProject>
 
     <TargetFrameworks>
-      <!-- net6 mobile is no longer supported https://dotnet.microsoft.com/en-us/platform/support/policy/maui -->
-      net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;
       net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
     </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
-      net7.0-windows10.0.19041.0;
       net8.0-windows10.0.19041.0
     </TargetFrameworks>
 
@@ -44,39 +41,14 @@
 	</PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
 	  <PackageReference Include="SkiaSharp.Views.Maui.Controls.Compatibility" Version="2.88.6" />
-    <PackageReference
-      Condition="!$(TargetFramework.Contains('net7.0'))"
-      Include="Microsoft.Maui.Controls"
-      Version="$(MauiVersion)" />
-    <PackageReference
-      Condition="!$(TargetFramework.Contains('net7.0'))"
-      Include="Microsoft.Maui.Controls.Compatibility"
-      Version="$(MauiVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
 	  <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="CartesianChart.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="GeoMap.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="MotionCanvas.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="PieChart.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="PolarChart.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	</ItemGroup>
 
   <ItemGroup>
