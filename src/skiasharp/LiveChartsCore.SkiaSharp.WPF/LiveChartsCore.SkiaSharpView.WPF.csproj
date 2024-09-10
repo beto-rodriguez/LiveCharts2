@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>12.0</LangVersion>
     <UseWPF>true</UseWPF>
-    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net462;</TargetFrameworks><!-- netcore app is out of support, but the latest sable release of SkiaSharp requires it. -->
     <AssemblyName>LiveChartsCore.SkiaSharpView.WPF</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WPF</RootNamespace>
     <Version>2.0.0-rc2</Version>

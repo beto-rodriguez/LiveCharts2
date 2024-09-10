@@ -4,13 +4,10 @@
     <LangVersion>12.0</LangVersion>
 
     <TargetFrameworks>
-      <!-- net6 mobile is no longer supported https://dotnet.microsoft.com/en-us/platform/support/policy/maui -->
-      net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;
       net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
     </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
-      net7.0-windows10.0.19041.0;
       net8.0-windows10.0.19041.0
     </TargetFrameworks>
 

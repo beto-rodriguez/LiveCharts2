@@ -5,16 +5,14 @@
     <LangVersion>12.0</LangVersion>
 
     <TargetFrameworks>
-      netstandard2.0;netcoreapp2.0.3;
-      net6.0; <!-- net6 mobile is no longer supported https://dotnet.microsoft.com/en-us/platform/support/policy/maui -->
-      net7.0;net7.0-android;net7.0-ios;net7.0-maccatalyst;
+      netstandard2.0;
+      net6.0;
       net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
     </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
       net462;
       net6.0-windows10.0.19041.0;
-      net7.0-windows10.0.19041.0;
       net8.0-windows10.0.19041.0
     </TargetFrameworks>
 
@@ -29,8 +27,8 @@
     net 8 breaking changes:
     https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/rid-graph
     -->
-    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-    
+    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64;win-arm64;</RuntimeIdentifiers>
+
     <AssemblyName>LiveChartsCore.Behaviours</AssemblyName>
     <RootNamespace>LiveChartsCore.Behaviours</RootNamespace>
     <Version>2.0.0-rc2</Version>
@@ -42,6 +40,11 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--not sure if we should ignore this warning.-->
+    <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
