@@ -11,7 +11,6 @@ dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/LiveChartsCore.SkiaSha
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj -c $configuration
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/LiveChartsCore.SkiaSharpView.Blazor.csproj -c $configuration
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Eto/LiveChartsCore.SkiaSharpView.Eto.csproj -c $configuration
-msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/LiveChartsCore.SkiaSharpView.Maui.csproj -c $configuration
 
 # DISABLE DOTNET BUILD FOR NOW
 # LiveCharts requires VisualStudio 17.8
@@ -25,12 +24,12 @@ $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.
     /p:configuration=$configuration `
     /restore
 
-# & $msbuild `
-#     ./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj `
-#     /p:configuration=$configuration `
-#     /restore
+& $msbuild `
+    ./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj `
+    /p:configuration=$configuration `
+    /restore
 
-# & $msbuild `
-#     ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj `
-#     /p:configuration=$configuration `
-#     /restore
+& $msbuild `
+    ./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj `
+    /p:configuration=$configuration `
+    /restore
