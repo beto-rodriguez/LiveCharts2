@@ -12,11 +12,6 @@ dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/LiveChartsCo
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/LiveChartsCore.SkiaSharpView.Blazor.csproj -c $configuration
 dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Eto/LiveChartsCore.SkiaSharpView.Eto.csproj -c $configuration
 
-# DISABLE DOTNET BUILD FOR NOW
-# LiveCharts requires VisualStudio 17.8
-# but it seems that the current image installed is 17.6 (UPDATE NOT SURE WHICH VERSION IS INSTALLED AS TODAY)
-# FOR NOW... DISABLE MSBUILD
-
 $msbuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
 
 & $msbuild `
