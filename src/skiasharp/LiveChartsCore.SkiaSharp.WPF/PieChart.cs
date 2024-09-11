@@ -64,6 +64,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         MouseDown += OnMouseDown;
 
         tooltip = new SKDefaultTooltip();
+        legend = new SKDefaultLegend();
     }
 
     /// <summary>
@@ -200,7 +201,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         if (canvas is null) throw new Exception("canvas not found");
         core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
-        legend = new SKDefaultLegend(); // Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
         core.Update();
     }
 
