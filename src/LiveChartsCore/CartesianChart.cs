@@ -406,6 +406,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         YAxes = _chartView.YAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
         XAxes = _chartView.XAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
 
+        if (XAxes.Length == 0 || YAxes.Length == 0)
+        {
+            throw new Exception($"{nameof(XAxes)} and {nameof(YAxes)} must contain at least one element.");
+        }
+
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
 
