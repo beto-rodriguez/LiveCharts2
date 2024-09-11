@@ -241,7 +241,14 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     public IPaint<TDrawingContext>? ZeroPaint
     {
         get => _zeroPaint;
-        set => SetPaintProperty(ref _zeroPaint, value, true);
+        set
+        {
+            SetPaintProperty(ref _zeroPaint, value, true);
+
+            // clear the reference to thre previous line.
+            // so a new instance will be created for the new paint task.
+            _zeroLine = null;
+        }
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPaint"/>
