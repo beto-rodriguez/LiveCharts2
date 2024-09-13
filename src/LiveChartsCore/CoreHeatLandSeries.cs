@@ -131,7 +131,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
             var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
 
             var mapLand = context.View.ActiveMap.FindLand(land.Name);
-            if (mapLand is null) return;
+            if (mapLand is null) continue;
 
             var shapesQuery = mapLand.Data
                 .Select(x => x.Shape)
