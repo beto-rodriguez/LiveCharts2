@@ -51,6 +51,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     private double _labelsSize = 12;
     private readonly int _subSections = 5;
     private readonly Dictionary<string, TickVisual> _visuals = [];
+    private Func<double, string> _labeler = Labelers.Default;
 
     /// <summary>
     /// Gets or sets the labels paint.
@@ -89,6 +90,11 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// Gets or sets the labels size.
     /// </summary>
     public double LabelsSize { get => _labelsSize; set => SetProperty(ref _labelsSize, value); }
+
+    /// <summary>
+    /// Gets or sets the labeler, a function that receives a number and return the label content as string.
+    /// </summary>
+    public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
@@ -204,7 +210,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
             visual.Tick.X1 = cx + (float)Math.Cos(beta) * ticksRadius;
             visual.Tick.Y1 = cy + (float)Math.Sin(beta) * ticksRadius;
 
-            visual.Label.Text = i.ToString();
+            visual.Label.Text = Labeler(i);
             visual.Label.X = cx + (float)Math.Cos(beta) * labelsRadius;
             visual.Label.Y = cy + (float)Math.Sin(beta) * labelsRadius;
             visual.Label.TextSize = labelsSize;

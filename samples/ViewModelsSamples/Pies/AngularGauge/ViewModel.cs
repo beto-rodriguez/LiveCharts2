@@ -35,6 +35,7 @@ public partial class ViewModel : ObservableObject
         {
             new AngularTicksVisual
             {
+                Labeler = value => value.ToString("N1"),
                 LabelsSize = 16,
                 LabelsOuterOffset = 15,
                 OuterOffset = 65,
