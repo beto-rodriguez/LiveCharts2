@@ -44,7 +44,10 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     /// </summary>
     public SKGeoMap()
     {
+        LiveCharts.Configure(config => config.UseDefaults());
+
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
     }
 
     /// <summary>
@@ -69,7 +72,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     public bool DesignerMode { get; set; } = false;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap { get; set; } = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+    public CoreMap<SkiaSharpDrawingContext> ActiveMap { get; set; }
 
     float IGeoMapView<SkiaSharpDrawingContext>.Width => Width;
 
