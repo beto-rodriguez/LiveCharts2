@@ -73,4 +73,24 @@ public class ChartTests
 
         Assert.IsTrue(image is not null);
     }
+
+    [TestMethod]
+    public void PolarShouldHandleNullParams()
+    {
+        // we are testing the properties defined on LiveChartsCore/Kernel/Sketches/IPolarChartView.cs
+
+        var chart = new SKPolarChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = null,
+            AngleAxes = null,
+            RadiusAxes = null,
+            VisualElements = null
+        };
+
+        var image = chart.GetImage();
+
+        Assert.IsTrue(image is not null);
+    }
 }
