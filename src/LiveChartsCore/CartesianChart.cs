@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    internal readonly ISizedGeometry<TDrawingContext> _zoomingSection;
+    private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private readonly ICartesianChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
