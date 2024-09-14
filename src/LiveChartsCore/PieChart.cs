@@ -53,7 +53,7 @@ public class PieChart<TDrawingContext>(
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        view.Series.Cast<IChartSeries<TDrawingContext>>();
+        view.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>

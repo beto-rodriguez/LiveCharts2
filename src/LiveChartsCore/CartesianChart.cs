@@ -101,7 +101,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        _chartView.Series.Cast<IChartSeries<TDrawingContext>>();
+        _chartView.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
@@ -403,8 +403,20 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        YAxes = _chartView.YAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
-        XAxes = _chartView.XAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
+        var x = _chartView.XAxes;
+        var y = _chartView.YAxes;
+
+        if (x is null || y is null)
+        {
+            // in theory nulls are not valid, see ChartTest.cs for more context.
+            var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+
+            x = [provider.GetDefaultCartesianAxis()];
+            y = [provider.GetDefaultCartesianAxis()];
+        }
+
+        XAxes = x.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
+        YAxes = y.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
 
         if (XAxes.Length == 0 || YAxes.Length == 0)
         {
