@@ -69,7 +69,7 @@ public class PolarChart<TDrawingContext>(
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        view.Series.Cast<IChartSeries<TDrawingContext>>();
+        view.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
@@ -157,8 +157,25 @@ public class PolarChart<TDrawingContext>(
         var viewDrawMargin = view.DrawMargin;
         ControlSize = view.ControlSize;
 
-        AngleAxes = view.AngleAxes.Cast<IPolarAxis>().ToArray();
-        RadiusAxes = view.RadiusAxes.Cast<IPolarAxis>().ToArray();
+        var a = view.AngleAxes;
+        var r = view.RadiusAxes;
+
+        if (a is null || r is null)
+        {
+            // in theory nulls are not valid, see ChartTest.cs for more context.
+            var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+
+            a = [provider.GetDefaultPolarAxis()];
+            r = [provider.GetDefaultPolarAxis()];
+        }
+
+        AngleAxes = a.Cast<IPolarAxis>().ToArray();
+        RadiusAxes = r.Cast<IPolarAxis>().ToArray();
+
+        if (AngleAxes.Length == 0 || RadiusAxes.Length == 0)
+        {
+            throw new Exception($"{nameof(AngleAxes)} and {nameof(RadiusAxes)} must contain at least one element.");
+        }
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
