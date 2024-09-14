@@ -55,4 +55,22 @@ public class ChartTests
 
         Assert.IsTrue(image is not null);
     }
+
+    [TestMethod]
+    public void PieShouldHandleNullParams()
+    {
+        // we are testing the properties defined on LiveChartsCore/Kernel/Sketches/IPieChartView.cs
+
+        var chart = new SKPieChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = null,
+            VisualElements = null
+        };
+
+        var image = chart.GetImage();
+
+        Assert.IsTrue(image is not null);
+    }
 }
