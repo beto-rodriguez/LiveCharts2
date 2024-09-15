@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Net.NetworkInformation;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -87,6 +86,23 @@ public class ChartTests
             AngleAxes = null,
             RadiusAxes = null,
             VisualElements = null
+        };
+
+        var image = chart.GetImage();
+
+        Assert.IsTrue(image is not null);
+    }
+
+    [TestMethod]
+    public void MapShouldHandleNullParams()
+    {
+        // we are testing the properties defined on LiveChartsCore/Kernel/Sketches/IGeoMapView.cs
+
+        var chart = new SKGeoMap
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = null,
         };
 
         var image = chart.GetImage();

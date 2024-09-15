@@ -239,7 +239,7 @@ public class GeoMap<TDrawingContext>
         _mapFactory.GenerateLands(context);
 
         var toDeleteSeries = new HashSet<IGeoSeries<TDrawingContext>>(_everMeasuredSeries);
-        foreach (var series in View.Series.Cast<IGeoSeries<TDrawingContext>>())
+        foreach (var series in View.Series?.Cast<IGeoSeries<TDrawingContext>>() ?? [])
         {
             series.Measure(context);
             _ = _everMeasuredSeries.Add(series);
