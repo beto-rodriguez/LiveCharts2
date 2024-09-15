@@ -102,19 +102,11 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     public double? Low { get => _low; set { _low = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
-#if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
     public ChartEntityMetaData? MetaData { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
-#if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
     public Coordinate Coordinate { get; set; } = Coordinate.Empty;
 
     /// <summary>
