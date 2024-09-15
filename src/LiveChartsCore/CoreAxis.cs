@@ -807,16 +807,22 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         if (CustomSeparators is not null)
         {
-            foreach (var s in CustomSeparators) yield return s;
+            foreach (var s in CustomSeparators)
+                yield return s;
+
             yield break;
         }
 
         var relativeEnd = end - start;
+
         if (relativeEnd / step > 10000)
-        {
             ThrowInfiniteSeparators();
-        }
-        for (var i = 0d; i <= relativeEnd; i += step) yield return start + i;
+
+        // start from -step to include the first separator/sub-separator
+        // and end at relativeEnd + step to include the last separator/sub-separator
+
+        for (var i = -step; i <= relativeEnd + step; i += step)
+            yield return start + i;
     }
 
     private static ChartPoint? FindClosestPoint(
