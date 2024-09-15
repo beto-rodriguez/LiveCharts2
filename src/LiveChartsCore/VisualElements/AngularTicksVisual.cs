@@ -268,8 +268,6 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
                 Stroke?.RemoveGeometryFromPainTask(chart.Canvas, subtick);
             _ = _visuals.Remove(key);
         }
-
-        Trace.WriteLine(_visuals.Count);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
