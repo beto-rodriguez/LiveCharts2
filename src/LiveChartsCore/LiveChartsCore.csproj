@@ -62,7 +62,7 @@
   <ItemGroup>
     <PackageReference
       Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0'"
-      Include="Newtonsoft.Json" Version="13.0.2" />
+      Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
 
 </Project>

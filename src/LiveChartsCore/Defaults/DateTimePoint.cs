@@ -70,19 +70,11 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
-#if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
     public ChartEntityMetaData? MetaData { get; set; }
 
     /// <inheritdoc cref="IChartEntity.Coordinate"/>
-#if NET5_0_OR_GREATER
     [System.Text.Json.Serialization.JsonIgnore]
-#else
-    [Newtonsoft.Json.JsonIgnore]
-#endif
     public Coordinate Coordinate { get; set; } = Coordinate.Empty;
 
     /// <summary>
