@@ -52,12 +52,12 @@
     <!-- if uno then add reference to uno dependencies -->
     <PackageReference
       Condition="!$(TargetFramework.Contains('-windows'))"
-      Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.6" />
+      Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
 
     <!-- in windows then use the winui package -->
     <PackageReference
       Condition="$(TargetFramework.Contains('-windows'))"
-      Include="SkiaSharp.Views.WinUI" Version="2.88.6" />
+      Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
   </ItemGroup>
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
