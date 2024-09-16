@@ -492,7 +492,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
     }

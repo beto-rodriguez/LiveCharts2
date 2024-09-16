@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.VisualElements;
@@ -279,7 +280,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
     { }
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         var count =
             _visuals.Count +                    // the ticks
@@ -303,7 +305,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         return l;
     }
 
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _stroke, _labelsPaint };
     }

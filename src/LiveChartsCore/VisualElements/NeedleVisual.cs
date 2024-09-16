@@ -134,12 +134,14 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         _geometry.Parent = parent;
     }
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         return new IAnimatable?[] { _geometry };
     }
 
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _fill };
     }

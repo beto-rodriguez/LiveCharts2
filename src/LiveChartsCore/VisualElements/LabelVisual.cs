@@ -22,6 +22,7 @@
 
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
@@ -96,12 +97,14 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// </summary>
     public float MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
 
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paint };
     }
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         return new IAnimatable?[] { _labelGeometry };
     }

@@ -549,11 +549,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
     }
 
-    /// <summary>
-    /// Gets the paint tasks.
-    /// </summary>
-    /// <returns></returns>
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint };
     }

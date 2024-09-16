@@ -198,7 +198,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
         PointerDown?.Invoke(this, args);
     }
 
-    internal abstract IAnimatable?[] GetDrawnGeometries();
+    /// <summary>
+    /// Gets the geometries to draw.
+    /// </summary>
+    /// <returns>The geometries.</returns>
+    protected internal abstract IAnimatable?[] GetDrawnGeometries();
 
     internal virtual void AlignToTopLeftCorner()
     {

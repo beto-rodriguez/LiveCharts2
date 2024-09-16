@@ -439,12 +439,8 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         label.RemoveOnCompleted = true;
     }
 
-    /// <summary>
-    /// Gets the paint tasks.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
     }

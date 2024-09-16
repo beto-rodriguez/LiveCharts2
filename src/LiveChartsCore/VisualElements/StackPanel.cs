@@ -101,12 +101,14 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// </summary>
     public double MaxHeight { get => _maxHeight; set => SetProperty(ref _maxHeight, value); }
 
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _backgroundPaint };
     }
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         return new IAnimatable?[] { BackgroundGeometry };
     }
