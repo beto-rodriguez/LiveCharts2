@@ -8,7 +8,7 @@
 
     <AssemblyName>LiveChartsCore.SkiaSharpView.Avalonia</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Avalonia</RootNamespace>
-    <Version>2.0.0-rc2</Version>
+    <Version>2.0.0-rc3</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for AvaloniaUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

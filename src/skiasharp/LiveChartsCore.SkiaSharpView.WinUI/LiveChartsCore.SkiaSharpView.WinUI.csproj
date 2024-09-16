@@ -20,7 +20,7 @@
     <UseWinUI>true</UseWinUI>
     
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
-    <Version>2.0.0-rc2</Version>
+    <Version>2.0.0-rc3</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsAppSDK.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
