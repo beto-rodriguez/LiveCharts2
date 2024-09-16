@@ -593,7 +593,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         for (var i = 0; i < points.Length; i++)
         {
-            var isClosed = IsClosed && points.Length > 3;
+            var isClosed = IsClosed && points.Length > 2;
 
             var a1 = i + 1 - points.Length;
             var a2 = i + 2 - points.Length;
