@@ -60,7 +60,8 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
     /// </summary>
     public event Action<ISizedGeometry<TDrawingContext>>? GeometryInitialized;
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         return new IAnimatable?[] { geometry };
     }

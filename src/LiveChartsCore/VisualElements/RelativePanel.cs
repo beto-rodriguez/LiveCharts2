@@ -68,12 +68,14 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _backgroundPaint };
     }
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         return new IAnimatable?[] { BackgroundGeometry };
     }
