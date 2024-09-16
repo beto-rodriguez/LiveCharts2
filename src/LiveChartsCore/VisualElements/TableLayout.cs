@@ -252,12 +252,14 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         BackgroundGeometry.Parent = parent;
     }
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         return new IAnimatable?[] { BackgroundGeometry };
     }
 
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _backgroundPaint };
     }
