@@ -22,7 +22,7 @@
         <dependency id="LiveChartsCore.Behaviours" version="2.0.0-rc3" />
         <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-rc3" />
       </group>
-      <group targetFramework="net7.0-windows10.0.19041">
+      <group targetFramework="net8.0-windows10.0.19041">
         <dependency id="SkiaSharp.Views.WinUI" version="2.88.8" />
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
         <dependency id="LiveChartsCore.Behaviours" version="2.0.0-rc3" />
@@ -59,26 +59,26 @@
 
 
     <file
-     src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.dll"
-     target="lib\net7.0-windows10.0.19041"/>
+     src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.dll"
+     target="lib\net8.0-windows10.0.19041"/>
     <file
-      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.pdb"
-      target="lib\net7.0-windows10.0.19041"/>
+      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.pdb"
+      target="lib\net8.0-windows10.0.19041"/>
     <file
-      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.xml"
-      target="lib\net7.0-windows10.0.19041"/>
+      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.xml"
+      target="lib\net8.0-windows10.0.19041"/>
     <file
-      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.pri"
-      target="lib\net7.0-windows10.0.19041"/>
+      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI.pri"
+      target="lib\net8.0-windows10.0.19041"/>
     <file
-      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\*.*"
-      target="lib\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI"/>
+      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\*.*"
+      target="lib\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI"/>
     <file
-      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\images\*.*"
-      target="lib\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\images"/>
+      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\images\*.*"
+      target="lib\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\images"/>
     <file
-      src="bin\Release\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes\*.*"
-      target="lib\net7.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes"/>
+      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes\*.*"
+      target="lib\net8.0-windows10.0.19041\LiveChartsCore.SkiaSharpView.WinUI\Themes"/>
 
   </files>
 </package>

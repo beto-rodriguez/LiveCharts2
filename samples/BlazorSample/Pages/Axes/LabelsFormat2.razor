@@ -17,7 +17,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        // On .net7, SkiaSharp 2.88.6 and SkiaSharp.HarfBuzz 2.88.6 the MatchCharacter does not load the font.
+        // On .net8, SkiaSharp 2.88.6 and SkiaSharp.HarfBuzz 2.88.6 the MatchCharacter does not load the font.
         // The MatchCharacter function loads a font from the system,
         // it seems that on WASM we must load the font manually.
 
