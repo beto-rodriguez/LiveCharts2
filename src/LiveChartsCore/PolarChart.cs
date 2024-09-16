@@ -245,12 +245,17 @@ public class PolarChart<TDrawingContext>(
 
             var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
 
-            if (seriesBounds.IsEmpty) continue;
+            if (seriesBounds.IsEmpty)
+            {
+                ce._isThemeSet = false;
+                continue;
+            }
 
             secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds);
             primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
             secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.SecondaryBounds);
             primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.PrimaryBounds);
+            ce._isThemeSet = false;
         }
 
         #region empty bounds
