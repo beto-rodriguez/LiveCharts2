@@ -8,6 +8,7 @@
     <SingleProject>true</SingleProject>
 
     <TargetFrameworks>
+      netstandard2.1;
       net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
     </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
