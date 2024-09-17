@@ -25,7 +25,7 @@
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
-    <Version>2.0.0-rc3</Version>
+    <Version>2.0.0-rc3.1</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
