@@ -11,14 +11,7 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 
     <EnableMsixTooling>true</EnableMsixTooling>
-
-    <!--
-    net 8 breaking changes:
-    https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/rid-graph
-    -->
-    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-    <RuntimeIdentifiers Condition="!$(TargetFramework.Contains('8.0-windows'))">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-    
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>    
     <UseWinUI>true</UseWinUI>
     
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
@@ -30,8 +23,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IsPackable>false</IsPackable>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -42,7 +33,7 @@
     <!--not sure if we should ignore this warning.-->
     <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
