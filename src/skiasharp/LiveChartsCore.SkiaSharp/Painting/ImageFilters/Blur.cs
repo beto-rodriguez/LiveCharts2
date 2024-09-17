@@ -29,27 +29,15 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// Creates a blur image filter.
 /// </summary>
 /// <seealso cref="ImageFilter" />
-public class Blur : ImageFilter
+/// <remarks>
+/// Initializes a new instance of the <see cref="Blur"/> class.
+/// </remarks>
+/// <param name="sigmaX">The sigma x.</param>
+/// <param name="sigmaY">The sigma y.</param>
+/// <param name="input">The input.</param>
+/// <param name="cropRect">The crop rect.</param>
+public class Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null) : ImageFilter
 {
-    private readonly float _sigmaX;
-    private readonly float _sigmaY;
-    private readonly SKImageFilter? _filter = null;
-    private readonly SKImageFilter.CropRect? _cropRect = null;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Blur"/> class.
-    /// </summary>
-    /// <param name="sigmaX">The sigma x.</param>
-    /// <param name="sigmaY">The sigma y.</param>
-    /// <param name="input">The input.</param>
-    /// <param name="cropRect">The crop rect.</param>
-    public Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null)
-    {
-        _sigmaX = sigmaX;
-        _sigmaY = sigmaY;
-        _filter = input;
-        _cropRect = cropRect;
-    }
 
     /// <summary>
     /// Clones this instance.
@@ -58,7 +46,7 @@ public class Blur : ImageFilter
     /// <exception cref="System.NotImplementedException"></exception>
     public override ImageFilter Clone()
     {
-        return new Blur(_sigmaX, _sigmaY, _filter, _cropRect);
+        return new Blur(sigmaX, sigmaY, input, cropRect);
     }
 
     /// <summary>
@@ -68,6 +56,6 @@ public class Blur : ImageFilter
     /// <returns></returns>
     public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
     {
-        SKImageFilter = SKImageFilter.CreateBlur(_sigmaX, _sigmaY, _filter, _cropRect);
+        SKImageFilter = SKImageFilter.CreateBlur(sigmaX, sigmaY, input, cropRect);
     }
 }

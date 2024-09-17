@@ -18,8 +18,8 @@ public partial class ViewModel : ObservableObject
     public ViewModel()
     {
         // Use ObservableCollections to let the chart listen for changes (or any INotifyCollectionChanged). // mark
-        _observableValues = new ObservableCollection<WeightedPoint>
-        {
+        _observableValues =
+        [
             // Use the WeightedPoint, ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
             // or use any INotifyPropertyChanged implementation // mark
             new WeightedPoint(_index++, 2, 6),
@@ -35,12 +35,12 @@ public partial class ViewModel : ObservableObject
             new(_index++, 3, 8),
             new(_index++, 8, 9),
             new(_index++, 3, 4)
-        };
+        ];
 
-        Series = new ObservableCollection<ISeries>
-        {
+        Series =
+        [
             new ScatterSeries<WeightedPoint> { Values = _observableValues, GeometrySize = 50 }
-        };
+        ];
 
         // in the following series notice that the type int does not implement INotifyPropertyChanged
         // and our Series.Values collection is of type List<T>

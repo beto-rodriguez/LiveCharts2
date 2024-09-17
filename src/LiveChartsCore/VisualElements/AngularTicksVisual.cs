@@ -22,9 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.VisualElements;
@@ -50,7 +50,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     private double _ticksLength;
     private double _labelsSize = 12;
     private readonly int _subSections = 5;
-    private readonly Dictionary<string, TickVisual> _visuals = new();
+    private readonly Dictionary<string, TickVisual> _visuals = [];
+    private Func<double, string> _labeler = Labelers.Default;
 
     /// <summary>
     /// Gets or sets the labels paint.
@@ -89,6 +90,11 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// Gets or sets the labels size.
     /// </summary>
     public double LabelsSize { get => _labelsSize; set => SetProperty(ref _labelsSize, value); }
+
+    /// <summary>
+    /// Gets or sets the labeler, a function that receives a number and return the label content as string.
+    /// </summary>
+    public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
@@ -204,7 +210,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
             visual.Tick.X1 = cx + (float)Math.Cos(beta) * ticksRadius;
             visual.Tick.Y1 = cy + (float)Math.Sin(beta) * ticksRadius;
 
-            visual.Label.Text = i.ToString();
+            visual.Label.Text = Labeler(i);
             visual.Label.X = cx + (float)Math.Cos(beta) * labelsRadius;
             visual.Label.Y = cy + (float)Math.Sin(beta) * labelsRadius;
             visual.Label.TextSize = labelsSize;
@@ -262,8 +268,6 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
                 Stroke?.RemoveGeometryFromPainTask(chart.Canvas, subtick);
             _ = _visuals.Remove(key);
         }
-
-        Trace.WriteLine(_visuals.Count);
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
@@ -276,7 +280,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
     { }
 
-    internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         var count =
             _visuals.Count +                    // the ticks
@@ -300,23 +305,17 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         return l;
     }
 
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _stroke, _labelsPaint };
     }
 
-    private class TickVisual
+    private class TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)
     {
-        public TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)
-        {
-            Label = label;
-            Tick = line;
-            Subseparator = subseparator;
-        }
-
-        public TLabelGeometry Label { get; set; }
-        public TLineGeometry Tick { get; set; }
-        public TLineGeometry[] Subseparator { get; set; }
+        public TLabelGeometry Label { get; set; } = label;
+        public TLineGeometry Tick { get; set; } = line;
+        public TLineGeometry[] Subseparator { get; set; } = subseparator;
         public object UpdateId { get; set; } = new();
     }
 }

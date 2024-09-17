@@ -13,16 +13,16 @@ namespace ViewModelsSamples.General.ConditionalDraw;
 
 public partial class ViewModel : ObservableObject
 {
-    private readonly ObservableCollection<ObservableValue> _values = new();
+    private readonly ObservableCollection<ObservableValue> _values = [];
 
     public ViewModel()
     {
         var dangerPaint = new SolidColorPaint(SKColors.Red);
 
-        _values = new ObservableCollection<ObservableValue>
-        {
+        _values =
+        [
             new(2), new(5), new(4), new(6), new(8), new(3), new(2), new(4), new(6)
-        };
+        ];
 
         var series = new ColumnSeries<ObservableValue>
         {

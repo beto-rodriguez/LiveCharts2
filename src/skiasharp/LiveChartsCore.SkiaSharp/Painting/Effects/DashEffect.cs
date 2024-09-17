@@ -29,19 +29,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
 /// Creates a stroke dash effect.
 /// </summary>
 /// <seealso cref="PathEffect" />
-public class DashEffect : PathEffect
+/// <remarks>
+/// Initializes a new instance of the <see cref="DashEffect"/> class.
+/// </remarks>
+public class DashEffect(float[] dashArray, float phase = 0) : PathEffect
 {
-    private readonly float[] _dashArray;
-    private readonly float _phase = 0;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DashEffect"/> class.
-    /// </summary>
-    public DashEffect(float[] dashArray, float phase = 0)
-    {
-        _dashArray = dashArray;
-        _phase = phase;
-    }
 
     /// <summary>
     /// Creates a new object that is a copy of the current instance.
@@ -52,7 +44,7 @@ public class DashEffect : PathEffect
     /// <exception cref="System.NotImplementedException"></exception>
     public override PathEffect Clone()
     {
-        return new DashEffect(_dashArray, _phase);
+        return new DashEffect(dashArray, phase);
     }
 
     /// <summary>
@@ -61,6 +53,6 @@ public class DashEffect : PathEffect
     /// <param name="drawingContext">The drawing context.</param>
     public override void CreateEffect(SkiaSharpDrawingContext drawingContext)
     {
-        SKPathEffect = SKPathEffect.CreateDash(_dashArray, _phase);
+        SKPathEffect = SKPathEffect.CreateDash(dashArray, phase);
     }
 }

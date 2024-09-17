@@ -37,8 +37,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
 {
     internal bool _isInternalSet = false;
     internal bool _isThemeSet = false;
-    internal readonly HashSet<string> _userSets = new();
-    private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
+    internal readonly HashSet<string> _userSets = [];
+    private readonly List<IPaint<TDrawingContext>> _deletingTasks = [];
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -80,8 +80,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <summary>
     /// Gets the paint tasks registered by the <see cref="ChartElement{TDrawingContext}"/>.
     /// </summary>
-    /// <returns></returns>
-    internal abstract IPaint<TDrawingContext>?[] GetPaintTasks();
+    /// <returns>The paint tasks.</returns>
+    protected internal abstract IPaint<TDrawingContext>?[] GetPaintTasks();
 
     /// <summary>
     /// Sets a property value and handles the paints in the canvas.

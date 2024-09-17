@@ -40,7 +40,7 @@ public class DataFactory<TModel, TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     private readonly bool _isTModelChartEntity = false;
-    private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = new();
+    private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = [];
     private ISeries? _series;
 
     /// <summary>
@@ -380,12 +380,12 @@ public class DataFactory<TModel, TDrawingContext>
         _ = _chartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
         if (d is null)
         {
-            d = new Dictionary<int, MappedChartEntity>();
+            d = [];
             _chartIndexEntityMap[canvas.Sync] = d;
         }
         var IndexEntityMap = d;
 
-        foreach (var item in series.Values)
+        foreach (var item in series.Values.Cast<TModel>())
         {
             if (item is null)
             {

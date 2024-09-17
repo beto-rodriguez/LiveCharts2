@@ -41,13 +41,13 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
 {
     private IPaint<TDrawingContext>? _heatPaint;
     private bool _isHeatInCanvas = false;
-    private LvcColor[] _heatMap = Array.Empty<LvcColor>();
+    private LvcColor[] _heatMap = [];
     private double[]? _colorStops;
     private IEnumerable<IWeigthedMapLand>? _lands;
     private bool _isVisible;
-    private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = new();
+    private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = [];
     private readonly CollectionDeepObserver<IWeigthedMapLand> _observer;
-    private readonly HashSet<LandDefinition> _everUsed = new();
+    private readonly HashSet<LandDefinition> _everUsed = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TDrawingContext}"/> class.
@@ -131,7 +131,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
             var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
 
             var mapLand = context.View.ActiveMap.FindLand(land.Name);
-            if (mapLand is null) return;
+            if (mapLand is null) continue;
 
             var shapesQuery = mapLand.Data
                 .Select(x => x.Shape)

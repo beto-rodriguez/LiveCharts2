@@ -52,7 +52,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <summary>
     /// The active separators
     /// </summary>
-    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = [];
 
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
@@ -102,7 +102,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Align? _labelsAlignment;
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
-    private int _stepCount;
     internal double? _logBase;
 
     #endregion
@@ -242,7 +241,14 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     public IPaint<TDrawingContext>? ZeroPaint
     {
         get => _zeroPaint;
-        set => SetPaintProperty(ref _zeroPaint, value, true);
+        set
+        {
+            SetPaintProperty(ref _zeroPaint, value, true);
+
+            // clear the reference to thre previous line.
+            // so a new instance will be created for the new paint task.
+            _zeroLine = null;
+        }
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPaint"/>
@@ -307,8 +313,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
     {
-        _stepCount = 0;
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
         var controlSize = cartesianChart.ControlSize;
@@ -405,7 +409,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
         {
-            separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
+            separators = [];
             activeSeparators[cartesianChart] = separators;
         }
 
@@ -607,8 +611,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 UpdateLabel(visualSeparator.Label, x, y + tyco, labelContent, hasRotation, r, UpdateMode.Update);
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
-
-            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         foreach (var separatorValueKey in separators.ToArray())
@@ -805,12 +807,22 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         if (CustomSeparators is not null)
         {
-            foreach (var s in CustomSeparators) yield return s;
+            foreach (var s in CustomSeparators)
+                yield return s;
+
             yield break;
         }
 
         var relativeEnd = end - start;
-        for (var i = 0d; i <= relativeEnd; i += step) yield return start + i;
+
+        if (relativeEnd / step > 10000)
+            ThrowInfiniteSeparators();
+
+        // start from -step to include the first separator/sub-separator
+        // and end at relativeEnd + step to include the last separator/sub-separator
+
+        for (var i = -step; i <= relativeEnd + step; i += step)
+            yield return start + i;
     }
 
     private static ChartPoint? FindClosestPoint(
@@ -891,8 +903,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
             var m = textGeometry.Measure(LabelsPaint);
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
-
-            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         return new LvcSize(w, h);
@@ -988,11 +998,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         OnPropertyChanged(propertyName);
     }
 
-    /// <summary>
-    /// Gets the paint tasks.
-    /// </summary>
-    /// <returns></returns>
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
     }
@@ -1046,8 +1053,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
             maxLabelSize = new LvcSize(
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
                 maxLabelSize.Height > m.Height ? maxLabelSize.Height : m.Height);
-
-            if (_stepCount++ > 10000) ThrowInfiniteSeparators();
         }
 
         return maxLabelSize;
@@ -1259,7 +1264,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
             float xs = 0f, ys = 0f;
             if (_orientation == AxisOrientation.X)
             {
-                xs = scale.MeasureInPixels(s * kl);
+                xs = scale.MeasureInPixels(s + s * kl);
             }
             else
             {
@@ -1411,6 +1416,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
 
         label.Text = text;
+        label.TextSize = (float)_textSize;
         label.Padding = _padding;
         label.X = x;
         label.Y = y;
@@ -1456,8 +1462,9 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     private void ThrowInfiniteSeparators()
     {
+        var axisName = string.IsNullOrEmpty(Name) ? "" : $"named \"{Name}\" ";
         throw new Exception(
-            $"The {_orientation} axis has an excessive number of separators. " +
+            $"The {_orientation} axis {axisName}has an excessive number of separators. " +
             $"If you set the step manually, ensure the number of separators is less than 10,000. " +
             $"This could also be caused because you are zooming too deep, " +
             $"try to set a limit to the current chart zoom using the Axis.{nameof(MinZoomDelta)} property. " +

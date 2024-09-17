@@ -32,27 +32,21 @@ namespace LiveChartsCore.Measure;
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class VectorManager<TSegment, TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of the <see cref="VectorManager{TSegment, TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="areaGeometry">The area geometry</param>
+public class VectorManager<TSegment, TDrawingContext>(IVectorGeometry<TSegment, TDrawingContext> areaGeometry)
     where TDrawingContext : DrawingContext
     where TSegment : IConsecutivePathSegment, IAnimatable
 {
-    private LinkedListNode<TSegment>? _nextNode;
+    private LinkedListNode<TSegment>? _nextNode = areaGeometry.Commands.First;
     private LinkedListNode<TSegment>? _currentNode;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VectorManager{TSegment, TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="areaGeometry">The area geometry</param>
-    public VectorManager(IVectorGeometry<TSegment, TDrawingContext> areaGeometry)
-    {
-        AreaGeometry = areaGeometry;
-        _nextNode = areaGeometry.Commands.First;
-    }
 
     /// <summary>
     /// Gets the area geometry.
     /// </summary>
-    public IVectorGeometry<TSegment, TDrawingContext> AreaGeometry { get; private set; }
+    public IVectorGeometry<TSegment, TDrawingContext> AreaGeometry { get; private set; } = areaGeometry;
 
     /// <summary>
     /// Adds a segment to the area geometry.

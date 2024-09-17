@@ -60,11 +60,8 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <summary>
-    /// Gets the paint tasks.
-    /// </summary>
-    /// <returns></returns>
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _stroke, _fill };
     }

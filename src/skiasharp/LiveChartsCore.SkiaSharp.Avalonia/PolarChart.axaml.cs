@@ -773,12 +773,12 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         _core?.InvokePointerLeft();
     }
 
-    private void OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Load();
     }
 
-    private void PolarChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void PolarChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
     }

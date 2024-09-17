@@ -60,7 +60,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IChartLegend<SkiaSharpDrawingContext>? _legend = new SKDefaultLegend();
     private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
-    private bool _isZoomingSectionAttached;
 
     #endregion
 
@@ -747,6 +746,15 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     protected void InitializeCore()
     {
         var zoomingSection = new RectangleGeometry();
+        var zoomingSectionPaint = new SolidColorPaint
+        {
+            IsFill = true,
+            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
+            ZIndex = int.MaxValue
+        };
+        zoomingSectionPaint.AddGeometryToPaintTask(canvas!.CanvasCore, zoomingSection);
+        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+
         _core = new CartesianChart<SkiaSharpDrawingContext>(
             this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
         _core.Update();
@@ -785,20 +793,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         // not implemented yet?
         // https://github.com/dotnet/maui/issues/16202
         //if (Keyboard.Modifiers > 0) return;
-
-        if (!_isZoomingSectionAttached)
-        {
-            var zoomingSectionPaint = new SolidColorPaint
-            {
-                IsFill = true,
-                Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-                ZIndex = int.MaxValue
-            };
-            var zoomingSection = ((CartesianChart<SkiaSharpDrawingContext>)CoreChart)._zoomingSection;
-            zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
-            canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-            _isZoomingSectionAttached = true;
-        }
 
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (PressedCommand?.CanExecute(cArgs) == true) PressedCommand.Execute(cArgs);

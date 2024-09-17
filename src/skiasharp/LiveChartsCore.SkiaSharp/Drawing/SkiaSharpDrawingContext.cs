@@ -31,33 +31,21 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// Defines a skia sharp drawing context.
 /// </summary>
 /// <seealso cref="DrawingContext" />
-public class SkiaSharpDrawingContext : DrawingContext
+/// <remarks>
+/// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
+/// </remarks>
+/// <param name="motionCanvas">The motion canvas.</param>
+/// <param name="info">The information.</param>
+/// <param name="surface">The surface.</param>
+/// <param name="canvas">The canvas.</param>
+/// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
+public class SkiaSharpDrawingContext(
+    MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+    SKImageInfo info,
+    SKSurface? surface,
+    SKCanvas canvas,
+    bool clearOnBeginDraw = true) : DrawingContext
 {
-    private readonly bool _clearOnBegingDraw;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
-    /// </summary>
-    /// <param name="motionCanvas">The motion canvas.</param>
-    /// <param name="info">The information.</param>
-    /// <param name="surface">The surface.</param>
-    /// <param name="canvas">The canvas.</param>
-    /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
-    public SkiaSharpDrawingContext(
-        MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
-        SKImageInfo info,
-        SKSurface surface,
-        SKCanvas canvas,
-        bool clearOnBeginDraw = true)
-    {
-        MotionCanvas = motionCanvas;
-        Info = info;
-        Surface = surface;
-        Canvas = canvas;
-        PaintTask = null!;
-        Paint = null!;
-        _clearOnBegingDraw = clearOnBeginDraw;
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
@@ -71,7 +59,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     public SkiaSharpDrawingContext(
         MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
         SKImageInfo info,
-        SKSurface surface,
+        SKSurface? surface,
         SKCanvas canvas,
         SKColor background,
         bool clearOnBeginDraw = true)
@@ -86,7 +74,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <value>
     /// The motion canvas.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> MotionCanvas { get; set; }
+    public MotionCanvas<SkiaSharpDrawingContext> MotionCanvas { get; set; } = motionCanvas;
 
     /// <summary>
     /// Gets or sets the information.
@@ -94,7 +82,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <value>
     /// The information.
     /// </value>
-    public SKImageInfo Info { get; set; }
+    public SKImageInfo Info { get; set; } = info;
 
     /// <summary>
     /// Gets or sets the surface.
@@ -102,7 +90,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <value>
     /// The surface.
     /// </value>
-    public SKSurface Surface { get; set; }
+    public SKSurface? Surface { get; set; } = surface;
 
     /// <summary>
     /// Gets or sets the canvas.
@@ -110,7 +98,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <value>
     /// The canvas.
     /// </value>
-    public SKCanvas Canvas { get; set; }
+    public SKCanvas Canvas { get; set; } = canvas;
 
     /// <summary>
     /// Gets or sets the paint task.
@@ -118,7 +106,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <value>
     /// The paint task.
     /// </value>
-    public Paint PaintTask { get; set; }
+    public Paint PaintTask { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the paint.
@@ -126,7 +114,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <value>
     /// The paint.
     /// </value>
-    public SKPaint Paint { get; set; }
+    public SKPaint Paint { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the background.
@@ -136,7 +124,7 @@ public class SkiaSharpDrawingContext : DrawingContext
     /// <inheritdoc cref="DrawingContext.OnBeginDraw"/>
     public override void OnBeginDraw()
     {
-        if (_clearOnBegingDraw) Canvas.Clear();
+        if (clearOnBeginDraw) Canvas.Clear();
         if (Background != SKColor.Empty)
         {
             Canvas.DrawRect(Info.Rect, new SKPaint { Color = Background });

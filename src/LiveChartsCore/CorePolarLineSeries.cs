@@ -47,8 +47,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
-    private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = new();
-    private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = new();
+    private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
+    private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
@@ -167,7 +167,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? RadiusToolTipLabelFormatter
     {
         get => _radiusTooltipLabelFormatter;
-        set { SetProperty(ref _radiusTooltipLabelFormatter, value); _obsolete_formatter = value; }
+        set => SetProperty(ref _radiusTooltipLabelFormatter, value);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
@@ -218,13 +218,13 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
-            strokePathHelperContainer = new List<TPathGeometry>();
+            strokePathHelperContainer = [];
             _strokePathHelperDictionary[chart.Canvas.Sync] = strokePathHelperContainer;
         }
 
         if (!_fillPathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var fillPathHelperContainer))
         {
-            fillPathHelperContainer = new List<TPathGeometry>();
+            fillPathHelperContainer = [];
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
@@ -593,7 +593,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         for (var i = 0; i < points.Length; i++)
         {
-            var isClosed = IsClosed && points.Length > 3;
+            var isClosed = IsClosed && points.Length > 2;
 
             var a1 = i + 1 - points.Length;
             var a2 = i + 2 - points.Length;
@@ -775,11 +775,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         OnVisibilityChanged();
     }
 
-    /// <summary>
-    /// Gets the paint tasks.
-    /// </summary>
-    /// <returns></returns>
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
     }

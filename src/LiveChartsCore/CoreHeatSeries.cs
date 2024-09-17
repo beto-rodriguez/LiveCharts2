@@ -46,7 +46,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     private IPaint<TDrawingContext>? _paintTaks;
     private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
-    private List<Tuple<double, LvcColor>> _heatStops = new();
+    private List<Tuple<double, LvcColor>> _heatStops = [];
     private LvcColor[] _heatMap =
     {
         LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
@@ -353,7 +353,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return new[] { _paintTaks };
     }

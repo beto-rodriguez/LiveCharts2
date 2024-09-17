@@ -119,7 +119,7 @@ function Add-Pack {
             Invoke-WebRequest "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile "./nuget.exe"
         }
 
-        ./nuget pack $project.nuspecFile -OutputDirectory $nupkgOutputPath -Symbols
+        ./nuget pack $project.nuspecFile -OutputDirectory $nupkgOutputPath -Symbols -SymbolPackageFormat snupkg
     }
 }
 

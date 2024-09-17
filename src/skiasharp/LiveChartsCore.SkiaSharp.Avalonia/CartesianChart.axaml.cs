@@ -206,7 +206,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
         AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
-            nameof(AnimationsSpeed), LiveCharts.DefaultSettings.EasingFunction, inherits: true);
+            nameof(EasingFunction), LiveCharts.DefaultSettings.EasingFunction, inherits: true);
 
     /// <summary>
     /// The tool tip position property
@@ -850,12 +850,12 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         Measuring?.Invoke(this);
     }
 
-    private void CartesianChart_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void CartesianChart_AttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Load();
     }
 
-    private void CartesianChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void CartesianChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
     }

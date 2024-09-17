@@ -37,9 +37,9 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 {
-    private readonly HashSet<HeatPathShape> _usedPathShapes = new();
-    private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _usedPaints = new();
-    private readonly HashSet<string> _usedLayers = new();
+    private readonly HashSet<HeatPathShape> _usedPathShapes = [];
+    private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _usedPaints = [];
+    private readonly HashSet<string> _usedLayers = [];
     private IGeoMapView<SkiaSharpDrawingContext>? _mapView;
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.GenerateLands(MapContext{TDrawingContext})"/>

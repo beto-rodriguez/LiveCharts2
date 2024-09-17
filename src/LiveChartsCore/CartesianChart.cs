@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    internal readonly ISizedGeometry<TDrawingContext> _zoomingSection;
+    private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private readonly ICartesianChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
@@ -48,7 +48,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
-    private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = new();
+    private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
@@ -79,7 +79,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The x axes.
     /// </value>
     public ICartesianAxis<TDrawingContext>[] XAxes { get; private set; } =
-        Array.Empty<ICartesianAxis<TDrawingContext>>();
+        [];
 
     /// <summary>
     /// Gets the y axes.
@@ -88,7 +88,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The y axes.
     /// </value>
     public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } =
-        Array.Empty<ICartesianAxis<TDrawingContext>>();
+        [];
 
     /// <summary>
     /// Gets the sections.
@@ -101,7 +101,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        _chartView.Series.Cast<IChartSeries<TDrawingContext>>();
+        _chartView.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
@@ -403,8 +403,25 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        YAxes = _chartView.YAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
-        XAxes = _chartView.XAxes.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
+        var x = _chartView.XAxes;
+        var y = _chartView.YAxes;
+
+        if (x is null || y is null)
+        {
+            // in theory nulls are not valid, see ChartTest.cs for more context.
+            var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+
+            x = [provider.GetDefaultCartesianAxis()];
+            y = [provider.GetDefaultCartesianAxis()];
+        }
+
+        XAxes = x.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
+        YAxes = y.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
+
+        if (XAxes.Length == 0 || YAxes.Length == 0)
+        {
+            throw new Exception($"{nameof(XAxes)} and {nameof(YAxes)} must contain at least one element.");
+        }
 
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
@@ -476,7 +493,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var yAxis = YAxes[series.ScalesYAt];
 
             var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
-            if (seriesBounds.IsEmpty) continue;
+            if (seriesBounds.IsEmpty)
+            {
+                ce._isInternalSet = false;
+                continue;
+            }
 
             AppendLimits(xAxis, yAxis, seriesBounds);
 
@@ -851,7 +872,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public override void Unload()
     {
         base.Unload();
-        _crosshair = new();
+        _crosshair = [];
         _isFirstDraw = true;
     }
 

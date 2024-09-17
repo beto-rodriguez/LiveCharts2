@@ -37,32 +37,23 @@ namespace LiveChartsCore;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Chart{TDrawingContext}" />
-public class PieChart<TDrawingContext> : Chart<TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="view">The view.</param>
+/// <param name="defaultPlatformConfig">The default platform configuration.</param>
+/// <param name="canvas">The canvas.</param>
+public class PieChart<TDrawingContext>(
+    IPieChartView<TDrawingContext> view,
+    Action<LiveChartsSettings> defaultPlatformConfig,
+    MotionCanvas<TDrawingContext> canvas) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
     where TDrawingContext : DrawingContext
 {
-    private readonly IPieChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="view">The view.</param>
-    /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-    /// <param name="canvas">The canvas.</param>
-    /// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
-    public PieChart(
-        IPieChartView<TDrawingContext> view,
-        Action<LiveChartsSettings> defaultPlatformConfig,
-        MotionCanvas<TDrawingContext> canvas,
-        bool requiresLegendMeasureAlways = false)
-        : base(canvas, defaultPlatformConfig, view)
-    {
-        _chartView = view;
-    }
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        _chartView.Series.Cast<IChartSeries<TDrawingContext>>();
+        view.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
@@ -74,7 +65,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The view.
     /// </value>
-    public override IChartView<TDrawingContext> View => _chartView;
+    public override IChartView<TDrawingContext> View => view;
 
     /// <summary>
     /// Gets the value bounds.
@@ -107,7 +98,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <returns></returns>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
-        return _chartView.Series
+        return view.Series
             .Where(series => (series is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
             .Where(series => series.IsHoverable)
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
@@ -142,19 +133,19 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
 
         MeasureWork = new object();
 
-        var viewDrawMargin = _chartView.DrawMargin;
-        ControlSize = _chartView.ControlSize;
+        var viewDrawMargin = view.DrawMargin;
+        ControlSize = view.ControlSize;
 
-        VisualElements = _chartView.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
+        VisualElements = view.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
 
-        LegendPosition = _chartView.LegendPosition;
-        Legend = _chartView.Legend;
+        LegendPosition = view.LegendPosition;
+        Legend = view.Legend;
 
-        TooltipPosition = _chartView.TooltipPosition;
-        Tooltip = _chartView.Tooltip;
+        TooltipPosition = view.TooltipPosition;
+        Tooltip = view.Tooltip;
 
-        AnimationsSpeed = _chartView.AnimationsSpeed;
-        EasingFunction = _chartView.EasingFunction;
+        AnimationsSpeed = view.AnimationsSpeed;
+        EasingFunction = view.EasingFunction;
 
         SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;

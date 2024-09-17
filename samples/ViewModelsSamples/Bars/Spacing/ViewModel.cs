@@ -2,8 +2,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.Spacing;
 
@@ -19,7 +17,7 @@ public partial class ViewModel : ObservableObject
             Padding = 0,
 
             // Defines the max width a bar can have
-            MaxBarWidth = double.PositiveInfinity
+            MaxBarWidth = double.MaxValue
         }
     };
 }

@@ -36,12 +36,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingContext>
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
-    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
-    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, LvcRectangle> _clipRectangles = new();
-    private char? _matchesChar = null;
+    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = [];
+    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, LvcRectangle> _clipRectangles = [];
     internal SKPaint? _skiaPaint;
     internal FloatMotionProperty _strokeWidthTransition;
-    private string? _fontFamily;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Paint"/> class.
@@ -82,16 +80,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     public bool IsFill { get; set; }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.FontFamily" />
-    public string? FontFamily
-    {
-        get => _fontFamily;
-        set
-        {
-            _fontFamily = value;
-            if (!(_fontFamily?.Contains(LiveChartsSkiaSharp.SkiaFontMatchChar) ?? false)) return;
-            _matchesChar = Convert.ToChar(_fontFamily.Split('|')[1]);
-        }
-    }
+    public string? FontFamily { get; set; }
 
     /// <summary>
     /// Gets or sets the font style.
@@ -205,7 +194,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
         var g = GetGeometriesByCanvas(canvas);
         if (g is null)
         {
-            g = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
+            g = [];
             _geometriesByCanvas[canvas] = g;
         }
         _ = g.Add(geometry);
@@ -271,11 +260,8 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
         // return the defined typeface.
         if (SKTypeface is not null) return SKTypeface;
 
-        // Obsolete method used in older versions of LiveCharts...
-        if (_matchesChar is not null) return SKFontManager.Default.MatchCharacter(_matchesChar.Value);
-
         // create one from the font family.
-        if (FontFamily is not null) return SKTypeface.FromFamilyName(_fontFamily, SKFontStyle ?? new SKFontStyle());
+        if (FontFamily is not null) return SKTypeface.FromFamilyName(FontFamily, SKFontStyle ?? new SKFontStyle());
 
         // other wise ose the globally defined typeface.
         return LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;

@@ -35,9 +35,9 @@ namespace LiveChartsCore.Motion;
 public class MotionCanvas<TDrawingContext> : IDisposable
     where TDrawingContext : DrawingContext
 {
-    internal HashSet<IPaint<TDrawingContext>> _paintTasks = new();
+    internal HashSet<IPaint<TDrawingContext>> _paintTasks = [];
     private readonly Stopwatch _stopwatch = new();
-    private readonly List<double> _fpsStack = new();
+    private readonly List<double> _fpsStack = [];
     private long _previousFrameTime;
     private long _previousLogTime;
     private object _sync = new();
@@ -81,7 +81,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     /// <summary>
     /// Gets the animatables collection.
     /// </summary>
-    public HashSet<IAnimatable> Trackers { get; } = new HashSet<IAnimatable>();
+    public HashSet<IAnimatable> Trackers { get; } = [];
 
     /// <summary>
     /// Draws the frame.

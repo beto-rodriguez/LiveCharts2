@@ -51,6 +51,7 @@ public class PopUpGeometry : SizedGeometry
     /// </summary>
     public PopUpPlacement Placement { get; set; } = PopUpPlacement.Bottom;
 
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)"/>
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         using var path = new SKPath();

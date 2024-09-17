@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
     <TargetFrameworks>netstandard2.0;</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.XamarinForms</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.XamarinForms</RootNamespace>
-    <Version>2.0.0-rc2</Version>
+    <Version>2.0.0-rc3</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for XamarinForms.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -22,37 +22,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.8" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="PolarChart.xaml.cs">
-      <DependentUpon>PolarChart.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="MotionCanvas.xaml.cs">
-      <DependentUpon>MotionCanvas.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="CartesianChart.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GeoMap.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="MotionCanvas.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="PieChart.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

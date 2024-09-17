@@ -16,7 +16,7 @@ public partial class ViewModel : ObservableObject
         Series = data.AsPieSeries((value, series) =>
         {
             // this method is called once per element in the array
-            // we are decremting the outer radius 10 percent (0.1)
+            // we are decrementing the outer radius 50px
             // on every element in the array.
 
             series.InnerRadius = 50;

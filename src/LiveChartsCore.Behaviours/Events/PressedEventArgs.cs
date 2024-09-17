@@ -27,22 +27,17 @@ namespace LiveChartsCore.Behaviours.Events;
 /// <summary>
 /// Defines the pointer event args.
 /// </summary>
-public class PressedEventArgs : ScreenEventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
+/// </remarks>
+/// <param name="location">The pointer location.</param>
+/// <param name="isSecondaryPress">Indicates whether the action is secondary.</param>
+/// <param name="originalEvent">The original event.</param>
+public class PressedEventArgs(LvcPoint location, bool isSecondaryPress, object originalEvent) : ScreenEventArgs(location, originalEvent)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ScreenEventArgs"/> class.
-    /// </summary>
-    /// <param name="location">The pointer location.</param>
-    /// <param name="isSecondaryPress">Indicates whether the action is secondary.</param>
-    /// <param name="originalEvent">The original event.</param>
-    public PressedEventArgs(LvcPoint location, bool isSecondaryPress, object originalEvent)
-        : base(location, originalEvent)
-    {
-        IsSecondaryPress = isSecondaryPress;
-    }
 
     /// <summary>
     /// Gets a value indicating whether the action is a secondary press.
     /// </summary>
-    public bool IsSecondaryPress { get; }
+    public bool IsSecondaryPress { get; } = isSecondaryPress;
 }

@@ -62,7 +62,7 @@ public interface ISeries
     /// <value>
     /// The values.
     /// </value>
-    IEnumerable? Values { get; set; }
+    ICollection? Values { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is visible.
@@ -224,12 +224,4 @@ public interface ISeries<TModel> : ISeries
     /// The mapping.
     /// </value>
     Func<TModel, int, Coordinate>? Mapping { get; set; }
-
-    /// <summary>
-    /// Gets or sets the values.
-    /// </summary>
-    /// <value>
-    /// The values.
-    /// </value>
-    new IEnumerable<TModel>? Values { get; set; }
 }

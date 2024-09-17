@@ -45,7 +45,7 @@ public abstract class Animatable : IAnimatable
     public bool RemoveOnCompleted { get; set; }
 
     /// <inheritdoc cref="IAnimatable.MotionProperties" />
-    public Dictionary<string, IMotionProperty> MotionProperties { get; } = new();
+    public Dictionary<string, IMotionProperty> MotionProperties { get; } = [];
 
     /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[])" />
     public void SetTransition(Animation? animation, params string[]? propertyName)

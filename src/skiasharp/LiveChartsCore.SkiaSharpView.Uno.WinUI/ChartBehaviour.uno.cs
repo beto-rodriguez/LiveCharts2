@@ -22,7 +22,7 @@
 
 #if (HAS_UNO || HAS_UNO_WINUI) && !ANDROID && !IOS && !MACCATALYST && !WINDOWS
 
-// Work around for Uno (WASM and SKIA), we use the same code as WinUI, but we
+// Workaround for Uno (WASM and SKIA), we use the same code as WinUI, but we
 // can not call this from the behaviours assembly because it does not have
 // a reference to the Uno assembly. So we have to copy the code here.
 

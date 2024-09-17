@@ -44,27 +44,29 @@ public abstract class Chart<TDrawingContext> : IChart
 {
     #region fields
 
-    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = new();
-    internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = new();
+    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = [];
+    internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = [];
     internal bool _isToolTipOpen = false;
     internal bool _isPointerIn;
     internal LvcPoint _pointerPosition = new(-10, -10);
     internal float _titleHeight = 0f;
     internal LvcSize _legendSize;
     internal bool _preserveFirstDraw = false;
-    internal readonly HashSet<int> _drawnSeries = new();
+    internal readonly HashSet<int> _drawnSeries = [];
     internal bool _isFirstDraw = true;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;
-    private bool _isTooltipCanceled;
     private LvcPoint _pointerPanningStartPosition = new(-10, -10);
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private readonly Dictionary<ChartPoint, object> _activePoints = new();
+    private readonly Dictionary<ChartPoint, object> _activePoints = [];
     private LvcSize _previousSize = new();
+#if NET5_0_OR_GREATER
     private readonly bool _isMobile;
+    private bool _isTooltipCanceled;
+#endif
 
     #endregion
 
@@ -328,7 +330,9 @@ public abstract class Chart<TDrawingContext> : IChart
 
         lock (Canvas.Sync)
         {
+#if NET5_0_OR_GREATER
             if (_isMobile) _isTooltipCanceled = false;
+#endif
 
             var strategy = VisibleSeries.GetTooltipFindingStrategy();
 
@@ -373,6 +377,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
     internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
     {
+#if NET5_0_OR_GREATER
         if (_isMobile)
         {
             lock (Canvas.Sync)
@@ -382,6 +387,7 @@ public abstract class Chart<TDrawingContext> : IChart
 
             View.InvokeOnUIThread(CloseTooltip);
         }
+#endif
 
         if (!_isPanning) return;
         _isPanning = false;
@@ -578,7 +584,7 @@ public abstract class Chart<TDrawingContext> : IChart
             _ = _everMeasuredElements.Remove(visual);
         }
 
-        _toDeleteElements = new HashSet<ChartElement<TDrawingContext>>();
+        _toDeleteElements = [];
     }
 
     /// <summary>
@@ -661,7 +667,9 @@ public abstract class Chart<TDrawingContext> : IChart
              {
                  lock (Canvas.Sync)
                  {
+#if NET5_0_OR_GREATER
                      if (_isTooltipCanceled) return;
+#endif
                      DrawToolTip();
                      Canvas.Invalidate();
                  }

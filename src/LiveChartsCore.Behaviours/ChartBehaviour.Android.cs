@@ -41,6 +41,11 @@ public abstract partial class ChartBehaviour
     private CustomScaleListener _customScaleListener = null!;
     private DateTime _previousPress = DateTime.MinValue;
 
+    /// <summary>
+    /// Called on android hover events.
+    /// </summary>
+    /// <param name="sender">the sender.</param>
+    /// <param name="e">the event args.</param>
     protected void OnAndroidHover(object? sender, View.HoverEventArgs e)
     {
         if (e.Event is null) return;
@@ -49,6 +54,11 @@ public abstract partial class ChartBehaviour
         Moved?.Invoke(sender, new(p, e.Event));
     }
 
+    /// <summary>
+    /// Called on android touch events.
+    /// </summary>
+    /// <param name="sender">the sender.</param>
+    /// <param name="e">the event args.</param>
     protected void OnAndroidTouched(object? sender, View.TouchEventArgs e)
     {
         var viewGroup = (ViewGroup?)sender;
@@ -66,6 +76,12 @@ public abstract partial class ChartBehaviour
 
         _ = _scaleDetector.OnTouchEvent(e.Event);
 
+        // MotionEventActions.ButtonPress
+        // is supported from API 23, the min target it 21
+        // we are intentionally ignoring the warning here
+        // because the switch should never reach the case from api 21 or 22
+
+#pragma warning disable CA1416
         switch (e.Event.ActionMasked)
         {
             case MotionEventActions.ButtonPress:
@@ -110,6 +126,7 @@ public abstract partial class ChartBehaviour
             default:
                 break;
         }
+#pragma warning restore CA1416
 
         _lastTouch = p;
 
@@ -125,21 +142,14 @@ public abstract partial class ChartBehaviour
         viewGroup.RequestDisallowInterceptTouchEvent(isChartInteraction);
     }
 
-    private class CustomScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener
+    private class CustomScaleListener(Action<float> onScaled) : ScaleGestureDetector.SimpleOnScaleGestureListener
     {
-        private readonly Action<float> _onScaled;
-
-        public CustomScaleListener(Action<float> onScaled)
-        {
-            _onScaled = onScaled;
-        }
-
         public bool Paused { get; set; }
 
         public override bool OnScale(ScaleGestureDetector? detector)
         {
             if (detector is null || detector.ScaleFactor == 1 || Paused) return false;
-            _onScaled(detector.ScaleFactor);
+            onScaled(detector.ScaleFactor);
             return true;
         }
     }

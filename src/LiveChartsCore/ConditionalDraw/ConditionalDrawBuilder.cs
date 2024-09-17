@@ -29,28 +29,20 @@ namespace LiveChartsCore.ConditionalDraw;
 /// <summary>
 /// Defines a <see cref="ConditionalPaintBuilder{TModel, TVisual, TLabel, TDrawingContext}"/> instance.
 /// </summary>
+/// <remarks>
+/// Initializes a new builder for the given paint.
+/// </remarks>
+/// <param name="series">The series.</param>
+/// <param name="paint">The paint.</param>
 [Obsolete("Replaced by MaPoints extensiion.")]
-public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
+public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>(Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
     where TDrawingContext : DrawingContext
     where TVisual : class, IGeometry<TDrawingContext>, new()
     where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private bool _isPaintInCanvas = false;
     private object _clipFor = new();
-    private readonly Series<TModel, TVisual, TLabel, TDrawingContext> _series;
-    private readonly IPaint<TDrawingContext> _paint;
     private Func<ChartPoint<TModel, TVisual, TLabel>, bool>? _whenPredicate;
-
-    /// <summary>
-    /// Initializes a new builder for the given paint.
-    /// </summary>
-    /// <param name="series">The series.</param>
-    /// <param name="paint">The paint.</param>
-    public ConditionalPaintBuilder(Series<TModel, TVisual, TLabel, TDrawingContext> series, IPaint<TDrawingContext> paint)
-    {
-        _series = series;
-        _paint = paint;
-    }
 
     /// <summary>
     /// Applies the paint when the given condition is true.
@@ -60,8 +52,8 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
         Func<ChartPoint<TModel, TVisual, TLabel>, bool> predicate)
     {
         _whenPredicate = predicate;
-        _series.PointMeasured += OnMeasured;
-        return _series;
+        series.PointMeasured += OnMeasured;
+        return series;
     }
 
     /// <summary>
@@ -69,7 +61,7 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     public void UnSubscribe()
     {
-        _series.PointMeasured -= OnMeasured;
+        series.PointMeasured -= OnMeasured;
     }
 
     private void OnMeasured(ChartPoint<TModel, TVisual, TLabel> point)
@@ -83,8 +75,8 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
 
         if (!_isPaintInCanvas)
         {
-            canvas.AddDrawableTask(_paint);
-            if (_paint.ZIndex == 0) _paint.ZIndex = int.MaxValue;
+            canvas.AddDrawableTask(paint);
+            if (paint.ZIndex == 0) paint.ZIndex = int.MaxValue;
             _isPaintInCanvas = true;
         }
 
@@ -95,15 +87,15 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
             {
                 var drawLocation = cartesianChart.DrawMarginLocation;
                 var drawMarginSize = cartesianChart.DrawMarginSize;
-                _paint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                paint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             }
         }
 
         if (isTriggered)
         {
-            _paint.AddGeometryToPaintTask(canvas, drawable);
+            paint.AddGeometryToPaintTask(canvas, drawable);
 
-            foreach (var paint in _series.GetPaintTasks())
+            foreach (var paint in series.GetPaintTasks())
             {
                 if (paint is null) continue;
                 paint.RemoveGeometryFromPainTask(canvas, drawable);
@@ -111,7 +103,7 @@ public class ConditionalPaintBuilder<TModel, TVisual, TLabel, TDrawingContext>
         }
         else
         {
-            _paint.RemoveGeometryFromPainTask(canvas, drawable);
+            paint.RemoveGeometryFromPainTask(canvas, drawable);
         }
     }
 }

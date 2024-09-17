@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -35,7 +34,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
-using a = Avalonia.Media;
+using AvaloniaMedia = Avalonia.Media;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -91,10 +90,10 @@ public class MotionCanvas : UserControl
     /// Renders the control.
     /// </summary>p
     /// <param name="context"></param>
-    public override void Render(a.DrawingContext context)
+    public override void Render(AvaloniaMedia.DrawingContext context)
     {
         if (_isDeatached) return;
-        var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height));
+        var drawOperation = new CustomDrawOp(CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height));
         context.Custom(drawOperation);
 
         if (CanvasCore.IsValid) return;
@@ -125,13 +124,13 @@ public class MotionCanvas : UserControl
         InvalidateVisual();
     }
 
-    private void MotionCanvas_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void MotionCanvas_AttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _isDeatached = false;
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
     }
 
-    private void MotionCanvas_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    private void MotionCanvas_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _isDeatached = true;
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
@@ -139,23 +138,29 @@ public class MotionCanvas : UserControl
     }
 
     // based on:
-    // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0-preview1/samples/RenderDemo/Pages/CustomSkiaPage.cs
-    private class CustomDrawOp : ICustomDrawOperation
+    // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs
+    private class CustomDrawOp(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds)
+        : ICustomDrawOperation
     {
-        private readonly MotionCanvas _avaloniaControl;
-        private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas;
+        public Rect Bounds { get; } = bounds;
 
-        public CustomDrawOp(
-            MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds)
+        public void Render(AvaloniaMedia.ImmediateDrawingContext context)
         {
-            _avaloniaControl = avaloniaControl;
-            _motionCanvas = motionCanvas;
-            Bounds = bounds;
+            if (!context.TryGetFeature<ISkiaSharpApiLeaseFeature>(out var leaseFeature))
+                throw new Exception("SkiaSharp is not supported.");
+
+            using var lease = leaseFeature.Lease();
+
+            motionCanvas.DrawFrame(
+                new SkiaSharpDrawingContext(
+                    motionCanvas,
+                    new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
+                    lease.SkSurface,
+                    lease.SkCanvas,
+                    false));
         }
 
         public void Dispose() { }
-
-        public Rect Bounds { get; }
 
         public bool HitTest(Point p)
         {
@@ -165,30 +170,6 @@ public class MotionCanvas : UserControl
         public bool Equals(ICustomDrawOperation? other)
         {
             return false;
-        }
-
-        public void Render(a.ImmediateDrawingContext context)
-        {
-            if (!context.TryGetFeature<ISkiaSharpApiLeaseFeature>(out var leaseFeature))
-                throw new Exception("SkiaSharp is not supported.");
-
-            using var lease = leaseFeature.Lease();
-
-#if DEBUG
-            if (LiveCharts.EnableLogging)
-            {
-                Trace.WriteLine(
-                $"[rendering] ".PadRight(60) +
-                $"tread: {Environment.CurrentManagedThreadId}");
-            }
-#endif
-            _motionCanvas.DrawFrame(
-                new SkiaSharpDrawingContext(
-                    _motionCanvas,
-                    new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
-                    lease.SkSurface,
-                    lease.SkCanvas,
-                    false));
         }
     }
 }
