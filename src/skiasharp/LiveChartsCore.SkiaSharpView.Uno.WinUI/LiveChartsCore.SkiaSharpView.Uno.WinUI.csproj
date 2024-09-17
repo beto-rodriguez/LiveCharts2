@@ -4,7 +4,6 @@
     <LangVersion>12.0</LangVersion>
 
     <TargetFrameworks>
-      netstandard2.1;
       net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
     </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
@@ -26,7 +25,7 @@
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
-    <Version>2.0.0-rc3.2</Version>
+    <Version>2.0.0-rc3.3</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

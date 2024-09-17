@@ -42,5 +42,5 @@ foreach ($p in $projects) {
         Remove-Item $($folder + "/bin") -Force -Recurse
     }
     
-    dotnet pack $p.src -o $nupkgOutputPath -c $configuration
+    dotnet pack $p.src -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 }
