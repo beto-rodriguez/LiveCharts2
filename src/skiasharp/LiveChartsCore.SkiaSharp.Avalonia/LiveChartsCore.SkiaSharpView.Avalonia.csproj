@@ -4,11 +4,11 @@
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
 
-    <TargetFrameworks>netstandard2.0;net6.0;net8.0;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;</TargetFrameworks>
 
     <AssemblyName>LiveChartsCore.SkiaSharpView.Avalonia</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Avalonia</RootNamespace>
-    <Version>2.0.0-rc3</Version>
+    <Version>2.0.0-rc3.2</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for AvaloniaUI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -16,6 +16,13 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
+
+    <!-- not sure who does not work for avalonia -->
+    <!--<Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -34,6 +41,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0" />
     <PackageReference Include="Avalonia.Skia" Version="11.0.0" />
+    <!--<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>-->
   </ItemGroup>
 
   <ItemGroup>
