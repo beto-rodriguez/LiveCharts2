@@ -38,8 +38,16 @@
     <AssemblyName>LiveChartsCore.SkiaSharpView.Uno.WinUI</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+
     <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="Uno.WinUI" Version="5.0.19" />
 
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
