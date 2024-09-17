@@ -11,6 +11,8 @@
       net8.0-windows10.0.19041.0
     </TargetFrameworks>
 
+    <EnableMsixTooling Condition="$([MSBuild]::IsOSPlatform('windows'))">true</EnableMsixTooling>
+
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
@@ -18,10 +20,6 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 
-    <!--
-    net 8 breaking changes:
-    https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/rid-graph
-    -->
     <RuntimeIdentifiers Condition="$(TargetFramework.Contains('8.0-windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
@@ -42,22 +40,16 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference 
-      Condition="!$(TargetFramework.Contains('-windows'))" 
-      Include="Uno.WinUI" Version="5.0.19" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="Uno.WinUI" Version="5.0.19" />
 
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
     
     <!-- if uno then add reference to uno dependencies -->
-    <PackageReference
-      Condition="!$(TargetFramework.Contains('-windows'))"
-      Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
 
     <!-- in windows then use the winui package -->
-    <PackageReference
-      Condition="$(TargetFramework.Contains('-windows'))"
-      Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
+    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
   </ItemGroup>
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">

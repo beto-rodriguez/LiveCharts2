@@ -5,15 +5,14 @@
     <LangVersion>12.0</LangVersion>
 
     <TargetFrameworks>
-      netstandard2.0;
-      net6.0;
-      net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst
+      netstandard2.0;netstandard2.1;
+      net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
     </TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
       net462;
       net6.0-windows10.0.19041.0;
-      net8.0-windows10.0.19041.0;
+      net8.0-windows10.0.19041.0;net8.0-windows10.0.20348.0;
     </TargetFrameworks>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
@@ -61,7 +60,7 @@
 
   <ItemGroup>
     <PackageReference
-      Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0'"
+      Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'"
       Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
 

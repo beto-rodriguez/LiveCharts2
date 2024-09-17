@@ -18,90 +18,59 @@
     <repository type="git" url="https://github.com/beto-rodriguez/LiveCharts2.git"></repository>
 
     <dependencies>
-      <group targetFramework="net6.0">
-        <dependency id="LiveChartsCore" version="2.0.0-rc3" />
-      </group>
       <group targetFramework="net8.0">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
       </group>
-      
-      <group targetFramework="net6.0-android31.0">
+      <group targetFramework="net8.0-android34.0">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
       </group>
-      <group targetFramework="net8.0-android31.0">
+      <group targetFramework="net8.0-ios17.0">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
       </group>
-      
-      <group targetFramework="net6.0-ios16.1">
+      <group targetFramework="net8.0-ios17.5">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
       </group>
-      <group targetFramework="net8.0-ios16.1">
+      <group targetFramework="net8.0-maccatalyst17.0">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
       </group>
-      
-      <group targetFramework="net6.0-maccatalyst16.1">
+      <group targetFramework="net8.0-maccatalyst17.5">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
       </group>
-      <group targetFramework="net8.0-maccatalyst16.1">
+      <!--<group targetFramework="net8.0-tizen7.0">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
-      </group>
-
-      <group targetFramework="net6.0-windows10.0.19041">
-        <dependency id="LiveChartsCore" version="2.0.0-rc3" />
-      </group>
+      </group>-->
       <group targetFramework="net8.0-windows10.0.19041">
+        <dependency id="LiveChartsCore" version="2.0.0-rc3" />
+      </group>
+      <group targetFramework="net8.0-windows10.0.20348">
+        <dependency id="LiveChartsCore" version="2.0.0-rc3" />
+      </group>
+      <group targetFramework="netstandard2.0">
+        <dependency id="LiveChartsCore" version="2.0.0-rc3" />
+      </group>
+      <group targetFramework="netstandard2.1">
         <dependency id="LiveChartsCore" version="2.0.0-rc3" />
       </group>
     </dependencies>
   </metadata>
 
   <files>
-
-    <file src="bin\Release\net6.0\LiveChartsCore.Behaviours.dll" target="lib\net6.0"/>
-    <file src="bin\Release\net6.0\LiveChartsCore.Behaviours.xml" target="lib\net6.0"/>
     <file src="bin\Release\net8.0\LiveChartsCore.Behaviours.dll" target="lib\net8.0"/>
     <file src="bin\Release\net8.0\LiveChartsCore.Behaviours.xml" target="lib\net8.0"/>
-
-    <file src="bin\Release\net6.0-android\LiveChartsCore.Behaviours.dll" target="lib\net6.0-android31.0"/>
-    <file src="bin\Release\net6.0-android\LiveChartsCore.Behaviours.xml" target="lib\net6.0-android31.0"/>
     <file src="bin\Release\net8.0-android\LiveChartsCore.Behaviours.dll" target="lib\net8.0-android31.0"/>
     <file src="bin\Release\net8.0-android\LiveChartsCore.Behaviours.xml" target="lib\net8.0-android31.0"/>
-
-    <file src="bin\Release\net6.0-ios\LiveChartsCore.Behaviours.dll" target="lib\net6.0-ios16.1"/>
-    <file src="bin\Release\net6.0-ios\LiveChartsCore.Behaviours.xml" target="lib\net6.0-ios16.1"/>
     <file src="bin\Release\net8.0-ios\LiveChartsCore.Behaviours.dll" target="lib\net8.0-ios16.1"/>
     <file src="bin\Release\net8.0-ios\LiveChartsCore.Behaviours.xml" target="lib\net8.0-ios16.1"/>
-
-    <file src="bin\Release\net6.0-maccatalyst\LiveChartsCore.Behaviours.dll" target="lib\net6.0-maccatalyst16.1"/>
-    <file src="bin\Release\net6.0-maccatalyst\LiveChartsCore.Behaviours.xml" target="lib\net6.0-maccatalyst16.1"/>
     <file src="bin\Release\net8.0-maccatalyst\LiveChartsCore.Behaviours.dll" target="lib\net8.0-maccatalyst16.1"/>
     <file src="bin\Release\net8.0-maccatalyst\LiveChartsCore.Behaviours.xml" target="lib\net8.0-maccatalyst16.1"/>
-
-    <file
-      src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.Behaviours.dll"
-      target="lib\net6.0-windows10.0.19041"/>
-    <file
-      src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.Behaviours.pdb"
-      target="lib\net6.0-windows10.0.19041"/>
-    <file
-      src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.Behaviours.xml"
-      target="lib\net6.0-windows10.0.19041"/>
-    <file
-      src="bin\Release\net6.0-windows10.0.19041\LiveChartsCore.Behaviours.pri"
-      target="lib\net6.0-windows10.0.19041"/>
-
-    <file
-     src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.dll"
-     target="lib\net8.0-windows10.0.19041"/>
-    <file
-      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.pdb"
-      target="lib\net8.0-windows10.0.19041"/>
-    <file
-      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.xml"
-      target="lib\net8.0-windows10.0.19041"/>
-    <file
-      src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.pri"
-      target="lib\net8.0-windows10.0.19041"/>
+    <file src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.dll" target="lib\net8.0-windows10.0.19041.0"/>
+    <file src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.pdb" target="lib\net8.0-windows10.0.19041.0"/>
+    <file src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.xml" target="lib\net8.0-windows10.0.19041.0"/>
+    <file src="bin\Release\net8.0-windows10.0.19041\LiveChartsCore.Behaviours.pri" target="lib\net8.0-windows10.0.19041.0"/>
+    <file src="bin\Release\netstandard2.0\LiveChartsCore.Behaviours.dll" target="lib\netstandard2.0"/>
+    <file src="bin\Release\netstandard2.0\LiveChartsCore.Behaviours.xml" target="lib\netstandard2.0"/>
+    <file src="bin\Release\netstandard2.1\LiveChartsCore.Behaviours.dll" target="lib\netstandard2.1"/>
+    <file src="bin\Release\netstandard2.1\LiveChartsCore.Behaviours.xml" target="lib\netstandard2.1"/>
 
   </files>
 </package>
