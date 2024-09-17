@@ -36,6 +36,11 @@ namespace LiveChartsCore.Kernel.Sketches;
 public interface IChartView
 {
     /// <summary>
+    /// Gets or sets the ability to stop the chart colors from resetting.
+    /// </summary>
+    bool ResetSeries { get; set; }
+
+    /// <summary>
     /// Gets the core.
     /// </summary>
     /// <value>
@@ -65,7 +70,7 @@ public interface IChartView
     LvcSize ControlSize { get; }
 
     /// <summary>
-    /// Gets or sets the draw margin, if this property is null, the library will calculate a margin, this margin is the distance 
+    /// Gets or sets the draw margin, if this property is null, the library will calculate a margin, this margin is the distance
     /// between the view bounds and the drawable area.
     /// </summary>
     /// <value>
@@ -82,7 +87,7 @@ public interface IChartView
     TimeSpan AnimationsSpeed { get; set; }
 
     /// <summary>
-    /// Gets or sets the easing function, the library already provides many easing functions in the 
+    /// Gets or sets the easing function, the library already provides many easing functions in the
     /// LiveCharts.EasingFunction static class.
     /// </summary>
     /// <value>
