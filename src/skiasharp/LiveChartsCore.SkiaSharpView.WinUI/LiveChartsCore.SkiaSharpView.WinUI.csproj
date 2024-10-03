@@ -4,7 +4,6 @@
     <Nullable>enable</Nullable>
 
     <TargetFrameworks>
-      net6.0-windows10.0.19041.0;
       net8.0-windows10.0.19041.0;net8.0-windows10.0.20348.0;
     </TargetFrameworks>
 
@@ -50,7 +49,7 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.4.1" />
   </ItemGroup>
 
   <ItemGroup>

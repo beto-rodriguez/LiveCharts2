@@ -44,7 +44,7 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
-	  <PackageReference Include="SkiaSharp.Views.Maui.Controls.Compatibility" Version="2.88.8" />
+	  <PackageReference Include="SkiaSharp.Views.Maui.Controls.Compatibility" Version="3.0.0-preview.4.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
 
