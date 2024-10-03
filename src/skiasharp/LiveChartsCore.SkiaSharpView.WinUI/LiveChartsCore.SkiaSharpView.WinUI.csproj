@@ -47,9 +47,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.4.1" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.5.3" />
   </ItemGroup>
 
   <ItemGroup>
