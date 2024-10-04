@@ -60,15 +60,6 @@ public interface IPieSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IS
     double OuterRadiusOffset { get; set; }
 
     /// <summary>
-    /// Gets or sets the maximum outer radius, the value goes from 0 to 1, where 1 is the full available radius and 0 is none.
-    /// </summary>
-    /// <value>
-    /// The maximum outer radius.
-    /// </value>
-    [Obsolete($"Replaced by {nameof(OuterRadiusOffset)}")]
-    double MaxOuterRadius { get; set; }
-
-    /// <summary>
     /// Gets or sets the hover push out in pixes, it defines the <see cref="Pushout"/> where the pointer is over the slice.
     /// </summary>
     /// <value>

@@ -52,7 +52,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     private IPaint<TDrawingContext>? _fill = null;
     private double _pushout = 0;
     private double _innerRadius = 0;
-    private double _maxOuterRadius = 1;
     private double _outerRadiusOffset = 0;
     private double _hoverPushout = 20;
     private double _innerPadding = 0;
@@ -106,10 +105,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.OuterRadiusOffset"/>
     public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
-
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxOuterRadius"/>
-    [Obsolete($"Use {nameof(OuterRadiusOffset)} instead.")]
-    public double MaxOuterRadius { get => _maxOuterRadius; set => SetProperty(ref _maxOuterRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
     public double HoverPushout { get => _hoverPushout; set => SetProperty(ref _hoverPushout, value); }

@@ -494,7 +494,7 @@ values.Add(new(5));");
 .AsLiveChartsPieSeries((value, series) =>
 {
     series.InnerRadius = 50;
-    series.MaxOuterRadius = outer;
+    series.OuterRadiusOffset = outer;
     outer = outer - 0.1;
 });");
 
