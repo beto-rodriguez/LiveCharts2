@@ -386,14 +386,6 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(MaxAngleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
-    [Obsolete($"Use {nameof(MaxValue)} instead.")]
-    public double? Total
-    {
-        get => (double?)GetValue(MaxValueProperty);
-        set => SetValue(MaxValueProperty, value);
-    }
-
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
     public double MinValue
     {

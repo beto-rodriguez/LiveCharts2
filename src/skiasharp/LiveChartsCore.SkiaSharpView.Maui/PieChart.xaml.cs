@@ -427,14 +427,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
-    [Obsolete($"Use {nameof(MaxValue)} instead.")]
-    public double? Total
-    {
-        get => (double?)GetValue(MaxValueProperty);
-        set => SetValue(MaxValueProperty, value);
-    }
-
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
     public double? MaxValue
     {
         get => (double?)GetValue(MaxValueProperty);
