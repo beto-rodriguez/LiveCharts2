@@ -118,40 +118,25 @@ Finally we could aso set the padding to `0`.
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         MaxBarWidth = double.MaxValue,
-        GroupPadding = 0 // mark
+        Padding = 0 // mark
     }
 };</code></pre>
 
-## GroupPadding property
+## Padding property
 
-Defines the distance between every group of columns in the plot, a group of columns is all the column that share the same
-secondary value coordinate, in the following image there are 5 groups of columns, the first one the columns that share the 
-`0` coordinate, the second one shares the `1`, the third group shares the `2` coordinate, the forth group shares the `3` coordinate,
-finally the fifth group shares the `4` coordinate.
-
-:::info
-To highlight this feature the following code uses the ColumnSeries class, but it works the same for the StackedColumnSeries
-notice the sample above is using the GroupPadding property also.
-:::
-
-![image]({{ assets_url }}/docs/_assets/columngp.png)
+Gets or sets the padding for each bar in the series.
 
 <pre><code>Series = new ISeries[]
 {
     new ColumnSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        GroupPadding = 50 // mark
+        adding = 5 // mark
     },
     new ColumnSeries&lt;int>
     {
         Values = new [] { 2, 3,1, 4, 6 },
-        GroupPadding = 50 // mark
-    },
-    new ColumnSeries&lt;int>
-    {
-        Values = new [] { 6, 3, 6, 9, 4 },
-        GroupPadding = 50 // mark
+        Padding = 5 // mark
     }
 };</code></pre>
 

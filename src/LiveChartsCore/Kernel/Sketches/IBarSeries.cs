@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -50,15 +49,6 @@ public interface IBarSeries<TDrawingContext> :
     /// The ry.
     /// </value>
     double Ry { get; set; }
-
-    /// <summary>
-    /// Gets or sets the padding for each group of bars that share the same secondary coordinate.
-    /// </summary>
-    /// <value>
-    /// The bar group padding.
-    /// </value>
-    [Obsolete($"Replace by {nameof(Padding)} property.")]
-    double GroupPadding { get; set; }
 
     /// <summary>
     /// Gets or sets the padding for each bar in the series.
