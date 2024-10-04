@@ -94,10 +94,6 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle"/>
     public double MaxAngle { get; set; } = 360;
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total"/>
-    [Obsolete($"Renamed to {nameof(MaxValue)}")]
-    public double? Total { get => MaxValue; set => MaxValue = value; }
-
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue"/>
     public double? MaxValue { get; set; }
 
