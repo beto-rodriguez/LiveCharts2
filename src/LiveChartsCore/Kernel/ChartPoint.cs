@@ -20,9 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Quinary
-
-using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -82,71 +79,6 @@ public class ChartPoint
     ///   <c>true</c> if this instance is empty; otherwise, <c>false</c>.
     /// </value>
     public bool IsEmpty => Context.Entity.Coordinate.IsEmpty;
-
-    /// <summary>
-    /// Gets or sets the primary value.
-    /// </summary>
-    /// <value>
-    /// The primary value.
-    /// </value>
-    [Obsolete($"Instead set the {nameof(Coordinate)} of the point.")]
-    public double PrimaryValue
-    {
-        get => Context.Entity.Coordinate.PrimaryValue;
-        set => SetCoordinate(primary: value);
-    }
-
-    /// <summary>
-    /// Gets or sets the secondary value.
-    /// </summary>
-    /// <value>
-    /// The secondary value.
-    /// </value>
-    [Obsolete($"Use {nameof(Coordinate)} instead.")]
-    public double SecondaryValue
-    {
-        get => Context.Entity.Coordinate.SecondaryValue;
-        set => SetCoordinate(secondary: value);
-    }
-
-    /// <summary>
-    /// Gets or sets the tertiary value.
-    /// </summary>
-    /// <value>
-    /// The tertiary value.
-    /// </value>
-    [Obsolete($"Use {nameof(Coordinate)} instead.")]
-    public double TertiaryValue
-    {
-        get => Context.Entity.Coordinate.TertiaryValue;
-        set => SetCoordinate(tertiary: value);
-    }
-
-    /// <summary>
-    /// Gets or sets the quaternary value.
-    /// </summary>
-    /// <value>
-    /// The quaternary value.
-    /// </value>
-    [Obsolete($"Use {nameof(Coordinate)} instead.")]
-    public double QuaternaryValue
-    {
-        get => Context.Entity.Coordinate.QuaternaryValue;
-        set => SetCoordinate(quaternary: value);
-    }
-
-    /// <summary>
-    /// Gets or sets the quinary value.
-    /// </summary>
-    /// <value>
-    /// The quinary value.
-    /// </value>
-    [Obsolete($"Use {nameof(Coordinate)} instead.")]
-    public double QuinaryValue
-    {
-        get => Context.Entity.Coordinate.QuinaryValue;
-        set => SetCoordinate(quinary: value);
-    }
 
     /// <summary>
     /// Gets or sets the stacked value, if the point do not belongs to a stacked series then this property is null.

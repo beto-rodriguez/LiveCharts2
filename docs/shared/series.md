@@ -91,19 +91,16 @@ var citiesSeries = new {{ name  | to_title_case_no_spaces }}&lt;City>
         new City { Name = "New York", Population = 11 },
         new City { Name = "Mexico City", Population = 10 },
     },
-    Mapping = (city, point) =>
+    Mapping = (city, index) =>
     {
-        // this function will be called for every city in our data collection
-        // in this case Tokio, New York and Mexico city
-        // it takes the city and the point in the chart liveCharts built for the given city
-        // you must map the coordinates to the point
-
-        // use the Population property as the primary value (normally Y)
-        point.PrimaryValue = (float)city.Population;
-
-        // use the index of the city in our data collection as the secondary value
-        // (normally X)
-        point.SecondaryValue = point.Context.Index;
+        // this function will be called for each instance in our values array,
+        // the function takes each instance (city) and the index of the item in the array as parameters
+        // and must return the coordinate of the city in the plot.
+        
+        // in this case, we return the index as the X coordinate
+        // and the Population as the Y value.
+        
+        return new Coordinate(index, city.Population.Value);
     }
 };</code></pre>
 
