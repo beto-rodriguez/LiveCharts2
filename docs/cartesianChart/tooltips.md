@@ -143,7 +143,8 @@ cartesianChart1.TooltipFindingStrategy = LiveChartsCore.Measure.TooltipFindingSt
 
 ## Tooltip point text
 
-You can define the text the tooltip will display for a given point, using the `Series.YToolTipLabelFormatter` or `Series.XToolTipLabelFormatter` properties, these 
+You can define the text the tooltip will display for a given point, using the 
+`YToolTipLabelFormatter`, `XToolTipLabelFormatter` or `ToolTipLabelFormatter` properties, these 
 properties are of type `Func<ChartPoint, string>` it means that both are a function, that takes a point as parameter
 and return a string, the point will be injected by LiveCharts in this function to get a string out of it when it
 requires to build the text for a point in a tooltip, the injected point will be different as the user moves the pointer over the
