@@ -537,27 +537,6 @@ public class PolarChart<TDrawingContext>(
         _isFirstDraw = false;
     }
 
-    /// <summary>
-    /// Scales the specified point to the UI.
-    /// </summary>
-    /// <param name="point">The point, where X = angle, Y = radius.</param>
-    /// <param name="angleAxisIndex">Index of the angle axis.</param>
-    /// <param name="radiusAxisIndex">Index of the radius axis.</param>
-    /// <returns></returns>
-    public double[] ScaleUIPoint(LvcPoint point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-    {
-        var angleAxis = AngleAxes[angleAxisIndex];
-        var radiusAxis = RadiusAxes[radiusAxisIndex];
-
-        var scaler = new PolarScaler(
-            DrawMarginLocation, DrawMarginSize, angleAxis, radiusAxis,
-            InnerRadius, InitialRotation, TotalAnge);
-
-        var r = scaler.ToChartValues(point.X, point.Y);
-
-        return new double[] { r.X, r.Y };
-    }
-
     /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
     public override void Unload()
     {

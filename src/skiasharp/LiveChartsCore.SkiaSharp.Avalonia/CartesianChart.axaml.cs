@@ -602,15 +602,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     #endregion
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    [Obsolete("Use the ScalePixelsToData method instead.")]
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (_core is null) throw new Exception("core not found");
-        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {

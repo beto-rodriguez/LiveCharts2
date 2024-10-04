@@ -189,13 +189,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
     public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)"/>
-    [Obsolete($"Use {nameof(ScalePixelsToData)} instead.")]
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        throw new NotImplementedException();
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
