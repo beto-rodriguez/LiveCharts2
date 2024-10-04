@@ -532,16 +532,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <summary>
-    /// Gets or sets a command to execute when the users taped the chart.
-    /// </summary>
-    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
-    public ICommand? TappedCommand
-    {
-        get => (ICommand?)GetValue(ReleasedCommandProperty);
-        set => SetValue(ReleasedCommandProperty, value);
-    }
-
-    /// <summary>
     /// Gets or sets a command to execute when the pressed the chart.
     /// </summary>
     public ICommand? PressedCommand
@@ -563,16 +553,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// Gets or sets a command to execute when the pointer/finger moves over the chart.
     /// </summary>
     public ICommand? MovedCommand
-    {
-        get => (ICommand?)GetValue(MovedCommandProperty);
-        set => SetValue(MovedCommandProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a command to execute when the pointer moves over the chart.
-    /// </summary>
-    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
-    public ICommand? PointerMoveCommand
     {
         get => (ICommand?)GetValue(MovedCommandProperty);
         set => SetValue(MovedCommandProperty, value);
