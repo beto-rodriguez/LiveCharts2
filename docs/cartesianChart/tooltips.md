@@ -143,14 +143,14 @@ cartesianChart1.TooltipFindingStrategy = LiveChartsCore.Measure.TooltipFindingSt
 
 ## Tooltip point text
 
-You can define the text the tooltip will display for a given point, using the `Series.TooltipLabelFormatter` property, this 
-property is of type `Func<ChartPoint, string>` this means that is is a function, that takes a point as parameter
-and returns a string, the point will be injected by LiveCharts in this function to get a string out of it when it
+You can define the text the tooltip will display for a given point, using the `Series.YToolTipLabelFormatter` or `Series.XToolTipLabelFormatter` properties, these 
+properties are of type `Func<ChartPoint, string>` it means that both are a function, that takes a point as parameter
+and return a string, the point will be injected by LiveCharts in this function to get a string out of it when it
 requires to build the text for a point in a tooltip, the injected point will be different as the user moves the pointer over the
 user interface.
 
-By default the library already defines a default `TooltipLabelFormatter` for every series, all the series have a different
-formatter, but generally the default value uses the `Series.Name` and the `ChartPoint.PrimaryValue` properties, the following
+By default the library already defines a default formatter  for every series, all the series have a different
+formatters, but generally the default value uses the `Series.Name` and the `ChartPoint.Coordinate.PrimaryValue` properties, the following
 code snippet illustrates how to build a custom tooltip formatter.
 
 <pre><code>new LineSeries&lt;double>
@@ -160,8 +160,8 @@ code snippet illustrates how to build a custom tooltip formatter.
     // for the following formatter
     // when the pointer is over the first point (200), the tooltip will display:
     // Sales: 200
-    TooltipLabelFormatter =
-        (chartPoint) => $"{chartPoint.Context.Series.Name}: {chartPoint.PrimaryValue}"
+    YTooltipLabelFormatter =
+        (chartPoint) => $"{chartPoint.Context.Series.Name}: {chartPoint.Coordinate.PrimaryValue}"
 },
 
 new ColumnSeries&lt;double>
@@ -170,8 +170,8 @@ new ColumnSeries&lt;double>
     Values = new ObservableCollection&lt;double> { 250, 350, 240 },
     // now it will use a currency formatter to display the primary value
     // result: Sales 2: $200.00
-    TooltipLabelFormatter =
-        (chartPoint) => $"{chartPoint.Context.Series.Name}: {chartPoint.PrimaryValue:C2}"
+    YTooltipLabelFormatter =
+        (chartPoint) => $"{chartPoint.Context.Series.Name}: {chartPoint.Coordinate.PrimaryValue:C2}"
 },
 
 new StepLineSeries&lt;ObservablePoint>
@@ -184,16 +184,16 @@ new StepLineSeries&lt;ObservablePoint>
     },
     // We can also display both coordinates (X and Y in a cartesian coordinate system)
     // result: Average: 10, 5
-    TooltipLabelFormatter =
-        (chartPoint) => $"{chartPoint.Context.Series.Name}: {chartPoint.SecondaryValue}, {chartPoint.PrimaryValue}"
+    YTooltipLabelFormatter =
+        (chartPoint) => 
+            $"{chartPoint.Context.Series.Name}: {chartPoint.Coordinate.SecondaryValue}, {chartPoint.Coordinate.PrimaryValue}"
 },
 
 new ColumnSeries&lt;ObservablePoint>
 {
     Values = new ObservableCollection&lt;double> { 250, 350, 240 },
-    // or anything...
     // result: Sales at this moment: $200.00
-    TooltipLabelFormatter =
+    YTooltipLabelFormatter =
         (chartPoint) => $"Sales at this moment: {chartPoint.PrimaryValue:C2}"
 }</code></pre>
 
