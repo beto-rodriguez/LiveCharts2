@@ -277,19 +277,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <value>
     /// The size of the legend shape.
     /// </value>
-    [Obsolete($"Renamed to {nameof(MiniatureShapeSize)}")]
-    public double LegendShapeSize
-    {
-        get => MiniatureShapeSize;
-        set => MiniatureShapeSize = value;
-    }
-
-    /// <summary>
-    /// Gets or sets the size of the legend shape.
-    /// </summary>
-    /// <value>
-    /// The size of the legend shape.
-    /// </value>
     public double MiniatureShapeSize
     {
         get => _miniatureShapeSize;
