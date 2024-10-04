@@ -83,7 +83,7 @@ public class PolarLineSeriesTest
         foreach (var sutPoint in toCompareGuys)
         {
             var sutHyp = Math.Sqrt(Math.Pow(sutPoint.Visual.X - 150, 2) + Math.Pow(sutPoint.Visual.Y - 150, 2));
-            Assert.IsTrue(Math.Abs(uHyp * (1 + sutPoint.Context.Index) - sutHyp) < 0.0001);
+            Assert.IsTrue(Math.Abs(uHyp * (1 + sutPoint.Index) - sutHyp) < 0.0001);
         }
     }
 

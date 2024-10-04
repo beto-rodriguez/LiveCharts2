@@ -60,7 +60,7 @@ public class VisualElementsTests
         {
             Width = 1000,
             Height = 1000,
-            Total = 100
+            MaxValue = 100
         };
 
         void Draw()
