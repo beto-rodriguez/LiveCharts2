@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -59,10 +58,6 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     protected BarSeries(SeriesProperties properties)
         : base(properties)
     { }
-
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
-    [Obsolete($"Replace by {nameof(Padding)} property.")]
-    public double GroupPadding { get => _pading; set => SetProperty(ref _pading, value); }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }

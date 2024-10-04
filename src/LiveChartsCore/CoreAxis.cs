@@ -278,18 +278,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairSnapEnabled" />
     public bool CrosshairSnapEnabled { get => _crosshairSnapEnabled; set => SetProperty(ref _crosshairSnapEnabled, value); }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    [Obsolete("Renamed to LabelsPaint")]
-    public IPaint<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Obsolete("Renamed to SeparatorsPaint")]
-    public IPaint<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
-
     /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
     public TimeSpan? AnimationsSpeed { get; set; }
 

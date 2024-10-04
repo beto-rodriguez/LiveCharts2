@@ -6,6 +6,7 @@ using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Test.Dispose;
 
@@ -32,7 +33,7 @@ public partial class ViewModel : ObservableObject
             new RowSeries<double> { Values = data }
         };
 
-        PieSeries = data.AsLiveChartsPieSeries();
+        PieSeries = data.AsPieSeries();
 
         PolarSeries = new ISeries[]
         {

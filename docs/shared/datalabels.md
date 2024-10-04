@@ -14,7 +14,7 @@ following sample:
     // that takes the current point as parameter
     // and returns a string.
     // in this case we returned the PrimaryValue property as currency
-    DataLabelsFormatter = (point) => point.PrimaryValue.ToString("C2"),
+    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("C2"),
     Values = new ObservableCollection&lt;double> { 2, 1, 3, 5, 3, 4, 6 },
     Fill = null
 }</code></pre>

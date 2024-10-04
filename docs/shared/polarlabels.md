@@ -19,7 +19,7 @@ following sample:
         // for more information about available positions see:
         // {{ website_url }}/api/{{ version }}/LiveChartsCore.Measure.PolarLabelsPosition
         DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-        DataLabelsFormatter = point => point.PrimaryValue.ToString("N2") + " elements"
+        DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString("N2") + " elements"
     },
     new PieSeries&lt;double>
     {
@@ -27,7 +27,7 @@ following sample:
         DataLabelsPaint = new SolidColorPaint(SKColors.Black),
         DataLabelsSize = 22,
         DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-        DataLabelsFormatter = point => point.PrimaryValue.ToString("N2") + " elements"
+        DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString("N2") + " elements"
     },
     new PieSeries&lt;double>
     {
@@ -35,7 +35,7 @@ following sample:
         DataLabelsPaint = new SolidColorPaint(SKColors.Black),
         DataLabelsSize = 22,
         DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-        DataLabelsFormatter = point => point.PrimaryValue.ToString("N2") + " elements"
+        DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString("N2") + " elements"
     }
 };</code></pre>
 

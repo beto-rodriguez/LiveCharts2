@@ -198,18 +198,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// Occurs when the pointer is over a chart point.
     /// </summary>
-    [Obsolete($"Renamed to {nameof(ChartPointPointerHover)}")]
-    public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHover;
-
-    /// <summary>
-    /// Occurs when the pointer left a chart point.
-    /// </summary>
-    [Obsolete($"Renamed to {nameof(ChartPointPointerHoverLost)}")]
-    public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHoverLost;
-
-    /// <summary>
-    /// Occurs when the pointer is over a chart point.
-    /// </summary>
     public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerHover;
 
     /// <summary>
@@ -282,19 +270,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Called when a point is measured.
     /// </summary>
     public Action<ChartPoint<TModel, TVisual, TLabel>>? WhenPointMeasured { get; set; }
-
-    /// <summary>
-    /// Gets or sets the size of the legend shape.
-    /// </summary>
-    /// <value>
-    /// The size of the legend shape.
-    /// </value>
-    [Obsolete($"Renamed to {nameof(MiniatureShapeSize)}")]
-    public double LegendShapeSize
-    {
-        get => MiniatureShapeSize;
-        set => MiniatureShapeSize = value;
-    }
 
     /// <summary>
     /// Gets or sets the size of the legend shape.
@@ -492,7 +467,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
-        DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
@@ -502,7 +476,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
-        DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 

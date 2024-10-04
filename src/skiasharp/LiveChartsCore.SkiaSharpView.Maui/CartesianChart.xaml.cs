@@ -610,16 +610,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     /// <summary>
-    /// Gets or sets a command to execute when the users taped the chart.
-    /// </summary>
-    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
-    public ICommand? TappedCommand
-    {
-        get => (ICommand?)GetValue(ReleasedCommandProperty);
-        set => SetValue(ReleasedCommandProperty, value);
-    }
-
-    /// <summary>
     /// Gets or sets a command to execute when the prressed the chart.
     /// </summary>
     public ICommand? PressedCommand
@@ -641,16 +631,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// Gets or sets a command to execute when the pointer/finger moves over the chart.
     /// </summary>
     public ICommand? MovedCommand
-    {
-        get => (ICommand?)GetValue(MovedCommandProperty);
-        set => SetValue(MovedCommandProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a command to execute when the pointer moves over the chart.
-    /// </summary>
-    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
-    public ICommand? PointerMoveCommand
     {
         get => (ICommand?)GetValue(MovedCommandProperty);
         set => SetValue(MovedCommandProperty, value);
@@ -684,15 +664,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     #endregion
-
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    [Obsolete("Use the ScalePixelsToData method instead.")]
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (_core is null) throw new Exception("core not found");
-        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-    }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)

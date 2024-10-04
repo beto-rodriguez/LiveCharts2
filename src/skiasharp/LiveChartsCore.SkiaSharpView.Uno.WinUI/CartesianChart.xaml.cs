@@ -688,14 +688,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     #endregion
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (_core == null) throw new Exception("core not found");
-        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
