@@ -25,7 +25,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.UnitTesting.MockedObjects;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
@@ -42,7 +42,7 @@ public class ChangingPaintTasks
             Values = new List<int> { 1, 6, 4, 2 }
         };
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries> { series },
             XAxes = new[] { new Axis() },
@@ -87,7 +87,7 @@ public class ChangingPaintTasks
             Values = new List<int> { 1, 6, 4, 2 }
         };
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries> { series },
             XAxes = new[] { new Axis() },
@@ -131,7 +131,7 @@ public class ChangingPaintTasks
             Values = new List<int> { 1, 6, 4, 2 }
         };
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries> { series },
             XAxes = new[] { new Axis() },
@@ -175,7 +175,7 @@ public class ChangingPaintTasks
 
         var seriesCollection = new List<ISeries> { series };
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = seriesCollection,
             XAxes = new[] { new Axis() },
@@ -221,7 +221,7 @@ public class ChangingPaintTasks
 
         var seriesCollection = new List<ISeries> { series };
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = seriesCollection,
             XAxes = new[] { new Axis() },
@@ -265,7 +265,7 @@ public class ChangingPaintTasks
     {
         var axis = new Axis();
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries>
                 {
@@ -309,7 +309,7 @@ public class ChangingPaintTasks
     {
         var axis = new Axis();
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries>
                 {
@@ -351,7 +351,7 @@ public class ChangingPaintTasks
     [TestMethod]
     public void AxisCollectionInstanceChanged()
     {
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries>
                 {
@@ -398,7 +398,7 @@ public class ChangingPaintTasks
             Fill = new SolidColorPaint()
         };
 
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries>
                 {
@@ -441,7 +441,7 @@ public class ChangingPaintTasks
     [TestMethod]
     public void SectionsInstanceChanged()
     {
-        var chart = new TestCartesianChartView
+        var chart = new SKCartesianChart
         {
             Series = new List<ISeries>
                 {
