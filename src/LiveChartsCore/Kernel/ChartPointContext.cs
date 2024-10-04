@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -79,12 +78,6 @@ public class ChartPointContext
     /// Gets the DataSource.
     /// </summary>
     public object? DataSource { get; internal set; }
-
-    /// <summary>
-    /// Gets the position of the point the collection that was used when the point was drawn.
-    /// </summary>
-    [Obsolete($"use {nameof(ChartPoint)}.{nameof(ChartPoint.Index)} instead")]
-    public int Index => Entity?.MetaData?.EntityIndex ?? 0;
 
     /// <summary>
     /// Gets the visual.
