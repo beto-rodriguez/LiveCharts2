@@ -54,16 +54,16 @@
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
     
     <!-- if uno then add reference to uno dependencies -->
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="3.0.0-preview.4.1" />
 
     <!-- in windows then use the winui package -->
-    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
+    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.4.1" />
   </ItemGroup>
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
       <ItemGroup>
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
       </ItemGroup>
     </When>
     <Otherwise>

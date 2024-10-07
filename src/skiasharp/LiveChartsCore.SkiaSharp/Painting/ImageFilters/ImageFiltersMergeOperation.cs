@@ -33,8 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// Initializes a new instance of the <see cref="ImageFiltersMergeOperation"/> class.
 /// </remarks>
 /// <param name="imageFilters">The image filters.</param>
-/// <param name="cropRect">The crop rect.</param>
-public class ImageFiltersMergeOperation(ImageFilter[] imageFilters, SKImageFilter.CropRect? cropRect = null) : ImageFilter
+public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilter
 {
     private readonly ImageFilter[] _filters = imageFilters;
 
@@ -45,7 +44,7 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters, SKImageFilte
     /// <exception cref="System.NotImplementedException"></exception>
     public override ImageFilter Clone()
     {
-        return new ImageFiltersMergeOperation(_filters, cropRect);
+        return new ImageFiltersMergeOperation(_filters);
     }
 
     /// <summary>
@@ -65,7 +64,7 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters, SKImageFilte
             imageFilters[i++] = item.SKImageFilter;
         }
 
-        SKImageFilter = SKImageFilter.CreateMerge(imageFilters, cropRect);
+        SKImageFilter = SKImageFilter.CreateMerge(imageFilters);
     }
 
     /// <summary>
