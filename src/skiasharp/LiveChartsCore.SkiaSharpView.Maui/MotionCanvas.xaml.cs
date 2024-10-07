@@ -44,6 +44,7 @@ public partial class MotionCanvas : ContentView
 {
     private bool _isDrawingLoopRunning = false;
     private bool _isLoaded = true;
+    private double _density = 1;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -57,6 +58,9 @@ public partial class MotionCanvas : ContentView
                 $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                 $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");
 
+        _density = DeviceDisplay.MainDisplayInfo.Density;
+
+        DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
         skiaElement.PaintSurface += OnCanvasViewPaintSurface;
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
         Unloaded += MotionCanvas_Unloaded;
@@ -129,8 +133,7 @@ public partial class MotionCanvas : ContentView
 
     private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
-        var scale = DeviceDisplay.MainDisplayInfo.Density;
-        args.Surface.Canvas.Scale((float)scale, (float)scale);
+        args.Surface.Canvas.Scale((float)_density, (float)_density);
 
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
@@ -178,5 +181,10 @@ public partial class MotionCanvas : ContentView
     private void MotionCanvas_Unloaded(object? sender, EventArgs e)
     {
         _isLoaded = false;
+    }
+
+    private void MainDisplayInfoChanged(object? sender, EventArgs e)
+    {
+        _density = DeviceDisplay.MainDisplayInfo.Density;
     }
 }
