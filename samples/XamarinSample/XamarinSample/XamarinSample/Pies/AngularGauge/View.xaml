@@ -22,7 +22,7 @@
             InitialRotation="-225"
             MaxAngle="270"
             MinValue="0"
-            Total="100">
+            MaxValue="100">
         </lvc:PieChart>
     </Grid>
 </ContentPage>
