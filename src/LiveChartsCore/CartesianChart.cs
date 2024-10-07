@@ -157,6 +157,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         return new double[] { xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y) };
     }
+
+    /// <summary>
     /// Zooms to the specified pivot.
     /// </summary>
     /// <param name="pivot">The pivot.</param>

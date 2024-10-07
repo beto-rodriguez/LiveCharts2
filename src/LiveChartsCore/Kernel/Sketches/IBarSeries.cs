@@ -68,7 +68,7 @@ public interface IBarSeries<TDrawingContext> :
 
     /// <summary>
     /// Gets or sets a value indicating whether the bar position respects the other bars that share 
-    /// the same <see cref="ChartPoint.SecondaryValue"/>.
-    /// </summary>
+    /// the same Coordinate.
+    ///</summary>
     bool IgnoresBarPosition { get; set; }
 }
