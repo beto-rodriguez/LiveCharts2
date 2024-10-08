@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -53,8 +54,9 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    public CoreScatterSeries()
-        : base(SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
+    /// <param name="values">The values.</param>
+    public CoreScatterSeries(ICollection values)
+        : base(GetProperties(), values)
     {
         DataPadding = new LvcPoint(1, 1);
 
@@ -416,5 +418,10 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
+    }
+
+    private static SeriesProperties GetProperties()
+    {
+        return SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips;
     }
 }

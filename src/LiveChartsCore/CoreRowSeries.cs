@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -49,10 +50,10 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreRowSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    public CoreRowSeries(bool isStacked = false)
-        : base(
-              SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
-              SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
+    /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
+    /// <param name="values">The values.</param>
+    public CoreRowSeries(ICollection? values, bool isStacked = false)
+        : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(1, 0);
         _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
@@ -459,5 +460,12 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         };
 
         return new SeriesBounds(dimensionalBounds, false);
+    }
+
+    private static SeriesProperties GetProperties(bool isStacked)
+    {
+        return SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
+              SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips |
+              (isStacked ? SeriesProperties.Stacked : 0);
     }
 }

@@ -113,9 +113,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
     /// <param name="properties">The properties.</param>
-    protected Series(SeriesProperties properties)
+    /// <param name="values">The values.</param>
+    protected Series(SeriesProperties properties, ICollection? values)
     {
         SeriesProperties = properties;
+        Values = values;
 
         if (typeof(ISvgPath<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
             SeriesProperties |= SeriesProperties.IsSVGPath;

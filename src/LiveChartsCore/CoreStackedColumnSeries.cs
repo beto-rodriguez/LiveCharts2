@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -34,20 +35,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 /// <seealso cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}" />
-public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
-    : CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>, IStackedBarSeries<TDrawingContext>
+/// <remarks>
+/// Initializes a new instance of the <see cref="CoreStackedColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+/// </remarks>
+/// <param name="values">The values.</param>
+public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(ICollection? values)
+    : CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries<TDrawingContext>
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
     private int _stackGroup = 0;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackedColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
-    /// </summary>
-    public CoreStackedColumnSeries() : base(true)
-    { }
 
     /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
     public int StackGroup { get => _stackGroup; set { _stackGroup = value; OnPropertyChanged(); } }

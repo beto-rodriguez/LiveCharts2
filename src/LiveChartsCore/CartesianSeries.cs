@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -39,11 +40,18 @@ namespace LiveChartsCore;
 /// <seealso cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="IDisposable" />
 /// <seealso cref="ICartesianSeries{TDrawingContext}" />
-public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
-    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, ICartesianSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TVisual : class, IGeometry<TDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+/// <remarks>
+/// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="properties">The series properties.</param>
+/// <param name="values">The values.</param>
+public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
+    SeriesProperties properties,
+    ICollection? values)
+        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), ICartesianSeries<TDrawingContext>
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private int _scalesXAt;
     private int _scalesYAt;
@@ -52,12 +60,6 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _xTooltipLabelFormatter;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _yTooltipLabelFormatter;
     private ClipMode _clippingMode = ClipMode.XY;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="properties">The series properties.</param>
-    protected CartesianSeries(SeriesProperties properties) : base(properties) { }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
     public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }

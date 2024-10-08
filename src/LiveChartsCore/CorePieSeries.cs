@@ -23,6 +23,7 @@
 // Ignore Spelling: Gauge Pushout
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
@@ -41,12 +42,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
-    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
+/// <remarks>
+/// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+/// </remarks>
+public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>(
+    ICollection? values,
+    bool isGauge = false,
+    bool isGaugeFill = false)
+    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _stroke = null;
     private IPaint<TDrawingContext>? _fill = null;
@@ -64,14 +71,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     private bool _isRelativeToMin;
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
-    /// </summary>
-    protected CorePieSeries(bool isGauge = false, bool isGaugeFill = false)
-        : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
-              (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
-    { }
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -685,5 +684,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             default:
                 break;
         }
+    }
+
+    private static SeriesProperties GetProperties(bool isGauge = false, bool isGaugeFill = false)
+    {
+        return SeriesProperties.PieSeries | SeriesProperties.Stacked | SeriesProperties.Solid |
+            (isGauge ? SeriesProperties.Gauge : 0) |
+            (isGaugeFill ? SeriesProperties.GaugeFill : 0);
     }
 }

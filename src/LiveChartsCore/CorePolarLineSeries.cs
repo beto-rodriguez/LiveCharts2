@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
@@ -67,10 +68,9 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// Initializes a new instance of the <see cref="CorePolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
-    public CorePolarLineSeries(bool isStacked = false)
-        : base(
-              SeriesProperties.Polar | SeriesProperties.PolarLine |
-              (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
+    /// <param name="values">The values.</param>
+    public CorePolarLineSeries(ICollection? values, bool isStacked = false)
+        : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(1f, 1.5f);
     }
@@ -193,7 +193,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         var segments = _enableNullSplitting
             ? SplitEachNull(points, scaler)
-            : new ChartPoint[][] { points };
+            : [points];
 
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
             ? polarChart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -778,7 +778,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
+        return [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
     }
 
     /// <summary>
@@ -895,5 +895,12 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         }
 
         if (l.Count > 0) yield return l.ToArray();
+    }
+
+    private static SeriesProperties GetProperties(bool isStacked = false)
+    {
+        return SeriesProperties.Polar | SeriesProperties.PolarLine |
+            SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips |
+            (isStacked ? SeriesProperties.Stacked : 0);
     }
 }

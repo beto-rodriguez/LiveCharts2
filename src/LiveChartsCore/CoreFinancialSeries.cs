@@ -22,6 +22,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -58,10 +59,8 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreFinancialSeries()
-        : base(
-             SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
-             SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
+    protected CoreFinancialSeries(ICollection? values)
+        : base(GetProperties(), values)
     {
         YToolTipLabelFormatter = p =>
         {
@@ -442,7 +441,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
+        return [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
@@ -487,5 +486,11 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         {
             PaintSchedules = schedules
         };
+    }
+
+    private static SeriesProperties GetProperties()
+    {
+        return SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
+            SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips;
     }
 }

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -48,10 +49,8 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    protected CoreColumnSeries(bool isStacked = false)
-        : base(
-              SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
-              SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
+    protected CoreColumnSeries(ICollection? values, bool isStacked = false)
+        : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0, 1);
         _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
@@ -393,5 +392,12 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
+    }
+
+    private static SeriesProperties GetProperties(bool isStacked)
+    {
+        return SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
+            SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips |
+            (isStacked ? SeriesProperties.Stacked : 0);
     }
 }

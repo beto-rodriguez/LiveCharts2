@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -54,10 +55,8 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreBoxSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreBoxSeries()
-        : base(
-             SeriesProperties.BoxSeries | SeriesProperties.PrimaryAxisVerticalOrientation |
-             SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
+    protected CoreBoxSeries(ICollection? values)
+        : base(GetProperties(), values)
     {
         YToolTipLabelFormatter = p =>
         {
@@ -502,5 +501,11 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         /// helper units.
         /// </summary>
         public float uw, uwm, cp, p, actualUw;
+    }
+
+    private static SeriesProperties GetProperties()
+    {
+        return SeriesProperties.BoxSeries | SeriesProperties.PrimaryAxisVerticalOrientation |
+             SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips;
     }
 }
