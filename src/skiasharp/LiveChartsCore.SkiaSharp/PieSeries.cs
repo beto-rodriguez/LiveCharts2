@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -37,20 +38,39 @@ namespace LiveChartsCore.SkiaSharpView;
 /// or at the series level 
 /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
 /// </typeparam>
-public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeometry>
+public class PieSeries<TModel>
+    : PieSeries<TModel, DoughnutGeometry, LabelGeometry>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>
-    public PieSeries() : base(false, false)
+    public PieSeries()
+        : base()
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
     /// </summary>
-    /// <param name="isGauge"></param>
-    /// <param name="isGaugeFill"></param>
-    public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
+    /// <param name="values">The values to plot.</param>
+    public PieSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PieSeries(params TModel[] values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public PieSeries(bool isGauge = false, bool isGaugeFill = false)
+        : base(isGauge, isGaugeFill)
     { }
 }
 
@@ -67,21 +87,40 @@ public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeomet
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
-public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
+public class PieSeries<TModel, TVisual>
+    : PieSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>
-    public PieSeries() : base(false, false)
+    public PieSeries()
+        : base()
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual}"/> class.
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
     /// </summary>
-    /// <param name="isGauge"></param>
-    /// <param name="isGaugeFill"></param>
-    public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
+    /// <param name="values">The values to plot.</param>
+    public PieSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PieSeries(params TModel[] values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public PieSeries(bool isGauge = false, bool isGaugeFill = false)
+        : base(isGauge, isGaugeFill)
     { }
 }
 
@@ -101,21 +140,40 @@ public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeomet
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class PieSeries<TModel, TVisual, TLabel> : CorePieSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-    where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+public class PieSeries<TModel, TVisual, TLabel>
+    : CorePieSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
+        where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>
-    public PieSeries() : base(false, false)
+    public PieSeries()
+        : base(null, false, false)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PieSeries(ICollection? values)
+        : base(values, false, false)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PieSeries(params TModel[] values)
+        : base(values, false, false)
     { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>
-    /// <param name="isGauge"></param>
-    /// <param name="isGaugeFill"></param>
-    public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
+    public PieSeries(bool isGauge = false, bool isGaugeFill = false)
+        : base(null, isGauge, isGaugeFill)
     { }
 }

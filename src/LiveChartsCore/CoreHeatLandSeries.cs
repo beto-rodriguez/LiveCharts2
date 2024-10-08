@@ -43,7 +43,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
     private bool _isHeatInCanvas = false;
     private LvcColor[] _heatMap = [];
     private double[]? _colorStops;
-    private IEnumerable<IWeigthedMapLand>? _lands;
+    private ICollection<IWeigthedMapLand>? _lands;
     private bool _isVisible;
     private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = [];
     private readonly CollectionDeepObserver<IWeigthedMapLand> _observer;
@@ -52,8 +52,11 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TDrawingContext}"/> class.
     /// </summary>
-    public CoreHeatLandSeries()
+    /// <param name="lands">The lands.</param>
+    public CoreHeatLandSeries(ICollection<IWeigthedMapLand>? lands)
     {
+        Lands = lands;
+
         _observer = new CollectionDeepObserver<IWeigthedMapLand>(
             (sender, e) => NotifySubscribers(),
             (sender, e) => NotifySubscribers());
@@ -82,7 +85,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
     /// <summary>
     /// Gets or sets the lands.
     /// </summary>
-    public IEnumerable<IWeigthedMapLand>? Lands
+    public ICollection<IWeigthedMapLand>? Lands
     {
         get => _lands;
         set
@@ -126,7 +129,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
         foreach (var land in Lands ?? Enumerable.Empty<IWeigthedMapLand>())
         {
             var projector = Maps.BuildProjector(
-                context.View.MapProjection, new[] { context.View.Width, context.View.Height });
+                context.View.MapProjection, [context.View.Width, context.View.Height]);
 
             var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
 

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -37,8 +38,34 @@ namespace LiveChartsCore.SkiaSharpView;
 /// or at the series level 
 /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
 /// </typeparam>
-public class CandlesticksSeries<TModel> : CandlesticksSeries<TModel, CandlestickGeometry, LabelGeometry>
-{ }
+public class CandlesticksSeries<TModel>
+    : CandlesticksSeries<TModel, CandlestickGeometry, LabelGeometry>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public CandlesticksSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public CandlesticksSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public CandlesticksSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a candlesticks series in the user interface.
@@ -53,9 +80,35 @@ public class CandlesticksSeries<TModel> : CandlesticksSeries<TModel, Candlestick
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
-public class CandlesticksSeries<TModel, TVisual> : CandlesticksSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class CandlesticksSeries<TModel, TVisual>
+    : CandlesticksSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public CandlesticksSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public CandlesticksSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public CandlesticksSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a candlesticks series in the user interface.
@@ -73,7 +126,33 @@ public class CandlesticksSeries<TModel, TVisual> : CandlesticksSeries<TModel, TV
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class CandlesticksSeries<TModel, TVisual, TLabel> : CoreFinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-    where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class CandlesticksSeries<TModel, TVisual, TLabel>
+    : CoreFinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
+        where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public CandlesticksSeries()
+        : base(null)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public CandlesticksSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public CandlesticksSeries(params TModel[] values)
+        : base(values)
+    { }
+}

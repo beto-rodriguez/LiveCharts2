@@ -20,24 +20,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView;
 
 /// <inheritdoc cref="CoreHeatLandSeries{TDrawingContext}"/>
-public class HeatLandSeries : CoreHeatLandSeries<SkiaSharpDrawingContext>
+public class HeatLandSeries
+    : CoreHeatLandSeries<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
     /// </summary>
     public HeatLandSeries()
+        : this(null)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
+    /// </summary>
+    /// <param name="lands">The lands.</param>
+    public HeatLandSeries(ICollection<IWeigthedMapLand>? lands)
+        : this(lands, [LvcColor.FromArgb(255, 179, 229, 252), LvcColor.FromArgb(255, 2, 136, 209)])
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
+    /// </summary>
+    /// <param name="lands">The lands.</param>
+    public HeatLandSeries(params IWeigthedMapLand[]? lands)
+        : this(lands, [LvcColor.FromArgb(255, 179, 229, 252), LvcColor.FromArgb(255, 2, 136, 209)])
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
+    /// </summary>
+    /// <param name="lands">The lands.</param>
+    /// <param name="heatMap">The heat map.</param>
+    public HeatLandSeries(ICollection<IWeigthedMapLand>? lands, LvcColor[] heatMap)
+        : base(lands)
     {
-        HeatMap = new[]
-        {
-            LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-            LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-        };
+        HeatMap = heatMap;
 
         LiveCharts.Configure(config => config.UseDefaults());
         IntitializeSeries(LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -37,8 +38,34 @@ namespace LiveChartsCore.SkiaSharpView;
 /// or at the series level 
 /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
 /// </typeparam>
-public class PolarLineSeries<TModel> : PolarLineSeries<TModel, CircleGeometry, LabelGeometry>
-{ }
+public class PolarLineSeries<TModel>
+    : PolarLineSeries<TModel, CircleGeometry, LabelGeometry>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public PolarLineSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PolarLineSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PolarLineSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a polar line series in the user interface.
@@ -53,9 +80,35 @@ public class PolarLineSeries<TModel> : PolarLineSeries<TModel, CircleGeometry, L
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
-public class PolarLineSeries<TModel, TVisual> : PolarLineSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class PolarLineSeries<TModel, TVisual>
+    : PolarLineSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public PolarLineSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PolarLineSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PolarLineSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a polar line series in the user interface.
@@ -75,6 +128,31 @@ public class PolarLineSeries<TModel, TVisual> : PolarLineSeries<TModel, TVisual,
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual, TLabel>
     : CorePolarLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{ }
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public PolarLineSeries()
+        : base(null)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PolarLineSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public PolarLineSeries(params TModel[] values)
+        : base(values)
+    { }
+}

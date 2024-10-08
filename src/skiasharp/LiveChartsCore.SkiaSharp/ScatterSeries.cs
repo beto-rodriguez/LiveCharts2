@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -37,8 +38,34 @@ namespace LiveChartsCore.SkiaSharpView;
 /// or at the series level 
 /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
 /// </typeparam>
-public class ScatterSeries<TModel> : ScatterSeries<TModel, CircleGeometry, LabelGeometry>
-{ }
+public class ScatterSeries<TModel>
+    : ScatterSeries<TModel, CircleGeometry, LabelGeometry>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public ScatterSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public ScatterSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public ScatterSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a scatter series in the user interface.
@@ -53,9 +80,35 @@ public class ScatterSeries<TModel> : ScatterSeries<TModel, CircleGeometry, Label
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
-public class ScatterSeries<TModel, TVisual> : ScatterSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class ScatterSeries<TModel, TVisual>
+    : ScatterSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public ScatterSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public ScatterSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public ScatterSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a scatter series in the user interface.
@@ -73,7 +126,33 @@ public class ScatterSeries<TModel, TVisual> : ScatterSeries<TModel, TVisual, Lab
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class ScatterSeries<TModel, TVisual, TLabel> : CoreScatterSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class ScatterSeries<TModel, TVisual, TLabel>
+    : CoreScatterSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public ScatterSeries()
+        : base(null)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public ScatterSeries(ICollection? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public ScatterSeries(params TModel[] values)
+        : base(values)
+    { }
+}
