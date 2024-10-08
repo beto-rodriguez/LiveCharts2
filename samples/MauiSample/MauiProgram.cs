@@ -8,7 +8,7 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         _ = builder
-            .UseSkiaSharp(true)
+            .UseSkiaSharp()
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {
