@@ -144,7 +144,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             _heatKnownLength = HeatMap.Length;
         }
 
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -207,7 +207,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (hasSvg)
             {
-                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }

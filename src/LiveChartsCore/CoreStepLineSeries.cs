@@ -145,7 +145,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         uwx = uwx < gs ? gs : uwx;
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -235,7 +235,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
 
                 if (hasSvg)
                 {
-                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    var svgVisual = (IVariableSvgPath<TDrawingContext>)visual.Geometry;
                     if (_geometrySvgChanged || svgVisual.SVGPath is null)
                         svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
                 }

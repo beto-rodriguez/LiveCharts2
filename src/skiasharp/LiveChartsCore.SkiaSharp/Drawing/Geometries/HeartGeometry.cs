@@ -20,10 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using LiveChartsCore.Drawing;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="VariableSVGPathGeometry"/>
-[Obsolete($"Replaced by {nameof(VariableSVGPathGeometry)}")]
-public class SVGPathGeometry : VariableSVGPathGeometry { }
+/// <summary>
+/// Defines a heart geometry.
+/// </summary>
+public class HeartGeometry : BaseSVGPathGeometry
+{
+    private static readonly SKPath s_sKPath = SKPath.ParseSvgPathData(SVGPoints.Heart);
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeartGeometry"/> class.
+    /// </summary>
+    public HeartGeometry()
+        : base(s_sKPath)
+    { }
+}

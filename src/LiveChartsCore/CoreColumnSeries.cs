@@ -118,7 +118,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
         var ry = (float)Ry;
 
         var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -206,7 +206,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
 
             if (hasSvg)
             {
-                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }

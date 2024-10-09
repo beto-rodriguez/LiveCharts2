@@ -119,7 +119,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         SeriesProperties = properties;
         Values = values;
 
-        if (typeof(ISvgPath<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
+        if (typeof(IVariableSvgPath<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
             SeriesProperties |= SeriesProperties.IsSVGPath;
 
         _observer = new CollectionDeepObserver<TModel>(
@@ -169,10 +169,10 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             _geometrySvgChanged = true;
             SetProperty(ref _geometrySvg, value);
 
-            if (!this.HasSvgGeometry())
+            if (!this.HasVariableSvgGeometry())
             {
                 throw new Exception(
-                    $"You must use a geometry that implements {nameof(ISvgPath<TDrawingContext>)}, " +
+                    $"You must use a geometry that implements {nameof(IVariableSvgPath<TDrawingContext>)}, " +
                     $"{nameof(TVisual)} does not satisfies the constrait.");
             }
         }

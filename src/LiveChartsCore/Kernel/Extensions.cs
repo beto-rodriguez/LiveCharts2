@@ -500,7 +500,7 @@ public static class Extensions
     /// <returns>
     ///   <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool HasSvgGeometry(this ISeries series)
+    public static bool HasVariableSvgGeometry(this ISeries series)
     {
         return (series.SeriesProperties & SeriesProperties.IsSVGPath) != 0;
     }

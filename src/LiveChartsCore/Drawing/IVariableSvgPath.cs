@@ -20,10 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+namespace LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-
-/// <inheritdoc cref="VariableSVGPathGeometry"/>
-[Obsolete($"Replaced by {nameof(VariableSVGPathGeometry)}")]
-public class SVGPathGeometry : VariableSVGPathGeometry { }
+/// <summary>
+/// Defines a geometry that is built using from a svg path.
+/// </summary>
+public interface IVariableSvgPath<TDrawingContext> : ISizedGeometry<TDrawingContext>
+    where TDrawingContext : DrawingContext
+{
+    /// <summary>
+    /// Gets or sets the svg path.
+    /// </summary>
+    string? SVGPath { get; set; }
+}
