@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Bars.RowsWithLabels;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new RowSeries<int>
         {
             Values = new List<int> { 8, -3, 4 },
@@ -36,5 +36,5 @@ public partial class ViewModel : ObservableObject
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.Start
         }
-    };
+    ];
 }

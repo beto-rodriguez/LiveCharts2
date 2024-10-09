@@ -7,10 +7,10 @@ namespace ViewModelsSamples.Lines.Straight;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<double>
         {
-            Values = new double[] { 5, 0, 5, 0, 5, 0 },
+            Values = [5, 0, 5, 0, 5, 0],
             Fill = null,
             GeometrySize = 0,
             // use the line smoothness property to control the curve
@@ -20,10 +20,10 @@ public partial class ViewModel : ObservableObject
         },
         new LineSeries<double>
         {
-            Values = new double[] { 7, 2, 7, 2, 7, 2 },
+            Values = [7, 2, 7, 2, 7, 2],
             Fill = null,
             GeometrySize = 0,
             LineSmoothness = 1 // mark
         }
-    };
+    ];
 }

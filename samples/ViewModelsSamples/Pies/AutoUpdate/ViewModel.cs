@@ -19,12 +19,12 @@ public partial class ViewModel : ObservableObject
         [
             // Use the ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
             // or use any INotifyPropertyChanged implementation // mark
-            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(2) } },
-            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(5) } },
-            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } },
-            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(7) } },
-            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(4) } },
-            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } }
+            new PieSeries<ObservableValue> { Values = [new ObservableValue(2)] },
+            new PieSeries<ObservableValue> { Values = [new ObservableValue(5)] },
+            new PieSeries<ObservableValue> { Values = [new ObservableValue(3)] },
+            new PieSeries<ObservableValue> { Values = [new ObservableValue(7)] },
+            new PieSeries<ObservableValue> { Values = [new ObservableValue(4)] },
+            new PieSeries<ObservableValue> { Values = [new ObservableValue(3)] }
         ];
     }
 
@@ -39,7 +39,7 @@ public partial class ViewModel : ObservableObject
         Series.Add(
             new PieSeries<ObservableValue>
             {
-                Values = new[] { new ObservableValue(_random.Next(1, 10)) }
+                Values = [new ObservableValue(_random.Next(1, 10))]
             });
     }
 

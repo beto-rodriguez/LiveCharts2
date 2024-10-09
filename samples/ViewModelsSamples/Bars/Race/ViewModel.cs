@@ -41,8 +41,8 @@ public partial class ViewModel : ObservableObject
             .ToArray();
 
         // generate some data for each pilot:
-        _data = new PilotInfo[]
-        {
+        _data =
+        [
             new("Tsunoda",   500,  paints[0]),
             new("Sainz",     450,  paints[1]),
             new("Riccardo",  520,  paints[2]),
@@ -50,7 +50,7 @@ public partial class ViewModel : ObservableObject
             new("Perez",     660,  paints[4]),
             new("Verstapen", 920,  paints[5]),
             new("Hamilton",  1000, paints[6])
-        };
+        ];
 
         var rowSeries = new RowSeries<PilotInfo>
         {
@@ -69,7 +69,7 @@ public partial class ViewModel : ObservableObject
             point.Visual.Fill = point.Model!.Paint;
         });
 
-        _series = new[] { rowSeries };
+        _series = [rowSeries];
 
         _ = StartRace();
     }
@@ -78,10 +78,10 @@ public partial class ViewModel : ObservableObject
     private ISeries[] _series;
 
     [ObservableProperty]
-    private Axis[] _xAxes = { new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)) } };
+    private Axis[] _xAxes = [new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)) }];
 
     [ObservableProperty]
-    private Axis[] _yAxes = { new Axis { IsVisible = false } };
+    private Axis[] _yAxes = [new Axis { IsVisible = false }];
 
     public bool IsReading { get; set; } = true;
 

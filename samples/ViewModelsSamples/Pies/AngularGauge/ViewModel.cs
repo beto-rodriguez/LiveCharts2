@@ -31,8 +31,8 @@ public partial class ViewModel : ObservableObject
             new GaugeItem(30, s => SetStyle(sectionsOuter, sectionsWidth, s)),
             new GaugeItem(10, s => SetStyle(sectionsOuter, sectionsWidth, s)));
 
-        VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
-        {
+        VisualElements =
+        [
             new AngularTicksVisual
             {
                 Labeler = value => value.ToString("N1"),
@@ -42,7 +42,7 @@ public partial class ViewModel : ObservableObject
                 TicksLength = 20
             },
             Needle
-        };
+        ];
     }
 
     public IEnumerable<ISeries> Series { get; set; }

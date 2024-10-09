@@ -21,23 +21,23 @@ public partial class ViewModel : ObservableObject
     }
 
     public ISeries[] Series { get; set; } =
-    {
-        new ColumnSeries<double> { Values = new double[] { 426, 583, 104 } },
-        new LineSeries<double>   { Values = new double[] { 200, 558, 458 }, Fill = null }
-    };
+    [
+        new ColumnSeries<double> { Values = [426, 583, 104] },
+        new LineSeries<double>   { Values = [200, 558, 458], Fill = null }
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
             Name = "Salesman/woman",
-            Labels = new string[] { "王", "赵", "张" },
+            Labels = ["王", "赵", "张"],
             LabelsPaint = new SolidColorPaint(SKColors.Black)
         }
-    };
+    ];
 
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new Axis
         {
             Name = "Sales amount",
@@ -50,5 +50,5 @@ public partial class ViewModel : ObservableObject
                 SKFontStyle = new SKFontStyle(SKFontStyleWeight.ExtraBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Italic)
             },
         }
-    };
+    ];
 }

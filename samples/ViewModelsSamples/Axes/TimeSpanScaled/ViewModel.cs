@@ -10,7 +10,7 @@ namespace ViewModelsSamples.Axes.TimeSpanScaled;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ColumnSeries<TimeSpanPoint>
         {
             Values = new ObservableCollection<TimeSpanPoint>
@@ -22,7 +22,7 @@ public partial class ViewModel : ObservableObject
                 new TimeSpanPoint(TimeSpan.FromMilliseconds(5), 8),
             },
         }
-    };
+    ];
 
     // You can use the TimeSpanAxis class to define a time span based axis // mark
 
@@ -31,7 +31,7 @@ public partial class ViewModel : ObservableObject
 
     // The second parameter is a function that receives the value and returns the label // mark
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new TimeSpanAxis(TimeSpan.FromMilliseconds(1), date => date.ToString("fff") + "ms")
-    };
+    ];
 }

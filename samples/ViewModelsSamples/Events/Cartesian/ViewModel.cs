@@ -43,7 +43,7 @@ public partial class ViewModel : ObservableObject
         salesPerDaysSeries.ChartPointPointerHover += OnPointerHover; // mark
         salesPerDaysSeries.ChartPointPointerHoverLost += OnPointerHoverLost; // mark
 
-        Series = new ISeries[] { salesPerDaysSeries };
+        Series = [salesPerDaysSeries];
     }
 
     public ISeries[] Series { get; set; }

@@ -22,15 +22,15 @@ public partial class ViewModel : ObservableObject
             values.Add(trend);
         }
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
             new ColumnSeries<int>
             {
                 Values = values
             }
-        };
+        ];
 
-        XAxes = new[] { new Axis() };
+        XAxes = [new Axis()];
     }
 
     public ISeries[] Series { get; }

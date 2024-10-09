@@ -9,10 +9,10 @@ namespace ViewModelsSamples.Lines.Custom;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<double>
         {
-            Values = new double[] { 2, 1, 4, 2, 2, -5, -2 },
+            Values = [2, 1, 4, 2, 2, -5, -2],
             Fill = null,
             GeometrySize = 20
         },
@@ -22,7 +22,7 @@ public partial class ViewModel : ObservableObject
         // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
         new LineSeries<double, RectangleGeometry>
         {
-            Values = new double[] { 3, 3, -3, -2, -4, -3, -1 },
+            Values = [3, 3, -3, -2, -4, -3, -1],
             Fill = null,
             GeometrySize = 20
         },
@@ -31,7 +31,7 @@ public partial class ViewModel : ObservableObject
         // LiveCharts already provides some predefined paths in the SVGPoints class.
         new LineSeries<double, VariableSVGPathGeometry>
         {
-            Values = new double[] { -2, 2, 1, 3, -1, 4, 3 },
+            Values = [-2, 2, 1, 3, -1, 4, 3],
             Fill = null,
             GeometrySvg = SVGPoints.Star,
             GeometrySize = 20
@@ -40,9 +40,9 @@ public partial class ViewModel : ObservableObject
         // you can declare your own gemetry and use the SkiaSharp api to draw it
         new LineSeries<double, MyGeometry>
         {
-            Values = new double[] { 4, 5, 2, 4, 3, 2, 1 },
+            Values = [4, 5, 2, 4, 3, 2, 1],
             Fill = null,
             GeometrySize = 20
         },
-    };
+    ];
 }

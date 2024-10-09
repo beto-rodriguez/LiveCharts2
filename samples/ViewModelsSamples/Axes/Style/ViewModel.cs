@@ -18,7 +18,7 @@ public partial class ViewModel : ObservableObject
     private static readonly SKColor s_dark3 = new(60, 60, 60);
 
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<ObservablePoint>
         {
             Values = Fetch(),
@@ -26,10 +26,10 @@ public partial class ViewModel : ObservableObject
             Fill = null,
             GeometrySize = 0
         }
-    };
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
             Name = "X axis",
@@ -41,7 +41,7 @@ public partial class ViewModel : ObservableObject
             {
                 Color = s_gray,
                 StrokeThickness = 1,
-                PathEffect = new DashEffect(new float[] { 3, 3 })
+                PathEffect = new DashEffect([3, 3])
             },
             SubseparatorsPaint = new SolidColorPaint
             {
@@ -65,10 +65,10 @@ public partial class ViewModel : ObservableObject
                 StrokeThickness = 1
             }
         }
-    };
+    ];
 
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new Axis
         {
             Name = "Y axis",
@@ -80,7 +80,7 @@ public partial class ViewModel : ObservableObject
             {
                 Color = s_gray,
                 StrokeThickness = 1,
-                PathEffect = new DashEffect(new float[] { 3, 3 })
+                PathEffect = new DashEffect([3, 3])
             },
             SubseparatorsPaint = new SolidColorPaint
             {
@@ -104,7 +104,7 @@ public partial class ViewModel : ObservableObject
                 StrokeThickness = 1
             }
         }
-    };
+    ];
 
     public DrawMarginFrame Frame { get; set; } =
     new()

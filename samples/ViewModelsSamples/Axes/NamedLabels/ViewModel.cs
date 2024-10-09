@@ -9,31 +9,31 @@ namespace ViewModelsSamples.Axes.NamedLabels;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ColumnSeries<int>
         {
             Name = "Sales",
-            Values = new int[] { 200, 558, 458, 249 },
+            Values = [200, 558, 458, 249],
         },
         new LineSeries<int>
         {
             Name = "Projected",
-            Values = new int[] { 300, 450, 400, 280 },
+            Values = [300, 450, 400, 280],
             Fill = null
         }
-    };
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
             // Use the labels property to define named labels.
-            Labels = new string[] { "Anne", "Johnny", "Zac", "Rosa" }
+            Labels = ["Anne", "Johnny", "Zac", "Rosa"]
         }
-    };
+    ];
 
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new Axis
         {
             // Now the Y axis we will display labels as currency
@@ -48,7 +48,7 @@ public partial class ViewModel : ObservableObject
             // But the one that LiveCharts provides creates shorter labels when
             // the amount is in millions or trillions
         }
-    };
+    ];
 
     public SolidColorPaint TooltipTextPaint { get; set; } =
         new SolidColorPaint

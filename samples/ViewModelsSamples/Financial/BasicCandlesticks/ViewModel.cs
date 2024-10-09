@@ -36,18 +36,18 @@ public partial class ViewModel : ObservableObject
             new(new DateTime(2021, 1, 21), 630, 610, 630, 590)
         };
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
             new CandlesticksSeries<FinancialPointI>
             {
                 Values = data
                     .Select(x => new FinancialPointI(x.High, x.Open, x.Close, x.Low))
                     .ToArray()
             }
-        };
+        ];
 
-        XAxes = new[]
-        {
+        XAxes =
+        [
             new Axis
             {
                 LabelsRotation = 15,
@@ -55,7 +55,7 @@ public partial class ViewModel : ObservableObject
                     .Select(x => x.Date.ToString("yyyy MMM dd"))
                     .ToArray()
             }
-        };
+        ];
     }
 
     public Axis[] XAxes { get; set; }

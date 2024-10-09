@@ -25,8 +25,8 @@ public partial class ViewModel : ObservableObject
             values3.Add(new ObservablePoint(r.Next(0, 20), r.Next(0, 20)));
         }
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
             // use the second type parameter to specify the geometry to draw for every point
             // there are already many predefined geometries in the
             // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
@@ -51,7 +51,7 @@ public partial class ViewModel : ObservableObject
                 Values = values3,
                 GeometrySize = 40,
             }
-        };
+        ];
     }
 
     public ISeries[] Series { get; set; }

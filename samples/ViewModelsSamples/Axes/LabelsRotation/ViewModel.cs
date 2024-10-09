@@ -13,7 +13,7 @@ public partial class ViewModel : ObservableObject
     private double _sliderValue = 15;
 
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<double>
         {
             Values = new ObservableCollection<double> { 200, 558, 458, 249, 457, 339, 587 },
@@ -22,10 +22,10 @@ public partial class ViewModel : ObservableObject
                 $"A multi-line label {Environment.NewLine}" +
                 $"With a value of {Environment.NewLine}" + point.Coordinate.PrimaryValue,
         }
-    };
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
             // Use the Label property to indicate the format of the labels in the axis
@@ -45,10 +45,10 @@ public partial class ViewModel : ObservableObject
 
             SeparatorsPaint = new SolidColorPaint(SKColors.LightGray, 2)
         }
-    };
+    ];
 
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new Axis
         {
             LabelsRotation = 15,
@@ -67,7 +67,7 @@ public partial class ViewModel : ObservableObject
 
             SeparatorsPaint = new SolidColorPaint(SKColors.LightGray, 2)
         }
-    };
+    ];
 
     public double SliderValue
     {

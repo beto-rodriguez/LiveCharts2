@@ -12,12 +12,12 @@ public partial class ViewModel : ObservableObject
     // for more info please see:
     // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/effects/shaders/linear-gradient
 
-    public ISeries[] Series { get; set; } = new ISeries[]
-    {
+    public ISeries[] Series { get; set; } =
+    [
         new ColumnSeries<int>
         {
             Name = "John",
-            Values = new []{ 3, 7, 2, 9, 4 },
+            Values = [3, 7, 2, 9, 4],
             Stroke = null,
 
             // this is an easy way to set a linear gradient:
@@ -26,7 +26,7 @@ public partial class ViewModel : ObservableObject
             // but you can customize the gradient
             Fill = new LinearGradientPaint(
                 // the gradient will use the following colors array
-                new [] { new SKColor(255, 140, 148), new SKColor(220, 237, 194) },
+                [new SKColor(255, 140, 148), new SKColor(220, 237, 194)],
 
                 // now with the following points we are specifying the orientation of the gradient
                 // by default the gradient is orientated horizontally
@@ -49,11 +49,11 @@ public partial class ViewModel : ObservableObject
         new LineSeries<int>
         {
             Name = "Charles",
-            Values = new []{ 4, 2, 8, 5, 3 },
+            Values = [4, 2, 8, 5, 3],
             GeometrySize = 22,
-            Stroke = new LinearGradientPaint(new[]{ new SKColor(45, 64, 89), new SKColor(255, 212, 96)}) { StrokeThickness = 10 },
-            GeometryStroke = new LinearGradientPaint(new[]{ new SKColor(45, 64, 89), new SKColor(255, 212, 96)}) { StrokeThickness = 10 },
+            Stroke = new LinearGradientPaint([new SKColor(45, 64, 89), new SKColor(255, 212, 96)]) { StrokeThickness = 10 },
+            GeometryStroke = new LinearGradientPaint([new SKColor(45, 64, 89), new SKColor(255, 212, 96)]) { StrokeThickness = 10 },
             Fill = null
         }
-    };
+    ];
 }

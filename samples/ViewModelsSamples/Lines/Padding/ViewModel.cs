@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Lines.Padding;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         // this series fits the draw margin area
         // the key is to set the DataPadding to 0,0
         // also remove GeometryStroke, GeometryFill and GeometrySize
@@ -24,7 +24,7 @@ public partial class ViewModel : ObservableObject
             GeometrySize = 0,
             DataPadding = new LvcPoint(0,0)
         }
-    };
+    ];
 
     public DrawMarginFrame DrawMarginFrame => new()
     {

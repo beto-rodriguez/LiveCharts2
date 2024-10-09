@@ -17,14 +17,13 @@ public partial class ViewModel : ObservableObject
 
     // the expression above is equivalent to the next series collection:
     public IEnumerable<ISeries> Series2 { get; set; } =
-        new[]
-        {
-            new PieSeries<int> { Values = new[]{ 2 } },
-            new PieSeries<int> { Values = new[]{ 4 } },
-            new PieSeries<int> { Values = new[]{ 1 } },
-            new PieSeries<int> { Values = new[]{ 4 } },
-            new PieSeries<int> { Values = new[]{ 3 } },
-        };
+        [
+            new PieSeries<int> { Values = [2] },
+            new PieSeries<int> { Values = [4] },
+            new PieSeries<int> { Values = [1] },
+            new PieSeries<int> { Values = [4] },
+            new PieSeries<int> { Values = [3] },
+        ];
 
     public LabelVisual Title { get; set; } =
         new LabelVisual

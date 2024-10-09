@@ -41,8 +41,8 @@ public partial class ViewModel : ObservableObject
             new(6, 50, 0.3, 6)
         };
 
-        Series0 = new ISeries[]
-        {
+        Series0 =
+        [
             new ColumnSeries<ErrorValue>
             {
                 Values = values0,
@@ -55,11 +55,11 @@ public partial class ViewModel : ObservableObject
                 ErrorPaint = new SolidColorPaint(SKColors.Black),
                 Padding = 0
             }
-        };
+        ];
 
         // LineSeries also supports error bars // mark
-        Series1 = new ISeries[]
-        {
+        Series1 =
+        [
             new LineSeries<ErrorValue, RectangleGeometry>
             {
                 Values = values0,
@@ -67,7 +67,7 @@ public partial class ViewModel : ObservableObject
                 GeometrySize = 4,
                 Fill = null
             }
-        };
+        ];
 
         // You can also use DateTime on the X axis // mark
         var now = DateTime.Now;
@@ -86,15 +86,15 @@ public partial class ViewModel : ObservableObject
         };
 
         // ScatterSeries also supports error bars // mark
-        Series2 = new ISeries[]
-        {
+        Series2 =
+        [
             new ScatterSeries<ErrorDateTimePoint>
             {
                 Values = values2,
                 ErrorPaint = new SolidColorPaint(SKColors.Black),
                 GeometrySize = 10
             }
-        };
+        ];
     }
 
     public ISeries[] Series0 { get; set; }
@@ -106,7 +106,7 @@ public partial class ViewModel : ObservableObject
     // To get more help about DateTime axes see:
     // https://livecharts.dev/docs/{{ platform }}/{{ version }}/samples.axes.dateTimeScaled
     public Axis[] DateTimeAxis { get; set; } =
-    {
+    [
         new DateTimeAxis(TimeSpan.FromDays(1), date => date.ToString("MMMM dd"))
-    };
+    ];
 }

@@ -9,24 +9,24 @@ namespace ViewModelsSamples.Bars.Basic;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ColumnSeries<double>
         {
             Name = "Mary",
-            Values = new double[] { 2, 5, 4 }
+            Values = [2, 5, 4]
         },
         new ColumnSeries<double>
         {
             Name = "Ana",
-            Values = new double[] { 3, 1, 6 }
+            Values = [3, 1, 6]
         }
-    };
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
-            Labels = new string[] { "Category 1", "Category 2", "Category 3" },
+            Labels = ["Category 1", "Category 2", "Category 3"],
             LabelsRotation = 0,
             SeparatorsPaint = new SolidColorPaint(new SKColor(200, 200, 200)),
             SeparatorsAtCenter = false,
@@ -38,5 +38,5 @@ public partial class ViewModel : ObservableObject
             ForceStepToMin = true, // mark
             MinStep = 1 // mark
         }
-    };
+    ];
 }

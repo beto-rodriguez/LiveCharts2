@@ -37,7 +37,7 @@ public partial class ViewModel : ObservableObject
             SeparatorsPaint = new SolidColorPaint(SKColors.Black.WithAlpha(100))
         };
 
-        XAxes = new Axis[] { _customAxis };
+        XAxes = [_customAxis];
 
         _ = ReadData();
     }
@@ -77,15 +77,15 @@ public partial class ViewModel : ObservableObject
     {
         var now = DateTime.Now;
 
-        return new double[]
-        {
+        return
+        [
             now.AddSeconds(-25).Ticks,
             now.AddSeconds(-20).Ticks,
             now.AddSeconds(-15).Ticks,
             now.AddSeconds(-10).Ticks,
             now.AddSeconds(-5).Ticks,
             now.Ticks
-        };
+        ];
     }
 
     private static string Formatter(DateTime date)

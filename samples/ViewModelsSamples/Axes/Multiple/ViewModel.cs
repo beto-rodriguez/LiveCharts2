@@ -14,12 +14,12 @@ public partial class ViewModel : ObservableObject
     private static readonly SKColor s_yellow = new(198, 167, 0);
 
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<double>
         {
             LineSmoothness = 1,
             Name = "Tens",
-            Values = new double[] { 14, 13, 14, 15, 17 },
+            Values = [14, 13, 14, 15, 17],
             Stroke = new SolidColorPaint(s_blue, 2),
             GeometrySize = 10,
             GeometryStroke = new SolidColorPaint(s_blue, 2),
@@ -29,7 +29,7 @@ public partial class ViewModel : ObservableObject
         new LineSeries<double>
         {
             Name = "Tens 2",
-            Values = new double[] { 11, 12, 13, 10, 13 },
+            Values = [11, 12, 13, 10, 13],
             Stroke = new SolidColorPaint(s_blue, 2),
             GeometrySize = 10,
             GeometryStroke = new SolidColorPaint(s_blue, 2),
@@ -39,7 +39,7 @@ public partial class ViewModel : ObservableObject
         new LineSeries<double>
         {
             Name = "Hundreds",
-            Values = new double[] { 533, 586, 425, 579, 518 },
+            Values = [533, 586, 425, 579, 518],
             Stroke = new SolidColorPaint(s_red, 2),
             GeometrySize = 10,
             GeometryStroke = new SolidColorPaint(s_red, 2),
@@ -49,17 +49,17 @@ public partial class ViewModel : ObservableObject
         new LineSeries<double>
         {
             Name = "Thousands",
-            Values = new double[] { 5493, 7843, 4368, 9018, 3902 },
+            Values = [5493, 7843, 4368, 9018, 3902],
             Stroke = new SolidColorPaint(s_yellow, 2),
             GeometrySize = 10,
             GeometryStroke = new SolidColorPaint(s_yellow, 2),
             Fill = null,
             ScalesYAt = 2  // it will be scaled at the YAxes[2] instance // mark
         }
-    };
+    ];
 
     public ICartesianAxis[] YAxes { get; set; } =
-    {
+    [
         new Axis // the "units" and "tens" series will be scaled on this axis
         {
             Name = "Tens",
@@ -103,7 +103,7 @@ public partial class ViewModel : ObservableObject
             ShowSeparatorLines = false,
             Position = LiveChartsCore.Measure.AxisPosition.End
         }
-    };
+    ];
 
     public SolidColorPaint LegendTextPaint { get; set; } =
         new SolidColorPaint

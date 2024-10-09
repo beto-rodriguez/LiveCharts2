@@ -10,13 +10,13 @@ namespace ViewModelsSamples.Lines.Basic;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<double>
         {
-            Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
+            Values = [2, 1, 3, 5, 3, 4, 6],
             Fill = null
         }
-    };
+    ];
 
     public LabelVisual Title { get; set; } =
         new LabelVisual

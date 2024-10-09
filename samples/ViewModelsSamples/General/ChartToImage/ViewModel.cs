@@ -2,31 +2,30 @@
 using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.General.ChartToImage;
 
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] CatesianSeries { get; set; } =
-    {
-        new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
-        new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
-    };
+    [
+        new LineSeries<int> { Values = [1, 5, 4, 6] },
+        new ColumnSeries<int> { Values = [4, 8, 2, 4] }
+    ];
 
     public ISeries[] PieSeries { get; set; } =
-    {
-        new PieSeries<int> { Values = new int[] { 10, } },
-        new PieSeries<int> { Values = new int[] { 6 } },
-        new PieSeries<int> { Values = new int[] { 4 } }
-    };
+    [
+        new PieSeries<int> { Values = [10,] },
+        new PieSeries<int> { Values = [6] },
+        new PieSeries<int> { Values = [4] }
+    ];
 
-    public IGeoSeries[] GeoSeries { get; set; } = new HeatLandSeries[]
-    {
-        new()
+    public IGeoSeries[] GeoSeries { get; set; } =
+    [
+        new HeatLandSeries
         {
-            Lands = new HeatLand[]
-            {
+            Lands =
+            [
                 new() { Name = "bra", Value = 13 },
                 new() { Name = "mex", Value = 10 },
                 new() { Name = "usa", Value = 15 },
@@ -41,7 +40,7 @@ public partial class ViewModel : ObservableObject
                 new() { Name = "kor", Value = 10 },
                 new() { Name = "zaf", Value = 12 },
                 new() { Name = "are", Value = 13 }
-            }
+            ]
         }
-    };
+    ];
 }

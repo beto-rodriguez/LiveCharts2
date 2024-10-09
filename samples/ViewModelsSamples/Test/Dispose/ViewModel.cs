@@ -23,36 +23,36 @@ public partial class ViewModel : ObservableObject
             data.Add(_r.Next(0, 100));
         }
 
-        CartesianSeries = new ISeries[]
-        {
+        CartesianSeries =
+        [
             new LineSeries<double> { Values = new ObservableCollection<double>(data) },
             new ColumnSeries<double> { Values = data },
             new StackedAreaSeries<double> { Values = data },
             new StackedColumnSeries<double> { Values = data },
             new ScatterSeries<double> { Values= data },
             new RowSeries<double> { Values = data }
-        };
+        ];
 
         PieSeries = data.AsPieSeries();
 
-        PolarSeries = new ISeries[]
-        {
+        PolarSeries =
+        [
             new PolarLineSeries<double> { Values = new ObservableCollection<double>(data) }
-        };
+        ];
 
-        GeoSeries = new IGeoSeries[]
-        {
+        GeoSeries =
+        [
             new HeatLandSeries
             {
-                Lands = new HeatLand[]
-                {
+                Lands =
+                [
                     new() { Name = "bra", Value = 13 },
                     new() { Name = "mex", Value = 10 },
                     new() { Name = "usa", Value = 15 },
                     new() { Name = "can", Value = 8 }
-                }
+                ]
             }
-        };
+        ];
     }
 
     public IEnumerable<ISeries> CartesianSeries { get; }

@@ -14,14 +14,14 @@ public partial class ViewModel : ObservableObject
     private static readonly int s_logBase = 10;
 
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<LogarithmicPoint>
         {
             // for the x coordinate, we use the X property
             // and for the Y coordinate, we will map it to the logarithm of the value
             Mapping = (logPoint, index) => new(logPoint.X, Math.Log(logPoint.Y, s_logBase)),
-            Values = new LogarithmicPoint[]
-            {
+            Values =
+            [
                 new() { X = 1, Y = 1 },
                 new() { X = 2, Y = 10 },
                 new() { X = 3, Y = 100 },
@@ -30,12 +30,12 @@ public partial class ViewModel : ObservableObject
                 new() { X = 6, Y = 100000 },
                 new() { X = 7, Y = 1000000 },
                 new() { X = 8, Y = 10000000 }
-            }
+            ]
         }
-    };
+    ];
 
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new LogaritmicAxis(s_logBase)
         {
             SeparatorsPaint = new SolidColorPaint
@@ -50,5 +50,5 @@ public partial class ViewModel : ObservableObject
             },
             SubseparatorsCount = 9,
         }
-    };
+    ];
 }

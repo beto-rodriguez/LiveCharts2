@@ -10,7 +10,7 @@ namespace ViewModelsSamples.Axes.DateTimeScaled;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ColumnSeries<DateTimePoint>
         {
             Values = new ObservableCollection<DateTimePoint>
@@ -24,7 +24,7 @@ public partial class ViewModel : ObservableObject
                 new DateTimePoint(new DateTime(2021, 1, 7), 6)
             }
         }
-    };
+    ];
 
     // You can use the DateTimeAxis class to define a date time based axis // mark
 
@@ -33,7 +33,7 @@ public partial class ViewModel : ObservableObject
 
     // The second parameter is a function that receives the value and returns the label // mark
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new DateTimeAxis(TimeSpan.FromDays(1), date => date.ToString("MMMM dd"))
-    };
+    ];
 }

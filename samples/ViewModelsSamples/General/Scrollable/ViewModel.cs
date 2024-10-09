@@ -28,8 +28,8 @@ public partial class ViewModel
             _values.Add(new ObservablePoint(i, trend += r.Next(-20, 20)));
         }
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
             new LineSeries<ObservablePoint>
             {
                 Values = _values,
@@ -37,10 +37,10 @@ public partial class ViewModel
                 GeometryFill = null,
                 DataPadding = new(0, 1)
             }
-        };
+        ];
 
-        ScrollbarSeries = new ISeries[]
-        {
+        ScrollbarSeries =
+        [
             new LineSeries<ObservablePoint>
             {
                 Values = _values,
@@ -48,20 +48,20 @@ public partial class ViewModel
                 GeometryFill = null,
                 DataPadding = new(0, 1)
             }
-        };
+        ];
 
-        ScrollableAxes = new[] { new Axis() };
+        ScrollableAxes = [new Axis()];
 
-        Thumbs = new[]
-        {
+        Thumbs =
+        [
             new RectangularSection
             {
                 Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
             }
-        };
+        ];
 
-        InvisibleX = new[] { new Axis { IsVisible = false } };
-        InvisibleY = new[] { new Axis { IsVisible = false } };
+        InvisibleX = [new Axis { IsVisible = false }];
+        InvisibleY = [new Axis { IsVisible = false }];
 
         // force the left margin to be 100 and the right margin 50 in both charts, this will
         // align the start and end point of the "draw margin",

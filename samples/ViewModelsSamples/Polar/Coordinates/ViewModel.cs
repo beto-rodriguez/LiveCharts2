@@ -8,11 +8,11 @@ namespace ViewModelsSamples.Polar.Coordinates;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new PolarLineSeries<ObservablePolarPoint>
         {
-            Values = new[]
-            {
+            Values =
+            [
                 new ObservablePolarPoint(0, 10),
                 new ObservablePolarPoint(45, 15),
                 new ObservablePolarPoint(90, 20),
@@ -22,14 +22,14 @@ public partial class ViewModel : ObservableObject
                 new ObservablePolarPoint(270, 40),
                 new ObservablePolarPoint(315, 45),
                 new ObservablePolarPoint(360, 50),
-            },
+            ],
             IsClosed = false,
             Fill = null
         }
-    };
+    ];
 
     public PolarAxis[] AngleAxes { get; set; } =
-    {
+    [
         new PolarAxis
         {
             // force the axis to always show 360 degrees.
@@ -39,5 +39,5 @@ public partial class ViewModel : ObservableObject
             ForceStepToMin = true,
             MinStep = 30
         }
-    };
+    ];
 }

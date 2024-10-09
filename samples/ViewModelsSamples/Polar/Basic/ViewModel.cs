@@ -12,7 +12,7 @@ namespace ViewModelsSamples.Polar.Basic;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new PolarLineSeries<double>
         {
             Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
@@ -23,24 +23,24 @@ public partial class ViewModel : ObservableObject
             DataLabelsRotation = LiveCharts.CotangentAngle,
             IsClosed = true
         }
-    };
+    ];
 
     public PolarAxis[] RadialAxes { get; set; } =
-    {
+    [
         new PolarAxis
         {
             LabelsAngle = -60,
             MaxLimit = 30 // null to let the chart autoscale (defualt is null) // mark
         }
-    };
+    ];
 
     public PolarAxis[] AngleAxes { get; set; } =
-    {
+    [
         new PolarAxis
         {
             LabelsRotation = LiveCharts.TangentAngle
         }
-    };
+    ];
 
     public LabelVisual Title { get; set; } =
         new LabelVisual

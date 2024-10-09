@@ -10,15 +10,15 @@ namespace ViewModelsSamples.Heat.Basic;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new HeatSeries<WeightedPoint>
         {
-            HeatMap = new[]
-            {
+            HeatMap =
+            [
                 new SKColor(255, 241, 118).AsLvcColor(), // the first element is the "coldest"
                 SKColors.DarkSlateGray.AsLvcColor(),
                 SKColors.Blue.AsLvcColor() // the last element is the "hottest"
-            },
+            ],
             Values = new ObservableCollection<WeightedPoint>
             {
                 // Charles
@@ -54,21 +54,21 @@ public partial class ViewModel : ObservableObject
                 new(3, 5, 142), // Jun
             },
         }
-    };
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
-            Labels = new[] { "Charles", "Richard", "Ana", "Mari" }
+            Labels = ["Charles", "Richard", "Ana", "Mari"]
         }
-    };
+    ];
 
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new Axis
         {
-            Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" }
+            Labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
         }
-    };
+    ];
 }

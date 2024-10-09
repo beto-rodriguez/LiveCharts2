@@ -19,7 +19,7 @@ public partial class ViewModel : ObservableObject
             values[i] = t;
         }
 
-        SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values } };
+        SeriesCollection = [new LineSeries<int> { Values = values }];
     }
 
     public ISeries[] SeriesCollection { get; set; }

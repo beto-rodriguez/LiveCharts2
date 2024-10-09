@@ -9,29 +9,29 @@ namespace ViewModelsSamples.Polar.RadialArea;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new PolarLineSeries<int>
         {
-            Values = new[] { 7, 5, 7, 5, 6 },
+            Values = [7, 5, 7, 5, 6],
             LineSmoothness = 0,
             GeometrySize= 0,
             Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90))
         },
         new PolarLineSeries<int>
         {
-            Values = new[] { 2, 7, 5, 9, 7 },
+            Values = [2, 7, 5, 9, 7],
             LineSmoothness = 1,
             GeometrySize = 0,
             Fill = new SolidColorPaint(SKColors.Red.WithAlpha(90))
         }
-    };
+    ];
 
     public PolarAxis[] AngleAxes { get; set; } =
-    {
+    [
         new PolarAxis
         {
             LabelsRotation = LiveCharts.TangentAngle,
-            Labels = new[] { "first", "second", "third", "forth", "fifth" }
+            Labels = ["first", "second", "third", "forth", "fifth"]
         }
-    };
+    ];
 }

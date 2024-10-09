@@ -9,7 +9,7 @@ namespace ViewModelsSamples.Scatter.Basic;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ScatterSeries<ObservablePoint>
         {
             Values = new ObservableCollection<ObservablePoint>
@@ -38,5 +38,5 @@ public partial class ViewModel : ObservableObject
                 new(5.3, 7.1),
             }
         }
-    };
+    ];
 }

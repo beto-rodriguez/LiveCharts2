@@ -40,7 +40,7 @@ public partial class ViewModel : ObservableObject
                 : null; // when null, the series fill is used // mark
         });
 
-        Series = new ISeries[] { series };
+        Series = [series];
 
         Randomize();
     }
@@ -48,7 +48,7 @@ public partial class ViewModel : ObservableObject
     public ISeries[] Series { get; set; }
 
     public RectangularSection[] Sections { get; set; } =
-    {
+    [
         new RectangularSection
         {
             Label = "Danger zone!",
@@ -60,12 +60,12 @@ public partial class ViewModel : ObservableObject
             Yj = 5,
             Fill = new SolidColorPaint(SKColors.Red.WithAlpha(50))
         }
-    };
+    ];
 
     public Axis[] Y { get; set; } =
-    {
+    [
         new Axis { MinLimit = 0 }
-    };
+    ];
 
     private async void Randomize()
     {

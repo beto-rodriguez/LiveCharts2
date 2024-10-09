@@ -9,7 +9,7 @@ namespace ViewModelsSamples.General.Visibility;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ColumnSeries<double>
         {
             Values = new ObservableCollection<double> { 2, 5, 4, 3 },
@@ -25,7 +25,7 @@ public partial class ViewModel : ObservableObject
             Values = new ObservableCollection<double> { 4, 2, 8, 7 },
             IsVisible = true
         }
-    };
+    ];
 
     [RelayCommand]
     public void ToggleSeries0()

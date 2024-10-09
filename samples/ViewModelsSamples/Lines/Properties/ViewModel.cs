@@ -27,7 +27,7 @@ public partial class ViewModel : ObservableObject
             LineSmoothness = 0.5
         };
 
-        _series = new ISeries[] { _lineSeries };
+        _series = [_lineSeries];
     }
 
     [ObservableProperty]
@@ -56,7 +56,7 @@ public partial class ViewModel : ObservableObject
             LineSmoothness = 0.5
         };
 
-        Series = new ISeries[] { _lineSeries };
+        Series = [_lineSeries];
     }
 
     [RelayCommand]

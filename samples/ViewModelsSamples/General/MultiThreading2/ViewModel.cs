@@ -31,8 +31,8 @@ public partial class ViewModel : ObservableObject
         _values = new ObservableCollection<int>(items);
 
         // create a series with the data // mark
-        Series = new ISeries[]
-        {
+        Series =
+        [
             new LineSeries<int>
             {
                 Values = _values,
@@ -41,7 +41,7 @@ public partial class ViewModel : ObservableObject
                 LineSmoothness = 0,
                 Stroke = new SolidColorPaint(SKColors.Blue, 1)
             }
-        };
+        ];
 
         // There are simplier ways to do this, but since we are using a MVVM pattern, // mark
         // we need to inject a delegate that will run an action in the UI thread. // mark

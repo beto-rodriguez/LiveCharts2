@@ -11,7 +11,7 @@ namespace ViewModelsSamples.StackedBars.Basic;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new StackedColumnSeries<int>
         {
             Values = new List<int> { 3, 5, -3, 2, 5, -4, -2 },
@@ -36,5 +36,5 @@ public partial class ViewModel : ObservableObject
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.Middle
         }
-    };
+    ];
 }

@@ -23,11 +23,11 @@ public partial class ViewModel : ObservableObject
         var strokeDashArray = new float[] { 3 * strokeThickness, 2 * strokeThickness };
         var effect = new DashEffect(strokeDashArray);
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
             new LineSeries<int>
             {
-                Values = new [] { 4, 2, 8, 5, 3 },
+                Values = [4, 2, 8, 5, 3],
                 LineSmoothness = 1,
                 GeometrySize = 22,
                 Stroke = new SolidColorPaint
@@ -39,7 +39,7 @@ public partial class ViewModel : ObservableObject
                 },
                 Fill = null
             }
-        };
+        ];
     }
 
     public ISeries[] Series { get; set; }

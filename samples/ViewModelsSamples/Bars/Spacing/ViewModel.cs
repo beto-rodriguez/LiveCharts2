@@ -8,7 +8,7 @@ namespace ViewModelsSamples.Bars.Spacing;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ColumnSeries<double>
         {
             Values = new ObservableCollection<double> { 20, 50, 40, 20, 40, 30, 50, 20, 50, 40 },
@@ -19,5 +19,5 @@ public partial class ViewModel : ObservableObject
             // Defines the max width a bar can have
             MaxBarWidth = double.MaxValue
         }
-    };
+    ];
 }

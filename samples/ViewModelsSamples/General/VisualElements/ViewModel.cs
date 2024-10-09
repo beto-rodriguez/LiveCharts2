@@ -72,14 +72,14 @@ public partial class ViewModel : ObservableObject
         visuals.Add(svgVisiual);
 
         VisualElements = visuals;
-        Series = new ISeries[]
-        {
+        Series =
+        [
             new LineSeries<int>
             {
                 GeometrySize = 13,
-                Values = new int[] { 2, 2, 3, 4, 2, 2, 3, 6, 3, 5, 2, 1, 4, 5, 2, 3, 2, 4, 5, 3, 2, 6 }
+                Values = [2, 2, 3, 4, 2, 2, 3, 6, 3, 5, 2, 1, 4, 5, 2, 3, 2, 4, 5, 3, 2, 6]
             }
-        };
+        ];
     }
 
     public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; }

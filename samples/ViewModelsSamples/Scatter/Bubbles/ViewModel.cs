@@ -37,8 +37,8 @@ public partial class ViewModel : ObservableObject
             values2.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 100)));
         }
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
             new ScatterSeries<WeightedPoint>
             {
                 Values = values1,
@@ -51,7 +51,7 @@ public partial class ViewModel : ObservableObject
                 GeometrySize = 50,
                 MinGeometrySize = 5
             }
-        };
+        ];
     }
 
     public ISeries[] Series { get; set; }

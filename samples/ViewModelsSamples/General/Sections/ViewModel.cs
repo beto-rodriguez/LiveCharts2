@@ -11,7 +11,7 @@ namespace ViewModelsSamples.General.Sections;
 public partial class ViewModel
 {
     public RectangularSection[] Sections { get; set; } =
-    {
+    [
         new RectangularSection
         {
             // creates a section from 3 to 4 in the X axis
@@ -40,10 +40,10 @@ public partial class ViewModel
             LabelSize = 14,
             LabelPaint = new SolidColorPaint(new SKColor(255, 111, 0))
         }
-    };
+    ];
 
     public ISeries[] Series { get; set; } =
-    {
+    [
         new ScatterSeries<ObservablePoint>
         {
             Values = new ObservableCollection<ObservablePoint>
@@ -72,7 +72,7 @@ public partial class ViewModel
                 new(5.3, 7.1),
             }
         }
-    };
+    ];
 
     [RelayCommand]
     public void ToggleFirst()

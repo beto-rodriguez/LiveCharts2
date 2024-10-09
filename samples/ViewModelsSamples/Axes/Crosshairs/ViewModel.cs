@@ -10,7 +10,7 @@ namespace ViewModelsSamples.Axes.Crosshairs;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new LineSeries<double>
         {
             Values = new ObservableCollection<double> { 200, 558, 458, 249, 457, 339, 587 },
@@ -19,10 +19,10 @@ public partial class ViewModel : ObservableObject
         {
             Values = new ObservableCollection<double> { 210, 400, 300, 350, 219, 323, 618 },
         },
-    };
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
             CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
@@ -30,9 +30,9 @@ public partial class ViewModel : ObservableObject
             CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
             Labeler = value => value.ToString("N2")
         }
-    };
+    ];
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new Axis
         {
             CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
@@ -40,5 +40,5 @@ public partial class ViewModel : ObservableObject
             CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
             CrosshairSnapEnabled = true // snapping is also supported
         }
-    };
+    ];
 }

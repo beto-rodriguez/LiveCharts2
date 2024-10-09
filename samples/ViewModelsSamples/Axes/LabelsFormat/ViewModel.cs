@@ -9,24 +9,24 @@ namespace ViewModelsSamples.Axes.LabelsFormat;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
-        new ColumnSeries<double> { Values = new double[] { 426, 583, 104 } },
-        new LineSeries<double>   { Values = new double[] { 200, 558, 458 }, Fill = null },
-    };
+    [
+        new ColumnSeries<double> { Values = [426, 583, 104] },
+        new LineSeries<double>   { Values = [200, 558, 458], Fill = null },
+    ];
 
     public Axis[] XAxes { get; set; } =
-    {
+    [
         new Axis
         {
             Name = "Salesman/woman",
             // Use the labels property for named or static labels // mark
-            Labels = new string[] { "Sergio", "Lando", "Lewis" }, // mark
+            Labels = ["Sergio", "Lando", "Lewis"], // mark
             LabelsRotation = 15,
         }
-    };
+    ];
 
     public Axis[] YAxes { get; set; } =
-    {
+    [
         new Axis
         {
             Name = "Salome",
@@ -52,5 +52,5 @@ public partial class ViewModel : ObservableObject
             // But the one that LiveCharts provides creates shorter labels when
             // the amount is in millions or trillions
         }
-    };
+    ];
 }

@@ -13,8 +13,7 @@ namespace ViewModelsSamples.Events.AddPointOnClick;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] SeriesCollection { get; set; } =
-        new ISeries[]
-        {
+        [
             new LineSeries<ObservablePoint>
             {
                 Values = new ObservableCollection<ObservablePoint>
@@ -26,7 +25,7 @@ public partial class ViewModel : ObservableObject
                 Fill = null,
                 DataPadding = new LiveChartsCore.Drawing.LvcPoint(5, 5)
             }
-        };
+        ];
 
     [RelayCommand]
     public void PointerDown(PointerCommandArgs args)

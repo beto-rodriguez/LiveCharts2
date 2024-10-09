@@ -9,7 +9,7 @@ namespace ViewModelsSamples.StackedBars.Groups;
 public partial class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
-    {
+    [
         new StackedColumnSeries<int>
         {
             Values = new List<int> { 3, 5, 3 },
@@ -34,14 +34,14 @@ public partial class ViewModel : ObservableObject
             Stroke = null,
             StackGroup = 1 // mark
         }
-    };
+    ];
 
     public Axis[] XAxis { get; set; } =
-    {
+    [
         new Axis
         {
             LabelsRotation = -15,
-            Labels = new[] { "Category 1", "Category 2", "Category 3" }
+            Labels = ["Category 1", "Category 2", "Category 3"]
         }
-    };
+    ];
 }

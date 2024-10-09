@@ -25,15 +25,15 @@ public partial class ViewModel : ObservableObject
             values2[i] = t2;
         }
 
-        SeriesCollection1 = new ISeries[] { new LineSeries<int> { Values = values1 } };
-        SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
+        SeriesCollection1 = [new LineSeries<int> { Values = values1 }];
+        SeriesCollection2 = [new ColumnSeries<int> { Values = values2 }];
 
         // ideally, when sharing an axis, you should set the initial limits for all the axes involved. // mark
         var start = 0 - 5;
         var end = 50 + 5;
 
-        X1 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
-        X2 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
+        X1 = [new Axis { MinLimit = start, MaxLimit = end }];
+        X2 = [new Axis { MinLimit = start, MaxLimit = end }];
 
         X1[0].SharedWith = X2;
         X2[0].SharedWith = X1;
