@@ -24,42 +24,48 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
 
-/// <inheritdoc cref="CoreHeatLandSeries{TDrawingContext}"/>
-public class HeatLandSeries
-    : CoreHeatLandSeries<SkiaSharpDrawingContext>
+/// <inheritdoc cref="CoreHeatLandSeries{TModel, TDrawingContext}"/>
+public class HeatLandSeries : HeatLandSeries<HeatLand>
+{ }
+
+/// <inheritdoc cref="CoreHeatLandSeries{TModel, TDrawingContext}"/>
+public class HeatLandSeries<TModel>
+    : CoreHeatLandSeries<TModel, SkiaSharpDrawingContext>
+        where TModel : IWeigthedMapLand
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
+    /// Initializes a new instance of the <see cref="HeatLandSeries{TModel}"/> class.
     /// </summary>
     public HeatLandSeries()
         : this(null)
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
+    /// Initializes a new instance of the <see cref="HeatLandSeries{TModel}"/> class.
     /// </summary>
     /// <param name="lands">The lands.</param>
-    public HeatLandSeries(ICollection<IWeigthedMapLand>? lands)
+    public HeatLandSeries(ICollection<TModel>? lands)
         : this(lands, [LvcColor.FromArgb(255, 179, 229, 252), LvcColor.FromArgb(255, 2, 136, 209)])
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
+    /// Initializes a new instance of the <see cref="HeatLandSeries{TModel}"/> class.
     /// </summary>
     /// <param name="lands">The lands.</param>
-    public HeatLandSeries(params IWeigthedMapLand[]? lands)
+    public HeatLandSeries(params TModel[]? lands)
         : this(lands, [LvcColor.FromArgb(255, 179, 229, 252), LvcColor.FromArgb(255, 2, 136, 209)])
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HeatLandSeries"/> class.
+    /// Initializes a new instance of the <see cref="HeatLandSeries{TModel}"/> class.
     /// </summary>
     /// <param name="lands">The lands.</param>
     /// <param name="heatMap">The heat map.</param>
-    public HeatLandSeries(ICollection<IWeigthedMapLand>? lands, LvcColor[] heatMap)
+    public HeatLandSeries(ICollection<TModel>? lands, LvcColor[] heatMap)
         : base(lands)
     {
         HeatMap = heatMap;
