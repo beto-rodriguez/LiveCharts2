@@ -17,7 +17,7 @@ public partial class ViewModel : ObservableObject
 
             // You can also use SVG paths to draw the geometry
             // LiveCharts already provides some predefined paths in the SVGPoints class.
-            new ColumnSeries<double, SVGPathGeometry>
+            new ColumnSeries<double, VariableSVGPathGeometry>
             {
                 Values = new double[] { -2, 2, 1 },
                 GeometrySvg = SVGPoints.Star

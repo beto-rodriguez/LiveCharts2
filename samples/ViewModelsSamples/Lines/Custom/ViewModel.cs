@@ -29,7 +29,7 @@ public partial class ViewModel : ObservableObject
 
         // You can also use SVG paths to draw the geometry
         // LiveCharts already provides some predefined paths in the SVGPoints class.
-        new LineSeries<double, SVGPathGeometry>
+        new LineSeries<double, VariableSVGPathGeometry>
         {
             Values = new double[] { -2, 2, 1, 3, -1, 4, 3 },
             Fill = null,

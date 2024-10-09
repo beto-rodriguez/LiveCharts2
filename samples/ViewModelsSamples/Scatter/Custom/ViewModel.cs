@@ -39,7 +39,7 @@ public partial class ViewModel : ObservableObject
 
             // You can also use SVG paths to draw the geometry
             // LiveCharts already provides some predefined paths in the SVGPoints class.
-            new ScatterSeries<ObservablePoint, SVGPathGeometry>
+            new ScatterSeries<ObservablePoint, VariableSVGPathGeometry>
             {
                 Values = values2,
                 GeometrySvg = SVGPoints.Heart
