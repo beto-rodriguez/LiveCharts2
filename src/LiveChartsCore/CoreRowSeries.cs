@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -39,11 +39,12 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-    where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-    where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
-    where TDrawingContext : DrawingContext
+public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
+    : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
 {
     private readonly bool _isRounded = false;
 
@@ -52,7 +53,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     /// <param name="values">The values.</param>
-    public CoreRowSeries(ICollection? values, bool isStacked = false)
+    public CoreRowSeries(ICollection<TModel>? values, bool isStacked = false)
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(1, 0);

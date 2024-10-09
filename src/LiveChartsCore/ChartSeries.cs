@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -44,7 +43,7 @@ namespace LiveChartsCore;
 /// <param name="values">The values.</param>
 public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
     SeriesProperties properties,
-    ICollection? values)
+    ICollection<TModel>? values)
         : Series<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IChartSeries<TDrawingContext>
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry<TDrawingContext>, new()

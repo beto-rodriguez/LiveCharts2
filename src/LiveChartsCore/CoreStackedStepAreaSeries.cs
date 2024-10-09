@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
 
@@ -46,7 +46,7 @@ public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext,
     /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
-    public CoreStackedStepAreaSeries(ICollection? values)
+    public CoreStackedStepAreaSeries(ICollection<TModel>? values)
         : base(values, true)
     {
         GeometryFill = null;

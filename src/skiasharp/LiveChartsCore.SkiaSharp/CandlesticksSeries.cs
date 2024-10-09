@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -53,7 +53,7 @@ public class CandlesticksSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection? values)
+    public CandlesticksSeries(ICollection<TModel>? values)
         : base(values)
     { }
 
@@ -96,7 +96,7 @@ public class CandlesticksSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection? values)
+    public CandlesticksSeries(ICollection<TModel>? values)
         : base(values)
     { }
 
@@ -143,7 +143,7 @@ public class CandlesticksSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection? values)
+    public CandlesticksSeries(ICollection<TModel>? values)
         : base(values)
     { }
 

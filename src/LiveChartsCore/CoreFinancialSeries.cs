@@ -59,7 +59,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreFinancialSeries(ICollection? values)
+    protected CoreFinancialSeries(ICollection<TModel>? values)
         : base(GetProperties(), values)
     {
         YToolTipLabelFormatter = p =>

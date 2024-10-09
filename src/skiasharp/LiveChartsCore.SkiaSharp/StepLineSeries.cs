@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -70,7 +70,7 @@ public class StepLineSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StepLineSeries(ICollection? values)
+    public StepLineSeries(ICollection<TModel>? values)
         : base(values)
     { }
 
@@ -117,7 +117,7 @@ public class StepLineSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StepLineSeries(ICollection? values)
+    public StepLineSeries(ICollection<TModel>? values)
         : base(values)
     { }
 
