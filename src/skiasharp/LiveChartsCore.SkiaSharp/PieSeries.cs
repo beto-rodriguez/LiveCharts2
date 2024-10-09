@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -53,7 +53,7 @@ public class PieSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection? values)
+    public PieSeries(ICollection<TModel>? values)
         : base(values)
     { }
 
@@ -103,7 +103,7 @@ public class PieSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection? values)
+    public PieSeries(ICollection<TModel>? values)
         : base(values)
     { }
 
@@ -157,7 +157,7 @@ public class PieSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection? values)
+    public PieSeries(ICollection<TModel>? values)
         : base(values, false, false)
     { }
 

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 /// <param name="values">The values.</param>
 public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
     SeriesProperties properties,
-    ICollection? values)
+    ICollection<TModel>? values)
         : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values)
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry<TDrawingContext>, new()

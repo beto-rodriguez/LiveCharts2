@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -38,18 +38,19 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">the type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-    where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-    where TDrawingContext : DrawingContext
-    where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-    where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
+    : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
     private readonly bool _isRounded = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    protected CoreColumnSeries(ICollection? values, bool isStacked = false)
+    protected CoreColumnSeries(ICollection<TModel>? values, bool isStacked = false)
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0, 1);

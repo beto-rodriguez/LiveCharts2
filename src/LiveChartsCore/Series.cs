@@ -94,7 +94,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected bool _geometrySvgChanged = false;
 
     private readonly CollectionDeepObserver<TModel> _observer;
-    private ICollection? _values;
+    private ICollection<TModel>? _values;
     private string? _name;
     private Func<TModel, int, Coordinate>? _mapping;
     private int _zIndex;
@@ -114,7 +114,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     /// <param name="properties">The properties.</param>
     /// <param name="values">The values.</param>
-    protected Series(SeriesProperties properties, ICollection? values)
+    protected Series(SeriesProperties properties, ICollection<TModel>? values)
     {
         SeriesProperties = properties;
         Values = values;
@@ -142,7 +142,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// Gets or sets the data set to draw in the chart.
     /// </summary>
-    public ICollection? Values
+    public ICollection<TModel>? Values
     {
         get => _values;
         set
@@ -152,6 +152,12 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             _values = value;
             OnPropertyChanged();
         }
+    }
+
+    IEnumerable? ISeries.Values
+    {
+        get => Values;
+        set => Values = (ICollection<TModel>?)value;
     }
 
     /// <inheritdoc cref="ISeries.Pivot"/>

@@ -62,7 +62,7 @@ public interface ISeries
     /// <value>
     /// The values.
     /// </value>
-    ICollection? Values { get; set; }
+    IEnumerable? Values { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is visible.
@@ -214,9 +214,16 @@ public interface ISeries
 /// Defines a series.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <seealso cref="IDisposable" />
 public interface ISeries<TModel> : ISeries
 {
+    /// <summary>
+    /// Gets or sets the values.
+    /// </summary>
+    /// <value>
+    /// The values.
+    /// </value>
+    new ICollection<TModel>? Values { get; set; }
+
     /// <summary>
     /// Gets or sets the mapping.
     /// </summary>

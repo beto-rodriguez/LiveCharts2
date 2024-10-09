@@ -20,10 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Gauge Pushout
-
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
@@ -46,10 +43,10 @@ namespace LiveChartsCore;
 /// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
 /// </remarks>
 public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>(
-    ICollection? values,
+    ICollection<TModel>? values,
     bool isGauge = false,
     bool isGaugeFill = false)
-    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
+        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
             where TDrawingContext : DrawingContext
             where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()

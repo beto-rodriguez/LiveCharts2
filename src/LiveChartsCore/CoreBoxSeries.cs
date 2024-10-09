@@ -55,7 +55,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreBoxSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreBoxSeries(ICollection? values)
+    protected CoreBoxSeries(ICollection<TModel>? values)
         : base(GetProperties(), values)
     {
         YToolTipLabelFormatter = p =>
