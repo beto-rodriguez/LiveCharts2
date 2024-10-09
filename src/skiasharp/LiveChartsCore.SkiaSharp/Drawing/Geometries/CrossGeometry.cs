@@ -20,10 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using LiveChartsCore.Drawing;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="VariableSVGPathGeometry"/>
-[Obsolete($"Replaced by {nameof(VariableSVGPathGeometry)}")]
-public class SVGPathGeometry : VariableSVGPathGeometry { }
+/// <summary>
+/// Defines a cross geometry.
+/// </summary>
+public class CrossGeometry : BaseSVGPathGeometry
+{
+    private static readonly SKPath s_sKPath = SKPath.ParseSvgPathData(SVGPoints.Cross);
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CrossGeometry"/> class.
+    /// </summary>
+    public CrossGeometry()
+        : base(s_sKPath)
+    { }
+}

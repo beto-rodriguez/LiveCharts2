@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// <summary>
 /// Defines a visual element in a chart that draws a svg geometry in the user interface.
 /// </summary>
-public class SVGVisual : GeometryVisual<SVGPathGeometry>
+public class SVGVisual : GeometryVisual<VariableSVGPathGeometry>
 {
     private SKPath? _path;
 

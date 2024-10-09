@@ -177,7 +177,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var tooltipPositon = chart.TooltipPosition;
 
         var segmentI = 0;
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -305,7 +305,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 if (hasSvg)
                 {
-                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    var svgVisual = (IVariableSvgPath<TDrawingContext>)visual.Geometry;
                     if (_geometrySvgChanged || svgVisual.SVGPath is null)
                         svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
                 }
