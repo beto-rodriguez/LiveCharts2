@@ -117,7 +117,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected Series(SeriesProperties properties, ICollection<TModel>? values)
     {
         SeriesProperties = properties;
-        Values = values;
 
         if (typeof(IVariableSvgPath<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
             SeriesProperties |= SeriesProperties.IsSVGPath;
@@ -125,6 +124,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         _observer = new CollectionDeepObserver<TModel>(
             (sender, e) => NotifySubscribers(),
             (sender, e) => NotifySubscribers());
+
+        Values = values;
     }
 
     /// <inheritdoc cref="ISeries.SeriesProperties"/>
