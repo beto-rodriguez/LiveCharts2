@@ -94,7 +94,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected bool _geometrySvgChanged = false;
 
     private readonly CollectionDeepObserver<TModel> _observer;
-    private ICollection? _values;
+    private ICollection<TModel>? _values;
     private string? _name;
     private Func<TModel, int, Coordinate>? _mapping;
     private int _zIndex;
@@ -113,16 +113,19 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
     /// <param name="properties">The properties.</param>
-    protected Series(SeriesProperties properties)
+    /// <param name="values">The values.</param>
+    protected Series(SeriesProperties properties, ICollection<TModel>? values)
     {
         SeriesProperties = properties;
 
-        if (typeof(ISvgPath<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
+        if (typeof(IVariableSvgPath<TDrawingContext>).IsAssignableFrom(typeof(TVisual)))
             SeriesProperties |= SeriesProperties.IsSVGPath;
 
         _observer = new CollectionDeepObserver<TModel>(
             (sender, e) => NotifySubscribers(),
             (sender, e) => NotifySubscribers());
+
+        Values = values;
     }
 
     /// <inheritdoc cref="ISeries.SeriesProperties"/>
@@ -140,7 +143,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// Gets or sets the data set to draw in the chart.
     /// </summary>
-    public ICollection? Values
+    public ICollection<TModel>? Values
     {
         get => _values;
         set
@@ -150,6 +153,12 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             _values = value;
             OnPropertyChanged();
         }
+    }
+
+    IEnumerable? ISeries.Values
+    {
+        get => Values;
+        set => Values = (ICollection<TModel>?)value;
     }
 
     /// <inheritdoc cref="ISeries.Pivot"/>
@@ -167,10 +176,10 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             _geometrySvgChanged = true;
             SetProperty(ref _geometrySvg, value);
 
-            if (!this.HasSvgGeometry())
+            if (!this.HasVariableSvgGeometry())
             {
                 throw new Exception(
-                    $"You must use a geometry that implements {nameof(ISvgPath<TDrawingContext>)}, " +
+                    $"You must use a geometry that implements {nameof(IVariableSvgPath<TDrawingContext>)}, " +
                     $"{nameof(TVisual)} does not satisfies the constrait.");
             }
         }

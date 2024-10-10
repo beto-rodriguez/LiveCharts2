@@ -1,13 +1,19 @@
 ﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Shared;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] SeriesCollection1 { get; set; }
+    public ISeries[] SeriesCollection2 { get; set; }
+    public ICartesianAxis[] X1 { get; set; }
+    public ICartesianAxis[] X2 { get; set; }
+    public Margin DrawMargin { get; set; }
+
     public ViewModel()
     {
         var values1 = new int[50];
@@ -25,15 +31,16 @@ public partial class ViewModel : ObservableObject
             values2[i] = t2;
         }
 
-        SeriesCollection1 = new ISeries[] { new LineSeries<int> { Values = values1 } };
-        SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
+        SeriesCollection1 = [new LineSeries<int> { Values = values1 }];
+        SeriesCollection2 = [new ColumnSeries<int> { Values = values2 }];
 
-        // ideally, when sharing an axis, you should set the initial limits for all the axes involved. // mark
+        // ideally, when sharing an axis, you should set the // mark
+        // initial limits for all the axes involved. // mark
         var start = 0 - 5;
         var end = 50 + 5;
 
-        X1 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
-        X2 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
+        X1 = [new Axis { MinLimit = start, MaxLimit = end }];
+        X2 = [new Axis { MinLimit = start, MaxLimit = end }];
 
         X1[0].SharedWith = X2;
         X2[0].SharedWith = X1;
@@ -58,10 +65,4 @@ public partial class ViewModel : ObservableObject
         // normally you would need measure all the axes involved, and use the greater width to
         // calculate the required margin.
     }
-
-    public ISeries[] SeriesCollection1 { get; set; }
-    public ISeries[] SeriesCollection2 { get; set; }
-    public Axis[] X1 { get; set; }
-    public Axis[] X2 { get; set; }
-    public Margin DrawMargin { get; set; }
 }

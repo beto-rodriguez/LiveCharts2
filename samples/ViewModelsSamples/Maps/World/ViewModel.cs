@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
@@ -9,10 +8,10 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World;
 
-public  partial class ViewModel
+public partial class ViewModel
 {
     private bool _isBrazilInChart = true;
-    private readonly IWeigthedMapLand _brazil;
+    private readonly HeatLand _brazil;
     private readonly Random _r = new();
 
     public ViewModel()
@@ -39,7 +38,7 @@ public  partial class ViewModel
             new() { Name = "are", Value = 13 }
         };
 
-        Series = new HeatLandSeries[] { new HeatLandSeries { Lands = lands } };
+        Series = [new HeatLandSeries { Lands = lands }];
 
         _brazil = lands.First(x => x.Name == "bra");
         DoRandomChanges();
@@ -60,7 +59,7 @@ public  partial class ViewModel
             return;
         }
 
-        Series[0].Lands = lands.Concat(new[] { _brazil }).ToArray();
+        Series[0].Lands = [.. lands, _brazil];
         _isBrazilInChart = true;
     }
 

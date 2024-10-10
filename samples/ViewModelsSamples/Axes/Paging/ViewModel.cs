@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Paging;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
     private readonly Random _random = new();
+
+    public ISeries[] Series { get; }
+
+    public ICartesianAxis[] XAxes { get; }
 
     public ViewModel()
     {
@@ -22,20 +26,9 @@ public partial class ViewModel : ObservableObject
             values.Add(trend);
         }
 
-        Series = new ISeries[]
-        {
-            new ColumnSeries<int>
-            {
-                Values = values
-            }
-        };
-
-        XAxes = new[] { new Axis() };
+        Series = [new ColumnSeries<int>(values)];
+        XAxes = [new Axis()];
     }
-
-    public ISeries[] Series { get; }
-
-    public Axis[] XAxes { get; }
 
     [RelayCommand]
     public void GoToPage1()

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
@@ -11,24 +10,22 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.ColorsAndPosition;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
     private AxisPosition _selectedPosition = AxisPosition.End;
     private int _selectedColor = 0;
     private readonly LvcColor[] _colors = ColorPalletes.FluentDesign;
 
-    public ISeries[] Series { get; set; } =
-    {
+    public ISeries[] Series { get; set; } = [
         new ColumnSeries<double>
         {
             Values = new ObservableCollection<double> { 2, 5, 4, -2, 4, -3, 5 },
             Stroke = null,
             Fill = new SolidColorPaint { Color = SKColors.DarkOliveGreen }
         }
-    };
+    ];
 
-    public Axis[] XAxes { get; set; } =
-    {
+    public Axis[] XAxes { get; set; } = [
         new Axis
         {
             //Name = "X axis",
@@ -42,10 +39,9 @@ public partial class ViewModel : ObservableObject
 
             Position = AxisPosition.End
         }
-    };
+    ];
 
-    public Axis[] YAxes { get; set; } =
-    {
+    public Axis[] YAxes { get; set; } = [
         new Axis
         {
             //Name = "Y axis",
@@ -54,7 +50,7 @@ public partial class ViewModel : ObservableObject
             SeparatorsPaint = new SolidColorPaint { Color = SKColors.LightPink, StrokeThickness = 3 },
             Position = AxisPosition.End
         }
-    };
+    ];
 
     [RelayCommand]
     public void SetNewColor()

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -9,33 +8,22 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Bars.DelayedAnimation;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public List<ISeries> Series { get; set; }
+
     public ViewModel()
     {
-        var values1 = new List<float>();
-        var values2 = new List<float>();
-
-        var fx = EasingFunctions.BounceInOut; // this is the function we are going to plot
-        var x = 0f;
-
-        while (x <= 1)
-        {
-            values1.Add(fx(x));
-            values2.Add(fx(x - 0.15f));
-            x += 0.025f;
-        }
-
         var columnSeries1 = new ColumnSeries<float>
         {
-            Values = values1,
+            Values = FetchVales(0),
             Stroke = null,
             Padding = 2
         };
 
         var columnSeries2 = new ColumnSeries<float>
         {
-            Values = values2,
+            Values = FetchVales(-0.15f),
             Stroke = null,
             Padding = 2
         };
@@ -48,9 +36,14 @@ public partial class ViewModel : ObservableObject
 
     private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
     {
-        var perPointDelay = 100; // milliseconds
+        var perPointDelay = 100; // in milliseconds
         var delay = point.Context.Entity.MetaData!.EntityIndex * perPointDelay;
         var speed = (float)point.Context.Chart.AnimationsSpeed.TotalMilliseconds + delay;
+
+        // the animation takes a function, that represents the progress of the animation
+        // the parameter is the progress of the animation, it goes from 0 to 1
+        // the function must return a value from 0 to 1, where 0 is the initial state
+        // and 1 is the end state
 
         point.Visual?.SetTransition(
             new Animation(progress =>
@@ -64,5 +57,22 @@ public partial class ViewModel : ObservableObject
             TimeSpan.FromMilliseconds(speed)));
     }
 
-    public List<ISeries> Series { get; set; }
+    private static List<float> FetchVales(float offset)
+    {
+        var values = new List<float>();
+
+        // the EasingFunctions.BounceInOut, is just
+        // a function that takes a double and returns a double
+
+        var fx = EasingFunctions.BounceInOut;
+        var x = 0f;
+
+        while (x <= 1)
+        {
+            values.Add(fx(x + offset));
+            x += 0.025f;
+        }
+
+        return values;
+    }
 }

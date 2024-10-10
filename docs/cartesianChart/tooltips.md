@@ -202,7 +202,7 @@ new ColumnSeries&lt;ObservablePoint>
 
 You can quickly change the position, the font, the text size or the background color:
 
-## View
+#### View
 
 {{~ if xaml ~}}
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/NamedLabels/$PlatformViewFile" ~}}
@@ -220,7 +220,7 @@ You can quickly change the position, the font, the text size or the background c
 {{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/NamedLabels.razor" ~}}
 {{~ end ~}}
 
-## View model
+#### View model
 
 ```c#
 [ObservableObject]
@@ -250,11 +250,19 @@ You can also create your own tooltip, the recommended way is to use the LiveChar
 use anything as tooltip as soon as it implements the `IChartTooltip<T>` interface. In the following example we build
 a custom control to render tooltips in out charts using the LiveCharts API.
 
-## CustomTooltip.cs
+:::tip
+The next tooltip is drawn by the library, LiveCharts can only draw inside the control bounds, in some cases it could 
+cause issues like [#912](https://github.com/beto-rodriguez/LiveCharts2/issues/912).
+
+Alternatively, you can build your own Tooltips and use the power of your UI framework, 
+see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info.
+:::
+
+#### CustomTooltip.cs
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
 
-## View
+#### View
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
 

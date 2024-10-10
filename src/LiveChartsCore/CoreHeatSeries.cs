@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -48,20 +49,19 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
     private LvcColor[] _heatMap =
-    {
+    [
         LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
         LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
-    };
+    ];
     private double[]? _colorStops;
     private Padding _pointPadding = new(4);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreHeatSeries()
-        : base(
-             SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
-             SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
+    /// <param name="values">The values.</param>
+    protected CoreHeatSeries(ICollection<TModel>? values)
+        : base(GetProperties(), values)
     {
         DataPadding = new LvcPoint(0, 0);
         YToolTipLabelFormatter = (point) =>
@@ -144,7 +144,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             _heatKnownLength = HeatMap.Length;
         }
 
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -207,7 +207,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (hasSvg)
             {
-                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
@@ -355,6 +355,12 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _paintTaks };
+        return [_paintTaks];
+    }
+
+    private static SeriesProperties GetProperties()
+    {
+        return SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
+            SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips;
     }
 }

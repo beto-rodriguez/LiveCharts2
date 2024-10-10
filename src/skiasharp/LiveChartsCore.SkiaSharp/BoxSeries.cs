@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -37,8 +38,34 @@ namespace LiveChartsCore.SkiaSharpView;
 /// or at the series level 
 /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
 /// </typeparam>
-public class BoxSeries<TModel> : CoreBoxSeries<TModel, BoxGeometry, LabelGeometry, CircleGeometry, SkiaSharpDrawingContext>
-{ }
+public class BoxSeries<TModel>
+    : BoxSeries<TModel, BoxGeometry>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public BoxSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public BoxSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public BoxSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a box serries series in the user interface.
@@ -53,9 +80,35 @@ public class BoxSeries<TModel> : CoreBoxSeries<TModel, BoxGeometry, LabelGeometr
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
-public class BoxSeries<TModel, TVisual> : CoreBoxSeries<TModel, TVisual, LabelGeometry, CircleGeometry, SkiaSharpDrawingContext>
-    where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class BoxSeries<TModel, TVisual>
+    : BoxSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public BoxSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public BoxSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public BoxSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a box serries series in the user interface.
@@ -73,7 +126,33 @@ public class BoxSeries<TModel, TVisual> : CoreBoxSeries<TModel, TVisual, LabelGe
 /// <typeparam name="TLabel">
 /// The type of the data label of every point.
 /// </typeparam>
-public class BoxSeries<TModel, TVisual, TLabel> : CoreBoxSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-    where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class BoxSeries<TModel, TVisual, TLabel>
+    : CoreBoxSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
+        where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public BoxSeries()
+        : base(null)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public BoxSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public BoxSeries(params TModel[] values)
+        : base(values)
+    { }
+}

@@ -1,13 +1,16 @@
 ﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Zoom;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ViewModel()
+    public ISeries[] SeriesCollection { get; set; } = [
+        new LineSeries<int>(Fetch())
+    ];
+
+    private static int[] Fetch()
     {
         var values = new int[100];
         var r = new Random();
@@ -19,8 +22,6 @@ public partial class ViewModel : ObservableObject
             values[i] = t;
         }
 
-        SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values } };
+        return values;
     }
-
-    public ISeries[] SeriesCollection { get; set; }
-}
+ }

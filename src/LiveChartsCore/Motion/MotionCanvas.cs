@@ -94,7 +94,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
         if (LiveCharts.EnableLogging)
             Trace.WriteLine(
                 $"[core canvas frame drawn] ".PadRight(60) +
-                $"tread: {Environment.CurrentManagedThreadId}");
+                $"thread: {Environment.CurrentManagedThreadId}");
 #endif
 
         lock (Sync)

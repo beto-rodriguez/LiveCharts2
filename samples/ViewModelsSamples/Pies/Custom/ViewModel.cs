@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
@@ -8,8 +7,10 @@ using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Custom;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public IEnumerable<ISeries> Series { get; set; }
+
     public ViewModel()
     {
         var outer = 0;
@@ -54,6 +55,4 @@ public partial class ViewModel : ObservableObject
                 };
         });
     }
-
-    public IEnumerable<ISeries> Series { get; set; }
 }

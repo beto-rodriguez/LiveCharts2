@@ -41,7 +41,7 @@ public class DataFactory<TModel, TDrawingContext>
 {
     private readonly bool _isTModelChartEntity = false;
     private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = [];
-    private ISeries? _series;
+    private ISeries<TModel>? _series;
 
     /// <summary>
     /// Gets or sets the previous known bounds.

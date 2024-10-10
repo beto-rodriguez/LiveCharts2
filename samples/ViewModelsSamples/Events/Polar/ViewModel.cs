@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
@@ -8,7 +7,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Events.Polar;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
     public ViewModel()
     {
@@ -31,11 +30,11 @@ public partial class ViewModel : ObservableObject
             Mapping = (city, index) => new(index, city.Population)
         };
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
             polarLineSeries,
-            new PolarLineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
-        };
+            new PolarLineSeries<int> { Values = [6, 7, 2, 9, 6, 2] },
+        ];
     }
 
     public ISeries[] Series { get; set; }

@@ -35,26 +35,31 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines the heat land series class.
 /// </summary>
-/// <typeparam name="TDrawingContext"></typeparam>
-public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
+/// <typeparam name="TModel">The type fo the model.</typeparam>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
+    where TModel : IWeigthedMapLand
     where TDrawingContext : DrawingContext
 {
     private IPaint<TDrawingContext>? _heatPaint;
     private bool _isHeatInCanvas = false;
     private LvcColor[] _heatMap = [];
     private double[]? _colorStops;
-    private IEnumerable<IWeigthedMapLand>? _lands;
+    private ICollection<TModel>? _lands;
     private bool _isVisible;
     private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = [];
-    private readonly CollectionDeepObserver<IWeigthedMapLand> _observer;
+    private readonly CollectionDeepObserver<TModel> _observer;
     private readonly HashSet<LandDefinition> _everUsed = [];
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TModel, TDrawingContext}"/> class.
     /// </summary>
-    public CoreHeatLandSeries()
+    /// <param name="lands">The lands.</param>
+    public CoreHeatLandSeries(ICollection<TModel>? lands)
     {
-        _observer = new CollectionDeepObserver<IWeigthedMapLand>(
+        Lands = lands;
+
+        _observer = new CollectionDeepObserver<TModel>(
             (sender, e) => NotifySubscribers(),
             (sender, e) => NotifySubscribers());
     }
@@ -82,7 +87,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
     /// <summary>
     /// Gets or sets the lands.
     /// </summary>
-    public IEnumerable<IWeigthedMapLand>? Lands
+    public ICollection<TModel>? Lands
     {
         get => _lands;
         set
@@ -114,7 +119,7 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
         _heatPaint.ZIndex = i + 1;
 
         var bounds = new Bounds();
-        foreach (var shape in Lands ?? Enumerable.Empty<IWeigthedMapLand>())
+        foreach (var shape in Lands ?? [])
         {
             bounds.AppendValue(shape.Value);
         }
@@ -123,10 +128,10 @@ public class CoreHeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, 
         var shapeContext = new MapShapeContext<TDrawingContext>(context.View, _heatPaint, heatStops, bounds);
         var toRemove = new HashSet<LandDefinition>(_everUsed);
 
-        foreach (var land in Lands ?? Enumerable.Empty<IWeigthedMapLand>())
+        foreach (var land in Lands ?? [])
         {
             var projector = Maps.BuildProjector(
-                context.View.MapProjection, new[] { context.View.Width, context.View.Height });
+                context.View.MapProjection, [context.View.Width, context.View.Height]);
 
             var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
 

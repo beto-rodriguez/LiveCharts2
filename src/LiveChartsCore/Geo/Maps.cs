@@ -103,7 +103,7 @@ public static class Maps
 
         return
             projection == MapProjection.Default
-            ? new ControlCoordinatesProjector(mapSize[0], mapSize[1], ox, oy)
-            : new MercatorProjector(mapSize[0], mapSize[1], ox, oy);
+                ? new ControlCoordinatesProjector(mapSize[0], mapSize[1], ox, oy)
+                : new MercatorProjector(mapSize[0], mapSize[1], ox, oy);
     }
 }

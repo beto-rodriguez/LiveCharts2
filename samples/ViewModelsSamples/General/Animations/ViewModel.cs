@@ -17,10 +17,10 @@ public partial class ViewModel : ObservableObject
     }
 
     public ISeries[] Series { get; set; } =
-        { new ColumnSeries<int> { Values = new[] { 5, 6, 3, 1, 8, 5, 3, 5, 6, 3, 1 } } };
+        [new ColumnSeries<int> { Values = [5, 6, 3, 1, 8, 5, 3, 5, 6, 3, 1] }];
 
-    public (string, Func<float, float>)[] AvalaibaleCurves => new (string, Func<float, float>)[]
-    {
+    public (string, Func<float, float>)[] AvalaibaleCurves =>
+    [
         // LiveCharts already contains many common animating curves in the EasingFunctions static class.
         ("Back in", EasingFunctions.BackIn),
         ("Back out", EasingFunctions.BackOut),
@@ -63,16 +63,16 @@ public partial class ViewModel : ObservableObject
         // and also based on cubic bezier curves that are common in web development
         // you can build and play with custom cubic bezier curves at https://cubic-bezier.com/#.17,.67,.83,.67
         ("custom cubic bezier", EasingFunctions.BuildCubicBezier(0.17f, 0.67f, 0.83f, 0.67f)),
-    };
+    ];
 
-    public (string, TimeSpan)[] AvailableSpeeds => new (string, TimeSpan)[]
-    {
+    public (string, TimeSpan)[] AvailableSpeeds =>
+    [
         ("Slowest", TimeSpan.FromMilliseconds(1300)),
         ("Slow", TimeSpan.FromMilliseconds(800)),
         ("Medium", TimeSpan.FromMilliseconds(500)),
         ("Fast", TimeSpan.FromMilliseconds(300)),
         ("Fastest", TimeSpan.FromMilliseconds(100)),
-    };
+    ];
 
     public (string, Func<float, float>) SelectedCurve
     {

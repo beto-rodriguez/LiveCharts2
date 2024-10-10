@@ -5,7 +5,7 @@ could cause a `InvalidOperationException (Collection Was Modified)` and some oth
 changing on multiple threads so it can handle it and prevent
 [concurrency hazards](https://learn.microsoft.com/en-us/archive/msdn-magazine/2008/october/concurrency-hazards-solving-problems-in-your-multithreaded-code).
 
-There are 2 alternatives you can follow to prevent this issue, 1. use the [lock](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/lock) keyword to wrap any change in your data, 2. Invoke the changes on the UI tread.
+There are 2 alternatives you can follow to prevent this issue, 1. use the [lock](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/lock) keyword to wrap any change in your data, 2. Invoke the changes on the UI thread.
 
 <div class="text-center">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
@@ -47,7 +47,7 @@ Notice that we also set the chart `SyncContext` property so the chart knows our 
 ## Invoke the changes on the UI thread (Alternative 2)
 
 You can also force the change to happen on the same thread where the chart is measured, this will prevent concurrency hazards because
-everything is happening on the same tread, but you must consider that now the UI tread is doing more operations.
+everything is happening on the same thread, but you must consider that now the UI thread is doing more operations.
 
 ## View model
 

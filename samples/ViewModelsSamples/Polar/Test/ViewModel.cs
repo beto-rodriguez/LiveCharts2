@@ -32,21 +32,21 @@ public class ViewModel : INotifyPropertyChanged
     };
 
     public PolarAxis[] RadialAxes { get; set; } =
-    {
+    [
         new PolarAxis
         {
             LabelsAngle = -60,
             MaxLimit = 30 // null to let the chart autoscale (defualt is null) // mark
         }
-    };
+    ];
 
     public PolarAxis[] AngleAxes { get; set; } =
-    {
+    [
         new PolarAxis
         {
             LabelsRotation = LiveCharts.TangentAngle
         }
-    };
+    ];
 
     public bool FitToBounds
     {

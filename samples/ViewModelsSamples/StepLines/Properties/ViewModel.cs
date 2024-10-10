@@ -25,7 +25,7 @@ public partial class ViewModel : ObservableObject
             Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
         };
 
-        _series = new ISeries[] { _lineSeries };
+        _series = [_lineSeries];
     }
 
     [ObservableProperty]
@@ -52,7 +52,7 @@ public partial class ViewModel : ObservableObject
             Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
         };
 
-        Series = new ISeries[] { _lineSeries };
+        Series = [_lineSeries];
     }
 
     [RelayCommand]

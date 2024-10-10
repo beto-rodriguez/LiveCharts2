@@ -20,16 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing;
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
-/// Defines a geometry that is built using from a svg path.
+/// Defines a diamond geometry.
 /// </summary>
-public interface ISvgPath<TDrawingContext> : ISizedGeometry<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class DiamondGeometry : BaseSVGPathGeometry
 {
+    private static readonly SKPath s_sKPath = SKPath.ParseSvgPathData(SVGPoints.Diamond);
+
     /// <summary>
-    /// Gets or sets the svg path.
+    /// Initializes a new instance of the <see cref="DiamondGeometry"/> class.
     /// </summary>
-    string? SVGPath { get; set; }
+    public DiamondGeometry()
+        : base(s_sKPath)
+    { }
 }
