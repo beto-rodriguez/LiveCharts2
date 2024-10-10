@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.DateTimeScaled;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new ColumnSeries<DateTimePoint>
         {
-            Values = new ObservableCollection<DateTimePoint>
-            {
-                new DateTimePoint(new DateTime(2021, 1, 1), 3),
-                new DateTimePoint(new DateTime(2021, 1, 2), 6),
-                new DateTimePoint(new DateTime(2021, 1, 3), 5),
-                new DateTimePoint(new DateTime(2021, 1, 4), 3),
-                new DateTimePoint(new DateTime(2021, 1, 5), 5),
-                new DateTimePoint(new DateTime(2021, 1, 6), 8),
-                new DateTimePoint(new DateTime(2021, 1, 7), 6)
-            }
+            Values = [
+                new() { DateTime = new(2021, 1, 1), Value = 3 },
+                new() { DateTime = new(2021, 1, 2), Value = 6 },
+                new() { DateTime = new(2021, 1, 3), Value = 5 },
+                new() { DateTime = new(2021, 1, 4), Value = 3 },
+                new() { DateTime = new(2021, 1, 5), Value = 5 },
+                new() { DateTime = new(2021, 1, 6), Value = 8 },
+                new() { DateTime = new(2021, 1, 7), Value = 6 }
+            ]
         }
     ];
 
@@ -31,9 +28,8 @@ public partial class ViewModel : ObservableObject
     // The first parameter is the time between each point, in this case 1 day // mark
     // you can also use 1 year, 1 month, 1 hour, 1 minute, 1 second, 1 millisecond, etc // mark
 
-    // The second parameter is a function that receives the value and returns the label // mark
-    public Axis[] XAxes { get; set; } =
-    [
+    // The second parameter is a function that receives a date and returns the label as string // mark
+    public ICartesianAxis[] XAxes { get; set; } = [
         new DateTimeAxis(TimeSpan.FromDays(1), date => date.ToString("MMMM dd"))
     ];
 }

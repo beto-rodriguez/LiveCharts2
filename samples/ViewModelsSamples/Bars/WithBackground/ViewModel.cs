@@ -1,15 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.Bars.WithBackground;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new ColumnSeries<double>
         {
             IsHoverable = false, // disables the series from the tooltips // mark
@@ -27,8 +26,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public Axis[] YAxes { get; set; } =
-    [
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis { MinLimit = 0, MaxLimit = 10 }
     ];
 }

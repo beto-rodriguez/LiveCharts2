@@ -1,12 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.Basic;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     public ISeries[] Series { get; set; } =
     [

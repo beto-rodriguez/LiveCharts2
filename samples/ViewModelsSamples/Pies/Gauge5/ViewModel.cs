@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Gauge5;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
     private readonly Random _random = new();
+
+    public ObservableValue ObservableValue1 { get; set; }
+    public ObservableValue ObservableValue2 { get; set; }
+    public IEnumerable<ISeries> Series { get; set; }
 
     public ViewModel()
     {
@@ -30,10 +33,6 @@ public partial class ViewModel : ObservableObject
                 series.DataLabelsPosition = PolarLabelsPosition.Start;
             }));
     }
-
-    public ObservableValue ObservableValue1 { get; set; }
-    public ObservableValue ObservableValue2 { get; set; }
-    public IEnumerable<ISeries> Series { get; set; }
 
     [RelayCommand]
     public void DoRandomChange()

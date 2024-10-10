@@ -1,13 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Straight;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new LineSeries<double>
         {
             Values = [5, 0, 5, 0, 5, 0],

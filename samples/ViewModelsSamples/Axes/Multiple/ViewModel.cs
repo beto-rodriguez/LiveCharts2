@@ -1,20 +1,18 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Multiple;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     private static readonly SKColor s_blue = new(25, 118, 210);
     private static readonly SKColor s_red = new(229, 57, 53);
     private static readonly SKColor s_yellow = new(198, 167, 0);
 
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new LineSeries<double>
         {
             LineSmoothness = 1,
@@ -58,8 +56,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public ICartesianAxis[] YAxes { get; set; } =
-    [
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis // the "units" and "tens" series will be scaled on this axis
         {
             Name = "Tens",

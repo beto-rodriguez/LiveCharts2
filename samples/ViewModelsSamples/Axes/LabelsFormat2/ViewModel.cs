@@ -1,12 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.Axes.LabelsFormat2;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     public ViewModel()
     {
@@ -17,17 +17,15 @@ public partial class ViewModel : ObservableObject
             config.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
 
         // You can learn more about extra settings at: // mark
-        // https://localhost:7053/docs/{{ platform }}/{{ version }}/Overview.Installation#configure-themes-fonts-or-mappers-optional // mark
+        // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Installation#configure-themes-fonts-or-mappers-optional // mark
     }
 
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new ColumnSeries<double> { Values = [426, 583, 104] },
         new LineSeries<double>   { Values = [200, 558, 458], Fill = null }
     ];
 
-    public Axis[] XAxes { get; set; } =
-    [
+    public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
         {
             Name = "Salesman/woman",
@@ -36,8 +34,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public Axis[] YAxes { get; set; } =
-    [
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis
         {
             Name = "Sales amount",
@@ -47,7 +44,10 @@ public partial class ViewModel : ObservableObject
             {
                 Color = SKColors.Blue,
                 FontFamily = "Times New Roman",
-                SKFontStyle = new SKFontStyle(SKFontStyleWeight.ExtraBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Italic)
+                SKFontStyle = new SKFontStyle(
+                    SKFontStyleWeight.ExtraBold,
+                    SKFontStyleWidth.Normal,
+                    SKFontStyleSlant.Italic)
             },
         }
     ];

@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Scatter.Bubbles;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
         var r = new Random();
-        var values1 = new ObservableCollection<WeightedPoint>();
-        var values2 = new ObservableCollection<WeightedPoint>();
+        var values1 = new List<WeightedPoint>();
+        var values2 = new List<WeightedPoint>();
 
         for (var i = 0; i < 8; i++)
         {
@@ -37,8 +38,7 @@ public partial class ViewModel : ObservableObject
             values2.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 100)));
         }
 
-        Series =
-        [
+        Series = [
             new ScatterSeries<WeightedPoint>
             {
                 Values = values1,
@@ -53,6 +53,4 @@ public partial class ViewModel : ObservableObject
             }
         ];
     }
-
-    public ISeries[] Series { get; set; }
 }

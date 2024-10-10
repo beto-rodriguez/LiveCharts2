@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -11,18 +10,20 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Events.Cartesian;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
-        var data = new[]
+        var data = new Fruit[]
         {
-            new Fruit { Name = "Apple", SalesPerDay = 4, Stock = 6 },
-            new Fruit { Name = "Orange", SalesPerDay = 6, Stock = 4 },
-            new Fruit { Name = "Pinaple", SalesPerDay = 2, Stock = 2 },
-            new Fruit { Name = "Potoato", SalesPerDay = 8, Stock = 4 },
-            new Fruit { Name = "Lettuce", SalesPerDay = 3, Stock = 6 },
-            new Fruit { Name = "Cherry", SalesPerDay = 4, Stock = 8 }
+            new() { Name = "Apple", SalesPerDay = 4, Stock = 6 },
+            new() { Name = "Orange", SalesPerDay = 6, Stock = 4 },
+            new() { Name = "Pinaple", SalesPerDay = 2, Stock = 2 },
+            new() { Name = "Potoato", SalesPerDay = 8, Stock = 4 },
+            new() { Name = "Lettuce", SalesPerDay = 3, Stock = 6 },
+            new() { Name = "Cherry", SalesPerDay = 4, Stock = 8 }
         };
 
         var salesPerDaysSeries = new ColumnSeries<Fruit>
@@ -38,15 +39,13 @@ public partial class ViewModel : ObservableObject
         };
 
         // notice that the event signature is different for every series
-        // use the  IDE intellisense to help you (see more bellow in this article). // mark
+        // use the IDE intellisense to help you (see more bellow in this article). // mark
         salesPerDaysSeries.ChartPointPointerDown += OnPointerDown; // mark
         salesPerDaysSeries.ChartPointPointerHover += OnPointerHover; // mark
         salesPerDaysSeries.ChartPointPointerHoverLost += OnPointerHoverLost; // mark
 
         Series = [salesPerDaysSeries];
     }
-
-    public ISeries[] Series { get; set; }
 
     private void OnPointerDown(IChartView chart, ChartPoint<Fruit, RoundedRectangleGeometry, LabelGeometry>? point)
     {

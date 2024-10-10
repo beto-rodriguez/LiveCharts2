@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.VisualElements;
@@ -12,9 +11,13 @@ using System;
 
 namespace ViewModelsSamples.Pies.AngularGauge;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
     private readonly Random _random = new();
+
+    public IEnumerable<ISeries> Series { get; set; }
+    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
+    public NeedleVisual Needle { get; set; }
 
     public ViewModel()
     {
@@ -44,12 +47,6 @@ public partial class ViewModel : ObservableObject
             Needle
         ];
     }
-
-    public IEnumerable<ISeries> Series { get; set; }
-
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
-
-    public NeedleVisual Needle { get; set; }
 
     [RelayCommand]
     public void DoRandomChange()

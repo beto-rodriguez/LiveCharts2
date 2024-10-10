@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -8,7 +7,7 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Pies.AutoUpdate;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
     private readonly Random _random = new();
 

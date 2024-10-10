@@ -1,17 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Bars.Spacing;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new ColumnSeries<double>
         {
-            Values = new ObservableCollection<double> { 20, 50, 40, 20, 40, 30, 50, 20, 50, 40 },
+            Values = [ 20, 50, 40, 20, 40, 30, 50, 20, 50, 40 ],
 
             // Defines the distance between every bars in the series
             Padding = 0,

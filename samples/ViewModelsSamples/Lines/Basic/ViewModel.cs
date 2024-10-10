@@ -1,20 +1,26 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using SkiaSharp;
 
 namespace ViewModelsSamples.Lines.Basic;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new LineSeries<double>
         {
             Values = [2, 1, 3, 5, 3, 4, 6],
-            Fill = null
+            Fill = null,
+            GeometrySize = 20
+        },
+        new LineSeries<int, StarGeometry>
+        {
+            Values = [4, 2, 5, 2, 4, 5, 3],
+            Fill = null,
+            GeometrySize = 20,
         }
     ];
 

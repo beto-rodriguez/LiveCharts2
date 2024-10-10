@@ -1,27 +1,22 @@
 ﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
+using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.Axes.Logarithmic;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     // base 10 log, change the base if you require it.
     // or use any custom scale the logic is the same.
     private static readonly int s_logBase = 10;
 
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new LineSeries<LogarithmicPoint>
         {
-            // for the x coordinate, we use the X property
-            // and for the Y coordinate, we will map it to the logarithm of the value
-            Mapping = (logPoint, index) => new(logPoint.X, Math.Log(logPoint.Y, s_logBase)),
-            Values =
-            [
+            Values = [
                 new() { X = 1, Y = 1 },
                 new() { X = 2, Y = 10 },
                 new() { X = 3, Y = 100 },
@@ -30,12 +25,20 @@ public partial class ViewModel : ObservableObject
                 new() { X = 6, Y = 100000 },
                 new() { X = 7, Y = 1000000 },
                 new() { X = 8, Y = 10000000 }
-            ]
+            ],
+
+            // lets map the values to the logarithmic scale // mark
+            // for the x coordinate, we use the X property // mark
+            // and for the Y coordinate, we will map it to the logarithm of the Y value // mark
+            Mapping = (logPoint, index) => // mark
+                new(logPoint.X, Math.Log(logPoint.Y, s_logBase)), // mark
+
+            // for more info about mappers see:
+            // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
         }
     ];
 
-    public Axis[] YAxes { get; set; } =
-    [
+    public ICartesianAxis[] YAxes { get; set; } = [
         new LogaritmicAxis(s_logBase)
         {
             SeparatorsPaint = new SolidColorPaint

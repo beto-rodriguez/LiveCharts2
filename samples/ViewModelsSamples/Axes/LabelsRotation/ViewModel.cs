@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.LabelsRotation;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel : ObservableObject
 {
     private double _sliderValue = 15;
 
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new LineSeries<double>
         {
-            Values = new ObservableCollection<double> { 200, 558, 458, 249, 457, 339, 587 },
+            Values = [200, 558, 458, 249, 457, 339, 587 ],
             XToolTipLabelFormatter = (point) =>
                 $"This is {Environment.NewLine}" +
                 $"A multi-line label {Environment.NewLine}" +
@@ -24,8 +23,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public Axis[] XAxes { get; set; } =
-    [
+    public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
         {
             // Use the Label property to indicate the format of the labels in the axis
@@ -47,8 +45,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public Axis[] YAxes { get; set; } =
-    [
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis
         {
             LabelsRotation = 15,

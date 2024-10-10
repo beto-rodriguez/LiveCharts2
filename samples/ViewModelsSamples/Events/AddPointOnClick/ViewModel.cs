@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -10,33 +9,39 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace ViewModelsSamples.Events.AddPointOnClick;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
-    public ISeries[] SeriesCollection { get; set; } =
-        [
+    public ObservableCollection<ObservablePoint> Points { get; set; }
+
+    public ISeries[] SeriesCollection { get; set; }
+
+    public ViewModel()
+    {
+        Points = [
+            new(0, 5),
+            new(3, 8),
+            new(7, 9)
+        ];
+
+        SeriesCollection = [
             new LineSeries<ObservablePoint>
             {
-                Values = new ObservableCollection<ObservablePoint>
-                {
-                    new(0, 5),
-                    new(3, 8),
-                    new(7, 9)
-                },
+                Values = Points,
                 Fill = null,
                 DataPadding = new LiveChartsCore.Drawing.LvcPoint(5, 5)
             }
         ];
+    }
 
     [RelayCommand]
     public void PointerDown(PointerCommandArgs args)
     {
         var chart = (ICartesianChartView<SkiaSharpDrawingContext>)args.Chart;
-        var values = (ObservableCollection<ObservablePoint>)SeriesCollection[0].Values!;
 
         // scales the UI coordinates to the corresponding data in the chart.
         var scaledPoint = chart.ScalePixelsToData(args.PointerPosition);
 
         // finally add the new point to the data in our chart.
-        values.Add(new ObservablePoint(scaledPoint.X, scaledPoint.Y));
+        Points.Add(new ObservablePoint(scaledPoint.X, scaledPoint.Y));
     }
 }

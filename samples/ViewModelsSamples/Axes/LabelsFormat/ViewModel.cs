@@ -1,21 +1,19 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.Axes.LabelsFormat;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new ColumnSeries<double> { Values = [426, 583, 104] },
         new LineSeries<double>   { Values = [200, 558, 458], Fill = null },
     ];
 
-    public Axis[] XAxes { get; set; } =
-    [
+    public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
         {
             Name = "Salesman/woman",
@@ -25,8 +23,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public Axis[] YAxes { get; set; } =
-    [
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis
         {
             Name = "Salome",
@@ -36,11 +33,15 @@ public partial class ViewModel : ObservableObject
             {
                 Color = SKColors.Blue,
                 FontFamily = "Times New Roman",
-                SKFontStyle = new SKFontStyle(SKFontStyleWeight.ExtraBold, SKFontStyleWidth.Normal, SKFontStyleSlant.Italic)
+                SKFontStyle = new SKFontStyle(
+                    SKFontStyleWeight.ExtraBold,
+                    SKFontStyleWidth.Normal,
+                    SKFontStyleSlant.Italic)
             },
 
             // Use the Labeler property to give format to the axis values // mark
-            // Now the Y axis we will display it as currency
+            // Now the Y axis labels have a currency format.
+
             // LiveCharts provides some common formatters
             // in this case we are using the currency formatter.
             Labeler = Labelers.Currency // mark
@@ -48,8 +49,7 @@ public partial class ViewModel : ObservableObject
             // you could also build your own currency formatter
             // for example:
             // Labeler = (value) => value.ToString("C")
-
-            // But the one that LiveCharts provides creates shorter labels when
+            // but the one that LiveCharts provides creates shorter labels when
             // the amount is in millions or trillions
         }
     ];

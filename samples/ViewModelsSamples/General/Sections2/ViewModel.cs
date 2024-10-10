@@ -1,17 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
-using SkiaSharp;
 
 namespace ViewModelsSamples.General.Sections2;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public RectangularSection[] Sections { get; set; } =
-    [
+    public RectangularSection[] Sections { get; set; } = [
         new RectangularSection
         {
             Yi = 8,
@@ -31,8 +29,7 @@ public partial class ViewModel : ObservableObject
         },
     ];
 
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new ScatterSeries<ObservablePoint>
         {
             GeometrySize = 10,

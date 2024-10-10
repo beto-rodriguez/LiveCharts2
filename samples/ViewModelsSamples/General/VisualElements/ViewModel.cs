@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -15,8 +14,12 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.VisualElements;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
+
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
         var visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
@@ -72,8 +75,7 @@ public partial class ViewModel : ObservableObject
         visuals.Add(svgVisiual);
 
         VisualElements = visuals;
-        Series =
-        [
+        Series = [
             new LineSeries<int>
             {
                 GeometrySize = 13,
@@ -81,10 +83,6 @@ public partial class ViewModel : ObservableObject
             }
         ];
     }
-
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
-
-    public ISeries[] Series { get; set; }
 
     private void RectanglePointerDown(
         VisualElement<SkiaSharpDrawingContext> visual,

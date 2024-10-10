@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
@@ -8,10 +7,9 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Lines.Padding;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         // this series fits the draw margin area
         // the key is to set the DataPadding to 0,0
         // also remove GeometryStroke, GeometryFill and GeometrySize

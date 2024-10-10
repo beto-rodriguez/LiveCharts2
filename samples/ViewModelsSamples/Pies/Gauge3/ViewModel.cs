@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 
 namespace ViewModelsSamples.Pies.Gauge3;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel 
 {
     public IEnumerable<ISeries> Series { get; set; } =
         GaugeGenerator.BuildSolidGauge(

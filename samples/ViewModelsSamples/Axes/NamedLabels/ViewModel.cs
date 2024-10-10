@@ -1,15 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.Axes.NamedLabels;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new ColumnSeries<int>
         {
             Name = "Sales",
@@ -23,8 +22,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public Axis[] XAxes { get; set; } =
-    [
+    public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
         {
             // Use the labels property to define named labels.
@@ -32,8 +30,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public Axis[] YAxes { get; set; } =
-    [
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis
         {
             // Now the Y axis we will display labels as currency

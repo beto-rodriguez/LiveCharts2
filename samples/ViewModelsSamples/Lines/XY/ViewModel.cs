@@ -1,18 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.XY;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new LineSeries<ObservablePoint>
         {
-            Values =
-            [
+            Values = [
                 new ObservablePoint(0, 4),
                 new ObservablePoint(1, 3),
                 new ObservablePoint(3, 8),

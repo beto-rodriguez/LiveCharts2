@@ -2,14 +2,12 @@
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Polar.RadialArea;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new PolarLineSeries<int>
         {
             Values = [7, 5, 7, 5, 6],
@@ -26,8 +24,7 @@ public partial class ViewModel : ObservableObject
         }
     ];
 
-    public PolarAxis[] AngleAxes { get; set; } =
-    [
+    public PolarAxis[] AngleAxes { get; set; } = [
         new PolarAxis
         {
             LabelsRotation = LiveCharts.TangentAngle,

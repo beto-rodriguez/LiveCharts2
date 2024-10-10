@@ -1,12 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Lines.Custom;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     public ISeries[] Series { get; set; } =
     [
@@ -17,10 +16,10 @@ public partial class ViewModel : ObservableObject
             GeometrySize = 20
         },
 
-        // use the second type parameter to specify the geometry to draw for every point
-        // there are already many predefined geometries in the
-        // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
-        new LineSeries<double, RectangleGeometry>
+        // use the second generic parameter to define the geometry to draw
+        // there are many predefined geometries in the LiveChartsCore.Drawing namespace
+        // for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+        new LineSeries<double, StarGeometry>
         {
             Values = [3, 3, -3, -2, -4, -3, -1],
             Fill = null,
@@ -28,16 +27,16 @@ public partial class ViewModel : ObservableObject
         },
 
         // You can also use SVG paths to draw the geometry
-        // LiveCharts already provides some predefined paths in the SVGPoints class.
+        // the VariableSVGPathGeometry can change the drawn path at runtime
         new LineSeries<double, VariableSVGPathGeometry>
         {
             Values = [-2, 2, 1, 3, -1, 4, 3],
             Fill = null,
-            GeometrySvg = SVGPoints.Star,
+            GeometrySvg = SVGPoints.Pin,
             GeometrySize = 20
         },
 
-        // you can declare your own gemetry and use the SkiaSharp api to draw it
+        // finally you can also use SkiaSharp to draw your own geometry
         new LineSeries<double, MyGeometry>
         {
             Values = [4, 5, 2, 4, 3, 2, 1],

@@ -18,18 +18,23 @@ public partial class ViewModel
     private bool _isDown = false;
     private readonly ObservableCollection<ObservablePoint> _values = [];
 
+    public ISeries[] Series { get; set; }
+    public Axis[] ScrollableAxes { get; set; }
+    public ISeries[] ScrollbarSeries { get; set; }
+    public Axis[] InvisibleX { get; set; }
+    public Axis[] InvisibleY { get; set; }
+    public LiveChartsCore.Measure.Margin Margin { get; set; }
+    public RectangularSection[] Thumbs { get; set; }
+
     public ViewModel()
     {
         var trend = 1000;
         var r = new Random();
 
         for (var i = 0; i < 500; i++)
-        {
             _values.Add(new ObservablePoint(i, trend += r.Next(-20, 20)));
-        }
 
-        Series =
-        [
+        Series = [
             new LineSeries<ObservablePoint>
             {
                 Values = _values,
@@ -39,8 +44,7 @@ public partial class ViewModel
             }
         ];
 
-        ScrollbarSeries =
-        [
+        ScrollbarSeries = [
             new LineSeries<ObservablePoint>
             {
                 Values = _values,
@@ -52,8 +56,7 @@ public partial class ViewModel
 
         ScrollableAxes = [new Axis()];
 
-        Thumbs =
-        [
+        Thumbs = [
             new RectangularSection
             {
                 Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
@@ -69,14 +72,6 @@ public partial class ViewModel
         var auto = LiveChartsCore.Measure.Margin.Auto;
         Margin = new(100, auto, 50, auto);
     }
-
-    public ISeries[] Series { get; set; }
-    public Axis[] ScrollableAxes { get; set; }
-    public ISeries[] ScrollbarSeries { get; set; }
-    public Axis[] InvisibleX { get; set; }
-    public Axis[] InvisibleY { get; set; }
-    public LiveChartsCore.Measure.Margin Margin { get; set; }
-    public RectangularSection[] Thumbs { get; set; }
 
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.StepLines.Zoom;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] SeriesCollection { get; set; }
+
     public ViewModel()
     {
         var values = new int[100];
@@ -22,6 +22,4 @@ public partial class ViewModel : ObservableObject
 
         SeriesCollection = [new StepLineSeries<int> { Values = values }];
     }
-
-    public ISeries[] SeriesCollection { get; set; }
 }

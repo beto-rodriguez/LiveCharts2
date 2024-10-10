@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
@@ -11,16 +10,23 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.RealTime;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     private readonly Random _random = new();
     private readonly List<DateTimePoint> _values = [];
     private readonly DateTimeAxis _customAxis;
 
+    public ObservableCollection<ISeries> Series { get; set; }
+
+    public Axis[] XAxes { get; set; }
+
+    public object Sync { get; } = new object();
+
+    public bool IsReading { get; set; } = true;
+
     public ViewModel()
     {
-        Series =
-        [
+        Series = [
             new LineSeries<DateTimePoint>
             {
                 Values = _values,
@@ -42,14 +48,6 @@ public partial class ViewModel : ObservableObject
         _ = ReadData();
     }
 
-    public ObservableCollection<ISeries> Series { get; set; }
-
-    public Axis[] XAxes { get; set; }
-
-    public object Sync { get; } = new object();
-
-    public bool IsReading { get; set; } = true;
-
     private async Task ReadData()
     {
         // to keep this sample simple, we run the next infinite loop // mark
@@ -61,7 +59,7 @@ public partial class ViewModel : ObservableObject
 
             // Because we are updating the chart from a different thread // mark
             // we need to use a lock to access the chart data. // mark
-            // this is not necessary if your changes are made in the UI thread. // mark
+            // this is not necessary if your changes are made on the UI thread. // mark
             lock (Sync)
             {
                 _values.Add(new DateTimePoint(DateTime.Now, _random.Next(0, 10)));
@@ -73,7 +71,7 @@ public partial class ViewModel : ObservableObject
         }
     }
 
-    private double[] GetSeparators()
+    private static double[] GetSeparators()
     {
         var now = DateTime.Now;
 

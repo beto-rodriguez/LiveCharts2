@@ -1,15 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace ViewModelsSamples.StepLines.Area;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    [
+    public ISeries[] Series { get; set; } = [
         new StepLineSeries<double>
         {
             Values = [-2, -1, 3, 5, 3, 4, 6],
