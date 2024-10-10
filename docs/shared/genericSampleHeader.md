@@ -12,8 +12,8 @@ Hover over the image to see the chart animation
 {{~ if xaml ~}}
 
 :::info
-The `ObservableObject` class, `ObservableProperty` and `RelayCommand` attributes, come from the 
-[CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm/) package, you can read more about it 
+This sample uses C# 12 features, it also uses features from the
+[CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm/) package, you can learn more about it 
 [here]({{ website_url }}/docs/{{ platform }}/{{ version }}/About.About%20this%20samples).
 :::
 
