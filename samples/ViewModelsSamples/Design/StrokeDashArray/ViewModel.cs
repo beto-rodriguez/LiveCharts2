@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -7,8 +6,10 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Design.StrokeDashArray;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
         // The LiveChartsCore.SkiaSharpView.Painting.EffectsPathEffect abstract class is a wrapper for
@@ -23,11 +24,10 @@ public partial class ViewModel : ObservableObject
         var strokeDashArray = new float[] { 3 * strokeThickness, 2 * strokeThickness };
         var effect = new DashEffect(strokeDashArray);
 
-        Series = new ISeries[]
-        {
+        Series = [
             new LineSeries<int>
             {
-                Values = new [] { 4, 2, 8, 5, 3 },
+                Values = [4, 2, 8, 5, 3],
                 LineSmoothness = 1,
                 GeometrySize = 22,
                 Stroke = new SolidColorPaint
@@ -39,8 +39,6 @@ public partial class ViewModel : ObservableObject
                 },
                 Fill = null
             }
-        };
+        ];
     }
-
-    public ISeries[] Series { get; set; }
 }

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -39,7 +40,32 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </typeparam>
 public class StackedStepAreaSeries<TModel>
     : StackedStepAreaSeries<TModel, CircleGeometry, LabelGeometry>
-{ }
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public StackedStepAreaSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StackedStepAreaSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StackedStepAreaSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a stacked area series in the user interface.
@@ -56,8 +82,33 @@ public class StackedStepAreaSeries<TModel>
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual>
     : StackedStepAreaSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-{ }
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public StackedStepAreaSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StackedStepAreaSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StackedStepAreaSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a stacked area series in the user interface.
@@ -77,6 +128,31 @@ public class StackedStepAreaSeries<TModel, TVisual>
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual, TLabel>
     : CoreStackedStepAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{ }
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public StackedStepAreaSeries()
+        : base(null)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StackedStepAreaSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StackedStepAreaSeries(params TModel[] values)
+        : base(values)
+    { }
+}

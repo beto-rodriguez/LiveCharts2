@@ -380,7 +380,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             Trace.WriteLine(
                 $"[Cartesian chart measured]".PadRight(60) +
-                $"tread: {Environment.CurrentManagedThreadId}");
+                $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
 

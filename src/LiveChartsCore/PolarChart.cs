@@ -135,7 +135,7 @@ public class PolarChart<TDrawingContext>(
         {
             Trace.WriteLine(
                 $"[Cartesian chart measured]".PadRight(60) +
-                $"tread: {Environment.CurrentManagedThreadId}");
+                $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
         if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method

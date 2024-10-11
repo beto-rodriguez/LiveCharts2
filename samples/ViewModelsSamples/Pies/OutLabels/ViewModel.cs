@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.OutLabels;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     private static int _index = 0;
-    private static string[] _names = new[] { "Maria", "Susan", "Charles", "Fiona", "George" };
+    private static string[] _names = ["Maria", "Susan", "Charles", "Fiona", "George"];
 
     public IEnumerable<ISeries> Series { get; set; } =
          new[] { 8, 6, 5, 3, 3 }.AsPieSeries((value, series) =>

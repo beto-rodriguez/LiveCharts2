@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -11,12 +10,18 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.MultiThreading;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     private readonly Random _r = new();
     private readonly int _delay = 100;
     private readonly ObservableCollection<int> _values;
     private int _current;
+
+    public ISeries[] Series { get; set; }
+
+    public object Sync { get; } = new object();
+
+    public bool IsReading { get; set; } = true;
 
     public ViewModel()
     {
@@ -31,8 +36,7 @@ public partial class ViewModel : ObservableObject
         _values = new ObservableCollection<int>(items);
 
         // create a series with the data // mark
-        Series = new ISeries[]
-        {
+        Series = [
             new LineSeries<int>
             {
                 Values = _values,
@@ -41,7 +45,7 @@ public partial class ViewModel : ObservableObject
                 LineSmoothness = 0,
                 Stroke = new SolidColorPaint(SKColors.Blue, 1)
             }
-        };
+        ];
 
         _delay = 1;
         var readTasks = 10;
@@ -54,12 +58,6 @@ public partial class ViewModel : ObservableObject
             _ = Task.Run(ReadData);
         }
     }
-
-    public ISeries[] Series { get; set; }
-
-    public object Sync { get; } = new object();
-
-    public bool IsReading { get; set; } = true;
 
     private async Task ReadData()
     {

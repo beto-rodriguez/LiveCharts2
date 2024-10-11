@@ -115,7 +115,7 @@ public class PieChart<TDrawingContext>(
         {
             Trace.WriteLine(
                 $"[Cartesian chart measured]".PadRight(60) +
-                $"tread: {Environment.CurrentManagedThreadId}");
+                $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
 

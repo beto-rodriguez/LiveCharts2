@@ -19,8 +19,7 @@ var chart = new SKCartesianChart
 {
     Width = 900,
     Height = 600,
-    Series = new[]
-    {
+    Series = [
         new LineSeries<TempSample>
         {
             // we set the X coordinate to the Time property
@@ -28,9 +27,9 @@ var chart = new SKCartesianChart
             Mapping = (tempSample, index) => new(tempSample.Time, tempSample.Temperature),
             Values = samples
         }
-    },
-    XAxes = new[] { new Axis { Labeler = value => $"{value} seconds" } },
-    YAxes = new[] { new Axis { Labeler = value => $"{value} °C" } }
+    ],
+    XAxes = [new Axis { Labeler = value => $"{value} seconds" }],
+    YAxes = [new Axis { Labeler = value => $"{value} °C" }]
 };
 
 chart.SaveImage("using mappers.png");
@@ -61,8 +60,8 @@ var citiesChart = new SKCartesianChart
 {
     Width = 900,
     Height = 600,
-    Series = new[]
-    {
+    Series =
+    [
         new ColumnSeries<City>
         {
             // we set the X coordinate to the index of the item in the array
@@ -70,16 +69,16 @@ var citiesChart = new SKCartesianChart
             Mapping = (city, index) => new(index, city.Population),
             Values = cities
         }
-    },
-    XAxes = new[]
-    {
+    ],
+    XAxes =
+    [
         new Axis
         {
             Labels = cities.Select(x => x.Name).ToArray(),
             LabelsRotation = 90
         }
-    },
-    YAxes = new[] { new Axis { Labeler = value => value.ToString("N2") } }
+    ],
+    YAxes = [new Axis { Labeler = value => value.ToString("N2") }]
 };
 
 citiesChart.SaveImage("cities.png");

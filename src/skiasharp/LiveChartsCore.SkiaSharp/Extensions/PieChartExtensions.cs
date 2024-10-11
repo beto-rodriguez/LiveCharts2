@@ -41,7 +41,7 @@ public static class PieChartExtensions
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <param name="source">The data source.</param>
     /// <param name="builder">An optional builder.</param>
-    /// <param name="gaugeOptions">Defines whether the series are treaded as gauge.</param>
+    /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
     public static ObservableCollection<PieSeries<TModel>> AsPieSeries<TModel>(
         this IEnumerable<TModel> source,
@@ -58,7 +58,7 @@ public static class PieChartExtensions
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <param name="source">The data source.</param>
     /// <param name="builder">An optional builder.</param>
-    /// <param name="gaugeOptions">Defines whether the series are treaded as gauge.</param>
+    /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
     public static ObservableCollection<PieSeries<TModel, TVisual>> AsPieSeries<TModel, TVisual>(
         this IEnumerable<TModel> source,
@@ -77,7 +77,7 @@ public static class PieChartExtensions
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <param name="source">The data source.</param>
     /// <param name="builder">An optional builder.</param>
-    /// <param name="gaugeOptions">Defines whether the series are treaded as gauge.</param>
+    /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
     public static ObservableCollection<PieSeries<TModel, TVisual, TLabel>> AsPieSeries<TModel, TVisual, TLabel>(
         this IEnumerable<TModel> source,
@@ -96,7 +96,7 @@ public static class PieChartExtensions
     /// <typeparam name="TSeries">The type of the series.</typeparam>
     /// <param name="source">The data source.</param>
     /// <param name="builder">An optional builder.</param>
-    /// <param name="gaugeOptions">Defines whether the series are treaded as gauge.</param>
+    /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
     public static ObservableCollection<TSeries> AsPieSeries<TModel, TSeries>(
         this IEnumerable<TModel> source,

@@ -76,7 +76,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 }
             };
 
-            _stackPanel?.Children.Add(sp);
+            _stackPanel.Children.Add(sp);
         }
 
         var size = _stackPanel.Measure(chart);

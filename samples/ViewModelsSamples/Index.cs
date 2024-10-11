@@ -3,7 +3,7 @@
 public static class Index
 {
     public static string[] Samples =
-    {
+    [
         "Design/LinearGradients",
         "Design/RadialGradients",
 
@@ -124,5 +124,5 @@ public static class Index
         "Test/MotionCanvasDispose",
 
         "Maps/World"
-    };
+    ];
 }

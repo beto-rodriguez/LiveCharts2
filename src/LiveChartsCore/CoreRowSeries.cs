@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -38,21 +39,22 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-    where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-    where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
-    where TDrawingContext : DrawingContext
+public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
+    : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
 {
     private readonly bool _isRounded = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreRowSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    public CoreRowSeries(bool isStacked = false)
-        : base(
-              SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
-              SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips | (isStacked ? SeriesProperties.Stacked : 0))
+    /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
+    /// <param name="values">The values.</param>
+    public CoreRowSeries(ICollection<TModel>? values, bool isStacked = false)
+        : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(1, 0);
         _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
@@ -120,7 +122,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         var ry = (float)Ry;
 
         var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -208,7 +210,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
 
             if (hasSvg)
             {
-                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
@@ -459,5 +461,12 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         };
 
         return new SeriesBounds(dimensionalBounds, false);
+    }
+
+    private static SeriesProperties GetProperties(bool isStacked)
+    {
+        return SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation |
+              SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips |
+              (isStacked ? SeriesProperties.Stacked : 0);
     }
 }

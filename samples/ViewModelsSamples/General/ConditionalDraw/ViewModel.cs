@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
+using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.ConditionalDraw;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.General.ConditionalDraw;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     private readonly ObservableCollection<ObservableValue> _values = [];
 
@@ -19,9 +19,10 @@ public partial class ViewModel : ObservableObject
     {
         var dangerPaint = new SolidColorPaint(SKColors.Red);
 
-        _values =
-        [
-            new(2), new(5), new(4), new(6), new(8), new(3), new(2), new(4), new(6)
+        _values = [
+            new(2),
+            new(5),
+            new(4)
         ];
 
         var series = new ColumnSeries<ObservableValue>
@@ -40,15 +41,14 @@ public partial class ViewModel : ObservableObject
                 : null; // when null, the series fill is used // mark
         });
 
-        Series = new ISeries[] { series };
+        Series = [series];
 
         Randomize();
     }
 
     public ISeries[] Series { get; set; }
 
-    public RectangularSection[] Sections { get; set; } =
-    {
+    public RectangularSection[] Sections { get; set; } = [
         new RectangularSection
         {
             Label = "Danger zone!",
@@ -60,12 +60,11 @@ public partial class ViewModel : ObservableObject
             Yj = 5,
             Fill = new SolidColorPaint(SKColors.Red.WithAlpha(50))
         }
-    };
+    ];
 
-    public Axis[] Y { get; set; } =
-    {
+    public ICartesianAxis[] Y { get; set; } = [
         new Axis { MinLimit = 0 }
-    };
+    ];
 
     private async void Randomize()
     {

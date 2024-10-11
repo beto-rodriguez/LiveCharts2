@@ -1,18 +1,15 @@
-﻿// Ignore Spelling: Gauge
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Gauges;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     public ViewModel()
     {

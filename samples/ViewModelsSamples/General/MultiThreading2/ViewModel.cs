@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -10,15 +9,19 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.MultiThreading2;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     private readonly Random _r = new();
     private readonly int _delay = 100;
     private readonly ObservableCollection<int> _values;
     private static int s_current;
-    private readonly Action<Action> _uiThreadInvoker;
+    private readonly Action<Action> _dispatcherService;
 
-    public ViewModel(Action<Action> uiThreadInvoker)
+    public ISeries[] Series { get; set; }
+
+    public bool IsReading { get; set; } = true;
+
+    public ViewModel(Action<Action> dispatcherService)
     {
         // lets create some initial data. // mark
         var items = new List<int>();
@@ -31,8 +34,7 @@ public partial class ViewModel : ObservableObject
         _values = new ObservableCollection<int>(items);
 
         // create a series with the data // mark
-        Series = new ISeries[]
-        {
+        Series = [
             new LineSeries<int>
             {
                 Values = _values,
@@ -41,11 +43,11 @@ public partial class ViewModel : ObservableObject
                 LineSmoothness = 0,
                 Stroke = new SolidColorPaint(SKColors.Blue, 1)
             }
-        };
+        ];
 
         // There are simplier ways to do this, but since we are using a MVVM pattern, // mark
-        // we need to inject a delegate that will run an action in the UI thread. // mark
-        _uiThreadInvoker = uiThreadInvoker;
+        // we need to inject a delegate that will run an action on the UI thread. // mark
+        _dispatcherService = dispatcherService;
         _delay = 1;
         var readTasks = 10;
 
@@ -57,10 +59,6 @@ public partial class ViewModel : ObservableObject
             _ = Task.Run(ReadData);
         }
     }
-
-    public ISeries[] Series { get; set; }
-
-    public bool IsReading { get; set; } = true;
 
     public async Task ReadData()
     {
@@ -74,7 +72,7 @@ public partial class ViewModel : ObservableObject
             await Task.Delay(_delay);
 
             // force the change to happen in the UI thread. // mark
-            _uiThreadInvoker(() =>
+            _dispatcherService(() =>
             {
                 s_current += _r.Next(-9, 10);
                 _values.Add(s_current);

@@ -64,10 +64,9 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
-    public CoreLineSeries(bool isStacked = false)
-        : base(
-              SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
-              (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
+    /// <param name="values">The values.</param>
+    public CoreLineSeries(ICollection<TModel>? values, bool isStacked = false)
+        : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0.5f, 1f);
     }
@@ -137,7 +136,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         // ToDo: Check this out, maybe this is unnecessary now and we should just go for the first approach all the times.
         var segments = _enableNullSplitting
             ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale)) // calling this method is probably as expensive as the line bellow
-            : new List<IEnumerable<ChartPoint>>() { Fetch(cartesianChart) };
+            : [Fetch(cartesianChart)];
 
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
             ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -177,7 +176,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var tooltipPositon = chart.TooltipPosition;
 
         var segmentI = 0;
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -305,7 +304,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 if (hasSvg)
                 {
-                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    var svgVisual = (IVariableSvgPath<TDrawingContext>)visual.Geometry;
                     if (_geometrySvgChanged || svgVisual.SVGPath is null)
                         svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
                 }
@@ -552,7 +551,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint };
+        return [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint];
     }
 
     /// <summary>
@@ -784,5 +783,12 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         public bool IsNew { get; set; } = isNew;
 
         public TPathGeometry Path { get; set; } = path;
+    }
+
+    private static SeriesProperties GetProperties(bool isStacked)
+    {
+        return SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
+            SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips |
+            (isStacked ? SeriesProperties.Stacked : 0);
     }
 }

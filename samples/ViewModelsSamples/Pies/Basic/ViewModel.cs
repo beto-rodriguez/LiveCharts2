@@ -1,6 +1,5 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -9,7 +8,7 @@ using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.Basic;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     // you can convert any array, list or IEnumerable<T> to a pie series collection:
     public IEnumerable<ISeries> Series { get; set; } =
@@ -17,14 +16,13 @@ public partial class ViewModel : ObservableObject
 
     // the expression above is equivalent to the next series collection:
     public IEnumerable<ISeries> Series2 { get; set; } =
-        new[]
-        {
-            new PieSeries<int> { Values = new[]{ 2 } },
-            new PieSeries<int> { Values = new[]{ 4 } },
-            new PieSeries<int> { Values = new[]{ 1 } },
-            new PieSeries<int> { Values = new[]{ 4 } },
-            new PieSeries<int> { Values = new[]{ 3 } },
-        };
+        [
+            new PieSeries<int> { Values = [2] },
+            new PieSeries<int> { Values = [4] },
+            new PieSeries<int> { Values = [1] },
+            new PieSeries<int> { Values = [4] },
+            new PieSeries<int> { Values = [3] },
+        ];
 
     public LabelVisual Title { get; set; } =
         new LabelVisual
