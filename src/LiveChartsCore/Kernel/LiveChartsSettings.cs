@@ -185,7 +185,13 @@ public class LiveChartsSettings
         return this;
     }
 
-    internal Func<TModel, int, Coordinate> GetMap<TModel>()
+    /// <summary>
+    /// Gets the map for a given type.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public Func<TModel, int, Coordinate> GetMap<TModel>()
     {
         return !_mappers.TryGetValue(typeof(TModel), out var mapper)
             ? throw new NotImplementedException(
