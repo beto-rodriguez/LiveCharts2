@@ -180,7 +180,13 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
         return new(x, y);
     }
 
-    internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <summary>
+    /// Determines whether the given point hits visuals in the chart.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="point">The point in the UI.</param>
+    /// <returns>The visual or visuals touched by the point.</returns>
+    protected internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
         var size = Measure(chart);
@@ -193,7 +199,11 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
         }
     }
 
-    internal void InvokePointerDown(VisualElementEventArgs<TDrawingContext> args)
+    /// <summary>
+    /// Called when the pointer goes down on the visual.
+    /// </summary>
+    /// <param name="args">The event arguments.</param>
+    protected internal void InvokePointerDown(VisualElementEventArgs<TDrawingContext> args)
     {
         PointerDown?.Invoke(this, args);
     }

@@ -322,7 +322,12 @@ public abstract class Chart<TDrawingContext> : IChart
         Canvas.Dispose();
     }
 
-    internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
+    /// <summary>
+    /// Invokes the pointer down event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    /// <param name="isSecondaryAction">Flags the action as secondary (normally rigth click or double tap on mobile)</param>
+    protected internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         _isPanning = true;
         _pointerPreviousPanningPosition = point;
@@ -364,7 +369,11 @@ public abstract class Chart<TDrawingContext> : IChart
         }
     }
 
-    internal virtual void InvokePointerMove(LvcPoint point)
+    /// <summary>
+    /// Invokes the pointer move event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    protected internal virtual void InvokePointerMove(LvcPoint point)
     {
         _pointerPosition = point;
         _isPointerIn = true;
@@ -375,7 +384,12 @@ public abstract class Chart<TDrawingContext> : IChart
         _panningThrottler.Call();
     }
 
-    internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
+    /// <summary>
+    /// Invokes the pointer up event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    /// <param name="isSecondaryAction">Flags the action as secondary (normally rigth click or double tap on mobile)</param>
+    protected internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
     {
 #if NET5_0_OR_GREATER
         if (_isMobile)
@@ -395,7 +409,10 @@ public abstract class Chart<TDrawingContext> : IChart
         _panningThrottler.Call();
     }
 
-    internal void InvokePointerLeft()
+    /// <summary>
+    /// Invokes the pointer out event.
+    /// </summary>
+    protected internal void InvokePointerLeft()
     {
         View.InvokeOnUIThread(CloseTooltip);
         _isPointerIn = false;
