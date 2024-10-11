@@ -22,4 +22,5 @@
 
 using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinUI")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
