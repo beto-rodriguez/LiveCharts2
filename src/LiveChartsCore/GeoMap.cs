@@ -136,22 +136,37 @@ public class GeoMap<TDrawingContext>
         View.Canvas.Dispose();
     }
 
-    internal void InvokePointerDown(LvcPoint point)
+    /// <summary>
+    /// Invokes the pointer down event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    protected internal void InvokePointerDown(LvcPoint point)
     {
         PointerDown?.Invoke(point);
     }
 
-    internal void InvokePointerMove(LvcPoint point)
+    /// <summary>
+    /// Invokes the pointer move event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    protected internal void InvokePointerMove(LvcPoint point)
     {
         PointerMove?.Invoke(point);
     }
 
-    internal void InvokePointerUp(LvcPoint point)
+    /// <summary>
+    /// Invokes the pointer up event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    protected internal void InvokePointerUp(LvcPoint point)
     {
         PointerUp?.Invoke(point);
     }
 
-    internal void InvokePointerLeft()
+    /// <summary>
+    /// Invokes the pointer left event.
+    /// </summary>
+    protected internal void InvokePointerLeft()
     {
         PointerLeft?.Invoke();
     }
@@ -178,7 +193,7 @@ public class GeoMap<TDrawingContext>
     /// <summary>
     /// Measures the chart.
     /// </summary>
-    internal void Measure()
+    protected internal void Measure()
     {
         if (_activeMap is not null && _activeMap != View.ActiveMap)
         {

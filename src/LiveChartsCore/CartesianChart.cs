@@ -878,7 +878,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     private LvcPoint? _sectionZoomingStart = null;
 
-    internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
+    /// <summary>
+    /// Invokes the pointer down.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    /// <param name="isSecondaryAction">Flags the action as secondary (normally rigth click or double tap on mobile)</param>
+    protected internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         var caretesianView = (ICartesianChartView<TDrawingContext>)View;
         if ((caretesianView.ZoomMode & ZoomAndPanMode.InvertPanningPointerTrigger) != 0)
@@ -922,7 +927,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         base.InvokePointerDown(point, isSecondaryAction);
     }
 
-    internal override void InvokePointerMove(LvcPoint point)
+    /// <summary>
+    /// Invokes the pointer move.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    protected internal override void InvokePointerMove(LvcPoint point)
     {
         foreach (var axis in _crosshair)
         {
@@ -952,7 +961,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         base.InvokePointerMove(point);
     }
 
-    internal override void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
+    /// <summary>
+    /// Invokes the pointer up.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    /// <param name="isSecondaryAction">Flags the action as secondary (normally rigth click or double tap on mobile)</param>
+    protected internal override void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
     {
         if (_sectionZoomingStart is not null)
         {

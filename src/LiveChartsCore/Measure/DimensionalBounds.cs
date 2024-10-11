@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Measure;
-
-namespace LiveChartsCore.Kernel;
+namespace LiveChartsCore.Measure;
 
 /// <summary>
 /// Defines bounds for both, X and Y axes.
