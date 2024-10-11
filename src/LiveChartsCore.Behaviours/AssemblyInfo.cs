@@ -20,14 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if !DEBUG
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
-[assembly: AssemblyKeyFile("./../../LiveCharts.snk")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI, PublicKey=0024000004800000940000000602000000240000525341310004000001000100d53791eaa0d98b405ca858f39169be6af36ceb7a1bca3ca76c6905fd22fddf8c5e4ef2778a5d7a77ad12f08da711fecfc44795c7923739a2acac946b3f1719a6dfc238695bc69cf5d959b3fb6bc4d18d57a97ff8ed897e6b22a6b8155401ee368d77431e74178104b4adca73520b058b9be28d4ec129beb54871778167afa5ce")]
-#else
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
-#endif
