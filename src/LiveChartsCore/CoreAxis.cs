@@ -102,6 +102,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Align? _labelsAlignment;
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
+    private float _labelsDensity = 0.85f;
     internal double? _logBase;
 
     #endregion
@@ -140,6 +141,9 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="ICartesianAxis.Padding"/>
     public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
+
+    /// <inheritdoc cref="ICartesianAxis.LabelsDensity"/>
+    public float LabelsDensity { get => _labelsDensity; set => SetProperty(ref _labelsDensity, value); }
 
     /// <inheritdoc cref="IPlane.Labeler"/>
     public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }

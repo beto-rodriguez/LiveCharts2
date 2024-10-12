@@ -38,8 +38,6 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public static class Extensions
 {
-    private const float MinLabelSize = 10; // Assume the label size is at least 10px
-
     private static readonly Type s_nullableType = typeof(Nullable<>);
 
     /// <summary>
@@ -219,12 +217,13 @@ public static class Extensions
             // modify the size of the label to avoid overlapping
             // and improve readability.
 
-            const float xGrowFactor = 1.10f;
-            if (axis.Orientation == AxisOrientation.X) w *= xGrowFactor;
+            var density = 1 + axis.LabelsDensity;
 
-            const float yGrowFactor = 1.5f;
-            if (axis.Orientation == AxisOrientation.Y) h *= yGrowFactor;
+            if (axis.Orientation == AxisOrientation.X) w *= density / 2f;
+            if (axis.Orientation == AxisOrientation.Y) h *= density / 2f;
         }
+
+        const float MinLabelSize = 10; // Assume the label size is at least 10px
 
         if (w < MinLabelSize) w = MinLabelSize;
         if (h < MinLabelSize) h = MinLabelSize;
