@@ -635,7 +635,8 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Draws the current tool tip, requires canvas invalidation after this call.
     /// </summary>
-    protected void DrawToolTip()
+    /// <returns>A value indicating whether the tooltip was drawn.</returns>
+    protected bool DrawToolTip()
     {
         var x = _pointerPosition.X;
         var y = _pointerPosition.Y;
@@ -644,7 +645,7 @@ public abstract class Chart<TDrawingContext> : IChart
             x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
             y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
         {
-            return;
+            return false;
         }
 
         var points = FindHoveredPointsBy(_pointerPosition);
@@ -660,10 +661,12 @@ public abstract class Chart<TDrawingContext> : IChart
 
         CleanHoveredPoints(o);
 
-        if (isEmpty) return;
+        if (isEmpty) return true;
 
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
+
+        return true;
     }
 
     private void CleanHoveredPoints(object comparer)
@@ -687,7 +690,9 @@ public abstract class Chart<TDrawingContext> : IChart
 #if NET5_0_OR_GREATER
                      if (_isTooltipCanceled) return;
 #endif
-                     DrawToolTip();
+                     var tooltipDrawn = DrawToolTip();
+                     if (!tooltipDrawn) return;
+
                      Canvas.Invalidate();
                  }
              }));

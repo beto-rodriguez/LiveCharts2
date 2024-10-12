@@ -861,7 +861,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         IsZoomingOrPanning = false;
         InvokeOnUpdateStarted();
 
-        if (_isToolTipOpen) DrawToolTip();
+        if (_isToolTipOpen) _ = DrawToolTip();
         ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
