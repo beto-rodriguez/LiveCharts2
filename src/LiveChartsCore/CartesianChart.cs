@@ -708,8 +708,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     axis.Xo = ls + w * 0.5f + ns.Width;
                     ls += w + ns.Width;
                     m.Left = ls;
-                    if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
-                    if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+
+                    if (s.Height * 0.5f > m.Top) m.Top = s.Height * 0.5f;
+                    if (s.Height * 0.5f > m.Bottom) m.Bottom = s.Height * 0.5f;
                 }
             }
             else
@@ -740,8 +741,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                     axis.Xo = rs + w * 0.5f + ns.Width;
                     rs += w + ns.Width;
                     m.Right = rs;
-                    if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
-                    if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
+
+                    if (s.Height * 0.5f > m.Top) m.Top = s.Height * 0.5f;
+                    if (s.Height * 0.5f > m.Bottom) m.Bottom = s.Height * 0.5f;
                 }
             }
         }

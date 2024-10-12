@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -21,15 +22,31 @@ public class ViewModel
             Values = [4, 2, 5, 2, 4, 5, 3],
             Fill = null,
             GeometrySize = 20,
+            ScalesYAt = 1
         }
     ];
 
-    public LabelVisual Title { get; set; } =
-        new LabelVisual
-        {
-            Text = "My chart title",
-            TextSize = 25,
-            Padding = new LiveChartsCore.Drawing.Padding(15),
-            Paint = new SolidColorPaint(SKColors.DarkSlateGray)
-        };
+    public DrawMarginFrame Frame { get; set; } = new()
+    {
+        Stroke = new SolidColorPaint { Color = SKColors.Black, StrokeThickness = 1 },
+    };
+
+    public ICartesianAxis[] X { get; } = [
+        new Axis {
+            TicksPaint = new SolidColorPaint {Color = SKColors.Black },
+            DrawTicksPath = true
+        }
+    ];
+
+    public ICartesianAxis[] Y { get; } = [
+        new Axis {
+            TicksPaint = new SolidColorPaint {Color = SKColors.Green },
+            DrawTicksPath = true
+        },
+        new Axis {
+            Position = LiveChartsCore.Measure.AxisPosition.End,
+            TicksPaint = new SolidColorPaint {Color = SKColors.Blue },
+            DrawTicksPath = true
+        }
+    ];
 }
