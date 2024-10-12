@@ -76,7 +76,7 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the labels density, it is a factor that determines the distance between labels when calculated
     /// by the library, 0 is the most dense any value greater than 0 will make the labels to be more separated,
-    /// values less than 0 will make the labels to overlap (labels rotation could prevent overlaping).
+    /// values less than 0 will make the labels to overlap (labels rotation could prevent overlapping).
     /// Default value is 0.85.
     /// </summary>
     float LabelsDensity { get; set; }

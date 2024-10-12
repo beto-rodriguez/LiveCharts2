@@ -192,8 +192,8 @@ public interface IPlane
     bool ShowSeparatorLines { get; set; }
 
     /// <summary>
-    /// Gets or sets the custom separators array, when this property is set (not null)
-    /// the axis will use the values in this array instead of calculating the separators automatically.
+    /// Gets or sets the custom separators collection, when this property is set (not null)
+    /// the axis will use the values in this collection instead of calculating the separators automatically.
     /// Defalut is null.
     /// </summary>
     IEnumerable<double>? CustomSeparators { get; set; }
