@@ -55,6 +55,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     private readonly Dictionary<IChartSeries<TDrawingContext>, int> _boxPositions = [];
     private readonly Dictionary<int, int> _stackColumnPositions = [];
     private readonly Dictionary<int, int> _stackRowsPositions = [];
+    private readonly Dictionary<int, Bounds> _weightBounds = [];
 
     private readonly Dictionary<string, Stacker<TDrawingContext>> _stackers = [];
 
@@ -308,6 +309,38 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
         }
 
         _arePieLabeleMeasured = true;
+    }
+
+    #endregion
+
+    #region scatter
+
+    /// <summary>
+    /// Gets the weight bounds.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public Bounds GetWeightBounds(int key)
+    {
+        if (_weightBounds.TryGetValue(key, out var bounds)) return bounds;
+
+        bounds = new Bounds();
+        _weightBounds[key] = bounds;
+
+        return bounds;
+    }
+
+    /// <summary>
+    /// Appends the weight bounds.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    public void AppendWeightBounds(int key, Bounds value)
+    {
+        var bounds = GetWeightBounds(key);
+
+        if (value.Max > bounds.Max) bounds.Max = value.Max;
+        if (value.Min < bounds.Min) bounds.Min = value.Min;
     }
 
     #endregion

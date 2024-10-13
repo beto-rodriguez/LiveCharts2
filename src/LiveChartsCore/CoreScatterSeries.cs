@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -48,8 +47,10 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         where TDrawingContext : DrawingContext
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
-    private Bounds _weightBounds = new();
     private IPaint<TDrawingContext>? _errorPaint;
+    private int? _stackGroup;
+    private double _minGeometrySize = 6d;
+    private double _geometrySize = 24d;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
@@ -80,15 +81,14 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     /// <value>
     /// The minimum size of the geometry.
     /// </value>
-    public double MinGeometrySize { get; set; } = 6d;
-
+    public double MinGeometrySize { get => _minGeometrySize; set => SetProperty(ref _minGeometrySize, value); }
     /// <summary>
     /// Gets or sets the size of the geometry.
     /// </summary>
     /// <value>
     /// The size of the geometry.
     /// </value>
-    public double GeometrySize { get; set; } = 24d;
+    public double GeometrySize { get => _geometrySize; set =>SetProperty(ref _geometrySize, value); }
 
     /// <summary>
     /// Gets a value indicating whether the points in this series use weight.
@@ -101,6 +101,9 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         get => _errorPaint;
         set => SetPaintProperty(ref _errorPaint, value, true);
     }
+
+    /// <inheritdoc cref="IScatterSeries{TDrawingContext}.StackGroup"/>
+    public int? StackGroup { get => _stackGroup; set => SetProperty(ref _stackGroup, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -116,6 +119,9 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         var clipping = GetClipRectangle(cartesianChart);
+
+        var weightStackIndex = StackGroup ?? ((ISeries)this).SeriesId;
+        var weightBounds = chart.SeriesContext.GetWeightBounds(weightStackIndex);
 
         if (Fill is not null)
         {
@@ -148,8 +154,8 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         var gs = (float)GeometrySize;
         var hgs = gs / 2f;
         var sw = Stroke?.StrokeThickness ?? 0;
-        IsWeighted = _weightBounds.Max - _weightBounds.Min > 0;
-        var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.Max - _weightBounds.Min);
+        IsWeighted = weightBounds.Max - weightBounds.Min > 0;
+        var wm = -(GeometrySize - MinGeometrySize) / (weightBounds.Max - weightBounds.Min);
 
         var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwy = yScale.MeasureInPixels(secondaryAxis.UnitWidth);
@@ -188,7 +194,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
 
             if (IsWeighted)
             {
-                gs = (float)(wm * (_weightBounds.Max - coordinate.TertiaryValue) + GeometrySize);
+                gs = (float)(wm * (weightBounds.Max - coordinate.TertiaryValue) + GeometrySize);
                 hgs = gs / 2f;
             }
 
@@ -310,7 +316,10 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-        _weightBounds = seriesBounds.Bounds.TertiaryBounds;
+
+        chart.SeriesContext.AppendWeightBounds(
+            StackGroup ?? ((ISeries)this).SeriesId, seriesBounds.Bounds.TertiaryBounds);
+
         return seriesBounds;
     }
 
