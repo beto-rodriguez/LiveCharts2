@@ -1013,19 +1013,17 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                     if (xMax - xMin > min)
                     {
-                        x.MinLimit = xMin;
-                        x.MaxLimit = xMax;
+                        x.SetLimits(xMin, xMax);
                     }
                     else
                     {
                         if (x.MaxLimit is not null && x.MinLimit is not null)
                         {
                             var d = xMax - xMin;
-                            var ad = x.MaxLimit - x.MinLimit;
+                            var ad = x.MaxLimit.Value - x.MinLimit.Value;
                             var c = (ad - d) * 0.5;
 
-                            x.MinLimit = xMin - c;
-                            x.MaxLimit = xMax + c;
+                            x.SetLimits(xMin - c, xMax + c);
                         }
                     }
                 }
@@ -1060,19 +1058,17 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                     if (yMax - yMin > min)
                     {
-                        y.MinLimit = yMin;
-                        y.MaxLimit = yMax;
+                        y.SetLimits(yMin, yMax);
                     }
                     else
                     {
                         if (y.MaxLimit is not null && y.MinLimit is not null)
                         {
                             var d = yMax - yMin;
-                            var ad = y.MaxLimit - y.MinLimit;
+                            var ad = y.MaxLimit.Value - y.MinLimit.Value;
                             var c = (ad - d) * 0.5;
 
-                            y.MinLimit = yMin - c;
-                            y.MaxLimit = yMax + c;
+                            y.SetLimits(yMin - c, yMax + c);
                         }
                     }
                 }
@@ -1083,6 +1079,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             _zoomingSection.Width = 0;
             _zoomingSection.Height = 0;
             _sectionZoomingStart = null;
+
             return;
         }
 
