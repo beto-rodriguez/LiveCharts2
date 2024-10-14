@@ -141,7 +141,7 @@ the properly [unit width]({{ website_url }}/docs/{{ platform }}/{{ version }}/Ca
 cartesianChart1.TooltipFindingStrategy = LiveChartsCore.Measure.TooltipFindingStrategy.CompareOnlyX;</code></pre>
 {{~ end ~}}
 
-## Tooltip point text
+## Tooltip text
 
 You can define the text the tooltip will display for a given point, using the 
 `YToolTipLabelFormatter`, `XToolTipLabelFormatter` or `ToolTipLabelFormatter` properties, these 
@@ -154,49 +154,105 @@ By default the library already defines a default formatter  for every series, al
 formatters, but generally the default value uses the `Series.Name` and the `ChartPoint.Coordinate.PrimaryValue` properties, the following
 code snippet illustrates how to build a custom tooltip formatter.
 
+Lets take the example of the next series:"
+
+<pre><code>public ISeries[] Series { get; set; } = [
+    new LineSeries&lt;double>
+    {
+        Values = [2, 1, 3, 5, 3, 4, 6],
+        Fill = null,
+        GeometrySize = 20,
+    },
+    new LineSeries&lt;int, StarGeometry>
+    {
+        Values = [4, 2, 5, 2, 4, 5, 3],
+        Fill = null,
+        GeometrySize = 20
+    }
+];</code></pre>
+
+By default the tooltip will be:
+
+![tooltip]({{ assets_url }}/docs/assets/tooltip-format1.png)
+
+We can add format to the tooltip:
+
+<pre><code>public ISeries[] Series { get; set; } = [
+    new LineSeries&lt;double>
+    {
+        Values = [2, 1, 3, 5, 3, 4, 6],
+        Fill = null,
+        GeometrySize = 20,
+        YToolTipLabelFormatter = point => point.Model.ToString("N2") // mark
+    },
+    new LineSeries&lt;int, StarGeometry>
+    {
+        Values = [4, 2, 5, 2, 4, 5, 3],
+        Fill = null,
+        GeometrySize = 20,
+        YToolTipLabelFormatter = point => point.Model.ToString("N2") // mark
+    }
+];</code></pre>
+
+![tooltip]({{ assets_url }}/docs/assets/tooltip-format2.png)
+
+We used the Model property of the point, the Model property is just the item in the Values
+collection, for example in the next case, the Model property is of type `City`.
+
+<pre><code>public ISeries[] Series { get; set; } = [
+    new LineSeries&lt;City>
+    {
+        Values = [new() { Population = 4 }, new() { Population = 2}],
+        YToolTipLabelFormatter = point => point.Model.Population.ToString("N2") // mark
+    }
+];
+
+// ...
+
+public class City
+{
+    public double Population { get; set; }
+}</code></pre>
+
+We can also show a label for the `X` coordinate, the default tooltip uses the X label as the header in the tooltip.
+
 <pre><code>new LineSeries&lt;double>
 {
-    Name = "Sales",
-    Values = new ObservableCollection&lt;double> { 200, 558, 458 },
-    // for the following formatter
-    // when the pointer is over the first point (200), the tooltip will display:
-    // Sales: 200
-    YTooltipLabelFormatter =
-        (chartPoint) => $"{chartPoint.Context.Series.Name}: {chartPoint.Coordinate.PrimaryValue}"
-},
+    Values = [2, 1, 3, 5, 3, 4, 6],
+    Fill = null,
+    GeometrySize = 20,
+    XToolTipLabelFormatter = point => point.Index.ToString(), // mark
+    YToolTipLabelFormatter = point => point.Model.ToString("C2")
+};</code></pre>
 
-new ColumnSeries&lt;double>
-{
-    Name = "Sales 2",
-    Values = new ObservableCollection&lt;double> { 250, 350, 240 },
-    // now it will use a currency formatter to display the primary value
-    // result: Sales 2: $200.00
-    YTooltipLabelFormatter =
-        (chartPoint) => $"{chartPoint.Context.Series.Name}: {chartPoint.Coordinate.PrimaryValue:C2}"
-},
+![tooltip]({{ assets_url }}/docs/assets/tooltip-format3.png)
 
-new StepLineSeries&lt;ObservablePoint>
-{
-    Name = "Average",
-    Values = new ObservableCollection&lt;ObservablePoint>
+When the series is "Stacked" (`PieSeries`, `StackedColumn` or `StackedRow`) we can find information about the stacked data
+in the `StackedValue` property, for example:
+
+
+<pre><code>public ISeries[] Series { get; set; } = [
+    new StackedColumnSeries&lt;double>
     {
-        new ObservablePoint(10, 5),
-        new ObservablePoint(5, 8)
+        Values = [2, 1, 3, 5, 3, 4, 6],
+        YToolTipLabelFormatter =
+            point => $"{point.Model} / {point.StackedValue!.Total} ({point.StackedValue.Share:P2})"
     },
-    // We can also display both coordinates (X and Y in a cartesian coordinate system)
-    // result: Average: 10, 5
-    YTooltipLabelFormatter =
-        (chartPoint) => 
-            $"{chartPoint.Context.Series.Name}: {chartPoint.Coordinate.SecondaryValue}, {chartPoint.Coordinate.PrimaryValue}"
-},
+    new StackedColumnSeries&lt;int>
+    {
+        Values = [4, 2, 5, 2, 4, 5, 3],
+        YToolTipLabelFormatter =
+            point => $"{point.Model} / {point.StackedValue!.Total} ({point.StackedValue.Share:P2})"
+    }
+];</code></pre>
 
-new ColumnSeries&lt;ObservablePoint>
-{
-    Values = new ObservableCollection&lt;double> { 250, 350, 240 },
-    // result: Sales at this moment: $200.00
-    YTooltipLabelFormatter =
-        (chartPoint) => $"Sales at this moment: {chartPoint.PrimaryValue:C2}"
-}</code></pre>
+Will result in:
+
+![tooltip]({{ assets_url }}/docs/assets/tooltip-format4.png)
+
+:::tip
+The PieSeries class uses the `ToolTipLabelFormatter` property to configure the text inside the tooltip.
+:::
 
 # Customize default tooltips
 
