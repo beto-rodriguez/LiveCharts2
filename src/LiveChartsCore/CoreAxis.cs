@@ -648,11 +648,11 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         var location = chart.DrawMarginLocation;
         var size = chart.DrawMarginSize;
 
-        //if (pointerPosition.X < location.X || pointerPosition.X > location.X + size.Width ||
-        //    pointerPosition.Y < location.Y || pointerPosition.Y > location.Y + size.Height)
-        //{
-        //    return;
-        //}
+        if (pointerPosition.X < location.X || pointerPosition.X > location.X + size.Width ||
+            pointerPosition.Y < location.Y || pointerPosition.Y > location.Y + size.Height)
+        {
+            return;
+        }
 
         var scale = this.GetNextScaler(cartesianChart);
         var controlSize = cartesianChart.ControlSize;
