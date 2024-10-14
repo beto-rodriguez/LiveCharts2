@@ -412,7 +412,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Invokes the pointer out event.
     /// </summary>
-    protected internal void InvokePointerLeft()
+    protected internal virtual void InvokePointerLeft()
     {
         View.InvokeOnUIThread(CloseTooltip);
         _isPointerIn = false;

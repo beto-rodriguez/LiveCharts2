@@ -48,6 +48,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
+    private HashSet<CartesianChart<TDrawingContext>>? _sharedEvents;
     private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = [];
 
     /// <summary>
@@ -443,6 +444,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
+        Trace.WriteLine("measured");
+
         SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
         var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
 
@@ -451,7 +454,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
-            axis.Initialize(AxisOrientation.X);
+            axis.OnMeasureStarted(this, AxisOrientation.X);
             if (!ce._isThemeSet || isNewTheme)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
@@ -464,7 +467,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
-            axis.Initialize(AxisOrientation.Y);
+            axis.OnMeasureStarted(this, AxisOrientation.Y);
             if (!ce._isThemeSet || isNewTheme)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
@@ -875,6 +878,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     {
         base.Unload();
         _crosshair = [];
+        _sharedEvents = null;
         _isFirstDraw = true;
     }
 
@@ -935,10 +939,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="point">The pointer position.</param>
     protected internal override void InvokePointerMove(LvcPoint point)
     {
-        foreach (var axis in _crosshair)
-        {
-            axis.InvalidateCrosshair(this, point);
-        }
+        InvalidateCrosshairs(this, point);
 
         if (_sectionZoomingStart is not null)
         {
@@ -1084,6 +1085,46 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
 
         base.InvokePointerUp(point, isSecondaryAction);
+    }
+
+    /// <inheritdoc cref="InvokePointerLeft"/>
+    protected internal override void InvokePointerLeft()
+    {
+        OnPointerLeft();
+
+        //propagate to shared charts
+        foreach (var sharedChart in _sharedEvents ?? [])
+        {
+            if (sharedChart == this) continue;
+
+            sharedChart.OnPointerLeft();
+        }
+    }
+
+    internal void SubscribeSharedEvents(HashSet<CartesianChart<TDrawingContext>> instance)
+    {
+        // An experimental feature, it allows a chart to propagate some events to other charts,
+        // this feature was created to share crosshairs between multiple charts.
+
+        _sharedEvents = instance;
+        _ = _sharedEvents.Add(this);
+    }
+
+    private void OnPointerLeft() => base.InvokePointerLeft();
+
+    private void InvalidateCrosshairs(Chart<TDrawingContext> chart, LvcPoint point)
+    {
+        foreach (var axis in _crosshair)
+            axis.InvalidateCrosshair(chart, point);
+
+        //propagate to shared charts
+        foreach (var sharedChart in _sharedEvents ?? [])
+        {
+            if (sharedChart == this) continue;
+
+            foreach (var axis in sharedChart._crosshair)
+                axis.InvalidateCrosshair(sharedChart, point);
+        }
     }
 
     private static void AppendLimits(ICartesianAxis x, ICartesianAxis y, DimensionalBounds bounds)
