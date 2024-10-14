@@ -168,18 +168,9 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     protected override void InitializeCore()
     {
-        var zoomingSection = new RectangleGeometry();
-        var zoomingSectionPaint = new SolidColorPaint
-        {
-            IsFill = true,
-            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-            ZIndex = int.MaxValue
-        };
-        zoomingSectionPaint.AddGeometryToPaintTask(motionCanvas.CanvasCore, zoomingSection);
-        motionCanvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), motionCanvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), motionCanvas.CanvasCore);
+
         core.Update();
     }
 

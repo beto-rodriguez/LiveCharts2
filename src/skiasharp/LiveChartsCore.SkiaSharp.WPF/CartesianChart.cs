@@ -342,18 +342,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     {
         if (canvas is null) throw new Exception("canvas not found");
 
-        var zoomingSection = new RectangleGeometry();
-        var zoomingSectionPaint = new SolidColorPaint
-        {
-            IsFill = true,
-            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-            ZIndex = int.MaxValue
-        };
-        zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
-        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), canvas.CanvasCore);
 
         core.Update();
     }
