@@ -23,6 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Kernel.Providers;
 
@@ -39,9 +40,7 @@ public abstract class ChartEngine<TDrawingContext>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <returns></returns>
     public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
-    {
-        return new DataFactory<TModel, TDrawingContext>();
-    }
+        => new();
 
     /// <summary>
     /// Gets a new instance of the default map factory.
@@ -66,4 +65,11 @@ public abstract class ChartEngine<TDrawingContext>
     /// </summary>
     /// <returns></returns>
     public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new());
+
+    /// <summary>
+    /// Initializes the zooming section for a cartesian chart in a given canvas.
+    /// </summary>
+    /// <param name="canvas">The canvas.</param>
+    /// <returns>The created geometry.</returns>
+    public abstract ISizedGeometry<TDrawingContext> InitializeZoommingSection(MotionCanvas<TDrawingContext> canvas);
 }

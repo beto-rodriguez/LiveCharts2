@@ -24,7 +24,9 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -35,25 +37,35 @@ public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultMapFactory"/>
     public override IMapFactory<SkiaSharpDrawingContext> GetDefaultMapFactory()
-    {
-        return new MapFactory();
-    }
+        => new MapFactory();
 
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultCartesianAxis"/>
     public override ICartesianAxis GetDefaultCartesianAxis()
-    {
-        return new Axis();
-    }
+        => new Axis();
 
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultPolarAxis"/>
     public override IPolarAxis GetDefaultPolarAxis()
-    {
-        return new PolarAxis();
-    }
+        => new PolarAxis();
 
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
     public override IPaint<SkiaSharpDrawingContext> GetSolidColorPaint(LvcColor color)
+        => new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
+
+    /// <inheritdoc cref="ChartEngine{TDrawingContext}.InitializeZoommingSection(MotionCanvas{TDrawingContext})"/>
+    public override ISizedGeometry<SkiaSharpDrawingContext> InitializeZoommingSection(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {
-        return new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
+        var rectangle = new RectangleGeometry();
+
+        var zoomingSectionPaint = new SolidColorPaint
+        {
+            IsFill = true,
+            Color = new SKColor(33, 150, 243, 50),
+            ZIndex = int.MaxValue
+        };
+
+        zoomingSectionPaint.AddGeometryToPaintTask(canvas, rectangle);
+        canvas.AddDrawableTask(zoomingSectionPaint);
+
+        return rectangle;
     }
 }
