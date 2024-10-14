@@ -17,7 +17,7 @@ public class ViewModel
         new Axis
         {
             CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
-            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed, 1),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed),
             CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
             Labeler = value => value.ToString("N2")
         }
@@ -27,7 +27,7 @@ public class ViewModel
         new Axis
         {
             CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
-            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed, 1),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed),
             CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
             CrosshairSnapEnabled = true // snapping is also supported
         }
