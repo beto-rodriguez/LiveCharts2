@@ -741,18 +741,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         if (_core is null)
         {
-            var zoomingSection = new Drawing.Geometries.RectangleGeometry();
-            var zoomingSectionPaint = new SolidColorPaint
-            {
-                IsFill = true,
-                Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-                ZIndex = int.MaxValue
-            };
-            zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
-            canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
             _core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
+                this, config => config.UseDefaults(), canvas.CanvasCore);
 
             if (SyncContext != null)
                 _motionCanvas.CanvasCore.Sync = SyncContext;

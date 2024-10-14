@@ -40,14 +40,15 @@ namespace LiveChartsCore;
 public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly ISizedGeometry<TDrawingContext> _zoomingSection;
     private readonly ICartesianChartView<TDrawingContext> _chartView;
+    private ISizedGeometry<TDrawingContext>? _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
+    private HashSet<CartesianChart<TDrawingContext>>? _sharedEvents;
     private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = [];
 
     /// <summary>
@@ -56,20 +57,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="view">The view.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="zoomingSection">The zooming section.</param>
     public CartesianChart(
         ICartesianChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
-        MotionCanvas<TDrawingContext> canvas,
-        ISizedGeometry<TDrawingContext>? zoomingSection)
+        MotionCanvas<TDrawingContext> canvas)
             : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
-        _zoomingSection = zoomingSection ?? throw new Exception($"{nameof(zoomingSection)} is required.");
-        _zoomingSection.X = -1;
-        _zoomingSection.Y = -1;
-        _zoomingSection.Width = 0;
-        _zoomingSection.Height = 0;
     }
 
     /// <summary>
@@ -451,7 +445,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
-            axis.Initialize(AxisOrientation.X);
+            axis.OnMeasureStarted(this, AxisOrientation.X);
             if (!ce._isThemeSet || isNewTheme)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
@@ -464,7 +458,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         {
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
-            axis.Initialize(AxisOrientation.Y);
+            axis.OnMeasureStarted(this, AxisOrientation.Y);
             if (!ce._isThemeSet || isNewTheme)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
@@ -875,6 +869,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     {
         base.Unload();
         _crosshair = [];
+        _sharedEvents = null;
+        _zoomingSection = null;
         _isFirstDraw = true;
     }
 
@@ -893,6 +889,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         if (isSecondaryAction && _zoomMode != ZoomAndPanMode.None)
         {
+            if (_zoomingSection is null) InitializeZoomingSection();
+            if (_zoomingSection is null)
+                throw new Exception("Something went wrong when initializing the zoomming section.");
+
             _sectionZoomingStart = point;
 
             var x = point.X;
@@ -935,13 +935,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="point">The pointer position.</param>
     protected internal override void InvokePointerMove(LvcPoint point)
     {
-        foreach (var axis in _crosshair)
-        {
-            axis.InvalidateCrosshair(this, point);
-        }
+        InvalidateCrosshairs(this, point);
 
         if (_sectionZoomingStart is not null)
         {
+            if (_zoomingSection is null) return;
+
             var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
             var yMode = (_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
 
@@ -972,6 +971,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     {
         if (_sectionZoomingStart is not null)
         {
+            if (_zoomingSection is null) return;
+
             var xy = Math.Sqrt(Math.Pow(point.X - _sectionZoomingStart.Value.X, 2) + Math.Pow(point.Y - _sectionZoomingStart.Value.Y, 2));
             if (xy < 15)
             {
@@ -1013,19 +1014,17 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                     if (xMax - xMin > min)
                     {
-                        x.MinLimit = xMin;
-                        x.MaxLimit = xMax;
+                        x.SetLimits(xMin, xMax);
                     }
                     else
                     {
                         if (x.MaxLimit is not null && x.MinLimit is not null)
                         {
                             var d = xMax - xMin;
-                            var ad = x.MaxLimit - x.MinLimit;
+                            var ad = x.MaxLimit.Value - x.MinLimit.Value;
                             var c = (ad - d) * 0.5;
 
-                            x.MinLimit = xMin - c;
-                            x.MaxLimit = xMax + c;
+                            x.SetLimits(xMin - c, xMax + c);
                         }
                     }
                 }
@@ -1060,19 +1059,17 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                     if (yMax - yMin > min)
                     {
-                        y.MinLimit = yMin;
-                        y.MaxLimit = yMax;
+                        y.SetLimits(yMin, yMax);
                     }
                     else
                     {
                         if (y.MaxLimit is not null && y.MinLimit is not null)
                         {
                             var d = yMax - yMin;
-                            var ad = y.MaxLimit - y.MinLimit;
+                            var ad = y.MaxLimit.Value - y.MinLimit.Value;
                             var c = (ad - d) * 0.5;
 
-                            y.MinLimit = yMin - c;
-                            y.MaxLimit = yMax + c;
+                            y.SetLimits(yMin - c, yMax + c);
                         }
                     }
                 }
@@ -1083,10 +1080,62 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             _zoomingSection.Width = 0;
             _zoomingSection.Height = 0;
             _sectionZoomingStart = null;
+
             return;
         }
 
         base.InvokePointerUp(point, isSecondaryAction);
+    }
+
+    /// <inheritdoc cref="InvokePointerLeft"/>
+    protected internal override void InvokePointerLeft()
+    {
+        OnPointerLeft();
+
+        //propagate to shared charts
+        foreach (var sharedChart in _sharedEvents ?? [])
+        {
+            if (sharedChart == this) continue;
+
+            sharedChart.OnPointerLeft();
+        }
+    }
+
+    internal void SubscribeSharedEvents(HashSet<CartesianChart<TDrawingContext>> instance)
+    {
+        // An experimental feature, it allows a chart to propagate some events to other charts,
+        // this feature was created to share crosshairs between multiple charts.
+
+        _sharedEvents = instance;
+        _ = _sharedEvents.Add(this);
+    }
+
+    private void OnPointerLeft() => base.InvokePointerLeft();
+
+    private void InvalidateCrosshairs(Chart<TDrawingContext> chart, LvcPoint point)
+    {
+        foreach (var axis in _crosshair)
+            axis.InvalidateCrosshair(chart, point);
+
+        //propagate to shared charts
+        foreach (var sharedChart in _sharedEvents ?? [])
+        {
+            if (sharedChart == this) continue;
+
+            foreach (var axis in sharedChart._crosshair)
+                axis.InvalidateCrosshair(sharedChart, point);
+        }
+    }
+
+    private void InitializeZoomingSection()
+    {
+        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        _zoomingSection = provider.InitializeZoommingSection(Canvas);
+
+        _zoomingSection.X = -1;
+        _zoomingSection.Y = -1;
+        _zoomingSection.Width = 0;
+        _zoomingSection.Height = 0;
     }
 
     private static void AppendLimits(ICartesianAxis x, ICartesianAxis y, DimensionalBounds bounds)

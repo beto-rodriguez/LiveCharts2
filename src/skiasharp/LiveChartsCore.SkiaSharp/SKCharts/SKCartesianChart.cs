@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
@@ -49,8 +48,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        Core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), CoreCanvas, new RectangleGeometry());
+        Core = new CartesianChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;

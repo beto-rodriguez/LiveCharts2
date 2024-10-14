@@ -299,8 +299,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     #endregion
 
-    /// <inheritdoc cref="ICartesianAxis.Initialized"/>
-    public event Action<ICartesianAxis>? Initialized;
+    /// <inheritdoc cref="ICartesianAxis.MeasureStarted"/>
+    public event Action<IChart, ICartesianAxis>? MeasureStarted;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -942,15 +942,15 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         MaxLimit = max;
     }
 
-    /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>
-    void ICartesianAxis.Initialize(AxisOrientation orientation)
+    /// <inheritdoc cref="ICartesianAxis.OnMeasureStarted(IChart, AxisOrientation)"/>
+    void ICartesianAxis.OnMeasureStarted(IChart chart, AxisOrientation orientation)
     {
         _orientation = orientation;
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
         _animatableBounds ??= new();
         _possibleMaxLabelsSize = null;
-        Initialized?.Invoke(this);
+        MeasureStarted?.Invoke(chart, this);
     }
 
     /// <summary>
