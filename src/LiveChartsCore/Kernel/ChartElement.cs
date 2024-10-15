@@ -97,7 +97,11 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
-        if (value == reference) return;
+        // The null check is intentional.
+        // we need to allow nulls to go further this if
+        // OnPropertyChanged needs to be called
+        // to detect whether the user set the null value.
+        if (value is not null && value == reference) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
@@ -127,7 +131,11 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         T value,
         [CallerMemberName] string? propertyName = null)
     {
-        if (Equals(value, reference)) return;
+        // The null check is intentional.
+        // we need to allow nulls to go further this if
+        // OnPropertyChanged needs to be called
+        // to detect whether the user set the null value.
+        if (value is not null && value.Equals(reference)) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
