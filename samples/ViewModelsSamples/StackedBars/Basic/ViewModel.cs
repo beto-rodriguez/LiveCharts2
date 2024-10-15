@@ -12,11 +12,13 @@ public class ViewModel
     [
         new StackedColumnSeries<int>
         {
-            Values = [3, 5, -3, 2, 5, -4, -2],
+            Values = [-3, 2, 5, -4, -2],
             Stroke = null,
             DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
             DataLabelsSize = 14,
-            DataLabelsPosition = DataLabelsPosition.Middle
+            DataLabelsPosition = DataLabelsPosition.Middle,
+            YToolTipLabelFormatter =
+                p => $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})"
         },
         new StackedColumnSeries<int>
         {
@@ -24,7 +26,9 @@ public class ViewModel
             Stroke = null,
             DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
             DataLabelsSize = 14,
-            DataLabelsPosition = DataLabelsPosition.Middle
+            DataLabelsPosition = DataLabelsPosition.Middle,
+            YToolTipLabelFormatter =
+                p => $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})"
         },
         new StackedColumnSeries<int>
         {
@@ -32,7 +36,9 @@ public class ViewModel
             Stroke = null,
             DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
             DataLabelsSize = 14,
-            DataLabelsPosition = DataLabelsPosition.Middle
+            DataLabelsPosition = DataLabelsPosition.Middle,
+            YToolTipLabelFormatter =
+                p => $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})"
         }
     ];
 }
