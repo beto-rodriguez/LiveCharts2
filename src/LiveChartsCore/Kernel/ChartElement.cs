@@ -97,6 +97,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
+        if (value == reference) return;
+
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
 
@@ -125,6 +127,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         T value,
         [CallerMemberName] string? propertyName = null)
     {
+        if (Equals(value, reference)) return;
+
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
 
