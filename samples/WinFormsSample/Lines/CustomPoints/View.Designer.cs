@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.CustomPoints
+namespace WinFormsSample.Lines.Custom
 {
     partial class View
     {
