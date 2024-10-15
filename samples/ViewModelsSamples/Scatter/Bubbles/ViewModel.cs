@@ -57,9 +57,9 @@ public class ViewModel
                 Values = [ new() { X = 10, Y = 10, Weight = 500 } ],
                 GeometrySize = 100,
                 MinGeometrySize = 5,
-                // use the stack group to shhare the Weight between series. // mark
-                // in this case, the previous series shares the same
-                // StackGroup, thus series share the Weigth bounds.
+                // use the stack group to share the Weight between series. // mark
+                // in this case, the previous series shares the same // mark
+                // StackGroup, thus series share the Weigth bounds. // mark
                 StackGroup = 1
             }
         ];
