@@ -13,6 +13,7 @@ public static class Index
         "Lines/Properties",
         "Lines/Area",
         "Lines/Custom",
+        "Lines/CustomPoints",
         "Lines/Padding",
         "Lines/XY",
         "Lines/Zoom",
