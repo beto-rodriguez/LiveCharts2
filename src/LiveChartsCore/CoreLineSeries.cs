@@ -570,7 +570,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             {
                 var c = item.Current.Coordinate;
 
-                var sc = (c.PrimaryValue > 0
+                var sc = (c.PrimaryValue >= 0
                     ? stacker?.GetStack(item.Current).Start
                     : stacker?.GetStack(item.Current).NegativeStart) ?? 0;
 
@@ -600,16 +600,18 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
             if (stacker is not null)
             {
-                pys = previous.PrimaryValue > 0
+                var isPositive = current.PrimaryValue >= 0;
+
+                pys = isPositive
                     ? stacker.GetStack(item.Previous).Start
                     : stacker.GetStack(item.Previous).NegativeStart;
-                cys = current.PrimaryValue > 0
+                cys = isPositive
                     ? stacker.GetStack(item.Current).Start
                     : stacker.GetStack(item.Current).NegativeStart;
-                nys = next.PrimaryValue > 0
+                nys = isPositive
                     ? stacker.GetStack(item.Next).Start
                     : stacker.GetStack(item.Next).NegativeStart;
-                nnys = afterNext.PrimaryValue > 0
+                nnys = isPositive
                     ? stacker.GetStack(item.AfterNext).Start
                     : stacker.GetStack(item.AfterNext).NegativeStart;
             }
