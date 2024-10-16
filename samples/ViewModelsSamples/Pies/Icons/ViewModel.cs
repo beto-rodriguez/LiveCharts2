@@ -25,21 +25,22 @@ public class ViewModel
 
         // lets create a pie series collection that plots the BrowserShare class,
         // it will use the DoughnutGeometry to draw each point (the default geometry),
-        // and uses the CustomDoughnutGeometry to draw each point.
+        // and uses the SvgIconLabel to draw the label, in this case a SVG icon.
         Series = data.AsPieSeries<BrowserShare, DoughnutGeometry, SvgIconLabel>(
-            (data, series) =>
+            (dataItem, series) =>
             {
-                // lets define the data labels paint.
+                // define the data labels paint.
                 series.DataLabelsPaint = new SolidColorPaint(SKColors.WhiteSmoke);
 
-                // now, when the point is measured, we will set up the svg label based on the BrowserShare data.
+                // now, when the point is measured,
+                // we will set up the svg label based on the BrowserShare class.
                 series
                     .OnPointMeasured(point =>
                     {
                         var svgLabel = point.Label!;
 
-                        svgLabel.Path = data.Svg;
-                        svgLabel.Name = data.Name;
+                        svgLabel.Path = dataItem.Svg;
+                        svgLabel.Name = dataItem.Name;
                         svgLabel.Width = 50;
                         svgLabel.Height = 50;
                         svgLabel.TranslateTransform = new(-25, -25);
@@ -63,15 +64,18 @@ public class BrowserShare
 
 // this is the geometry that will be used to draw the labels on each point.
 // internaly is simplifies a lot the SkiaSharp API and animates everything.
-// we inherit from BaseSVGPathGeometry to handle the svg path
+// we inherit from VariableSVGPathGeometry to handle the svg path
 // and implement ILabelGeometry to satisfy the series requirements.
 public class SvgIconLabel : VariableSVGPathGeometry, ILabelGeometry<SkiaSharpDrawingContext>
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
+        // lets draw the icon using the VariableSVGPathGeometry base class.
         base.OnDraw(context, paint);
+
+        // and after that, lets draw the name of the browser using the SkiaSharp API.
 
         using var textPaint = new SKPaint
         {
