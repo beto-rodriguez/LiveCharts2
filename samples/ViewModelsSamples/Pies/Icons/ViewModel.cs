@@ -49,7 +49,7 @@ public class ViewModel
 
         // Lets teach LiveCharts how to handle the BrowserShare class
         // you can learn more about mappings here:
-        // // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
+        // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
         LiveCharts.Configure(config => config
             .HasMap<BrowserShare>((point, index) => new(index, point.Value)));
     }
@@ -63,9 +63,9 @@ public class BrowserShare
 }
 
 // this is the geometry that will be used to draw the labels on each point.
-// internaly is simplifies a lot the SkiaSharp API and animates everything.
-// we inherit from VariableSVGPathGeometry to handle the svg path
-// and implement ILabelGeometry to satisfy the series requirements.
+// we inherit from VariableSVGPathGeometry to handle the svg path,
+// the VariableSVGPathGeometry class scales the svg path to fit the Width and Height properties.
+// we also implement ILabelGeometry to satisfy the series requirements.
 public class SvgIconLabel : VariableSVGPathGeometry, ILabelGeometry<SkiaSharpDrawingContext>
 {
     public string Name { get; set; } = string.Empty;
