@@ -268,7 +268,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendTextSize), typeof(double?), typeof(PolarChart),
+            nameof(LegendTextSize), typeof(object), typeof(PolarChart),
             LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -310,7 +310,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipTextSize), typeof(double?), typeof(PolarChart),
+            nameof(TooltipTextSize), typeof(object), typeof(PolarChart),
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>

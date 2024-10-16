@@ -293,7 +293,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(LegendTextSize), typeof(object), typeof(CartesianChart),
             LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -333,7 +333,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(TooltipTextSize), typeof(object), typeof(CartesianChart),
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>

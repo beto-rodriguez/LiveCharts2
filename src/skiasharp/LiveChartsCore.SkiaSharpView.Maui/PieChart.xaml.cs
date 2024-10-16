@@ -177,7 +177,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty MaxValueProperty =
         BindableProperty.Create(
-            nameof(MaxValue), typeof(double?), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+            nameof(MaxValue), typeof(object), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
     /// The start property
@@ -236,7 +236,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendTextSize), typeof(double?), typeof(PieChart),
+            nameof(LegendTextSize), typeof(object), typeof(PieChart),
             LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -268,7 +268,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipTextSize), typeof(double?), typeof(PieChart),
+            nameof(TooltipTextSize), typeof(object), typeof(PieChart),
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>

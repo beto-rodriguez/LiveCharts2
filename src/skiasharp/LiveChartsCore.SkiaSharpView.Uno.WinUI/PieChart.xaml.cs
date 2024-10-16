@@ -157,7 +157,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty MaxValueProperty =
         DependencyProperty.Register(
-            nameof(MaxValue), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(MaxValue), typeof(object), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The start property
@@ -218,7 +218,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty LegendTextSizeProperty =
         DependencyProperty.Register(
-            nameof(LegendTextSize), typeof(double?), typeof(PieChart),
+            nameof(LegendTextSize), typeof(object), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -250,7 +250,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty TooltipTextSizeProperty =
         DependencyProperty.Register(
-            nameof(TooltipTextSize), typeof(double?), typeof(PieChart),
+            nameof(TooltipTextSize), typeof(object), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>

@@ -278,7 +278,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty LegendTextSizeProperty =
         DependencyProperty.Register(
-            nameof(LegendTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(LegendTextSize), typeof(object), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -310,7 +310,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty TooltipTextSizeProperty =
         DependencyProperty.Register(
-            nameof(TooltipTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(TooltipTextSize), typeof(object), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
