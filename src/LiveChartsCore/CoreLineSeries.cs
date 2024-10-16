@@ -186,7 +186,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             var isSegmentEmpty = true;
             VectorManager<CubicBezierSegment, TDrawingContext>? strokeVector = null, fillVector = null;
 
-            var line = GetSpline(segment, stacker).ToArray();
+            var line = GetSpline(segment, stacker);
 
             foreach (var data in line)
             {
