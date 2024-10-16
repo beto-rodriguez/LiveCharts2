@@ -47,6 +47,7 @@ public static class Index
         "Pies/Doughnut",
         "Pies/Pushout",
         "Pies/Custom",
+        "Pies/Icons",
         "Pies/OutLabels",
         "Pies/NightingaleRose",
         "Pies/Gauges",
