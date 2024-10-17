@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -34,6 +36,44 @@ namespace LiveChartsCore.UnitTesting.CoreObjectsTests;
 [TestClass]
 public class ChangingPaintTasks
 {
+    [TestMethod]
+    public async Task EnsureChartIsMeasured()
+    {
+        var chart = new SKCartesianChart
+        {
+            Series = [new LineSeries<int>([1, 2, 3])]
+        };
+
+        var measureCount = 0;
+        chart.Measuring += c => measureCount++;
+
+        var frames = DrawChart(chart, false);
+
+        await Task.Delay(1000);
+
+        Assert.IsTrue(measureCount == 1 && frames == 1);
+    }
+
+    [TestMethod]
+    public async Task EnsureChartIsAnimated()
+    {
+        var chart = new SKCartesianChart
+        {
+            AnimationsSpeed = TimeSpan.FromSeconds(1),
+            EasingFunction = EasingFunctions.Lineal,
+            Series = [new LineSeries<int>([1, 2, 3])]
+        };
+
+        var measureCount = 0;
+        chart.Measuring += c => measureCount++;
+
+        var frames = DrawChart(chart, true);
+
+        await Task.Delay(1000);
+
+        Assert.IsTrue(measureCount == 1 && frames > 1);
+    }
+
     [TestMethod]
     public void DrawableSeriesFillChanged()
     {
@@ -479,5 +519,31 @@ public class ChangingPaintTasks
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
             geometries == canvas.CountGeometries());
+    }
+
+    private int DrawChart(InMemorySkiaSharpChart chart, bool animated = false)
+    {
+        var coreChart = (Chart<SkiaSharpDrawingContext>)chart.CoreChart;
+
+        coreChart.IsLoaded = true;
+        coreChart._isFirstDraw = true;
+        coreChart.Measure();
+
+        var canvas = chart.CoreCanvas;
+        canvas.DisableAnimations = !animated;
+        var frames = 0;
+
+        while (!canvas.IsValid)
+        {
+            frames++;
+            canvas.DrawFrame(
+                new SkiaSharpDrawingContext(
+                    canvas,
+                    new SKImageInfo(100, 100),
+                    SKSurface.CreateNull(100, 100),
+                    new SKCanvas(new SKBitmap())));
+        }
+
+        return frames;
     }
 }
