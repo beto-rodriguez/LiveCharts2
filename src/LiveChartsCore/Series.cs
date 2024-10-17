@@ -239,8 +239,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public bool IsVisible
     {
         get => _isVisible;
-        set
-        => SetProperty(ref _isVisible, value);
+        set => SetProperty(ref _isVisible, value);
     }
 
     /// <inheritdoc cref="ISeries.IsHoverable" />
@@ -303,9 +302,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         get => _miniatureSketch;
         protected set => SetProperty(ref _miniatureSketch, value);
     }
-
-    /// <inheritdoc cref="ISeries.VisibilityChanged"/>
-    public event Action<ISeries>? VisibilityChanged;
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetStackGroup"/>
     public virtual int GetStackGroup()
@@ -461,14 +457,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="chartPoint">The chart point.</param>
     /// <returns></returns>
     protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
-
-    /// <summary>
-    /// Called when the visibility changes.
-    /// </summary>
-    protected virtual void OnVisibilityChanged()
-    {
-        VisibilityChanged?.Invoke(this);
-    }
 
     /// <summary>
     /// Called when the pointer enters a point.

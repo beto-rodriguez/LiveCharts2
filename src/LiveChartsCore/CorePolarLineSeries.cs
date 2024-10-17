@@ -770,8 +770,6 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
         if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
-
-        OnVisibilityChanged();
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>

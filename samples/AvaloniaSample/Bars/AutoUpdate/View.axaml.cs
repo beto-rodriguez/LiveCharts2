@@ -23,8 +23,8 @@ public partial class View : UserControl
 
         while (isStreaming.Value)
         {
-            vm.RemoveItem();
-            vm.AddItem();
+            //vm.RemoveItem();
+            //vm.AddItem();
             await Task.Delay(1000);
         }
     }

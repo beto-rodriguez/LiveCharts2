@@ -646,8 +646,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         }
 
         foreach (var item in toDelete) _ = everFetched.Remove(item);
-
-        OnVisibilityChanged();
     }
 
     private void AlignLabel(TLabel label, double start, double initialRotation, double sweep)

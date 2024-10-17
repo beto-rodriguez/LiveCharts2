@@ -52,8 +52,11 @@ public class _SharedPropertiesTests
     [TestMethod]
     public void VisbilityAndPaintsTasks()
     {
-        var values = new ObservableCollection<DateTimePoint>() { new() };
-        var lineSeries = new ColumnSeries<DateTimePoint>(values);
+        // based on:
+        // https://github.com/beto-rodriguez/LiveCharts2/issues/1164
+
+        var values = new ObservableCollection<ObservableValue>() { new(1) };
+        var lineSeries = new ColumnSeries<ObservableValue>(values);
         var chart = new SKCartesianChart
         {
             Series = [lineSeries],
@@ -76,5 +79,11 @@ public class _SharedPropertiesTests
         Assert.IsTrue(
            drawables == canvas.DrawablesCount &&
            geometries == canvas.CountGeometries());
+
+        values.Clear();
+
+        Assert.IsTrue(
+           drawables == canvas.DrawablesCount &&
+           geometries < canvas.CountGeometries());
     }
 }
