@@ -239,8 +239,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public bool IsVisible
     {
         get => _isVisible;
-        set
-        => SetProperty(ref _isVisible, value);
+        set => SetProperty(ref _isVisible, value);
     }
 
     /// <inheritdoc cref="ISeries.IsHoverable" />
