@@ -91,19 +91,7 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
@@ -111,8 +99,7 @@ public class ChangingPaintTasks
         // on changing the fill task, the previous instance should be removed.
         series.Fill = new SolidColorPaint();
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -136,27 +123,14 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
 
         series.Stroke = new SolidColorPaint();
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -180,19 +154,7 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
@@ -200,8 +162,7 @@ public class ChangingPaintTasks
         series.GeometryFill = new SolidColorPaint();
         series.GeometryStroke = new SolidColorPaint();
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -224,30 +185,16 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
         seriesCollection.Add(new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } });
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         seriesCollection.RemoveAt(0);
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -270,30 +217,17 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
 
         chart.Series = new List<ISeries>
-            {
-                new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } }
-            };
+        {
+            new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } }
+        };
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -317,27 +251,14 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
 
         axis.LabelsPaint = new SolidColorPaint();
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -361,27 +282,14 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
 
         axis.SeparatorsPaint = new SolidColorPaint();
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -403,27 +311,14 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
 
         chart.XAxes = new[] { new Axis() };
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -451,27 +346,14 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
 
         section.Fill = new SolidColorPaint();
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
@@ -494,27 +376,14 @@ public class ChangingPaintTasks
 
         var canvas = chart.CoreCanvas;
 
-        void DrawChart()
-        {
-            while (!canvas.IsValid)
-                canvas.DrawFrame(
-                    new SkiaSharpDrawingContext(
-                        canvas,
-                        new SKImageInfo(100, 100),
-                        SKSurface.CreateNull(100, 100),
-                        new SKCanvas(new SKBitmap())));
-        }
-
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         var drawables = canvas.DrawablesCount;
         var geometries = canvas.CountGeometries();
 
         chart.Sections = new[] { new RectangularSection() };
 
-        chart.Core.Update(new ChartUpdateParams { Throttling = false });
-        DrawChart();
+        _ = DrawChart(chart);
 
         Assert.IsTrue(
             drawables == canvas.DrawablesCount &&
