@@ -367,7 +367,7 @@ public class ChangingPaintTasks
             geometries == canvas.CountGeometries());
     }
 
-    private int DrawChart(InMemorySkiaSharpChart chart, bool animated = false)
+    public static int DrawChart(InMemorySkiaSharpChart chart, bool animated = false)
     {
         var coreChart = (Chart<SkiaSharpDrawingContext>)chart.CoreChart;
 
