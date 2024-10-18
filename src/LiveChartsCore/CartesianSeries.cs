@@ -289,8 +289,6 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
         }
 
         foreach (var item in deleted) _ = everFetched.Remove(item);
-
-        OnVisibilityChanged();
     }
 
     /// <summary>
