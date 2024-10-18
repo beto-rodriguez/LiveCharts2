@@ -810,8 +810,14 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
-        foreach (var section in Sections) AddVisual(section);
-        foreach (var visual in VisualElements) AddVisual(visual);
+
+        // we draw all the series even invisible because it animates the series when hidden.
+        // Sections and Visuals are not animated when hidden, thus we just skip them.
+        // it means that invisible series have a performance impact, it should not be a big deal
+        // but ideally, do not keep invisible series in the chart, instead, add/remove them when needed.
+
+        foreach (var section in Sections.Where(x => x.IsVisible)) AddVisual(section);
+        foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
             AddVisual((ChartElement<TDrawingContext>)series);
@@ -836,7 +842,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 ce._isInternalSet = false;
             }
 
-            AddVisual(_chartView.DrawMarginFrame);
+            if (_chartView.DrawMarginFrame.IsVisible) AddVisual(_chartView.DrawMarginFrame);
             _previousDrawMarginFrame = _chartView.DrawMarginFrame;
         }
 
