@@ -812,7 +812,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
         foreach (var section in Sections) AddVisual(section);
         foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in VisibleSeries)
+        foreach (var series in Series)
         {
             AddVisual((ChartElement<TDrawingContext>)series);
             _drawnSeries.Add(series.SeriesId);
