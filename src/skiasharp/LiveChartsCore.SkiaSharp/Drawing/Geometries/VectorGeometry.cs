@@ -37,12 +37,15 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
 {
     private readonly FloatMotionProperty _pivotProperty;
 
+    private readonly FloatMotionProperty _opacityProperty;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="VectorGeometry{TSegment}"/> class.
     /// </summary>
     public VectorGeometry()
     {
         _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
+        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
     }
 
     /// <summary>
@@ -55,6 +58,15 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
 
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Pivot" />
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
+    public IPaint<SkiaSharpDrawingContext>? Stroke { get; set; }
+
+    /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
+    public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
+
+    /// <inheritdoc cref="IPaintable{TDrawingContext}.Opacity" />
+    public float Opacity { get => _opacityProperty.GetMovement(this); set => _opacityProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
     public override void CompleteTransition(params string[]? propertyName)
@@ -107,7 +119,18 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
 
         if (last is not null) OnClose(context, path, last);
 
-        context.Canvas.DrawPath(path, context.Paint);
+        var hasGeometryOpacity = Opacity < 1;
+
+        if (Fill is null && Stroke is null)
+        {
+            if (hasGeometryOpacity) context.PaintTask.ApplyOpacityMask(context, this);
+            context.Canvas.DrawPath(path, context.Paint);
+            if (hasGeometryOpacity) context.PaintTask.RestoreOpacityMask(context, this);
+        }
+        else
+        {
+            throw new System.NotImplementedException($"Fill and strokes per vector is not implemented.");
+        }
 
         if (!isValid) IsValid = false;
     }
