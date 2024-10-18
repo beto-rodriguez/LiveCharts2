@@ -46,7 +46,6 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     private int _scalesXAt;
     private int _scalesYAt;
     private int? _zIndex;
-    private bool _isVisible = true;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -83,11 +82,6 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
         get => _labelPaint;
         set => SetPaintProperty(ref _labelPaint, value);
     }
-
-    /// <summary>
-    /// Gets or sets whether the section is visible or not.
-    /// </summary>
-    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <summary>
     /// Gets or sets the xi, the value where the section starts at the X axis,

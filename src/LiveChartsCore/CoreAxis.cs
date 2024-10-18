@@ -91,7 +91,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private IPaint<TDrawingContext>? _crosshairLabelsPaint;
     private LvcColor? _crosshairLabelsBackground;
     private bool _showSeparatorLines = true;
-    private bool _isVisible = true;
     private bool _isInverted;
     private bool _separatorsAtCenter = true;
     private bool _ticksAtCenter = true;
@@ -180,9 +179,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.CustomSeparators"/>
     public IEnumerable<double>? CustomSeparators { get => _customSeparators; set => SetProperty(ref _customSeparators, value); }
-
-    /// <inheritdoc cref="IPlane.IsVisible"/>
-    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }

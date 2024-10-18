@@ -38,6 +38,11 @@ public interface IChartElement<TDrawingContext> : INotifyPropertyChanged
     object? Tag { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the element is visible.
+    /// </summary>
+    bool IsVisible { get; set; }
+
+    /// <summary>
     /// Invalidates the <see cref="IChartElement{TDrawingContext}"/> in the user interface.
     /// </summary>
     /// <param name="chart">The chart.</param>

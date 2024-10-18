@@ -99,7 +99,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private Func<TModel, int, Coordinate>? _mapping;
     private int _zIndex;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
-    private bool _isVisible = true;
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
     private bool _isVisibleAtLegend = true;
@@ -233,13 +232,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     {
         get => _dataLabelsFormatter;
         set => SetProperty(ref _dataLabelsFormatter, value);
-    }
-
-    /// <inheritdoc cref="ISeries.IsVisible" />
-    public bool IsVisible
-    {
-        get => _isVisible;
-        set => SetProperty(ref _isVisible, value);
     }
 
     /// <inheritdoc cref="ISeries.IsHoverable" />
