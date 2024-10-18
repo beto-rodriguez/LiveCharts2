@@ -67,6 +67,8 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// <param name="series">The series.</param>
     public int GetColumnPostion(IChartSeries<TDrawingContext> series)
     {
+        if (!series.IsVisible) return ReturnDefault();
+
         if (_areBarsIndexed) return _columnPositions[series];
         IndexBars();
         return _columnPositions[series];
@@ -100,6 +102,8 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// <returns></returns>
     public int GetRowPosition(IChartSeries<TDrawingContext> series)
     {
+        if (!series.IsVisible) return ReturnDefault();
+
         if (_areBarsIndexed) return _rowPositions[series];
         IndexBars();
         return _rowPositions[series];
@@ -123,6 +127,8 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// <returns></returns>
     public int GetBoxPosition(IChartSeries<TDrawingContext> series)
     {
+        if (!series.IsVisible) return ReturnDefault();
+
         if (_areBarsIndexed) return _boxPositions[series];
         IndexBars();
         return _boxPositions[series];
@@ -146,6 +152,8 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// <returns></returns>
     public int GetStackedColumnPostion(IChartSeries<TDrawingContext> series)
     {
+        if (!series.IsVisible) return ReturnDefault();
+
         if (_areBarsIndexed) return _stackColumnPositions[series.GetStackGroup()];
         IndexBars();
         return _stackColumnPositions[series.GetStackGroup()];
@@ -169,6 +177,8 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// <returns></returns>
     public int GetStackedRowPostion(IChartSeries<TDrawingContext> series)
     {
+        if (!series.IsVisible) return ReturnDefault();
+
         if (_areBarsIndexed) return _stackRowsPositions[series.GetStackGroup()];
         IndexBars();
         return _stackRowsPositions[series.GetStackGroup()];
@@ -344,4 +354,10 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     }
 
     #endregion
+
+    private int ReturnDefault()
+        // This return 0 for now, but maybe we should cache the last positon and return it.
+        // this method is normally called when the series visibility changed.
+        // because the series is ignored in the UI, so no position is assigned.
+        => 0;
 }
