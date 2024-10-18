@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Buffers.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -135,7 +136,11 @@ public class SolidColorPaint : Paint
 
         var baseColor = context.PaintTask.Color;
         context.Paint.Color =
-            new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, (byte)(255 * geometry.Opacity));
+            new SKColor(
+                baseColor.Red,
+                baseColor.Green,
+                baseColor.Blue,
+                (byte)(baseColor.Alpha * geometry.Opacity));
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
