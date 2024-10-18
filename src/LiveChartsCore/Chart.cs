@@ -591,6 +591,9 @@ public abstract class Chart<TDrawingContext> : IChart
             if (visual is ISeries series)
             {
                 // series delete softly and animate as they leave the UI.
+                // UPDATE
+                // actually series are not even removed sofly.. this is only disposing things
+                // and causes bugs such as #1164
                 series.SoftDeleteOrDispose(View);
             }
             else
