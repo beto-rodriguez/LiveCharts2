@@ -57,7 +57,7 @@ public class PieChart<TDrawingContext>(
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
-        Series.Where(x => ((ChartElement<TDrawingContext>)x).IsVisible);
+        Series.Where(x => x.IsVisible);
 
     /// <summary>
     /// Gets the view.

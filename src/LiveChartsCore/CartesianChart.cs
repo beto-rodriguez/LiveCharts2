@@ -99,7 +99,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
-        Series.Where(x => ((ChartElement<TDrawingContext>)x).IsVisible);
+        Series.Where(x => x.IsVisible);
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is zooming or panning.

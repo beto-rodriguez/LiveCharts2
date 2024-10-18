@@ -31,7 +31,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a plane for a dimension.
 /// </summary>
-public interface IPlane
+public interface IPlane : IChartElement
 {
     /// <summary>
     /// Gets or sets the axis name.
@@ -124,14 +124,6 @@ public interface IPlane
     /// The maximum value.
     /// </value>
     double? MaxLimit { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is visible.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
-    /// </value>
-    bool IsVisible { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
