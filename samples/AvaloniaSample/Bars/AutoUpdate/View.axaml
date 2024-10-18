@@ -12,10 +12,12 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <StackPanel Grid.Row="0" Orientation="Horizontal">
-      <Button Margin="6" Command="{Binding ToggleVisibilityCommand}">ToggleVisible</Button>
-      <Button Margin="6" Command="{Binding ClearSeriesCommand}">Clear</Button>
-      <Button Margin="6" Command="{Binding UpdateSeriesCommand}">Update</Button>
-        <Button Margin="6" Command="{Binding AddPointCommand}">Add</Button>
+      <Button Margin="6" Command="{Binding AddItemCommand}">Add item</Button>
+      <Button Margin="6" Command="{Binding ReplaceItemCommand}">Replace item</Button>
+      <Button Margin="6" Command="{Binding RemoveItemCommand}">Remove item</Button>
+      <Button Margin="6" Command="{Binding AddSeriesCommand}">Add Series</Button>
+      <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
+      <Button Margin="6" Click="ButtonClick">Constant changes</Button>
     </StackPanel>
     <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}">
     </lvc:CartesianChart>
