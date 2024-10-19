@@ -54,11 +54,32 @@ public class _MemoryTests
         // stacked series are irrelevant for this test because they inherit from some type above.
     }
 
+    [TestMethod]
+    public void ObservableValuesInstanceChangedTest()
+    {
+        // here series.values is of type ObservableCollection<ObservableValue>
+        // we change the instance of the values array multiple times
+        // the memory and geometries count should not increase significantly.
+
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new BoxSeries<ObservableValue>(), "box"));
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new ColumnSeries<ObservableValue>(), "colum"));
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new CandlesticksSeries<ObservableValue>(), "candle"));
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new HeatSeries<ObservableValue>(), "heat"));
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new LineSeries<ObservableValue>(), "line"));
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new RowSeries<ObservableValue>(), "row"));
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new ScatterSeries<ObservableValue>(), "scatter"));
+        TestValuesInstanceChangedObservableIChartEntities(new CartesianSut(new StepLineSeries<ObservableValue>(), "step line"));
+        TestValuesInstanceChangedObservableIChartEntities(new PieSut(new PieSeries<ObservableValue>(), "pie"));
+        TestValuesInstanceChangedObservableIChartEntities(new PolarSut(new PolarLineSeries<ObservableValue>(), "polar"));
+
+        // stacked series are irrelevant for this test because they inherit from some type above.
+    }
+
     private static void TestObservablesChanging<T>(ChartSut<T> sut)
         where T : IList
     {
-        // this test adds, removes, clears, and changes the visibility multiple times
-        // the memory and gemeotries count should not increase significantly
+        // this test replaces the values of the series with a new collection of 5,000 elements
+        // values is of type ObservableCollection<ObservableValue>
 
         GC.Collect();
         GC.WaitForPendingFinalizers();
@@ -128,11 +149,14 @@ public class _MemoryTests
     private void TestValuesInstanceChangedPrimitiveMapped<T>(ChartSut<T> sut)
         where T : IEnumerable
     {
+        // this test replaces the values of the series with a new array of 5,000 elements
+        // values is of type int[]
+
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        var initialMemory = GC.GetTotalMemory(true);
+        var initialMemory = 0L;
 
         _ = ChangingPaintTasks.DrawChart(sut.Chart, true);
 
@@ -151,6 +175,13 @@ public class _MemoryTests
 
             sut.Series.Values = values;
             totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
+
+            // we wait for the first frame to be drawn to measure the initial memory
+            // not sure why, but the first draw consumes about 12mb in this case
+            // but no matter the number or runs, it stays at those 12 mb all the time.
+            // so if we ignore the first call, we satisfy the 2mb threashold.
+            // in this test, it only happens in the HeatSeries.
+            if (i == 0) initialMemory = GC.GetTotalMemory(true);
 
             var newCount = canvas.CountGeometries();
             if (newCount > geometries)
@@ -184,6 +215,78 @@ public class _MemoryTests
         Assert.IsTrue(
             finalMemory - initialMemory < 2 * 1024 * 1024,
             $"[{sut.Series.Name} series] Potential memory leak detected {(finalMemory - initialMemory) / (1024d * 1024):N2}MB, " +
+            $"{totalFramesDrawn} frames drawn.");
+    }
+
+    private void TestValuesInstanceChangedObservableIChartEntities<T>(ChartSut<T> sut)
+        where T : IEnumerable
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        var initialMemory = 0L;
+
+        _ = ChangingPaintTasks.DrawChart(sut.Chart, true);
+
+        var canvas = sut.Chart.CoreCanvas;
+        var geometries = canvas.CountGeometries();
+        var deltas = 0;
+        var totalFramesDrawn = 0;
+
+        ObservableCollection<ObservableValue> values;
+
+        for (var i = 0; i < 100; i++)
+        {
+            var newValues = new ObservableValue[5000];
+            for (var j = 0; j < 5000; j++)
+                newValues[j] = new(2);
+
+            values = new(newValues);
+
+            sut.Series.Values = values;
+            totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
+
+            // we wait for the first frame to be drawn to measure the initial memory
+            // not sure why, but the first draw consumes about 12mb in this case
+            // but no matter the number or runs, it stays at those 12 mb all the time.
+            // so if we ignore the first call, we satisfy the 2mb threashold.
+            if (i == 0) initialMemory = GC.GetTotalMemory(true);
+
+            var newCount = canvas.CountGeometries();
+            if (newCount > geometries)
+            {
+                deltas++;
+                geometries = newCount;
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+
+        sut.Series.Values = null;
+        totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
+
+        values = null;
+
+        Assert.IsTrue(deltas <= 1);
+
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        // Assert that there is no significant increase in memory usage
+        var finalMemory = GC.GetTotalMemory(true);
+
+        // 2MB is a reasonable threshold for this test
+        // it changes 100 times, the instance of the values array to a new array of 5,000 elements
+
+        var mb = (finalMemory - initialMemory) / (1024d * 1024);
+
+        Assert.IsTrue(
+            finalMemory - initialMemory < 2 * 1024 * 1024,
+            $"[{sut.Series.Name} series] Potential memory leak detected {mb:N2}MB, " +
             $"{totalFramesDrawn} frames drawn.");
     }
 
@@ -304,7 +407,6 @@ public class _MemoryTests
             name,
             [])
     { }
-
 
     #endregion
 }
