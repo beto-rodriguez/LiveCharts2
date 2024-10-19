@@ -193,10 +193,6 @@ public class DataFactory<TModel, TDrawingContext>
         }
 
         return new SeriesBounds(bounds, false);
-
-        //return !hasData
-        //    ? new SeriesBounds(PreviousKnownBounds, true)
-        //    : new SeriesBounds(PreviousKnownBounds = bounds, false);
     }
 
     /// <summary>
