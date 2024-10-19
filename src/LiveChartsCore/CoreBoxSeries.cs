@@ -151,7 +151,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             var median = primaryScale.ToPixels(coordinate.SenaryValue);
             var middle = open;
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {

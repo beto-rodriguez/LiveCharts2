@@ -168,6 +168,9 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                 strokePath = strokePathHelperContainer[segmentI];
             }
 
+            strokePath.Opacity = IsVisible ? 1 : 0;
+            fillPath.Opacity = IsVisible ? 1 : 0;
+
             var strokeVector = new VectorManager<StepLineSegment, TDrawingContext>(strokePath);
             var fillVector = new VectorManager<StepLineSegment, TDrawingContext>(fillPath);
 
@@ -209,6 +212,28 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                 var dp = coordinate.PrimaryValue + s - previousPrimary;
                 var ds = coordinate.SecondaryValue - previousSecondary;
 
+                if (!IsVisible)
+                {
+                    if (visual is not null)
+                    {
+                        visual.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        visual.Geometry.Y = p;
+                        visual.Geometry.Opacity = 0;
+                        visual.Geometry.RemoveOnCompleted = true;
+
+                        visual.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
+                        visual.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        visual.StepSegment.Yi = p;
+                        visual.StepSegment.Yj = p;
+
+                        point.Context.Visual = null;
+                    }
+
+                    pointsCleanup.Clean(point);
+
+                    continue;
+                }
+
                 if (visual is null)
                 {
                     var v = new StepLineVisualPoint<TDrawingContext, TVisual>();
@@ -231,6 +256,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                     point.Context.AdditionalVisuals = v;
                     OnPointCreated(point);
                 }
+
+                visual.Geometry.Opacity = 1;
 
                 if (hasSvg)
                 {
@@ -444,6 +471,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         visual.Geometry.Y = y + visual.Geometry.Height * 0.5f;
         visual.Geometry.Height = 0;
         visual.Geometry.Width = 0;
+        visual.Geometry.Opacity = 0;
         visual.Geometry.RemoveOnCompleted = true;
 
         DataFactory.DisposePoint(point);

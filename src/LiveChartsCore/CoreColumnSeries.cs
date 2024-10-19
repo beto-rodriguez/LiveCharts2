@@ -134,7 +134,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
             var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var b = Math.Abs(primary - helper.p);
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {

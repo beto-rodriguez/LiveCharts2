@@ -262,7 +262,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             var coordinate = point.Coordinate;
             var visual = point.Context.Visual as TVisual;
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {

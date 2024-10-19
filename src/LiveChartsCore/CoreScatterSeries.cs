@@ -178,7 +178,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
             var x = xScale.ToPixels(coordinate.SecondaryValue);
             var y = yScale.ToPixels(coordinate.PrimaryValue);
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {
