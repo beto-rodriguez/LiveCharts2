@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
@@ -27,70 +28,8 @@ public class _MemoryTests
         // stacked series are irrelevant for this test because they inherit from some type above.
     }
 
-    private abstract class ChartSut
-    {
-        public InMemorySkiaSharpChart Chart { get; set; }
-        public ISeries Series { get; set; }
-        public ObservableCollection<ObservableValue> Values { get; set; }
-
-        protected ChartSut(
-            InMemorySkiaSharpChart chart,
-            ISeries series,
-            string name)
-        {
-            series.Name = name;
-            series.Values = Values = [];
-            Series = series;
-            Chart = chart;
-        }
-    }
-
-    private class CartesianSut(
-        ISeries series,
-        string name)
-            : ChartSut(new SKCartesianChart
-            {
-                Series = [series],
-                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
-                EasingFunction = EasingFunctions.Lineal,
-                Width = 1000,
-                Height = 1000
-            },
-            series,
-            name)
-    { }
-
-    private class PieSut(
-        ISeries series,
-        string name)
-            : ChartSut(new SKPieChart
-            {
-                Series = [series],
-                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
-                EasingFunction = EasingFunctions.Lineal,
-                Width = 1000,
-                Height = 1000
-            },
-            series,
-            name)
-    { }
-
-    private class PolarSut(
-        ISeries series,
-        string name)
-            : ChartSut(new SKPolarChart
-            {
-                Series = [series],
-                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
-                EasingFunction = EasingFunctions.Lineal,
-                Width = 1000,
-                Height = 1000
-            },
-            series,
-            name)
-    { }
-
-    private void TestObservablesChanging(ChartSut sut)
+    private static void TestObservablesChanging<T>(ChartSut<T> sut)
+        where T : IList, new()
     {
         // this test adds, removes, clears, and changes the visibility multiple times
         // the memory and gemeotries count should not increase significantly
@@ -117,7 +56,7 @@ public class _MemoryTests
             totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
 
             for (var j = 0; j < 5000; j++)
-                sut.Values.Add(new(2));
+                _ = sut.Values.Add(new ObservableValue(2));
             totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
 
             sut.Values.RemoveAt(0);
@@ -158,4 +97,91 @@ public class _MemoryTests
             finalMemory - initialMemory < 2 * 1024 * 1024,
             $"Potential memory leak detected {(finalMemory - initialMemory) / (1024d * 1024):N2}MB, {totalFramesDrawn} frames drawn.");
     }
+
+    #region helper classes
+
+    private abstract class ChartSut<T>
+        where T : IEnumerable, new()
+    {
+        public InMemorySkiaSharpChart Chart { get; set; }
+        public ISeries Series { get; set; }
+        public T Values { get; set; }
+
+        protected ChartSut(
+            InMemorySkiaSharpChart chart,
+            ISeries series,
+            string name)
+        {
+            series.Name = name;
+            series.Values = Values = [];
+            Series = series;
+            Chart = chart;
+        }
+    }
+
+    private class CartesianSut(
+        ISeries series,
+        string name)
+            : ChartSut<ObservableCollection<ObservableValue>>(new SKCartesianChart
+            {
+                Series = [series],
+                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
+                EasingFunction = EasingFunctions.Lineal,
+                Width = 1000,
+                Height = 1000
+            },
+            series,
+            name)
+    { }
+
+    private class PieSut(
+        ISeries series,
+        string name)
+            : ChartSut<ObservableCollection<ObservableValue>>(new SKPieChart
+            {
+                Series = [series],
+                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
+                EasingFunction = EasingFunctions.Lineal,
+                Width = 1000,
+                Height = 1000
+            },
+            series,
+            name)
+    { }
+
+    private class PolarSut(
+        ISeries series,
+        string name)
+            : ChartSut<ObservableCollection<ObservableValue>>(new SKPolarChart
+            {
+                Series = [series],
+                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
+                EasingFunction = EasingFunctions.Lineal,
+                Width = 1000,
+                Height = 1000
+            },
+            series,
+            name)
+    { }
+
+    private abstract class ChartSutInt
+    {
+        public InMemorySkiaSharpChart Chart { get; set; }
+        public ISeries Series { get; set; }
+        public int[] Values { get; set; }
+
+        protected ChartSutInt(
+            InMemorySkiaSharpChart chart,
+            ISeries series,
+            string name)
+        {
+            series.Name = name;
+            series.Values = Values = [];
+            Series = series;
+            Chart = chart;
+        }
+    }
+
+
+    #endregion
 }
