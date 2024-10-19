@@ -150,63 +150,83 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
 
         foreach (var segment in segments)
         {
-            TPathGeometry fillPath;
-            TPathGeometry strokePath;
-            var isNew = false;
-
-            if (segmentI >= fillPathHelperContainer.Count)
-            {
-                isNew = true;
-                fillPath = new TPathGeometry { ClosingMethod = VectorClosingMethod.CloseToPivot };
-                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
-                fillPathHelperContainer.Add(fillPath);
-                strokePathHelperContainer.Add(strokePath);
-            }
-            else
-            {
-                fillPath = fillPathHelperContainer[segmentI];
-                strokePath = strokePathHelperContainer[segmentI];
-            }
-
-            strokePath.Opacity = IsVisible ? 1 : 0;
-            fillPath.Opacity = IsVisible ? 1 : 0;
-
-            var strokeVector = new VectorManager<StepLineSegment, TDrawingContext>(strokePath);
-            var fillVector = new VectorManager<StepLineSegment, TDrawingContext>(fillPath);
-
-            if (Fill is not null)
-            {
-                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
-                cartesianChart.Canvas.AddDrawableTask(Fill);
-                Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
-                fillPath.Pivot = p;
-                if (isNew)
-                {
-                    fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
-                }
-            }
-            if (Stroke is not null)
-            {
-                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
-                cartesianChart.Canvas.AddDrawableTask(Stroke);
-                Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
-                strokePath.Pivot = p;
-                if (isNew)
-                {
-                    strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
-                }
-            }
+            var hasPaths = false;
+            var isSegmentEmpty = true;
+            VectorManager<StepLineSegment, TDrawingContext>? strokeVector = null, fillVector = null;
 
             double previousPrimary = 0, previousSecondary = 0;
 
             foreach (var point in segment)
             {
+                if (!hasPaths)
+                {
+                    hasPaths = true;
+
+                    var fillLookup = GetSegmentVisual(segmentI, fillPathHelperContainer, VectorClosingMethod.CloseToPivot);
+                    var strokeLookup = GetSegmentVisual(segmentI, strokePathHelperContainer, VectorClosingMethod.NotClosed);
+
+                    if (fillLookup.Path.Commands.Count == 1)
+                    {
+                        Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillLookup.Path);
+                        fillLookup.Path.Commands.Clear();
+                        fillPathHelperContainer.RemoveAt(segmentI);
+
+                        fillLookup = GetSegmentVisual(segmentI, fillPathHelperContainer, VectorClosingMethod.CloseToPivot);
+                    }
+
+                    if (strokeLookup.Path.Commands.Count == 1)
+                    {
+                        Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeLookup.Path);
+                        strokeLookup.Path.Commands.Clear();
+                        strokePathHelperContainer.RemoveAt(segmentI);
+
+                        strokeLookup = GetSegmentVisual(segmentI, strokePathHelperContainer, VectorClosingMethod.NotClosed);
+                    }
+
+                    var isNew = fillLookup.IsNew || strokeLookup.IsNew;
+                    var fillPath = fillLookup.Path;
+                    var strokePath = strokeLookup.Path;
+
+                    strokeVector = new VectorManager<StepLineSegment, TDrawingContext>(strokePath);
+                    fillVector = new VectorManager<StepLineSegment, TDrawingContext>(fillPath);
+
+                    if (Fill is not null)
+                    {
+                        Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
+                        cartesianChart.Canvas.AddDrawableTask(Fill);
+                        Fill.ZIndex = actualZIndex + 0.1;
+                        Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
+                        fillPath.Pivot = p;
+                        if (isNew)
+                        {
+                            fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                        }
+                    }
+                    if (Stroke is not null)
+                    {
+                        Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
+                        cartesianChart.Canvas.AddDrawableTask(Stroke);
+                        Stroke.ZIndex = actualZIndex + 0.2;
+                        Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
+                        strokePath.Pivot = p;
+                        if (isNew)
+                        {
+                            strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                        }
+                    }
+
+                    strokePath.Opacity = IsVisible ? 1 : 0;
+                    fillPath.Opacity = IsVisible ? 1 : 0;
+                }
+
                 var coordinate = point.Coordinate;
 
+                isSegmentEmpty = false;
                 var s = 0d;
-                if (stacker is not null) s = stacker.GetStack(point).Start;
+                if (stacker is not null)
+                    s = coordinate.PrimaryValue > 0
+                        ? stacker.GetStack(point).Start
+                        : stacker.GetStack(point).NegativeStart;
 
                 var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
                 var dp = coordinate.PrimaryValue + s - previousPrimary;
@@ -273,8 +293,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
 
                 visual.StepSegment.Id = point.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
-                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
 
                 visual.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
                 visual.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
@@ -284,16 +304,18 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                 var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
                 var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)].CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Xj)]);
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)].CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Yj)]);
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
+                    .CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Xj)]);
+                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)]
+                    .CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Yj)]);
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                visual.FillPath = fillPath;
-                visual.StrokePath = strokePath;
+                visual.FillPath = fillVector!.AreaGeometry;
+                visual.StrokePath = strokeVector!.AreaGeometry;
 
                 var hags = gs < 8 ? 8 : gs;
 
@@ -343,12 +365,13 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                 }
 
                 OnPointMeasured(point);
+
                 previousPrimary = coordinate.PrimaryValue + s;
                 previousSecondary = coordinate.SecondaryValue;
             }
 
-            strokeVector.End();
-            fillVector.End();
+            strokeVector?.End();
+            fillVector?.End();
 
             if (GeometryFill is not null)
             {
@@ -362,20 +385,31 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                 GeometryStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
                 GeometryStroke.ZIndex = actualZIndex + 0.4;
             }
-            segmentI++;
+
+            if (!isSegmentEmpty) segmentI++;
         }
 
-        while (segmentI > fillPathHelperContainer.Count)
-        {
-            var iFill = fillPathHelperContainer.Count - 1;
-            var fillHelper = fillPathHelperContainer[iFill];
-            Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper);
-            fillPathHelperContainer.RemoveAt(iFill);
+        var maxSegment = fillPathHelperContainer.Count > strokePathHelperContainer.Count
+            ? fillPathHelperContainer.Count
+            : strokePathHelperContainer.Count;
 
-            var iStroke = strokePathHelperContainer.Count - 1;
-            var strokeHelper = strokePathHelperContainer[iStroke];
-            Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper);
-            strokePathHelperContainer.RemoveAt(iStroke);
+        for (var i = maxSegment - 1; i >= segmentI; i--)
+        {
+            if (i < fillPathHelperContainer.Count)
+            {
+                var segmentFill = fillPathHelperContainer[i];
+                Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentFill);
+                segmentFill.Commands.Clear();
+                fillPathHelperContainer.RemoveAt(i);
+            }
+
+            if (i < strokePathHelperContainer.Count)
+            {
+                var segmentStroke = strokePathHelperContainer[i];
+                Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentStroke);
+                segmentStroke.Commands.Clear();
+                strokePathHelperContainer.RemoveAt(i);
+            }
         }
 
         if (DataLabelsPaint is not null)
@@ -541,6 +575,32 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         visual.Geometry.Height = gs;
         visual.Geometry.RemoveOnCompleted = true;
         point.Context.Visual = null;
+    }
+
+    private SegmentVisual GetSegmentVisual(int index, List<TPathGeometry> container, VectorClosingMethod method)
+    {
+        var isNew = false;
+        TPathGeometry? path;
+
+        if (index >= container.Count)
+        {
+            isNew = true;
+            path = new TPathGeometry { ClosingMethod = method };
+            container.Add(path);
+        }
+        else
+        {
+            path = container[index];
+        }
+
+        return new SegmentVisual(isNew, path);
+    }
+
+    private class SegmentVisual(bool isNew, TPathGeometry path)
+    {
+        public bool IsNew { get; set; } = isNew;
+
+        public TPathGeometry Path { get; set; } = path;
     }
 
     private static SeriesProperties GetProperties(bool isStacked)
