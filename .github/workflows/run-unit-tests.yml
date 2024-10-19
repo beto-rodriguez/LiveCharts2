@@ -27,8 +27,5 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Install MAUI workload
-      run: dotnet workload install maui
-
     - name: Run unit tests
       run: dotnet test ./tests/LiveChartsCore.UnitTesting
