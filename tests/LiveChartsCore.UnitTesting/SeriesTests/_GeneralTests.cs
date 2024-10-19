@@ -45,6 +45,14 @@ public class _GeneralTests
 
     // stacked series are irrelevant for this test because they inherit from some type above.
 
+    [TestMethod]
+    public void PieSeriesResilienceTests() =>
+        GenericResilenceTest(new PieSut(new PieSeries<ObservableValue>()));
+
+    [TestMethod]
+    public void PolarLineSeriesResilienceTests() =>
+        GenericResilenceTest(new PolarSut(new PolarLineSeries<ObservableValue>()));
+
     private abstract class ChartSut
     {
         public InMemorySkiaSharpChart Chart { get; set; }
@@ -64,6 +72,32 @@ public class _GeneralTests
     private class CartesianSut(
         ISeries series)
             : ChartSut(new SKCartesianChart
+            {
+                Series = [series],
+                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
+                EasingFunction = EasingFunctions.Lineal,
+                Width = 1000,
+                Height = 1000
+            },
+            series)
+    { }
+
+    private class PieSut(
+        ISeries series)
+            : ChartSut(new SKPieChart
+            {
+                Series = [series],
+                AnimationsSpeed = TimeSpan.FromMilliseconds(10),
+                EasingFunction = EasingFunctions.Lineal,
+                Width = 1000,
+                Height = 1000
+            },
+            series)
+    { }
+
+    private class PolarSut(
+        ISeries series)
+            : ChartSut(new SKPolarChart
             {
                 Series = [series],
                 AnimationsSpeed = TimeSpan.FromMilliseconds(10),
