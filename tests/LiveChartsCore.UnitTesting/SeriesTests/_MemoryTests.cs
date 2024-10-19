@@ -9,49 +9,23 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LiveChartsCore.UnitTesting.SeriesTests;
 
 [TestClass]
-public class _GeneralTests
+public class _MemoryTests
 {
     [TestMethod]
-    public void BoxSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new BoxSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void ColumnSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new ColumnSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void FinancialSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new CandlesticksSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void HeatSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new HeatSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void LineSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new LineSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void RowSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new RowSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void ScatterSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new ScatterSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void StepLineSeriesResilienceTests() =>
-        GenericResilenceTest(new CartesianSut(new StepLineSeries<ObservableValue>()));
-
-    // stacked series are irrelevant for this test because they inherit from some type above.
-
-    [TestMethod]
-    public void PieSeriesResilienceTests() =>
-        GenericResilenceTest(new PieSut(new PieSeries<ObservableValue>()));
-
-    [TestMethod]
-    public void PolarLineSeriesResilienceTests() =>
-        GenericResilenceTest(new PolarSut(new PolarLineSeries<ObservableValue>()));
+    public void ObservableValuesChangingTest()
+    {
+        TestObservablesChanging(new CartesianSut(new BoxSeries<ObservableValue>(), "box"));
+        TestObservablesChanging(new CartesianSut(new ColumnSeries<ObservableValue>(), "colum"));
+        TestObservablesChanging(new CartesianSut(new CandlesticksSeries<ObservableValue>(), "candle"));
+        TestObservablesChanging(new CartesianSut(new HeatSeries<ObservableValue>(), "heat"));
+        TestObservablesChanging(new CartesianSut(new LineSeries<ObservableValue>(), "line"));
+        TestObservablesChanging(new CartesianSut(new RowSeries<ObservableValue>(), "row"));
+        TestObservablesChanging(new CartesianSut(new ScatterSeries<ObservableValue>(), "scatter"));
+        TestObservablesChanging(new CartesianSut(new StepLineSeries<ObservableValue>(), "step line"));
+        TestObservablesChanging(new PieSut(new PieSeries<ObservableValue>(), "pie"));
+        TestObservablesChanging(new PolarSut(new PolarLineSeries<ObservableValue>(), "polar"));
+        // stacked series are irrelevant for this test because they inherit from some type above.
+    }
 
     private abstract class ChartSut
     {
@@ -61,8 +35,10 @@ public class _GeneralTests
 
         protected ChartSut(
             InMemorySkiaSharpChart chart,
-            ISeries series)
+            ISeries series,
+            string name)
         {
+            series.Name = name;
             series.Values = Values = [];
             Series = series;
             Chart = chart;
@@ -70,7 +46,8 @@ public class _GeneralTests
     }
 
     private class CartesianSut(
-        ISeries series)
+        ISeries series,
+        string name)
             : ChartSut(new SKCartesianChart
             {
                 Series = [series],
@@ -79,11 +56,13 @@ public class _GeneralTests
                 Width = 1000,
                 Height = 1000
             },
-            series)
+            series,
+            name)
     { }
 
     private class PieSut(
-        ISeries series)
+        ISeries series,
+        string name)
             : ChartSut(new SKPieChart
             {
                 Series = [series],
@@ -92,11 +71,13 @@ public class _GeneralTests
                 Width = 1000,
                 Height = 1000
             },
-            series)
+            series,
+            name)
     { }
 
     private class PolarSut(
-        ISeries series)
+        ISeries series,
+        string name)
             : ChartSut(new SKPolarChart
             {
                 Series = [series],
@@ -105,10 +86,11 @@ public class _GeneralTests
                 Width = 1000,
                 Height = 1000
             },
-            series)
+            series,
+            name)
     { }
 
-    private void GenericResilenceTest(ChartSut sut)
+    private void TestObservablesChanging(ChartSut sut)
     {
         // this test adds, removes, clears, and changes the visibility multiple times
         // the memory and gemeotries count should not increase significantly
