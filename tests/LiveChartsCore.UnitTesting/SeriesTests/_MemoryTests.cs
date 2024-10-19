@@ -168,7 +168,6 @@ public class _MemoryTests
         totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
 
         values = null;
-        sut = null;
 
         Assert.IsTrue(deltas <= 1);
 
@@ -277,7 +276,7 @@ public class _MemoryTests
     private class PieSutInt(
         ISeries series,
         string name)
-            : ChartSut<ObservableCollection<ObservableValue>>(new SKPieChart
+            : ChartSut<int[]>(new SKPieChart
             {
                 Series = [series],
                 AnimationsSpeed = TimeSpan.FromMilliseconds(10),
@@ -293,7 +292,7 @@ public class _MemoryTests
     private class PolarSutInt(
         ISeries series,
         string name)
-            : ChartSut<ObservableCollection<ObservableValue>>(new SKPolarChart
+            : ChartSut<int[]>(new SKPolarChart
             {
                 Series = [series],
                 AnimationsSpeed = TimeSpan.FromMilliseconds(10),
