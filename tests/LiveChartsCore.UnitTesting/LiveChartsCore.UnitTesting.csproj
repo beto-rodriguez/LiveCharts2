@@ -4,7 +4,6 @@
     <LangVersion>12.0</LangVersion>
     <TargetFrameworks>net462;net6.0;net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
