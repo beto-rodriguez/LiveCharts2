@@ -29,14 +29,25 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a visual element in a chart.
 /// </summary>
-public interface IChartElement<TDrawingContext> : INotifyPropertyChanged
-    where TDrawingContext : DrawingContext
+public interface IChartElement : INotifyPropertyChanged
 {
     /// <summary>
     /// Gets or sets the object that contains data about the control.
     /// </summary>
     object? Tag { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the element is visible.
+    /// </summary>
+    bool IsVisible { get; set; }
+}
+
+/// <summary>
+/// Defines a visual element in a chart.
+/// </summary>
+public interface IChartElement<TDrawingContext> : IChartElement
+    where TDrawingContext : DrawingContext
+{
     /// <summary>
     /// Invalidates the <see cref="IChartElement{TDrawingContext}"/> in the user interface.
     /// </summary>

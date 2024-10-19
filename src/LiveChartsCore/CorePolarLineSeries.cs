@@ -770,8 +770,6 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
         if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
-
-        OnVisibilityChanged();
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
@@ -867,7 +865,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         foreach (var point in points)
         {
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (point.Context.Visual is BezierVisualPoint<TDrawingContext, TVisual> visual)
                 {

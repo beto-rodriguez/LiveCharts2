@@ -188,7 +188,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             var low = primaryScale.ToPixels(coordinate.QuinaryValue);
             var middle = open;
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {

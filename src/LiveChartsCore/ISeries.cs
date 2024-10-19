@@ -33,7 +33,7 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a chart series.
 /// </summary>
-public interface ISeries
+public interface ISeries : IChartElement
 {
     /// <summary>
     /// Gets or sets a series unique identifier, the library handles this id automatically.
@@ -63,14 +63,6 @@ public interface ISeries
     /// The values.
     /// </value>
     IEnumerable? Values { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is visible.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
-    /// </value>
-    bool IsVisible { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance will show up in tool tips when the pointer is over a point.
@@ -143,11 +135,6 @@ public interface ISeries
     /// The easing function.
     /// </value>
     Func<float, float>? EasingFunction { get; set; }
-
-    /// <summary>
-    /// Occurs when the series <see cref="IsVisible"/> property changes.
-    /// </summary>
-    event Action<ISeries>? VisibilityChanged;
 
     /// <summary>
     /// Gets the tool tip text for a give chart point.

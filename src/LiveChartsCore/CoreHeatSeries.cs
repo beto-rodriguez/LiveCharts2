@@ -158,7 +158,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {

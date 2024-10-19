@@ -137,7 +137,6 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var segments = _enableNullSplitting
             ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale)) // calling this method is probably as expensive as the line bellow
             : [Fetch(cartesianChart)];
-
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
             ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup())
             : null;
@@ -186,9 +185,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             var isSegmentEmpty = true;
             VectorManager<CubicBezierSegment, TDrawingContext>? strokeVector = null, fillVector = null;
 
-            var line = GetSpline(segment, stacker);
-
-            foreach (var data in line)
+            foreach (var data in GetSpline(segment, stacker))
             {
                 if (!hasPaths)
                 {
@@ -246,6 +243,9 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                             strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
                         }
                     }
+
+                    strokePath.Opacity = IsVisible ? 1 : 0;
+                    fillPath.Opacity = IsVisible ? 1 : 0;
                 }
 
                 var coordinate = data.TargetPoint.Coordinate;
@@ -260,6 +260,30 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 var visual =
                     (BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>?)
                     data.TargetPoint.Context.AdditionalVisuals;
+
+                if (!IsVisible)
+                {
+                    if (visual is not null)
+                    {
+                        visual.Geometry.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        visual.Geometry.Y = p;
+                        visual.Geometry.Opacity = 0;
+                        visual.Geometry.RemoveOnCompleted = true;
+
+                        visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
+                        visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
+                        visual.Bezier.Xj = secondaryScale.ToPixels(data.X2);
+                        visual.Bezier.Yi = p;
+                        visual.Bezier.Ym = p;
+                        visual.Bezier.Yj = p;
+
+                        data.TargetPoint.Context.Visual = null;
+                    }
+
+                    pointsCleanup.Clean(data.TargetPoint);
+
+                    continue;
+                }
 
                 if (visual is null)
                 {
@@ -301,6 +325,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     data.TargetPoint.Context.AdditionalVisuals = v;
                     OnPointCreated(data.TargetPoint);
                 }
+
+                visual.Geometry.Opacity = 1;
 
                 if (hasSvg)
                 {
@@ -697,6 +723,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         visual.Geometry.Y = y + visual.Geometry.Height * 0.5f;
         visual.Geometry.Height = 0;
         visual.Geometry.Width = 0;
+        visual.Geometry.Opacity = 0;
         visual.Geometry.RemoveOnCompleted = true;
 
         if (visual.YError is not null)

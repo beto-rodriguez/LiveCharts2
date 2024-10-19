@@ -38,6 +38,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     internal bool _isInternalSet = false;
     internal bool _isThemeSet = false;
     internal readonly HashSet<string> _userSets = [];
+    private bool _isVisible = true;
     private readonly List<IPaint<TDrawingContext>> _deletingTasks = [];
 
     /// <summary>
@@ -48,6 +49,13 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
 
     /// <inheritdoc cref="IChartElement{TDrawingContext}.Tag" />
     public object? Tag { get; set; }
+
+    /// <inheritdoc cref="IChartElement{TDrawingContext}.IsVisible" />
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set => SetProperty(ref _isVisible, value);
+    }
 
     /// <inheritdoc cref="IChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})" />
     public abstract void Invalidate(Chart<TDrawingContext> chart);
