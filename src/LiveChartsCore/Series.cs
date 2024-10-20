@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 namespace LiveChartsCore;
 
 /// <summary>
@@ -289,6 +290,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.CanvasSchedule"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
     public Sketch<TDrawingContext> CanvasSchedule
     {
         get => _miniatureSketch;
@@ -394,6 +396,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniaturesSketch"/>
     public abstract Sketch<TDrawingContext> GetMiniaturesSketch();
+
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniature"/>
+    public abstract VisualElement<TDrawingContext> GetMiniature();
 
     /// <summary>
     /// Builds a paint schedule.
