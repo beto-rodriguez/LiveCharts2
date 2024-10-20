@@ -100,8 +100,9 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <summary>
     /// Return the visual element shown in tooltips and legends.
     /// </summary>
+    /// <param name="zindex">The zindex.</param>
     /// <returns></returns>
-    VisualElement<TDrawingContext> GetMiniature();
+    VisualElement<TDrawingContext> GetMiniature(int zindex = 0);
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.

@@ -356,7 +356,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature()
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
     {
         // ToDo <- draw the gradient?
         // what to show in the legend?

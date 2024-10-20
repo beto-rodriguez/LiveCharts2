@@ -491,12 +491,12 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature()
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
     {
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {
-            Fill = DownStroke,
-            Stroke = UpStroke,
+            Fill = DownStroke.Clone(zindex),
+            Stroke = UpStroke.Clone(zindex),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };

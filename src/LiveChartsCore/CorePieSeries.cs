@@ -469,12 +469,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature()
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
     {
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {
-            Fill = Fill,
-            Stroke = Stroke,
+            Fill = Fill.Clone(zindex),
+            Stroke = Stroke.Clone(zindex),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };

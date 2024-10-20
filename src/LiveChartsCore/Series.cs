@@ -399,7 +399,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public abstract Sketch<TDrawingContext> GetMiniaturesSketch();
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniature"/>
-    public abstract VisualElement<TDrawingContext> GetMiniature();
+    public abstract VisualElement<TDrawingContext> GetMiniature(int zindex = 0);
 
     /// <summary>
     /// Builds a paint schedule.

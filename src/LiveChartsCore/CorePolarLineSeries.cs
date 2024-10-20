@@ -529,12 +529,12 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature()
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
     {
         return new GeometryVisual<TVisual, TLabel, TDrawingContext>
         {
-            Fill = Fill,
-            Stroke = Stroke,
+            Fill = Fill.Clone(zindex),
+            Stroke = Stroke.Clone(zindex),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };

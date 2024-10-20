@@ -544,12 +544,12 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature()
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
     {
         return new GeometryVisual<TVisual, TLabel, TDrawingContext>
         {
-            Fill = Fill,
-            Stroke = Stroke,
+            Fill = Fill.Clone(zindex),
+            Stroke = Stroke.Clone(zindex),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };
