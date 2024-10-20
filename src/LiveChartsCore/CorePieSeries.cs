@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -453,6 +454,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -463,6 +465,18 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
+    {
+        return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
+        {
+            Fill = Fill.Clone(zindex),
+            Stroke = Stroke.Clone(zindex + 1),
+            Width = MiniatureShapeSize,
+            Height = MiniatureShapeSize,
         };
     }
 

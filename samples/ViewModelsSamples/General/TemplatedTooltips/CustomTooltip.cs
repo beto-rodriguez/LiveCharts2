@@ -50,8 +50,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
         foreach (var point in foundPoints)
         {
-            var sketch = ((IChartSeries<SkiaSharpDrawingContext>)point.Context.Series).GetMiniaturesSketch();
-            var relativePanel = sketch.AsDrawnControl(s_zIndex);
+            var skiaSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
             var label = new LabelVisual
             {
@@ -71,7 +70,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    relativePanel,
+                    skiaSeries.GetMiniature(s_zIndex),
                     label
                 }
             };

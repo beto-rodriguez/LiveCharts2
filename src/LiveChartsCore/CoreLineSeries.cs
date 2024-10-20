@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -525,6 +526,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -539,6 +541,27 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         {
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
+    {
+        var usesLine = GeometrySize < 1 || GeometryStroke is null;
+
+        return usesLine
+            ? new LineVisual<TErrorGeometry, TDrawingContext>
+            {
+                Stroke = Stroke.Clone(zindex + 1),
+                Width = MiniatureShapeSize,
+                Height = 0
+            }
+            : new GeometryVisual<TVisual, TLabel, TDrawingContext>
+            {
+                Fill = Fill.Clone(zindex),
+                Stroke = Stroke.Clone(zindex + 1),
+                Width = MiniatureShapeSize,
+                Height = MiniatureShapeSize,
+            };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDispose(IChartView)"/>

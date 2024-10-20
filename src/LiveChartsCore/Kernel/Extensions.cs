@@ -600,6 +600,24 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Clones the paint and sets the given zindex.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The drawing context.</typeparam>
+    /// <param name="paint">the paint.</param>
+    /// <param name="zIndex">the z index.</param>
+    /// <returns>A paint clone.</returns>
+    public static IPaint<TDrawingContext>? Clone<TDrawingContext>(this IPaint<TDrawingContext>? paint, int zIndex)
+        where TDrawingContext : DrawingContext
+    {
+        if (paint is null) return null;
+
+        var clone = paint.CloneTask();
+        clone.ZIndex = zIndex;
+
+        return clone;
+    }
+
+    /// <summary>
     /// Returns an enumeration with only the first element.
     /// </summary>
     /// <typeparam name="T">The source type.</typeparam>

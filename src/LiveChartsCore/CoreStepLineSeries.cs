@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -432,6 +433,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -445,6 +447,18 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
+    {
+        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        {
+            Fill = Fill.Clone(zindex),
+            Stroke = Stroke.Clone(zindex + 1),
+            Width = MiniatureShapeSize,
+            Height = MiniatureShapeSize,
         };
     }
 
