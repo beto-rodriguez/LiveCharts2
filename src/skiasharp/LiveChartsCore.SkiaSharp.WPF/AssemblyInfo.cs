@@ -20,8 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
 using System.Windows;
+
+#if !DEBUG && NET462
+using System.Reflection;
+[assembly: AssemblyKeyFile("./../../../LiveCharts.snk")]
+#else
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("LiveChartsCore.BackersPackage")]
+#endif
 
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
@@ -31,5 +38,3 @@ using System.Windows;
                                               //(used if a resource is not found in the page,
                                               // app, or any theme specific resource dictionaries)
 )]
-
-[assembly: InternalsVisibleTo("LiveChartsCore.BackersPackage")]
