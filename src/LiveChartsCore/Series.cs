@@ -395,6 +395,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
     public abstract Sketch<TDrawingContext> GetMiniaturesSketch();
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniature"/>
