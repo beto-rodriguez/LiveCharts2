@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -350,6 +351,19 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
+        };
+    }
+
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature()
+    {
+        // ToDo <- draw the gradient?
+        // what to show in the legend?
+        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        {
+            Width = 0,
+            Height = 0,
         };
     }
 

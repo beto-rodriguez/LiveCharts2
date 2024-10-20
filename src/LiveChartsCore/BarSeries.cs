@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -93,6 +94,18 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature()
+    {
+        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        {
+            Fill = Fill,
+            Stroke = Stroke,
+            Width = MiniatureShapeSize,
+            Height = MiniatureShapeSize,
         };
     }
 
