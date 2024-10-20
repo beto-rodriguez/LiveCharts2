@@ -474,7 +474,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {
             Fill = Fill.Clone(zindex),
-            Stroke = Stroke.Clone(zindex),
+            Stroke = Stroke.Clone(zindex + 1),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };

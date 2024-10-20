@@ -496,7 +496,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {
             Fill = DownStroke.Clone(zindex),
-            Stroke = UpStroke.Clone(zindex),
+            Stroke = UpStroke.Clone(zindex + 1),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };

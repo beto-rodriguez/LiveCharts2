@@ -345,7 +345,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         return new GeometryVisual<TVisual, TLabel, TDrawingContext>
         {
             Fill = Fill.Clone(zindex),
-            Stroke = Stroke.Clone(zindex),
+            Stroke = Stroke.Clone(zindex + 1),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };
