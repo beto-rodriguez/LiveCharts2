@@ -91,7 +91,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
                 X = l.X,
                 Y = l.Y,
                 Width = size.Width,
-                Height = size.Height
+                Height = size.Height,
+                RotateTransform = (float)Rotation
             };
 
             if (Svg is not null)

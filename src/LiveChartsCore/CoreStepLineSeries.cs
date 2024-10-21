@@ -458,6 +458,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
         var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
 
+        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+
         return usesLine
             ? new LineVisual<TLineGeometry, TDrawingContext>
             {
@@ -472,6 +474,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                 Stroke = GetMiniatureStroke(point, zindex + 2),
                 Width = MiniatureShapeSize,
                 Height = MiniatureShapeSize,
+                Rotation = typedPoint?.Visual?.RotateTransform ?? 0,
                 Svg = GeometrySvg,
                 ClippingMode = ClipMode.None
             };
