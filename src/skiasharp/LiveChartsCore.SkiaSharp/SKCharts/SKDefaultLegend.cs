@@ -149,7 +149,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
                         Text = series.Name ?? string.Empty,
                         Paint = FontPaint,
                         TextSize = TextSize,
-                        Padding = new Padding(8, 0, 0, 0),
+                        Padding = new Padding(8, 2, 0, 2),
                         MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start,

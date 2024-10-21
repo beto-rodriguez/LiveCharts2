@@ -185,7 +185,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Text = content,
                         Paint = FontPaint,
                         TextSize = TextSize,
-                        Padding = new Padding(10, 0, 0, 0),
+                        Padding = new Padding(10, 2, 0, 2),
                         MaxWidth = lw,
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start,
