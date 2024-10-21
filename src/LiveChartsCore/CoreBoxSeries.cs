@@ -359,8 +359,8 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     {
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {
-            Fill = Fill.Clone(zindex),
-            Stroke = Stroke.Clone(zindex + 1),
+            Fill = Fill.Clone(zindex + 1),
+            Stroke = Stroke.Clone(zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };

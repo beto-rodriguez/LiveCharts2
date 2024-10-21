@@ -533,8 +533,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     {
         return new GeometryVisual<TVisual, TLabel, TDrawingContext>
         {
-            Fill = Fill.Clone(zindex),
-            Stroke = Stroke.Clone(zindex + 1),
+            Fill = Fill.Clone(zindex + 1),
+            Stroke = Stroke.Clone(zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };
