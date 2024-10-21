@@ -21,7 +21,7 @@ public class ViewModel
 
         _values = [
             new(2),
-            new(5),
+            new(8),
             new(4)
         ];
 
