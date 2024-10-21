@@ -533,7 +533,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
     public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
     {
-        var usesLine = (GeometrySize < 1 || GeometryStroke is null) && Stroke is not null;
+        var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
+        var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
 
         return usesLine
             ? new LineVisual<TLineGeometry, TDrawingContext>
@@ -874,7 +875,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? Fill;
+        var paint = p?.Visual?.Fill ?? GeometryFill;
 
         return GetMiniaturePaint(paint, zIndex);
     }
@@ -888,7 +889,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? Stroke;
+        var paint = p?.Visual?.Stroke ?? GeometryStroke;
 
         return GetMiniaturePaint(paint, zIndex);
     }

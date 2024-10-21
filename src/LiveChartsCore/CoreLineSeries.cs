@@ -546,7 +546,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
     public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
     {
-        var usesLine = (GeometrySize < 1 || GeometryStroke is null) && Stroke is not null;
+        var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
+        var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
 
         return usesLine
             ? new LineVisual<TErrorGeometry, TDrawingContext>
@@ -565,6 +566,24 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 Svg = GeometrySvg,
                 ClippingMode = ClipMode.None
             };
+    }
+
+    /// <inheritdoc cref="GetMiniatureFill(ChartPoint?, int)"/>
+    protected override IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? GeometryFill;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
+    /// <inheritdoc cref="GetMiniatureStroke(ChartPoint?, int)"/>
+    protected override IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? GeometryStroke;
+
+        return GetMiniaturePaint(paint, zIndex);
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDispose(IChartView)"/>
