@@ -455,7 +455,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
     public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
     {
-        var usesLine = GeometrySize < 1 || GeometryStroke is null;
+        var usesLine = (GeometrySize < 1 || GeometryStroke is null) && Stroke is not null;
 
         return usesLine
             ? new LineVisual<TLineGeometry, TDrawingContext>
