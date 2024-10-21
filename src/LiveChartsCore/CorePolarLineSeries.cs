@@ -540,7 +540,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
             {
                 Stroke = Stroke.AsMiniaturePaint(zindex + 1),
                 Width = MiniatureShapeSize,
-                Height = 0
+                Height = 0,
+                ClippingMode = ClipMode.None
             }
             : new GeometryVisual<TVisual, TLabel, TDrawingContext>
             {
@@ -548,7 +549,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
                 Stroke = Stroke.AsMiniaturePaint(zindex + 2),
                 Width = MiniatureShapeSize,
                 Height = MiniatureShapeSize,
-                Svg = GeometrySvg
+                Svg = GeometrySvg,
+                ClippingMode = ClipMode.None
             };
     }
 

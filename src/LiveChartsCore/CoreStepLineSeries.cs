@@ -462,7 +462,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
             {
                 Stroke = Stroke.AsMiniaturePaint(zindex + 1),
                 Width = MiniatureShapeSize,
-                Height = 0
+                Height = 0,
+                ClippingMode = ClipMode.None
             }
             : new GeometryVisual<TVisual, TLabel, TDrawingContext>
             {
@@ -470,7 +471,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                 Stroke = Stroke.AsMiniaturePaint(zindex + 2),
                 Width = MiniatureShapeSize,
                 Height = MiniatureShapeSize,
-                Svg = GeometrySvg
+                Svg = GeometrySvg,
+                ClippingMode = ClipMode.None
             };
     }
 
