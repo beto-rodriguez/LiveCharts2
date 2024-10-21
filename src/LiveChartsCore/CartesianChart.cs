@@ -438,7 +438,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         #endregion
 
         SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
-        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
+        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
@@ -446,10 +446,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.X);
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
@@ -459,10 +459,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.Y);
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
             ce._isInternalSet = false;
             if (axis.CrosshairPaint is not null) _crosshair.Add(axis);
@@ -477,10 +477,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToSeries(series);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
 
             var xAxis = XAxes[series.ScalesXAt];
@@ -834,11 +834,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         if (_chartView.DrawMarginFrame is not null)
         {
             var ce = (ChartElement<TDrawingContext>)_chartView.DrawMarginFrame;
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 ce._isInternalSet = true;
                 theme.ApplyStyleToDrawMargin(_chartView.DrawMarginFrame);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
                 ce._isInternalSet = false;
             }
 
@@ -864,7 +864,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         InvokeOnUpdateStarted();
 
         if (_isToolTipOpen) _ = DrawToolTip();
-        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
         _isFirstDraw = false;

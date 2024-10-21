@@ -103,7 +103,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
             throw new Exception("The AngularThicksVisual can only be added to a pie chart");
 
         _isInternalSet = true;
-        if (!_isThemeSet)
+        if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
         {
             if (CanSetProperty(nameof(Stroke)))
             {
@@ -119,7 +119,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
                     .GetSolidColorPaint(new LvcColor(30, 30, 30, 255));
             }
 
-            _isThemeSet = true;
+            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
         }
         _isInternalSet = false;
 

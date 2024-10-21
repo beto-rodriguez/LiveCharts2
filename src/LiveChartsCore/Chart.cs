@@ -131,14 +131,6 @@ public abstract class Chart<TDrawingContext> : IChart
     public object MeasureWork { get; protected set; } = new();
 
     /// <summary>
-    /// Gets or sets the theme identifier.
-    /// </summary>
-    /// <value>
-    /// The theme identifier.
-    /// </value>
-    public object ThemeId { get; protected set; } = new();
-
-    /// <summary>
     /// Gets whether the control is loaded.
     /// </summary>
     public bool IsLoaded { get; internal set; } = false;

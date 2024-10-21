@@ -63,12 +63,12 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
             throw new Exception("The needle visual can only be added to a pie chart");
 
         _isInternalSet = true;
-        if (!_isThemeSet && CanSetProperty(nameof(Fill)))
+        if (_theme != LiveCharts.DefaultSettings.CurrentThemeId && CanSetProperty(nameof(Fill)))
         {
             _fill = LiveCharts.DefaultSettings
                 .GetProvider<TDrawingContext>()
                 .GetSolidColorPaint(new LvcColor(30, 30, 30, 255));
-            _isThemeSet = true;
+            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
         }
         _isInternalSet = false;
 

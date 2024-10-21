@@ -37,6 +37,9 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public static class ThemesExtensions
 {
+    private static readonly object s_lightThemeKey = new();
+    private static readonly object s_darkThemeKey = new();
+
     /// <summary>
     /// Adds the light theme.
     /// </summary>
@@ -47,6 +50,7 @@ public static class ThemesExtensions
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
         LiveCharts.HasTheme = true;
+        settings.CurrentThemeId = s_lightThemeKey;
 
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
@@ -209,6 +213,7 @@ public static class ThemesExtensions
         this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
     {
         LiveCharts.HasTheme = true;
+        settings.CurrentThemeId = s_darkThemeKey;
 
         return settings
             .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>

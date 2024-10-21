@@ -198,7 +198,7 @@ public class PolarChart<TDrawingContext>(
         #endregion
 
         SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
-        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
+        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in AngleAxes)
@@ -206,10 +206,10 @@ public class PolarChart<TDrawingContext>(
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
             ce._isInternalSet = false;
         }
@@ -218,10 +218,10 @@ public class PolarChart<TDrawingContext>(
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
             ce._isInternalSet = false;
         }
@@ -234,10 +234,10 @@ public class PolarChart<TDrawingContext>(
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToSeries(series);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
 
             var secondaryAxis = AngleAxes[series.ScalesAngleAt];
@@ -247,7 +247,7 @@ public class PolarChart<TDrawingContext>(
 
             if (seriesBounds.IsEmpty)
             {
-                ce._isThemeSet = false;
+                ce._isInternalSet = false;
                 continue;
             }
 
@@ -255,7 +255,8 @@ public class PolarChart<TDrawingContext>(
             primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
             secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.SecondaryBounds);
             primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.PrimaryBounds);
-            ce._isThemeSet = false;
+
+            ce._isInternalSet = false;
         }
 
         #region empty bounds
@@ -536,7 +537,6 @@ public class PolarChart<TDrawingContext>(
 
         if (_isToolTipOpen) DrawToolTip();
         _isFirstDraw = false;
-        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
         _isFirstDraw = false;

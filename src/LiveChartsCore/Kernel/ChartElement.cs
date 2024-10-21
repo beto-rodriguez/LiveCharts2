@@ -36,7 +36,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     where TDrawingContext : DrawingContext
 {
     internal bool _isInternalSet = false;
-    internal bool _isThemeSet = false;
+    internal object _theme = new();
     internal readonly HashSet<string> _userSets = [];
     private bool _isVisible = true;
     private readonly List<IPaint<TDrawingContext>> _deletingTasks = [];
@@ -47,10 +47,10 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.Tag" />
+    /// <inheritdoc cref="IChartElement.Tag" />
     public object? Tag { get; set; }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.IsVisible" />
+    /// <inheritdoc cref="IChartElement.IsVisible" />
     public bool IsVisible
     {
         get => _isVisible;

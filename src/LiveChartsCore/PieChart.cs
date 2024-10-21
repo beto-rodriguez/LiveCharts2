@@ -148,7 +148,7 @@ public class PieChart<TDrawingContext>(
         EasingFunction = view.EasingFunction;
 
         SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
-        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
+        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
@@ -162,10 +162,10 @@ public class PieChart<TDrawingContext>(
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToSeries(series);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
 
             var seriesBounds = series.GetBounds(this);
@@ -242,7 +242,6 @@ public class PieChart<TDrawingContext>(
         if (_isToolTipOpen) _ = DrawToolTip();
         InvokeOnUpdateStarted();
         _isFirstDraw = false;
-        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
         _isFirstDraw = false;

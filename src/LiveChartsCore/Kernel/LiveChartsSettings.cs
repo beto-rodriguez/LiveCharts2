@@ -46,7 +46,7 @@ public class LiveChartsSettings
     /// <value>
     /// The theme identifier.
     /// </value>
-    public object CurrentThemeId { get; private set; } = new();
+    public object CurrentThemeId { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -366,7 +366,6 @@ public class LiveChartsSettings
     public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
         where TDrawingContext : DrawingContext
     {
-        CurrentThemeId = new object();
         Theme<TDrawingContext> t;
         _theme = t = new Theme<TDrawingContext>();
         builder(t);
