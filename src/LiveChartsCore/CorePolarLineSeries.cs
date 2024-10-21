@@ -537,6 +537,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
             Stroke = Stroke.AsMiniaturePaint(zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
+            Svg = GeometrySvg
         };
     }
 

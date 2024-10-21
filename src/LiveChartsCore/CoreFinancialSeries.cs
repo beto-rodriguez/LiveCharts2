@@ -499,6 +499,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             Stroke = UpStroke.AsMiniaturePaint(zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
+            Svg = GeometrySvg
         };
     }
 

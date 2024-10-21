@@ -561,6 +561,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 Stroke = Stroke.AsMiniaturePaint(zindex + 2),
                 Width = MiniatureShapeSize,
                 Height = MiniatureShapeSize,
+                Svg = GeometrySvg
             };
     }
 

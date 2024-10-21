@@ -477,6 +477,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             Stroke = Stroke.AsMiniaturePaint(zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
+            Svg = GeometrySvg
         };
     }
 

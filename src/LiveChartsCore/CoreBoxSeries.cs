@@ -363,6 +363,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             Stroke = Stroke.AsMiniaturePaint(zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
+            Svg = GeometrySvg
         };
     }
 
