@@ -55,6 +55,11 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     public double LabelSize { get => _labelSize; set => SetProperty(ref _labelSize, (float)value); }
 
     /// <summary>
+    /// Gets or sets the SVG path.
+    /// </summary>
+    public string? Svg { get; set; }
+
+    /// <summary>
     /// Gets or sets the label paint.
     /// </summary>
     /// <value>
@@ -88,6 +93,15 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
                 Width = size.Width,
                 Height = size.Height
             };
+
+            if (Svg is not null)
+            {
+                var svgGeometry = _geometry as IVariableSvgPath<TDrawingContext>
+                    ?? throw new Exception($"The geometry must be of type {nameof(IVariableSvgPath<TDrawingContext>)}.");
+
+                svgGeometry.SVGPath = Svg;
+            }
+
             _geometry.Animate(chart);
         }
 
