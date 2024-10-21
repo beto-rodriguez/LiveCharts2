@@ -606,13 +606,17 @@ public static class Extensions
     /// <param name="paint">the paint.</param>
     /// <param name="zIndex">the z index.</param>
     /// <returns>A paint clone.</returns>
-    public static IPaint<TDrawingContext>? Clone<TDrawingContext>(this IPaint<TDrawingContext>? paint, int zIndex)
+    public static IPaint<TDrawingContext>? AsMiniaturePaint<TDrawingContext>(this IPaint<TDrawingContext>? paint, int zIndex)
         where TDrawingContext : DrawingContext
     {
         if (paint is null) return null;
 
         var clone = paint.CloneTask();
         clone.ZIndex = zIndex;
+
+        const float MAX_MINIATURE_STROKE_WIDTH = 3.5f;
+        if (clone.StrokeThickness > MAX_MINIATURE_STROKE_WIDTH)
+            clone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
 
         return clone;
     }

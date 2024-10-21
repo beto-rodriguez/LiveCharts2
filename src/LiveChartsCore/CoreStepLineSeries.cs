@@ -455,8 +455,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     {
         return new GeometryVisual<TVisual, TLabel, TDrawingContext>
         {
-            Fill = Fill.Clone(zindex + 1),
-            Stroke = Stroke.Clone(zindex + 2),
+            Fill = Fill.AsMiniaturePaint(zindex + 1),
+            Stroke = Stroke.AsMiniaturePaint(zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
         };
