@@ -70,7 +70,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
                             ZIndex = s_zIndex + 1
                         }
                     },
-                    // series.GetMiniature(s_zIndex), or get the miniature defined in the series.
+                    // series.GetMiniature(null, s_zIndex), or get the miniature defined in the series.
                     new LabelVisual
                     {
                         Text = series.Name ?? string.Empty,

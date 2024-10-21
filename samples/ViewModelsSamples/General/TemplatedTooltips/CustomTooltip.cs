@@ -70,7 +70,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    skiaSeries.GetMiniature(s_zIndex),
+                    skiaSeries.GetMiniature(point, s_zIndex),
                     label
                 }
             };

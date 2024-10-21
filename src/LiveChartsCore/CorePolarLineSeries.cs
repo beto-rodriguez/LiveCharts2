@@ -531,22 +531,22 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
     {
         var usesLine = (GeometrySize < 1 || GeometryStroke is null) && Stroke is not null;
 
         return usesLine
             ? new LineVisual<TLineGeometry, TDrawingContext>
             {
-                Stroke = Stroke.AsMiniaturePaint(zindex + 1),
+                Stroke = GetMiniaturePaint(Stroke, zindex + 2),
                 Width = MiniatureShapeSize,
                 Height = 0,
                 ClippingMode = ClipMode.None
             }
             : new GeometryVisual<TVisual, TLabel, TDrawingContext>
             {
-                Fill = Fill.AsMiniaturePaint(zindex + 1),
-                Stroke = Stroke.AsMiniaturePaint(zindex + 2),
+                Fill = GetMiniatureFill(point, zindex + 1),
+                Stroke = GetMiniatureStroke(point, zindex + 2),
                 Width = MiniatureShapeSize,
                 Height = MiniatureShapeSize,
                 Svg = GeometrySvg,
@@ -863,6 +863,34 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         return new LvcPoint(
              (float)(centerX + Math.Cos(actualAngle) * radius),
              (float)(centerY + Math.Sin(actualAngle) * radius));
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? Fill;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Stroke ?? Stroke;
+
+        return GetMiniaturePaint(paint, zIndex);
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>

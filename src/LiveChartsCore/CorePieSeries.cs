@@ -469,12 +469,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
     {
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {
-            Fill = Fill.AsMiniaturePaint(zindex + 1),
-            Stroke = Stroke.AsMiniaturePaint(zindex + 2),
+            Fill = GetMiniatureFill(point, zindex + 1),
+            Stroke = GetMiniatureStroke(point, zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
             Svg = GeometrySvg,
@@ -662,6 +662,34 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         }
 
         foreach (var item in toDelete) _ = everFetched.Remove(item);
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? Fill;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Stroke ?? Stroke;
+
+        return GetMiniaturePaint(paint, zIndex);
     }
 
     private void AlignLabel(TLabel label, double start, double initialRotation, double sweep)

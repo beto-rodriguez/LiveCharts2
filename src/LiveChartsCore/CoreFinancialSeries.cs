@@ -491,16 +491,13 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
     {
+        // No miniature.
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {
-            Fill = DownStroke.AsMiniaturePaint(zindex + 1),
-            Stroke = UpStroke.AsMiniaturePaint(zindex + 2),
-            Width = MiniatureShapeSize,
-            Height = MiniatureShapeSize,
-            Svg = GeometrySvg,
-            ClippingMode = ClipMode.None
+            Width = 0,
+            Height = 0
         };
     }
 

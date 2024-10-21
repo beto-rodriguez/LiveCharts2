@@ -340,12 +340,12 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
     {
         return new GeometryVisual<TVisual, TLabel, TDrawingContext>
         {
-            Fill = Fill.AsMiniaturePaint(zindex + 1),
-            Stroke = Stroke.AsMiniaturePaint(zindex + 2),
+            Fill = GetMiniatureFill(point, zindex + 1),
+            Stroke = GetMiniatureStroke(point, zindex + 2),
             Width = MiniatureShapeSize,
             Height = MiniatureShapeSize,
             Svg = GeometrySvg,

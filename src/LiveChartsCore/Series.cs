@@ -399,7 +399,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public abstract Sketch<TDrawingContext> GetMiniaturesSketch();
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniature"/>
-    public abstract VisualElement<TDrawingContext> GetMiniature(int zindex = 0);
+    public abstract VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex);
 
     /// <summary>
     /// Builds a paint schedule.
@@ -487,6 +487,26 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected void OnMiniatureChanged()
     {
         CanvasSchedule = GetMiniaturesSketch();
+    }
+
+    /// <summary>
+    /// Gets the miniature paint.
+    /// </summary>
+    /// <param name="paint">the base paint.</param>
+    /// <param name="zIndex">the z index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniaturePaint(IPaint<TDrawingContext>? paint, int zIndex)
+    {
+        if (paint is null) return null;
+
+        var clone = paint.CloneTask();
+        clone.ZIndex = zIndex;
+
+        const float MAX_MINIATURE_STROKE_WIDTH = 3.5f;
+        if (clone.StrokeThickness > MAX_MINIATURE_STROKE_WIDTH)
+            clone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
+
+        return clone;
     }
 
     private void NotifySubscribers()

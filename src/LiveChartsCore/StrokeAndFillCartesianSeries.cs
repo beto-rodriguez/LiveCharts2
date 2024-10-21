@@ -78,4 +78,32 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     {
         return [_stroke, _fill, DataLabelsPaint];
     }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? Fill;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Stroke ?? Stroke;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
 }
