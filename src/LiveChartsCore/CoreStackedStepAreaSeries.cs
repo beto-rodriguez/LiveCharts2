@@ -34,12 +34,14 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <seealso cref="CoreStepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}" />
-public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
-    : CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+/// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
+/// <seealso cref="CoreStepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry}" />
+public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
+    : CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
     /// <summary>

@@ -127,7 +127,7 @@ public class PolarLineSeries<TModel, TVisual>
 /// The type of the data label of every point.
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual, TLabel>
-    : CorePolarLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry>
+    : CorePolarLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, LineGeometry>
         where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {

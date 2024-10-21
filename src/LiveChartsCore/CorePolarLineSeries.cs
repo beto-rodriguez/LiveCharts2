@@ -41,11 +41,13 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+/// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
+public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
@@ -65,7 +67,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _radiusTooltipLabelFormatter;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CorePolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CorePolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     /// <param name="values">The values.</param>
@@ -531,14 +533,23 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
     public override VisualElement<TDrawingContext> GetMiniature(int zindex = 0)
     {
-        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
-        {
-            Fill = Fill.AsMiniaturePaint(zindex + 1),
-            Stroke = Stroke.AsMiniaturePaint(zindex + 2),
-            Width = MiniatureShapeSize,
-            Height = MiniatureShapeSize,
-            Svg = GeometrySvg
-        };
+        var usesLine = GeometrySize < 1 || GeometryStroke is null;
+
+        return usesLine
+            ? new LineVisual<TLineGeometry, TDrawingContext>
+            {
+                Stroke = Stroke.AsMiniaturePaint(zindex + 1),
+                Width = MiniatureShapeSize,
+                Height = 0
+            }
+            : new GeometryVisual<TVisual, TLabel, TDrawingContext>
+            {
+                Fill = Fill.AsMiniaturePaint(zindex + 1),
+                Stroke = Stroke.AsMiniaturePaint(zindex + 2),
+                Width = MiniatureShapeSize,
+                Height = MiniatureShapeSize,
+                Svg = GeometrySvg
+            };
     }
 
     /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>

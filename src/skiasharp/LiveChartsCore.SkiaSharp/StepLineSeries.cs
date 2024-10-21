@@ -126,7 +126,7 @@ public class StepLineSeries<TModel, TVisual>
 /// The type of the data label of every point.
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual, TLabel>
-    : CoreStepLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry>
+    : CoreStepLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry, LineGeometry>
         where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
