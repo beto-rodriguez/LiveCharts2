@@ -26,14 +26,15 @@ public class ViewModel
         new PolarAxis
         {
             LabelsAngle = -60,
-            MaxLimit = 30 // null to let the chart autoscale (defualt is null) // mark
+            MaxLimit = 30, // null to let the chart autoscale (defualt is null) // mark
         }
     ];
 
     public PolarAxis[] AngleAxes { get; set; } = [
         new PolarAxis
         {
-            LabelsRotation = LiveCharts.TangentAngle
+            LabelsRotation = LiveCharts.TangentAngle,
+            IsInverted = true // enables counter clockwise draw.
         }
     ];
 
