@@ -54,14 +54,14 @@ public interface IHeatSeries<TDrawingContext> : ICartesianSeries<TDrawingContext
     Padding PointPadding { get; set; }
 
     /// <summary>
-    /// Gets or sets the minimum value in the weigth axis,
+    /// Gets or sets the minimum value in the weight axis,
     /// this value will be used to calculate the color of the point.
     /// Default is null and means the minimum value in the series.
     /// </summary>
     double? MinValue { get; set; }
 
     /// <summary>
-    /// Gets or sets the maximum value in the weigth axis,
+    /// Gets or sets the maximum value in the weight axis,
     /// this value will be used to calculate the color of the point.
     /// Default is null and means the maximum value in the series.
     /// </summary>
