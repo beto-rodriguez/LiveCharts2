@@ -34,7 +34,7 @@ public class ViewModel
         new PolarAxis
         {
             LabelsRotation = LiveCharts.TangentAngle,
-            IsInverted = true // enables counter clockwise draw.
+            IsInverted = true // enables counter clockwise draw. // mark
         }
     ];
 
