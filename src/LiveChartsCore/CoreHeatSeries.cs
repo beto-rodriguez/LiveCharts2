@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -56,6 +55,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     ];
     private double[]? _colorStops;
     private Padding _pointPadding = new(4);
+    private double? _minValue;
+    private double? _maxValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -98,6 +99,12 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
     public Padding PointPadding { get => _pointPadding; set => SetProperty(ref _pointPadding, value); }
+
+    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.MinValue"/>
+    public double? MinValue { get => _minValue; set => SetProperty(ref _minValue, value); }
+
+    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.MaxValue"/>
+    public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -272,7 +279,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-        _weightBounds = seriesBounds.Bounds.TertiaryBounds;
+        var b = seriesBounds.Bounds.TertiaryBounds;
+        _weightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
         return seriesBounds;
     }
 
@@ -353,7 +361,6 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             PaintSchedules = schedules
         };
     }
-
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
     public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
