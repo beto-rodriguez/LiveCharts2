@@ -1,8 +1,6 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.SkiaSharpView.Extensions;
 
@@ -29,7 +27,6 @@ public class ViewModel
         {
             Text = "My chart title",
             TextSize = 25,
-            Padding = new LiveChartsCore.Drawing.Padding(15),
-            Paint = new SolidColorPaint(SKColors.DarkSlateGray)
+            Padding = new LiveChartsCore.Drawing.Padding(15)
         };
 }
