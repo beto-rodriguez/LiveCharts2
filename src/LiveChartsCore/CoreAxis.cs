@@ -310,8 +310,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
-
         _animatableBounds.MaxVisibleBound = max;
         _animatableBounds.MinVisibleBound = min;
 
@@ -868,8 +866,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
-
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
@@ -902,13 +898,13 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? DataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? DataBounds.Min : MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        AxisLimit.ValidateLimits(IsInverted, ref min, ref max);
 
         var maxd = DataBounds.Max;
         var mind = DataBounds.Min;
         var minZoomDelta = MinZoomDelta ?? DataBounds.MinDelta * 3;
 
-        foreach (var axis in SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        foreach (var axis in SharedWith ?? [])
         {
             var maxI = axis.MaxLimit is null ? axis.DataBounds.Max : axis.MaxLimit.Value;
             var minI = axis.MinLimit is null ? axis.DataBounds.Min : axis.MinLimit.Value;
@@ -1011,10 +1007,13 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
         var labeler = GetActualLabeler();
 
-        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
-        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
+        var vMax = _visibleDataBounds.Max;
+        var vMin = _visibleDataBounds.Min;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        if (IsInverted) (vMin, vMax) = (vMax, vMin);
+
+        var max = MaxLimit is null ? vMax : MaxLimit.Value;
+        var min = MinLimit is null ? vMin : MinLimit.Value;
 
         const double testSeparators = 25;
         var s = (max - min) / testSeparators;
