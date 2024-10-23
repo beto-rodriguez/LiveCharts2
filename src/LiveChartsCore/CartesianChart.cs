@@ -186,6 +186,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var max = limits.Max;
                 var min = limits.Min;
 
+                if (xi.IsInverted) (min, max) = (max, min);
+
                 double mint, maxt;
                 var l = max - min;
 
@@ -241,6 +243,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                 var max = limits.Max;
                 var min = limits.Min;
+
+                if (yi.IsInverted) (min, max) = (max, min);
 
                 double mint, maxt;
                 var l = max - min;
@@ -309,6 +313,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var max = limits.Max;
                 var min = limits.Min;
 
+                if (xi.IsInverted) (min, max) = (max, min);
+
                 var xm = max - min;
                 xm = isActive ? xm * MaxAxisActiveBound : xm * MaxAxisBound;
 
@@ -340,6 +346,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                 var max = limits.Max;
                 var min = limits.Min;
+
+                if (yi.IsInverted) (min, max) = (max, min);
 
                 var ym = max - min;
                 ym = isActive ? ym * MaxAxisActiveBound : ym * MaxAxisBound;
