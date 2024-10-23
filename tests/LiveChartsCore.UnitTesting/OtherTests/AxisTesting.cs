@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 using LiveChartsCore.Defaults;
 using System.Diagnostics;
+using LiveChartsCore.UnitTesting.CoreObjectsTests;
 
 namespace LiveChartsCore.UnitTesting.OtherTests;
 
@@ -157,5 +158,37 @@ public class AxisTesting
         sw.Start();
         _ = chart.GetImage();
         Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
+    }
+
+    [TestMethod]
+    public void InvertedAxis()
+    {
+        var x1 = new Axis { MaxLimit = 0, MinLimit = 10 };
+        var y1 = new Axis { MaxLimit = 0, MinLimit = 10 };
+        var chart1 = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = [new LineSeries<double>([1, 2, 3])],
+            XAxes = [x1],
+            YAxes = [y1]
+        };
+
+        var x2 = new Axis { MaxLimit = 0, MinLimit = 10, IsInverted = true };
+        var y2 = new Axis { MaxLimit = 0, MinLimit = 10, IsInverted = true };
+        var chart2 = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = [new LineSeries<double>([1, 2, 3])],
+            XAxes = [x2],
+            YAxes = [y2]
+        };
+
+        _ = ChangingPaintTasks.DrawChart(chart1);
+        _ = ChangingPaintTasks.DrawChart(chart2);
+
+        Assert.IsTrue(x1._size == x2._size);
+        Assert.IsTrue(y1._size == y2._size);
     }
 }
