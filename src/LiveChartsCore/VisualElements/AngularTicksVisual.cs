@@ -102,26 +102,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         if (chart is not PieChart<TDrawingContext> pieChart)
             throw new Exception("The AngularThicksVisual can only be added to a pie chart");
 
-        _isInternalSet = true;
-        if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
-        {
-            if (CanSetProperty(nameof(Stroke)))
-            {
-                Stroke = LiveCharts.DefaultSettings
-                    .GetProvider<TDrawingContext>()
-                    .GetSolidColorPaint(new LvcColor(30, 30, 30, 255));
-            }
-
-            if (CanSetProperty(nameof(LabelsPaint)))
-            {
-                LabelsPaint = LiveCharts.DefaultSettings
-                    .GetProvider<TDrawingContext>()
-                    .GetSolidColorPaint(new LvcColor(30, 30, 30, 255));
-            }
-
-            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
-        }
-        _isInternalSet = false;
+        ApplyTheme<AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext>>();
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
