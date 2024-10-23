@@ -163,8 +163,8 @@ public class AxisTesting
     [TestMethod]
     public void InvertedAxis()
     {
-        var x1 = new Axis { MaxLimit = 0, MinLimit = 10 };
-        var y1 = new Axis { MaxLimit = 0, MinLimit = 10 };
+        var x1 = new Axis { MaxLimit = 10, MinLimit = 0 };
+        var y1 = new Axis { MaxLimit = 10, MinLimit = 0 };
         var chart1 = new SKCartesianChart
         {
             Width = 1000,
@@ -188,11 +188,11 @@ public class AxisTesting
         _ = ChangingPaintTasks.DrawChart(chart1);
         _ = ChangingPaintTasks.DrawChart(chart2);
 
-        Assert.IsTrue(x1._size.Width > 0 && x1._size.Height > 0);
+        Assert.IsTrue(x1._size.Width > 0 && x2._size.Height > 0);
         Assert.IsTrue(x1._size == x2._size);
         Assert.IsTrue(x1.activeSeparators.Count == x2.activeSeparators.Count);
 
-        Assert.IsTrue(y1._size.Width > 0 && y1._size.Height > 0);
+        Assert.IsTrue(y1._size.Width > 0 && y2._size.Height > 0);
         Assert.IsTrue(y1._size == y2._size);
         Assert.IsTrue(y1.activeSeparators.Count == y2.activeSeparators.Count);
     }
