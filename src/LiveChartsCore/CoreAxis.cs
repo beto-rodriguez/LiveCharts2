@@ -1012,7 +1012,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         var vMax = _visibleDataBounds.Max;
         var vMin = _visibleDataBounds.Min;
 
-        if (IsInverted) (vMin, vMax) = (vMax, vMin);
+        AxisLimit.ValidateLimits(IsInverted, ref vMin, ref vMax);
 
         var max = MaxLimit is null ? vMax : MaxLimit.Value;
         var min = MinLimit is null ? vMin : MinLimit.Value;
