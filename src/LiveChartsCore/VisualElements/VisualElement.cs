@@ -214,6 +214,22 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <returns>The geometries.</returns>
     protected internal abstract IAnimatable?[] GetDrawnGeometries();
 
+    /// <summary>
+    /// Applies the theme to the visual.
+    /// </summary>
+    protected virtual void ApplyTheme<T>()
+        where T : VisualElement<TDrawingContext>
+    {
+        _isInternalSet = true;
+        if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
+        {
+            var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
+            theme.ApplyStyleTo((T)this);
+            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
+        }
+        _isInternalSet = false;
+    }
+
     internal virtual void AlignToTopLeftCorner()
     {
         // just a workaround to align labels as the rest of the geometries.

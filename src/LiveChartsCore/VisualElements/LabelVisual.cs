@@ -165,6 +165,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override LvcSize Measure(Chart<TDrawingContext> chart)
     {
+        ApplyTheme<LabelVisual<TLabelGeometry, TDrawingContext>>();
+
         InitializeLabel(chart);
 
         _labelGeometry!.Text = Text;

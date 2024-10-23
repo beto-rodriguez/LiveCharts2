@@ -26,8 +26,10 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Themes;
+using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -74,6 +76,11 @@ public static class ThemesExtensions
                                 ? null
                                 : new SolidColorPaint(new SKColor(235, 235, 235));
                             cartesian.Padding = new Padding(12);
+                        }
+                        else if (axis is IPolarAxis polar)
+                        {
+                            polar.LabelsBackground = new LvcColor(255, 255, 255);
+                            axis.SeparatorsPaint = new SolidColorPaint(new SKColor(235, 235, 235));
                         }
                         else
                         {
@@ -197,6 +204,19 @@ public static class ThemesExtensions
                     .HasRuleForGaugeFillSeries(gaugeFill =>
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(30, 30, 30, 10));
+                    })
+                    .HasRuleFor<LabelVisual<LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(label =>
+                    {
+                        label.Paint = new SolidColorPaint(new SKColor(30, 30, 30));
+                    })
+                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(needle =>
+                    {
+                        needle.Fill = new SolidColorPaint(new SKColor(30, 30, 30));
+                    })
+                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(ticks =>
+                    {
+                        ticks.Stroke = new SolidColorPaint(new SKColor(30, 30, 30));
+                        ticks.LabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30));
                     });
 
                 additionalStyles?.Invoke(theme);
@@ -222,7 +242,8 @@ public static class ThemesExtensions
                     .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
                     .WithEasingFunction(EasingFunctions.ExponentialOut)
                     .WithTooltipBackgroundPaint(new SolidColorPaint(new SKColor(45, 45, 45)))
-                    .WithTooltipTextPaint(new SolidColorPaint(new SKColor(245, 245, 245)));
+                    .WithTooltipTextPaint(new SolidColorPaint(new SKColor(245, 245, 245)))
+                    .WithLegendTextPaint(new SolidColorPaint(new SKColor(245, 245, 245)));
 
                 theme.Colors = ColorPalletes.MaterialDesign200;
 
@@ -233,12 +254,18 @@ public static class ThemesExtensions
                         axis.ShowSeparatorLines = true;
                         axis.NamePaint = new SolidColorPaint(new SKColor(235, 235, 235));
                         axis.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
+
                         if (axis is ICartesianAxis cartesian)
                         {
                             axis.SeparatorsPaint = cartesian.Orientation == AxisOrientation.X
                                 ? null
                                 : new SolidColorPaint(new SKColor(90, 90, 90));
                             cartesian.Padding = new Padding(12);
+                        }
+                        else if (axis is IPolarAxis polar)
+                        {
+                            polar.LabelsBackground = new LvcColor(0, 0, 0);
+                            axis.SeparatorsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
                         }
                         else
                         {
@@ -297,6 +324,13 @@ public static class ThemesExtensions
                         stackedBarSeries.Rx = 0;
                         stackedBarSeries.Ry = 0;
                     })
+                    .HasRuleForScatterSeries(scatterSeries =>
+                    {
+                        var color = theme.GetSeriesColor(scatterSeries).AsSKColor();
+
+                        scatterSeries.Stroke = null;
+                        scatterSeries.Fill = new SolidColorPaint(color.WithAlpha(200));
+                    })
                     .HasRuleForPieSeries(pieSeries =>
                     {
                         var color = theme.GetSeriesColor(pieSeries).AsSKColor();
@@ -339,7 +373,7 @@ public static class ThemesExtensions
 
                         polarLine.GeometrySize = 12;
                         polarLine.GeometryStroke = new SolidColorPaint(color, 4);
-                        polarLine.GeometryFill = new SolidColorPaint(new SKColor());
+                        polarLine.GeometryFill = new SolidColorPaint(new SKColor(30, 30, 30));
                         polarLine.Stroke = new SolidColorPaint(color, 4);
                         polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
                     })
@@ -349,11 +383,25 @@ public static class ThemesExtensions
 
                         gaugeSeries.Stroke = null;
                         gaugeSeries.Fill = new SolidColorPaint(color);
+                        gaugeSeries.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
                         gaugeSeries.DataLabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
                     .HasRuleForGaugeFillSeries(gaugeFill =>
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(255, 255, 255, 30));
+                    })
+                    .HasRuleFor<LabelVisual<LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(label =>
+                    {
+                        label.Paint = new SolidColorPaint(new SKColor(200, 200, 200));
+                    })
+                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(needle =>
+                    {
+                        needle.Fill = new SolidColorPaint(new SKColor(200, 200, 200));
+                    })
+                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(ticks =>
+                    {
+                        ticks.Stroke = new SolidColorPaint(new SKColor(200, 200, 200));
+                        ticks.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
                     });
 
                 additionalStyles?.Invoke(theme);

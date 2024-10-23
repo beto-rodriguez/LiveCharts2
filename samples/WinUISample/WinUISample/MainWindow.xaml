@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid x:Name="grid" Padding="25 0 0 0" Background="#fafafa">
+    <Grid x:Name="grid" Padding="25 0 0 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -46,7 +46,7 @@
             </ScrollViewer>
         </Grid>
 
-        <Border Name="contentBorder" Grid.Column="1" Background="White">
+        <Border Name="contentBorder" Grid.Column="1">
             <ContentControl x:Name="content"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch">

@@ -59,18 +59,10 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
     {
+        ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext>>();
+
         if (chart is not PieChart<TDrawingContext> pieChart)
             throw new Exception("The needle visual can only be added to a pie chart");
-
-        _isInternalSet = true;
-        if (_theme != LiveCharts.DefaultSettings.CurrentThemeId && CanSetProperty(nameof(Fill)))
-        {
-            _fill = LiveCharts.DefaultSettings
-                .GetProvider<TDrawingContext>()
-                .GetSolidColorPaint(new LvcColor(30, 30, 30, 255));
-            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
-        }
-        _isInternalSet = false;
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
