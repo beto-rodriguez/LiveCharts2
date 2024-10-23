@@ -84,7 +84,7 @@ public class Scaler
                 var visibleMax = axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max;
                 var visibleMin = axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min;
 
-                AxisLimit.ValidateLimits(ref visibleMin, ref visibleMax);
+                AxisLimit.ValidateLimits(axis.IsInverted, ref visibleMin, ref visibleMax);
 
                 if (visibleMax != MaxVal || visibleMin != MinVal)
                 {
@@ -114,7 +114,7 @@ public class Scaler
                 var visibleMax = axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min;
                 var visibleMin = axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max;
 
-                AxisLimit.ValidateLimits(ref visibleMax, ref visibleMin);
+                AxisLimit.ValidateLimits(axis.IsInverted, ref visibleMax, ref visibleMin);
 
                 if (visibleMax != MaxVal || visibleMin != MinVal)
                 {

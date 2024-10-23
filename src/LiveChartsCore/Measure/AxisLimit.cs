@@ -35,7 +35,6 @@ namespace LiveChartsCore.Measure;
 /// <param name="dataMax">The data max value.</param>
 public struct AxisLimit(double min, double max, double minDelta, double dataMin, double dataMax)
 {
-
     /// <summary>
     /// Gets or sets the minimum value.
     /// </summary>
@@ -61,23 +60,25 @@ public struct AxisLimit(double min, double max, double minDelta, double dataMin,
     /// </summary>
     public double MinDelta { get; set; } = minDelta;
 
-    internal static void ValidateLimits(ref double min, ref double max)
+    internal static void ValidateLimits(bool isInverted, ref double min, ref double max)
     {
-        var isMax =
+        var isLimit =
             min is double.MaxValue or double.MinValue ||
             max is double.MaxValue or double.MinValue;
 
-        // easy workaround to prevent the axis from crashing
-        // https://github.com/beto-rodriguez/LiveCharts2/issues/1294
-        if (min > max)
+        if (!isLimit)
         {
-            var temp = max;
+            // easy workaround to prevent the axis from crashing
+            // https://github.com/beto-rodriguez/LiveCharts2/issues/1294
+            // ToDo: Check if this is still necessary.
 
-            max = min;
-            min = temp;
+            if (isInverted && min < max)
+                (min, max) = (max, min);
+            if (!isInverted && min > max)
+                (min, max) = (max, min);
+
+            return;
         }
-
-        if (!isMax) return;
 
         min = 0;
         max = 10;
