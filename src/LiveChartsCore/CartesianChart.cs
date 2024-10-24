@@ -226,6 +226,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + xm;
                 if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - xm;
 
+                // even on inverted axes, this is not supported,
+                // inverted axes handles this just with the magic of math..
+                if (maxt < mint) (maxt, mint) = (mint, maxt);
+
                 xi.SetLimits(mint, maxt);
             }
         }
@@ -280,6 +284,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
                 if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + ym;
                 if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - ym;
+
+                // even on inverted axes, this is not supported,
+                // inverted axes handles this just with the magic of math..
+                if (maxt < mint) (maxt, mint) = (mint, maxt);
 
                 yi.SetLimits(mint, maxt);
             }
