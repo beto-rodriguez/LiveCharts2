@@ -35,10 +35,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// <param name="sigmaX">The sigma x.</param>
 /// <param name="sigmaY">The sigma y.</param>
 /// <param name="input">The input.</param>
-/// <param name="cropRect">The crop rect.</param>
-public class Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null) : ImageFilter
+public class Blur(
+    float sigmaX,
+    float sigmaY,
+    SKImageFilter? input = null)
+        : ImageFilter
 {
-
     /// <summary>
     /// Clones this instance.
     /// </summary>
@@ -46,7 +48,7 @@ public class Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKIma
     /// <exception cref="System.NotImplementedException"></exception>
     public override ImageFilter Clone()
     {
-        return new Blur(sigmaX, sigmaY, input, cropRect);
+        return new Blur(sigmaX, sigmaY, input);
     }
 
     /// <summary>
@@ -56,6 +58,6 @@ public class Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKIma
     /// <returns></returns>
     public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
     {
-        SKImageFilter = SKImageFilter.CreateBlur(sigmaX, sigmaY, input, cropRect);
+        SKImageFilter = SKImageFilter.CreateBlur(sigmaX, sigmaY, input);
     }
 }
