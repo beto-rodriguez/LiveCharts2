@@ -33,7 +33,7 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a chart series.
 /// </summary>
-public interface ISeries
+public interface ISeries : IChartElement
 {
     /// <summary>
     /// Gets or sets a series unique identifier, the library handles this id automatically.
@@ -62,15 +62,7 @@ public interface ISeries
     /// <value>
     /// The values.
     /// </value>
-    ICollection? Values { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is visible.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
-    /// </value>
-    bool IsVisible { get; set; }
+    IEnumerable? Values { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance will show up in tool tips when the pointer is over a point.
@@ -122,7 +114,7 @@ public interface ISeries
 
     /// <summary>
     /// Gets or sets the series geometry svg, this property requires the series visual to be
-    /// an <see cref="ISvgPath{TDrawingContext}"/> instance.
+    /// an <see cref="IVariableSvgPath{TDrawingContext}"/> instance.
     /// </summary>
     string? GeometrySvg { get; set; }
 
@@ -143,11 +135,6 @@ public interface ISeries
     /// The easing function.
     /// </value>
     Func<float, float>? EasingFunction { get; set; }
-
-    /// <summary>
-    /// Occurs when the series <see cref="IsVisible"/> property changes.
-    /// </summary>
-    event Action<ISeries>? VisibilityChanged;
 
     /// <summary>
     /// Gets the tool tip text for a give chart point.
@@ -214,9 +201,16 @@ public interface ISeries
 /// Defines a series.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <seealso cref="IDisposable" />
 public interface ISeries<TModel> : ISeries
 {
+    /// <summary>
+    /// Gets or sets the values.
+    /// </summary>
+    /// <value>
+    /// The values.
+    /// </value>
+    new ICollection<TModel>? Values { get; set; }
+
     /// <summary>
     /// Gets or sets the mapping.
     /// </summary>

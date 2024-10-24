@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -20,35 +19,35 @@ public partial class ViewModel : ObservableObject
         _completed = new ObservableValue(100);
         _failed = new ObservableValue(100);
 
-        Series = new ISeries[]
-        {
+        Series =
+        [
                 new PieSeries<ObservableValue>
                 {
                     Name = "Processing",
-                    Values = new []{ _processing },
+                    Values = [_processing],
                     //InnerRadius = 45
                 },
                 new PieSeries<ObservableValue>
                 {
                     Name = "Failed",
-                    Values = new []{ _failed },
+                    Values = [_failed],
                     //InnerRadius = 45
                 },
                 new PieSeries<ObservableValue>
                 {
                     Name = "Completed",
-                    Values = new []{ _completed },
+                    Values = [_completed],
                     //InnerRadius = 45
                 }
-        };
+        ];
 
         // the ValueSeries property is a workaround for WPF only.
-        ValueSeries = new ValueSeries[]
-        {
+        ValueSeries =
+        [
             new() { Value = _processing, Series = Series[0] },
             new() { Value = _failed, Series = Series[1] },
             new() { Value = _completed, Series = Series[2] }
-        };
+        ];
 
         Value = _processing;
 
@@ -93,12 +92,12 @@ public partial class ViewModel : ObservableObject
             processed = newTask;
 
             //Value = new ObservableValue(_processing.Value ?? 0);
-            ValueSeries = new ValueSeries[]
-            {
+            ValueSeries =
+            [
                     new() { Value = _processing, Series = Series[0] },
                     new() { Value = _failed, Series = Series[1] },
                     new() { Value = _completed, Series = Series[2] }
-            };
+            ];
             OnPropertyChanged(nameof(ValueSeries));
             OnPropertyChanged(nameof(Value));
             isProcessing = _completed.Value < 1000;

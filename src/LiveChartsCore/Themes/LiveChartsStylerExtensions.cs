@@ -22,7 +22,9 @@
 
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Themes;
 
@@ -380,6 +382,24 @@ public static class LiveChartsStylerExtensions
         where TDrawingContext : DrawingContext
     {
         styler.PolarLineSeriesBuilder.Add(predicate);
+        return styler;
+    }
+
+    /// <summary>
+    /// Defines a style builder for <see cref= "VisualElement{TDrawingContext}" /> objects.
+    /// </summary>
+    /// <typeparam name="TChartElement">The type of the chart element.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <param name="styler">the styler.</param>
+    /// <param name="predicate">the predicate.</param>
+    /// <returns></returns>
+    public static Theme<TDrawingContext> HasRuleFor<TChartElement, TDrawingContext>(
+        this Theme<TDrawingContext> styler,
+        Action<TChartElement> predicate)
+            where TDrawingContext : DrawingContext
+            where TChartElement : ChartElement<TDrawingContext>
+    {
+        styler.ChartElementElementBuilder.Add(typeof(TChartElement), predicate);
         return styler;
     }
 }

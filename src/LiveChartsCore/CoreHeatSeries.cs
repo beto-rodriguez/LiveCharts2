@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -48,20 +49,21 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
     private LvcColor[] _heatMap =
-    {
+    [
         LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
         LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
-    };
+    ];
     private double[]? _colorStops;
     private Padding _pointPadding = new(4);
+    private double? _minValue;
+    private double? _maxValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreHeatSeries()
-        : base(
-             SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
-             SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
+    /// <param name="values">The values.</param>
+    protected CoreHeatSeries(ICollection<TModel>? values)
+        : base(GetProperties(), values)
     {
         DataPadding = new LvcPoint(0, 0);
         YToolTipLabelFormatter = (point) =>
@@ -85,11 +87,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     public LvcColor[] HeatMap
     {
         get => _heatMap;
-        set
-        {
-            OnMiniatureChanged();
-            SetProperty(ref _heatMap, value);
-        }
+        set => SetProperty(ref _heatMap, value);
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
@@ -97,6 +95,12 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
     public Padding PointPadding { get => _pointPadding; set => SetProperty(ref _pointPadding, value); }
+
+    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.MinValue"/>
+    public double? MinValue { get => _minValue; set => SetProperty(ref _minValue, value); }
+
+    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.MaxValue"/>
+    public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -144,7 +148,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             _heatKnownLength = HeatMap.Length;
         }
 
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -158,7 +162,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {
@@ -207,7 +211,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (hasSvg)
             {
-                var svgVisual = (ISvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
@@ -271,7 +275,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-        _weightBounds = seriesBounds.Bounds.TertiaryBounds;
+        var b = seriesBounds.Bounds.TertiaryBounds;
+        _weightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
         return seriesBounds;
     }
 
@@ -322,6 +327,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -352,9 +358,27 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         };
     }
 
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    {
+        // ToDo <- draw the gradient?
+        // what to show in the legend?
+        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        {
+            Width = 0,
+            Height = 0,
+        };
+    }
+
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _paintTaks };
+        return [_paintTaks];
+    }
+
+    private static SeriesProperties GetProperties()
+    {
+        return SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
+            SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips;
     }
 }

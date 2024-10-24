@@ -135,7 +135,7 @@ public class PolarChart<TDrawingContext>(
         {
             Trace.WriteLine(
                 $"[Cartesian chart measured]".PadRight(60) +
-                $"tread: {Environment.CurrentManagedThreadId}");
+                $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
         if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
@@ -198,7 +198,7 @@ public class PolarChart<TDrawingContext>(
         #endregion
 
         SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
-        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
+        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in AngleAxes)
@@ -206,10 +206,10 @@ public class PolarChart<TDrawingContext>(
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
             ce._isInternalSet = false;
         }
@@ -218,10 +218,10 @@ public class PolarChart<TDrawingContext>(
             var ce = (ChartElement<TDrawingContext>)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
             ce._isInternalSet = false;
         }
@@ -234,10 +234,10 @@ public class PolarChart<TDrawingContext>(
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToSeries(series);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
 
             var secondaryAxis = AngleAxes[series.ScalesAngleAt];
@@ -247,7 +247,7 @@ public class PolarChart<TDrawingContext>(
 
             if (seriesBounds.IsEmpty)
             {
-                ce._isThemeSet = false;
+                ce._isInternalSet = false;
                 continue;
             }
 
@@ -255,7 +255,8 @@ public class PolarChart<TDrawingContext>(
             primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
             secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.SecondaryBounds);
             primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.PrimaryBounds);
-            ce._isThemeSet = false;
+
+            ce._isInternalSet = false;
         }
 
         #region empty bounds
@@ -508,8 +509,13 @@ public class PolarChart<TDrawingContext>(
             // the probable issue is the "IsVisible" property
         }
 
-        foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in VisibleSeries)
+        // we draw all the series even invisible because it animates the series when hidden.
+        // Sections and Visuals are not animated when hidden, thus we just skip them.
+        // it means that invisible series have a performance impact, it should not be a big deal
+        // but ideally, do not keep invisible series in the chart, instead, add/remove them when needed.
+
+        foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
+        foreach (var series in Series)
         {
             AddVisual((ChartElement<TDrawingContext>)series);
             _drawnSeries.Add(series.SeriesId);
@@ -531,31 +537,9 @@ public class PolarChart<TDrawingContext>(
 
         if (_isToolTipOpen) DrawToolTip();
         _isFirstDraw = false;
-        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
         _isFirstDraw = false;
-    }
-
-    /// <summary>
-    /// Scales the specified point to the UI.
-    /// </summary>
-    /// <param name="point">The point, where X = angle, Y = radius.</param>
-    /// <param name="angleAxisIndex">Index of the angle axis.</param>
-    /// <param name="radiusAxisIndex">Index of the radius axis.</param>
-    /// <returns></returns>
-    public double[] ScaleUIPoint(LvcPoint point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-    {
-        var angleAxis = AngleAxes[angleAxisIndex];
-        var radiusAxis = RadiusAxes[radiusAxisIndex];
-
-        var scaler = new PolarScaler(
-            DrawMarginLocation, DrawMarginSize, angleAxis, radiusAxis,
-            InnerRadius, InitialRotation, TotalAnge);
-
-        var r = scaler.ToChartValues(point.X, point.Y);
-
-        return new double[] { r.X, r.Y };
     }
 
     /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>

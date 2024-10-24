@@ -3,7 +3,7 @@
 public static class Index
 {
     public static string[] Samples =
-    {
+    [
         "Design/LinearGradients",
         "Design/RadialGradients",
 
@@ -13,19 +13,10 @@ public static class Index
         "Lines/Properties",
         "Lines/Area",
         "Lines/Custom",
+        "Lines/CustomPoints",
         "Lines/Padding",
         "Lines/XY",
         "Lines/Zoom",
-
-        "StepLines/Basic",
-        "StepLines/AutoUpdate",
-        "StepLines/Properties",
-        "StepLines/Area",
-        "StepLines/Custom",
-        "StepLines/Zoom",
-
-        "StackedArea/Basic",
-        "StackedArea/StepArea",
 
         "Bars/Basic",
         "Bars/AutoUpdate",
@@ -37,15 +28,13 @@ public static class Index
         "Bars/RowsWithLabels",
         "Bars/Layered",
 
-        "StackedBars/Basic",
-        "StackedBars/Groups",
-
         "Pies/Basic",
         "Pies/AutoUpdate",
         //"Pies/Processing",
         "Pies/Doughnut",
         "Pies/Pushout",
         "Pies/Custom",
+        "Pies/Icons",
         "Pies/OutLabels",
         "Pies/NightingaleRose",
         "Pies/Gauges",
@@ -62,6 +51,12 @@ public static class Index
         "Scatter/AutoUpdate",
         "Scatter/Custom",
 
+        "StackedArea/Basic",
+        "StackedArea/StepArea",
+
+        "StackedBars/Basic",
+        "StackedBars/Groups",
+
         "Financial/BasicCandlesticks",
 
         "Error/Basic",
@@ -69,6 +64,13 @@ public static class Index
         "Box/Basic",
 
         "Heat/Basic",
+
+        "StepLines/Basic",
+        "StepLines/AutoUpdate",
+        "StepLines/Properties",
+        "StepLines/Area",
+        "StepLines/Custom",
+        "StepLines/Zoom",
 
         "Polar/Basic",
         "Polar/RadialArea",
@@ -124,5 +126,5 @@ public static class Index
         "Test/MotionCanvasDispose",
 
         "Maps/World"
-    };
+    ];
 }

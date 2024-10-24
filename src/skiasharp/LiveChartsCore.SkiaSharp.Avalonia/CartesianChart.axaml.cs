@@ -602,15 +602,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     #endregion
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    [Obsolete("Use the ScalePixelsToData method instead.")]
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (_core is null) throw new Exception("core not found");
-        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
@@ -662,21 +653,11 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <returns></returns>
     protected void InitializeCore()
     {
-        var canvas = this.FindControl<MotionCanvas>("canvas");
-
-        var zoomingSection = new Drawing.Geometries.RectangleGeometry();
-        var zoomingSectionPaint = new SolidColorPaint
-        {
-            IsFill = true,
-            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-            ZIndex = int.MaxValue
-        };
-        zoomingSectionPaint.AddGeometryToPaintTask(canvas!.CanvasCore, zoomingSection);
-        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
+        var canvas = this.FindControl<MotionCanvas>("canvas")!;
 
         _avaloniaCanvas = canvas;
         _core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), canvas.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;

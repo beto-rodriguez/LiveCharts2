@@ -68,13 +68,6 @@ public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
     double MaxAngle { get; set; }
 
     /// <summary>
-    /// Gets or sets the total, it is the maximum value a pie slice can represent, when this property is null, the <see cref="Total"/> property
-    /// will be calculated automatically based on the series data. Default value is null.
-    /// </summary>
-    [Obsolete($"Use {nameof(MaxValue)} instead.")]
-    double? Total { get; set; }
-
-    /// <summary>
     /// Gets or sets the minimum valu, normally used in gauges to set the minimum value a pie slice can represent,
     /// default is 0.
     /// </summary>

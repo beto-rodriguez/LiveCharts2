@@ -36,8 +36,9 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     where TDrawingContext : DrawingContext
 {
     internal bool _isInternalSet = false;
-    internal bool _isThemeSet = false;
+    internal object _theme = new();
     internal readonly HashSet<string> _userSets = [];
+    private bool _isVisible = true;
     private readonly List<IPaint<TDrawingContext>> _deletingTasks = [];
 
     /// <summary>
@@ -46,8 +47,15 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <returns></returns>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.Tag" />
+    /// <inheritdoc cref="IChartElement.Tag" />
     public object? Tag { get; set; }
+
+    /// <inheritdoc cref="IChartElement.IsVisible" />
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set => SetProperty(ref _isVisible, value);
+    }
 
     /// <inheritdoc cref="IChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})" />
     public abstract void Invalidate(Chart<TDrawingContext> chart);
@@ -97,6 +105,12 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
+        // The null check is intentional.
+        // we need to allow nulls to go further this if
+        // OnPropertyChanged needs to be called
+        // to detect whether the user set the null value.
+        if (value is not null && value == reference) return;
+
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
 
@@ -125,6 +139,12 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         T value,
         [CallerMemberName] string? propertyName = null)
     {
+        // The null check is intentional.
+        // we need to allow nulls to go further this if
+        // OnPropertyChanged needs to be called
+        // to detect whether the user set the null value.
+        if (value is not null && value.Equals(reference)) return;
+
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
 

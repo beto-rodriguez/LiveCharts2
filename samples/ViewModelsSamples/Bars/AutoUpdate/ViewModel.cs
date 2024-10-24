@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -9,94 +7,37 @@ using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Bars.AutoUpdate;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
-    private int _index = 0;
     private readonly Random _random = new();
-    private readonly ObservableCollection<ObservablePoint> _observableValues;
+
+    // We use the ObservableCollection class, to let the chart know // mark
+    // when a new item is added or removed from the chart. // mark
+    public ObservableCollection<ISeries> Series { get; set; }
+    public ObservableCollection<ObservablePoint> ObservablePoints { get; set; }
 
     public ViewModel()
     {
-        // Use ObservableCollections to let the chart listen for changes (or any INotifyCollectionChanged). // mark
-        _observableValues =
-        [
-            // Use the ObservableValue or ObservablePoint types to let the chart listen for property changes // mark
-            // or use any INotifyPropertyChanged implementation // mark
-            new ObservablePoint(_index++, 2),
-            new(_index++, 5), // the ObservablePoint type is redundant and inferred by the compiler (C# 9 and above)
-            new(_index++, 4),
-            new(_index++, 5),
-            new(_index++, 2),
-            new(_index++, 6),
-            new(_index++, 6),
-            new(_index++, 6),
-            new(_index++, 4),
-            new(_index++, 2),
-            new(_index++, 3),
-            new(_index++, 8),
-            new(_index++, 3)
+        ObservablePoints = [
+            new() { X = 0, Y = 2 },
+            new() { X = 1, Y = 5 },
+            new() { X = 2, Y = 4 }
         ];
 
-        Series =
-        [
-            new ColumnSeries<ObservablePoint>
-            {
-                Values = _observableValues
-            }
+        Series = [
+            new ColumnSeries<ObservablePoint>(ObservablePoints)
         ];
-
-        // in the following sample notice that the type int does not implement INotifyPropertyChanged
-        // and our Series.Values property is of type List<T>
-        // List<T> does not implement INotifyCollectionChanged
-        // this means the following series is not listening for changes.
-        // Series.Add(new ColumnSeries<int> { Values = new List<int> { 2, 4, 6, 1, 7, -2 } }); // mark
     }
-
-    public ObservableCollection<ISeries> Series { get; set; }
-
-    [RelayCommand]
-    public void AddItem()
-    {
-        // for this sample only 50 items are supported.
-        if (_observableValues.Count > 50) return;
-
-        var randomValue = _random.Next(1, 10);
-        _observableValues.Add(new ObservablePoint(_index++, randomValue));
-    }
-
-    [RelayCommand]
-    public void RemoveItem()
-    {
-        if (_observableValues.Count < 2) return;
-
-        _observableValues.RemoveAt(0);
-    }
-
-    [RelayCommand]
-    public void ReplaceItem()
-    {
-        var randomValue = _random.Next(1, 10);
-        var randomIndex = _random.Next(0, _observableValues.Count - 1);
-        _observableValues[randomIndex] = new(_observableValues[randomIndex].X, randomValue);
-    }
-
 
     [RelayCommand]
     public void AddSeries()
     {
-        //  for this sample only 5 series are supported.
-        if (Series.Count == 5) return;
+        // Because the Series property is an ObservableCollection, // mark
+        // the chart will listen for changes and update // mark
+        // in this case a new series is added to the chart // mark
 
-        Series.Add(
-            new ColumnSeries<int>
-            {
-                Values = new List<int>
-                {
-                    _random.Next(0, 10),
-                    _random.Next(0, 10),
-                    _random.Next(0, 10)
-                }
-            });
+        var newColumnSeries = new ColumnSeries<int>(FetchVales());
+        Series.Add(newColumnSeries);
     }
 
     [RelayCommand]
@@ -104,6 +45,50 @@ public partial class ViewModel : ObservableObject
     {
         if (Series.Count == 1) return;
 
+        // This will also remove the series from the UI. // mark
         Series.RemoveAt(Series.Count - 1);
+    }
+
+    [RelayCommand]
+    public void AddItem()
+    {
+        var newPoint = new ObservablePoint
+        {
+            X = ObservablePoints.Count,
+            Y = _random.Next(0, 10)
+        };
+
+        // The new point will be drawn at the end of the chart // mark
+        ObservablePoints.Add(newPoint);
+    }
+
+    [RelayCommand]
+    public void RemoveItem()
+    {
+        if (ObservablePoints.Count < 2) return;
+
+        // Because the ObservablePoints property is an ObservableCollection, // mark
+        // the chart will listen for changes and update // mark
+        // in this case a point is removed from the chart // mark
+
+        ObservablePoints.RemoveAt(0);
+    }
+
+    [RelayCommand]
+    public void ReplaceItem()
+    {
+        var randomIndex = _random.Next(0, ObservablePoints.Count - 1);
+
+        // The chart will update the point at the specified index // mark
+        ObservablePoints[randomIndex] = new(ObservablePoints[randomIndex].X, _random.Next(1, 10));
+    }
+
+    private int[] FetchVales()
+    {
+        return [
+            _random.Next(0, 10),
+            _random.Next(0, 10),
+            _random.Next(0, 10)
+        ];
     }
 }

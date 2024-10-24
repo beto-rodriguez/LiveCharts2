@@ -91,7 +91,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private IPaint<TDrawingContext>? _crosshairLabelsPaint;
     private LvcColor? _crosshairLabelsBackground;
     private bool _showSeparatorLines = true;
-    private bool _isVisible = true;
     private bool _isInverted;
     private bool _separatorsAtCenter = true;
     private bool _ticksAtCenter = true;
@@ -102,6 +101,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Align? _labelsAlignment;
     private bool _inLineNamePlacement;
     private IEnumerable<double>? _customSeparators;
+    private float _labelsDensity = 0.85f;
     internal double? _logBase;
 
     #endregion
@@ -141,6 +141,9 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.Padding"/>
     public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
 
+    /// <inheritdoc cref="ICartesianAxis.LabelsDensity"/>
+    public float LabelsDensity { get => _labelsDensity; set => SetProperty(ref _labelsDensity, value); }
+
     /// <inheritdoc cref="IPlane.Labeler"/>
     public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
@@ -176,9 +179,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.CustomSeparators"/>
     public IEnumerable<double>? CustomSeparators { get => _customSeparators; set => SetProperty(ref _customSeparators, value); }
-
-    /// <inheritdoc cref="IPlane.IsVisible"/>
-    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
@@ -278,18 +278,6 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairSnapEnabled" />
     public bool CrosshairSnapEnabled { get => _crosshairSnapEnabled; set => SetProperty(ref _crosshairSnapEnabled, value); }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    [Obsolete("Renamed to LabelsPaint")]
-    public IPaint<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Obsolete("Renamed to SeparatorsPaint")]
-    public IPaint<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
-
     /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
     public TimeSpan? AnimationsSpeed { get; set; }
 
@@ -307,8 +295,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     #endregion
 
-    /// <inheritdoc cref="ICartesianAxis.Initialized"/>
-    public event Action<ICartesianAxis>? Initialized;
+    /// <inheritdoc cref="ICartesianAxis.MeasureStarted"/>
+    public event Action<IChart, ICartesianAxis>? MeasureStarted;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
     public override void Invalidate(Chart<TDrawingContext> chart)
@@ -950,15 +938,15 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         MaxLimit = max;
     }
 
-    /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>
-    void ICartesianAxis.Initialize(AxisOrientation orientation)
+    /// <inheritdoc cref="ICartesianAxis.OnMeasureStarted(IChart, AxisOrientation)"/>
+    void ICartesianAxis.OnMeasureStarted(IChart chart, AxisOrientation orientation)
     {
         _orientation = orientation;
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
         _animatableBounds ??= new();
         _possibleMaxLabelsSize = null;
-        Initialized?.Invoke(this);
+        MeasureStarted?.Invoke(chart, this);
     }
 
     /// <summary>

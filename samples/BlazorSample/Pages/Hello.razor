@@ -7,6 +7,7 @@
 @using LiveChartsCore.SkiaSharpView;
 @using System.Collections.ObjectModel;
 @using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+@using LiveChartsCore.SkiaSharpView.Extensions
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using LiveChartsCore.SkiaSharpView.Painting.Effects;
 @using LiveChartsCore.SkiaSharpView.VisualElements;
@@ -480,7 +481,7 @@ values.Add(new(5));");
 
         var outer = 10;
         PieChart.Series = new[] { 30, 20, 15, 10, 8, 4 }
-            .AsLiveChartsPieSeries((value, series) =>
+            .AsPieSeries((value, series) =>
             {
                 series.InnerRadius = 50;
                 series.OuterRadiusOffset = outer;
@@ -494,7 +495,7 @@ values.Add(new(5));");
 .AsLiveChartsPieSeries((value, series) =>
 {
     series.InnerRadius = 50;
-    series.MaxOuterRadius = outer;
+    series.OuterRadiusOffset = outer;
     outer = outer - 0.1;
 });");
 
@@ -514,23 +515,18 @@ values.Add(new(5));");
         var charles = new ObservableValue(50);
         var ana = new ObservableValue(70);
 
-        GaugeChart.Series = new GaugeBuilder()
-            .WithLabelsSize(20)
-            .WithLabelsPosition(PolarLabelsPosition.Start)
-            .WithLabelFormatter(point => $"{point.Coordinate.PrimaryValue} {point.Context.Series.Name}")
-            .WithInnerRadius(20)
-            .WithOffsetRadius(8)
-            .WithBackgroundInnerRadius(20)
-
-            .AddValue(vanesa, "Vanessa")
-            .AddValue(charles, "Charles")
-            .AddValue(ana, "Ana")
-
-            .BuildSeries();
+        GaugeChart.Series = GaugeGenerator.BuildSolidGauge(
+                new GaugeItem(50, series => SetStyle("Vanessa", series)),
+                new GaugeItem(80, series => SetStyle("Charles", series)),
+                new GaugeItem(95, series => SetStyle("Ana", series)),
+                new GaugeItem(GaugeItem.Background, series =>
+                {
+                    series.Fill = null;
+                }));
 
         GaugeChart.InitialRotation = 45;
         GaugeChart.MaxAngle = 270;
-        GaugeChart.Total = 100;
+        GaugeChart.MaxValue = 100;
 
         await JS.InvokeVoidAsync("hlElements",
             "Gauges",
@@ -558,6 +554,17 @@ values.Add(new(5));");
         vanesa.Value = 90;
         charles.Value = 60;
         ana.Value = 70;
+    }
+
+    public static void SetStyle(string name, PieSeries<ObservableValue> series)
+    {
+        series.Name = name;
+        series.DataLabelsSize = 20;
+        series.DataLabelsPosition = PolarLabelsPosition.End;
+        series.DataLabelsFormatter =
+                point => point.Coordinate.PrimaryValue.ToString();
+        series.InnerRadius = 20;
+        series.MaxRadialColumnWidth = 5;
     }
 
     public async Task Sample6()

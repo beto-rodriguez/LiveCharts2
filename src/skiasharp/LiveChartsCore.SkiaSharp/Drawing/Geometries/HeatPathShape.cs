@@ -29,6 +29,9 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
+// THE PATH GEOMETRY CLASS IS OBSOLETE, BUT IT IS USED IN THE HEAT PATH SHAPE CLASS
+// ToDo: Update the HeatPathShape class to use the AreaGeometry class instead of the PathGeometry class
+
 /// <summary>
 /// Defines a path geometry with a specified color.
 /// </summary>

@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -75,24 +77,24 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     double DataLabelsMaxWidth { get; set; }
 
     /// <summary>
-    /// Gets the paint schedule, normally handled internally to display tool tips and legends.
-    /// </summary>
-    /// <value>
-    /// The default paint context.
-    /// </value>
-    Sketch<TDrawingContext> CanvasSchedule { get; }
-
-    /// <summary>
     /// Gets the stack group, normally used internally to handled the stacked series.
     /// </summary>
     /// <returns></returns>
     int GetStackGroup();
 
     /// <summary>
-    /// 
     /// </summary>
     /// <returns></returns>
+    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
     Sketch<TDrawingContext> GetMiniaturesSketch();
+
+    /// <summary>
+    /// Return the visual element shown in tooltips and legends.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <param name="zindex">The zindex.</param>
+    /// <returns></returns>
+    VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex);
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.

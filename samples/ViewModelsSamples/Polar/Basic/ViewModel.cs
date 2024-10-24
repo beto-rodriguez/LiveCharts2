@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -9,13 +7,12 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.Polar.Basic;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    {
+    public ISeries[] Series { get; set; } = [
         new PolarLineSeries<double>
         {
-            Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+            Values = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
             DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
             GeometrySize = 15,
             DataLabelsSize = 8,
@@ -23,24 +20,23 @@ public partial class ViewModel : ObservableObject
             DataLabelsRotation = LiveCharts.CotangentAngle,
             IsClosed = true
         }
-    };
+    ];
 
-    public PolarAxis[] RadialAxes { get; set; } =
-    {
+    public PolarAxis[] RadialAxes { get; set; } = [
         new PolarAxis
         {
             LabelsAngle = -60,
-            MaxLimit = 30 // null to let the chart autoscale (defualt is null) // mark
+            MaxLimit = 30, // null to let the chart autoscale (defualt is null) // mark
         }
-    };
+    ];
 
-    public PolarAxis[] AngleAxes { get; set; } =
-    {
+    public PolarAxis[] AngleAxes { get; set; } = [
         new PolarAxis
         {
-            LabelsRotation = LiveCharts.TangentAngle
+            LabelsRotation = LiveCharts.TangentAngle,
+            //IsInverted = true // enables counter clockwise draw. // mark
         }
-    };
+    ];
 
     public LabelVisual Title { get; set; } =
         new LabelVisual

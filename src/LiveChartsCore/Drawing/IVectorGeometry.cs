@@ -30,7 +30,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TSegment"></typeparam>
 /// <typeparam name="TDrawingContext"></typeparam>
-public interface IVectorGeometry<TSegment, TDrawingContext> : IDrawable<TDrawingContext>
+public interface IVectorGeometry<TSegment, TDrawingContext> : IPaintable<TDrawingContext>
     where TSegment : IConsecutivePathSegment
     where TDrawingContext : DrawingContext
 {

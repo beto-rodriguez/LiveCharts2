@@ -31,7 +31,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a plane for a dimension.
 /// </summary>
-public interface IPlane
+public interface IPlane : IChartElement
 {
     /// <summary>
     /// Gets or sets the axis name.
@@ -126,14 +126,6 @@ public interface IPlane
     double? MaxLimit { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is visible.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
-    /// </value>
-    bool IsVisible { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
     /// </summary>
     /// <value>
@@ -192,8 +184,8 @@ public interface IPlane
     bool ShowSeparatorLines { get; set; }
 
     /// <summary>
-    /// Gets or sets the custom separators array, when this property is set (not null)
-    /// the axis will use the values in this array instead of calculating the separators automatically.
+    /// Gets or sets the custom separators collection, when this property is set (not null)
+    /// the axis will use the values in this collection instead of calculating the separators automatically.
     /// Defalut is null.
     /// </summary>
     IEnumerable<double>? CustomSeparators { get; set; }

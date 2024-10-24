@@ -293,7 +293,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(LegendTextSize), typeof(object), typeof(CartesianChart),
             LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -333,7 +333,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(TooltipTextSize), typeof(object), typeof(CartesianChart),
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -610,16 +610,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     /// <summary>
-    /// Gets or sets a command to execute when the users taped the chart.
-    /// </summary>
-    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
-    public ICommand? TappedCommand
-    {
-        get => (ICommand?)GetValue(ReleasedCommandProperty);
-        set => SetValue(ReleasedCommandProperty, value);
-    }
-
-    /// <summary>
     /// Gets or sets a command to execute when the prressed the chart.
     /// </summary>
     public ICommand? PressedCommand
@@ -641,16 +631,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// Gets or sets a command to execute when the pointer/finger moves over the chart.
     /// </summary>
     public ICommand? MovedCommand
-    {
-        get => (ICommand?)GetValue(MovedCommandProperty);
-        set => SetValue(MovedCommandProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a command to execute when the pointer moves over the chart.
-    /// </summary>
-    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
-    public ICommand? PointerMoveCommand
     {
         get => (ICommand?)GetValue(MovedCommandProperty);
         set => SetValue(MovedCommandProperty, value);
@@ -684,15 +664,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     #endregion
-
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    [Obsolete("Use the ScalePixelsToData method instead.")]
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (_core is null) throw new Exception("core not found");
-        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-    }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
@@ -745,18 +716,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <returns></returns>
     protected void InitializeCore()
     {
-        var zoomingSection = new RectangleGeometry();
-        var zoomingSectionPaint = new SolidColorPaint
-        {
-            IsFill = true,
-            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-            ZIndex = int.MaxValue
-        };
-        zoomingSectionPaint.AddGeometryToPaintTask(canvas!.CanvasCore, zoomingSection);
-        canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
         _core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), canvas.CanvasCore);
+
         _core.Update();
     }
 

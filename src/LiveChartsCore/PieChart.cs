@@ -115,7 +115,7 @@ public class PieChart<TDrawingContext>(
         {
             Trace.WriteLine(
                 $"[Cartesian chart measured]".PadRight(60) +
-                $"tread: {Environment.CurrentManagedThreadId}");
+                $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
 
@@ -148,7 +148,7 @@ public class PieChart<TDrawingContext>(
         EasingFunction = view.EasingFunction;
 
         SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
-        var isNewTheme = LiveCharts.DefaultSettings.CurrentThemeId != ThemeId;
+        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
 
@@ -162,10 +162,10 @@ public class PieChart<TDrawingContext>(
 
             var ce = (ChartElement<TDrawingContext>)series;
             ce._isInternalSet = true;
-            if (!ce._isThemeSet || isNewTheme)
+            if (ce._theme != themeId)
             {
                 theme.ApplyStyleToSeries(series);
-                ce._isThemeSet = true;
+                ce._theme = themeId;
             }
 
             var seriesBounds = series.GetBounds(this);
@@ -225,8 +225,13 @@ public class PieChart<TDrawingContext>(
             AddVisual(title);
         }
 
-        foreach (var visual in VisualElements) AddVisual(visual);
-        foreach (var series in VisibleSeries)
+        // we draw all the series even invisible because it animates the series when hidden.
+        // Sections and Visuals are not animated when hidden, thus we just skip them.
+        // it means that invisible series have a performance impact, it should not be a big deal
+        // but ideally, do not keep invisible series in the chart, instead, add/remove them when needed.
+
+        foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
+        foreach (var series in Series)
         {
             AddVisual((ChartElement<TDrawingContext>)series);
             _drawnSeries.Add(series.SeriesId);
@@ -234,10 +239,9 @@ public class PieChart<TDrawingContext>(
 
         CollectVisuals();
 
-        if (_isToolTipOpen) DrawToolTip();
+        if (_isToolTipOpen) _ = DrawToolTip();
         InvokeOnUpdateStarted();
         _isFirstDraw = false;
-        ThemeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         Canvas.Invalidate();
         _isFirstDraw = false;

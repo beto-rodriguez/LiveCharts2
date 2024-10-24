@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -38,7 +39,32 @@ namespace LiveChartsCore.SkiaSharpView;
 /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
 /// </typeparam>
 public class StepLineSeries<TModel> : StepLineSeries<TModel, CircleGeometry, LabelGeometry>
-{ }
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public StepLineSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StepLineSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StepLineSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a stepline series in the user interface.
@@ -53,9 +79,35 @@ public class StepLineSeries<TModel> : StepLineSeries<TModel, CircleGeometry, Lab
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
-public class StepLineSeries<TModel, TVisual> : StepLineSeries<TModel, TVisual, LabelGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-{ }
+public class StepLineSeries<TModel, TVisual>
+    : StepLineSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public StepLineSeries()
+        : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StepLineSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StepLineSeries(params TModel[] values)
+        : base(values)
+    { }
+}
 
 /// <summary>
 /// Defines a stepline series in the user interface.
@@ -74,7 +126,32 @@ public class StepLineSeries<TModel, TVisual> : StepLineSeries<TModel, TVisual, L
 /// The type of the data label of every point.
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual, TLabel>
-    : CoreStepLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry>
-    where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-    where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
-{ }
+    : CoreStepLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry, LineGeometry>
+        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class.
+    /// </summary>
+    public StepLineSeries()
+        : base(null)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StepLineSeries(ICollection<TModel>? values)
+        : base(values)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class,
+    /// with a given collection of values.
+    /// </summary>
+    /// <param name="values">The values to plot.</param>
+    public StepLineSeries(params TModel[] values)
+        : base(values)
+    { }
+}

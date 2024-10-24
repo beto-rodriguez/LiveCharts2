@@ -1,26 +1,4 @@
-﻿// The MIT License(MIT)
-//
-// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -29,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 using LiveChartsCore.Defaults;
 using System.Diagnostics;
+using LiveChartsCore.UnitTesting.CoreObjectsTests;
 
 namespace LiveChartsCore.UnitTesting.OtherTests;
 
@@ -179,5 +158,42 @@ public class AxisTesting
         sw.Start();
         _ = chart.GetImage();
         Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
+    }
+
+    [TestMethod]
+    public void InvertedAxis()
+    {
+        var x1 = new Axis { MaxLimit = 10, MinLimit = 0 };
+        var y1 = new Axis { MaxLimit = 10, MinLimit = 0 };
+        var chart1 = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = [new LineSeries<double>([1, 2, 3])],
+            XAxes = [x1],
+            YAxes = [y1]
+        };
+
+        var x2 = new Axis { MinLimit = 0, MaxLimit = 10, IsInverted = true };
+        var y2 = new Axis { MinLimit = 0, MaxLimit = 10, IsInverted = true };
+        var chart2 = new SKCartesianChart
+        {
+            Width = 1000,
+            Height = 1000,
+            Series = [new LineSeries<double>([1, 2, 3])],
+            XAxes = [x2],
+            YAxes = [y2]
+        };
+
+        _ = ChangingPaintTasks.DrawChart(chart1);
+        _ = ChangingPaintTasks.DrawChart(chart2);
+
+        Assert.IsTrue(x1._size.Width > 0 && x2._size.Height > 0);
+        Assert.IsTrue(x1._size == x2._size);
+        Assert.IsTrue(x1.activeSeparators.Count == x2.activeSeparators.Count);
+
+        Assert.IsTrue(y1._size.Width > 0 && y2._size.Height > 0);
+        Assert.IsTrue(y1._size == y2._size);
+        Assert.IsTrue(y1.activeSeparators.Count == y2.activeSeparators.Count);
     }
 }

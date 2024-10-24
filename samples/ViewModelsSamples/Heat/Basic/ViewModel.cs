@@ -1,26 +1,22 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using SkiaSharp;
 
 namespace ViewModelsSamples.Heat.Basic;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    {
+    public ISeries[] Series { get; set; } = [
         new HeatSeries<WeightedPoint>
         {
-            HeatMap = new[]
-            {
+            HeatMap = [
                 new SKColor(255, 241, 118).AsLvcColor(), // the first element is the "coldest"
                 SKColors.DarkSlateGray.AsLvcColor(),
                 SKColors.Blue.AsLvcColor() // the last element is the "hottest"
-            },
-            Values = new ObservableCollection<WeightedPoint>
-            {
+            ],
+            Values = [
                 // Charles
                 new(0, 0, 150), // Jan
                 new(0, 1, 123), // Feb
@@ -52,23 +48,21 @@ public partial class ViewModel : ObservableObject
                 new(3, 3, 123), // Apr
                 new(3, 4, 432), // May
                 new(3, 5, 142), // Jun
-            },
+            ]
         }
-    };
+    ];
 
-    public Axis[] XAxes { get; set; } =
-    {
+    public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
         {
-            Labels = new[] { "Charles", "Richard", "Ana", "Mari" }
+            Labels = ["Charles", "Richard", "Ana", "Mari"]
         }
-    };
+    ];
 
-    public Axis[] YAxes { get; set; } =
-    {
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis
         {
-            Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" }
+            Labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
         }
-    };
+    ];
 }

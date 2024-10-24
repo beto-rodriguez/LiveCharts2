@@ -21,12 +21,14 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -54,10 +56,8 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreBoxSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreBoxSeries()
-        : base(
-             SeriesProperties.BoxSeries | SeriesProperties.PrimaryAxisVerticalOrientation |
-             SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
+    protected CoreBoxSeries(ICollection<TModel>? values)
+        : base(GetProperties(), values)
     {
         YToolTipLabelFormatter = p =>
         {
@@ -152,7 +152,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             var median = primaryScale.ToPixels(coordinate.SenaryValue);
             var middle = open;
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {
@@ -340,6 +340,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -350,6 +351,20 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    {
+        return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
+        {
+            Fill = GetMiniatureFill(point, zindex + 1),
+            Stroke = GetMiniatureStroke(point, zindex + 2),
+            Width = MiniatureShapeSize,
+            Height = MiniatureShapeSize,
+            Svg = GeometrySvg,
+            ClippingMode = ClipMode.None
         };
     }
 
@@ -502,5 +517,11 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         /// helper units.
         /// </summary>
         public float uw, uwm, cp, p, actualUw;
+    }
+
+    private static SeriesProperties GetProperties()
+    {
+        return SeriesProperties.BoxSeries | SeriesProperties.PrimaryAxisVerticalOrientation |
+             SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips;
     }
 }

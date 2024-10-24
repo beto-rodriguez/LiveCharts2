@@ -36,23 +36,24 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Series{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="IChartSeries{TDrawingContext}" />
-public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
-    : Series<TModel, TVisual, TLabel, TDrawingContext>, IChartSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+/// <remarks>
+/// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="properties">The properties.</param>
+/// <param name="values">The values.</param>
+public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
+    SeriesProperties properties,
+    ICollection<TModel>? values)
+        : Series<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IChartSeries<TDrawingContext>
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _dataLabelsPaint;
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
     private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="properties">The properties.</param>
-    protected ChartSeries(SeriesProperties properties) : base(properties) { }
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
     public IPaint<TDrawingContext>? DataLabelsPaint

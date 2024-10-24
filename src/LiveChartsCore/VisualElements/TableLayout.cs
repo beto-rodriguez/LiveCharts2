@@ -264,7 +264,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         return new[] { _backgroundPaint };
     }
 
-    internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
+    protected internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
         var size = Measure(chart);

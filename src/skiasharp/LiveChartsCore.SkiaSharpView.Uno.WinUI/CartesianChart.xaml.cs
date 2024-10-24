@@ -283,7 +283,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty LegendTextSizeProperty =
         DependencyProperty.Register(
-            nameof(LegendTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(LegendTextSize), typeof(object), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -315,7 +315,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty TooltipTextSizeProperty =
         DependencyProperty.Register(
-            nameof(TooltipTextSize), typeof(double?), typeof(CartesianChart),
+            nameof(TooltipTextSize), typeof(object), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -688,14 +688,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     #endregion
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (_core == null) throw new Exception("core not found");
-        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
-        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
@@ -749,18 +741,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         if (_core is null)
         {
-            var zoomingSection = new Drawing.Geometries.RectangleGeometry();
-            var zoomingSectionPaint = new SolidColorPaint
-            {
-                IsFill = true,
-                Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-                ZIndex = int.MaxValue
-            };
-            zoomingSectionPaint.AddGeometryToPaintTask(canvas.CanvasCore, zoomingSection);
-            canvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
             _core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, config => config.UseDefaults(), canvas.CanvasCore, zoomingSection);
+                this, config => config.UseDefaults(), canvas.CanvasCore);
 
             if (SyncContext != null)
                 _motionCanvas.CanvasCore.Sync = SyncContext;

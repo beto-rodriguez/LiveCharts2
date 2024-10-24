@@ -131,14 +131,6 @@ public abstract class Chart<TDrawingContext> : IChart
     public object MeasureWork { get; protected set; } = new();
 
     /// <summary>
-    /// Gets or sets the theme identifier.
-    /// </summary>
-    /// <value>
-    /// The theme identifier.
-    /// </value>
-    public object ThemeId { get; protected set; } = new();
-
-    /// <summary>
     /// Gets whether the control is loaded.
     /// </summary>
     public bool IsLoaded { get; internal set; } = false;
@@ -322,7 +314,12 @@ public abstract class Chart<TDrawingContext> : IChart
         Canvas.Dispose();
     }
 
-    internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
+    /// <summary>
+    /// Invokes the pointer down event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    /// <param name="isSecondaryAction">Flags the action as secondary (normally rigth click or double tap on mobile)</param>
+    protected internal virtual void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         _isPanning = true;
         _pointerPreviousPanningPosition = point;
@@ -364,7 +361,11 @@ public abstract class Chart<TDrawingContext> : IChart
         }
     }
 
-    internal virtual void InvokePointerMove(LvcPoint point)
+    /// <summary>
+    /// Invokes the pointer move event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    protected internal virtual void InvokePointerMove(LvcPoint point)
     {
         _pointerPosition = point;
         _isPointerIn = true;
@@ -375,7 +376,12 @@ public abstract class Chart<TDrawingContext> : IChart
         _panningThrottler.Call();
     }
 
-    internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
+    /// <summary>
+    /// Invokes the pointer up event.
+    /// </summary>
+    /// <param name="point">The pointer position.</param>
+    /// <param name="isSecondaryAction">Flags the action as secondary (normally rigth click or double tap on mobile)</param>
+    protected internal virtual void InvokePointerUp(LvcPoint point, bool isSecondaryAction)
     {
 #if NET5_0_OR_GREATER
         if (_isMobile)
@@ -395,7 +401,10 @@ public abstract class Chart<TDrawingContext> : IChart
         _panningThrottler.Call();
     }
 
-    internal void InvokePointerLeft()
+    /// <summary>
+    /// Invokes the pointer out event.
+    /// </summary>
+    protected internal virtual void InvokePointerLeft()
     {
         View.InvokeOnUIThread(CloseTooltip);
         _isPointerIn = false;
@@ -574,6 +583,9 @@ public abstract class Chart<TDrawingContext> : IChart
             if (visual is ISeries series)
             {
                 // series delete softly and animate as they leave the UI.
+                // UPDATE
+                // actually series are not even removed sofly.. this is only disposing things
+                // and causes bugs such as #1164
                 series.SoftDeleteOrDispose(View);
             }
             else
@@ -618,7 +630,8 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Draws the current tool tip, requires canvas invalidation after this call.
     /// </summary>
-    protected void DrawToolTip()
+    /// <returns>A value indicating whether the tooltip was drawn.</returns>
+    protected bool DrawToolTip()
     {
         var x = _pointerPosition.X;
         var y = _pointerPosition.Y;
@@ -627,7 +640,7 @@ public abstract class Chart<TDrawingContext> : IChart
             x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
             y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
         {
-            return;
+            return false;
         }
 
         var points = FindHoveredPointsBy(_pointerPosition);
@@ -643,10 +656,12 @@ public abstract class Chart<TDrawingContext> : IChart
 
         CleanHoveredPoints(o);
 
-        if (isEmpty) return;
+        if (isEmpty) return true;
 
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
+
+        return true;
     }
 
     private void CleanHoveredPoints(object comparer)
@@ -670,7 +685,9 @@ public abstract class Chart<TDrawingContext> : IChart
 #if NET5_0_OR_GREATER
                      if (_isTooltipCanceled) return;
 #endif
-                     DrawToolTip();
+                     var tooltipDrawn = DrawToolTip();
+                     if (!tooltipDrawn) return;
+
                      Canvas.Invalidate();
                  }
              }));

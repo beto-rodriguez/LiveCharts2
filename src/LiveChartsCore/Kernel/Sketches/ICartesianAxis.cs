@@ -74,6 +74,14 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     LvcSize Size { get; set; }
 
     /// <summary>
+    /// Gets or sets the labels density, it is a factor that determines the distance between labels when calculated
+    /// by the library, 0 is the most dense any value greater than 0 will make the labels to be more separated,
+    /// values less than 0 will make the labels to overlap (labels rotation could prevent overlapping).
+    /// Default value is 0.85.
+    /// </summary>
+    float LabelsDensity { get; set; }
+
+    /// <summary>
     /// Gets or sets the min zoom delta, the minimum difference between the max and min visible limits of the axis.
     /// default is null and null means that the library will calculate this value based on the current data.
     /// </summary>
@@ -129,15 +137,16 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     public IEnumerable<ICartesianAxis>? SharedWith { get; set; }
 
     /// <summary>
-    /// Initializes the axis for the specified orientation.
+    /// Called when the axis measure starts.
     /// </summary>
+    /// <param name="chart">The chart.</param>
     /// <param name="orientation">The orientation.</param>
-    void Initialize(AxisOrientation orientation);
+    void OnMeasureStarted(IChart chart, AxisOrientation orientation);
 
     /// <summary>
-    /// Occurs when the axis is initialized.
+    /// Occurs when the axis measure starts.
     /// </summary>
-    event Action<ICartesianAxis>? Initialized;
+    event Action<IChart, ICartesianAxis>? MeasureStarted;
 
     /// <summary>
     /// Gets the axis limits considering its own and the <see cref="SharedWith"/> axes.

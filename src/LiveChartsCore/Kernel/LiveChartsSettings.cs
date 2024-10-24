@@ -46,7 +46,7 @@ public class LiveChartsSettings
     /// <value>
     /// The theme identifier.
     /// </value>
-    public object CurrentThemeId { get; private set; } = new();
+    public object CurrentThemeId { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -185,7 +185,13 @@ public class LiveChartsSettings
         return this;
     }
 
-    internal Func<TModel, int, Coordinate> GetMap<TModel>()
+    /// <summary>
+    /// Gets the map for a given type.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public Func<TModel, int, Coordinate> GetMap<TModel>()
     {
         return !_mappers.TryGetValue(typeof(TModel), out var mapper)
             ? throw new NotImplementedException(
@@ -360,7 +366,6 @@ public class LiveChartsSettings
     public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
         where TDrawingContext : DrawingContext
     {
-        CurrentThemeId = new object();
         Theme<TDrawingContext> t;
         _theme = t = new Theme<TDrawingContext>();
         builder(t);

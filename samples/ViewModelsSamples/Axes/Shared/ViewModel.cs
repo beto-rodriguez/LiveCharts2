@@ -1,42 +1,57 @@
 ﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Shared;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] SeriesCollection1 { get; set; }
+    public ISeries[] SeriesCollection2 { get; set; }
+    public Axis[] X1 { get; set; }
+    public Axis[] X2 { get; set; }
+    public Margin DrawMargin { get; set; }
+
     public ViewModel()
     {
-        var values1 = new int[50];
-        var values2 = new int[50];
-        var r = new Random();
-        var t = 0;
-        var t2 = 0;
+        var values1 = Fetch();
+        var values2 = Fetch();
 
-        for (var i = 0; i < 50; i++)
-        {
-            t += r.Next(-90, 100);
-            values1[i] = t;
+        SeriesCollection1 = [new LineSeries<int> { Values = values1 }];
+        SeriesCollection2 = [new ColumnSeries<int> { Values = values2 }];
 
-            t2 += r.Next(-9000, 10000);
-            values2[i] = t2;
-        }
+        // ideally, when sharing an axis, you should set the // mark
+        // initial limits for all the axes involved. // mark
+        var padding = 3;
+        var start = 0 - padding;
+        var end = values1.Length - 1 + padding;
 
-        SeriesCollection1 = new ISeries[] { new LineSeries<int> { Values = values1 } };
-        SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
+        X1 = [
+            new Axis
+            {
+                MinLimit = start,
+                MaxLimit = end,
+                CrosshairLabelsBackground = SKColors.OrangeRed.AsLvcColor(),
+                CrosshairLabelsPaint = new SolidColorPaint(SKColors.White),
+                CrosshairPaint = new SolidColorPaint(SKColors.OrangeRed.WithAlpha(50), 4),
+                CrosshairPadding = new(8),
+                Labeler = value => value.ToString("N2")
+            }
+        ];
+        X2 = [
+            new Axis
+            {
+                MinLimit = start,
+                MaxLimit = end,
+                CrosshairPaint = new SolidColorPaint(SKColors.OrangeRed.WithAlpha(50), 4)
+            }
+        ];
 
-        // ideally, when sharing an axis, you should set the initial limits for all the axes involved. // mark
-        var start = 0 - 5;
-        var end = 50 + 5;
-
-        X1 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
-        X2 = new Axis[] { new Axis { MinLimit = start, MaxLimit = end } };
-
-        X1[0].SharedWith = X2;
-        X2[0].SharedWith = X1;
+        SharedAxes.Set(X1[0], X2[0]);
 
         // Force the chart to use 70px margin on the left, this way we can align both charts Y axes. // mark
         DrawMargin = new Margin(70, Margin.Auto, Margin.Auto, Margin.Auto);
@@ -59,9 +74,18 @@ public partial class ViewModel : ObservableObject
         // calculate the required margin.
     }
 
-    public ISeries[] SeriesCollection1 { get; set; }
-    public ISeries[] SeriesCollection2 { get; set; }
-    public Axis[] X1 { get; set; }
-    public Axis[] X2 { get; set; }
-    public Margin DrawMargin { get; set; }
+    private static int[] Fetch()
+    {
+        var values = new int[50];
+        var r = new Random();
+        var t = 0;
+
+        for (var i = 0; i < 50; i++)
+        {
+            t += r.Next(-90, 100);
+            values[i] = t;
+        }
+
+        return values;
+    }
 }

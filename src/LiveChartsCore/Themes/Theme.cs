@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Themes;
 
@@ -235,6 +236,11 @@ public class Theme<TDrawingContext>
     public List<Action<IBoxSeries<TDrawingContext>>> BoxSeriesBuilder { get; set; } = [];
 
     /// <summary>
+    /// Gets or sets the visual element builder.
+    /// </summary>
+    public Dictionary<Type, object> ChartElementElementBuilder { get; set; } = [];
+
+    /// <summary>
     /// Applies the theme to an axis.
     /// </summary>
     /// <param name="axis">The axis.</param>
@@ -383,6 +389,19 @@ public class Theme<TDrawingContext>
     public void ApplyStyleToDrawMargin(DrawMarginFrame<TDrawingContext> drawMarginFrame)
     {
         foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
+    }
+
+    /// <summary>
+    /// Applies the theme to a visual element.
+    /// </summary>
+    /// <typeparam name="TChartElement">The typoe of the chart element.</typeparam>
+    /// <param name="visualElement">The visual element.</param>
+    public void ApplyStyleTo<TChartElement>(TChartElement visualElement)
+        where TChartElement : VisualElement<TDrawingContext>
+    {
+        if (!ChartElementElementBuilder.TryGetValue(typeof(TChartElement), out var builder)) return;
+
+        ((Action<TChartElement>)builder)(visualElement);
     }
 
     /// <summary>

@@ -513,6 +513,36 @@ YAxes = new List&lt;Axis>
     }
 };</code></pre>
 
+## Custom Separators
+
+The library calculates the separators based on the data and the size of the chart, but we can manually set our own separators,
+When the `CustomSeparators` property is not null, the library will not calculate the separators, instead it will use the 
+collection we passed here.
+
+<pre><code>public Axis[] YAxes { get; set; } =
+    {
+        new Axis
+        {
+            // We can specify a custom separator collection
+            // the library will use this separators instead of
+            // calculating them based on the data of the chart
+            CustomSeparators = new double[] { 0, 10, 25, 50, 100 },
+            SeparatorsPaint = new SolidColorPaint(SKColors.Black.WithAlpha(100))
+        }
+    };</code></pre>
+
+![image]({{ assets_url }}/docs/samples/axes/customSeparatorsInterval/result.png)
+
+## Labels Density
+
+Separators are calculated automatically when the `CustomSeparators` and `Labels` properties are not set, the library decides
+the number of separators and distance between each one, based on the data, the size of the chart, and also based on the 
+`LabelsDensity` property, this property is a factor that determines the distance between labels; Where 0 is the most dense, 
+any value greater than 0 will make the labels to be more separated, values less than 0 will make the labels to overlap 
+(labels rotation could prevent overlapping). Default value is 0.85.
+
+![image]({{ assets_url }}/docs/_assets/labelsdensity.gif)
+
 ## Inverted property
 
 Normally both `X` and `Y` axes scale according to the Cartesian coordinate system you can invert the direction of the axes

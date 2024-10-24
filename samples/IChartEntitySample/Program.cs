@@ -15,15 +15,14 @@ var chart = new SKCartesianChart
 {
     Width = 900,
     Height = 600,
-    Series = new[]
-    {
+    Series = [
         new LineSeries<TempSample>
         {
             Values = samples
         }
-    },
-    XAxes = new[] { new Axis { Labeler = value => $"{value} seconds" } },
-    YAxes = new[] { new Axis { Labeler = value => $"{value} °C" } }
+    ],
+    XAxes = [new Axis { Labeler = value => $"{value} seconds" }],
+    YAxes = [new Axis { Labeler = value => $"{value} °C" }]
 };
 
 // save the chart.

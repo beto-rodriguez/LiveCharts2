@@ -32,7 +32,7 @@ public partial class ViewModel : ObservableObject
             values[i] = new(t);
         }
 
-        Series = new ISeries[] { new StepLineSeries<ObservableValue> { Values = values } };
+        Series = [new StepLineSeries<ObservableValue> { Values = values }];
     }
 
     public ISeries[] Series { get; set; }

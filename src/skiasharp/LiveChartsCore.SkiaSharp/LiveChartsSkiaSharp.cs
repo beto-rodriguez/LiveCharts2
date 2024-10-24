@@ -23,15 +23,11 @@
 // Ignore Spelling: Skia Lvc
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -114,21 +110,6 @@ public static class LiveChartsSkiaSharp
     public static LvcColor AsLvcColor(this SKColor color)
     {
         return new LvcColor(color.Red, color.Green, color.Blue, color.Alpha);
-    }
-
-    /// <summary>
-    /// Converts an IEnumerable to an ObservableCollection of pie series.
-    /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
-    /// <param name="source">The data source.</param>
-    /// <param name="builder">An optional builder.</param>
-    /// <returns></returns>
-    [Obsolete($"Renamed to {nameof(PieChartExtensions.AsPieSeries)}.")]
-    public static ObservableCollection<PieSeries<T, DoughnutGeometry, LabelGeometry>> AsLiveChartsPieSeries<T>(
-        this IEnumerable<T> source,
-        Action<T, PieSeries<T, DoughnutGeometry, LabelGeometry>>? builder = null)
-    {
-        return PieChartExtensions.AsPieSeries(source, builder);
     }
 
     /// <summary>

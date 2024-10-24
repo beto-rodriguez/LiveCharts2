@@ -1,24 +1,23 @@
 ﻿using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
+using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
-using SkiaSharp;
 
 namespace ViewModelsSamples.Axes.Style;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
     private static readonly SKColor s_gray = new(195, 195, 195);
     private static readonly SKColor s_gray1 = new(160, 160, 160);
     private static readonly SKColor s_gray2 = new(90, 90, 90);
     private static readonly SKColor s_dark3 = new(60, 60, 60);
 
-    public ISeries[] Series { get; set; } =
-    {
+    public ISeries[] Series { get; set; } = [
         new LineSeries<ObservablePoint>
         {
             Values = Fetch(),
@@ -26,10 +25,9 @@ public partial class ViewModel : ObservableObject
             Fill = null,
             GeometrySize = 0
         }
-    };
+    ];
 
-    public Axis[] XAxes { get; set; } =
-    {
+    public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
         {
             Name = "X axis",
@@ -41,7 +39,7 @@ public partial class ViewModel : ObservableObject
             {
                 Color = s_gray,
                 StrokeThickness = 1,
-                PathEffect = new DashEffect(new float[] { 3, 3 })
+                PathEffect = new DashEffect([3, 3])
             },
             SubseparatorsPaint = new SolidColorPaint
             {
@@ -65,10 +63,9 @@ public partial class ViewModel : ObservableObject
                 StrokeThickness = 1
             }
         }
-    };
+    ];
 
-    public Axis[] YAxes { get; set; } =
-    {
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis
         {
             Name = "Y axis",
@@ -80,7 +77,7 @@ public partial class ViewModel : ObservableObject
             {
                 Color = s_gray,
                 StrokeThickness = 1,
-                PathEffect = new DashEffect(new float[] { 3, 3 })
+                PathEffect = new DashEffect([3, 3])
             },
             SubseparatorsPaint = new SolidColorPaint
             {
@@ -104,18 +101,18 @@ public partial class ViewModel : ObservableObject
                 StrokeThickness = 1
             }
         }
-    };
+    ];
 
     public DrawMarginFrame Frame { get; set; } =
-    new()
-    {
-        Fill = new SolidColorPaint(s_dark3),
-        Stroke = new SolidColorPaint
+        new()
         {
-            Color = s_gray,
-            StrokeThickness = 1
-        }
-    };
+            Fill = new SolidColorPaint(s_dark3),
+            Stroke = new SolidColorPaint
+            {
+                Color = s_gray,
+                StrokeThickness = 1
+            }
+        };
 
     private static List<ObservablePoint> Fetch()
     {
@@ -125,7 +122,12 @@ public partial class ViewModel : ObservableObject
         for (var x = 0f; x < 1f; x += 0.001f)
         {
             var y = fx(x);
-            list.Add(new ObservablePoint(x - 0.5, y - 0.5));
+
+            list.Add(new()
+            {
+                X = x - 0.5,
+                Y = y - 0.5
+            });
         }
 
         return list;

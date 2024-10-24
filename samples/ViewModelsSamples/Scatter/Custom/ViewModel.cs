@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
@@ -9,8 +8,10 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Scatter.Custom;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
         var r = new Random();
@@ -25,34 +26,31 @@ public partial class ViewModel : ObservableObject
             values3.Add(new ObservablePoint(r.Next(0, 20), r.Next(0, 20)));
         }
 
-        Series = new ISeries[]
-        {
-            // use the second type parameter to specify the geometry to draw for every point
-            // there are already many predefined geometries in the
-            // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
-            new ScatterSeries<ObservablePoint, RoundedRectangleGeometry>
+        Series = [
+            // use the second generic parameter to define the geometry to draw
+            // there are many predefined geometries in the LiveChartsCore.Drawing namespace
+            // for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+            new ScatterSeries<ObservablePoint, HeartGeometry>
             {
                 Values = values1,
                 Stroke = null,
-                GeometrySize = 40,
+                GeometrySize = 40
             },
 
             // You can also use SVG paths to draw the geometry
-            // LiveCharts already provides some predefined paths in the SVGPoints class.
-            new ScatterSeries<ObservablePoint, SVGPathGeometry>
+            // the VariableSVGPathGeometry can change the drawn path at runtime
+            new ScatterSeries<ObservablePoint, VariableSVGPathGeometry>
             {
                 Values = values2,
-                GeometrySvg = SVGPoints.Heart
+                GeometrySvg = SVGPoints.Pin
             },
 
-            // you can declare your own gemetry and use the SkiaSharp api to draw it
+            // finally you can also use SkiaSharp to draw your own geometry
             new ScatterSeries<ObservablePoint, MyGeometry>
             {
                 Values = values3,
                 GeometrySize = 40,
             }
-        };
+        ];
     }
-
-    public ISeries[] Series { get; set; }
 }

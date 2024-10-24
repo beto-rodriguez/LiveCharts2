@@ -18,58 +18,6 @@ public partial class ViewModel
     private bool _isDown = false;
     private readonly ObservableCollection<ObservablePoint> _values = [];
 
-    public ViewModel()
-    {
-        var trend = 1000;
-        var r = new Random();
-
-        for (var i = 0; i < 500; i++)
-        {
-            _values.Add(new ObservablePoint(i, trend += r.Next(-20, 20)));
-        }
-
-        Series = new ISeries[]
-        {
-            new LineSeries<ObservablePoint>
-            {
-                Values = _values,
-                GeometryStroke = null,
-                GeometryFill = null,
-                DataPadding = new(0, 1)
-            }
-        };
-
-        ScrollbarSeries = new ISeries[]
-        {
-            new LineSeries<ObservablePoint>
-            {
-                Values = _values,
-                GeometryStroke = null,
-                GeometryFill = null,
-                DataPadding = new(0, 1)
-            }
-        };
-
-        ScrollableAxes = new[] { new Axis() };
-
-        Thumbs = new[]
-        {
-            new RectangularSection
-            {
-                Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
-            }
-        };
-
-        InvisibleX = new[] { new Axis { IsVisible = false } };
-        InvisibleY = new[] { new Axis { IsVisible = false } };
-
-        // force the left margin to be 100 and the right margin 50 in both charts, this will
-        // align the start and end point of the "draw margin",
-        // no matter the size of the labels in the Y axis of both chart.
-        var auto = LiveChartsCore.Measure.Margin.Auto;
-        Margin = new(100, auto, 50, auto);
-    }
-
     public ISeries[] Series { get; set; }
     public Axis[] ScrollableAxes { get; set; }
     public ISeries[] ScrollbarSeries { get; set; }
@@ -77,6 +25,53 @@ public partial class ViewModel
     public Axis[] InvisibleY { get; set; }
     public LiveChartsCore.Measure.Margin Margin { get; set; }
     public RectangularSection[] Thumbs { get; set; }
+
+    public ViewModel()
+    {
+        var trend = 1000;
+        var r = new Random();
+
+        for (var i = 0; i < 500; i++)
+            _values.Add(new ObservablePoint(i, trend += r.Next(-20, 20)));
+
+        Series = [
+            new LineSeries<ObservablePoint>
+            {
+                Values = _values,
+                GeometryStroke = null,
+                GeometryFill = null,
+                DataPadding = new(0, 1)
+            }
+        ];
+
+        ScrollbarSeries = [
+            new LineSeries<ObservablePoint>
+            {
+                Values = _values,
+                GeometryStroke = null,
+                GeometryFill = null,
+                DataPadding = new(0, 1)
+            }
+        ];
+
+        ScrollableAxes = [new Axis()];
+
+        Thumbs = [
+            new RectangularSection
+            {
+                Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
+            }
+        ];
+
+        InvisibleX = [new Axis { IsVisible = false }];
+        InvisibleY = [new Axis { IsVisible = false }];
+
+        // force the left margin to be 100 and the right margin 50 in both charts, this will
+        // align the start and end point of the "draw margin",
+        // no matter the size of the labels in the Y axis of both chart.
+        var auto = LiveChartsCore.Measure.Margin.Auto;
+        Margin = new(100, auto, 50, auto);
+    }
 
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)

@@ -71,7 +71,6 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     private double _textSize = 16;
     private IPaint<TDrawingContext>? _separatorsPaint;
     private bool _showSeparatorLines = true;
-    private bool _isVisible = true;
     private bool _isInverted;
     private bool _forceStepToMin;
     private double _labelsAngle;
@@ -153,9 +152,6 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
 
     /// <inheritdoc cref="IPlane.CustomSeparators"/>
     public IEnumerable<double>? CustomSeparators { get => _customSeparators; set => SetProperty(ref _customSeparators, value); }
-
-    /// <inheritdoc cref="IPlane.IsVisible"/>
-    public bool IsVisible { get => _isVisible; set => SetProperty(ref _isVisible, value); }
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }

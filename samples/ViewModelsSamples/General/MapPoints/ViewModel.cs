@@ -1,15 +1,16 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.ConditionalDraw;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.General.MapPoints;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
         var paints = new SolidColorPaint[]
@@ -22,7 +23,7 @@ public partial class ViewModel : ObservableObject
 
         var series = new ColumnSeries<int>
         {
-            Values = new[] { 2, 5, 4, 6, 8, 3, 2, 4, 6 },
+            Values = [2, 5, 4, 6, 8, 3, 2, 4, 6],
             DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
             DataLabelsPosition = DataLabelsPosition.Top
         }
@@ -39,8 +40,6 @@ public partial class ViewModel : ObservableObject
             point.Visual.Fill = paint;
         });
 
-        Series = new ISeries[] { series };
+        Series = [series];
     }
-
-    public ISeries[] Series { get; set; }
 }

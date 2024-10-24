@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -20,6 +21,7 @@ public class PilotInfo : ObservableValue
     {
         Name = name;
         Paint = paint;
+
         // the ObservableValue.Value property is used by the chart
         Value = value;
     }
@@ -41,8 +43,8 @@ public partial class ViewModel : ObservableObject
             .ToArray();
 
         // generate some data for each pilot:
-        _data = new PilotInfo[]
-        {
+        _data =
+        [
             new("Tsunoda",   500,  paints[0]),
             new("Sainz",     450,  paints[1]),
             new("Riccardo",  520,  paints[2]),
@@ -50,11 +52,11 @@ public partial class ViewModel : ObservableObject
             new("Perez",     660,  paints[4]),
             new("Verstapen", 920,  paints[5]),
             new("Hamilton",  1000, paints[6])
-        };
+        ];
 
         var rowSeries = new RowSeries<PilotInfo>
         {
-            Values = _data.OrderBy(x => x.Value).ToArray(),
+            Values = SortData(),
             DataLabelsPaint = new SolidColorPaint(new SKColor(245, 245, 245)),
             DataLabelsPosition = DataLabelsPosition.End,
             DataLabelsTranslate = new(-1, 0),
@@ -69,7 +71,7 @@ public partial class ViewModel : ObservableObject
             point.Visual.Fill = point.Model!.Paint;
         });
 
-        _series = new[] { rowSeries };
+        _series = [rowSeries];
 
         _ = StartRace();
     }
@@ -78,10 +80,10 @@ public partial class ViewModel : ObservableObject
     private ISeries[] _series;
 
     [ObservableProperty]
-    private Axis[] _xAxes = { new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)) } };
+    private Axis[] _xAxes = [new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)) }];
 
     [ObservableProperty]
-    private Axis[] _yAxes = { new Axis { IsVisible = false } };
+    private Axis[] _yAxes = [new Axis { IsVisible = false }];
 
     public bool IsReading { get; set; } = true;
 
@@ -98,10 +100,11 @@ public partial class ViewModel : ObservableObject
             foreach (var item in _data)
                 item.Value += _r.Next(0, 100);
 
-            Series[0].Values =
-                _data.OrderBy(x => x.Value).ToArray();
+            Series[0].Values = SortData();
 
             await Task.Delay(100);
         }
     }
+
+    private ICollection<PilotInfo> SortData() => [.. _data.OrderBy(x => x.Value)];
 }

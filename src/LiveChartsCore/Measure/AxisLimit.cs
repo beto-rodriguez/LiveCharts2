@@ -67,16 +67,6 @@ public struct AxisLimit(double min, double max, double minDelta, double dataMin,
             min is double.MaxValue or double.MinValue ||
             max is double.MaxValue or double.MinValue;
 
-        // easy workaround to prevent the axis from crashing
-        // https://github.com/beto-rodriguez/LiveCharts2/issues/1294
-        if (min > max)
-        {
-            var temp = max;
-
-            max = min;
-            min = temp;
-        }
-
         if (!isMax) return;
 
         min = 0;

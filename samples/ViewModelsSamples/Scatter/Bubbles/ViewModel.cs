@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Scatter.Bubbles;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
         var r = new Random();
-        var values1 = new ObservableCollection<WeightedPoint>();
-        var values2 = new ObservableCollection<WeightedPoint>();
+        var values1 = new List<WeightedPoint>();
+        var values2 = new List<WeightedPoint>();
 
         for (var i = 0; i < 8; i++)
         {
@@ -37,22 +38,30 @@ public partial class ViewModel : ObservableObject
             values2.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 100)));
         }
 
-        Series = new ISeries[]
-        {
+        Series = [
             new ScatterSeries<WeightedPoint>
             {
                 Values = values1,
-                GeometrySize = 50,
-                MinGeometrySize = 5
+                GeometrySize = 100,
+                MinGeometrySize = 5,
             },
             new ScatterSeries<WeightedPoint, RoundedRectangleGeometry>
             {
                 Values = values2,
-                GeometrySize = 50,
-                MinGeometrySize = 5
+                GeometrySize = 100,
+                MinGeometrySize = 5,
+                StackGroup = 1
+            },
+            new ScatterSeries<WeightedPoint>
+            {
+                Values = [ new() { X = 10, Y = 10, Weight = 500 } ],
+                GeometrySize = 100,
+                MinGeometrySize = 5,
+                // use the stack group to share the Weight between series. // mark
+                // in this case, the previous series shares the same // mark
+                // StackGroup, thus series share the Weigth bounds. // mark
+                StackGroup = 1
             }
-        };
+        ];
     }
-
-    public ISeries[] Series { get; set; }
 }

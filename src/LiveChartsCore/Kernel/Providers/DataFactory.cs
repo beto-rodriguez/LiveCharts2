@@ -41,7 +41,7 @@ public class DataFactory<TModel, TDrawingContext>
 {
     private readonly bool _isTModelChartEntity = false;
     private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = [];
-    private ISeries? _series;
+    private ISeries<TModel>? _series;
 
     /// <summary>
     /// Gets or sets the previous known bounds.
@@ -131,8 +131,6 @@ public class DataFactory<TModel, TDrawingContext>
         var yMin = plane2.MinLimit ?? double.MinValue;
         var yMax = plane2.MaxLimit ?? double.MaxValue;
 
-        var hasData = false;
-
         var bounds = new DimensionalBounds();
 
         ChartPoint? previous = null;
@@ -189,12 +187,9 @@ public class DataFactory<TModel, TDrawingContext>
             }
 
             previous = point;
-            hasData = true;
         }
 
-        return !hasData
-            ? new SeriesBounds(PreviousKnownBounds, true)
-            : new SeriesBounds(PreviousKnownBounds = bounds, false);
+        return new SeriesBounds(bounds, false);
     }
 
     /// <summary>

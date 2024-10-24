@@ -143,13 +143,13 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    series.GetMiniaturesSketch().AsDrawnControl(s_zIndex),
+                    series.GetMiniature(null, s_zIndex),
                     new LabelVisual
                     {
                         Text = series.Name ?? string.Empty,
                         Paint = FontPaint,
                         TextSize = TextSize,
-                        Padding = new Padding(8, 0, 0, 0),
+                        Padding = new Padding(8, 2, 0, 2),
                         MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start,

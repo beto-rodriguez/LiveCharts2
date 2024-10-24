@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
@@ -49,8 +48,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        Core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), CoreCanvas, new RectangleGeometry());
+        Core = new CartesianChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;
@@ -188,13 +186,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
     public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
-
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)"/>
-    [Obsolete($"Use {nameof(ScalePixelsToData)} instead.")]
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        throw new NotImplementedException();
-    }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)

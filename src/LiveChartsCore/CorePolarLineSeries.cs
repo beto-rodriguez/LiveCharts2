@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -40,11 +41,13 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry>
+/// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
+public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
     : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
@@ -64,13 +67,12 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _radiusTooltipLabelFormatter;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CorePolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CorePolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
-    public CorePolarLineSeries(bool isStacked = false)
-        : base(
-              SeriesProperties.Polar | SeriesProperties.PolarLine |
-              (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
+    /// <param name="values">The values.</param>
+    public CorePolarLineSeries(ICollection<TModel>? values, bool isStacked = false)
+        : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(1f, 1.5f);
     }
@@ -193,7 +195,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         var segments = _enableNullSplitting
             ? SplitEachNull(points, scaler)
-            : new ChartPoint[][] { points };
+            : [points];
 
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
             ? polarChart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -247,7 +249,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
             isCotangent = true;
         }
 
-        var hasSvg = this.HasSvgGeometry();
+        var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
 
@@ -334,7 +336,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
                 if (hasSvg)
                 {
-                    var svgVisual = (ISvgPath<TDrawingContext>)visual.Geometry;
+                    var svgVisual = (IVariableSvgPath<TDrawingContext>)visual.Geometry;
                     if (_geometrySvgChanged || svgVisual.SVGPath is null)
                         svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
                 }
@@ -511,6 +513,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -525,6 +528,34 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         {
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    {
+        var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
+        var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
+
+        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+
+        return usesLine
+            ? new LineVisual<TLineGeometry, TDrawingContext>
+            {
+                Stroke = GetMiniaturePaint(Stroke, zindex + 2),
+                Width = MiniatureShapeSize,
+                Height = 0,
+                ClippingMode = ClipMode.None
+            }
+            : new GeometryVisual<TVisual, TLabel, TDrawingContext>
+            {
+                Fill = GetMiniatureFill(point, zindex + 1),
+                Stroke = GetMiniatureStroke(point, zindex + 2),
+                Width = MiniatureShapeSize,
+                Height = MiniatureShapeSize,
+                Rotation = typedPoint?.Visual?.RotateTransform ?? 0,
+                Svg = GeometrySvg,
+                ClippingMode = ClipMode.None
+            };
     }
 
     /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>
@@ -771,14 +802,12 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
         if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
-
-        OnVisibilityChanged();
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
+        return [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
     }
 
     /// <summary>
@@ -840,6 +869,34 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
              (float)(centerY + Math.Sin(actualAngle) * radius));
     }
 
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? GeometryFill;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Stroke ?? GeometryStroke;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
@@ -868,7 +925,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         foreach (var point in points)
         {
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (point.Context.Visual is BezierVisualPoint<TDrawingContext, TVisual> visual)
                 {
@@ -895,5 +952,12 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         }
 
         if (l.Count > 0) yield return l.ToArray();
+    }
+
+    private static SeriesProperties GetProperties(bool isStacked = false)
+    {
+        return SeriesProperties.Polar | SeriesProperties.PolarLine |
+            SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips |
+            (isStacked ? SeriesProperties.Stacked : 0);
     }
 }

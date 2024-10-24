@@ -48,4 +48,10 @@ public interface IScatterSeries<TDrawingContext> :
     /// The minimum size of the geometry.
     /// </value>
     double MinGeometrySize { get; set; }
+
+    /// <summary>
+    /// Gets or sets and index for the stack group, if multiple weighed series share
+    /// the same stack group, they will be stacked, defualt is null and means that it is not stacked.
+    /// </summary>
+    int? StackGroup { get; set; }
 }

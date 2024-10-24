@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
@@ -11,8 +10,10 @@ using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Events.Pie;
 
-public partial class ViewModel : ObservableObject
+public partial class ViewModel
 {
+    public ISeries[] Series { get; set; }
+
     public ViewModel()
     {
         var data = new[]
@@ -25,7 +26,7 @@ public partial class ViewModel : ObservableObject
             new City { Name = "Guadalajara", Population = 4 }
         };
 
-        // the parameter in the AsLiveChartsSeries() function is optional
+        // the parameter in the AsPieSeries() function is optional
         // and is useful to customize each series
         // it is a function that takes the city and the series assigned to the city as parameters
         var seriesCollection = data.AsPieSeries(
@@ -38,10 +39,8 @@ public partial class ViewModel : ObservableObject
                 series.DataPointerDown += Series_DataPointerDown;
             });
 
-        Series = seriesCollection.ToArray();
+        Series = [.. seriesCollection];
     }
-
-    public ISeries[] Series { get; set; }
 
     private void Series_DataPointerDown(
         IChartView chart,

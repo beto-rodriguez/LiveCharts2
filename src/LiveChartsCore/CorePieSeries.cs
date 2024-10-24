@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Gauge Pushout
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -41,18 +40,23 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
-    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
+/// <remarks>
+/// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+/// </remarks>
+public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>(
+    ICollection<TModel>? values,
+    bool isGauge = false,
+    bool isGaugeFill = false)
+        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _stroke = null;
     private IPaint<TDrawingContext>? _fill = null;
     private double _pushout = 0;
     private double _innerRadius = 0;
-    private double _maxOuterRadius = 1;
     private double _outerRadiusOffset = 0;
     private double _hoverPushout = 20;
     private double _innerPadding = 0;
@@ -65,14 +69,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     private bool _isRelativeToMin;
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
-    /// </summary>
-    protected CorePieSeries(bool isGauge = false, bool isGaugeFill = false)
-        : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
-              (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
-    { }
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -106,10 +102,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.OuterRadiusOffset"/>
     public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
-
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxOuterRadius"/>
-    [Obsolete($"Use {nameof(OuterRadiusOffset)} instead.")]
-    public double MaxOuterRadius { get => _maxOuterRadius; set => SetProperty(ref _maxOuterRadius, value); }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
     public double HoverPushout { get => _hoverPushout; set => SetProperty(ref _hoverPushout, value); }
@@ -271,7 +263,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             var coordinate = point.Coordinate;
             var visual = point.Context.Visual as TVisual;
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {
@@ -462,6 +454,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -472,6 +465,20 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    {
+        return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
+        {
+            Fill = GetMiniatureFill(point, zindex + 1),
+            Stroke = GetMiniatureStroke(point, zindex + 2),
+            Width = MiniatureShapeSize,
+            Height = MiniatureShapeSize,
+            Svg = GeometrySvg,
+            ClippingMode = ClipMode.None
         };
     }
 
@@ -655,8 +662,34 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         }
 
         foreach (var item in toDelete) _ = everFetched.Remove(item);
+    }
 
-        OnVisibilityChanged();
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? Fill;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Stroke ?? Stroke;
+
+        return GetMiniaturePaint(paint, zIndex);
     }
 
     private void AlignLabel(TLabel label, double start, double initialRotation, double sweep)
@@ -690,5 +723,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             default:
                 break;
         }
+    }
+
+    private static SeriesProperties GetProperties(bool isGauge = false, bool isGaugeFill = false)
+    {
+        return SeriesProperties.PieSeries | SeriesProperties.Stacked | SeriesProperties.Solid |
+            (isGauge ? SeriesProperties.Gauge : 0) |
+            (isGaugeFill ? SeriesProperties.GaugeFill : 0);
     }
 }

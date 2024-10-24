@@ -38,7 +38,7 @@
         <lvc:PieChart
             Grid.Column="1"
             Series="{Binding Series}"
-            Total="{Binding GaugeTotal}"
+            MaxValue="{Binding GaugeTotal}"
             MaxAngle="{Binding MaxAngle}"
             InitialRotation="{Binding InitialRotation}"/>
     </Grid>

@@ -173,15 +173,6 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-    [Obsolete("Use the ScalePixelsToData method instead.")]
-    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (core is null) throw new Exception("core not found");
-        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
-        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-    }
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
@@ -227,18 +218,9 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     {
         if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
 
-        var zoomingSection = new RectangleGeometry();
-        var zoomingSectionPaint = new SolidColorPaint
-        {
-            IsFill = true,
-            Color = new SkiaSharp.SKColor(33, 150, 243, 50),
-            ZIndex = int.MaxValue
-        };
-        zoomingSectionPaint.AddGeometryToPaintTask(motionCanvas.CanvasCore, zoomingSection);
-        motionCanvas.CanvasCore.AddDrawableTask(zoomingSectionPaint);
-
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, config => config.UseDefaults(), motionCanvas.CanvasCore, zoomingSection);
+            this, config => config.UseDefaults(), motionCanvas.CanvasCore);
+
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

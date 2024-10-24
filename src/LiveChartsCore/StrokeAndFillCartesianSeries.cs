@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
@@ -33,22 +33,21 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
-    : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+/// <remarks>
+/// Initializes a new instance of the <see cref="StrokeAndFillCartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="properties">The properties.</param>
+/// <param name="values">The values.</param>
+public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
+    SeriesProperties properties,
+    ICollection<TModel>? values)
+        : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values)
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private IPaint<TDrawingContext>? _stroke = null;
     private IPaint<TDrawingContext>? _fill = null;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StrokeAndFillCartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="properties">The properties.</param>
-    protected StrokeAndFillCartesianSeries(SeriesProperties properties)
-        : base(properties)
-    { }
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -77,6 +76,34 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _stroke, _fill, DataLabelsPaint };
+        return [_stroke, _fill, DataLabelsPaint];
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Fill ?? Fill;
+
+        return GetMiniaturePaint(paint, zIndex);
+    }
+
+    /// <summary>
+    /// Gets the fill paint for the miniature.
+    /// </summary>
+    /// <param name="point">the point/</param>
+    /// <param name="zIndex">the x index.</param>
+    /// <returns></returns>
+    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    {
+        var p = point is null ? null : ConvertToTypedChartPoint(point);
+        var paint = p?.Visual?.Stroke ?? Stroke;
+
+        return GetMiniaturePaint(paint, zIndex);
     }
 }

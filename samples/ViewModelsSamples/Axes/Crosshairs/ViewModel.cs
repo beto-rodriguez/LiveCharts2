@@ -1,44 +1,35 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.Axes.Crosshairs;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel
 {
-    public ISeries[] Series { get; set; } =
-    {
-        new LineSeries<double>
-        {
-            Values = new ObservableCollection<double> { 200, 558, 458, 249, 457, 339, 587 },
-        },
-        new LineSeries<double>
-        {
-            Values = new ObservableCollection<double> { 210, 400, 300, 350, 219, 323, 618 },
-        },
-    };
+    public ISeries[] Series { get; set; } = [
+        new LineSeries<double> { Values = [200, 558, 458, 249, 457, 339, 587] },
+        new LineSeries<double> { Values = [210, 400, 300, 350, 219, 323, 618] },
+    ];
 
-    public Axis[] XAxes { get; set; } =
-    {
+    public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
         {
             CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
-            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed, 1),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed),
             CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
             Labeler = value => value.ToString("N2")
         }
-    };
-    public Axis[] YAxes { get; set; } =
-    {
+    ];
+
+    public ICartesianAxis[] YAxes { get; set; } = [
         new Axis
         {
             CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
-            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed, 1),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed),
             CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
             CrosshairSnapEnabled = true // snapping is also supported
         }
-    };
+    ];
 }

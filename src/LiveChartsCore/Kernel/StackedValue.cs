@@ -22,6 +22,7 @@
 
 namespace LiveChartsCore.Kernel;
 
+// ToDo: This should be a struct.
 /// <summary>
 /// Defines the a stacked value.
 /// </summary>
@@ -52,11 +53,6 @@ public class StackedValue
     public double Total { get; set; }
 
     /// <summary>
-    /// Gets the share in the total stack.
-    /// </summary>
-    public double Share => (End - Start) / Total;
-
-    /// <summary>
     /// Gets or sets the start.
     /// </summary>
     /// <value>
@@ -79,4 +75,13 @@ public class StackedValue
     /// The total.
     /// </value>
     public double NegativeTotal { get; set; }
+
+    /// <summary>
+    /// Gets the share in the total stack.
+    /// </summary>
+    public double Share => IsNegative
+        ? (NegativeEnd - NegativeStart) / NegativeTotal
+        : (End - Start) / Total;
+
+    internal bool IsNegative { get; set; }
 }

@@ -163,7 +163,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild(series.GetMiniaturesSketch().AsDrawnControl(s_zIndex), i, ltr ? 3 : 0);
+                tableLayout.AddChild(series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
                     tableLayout.AddChild(
@@ -185,7 +185,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
                         Text = content,
                         Paint = FontPaint,
                         TextSize = TextSize,
-                        Padding = new Padding(10, 0, 0, 0),
+                        Padding = new Padding(10, 2, 0, 2),
                         MaxWidth = lw,
                         VerticalAlignment = Align.Start,
                         HorizontalAlignment = Align.Start,

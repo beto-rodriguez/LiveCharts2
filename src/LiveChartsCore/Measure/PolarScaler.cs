@@ -75,20 +75,14 @@ public class PolarScaler
             actualRadiusVisibleBounds = radiusAxis.VisibleDataBounds;
         }
 
-        //var actualAngleBounds = usePreviousScale ? angleAxis.PreviousDataBounds : angleAxis.DataBounds;
-        //var actualAngleVisibleBounds = usePreviousScale ? angleAxis.PreviousVisibleDataBounds : angleAxis.VisibleDataBounds;
-
-        //var actualRadiusBounds = usePreviousScale ? radiusAxis.PreviousDataBounds : radiusAxis.DataBounds;
-        //var actualRadiusVisibleBounds = usePreviousScale ? radiusAxis.PreviousVisibleDataBounds : radiusAxis.VisibleDataBounds;
-
         if (actualAngleBounds is null || actualAngleVisibleBounds is null) throw new Exception("angle bounds not found");
         if (actualRadiusBounds is null || actualRadiusVisibleBounds is null) throw new Exception("radius bounds not found");
 
         CenterX = drawMarginLocation.X + drawMarginSize.Width * 0.5f;
         CenterY = drawMarginLocation.Y + drawMarginSize.Height * 0.5f;
 
-        MinRadius = radiusAxis.MinLimit ?? actualRadiusVisibleBounds.Min;
-        MaxRadius = radiusAxis.MaxLimit ?? actualRadiusVisibleBounds.Max;
+        MinRadius = radiusAxis.IsInverted ? radiusAxis.MaxLimit ?? actualRadiusVisibleBounds.Max : radiusAxis.MinLimit ?? actualRadiusVisibleBounds.Min;
+        MaxRadius = radiusAxis.IsInverted ? radiusAxis.MinLimit ?? actualRadiusVisibleBounds.Min : radiusAxis.MaxLimit ?? actualRadiusVisibleBounds.Max;
         _deltaRadius = MaxRadius - MinRadius;
 
         var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
@@ -97,8 +91,8 @@ public class PolarScaler
         _outerRadiusOffset = 0; //drawMagrinLocation.X; // We should also check for the top, right and bottom bounds.
         _scalableRadius = minDimension * 0.5 - _innerRadiusOffset - _outerRadiusOffset;
 
-        MinAngle = angleAxis.MinLimit ?? actualAngleBounds.Min;
-        MaxAngle = angleAxis.MaxLimit ?? actualAngleBounds.Max;
+        MinAngle = angleAxis.IsInverted ? angleAxis.MaxLimit ?? actualAngleBounds.Max : angleAxis.MinLimit ?? actualAngleBounds.Min;
+        MaxAngle = angleAxis.IsInverted ? angleAxis.MinLimit ?? actualAngleBounds.Min : angleAxis.MaxLimit ?? actualAngleBounds.Max;
         _deltaAngleVal = MaxAngle - MinAngle;
 
         _initialRotation = initialRotation;

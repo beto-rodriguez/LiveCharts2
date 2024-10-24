@@ -65,6 +65,10 @@ public class StackPosition<TDrawingContext>
     /// <returns></returns>
     public StackedValue GetStack(ChartPoint point)
     {
-        return point.StackedValue = Stacker.GetStack(point, Position);
+        var stack = Stacker.GetStack(point, Position);
+        stack.IsNegative = point.Coordinate.PrimaryValue < 0;
+        point.StackedValue = stack;
+
+        return stack;
     }
 }

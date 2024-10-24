@@ -12,11 +12,10 @@ var cartesianChart = new SKCartesianChart
 {
     Width = 900,
     Height = 600,
-    Series = new ISeries[]
-    {
-        new LineSeries<int> { Values = new int[] { 1, 5, 4, 6 } },
-        new ColumnSeries<int> { Values = new int[] { 4, 8, 2, 4 } }
-    },
+    Series = [
+        new LineSeries<int> { Values = [1, 5, 4, 6] },
+        new ColumnSeries<int> { Values = [4, 8, 2, 4] }
+    ],
     Title = new LabelVisual
     {
         Text = "Hello LiveCharts",
@@ -48,12 +47,11 @@ var pieChart = new SKPieChart
 {
     Width = 900,
     Height = 600,
-    Series = new ISeries[]
-    {
-        new PieSeries<int> { Values = new int[] { 10, } },
-        new PieSeries<int> { Values = new int[] { 6 } },
-        new PieSeries<int> { Values = new int[] { 4 } }
-    },
+    Series = [
+        new PieSeries<int> { Values = [10,] },
+        new PieSeries<int> { Values = [6] },
+        new PieSeries<int> { Values = [4] }
+    ],
     LegendPosition = LiveChartsCore.Measure.LegendPosition.Right
 };
 
@@ -63,18 +61,16 @@ var geoHeatMap = new SKGeoMap
 {
     Width = 900,
     Height = 600,
-    Series = new IGeoSeries[]
-    {
+    Series = [
         new HeatLandSeries
         {
-            Lands = new HeatLand[]
-            {
+            Lands = [
                 new() { Name = "mex", Value = 10 },
                 new() { Name = "usa", Value = 15 },
                 new() { Name = "can", Value = 8 }
-            }
+            ]
         }
-    }
+    ]
 };
 
 geoHeatMap.SaveImage("geoHeatMap.png");

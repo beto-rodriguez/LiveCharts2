@@ -22,12 +22,14 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -58,10 +60,8 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
     /// </summary>
-    protected CoreFinancialSeries()
-        : base(
-             SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
-             SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
+    protected CoreFinancialSeries(ICollection<TModel>? values)
+        : base(GetProperties(), values)
     {
         YToolTipLabelFormatter = p =>
         {
@@ -189,7 +189,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             var low = primaryScale.ToPixels(coordinate.QuinaryValue);
             var middle = open;
 
-            if (point.IsEmpty)
+            if (point.IsEmpty || !IsVisible)
             {
                 if (visual is not null)
                 {
@@ -442,7 +442,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
+        return [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
@@ -477,6 +477,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -487,5 +488,22 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         {
             PaintSchedules = schedules
         };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    {
+        // No miniature.
+        return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
+        {
+            Width = 0,
+            Height = 0
+        };
+    }
+
+    private static SeriesProperties GetProperties()
+    {
+        return SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
+            SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips;
     }
 }

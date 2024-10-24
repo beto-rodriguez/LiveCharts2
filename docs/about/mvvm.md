@@ -51,9 +51,7 @@ frameworks by the library and to implement `INotifyPropertyChanged` to handle au
 ## This site uses CommunityToolkit.Mvvm package
 
 Probably the less lovely thing about MVVM is how verbose it was, now with source generators, the dotnet foundation is maintaining the 
-[CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm/), this is a game changer IMO, it makes MVVM supper easy,
-basically you only need to make your view models `partial` classes, then add the `ObservableObject` attribute to the class and 
-the `ObservableProperty` attribute a field inside your class.
+[CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm/), it makes MVVM easier.
 
 To define a series property that notifies the change to the UI, without any MVVM framework a view model would look like:
 
@@ -88,13 +86,13 @@ Too much code to declare a property isn't it? but now we can use the `CommunityT
 <pre><code>using LiveChartsCore;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-[ObservableObject]
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     [ObservableProperty]
     public ISeries[] _series;
 }</code></pre>
 
-Notice the `ObservableProperty` attribute was added to the *_series*  field. By convention and with the magic of source generators the property
-`Series` now exists in our class, source generators are adding all this boring and repetitive code for us, this is just a quick guide
-to get started with the docs in this site but you can learn more about the toolkit [here](https://www.youtube.com/watch?v=aCxl0z04BN8).
+Now we inherited from `ObservableObject` and marked the *_series* field with the `ObservableProperty` attribute; by convention and with 
+the magic of source generators, the property `Series` now exists in our class, source generators are adding all this boring and repetitive 
+code for us, this is just a quick guide to get started with the docs in this site but you can learn more about the 
+toolkit [here](https://www.youtube.com/watch?v=aCxl0z04BN8) or in the [official docs](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/).

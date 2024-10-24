@@ -20,13 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -39,11 +40,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="IBarSeries{TDrawingContext}" />
-public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+/// <remarks>
+/// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="properties">The properties.</param>
+/// <param name="values">The values.</param>
+public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
+    SeriesProperties properties,
+    ICollection<TModel>? values)
+        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IBarSeries<TDrawingContext>
+            where TVisual : class, ISizedGeometry<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private double _pading = 2;
     private double _maxBarWidth = 50;
@@ -51,18 +59,6 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     private double _rx;
     private double _ry;
     private IPaint<TDrawingContext>? _errorPaint;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="properties">The properties.</param>
-    protected BarSeries(SeriesProperties properties)
-        : base(properties)
-    { }
-
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
-    [Obsolete($"Replace by {nameof(Padding)} property.")]
-    public double GroupPadding { get => _pading; set => SetProperty(ref _pading, value); }
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
@@ -87,6 +83,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    [System.Obsolete]
     public override Sketch<TDrawingContext> GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule<TDrawingContext>>();
@@ -97,6 +94,20 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    {
+        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        {
+            Fill = GetMiniatureFill(point, zindex + 1),
+            Stroke = GetMiniatureStroke(point, zindex + 2),
+            Width = MiniatureShapeSize,
+            Height = MiniatureShapeSize,
+            Svg = GeometrySvg,
+            ClippingMode = ClipMode.None
         };
     }
 
@@ -216,6 +227,6 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
-        return new[] { Stroke, Fill, DataLabelsPaint, _errorPaint };
+        return [Stroke, Fill, DataLabelsPaint, _errorPaint];
     }
 }

@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="15.0">
+<Project ToolsVersion="15.0">
   <ItemGroup>
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
@@ -10,8 +10,8 @@
     <PackageVersion Include="Microsoft.Windows.Compatibility" Version="7.0.5" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
-    <PackageVersion Include="SkiaSharp.Skottie" Version="2.88.6" />
-    <PackageVersion Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.6" />
+    <PackageVersion Include="SkiaSharp.Skottie" Version="2.88.8" />
+    <PackageVersion Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="Uno.Core.Extensions.Logging.Singleton" Version="4.0.1" />
     <PackageVersion Include="Uno.Extensions.Core.WinUI" Version="3.0.10" />

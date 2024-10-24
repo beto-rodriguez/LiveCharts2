@@ -177,7 +177,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty MaxValueProperty =
         BindableProperty.Create(
-            nameof(MaxValue), typeof(double?), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+            nameof(MaxValue), typeof(object), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
     /// The start property
@@ -236,7 +236,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendTextSize), typeof(double?), typeof(PieChart),
+            nameof(LegendTextSize), typeof(object), typeof(PieChart),
             LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -268,7 +268,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipTextSize), typeof(double?), typeof(PieChart),
+            nameof(TooltipTextSize), typeof(object), typeof(PieChart),
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -427,14 +427,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
-    [Obsolete($"Use {nameof(MaxValue)} instead.")]
-    public double? Total
-    {
-        get => (double?)GetValue(MaxValueProperty);
-        set => SetValue(MaxValueProperty, value);
-    }
-
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
     public double? MaxValue
     {
         get => (double?)GetValue(MaxValueProperty);
@@ -540,16 +532,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <summary>
-    /// Gets or sets a command to execute when the users taped the chart.
-    /// </summary>
-    [Obsolete($"Replaced by {nameof(PressedCommand)} and {nameof(ReleasedCommand)}")]
-    public ICommand? TappedCommand
-    {
-        get => (ICommand?)GetValue(ReleasedCommandProperty);
-        set => SetValue(ReleasedCommandProperty, value);
-    }
-
-    /// <summary>
     /// Gets or sets a command to execute when the pressed the chart.
     /// </summary>
     public ICommand? PressedCommand
@@ -571,16 +553,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// Gets or sets a command to execute when the pointer/finger moves over the chart.
     /// </summary>
     public ICommand? MovedCommand
-    {
-        get => (ICommand?)GetValue(MovedCommandProperty);
-        set => SetValue(MovedCommandProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a command to execute when the pointer moves over the chart.
-    /// </summary>
-    [Obsolete($"Use {nameof(MovedCommand)} instead.")]
-    public ICommand? PointerMoveCommand
     {
         get => (ICommand?)GetValue(MovedCommandProperty);
         set => SetValue(MovedCommandProperty, value);
