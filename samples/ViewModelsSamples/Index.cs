@@ -18,16 +18,6 @@ public static class Index
         "Lines/XY",
         "Lines/Zoom",
 
-        "StepLines/Basic",
-        "StepLines/AutoUpdate",
-        "StepLines/Properties",
-        "StepLines/Area",
-        "StepLines/Custom",
-        "StepLines/Zoom",
-
-        "StackedArea/Basic",
-        "StackedArea/StepArea",
-
         "Bars/Basic",
         "Bars/AutoUpdate",
         "Bars/Custom",
@@ -37,9 +27,6 @@ public static class Index
         "Bars/Race",
         "Bars/RowsWithLabels",
         "Bars/Layered",
-
-        "StackedBars/Basic",
-        "StackedBars/Groups",
 
         "Pies/Basic",
         "Pies/AutoUpdate",
@@ -64,6 +51,12 @@ public static class Index
         "Scatter/AutoUpdate",
         "Scatter/Custom",
 
+        "StackedArea/Basic",
+        "StackedArea/StepArea",
+
+        "StackedBars/Basic",
+        "StackedBars/Groups",
+
         "Financial/BasicCandlesticks",
 
         "Error/Basic",
@@ -71,6 +64,13 @@ public static class Index
         "Box/Basic",
 
         "Heat/Basic",
+
+        "StepLines/Basic",
+        "StepLines/AutoUpdate",
+        "StepLines/Properties",
+        "StepLines/Area",
+        "StepLines/Custom",
+        "StepLines/Zoom",
 
         "Polar/Basic",
         "Polar/RadialArea",
