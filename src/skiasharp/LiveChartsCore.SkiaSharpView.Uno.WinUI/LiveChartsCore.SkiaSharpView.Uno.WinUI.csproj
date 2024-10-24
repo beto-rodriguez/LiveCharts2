@@ -48,21 +48,21 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="Uno.WinUI" Version="5.0.19" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="Uno.WinUI" Version="5.2.175" />
 
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
     
     <!-- if uno then add reference to uno dependencies -->
-    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="3.0.0-preview.4.1" />
+    <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="3.0.0-preview.5.4" />
 
     <!-- in windows then use the winui package -->
-    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.4.1" />
+    <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.5.4" />
   </ItemGroup>
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
       <ItemGroup>
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
       </ItemGroup>
     </When>
