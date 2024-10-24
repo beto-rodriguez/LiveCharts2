@@ -4,16 +4,15 @@
     <Nullable>enable</Nullable>
 
     <TargetFrameworks>
-      net6.0-windows10.0.19041.0;
       net8.0-windows10.0.19041.0;net8.0-windows10.0.20348.0;
     </TargetFrameworks>
 
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 
     <EnableMsixTooling>true</EnableMsixTooling>
-    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>    
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
-    
+
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
     <Version>2.0.0-rc3.3</Version>
     <PackageIcon>icon.png</PackageIcon>
@@ -48,9 +47,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.5.4" />
   </ItemGroup>
 
   <ItemGroup>
