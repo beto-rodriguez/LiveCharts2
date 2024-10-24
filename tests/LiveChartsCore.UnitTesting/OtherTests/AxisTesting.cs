@@ -174,8 +174,8 @@ public class AxisTesting
             YAxes = [y1]
         };
 
-        var x2 = new Axis { MaxLimit = 0, MinLimit = 10, IsInverted = true };
-        var y2 = new Axis { MaxLimit = 0, MinLimit = 10, IsInverted = true };
+        var x2 = new Axis { MinLimit = 0, MaxLimit = 10, IsInverted = true };
+        var y2 = new Axis { MinLimit = 0, MaxLimit = 10, IsInverted = true };
         var chart2 = new SKCartesianChart
         {
             Width = 1000,
