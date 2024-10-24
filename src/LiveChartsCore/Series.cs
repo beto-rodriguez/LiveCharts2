@@ -284,12 +284,13 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         set
         {
             _miniatureShapeSize = value;
-            OnMiniatureChanged();
             SetProperty(ref _miniatureShapeSize, value);
         }
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.CanvasSchedule"/>
+    /// <summary>
+    /// Obsolete.
+    /// </summary>
     [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
     public Sketch<TDrawingContext> CanvasSchedule
     {
@@ -478,15 +479,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     protected override void OnPaintChanged(string? propertyName)
     {
         base.OnPaintChanged(propertyName);
-        OnMiniatureChanged();
-    }
-
-    /// <summary>
-    /// Called when the miniature changes.
-    /// </summary>
-    protected void OnMiniatureChanged()
-    {
-        CanvasSchedule = GetMiniaturesSketch();
     }
 
     /// <summary>

@@ -87,11 +87,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     public LvcColor[] HeatMap
     {
         get => _heatMap;
-        set
-        {
-            OnMiniatureChanged();
-            SetProperty(ref _heatMap, value);
-        }
+        set => SetProperty(ref _heatMap, value);
     }
 
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>

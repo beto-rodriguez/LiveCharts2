@@ -77,15 +77,6 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     double DataLabelsMaxWidth { get; set; }
 
     /// <summary>
-    /// Gets the paint schedule, normally handled internally to display tool tips and legends.
-    /// </summary>
-    /// <value>
-    /// The default paint context.
-    /// </value>
-    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    Sketch<TDrawingContext> CanvasSchedule { get; }
-
-    /// <summary>
     /// Gets the stack group, normally used internally to handled the stacked series.
     /// </summary>
     /// <returns></returns>

@@ -131,8 +131,6 @@ public class DataFactory<TModel, TDrawingContext>
         var yMin = plane2.MinLimit ?? double.MinValue;
         var yMax = plane2.MaxLimit ?? double.MaxValue;
 
-        var hasData = false;
-
         var bounds = new DimensionalBounds();
 
         ChartPoint? previous = null;
@@ -189,7 +187,6 @@ public class DataFactory<TModel, TDrawingContext>
             }
 
             previous = point;
-            hasData = true;
         }
 
         return new SeriesBounds(bounds, false);
