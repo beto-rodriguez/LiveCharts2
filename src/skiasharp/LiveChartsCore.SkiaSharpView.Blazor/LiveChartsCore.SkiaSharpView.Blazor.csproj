@@ -56,16 +56,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Blazor" Version="3.0.0-preview.5.4" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.9-preview.2.2" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="7.3.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 
-    <PackageReference
-      Condition="$(TargetFramework) == 'net6.0'"
-      Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-    <PackageReference
-      Condition="$(TargetFramework) == 'net8.0'"
-      Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+    <PackageReference Condition="$(TargetFramework) == 'net6.0'" Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+    <PackageReference Condition="$(TargetFramework) == 'net8.0'" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
 
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.1.5">
       <PrivateAssets>all</PrivateAssets>
