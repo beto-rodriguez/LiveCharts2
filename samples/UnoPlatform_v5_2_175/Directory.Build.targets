@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <SkiaSharpVersion>3.0.0-preview.5.4</SkiaSharpVersion>
+  </PropertyGroup>
+</Project>

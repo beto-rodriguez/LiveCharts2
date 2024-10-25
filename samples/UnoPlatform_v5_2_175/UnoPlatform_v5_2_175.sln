@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoPlatform_v5_2_175", "UnoPlatform_v5_2_175\UnoPlatform_v5_2_175.csproj", "{36400226-7BF2-4201-A4AC-E9F058D8D669}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F585B373-A92C-4B71-99E7-DF77C416B646}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LiveChartsSource", "LiveChartsSource", "{6ECCFE8E-AFC8-42B5-B52E-13A6D999661D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "..\..\src\LiveChartsCore\LiveChartsCore.csproj", "{5F3D3B40-64D5-459E-94AB-42E40F377DA2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.Behaviours", "..\..\src\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj", "{3861C54C-CA31-48E1-BCBE-0BF04C28978D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Uno.WinUI", "..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj", "{6A31F7FB-87B2-4EA7-A43F-81AB306297AC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModelsSamples", "..\ViewModelsSamples\ViewModelsSamples.csproj", "{20B529B1-76C4-4E46-8D32-6B0942CF02A6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36400226-7BF2-4201-A4AC-E9F058D8D669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36400226-7BF2-4201-A4AC-E9F058D8D669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36400226-7BF2-4201-A4AC-E9F058D8D669}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{36400226-7BF2-4201-A4AC-E9F058D8D669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36400226-7BF2-4201-A4AC-E9F058D8D669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36400226-7BF2-4201-A4AC-E9F058D8D669}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5F3D3B40-64D5-459E-94AB-42E40F377DA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F3D3B40-64D5-459E-94AB-42E40F377DA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F3D3B40-64D5-459E-94AB-42E40F377DA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F3D3B40-64D5-459E-94AB-42E40F377DA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3861C54C-CA31-48E1-BCBE-0BF04C28978D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3861C54C-CA31-48E1-BCBE-0BF04C28978D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3861C54C-CA31-48E1-BCBE-0BF04C28978D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3861C54C-CA31-48E1-BCBE-0BF04C28978D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A31F7FB-87B2-4EA7-A43F-81AB306297AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A31F7FB-87B2-4EA7-A43F-81AB306297AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A31F7FB-87B2-4EA7-A43F-81AB306297AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A31F7FB-87B2-4EA7-A43F-81AB306297AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20B529B1-76C4-4E46-8D32-6B0942CF02A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20B529B1-76C4-4E46-8D32-6B0942CF02A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20B529B1-76C4-4E46-8D32-6B0942CF02A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20B529B1-76C4-4E46-8D32-6B0942CF02A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5F3D3B40-64D5-459E-94AB-42E40F377DA2} = {6ECCFE8E-AFC8-42B5-B52E-13A6D999661D}
+		{3861C54C-CA31-48E1-BCBE-0BF04C28978D} = {6ECCFE8E-AFC8-42B5-B52E-13A6D999661D}
+		{6A31F7FB-87B2-4EA7-A43F-81AB306297AC} = {6ECCFE8E-AFC8-42B5-B52E-13A6D999661D}
+		{20B529B1-76C4-4E46-8D32-6B0942CF02A6} = {6ECCFE8E-AFC8-42B5-B52E-13A6D999661D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5A0E06B-CEFD-4EDB-A108-1E5331CE6FE2}
+	EndGlobalSection
+EndGlobal
