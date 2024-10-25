@@ -47,5 +47,9 @@
       ThemeService;
     </UnoFeatures>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
+    <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
+  </ItemGroup>
 
 </Project>

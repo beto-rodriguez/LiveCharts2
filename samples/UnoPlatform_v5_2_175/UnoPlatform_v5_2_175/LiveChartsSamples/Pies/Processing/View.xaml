@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="UnoWinUISample.Pies.Processing.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Pies.Processing"
+    xmlns:local="using:UnoSample.Pies.Processing"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <!--<local:PaintTaskToBrushConverter x:Key="toBrush"></local:PaintTaskToBrushConverter>-->
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <lvc:PieChart Series="{Binding Series}"/>
+
+        <ItemsControl Grid.Column="1" ItemsSource="{Binding Series}" Margin="0 10">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0 8">
+                        <!--<TextBlock Text="{Binding Values[0].Value}"
+                                   FontSize="35"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding Fill, Converter={StaticResource toBrush}}"
+                                   FontWeight="SemiBold" />
+                        <TextBlock Margin="8 0"
+                                   Text="{Binding Name}"
+                                   FontSize="18"
+                                   VerticalAlignment="Center"
+                                   Foreground="{Binding Fill, Converter={StaticResource toBrush}}"/>-->
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+
+</UserControl>

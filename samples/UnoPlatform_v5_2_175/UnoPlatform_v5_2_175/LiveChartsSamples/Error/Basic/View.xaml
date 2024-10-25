@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="UnoWinUISample.Error.Basic.View"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+            xmlns:vms="using:ViewModelsSamples.Error.Basic"
+            mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            Series="{Binding Series0}">
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Series="{Binding Series1}">
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+        Grid.Row="2"
+            Series="{Binding Series2}"
+            XAxes="{Binding DateTimeAxis}">
+        </lvc:CartesianChart>
+    </Grid>
+</UserControl>
