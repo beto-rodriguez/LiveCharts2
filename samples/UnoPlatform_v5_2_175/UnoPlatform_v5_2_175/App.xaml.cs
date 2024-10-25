@@ -1,3 +1,6 @@
+using LiveChartsCore; // mark
+using LiveChartsCore.SkiaSharpView; // mark
+using SkiaSharp; // mark
 using Uno.Resizetizer;
 
 namespace UnoPlatform_v5_2_175;
@@ -14,9 +17,34 @@ public partial class App : Application
 
     protected Window? MainWindow { get; private set; }
     protected IHost? Host { get; private set; }
+    public record City(string Name, double Population);
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        LiveCharts.Configure(config =>
+           config
+                   // you can override the theme 
+                   // .AddDarkTheme()  
+
+                   // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
+                   //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese 
+                   //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('あ')) // <- Japanese 
+                   //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('헬')) // <- Korean 
+                   //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('Ж'))  // <- Russian 
+
+                   //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('أ'))  // <- Arabic 
+                   //.UseRightToLeftSettings() // Enables right to left tooltips 
+
+                   // finally register your own mappers
+                   // you can learn more about mappers at:
+                   // https://livecharts.dev/docs/unowinui/2.0.0-rc2/Overview.Mappers
+
+                   // here we use the index as X, and the population as Y 
+                   .HasMap<City>((city, index) => new(index, city.Population))
+           // .HasMap<Foo>( .... ) 
+           // .HasMap<Bar>( .... ) 
+           );
+
         var builder = this.CreateBuilder(args)
             // Add navigation support for toolkit controls such as TabBar and NavigationView
             .UseToolkitNavigation()
