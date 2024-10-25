@@ -15,7 +15,7 @@
     <UseWinUI>true</UseWinUI>
 
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
-    <Version>2.0.0-rc4</Version>
+    <Version>2.0.0-rc4.5</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsAppSDK.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -50,7 +50,8 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.0.0-preview.5.4" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.9-preview.2.2" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.9-preview.2.2" />
   </ItemGroup>
 
   <ItemGroup>
