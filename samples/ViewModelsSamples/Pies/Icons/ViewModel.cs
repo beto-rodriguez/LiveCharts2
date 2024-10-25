@@ -41,9 +41,9 @@ public class ViewModel
 
                         svgLabel.Path = dataItem.Svg;
                         svgLabel.Name = dataItem.Name;
-                        svgLabel.Width = 50;
-                        svgLabel.Height = 50;
-                        svgLabel.TranslateTransform = new(-25, -25);
+                        svgLabel.Width = 30;
+                        svgLabel.Height = 30;
+                        svgLabel.TranslateTransform = new(-15, -15);
                     });
             });
 
