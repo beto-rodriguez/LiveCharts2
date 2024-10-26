@@ -209,7 +209,7 @@ public interface ISeries<TModel> : ISeries
     /// <value>
     /// The values.
     /// </value>
-    new ICollection<TModel>? Values { get; set; }
+    new IReadOnlyCollection<TModel>? Values { get; set; }
 
     /// <summary>
     /// Gets or sets the mapping.
