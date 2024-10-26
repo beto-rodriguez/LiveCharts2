@@ -106,8 +106,7 @@ public class MotionCanvas : UserControl
             using var lease = leaseFeature.Lease();
 
             motionCanvas.DrawFrame(
-                new SkiaSharpDrawingContext(
-                    motionCanvas,
+                new(motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
                     lease.SkSurface,
                     lease.SkCanvas,
