@@ -21,20 +21,16 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Avalonia.Threading;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
-using AvaloniaMedia = Avalonia.Media;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -50,32 +46,8 @@ public class MotionCanvas : UserControl
     /// </summary>
     public MotionCanvas()
     {
-        InitializeComponent();
-        AttachedToVisualTree += MotionCanvas_AttachedToVisualTree;
-        DetachedFromVisualTree += MotionCanvas_DetachedFromVisualTree;
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    /// <summary>
-    /// The paint tasks property
-    /// </summary>
-    public static readonly AvaloniaProperty<List<PaintSchedule<SkiaSharpDrawingContext>>> PaintTasksProperty =
-        AvaloniaProperty.Register<MotionCanvas, List<PaintSchedule<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
-
-    /// <summary>
-    /// Gets or sets the paint tasks.
-    /// </summary>
-    /// <value>
-    /// The paint tasks.
-    /// </value>
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
-    {
-        get => (List<PaintSchedule<SkiaSharpDrawingContext>>?)GetValue(PaintTasksProperty) ?? throw new Exception($"{nameof(PaintTasks)} must not be null.");
-        set => SetValue(PaintTasksProperty, value);
+        AttachedToVisualTree += OnAttached;
+        DetachedFromVisualTree += OnDetached;
     }
 
     /// <summary>
@@ -90,47 +62,27 @@ public class MotionCanvas : UserControl
     /// Renders the control.
     /// </summary>p
     /// <param name="context"></param>
-    public override void Render(AvaloniaMedia.DrawingContext context)
+    public override void Render(DrawingContext context)
     {
         if (_isDeatached) return;
-        var drawOperation = new CustomDrawOp(CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height));
-        context.Custom(drawOperation);
+
+        context.Custom(new ChartFrameOperation(
+            CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height)));
 
         if (CanvasCore.IsValid) return;
         _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
     }
 
-    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-
-        if (change.Property.Name == nameof(PaintTasks))
-        {
-            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-            foreach (var item in PaintTasks)
-            {
-                item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
-                _ = tasks.Add(item.PaintTask);
-            }
-
-            CanvasCore.SetPaintTasks(tasks);
-        }
-    }
-
-    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-    {
+    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         InvalidateVisual();
-    }
 
-    private void MotionCanvas_AttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    private void OnAttached(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _isDeatached = false;
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
     }
 
-    private void MotionCanvas_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    private void OnDetached(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _isDeatached = true;
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
@@ -139,12 +91,14 @@ public class MotionCanvas : UserControl
 
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs
-    private class CustomDrawOp(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds)
-        : ICustomDrawOperation
+    private class ChartFrameOperation(
+        MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+        Rect bounds)
+            : ICustomDrawOperation
     {
         public Rect Bounds { get; } = bounds;
 
-        public void Render(AvaloniaMedia.ImmediateDrawingContext context)
+        public void Render(ImmediateDrawingContext context)
         {
             if (!context.TryGetFeature<ISkiaSharpApiLeaseFeature>(out var leaseFeature))
                 throw new Exception("SkiaSharp is not supported.");
@@ -162,14 +116,8 @@ public class MotionCanvas : UserControl
 
         public void Dispose() { }
 
-        public bool HitTest(Point p)
-        {
-            return false;
-        }
+        public bool HitTest(Point p) => false;
 
-        public bool Equals(ICustomDrawOperation? other)
-        {
-            return false;
-        }
+        public bool Equals(ICustomDrawOperation? other) => false;
     }
 }
