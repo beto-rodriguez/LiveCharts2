@@ -200,6 +200,7 @@ public static class ThemesExtensions
                         gaugeSeries.Fill = new SolidColorPaint(color);
                         gaugeSeries.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
                         gaugeSeries.DataLabelsPaint = new SolidColorPaint(new SKColor(70, 70, 70));
+                        gaugeSeries.CornerRadius = 8;
                     })
                     .HasRuleForGaugeFillSeries(gaugeFill =>
                     {
@@ -385,6 +386,7 @@ public static class ThemesExtensions
                         gaugeSeries.Fill = new SolidColorPaint(color);
                         gaugeSeries.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
                         gaugeSeries.DataLabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
+                        gaugeSeries.CornerRadius = 8;
                     })
                     .HasRuleForGaugeFillSeries(gaugeFill =>
                     {

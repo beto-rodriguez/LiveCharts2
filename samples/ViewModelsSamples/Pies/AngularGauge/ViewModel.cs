@@ -60,5 +60,6 @@ public partial class ViewModel
     {
         series.OuterRadiusOffset = sectionsOuter;
         series.MaxRadialColumnWidth = sectionsWidth;
+        series.CornerRadius = 0;
     }
 }
