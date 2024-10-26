@@ -74,19 +74,19 @@ public class ViewModel
         ];
 
         // You can also use DateTime on the X axis // mark
-        var now = DateTime.Now;
+        var today = DateTime.Today;
 
         var values2 = new ErrorDateTimePoint[]
         {
             // (X, Y, Y+- error, Y+- error) // mark
-            new(now.AddDays(0), 50, 0.2, 8),
+            new(today.AddDays(0), 50, 0.2, 8),
             // (X, Y, X- error, X+ erorr, Y+ error, Y- error) // mark
-            new(now.AddDays(1), 45, 0.1, 0.3, 15, 4),
-            new(now.AddDays(2), 25, 0.3, 4),
-            new(now.AddDays(3), 30, 0.2, 6),
-            new(now.AddDays(4), 70, 0.2, 8),
-            new(now.AddDays(5), 30, 0.4, 4),
-            new(now.AddDays(6), 50, 0.3, 6)
+            new(today.AddDays(1), 45, 0.1, 0.3, 15, 4),
+            new(today.AddDays(2), 25, 0.3, 4),
+            new(today.AddDays(3), 30, 0.2, 6),
+            new(today.AddDays(4), 70, 0.2, 8),
+            new(today.AddDays(5), 30, 0.4, 4),
+            new(today.AddDays(6), 50, 0.3, 6)
         };
 
         // ScatterSeries also supports error bars // mark
