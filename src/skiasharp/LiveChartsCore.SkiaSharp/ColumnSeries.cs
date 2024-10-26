@@ -53,7 +53,7 @@ public class ColumnSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public ColumnSeries(ICollection<TModel>? values)
+    public ColumnSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -96,7 +96,7 @@ public class ColumnSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public ColumnSeries(ICollection<TModel>? values)
+    public ColumnSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -143,7 +143,7 @@ public class ColumnSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public ColumnSeries(ICollection<TModel>? values)
+    public ColumnSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 

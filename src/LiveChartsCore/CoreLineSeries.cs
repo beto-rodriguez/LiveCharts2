@@ -66,7 +66,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     /// <param name="values">The values.</param>
-    public CoreLineSeries(ICollection<TModel>? values, bool isStacked = false)
+    public CoreLineSeries(IReadOnlyCollection<TModel>? values, bool isStacked = false)
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0.5f, 1f);

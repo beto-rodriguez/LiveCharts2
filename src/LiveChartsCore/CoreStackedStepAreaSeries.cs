@@ -48,7 +48,7 @@ public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext,
     /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
-    public CoreStackedStepAreaSeries(ICollection<TModel>? values)
+    public CoreStackedStepAreaSeries(IReadOnlyCollection<TModel>? values)
         : base(values, true)
     {
         GeometryFill = null;

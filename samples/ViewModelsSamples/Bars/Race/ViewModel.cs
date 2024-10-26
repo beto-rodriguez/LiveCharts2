@@ -106,5 +106,5 @@ public partial class ViewModel : ObservableObject
         }
     }
 
-    private ICollection<PilotInfo> SortData() => [.. _data.OrderBy(x => x.Value)];
+    private PilotInfo[] SortData() => [.. _data.OrderBy(x => x.Value)];
 }

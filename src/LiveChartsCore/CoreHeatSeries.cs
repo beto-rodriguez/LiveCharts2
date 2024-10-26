@@ -62,7 +62,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// Initializes a new instance of the <see cref="CoreHeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
-    protected CoreHeatSeries(ICollection<TModel>? values)
+    protected CoreHeatSeries(IReadOnlyCollection<TModel>? values)
         : base(GetProperties(), values)
     {
         DataPadding = new LvcPoint(0, 0);

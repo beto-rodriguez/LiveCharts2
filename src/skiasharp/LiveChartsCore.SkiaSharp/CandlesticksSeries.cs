@@ -53,7 +53,7 @@ public class CandlesticksSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection<TModel>? values)
+    public CandlesticksSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -96,7 +96,7 @@ public class CandlesticksSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection<TModel>? values)
+    public CandlesticksSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -143,7 +143,7 @@ public class CandlesticksSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection<TModel>? values)
+    public CandlesticksSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 

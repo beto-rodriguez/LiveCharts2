@@ -53,7 +53,7 @@ public class PieSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection<TModel>? values)
+    public PieSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -103,7 +103,7 @@ public class PieSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection<TModel>? values)
+    public PieSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -157,7 +157,7 @@ public class PieSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection<TModel>? values)
+    public PieSeries(IReadOnlyCollection<TModel>? values)
         : base(values, false, false)
     { }
 

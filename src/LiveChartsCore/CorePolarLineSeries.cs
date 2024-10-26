@@ -71,7 +71,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     /// <param name="values">The values.</param>
-    public CorePolarLineSeries(ICollection<TModel>? values, bool isStacked = false)
+    public CorePolarLineSeries(IReadOnlyCollection<TModel>? values, bool isStacked = false)
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(1f, 1.5f);

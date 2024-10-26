@@ -50,7 +50,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
-    protected CoreColumnSeries(ICollection<TModel>? values, bool isStacked = false)
+    protected CoreColumnSeries(IReadOnlyCollection<TModel>? values, bool isStacked = false)
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0, 1);

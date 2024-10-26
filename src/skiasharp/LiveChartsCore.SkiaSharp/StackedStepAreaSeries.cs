@@ -53,7 +53,7 @@ public class StackedStepAreaSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StackedStepAreaSeries(ICollection<TModel>? values)
+    public StackedStepAreaSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -96,7 +96,7 @@ public class StackedStepAreaSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StackedStepAreaSeries(ICollection<TModel>? values)
+    public StackedStepAreaSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -143,7 +143,7 @@ public class StackedStepAreaSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StackedStepAreaSeries(ICollection<TModel>? values)
+    public StackedStepAreaSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 

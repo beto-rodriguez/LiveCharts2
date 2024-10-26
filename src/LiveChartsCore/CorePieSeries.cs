@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
 /// </remarks>
 public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>(
-    ICollection<TModel>? values,
+    IReadOnlyCollection<TModel>? values,
     bool isGauge = false,
     bool isGaugeFill = false)
         : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
