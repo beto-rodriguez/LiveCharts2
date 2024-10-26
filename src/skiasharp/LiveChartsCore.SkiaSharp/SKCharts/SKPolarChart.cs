@@ -75,6 +75,9 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         VisualElements = view.VisualElements;
     }
 
+    /// <inheritdoc cref="IChartView.ResetSeries">
+    public bool ResetSeries { get; set; }
+
     /// <inheritdoc cref="IChartView.DesignerMode" />
     public bool DesignerMode => false;
 
