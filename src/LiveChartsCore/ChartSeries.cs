@@ -43,7 +43,7 @@ namespace LiveChartsCore;
 /// <param name="values">The values.</param>
 public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
     SeriesProperties properties,
-    ICollection<TModel>? values)
+    IReadOnlyCollection<TModel>? values)
         : Series<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IChartSeries<TDrawingContext>
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry<TDrawingContext>, new()

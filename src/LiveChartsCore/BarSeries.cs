@@ -47,7 +47,7 @@ namespace LiveChartsCore;
 /// <param name="values">The values.</param>
 public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     SeriesProperties properties,
-    ICollection<TModel>? values)
+    IReadOnlyCollection<TModel>? values)
         : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IBarSeries<TDrawingContext>
             where TVisual : class, ISizedGeometry<TDrawingContext>, new()
             where TDrawingContext : DrawingContext

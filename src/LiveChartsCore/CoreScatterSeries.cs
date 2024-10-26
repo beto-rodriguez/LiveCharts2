@@ -57,7 +57,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
-    public CoreScatterSeries(ICollection<TModel>? values)
+    public CoreScatterSeries(IReadOnlyCollection<TModel>? values)
         : base(GetProperties(), values)
     {
         DataPadding = new LvcPoint(1, 1);
