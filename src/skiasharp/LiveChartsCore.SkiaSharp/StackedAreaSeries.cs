@@ -53,7 +53,7 @@ public class StackedAreaSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StackedAreaSeries(ICollection<TModel>? values)
+    public StackedAreaSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -96,7 +96,7 @@ public class StackedAreaSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StackedAreaSeries(ICollection<TModel>? values)
+    public StackedAreaSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -143,7 +143,7 @@ public class StackedAreaSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StackedAreaSeries(ICollection<TModel>? values)
+    public StackedAreaSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 

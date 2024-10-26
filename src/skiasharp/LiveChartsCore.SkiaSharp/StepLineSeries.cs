@@ -52,7 +52,7 @@ public class StepLineSeries<TModel> : StepLineSeries<TModel, CircleGeometry, Lab
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StepLineSeries(ICollection<TModel>? values)
+    public StepLineSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -95,7 +95,7 @@ public class StepLineSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StepLineSeries(ICollection<TModel>? values)
+    public StepLineSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -142,7 +142,7 @@ public class StepLineSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public StepLineSeries(ICollection<TModel>? values)
+    public StepLineSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 

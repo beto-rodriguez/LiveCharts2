@@ -53,7 +53,7 @@ public class ScatterSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public ScatterSeries(ICollection<TModel>? values)
+    public ScatterSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -96,7 +96,7 @@ public class ScatterSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public ScatterSeries(ICollection<TModel>? values)
+    public ScatterSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -143,7 +143,7 @@ public class ScatterSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public ScatterSeries(ICollection<TModel>? values)
+    public ScatterSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 

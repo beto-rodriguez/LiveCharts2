@@ -53,7 +53,7 @@ public class BoxSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public BoxSeries(ICollection<TModel>? values)
+    public BoxSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -96,7 +96,7 @@ public class BoxSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public BoxSeries(ICollection<TModel>? values)
+    public BoxSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -143,7 +143,7 @@ public class BoxSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public BoxSeries(ICollection<TModel>? values)
+    public BoxSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
