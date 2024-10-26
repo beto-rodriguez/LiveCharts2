@@ -105,11 +105,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
-        // The null check is intentional.
-        // we need to allow nulls to go further this if
-        // OnPropertyChanged needs to be called
-        // to detect whether the user set the null value.
-        if (value is not null && value == reference) return;
+        if (!_isInternalSet) TouchProperty(propertyName);
+        if (value == reference) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
@@ -139,11 +136,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         T value,
         [CallerMemberName] string? propertyName = null)
     {
-        // The null check is intentional.
-        // we need to allow nulls to go further this if
-        // OnPropertyChanged needs to be called
-        // to detect whether the user set the null value.
-        if (value is not null && value.Equals(reference)) return;
+        if (!_isInternalSet) TouchProperty(propertyName);
+        if (Equals(value, reference)) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
@@ -189,10 +183,10 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <returns></returns>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        // only invoke property change event when the user set the property.
         if (_isInternalSet) return;
-
-        _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    private void TouchProperty([CallerMemberName] string? propertyName = null) =>
+        _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
 }
