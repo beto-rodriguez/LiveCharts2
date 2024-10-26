@@ -59,9 +59,6 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
 
-        canvas.SkCanvasView.EnableTouchEvents = true;
-        canvas.SkCanvasView.Touch += OnSkCanvasTouched;
-
         SizeChanged += GeoMap_SizeChanged;
 
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
@@ -264,13 +261,6 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
             new ZoomOnPointerView(
                 new LvcPoint((float)(p.X * w), (float)(p.Y * h)),
                 e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
-    }
-
-    private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)
-    {
-        if (_core is null) return;
-        var location = new LvcPoint(e.Location.X, e.Location.Y);
-        _core.InvokePointerDown(location);
     }
 
     private static void OnBindablePropertyChanged(BindableObject o, object oldValue, object newValue)
