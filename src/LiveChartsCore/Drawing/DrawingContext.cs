@@ -34,10 +34,10 @@ public abstract class DrawingContext
     { }
 
     /// <summary>
-    /// Draws the Frames per second.
+    /// Draws the given string over the canvas.
     /// </summary>
-    /// <param name="fps"></param>
-    public abstract void DrawFPS(double fps);
+    /// <param name="log">the log content.</param>
+    public abstract void LogOnCanvas(string log);
 
     /// <summary>
     /// Called when the frame ends.

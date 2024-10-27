@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.InteropServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -132,8 +131,8 @@ public class SkiaSharpDrawingContext(
         }
     }
 
-    /// <inheritdoc cref="DrawingContext.DrawFPS(double)"/>
-    public override void DrawFPS(double fps)
+    /// <inheritdoc cref="DrawingContext.LogOnCanvas(string)"/>
+    public override void LogOnCanvas(string log)
     {
         using var p = new SKPaint
         {
@@ -144,8 +143,8 @@ public class SkiaSharpDrawingContext(
         };
 
         Canvas.DrawText(
-            $"FPS: {fps:N2}",
-            new SKPoint(10, 10 + p.TextSize),
+            log,
+            new SKPoint(50, 10 + p.TextSize),
             p);
     }
 }

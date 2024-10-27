@@ -42,6 +42,8 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     private int _frames = 0;
     private Stopwatch? _fspSw;
     private double _lastKnowFps = 0;
+    private double _totalFrames = 0;
+    private double _totalSeconds = 0;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
@@ -157,7 +159,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             if (showFps)
             {
                 MeasureFPS();
-                context.DrawFPS(_lastKnowFps);
+                context.LogOnCanvas($"[fps] last {_lastKnowFps:N2}, average {_totalFrames / _totalSeconds:N2}");
             }
 
             IsValid = isValid;
@@ -259,6 +261,10 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             _fspSw ??= new Stopwatch();
             var elapsedSeconds = _fspSw.ElapsedMilliseconds / 1000d;
             _lastKnowFps = logEach / elapsedSeconds;
+
+            _totalFrames += logEach;
+            _totalSeconds += elapsedSeconds;
+
             _fspSw.Restart();
         }
     }

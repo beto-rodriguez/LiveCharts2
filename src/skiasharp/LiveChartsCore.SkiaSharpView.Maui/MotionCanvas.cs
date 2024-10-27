@@ -24,7 +24,6 @@ using System;
 using System.Threading.Tasks;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using SkiaSharp.Views.Maui;
@@ -64,7 +63,7 @@ public class MotionCanvas : ContentView
     /// <value>
     /// The frames per second.
     /// </value>
-    public double MaxFps { get; set; } = 60;
+    public double MaxFps { get; set; } = 200;
 
     /// <summary>
     /// Gets the canvas core.
@@ -79,7 +78,7 @@ public class MotionCanvas : ContentView
     /// </summary>
     /// <returns></returns>
     public void Invalidate() =>
-        _ = MainThread.InvokeOnMainThreadAsync(RunDrawingLoop);
+        RunDrawingLoop();
 
     /// <inheritdoc cref="NavigableElement.OnParentSet"/>
     protected override void OnParentSet()
