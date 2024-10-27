@@ -21,12 +21,9 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
@@ -40,15 +37,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <seealso cref="Control" />
 public class MotionCanvas : Control
 {
-    /// <summary>
-    /// The skia element
-    /// </summary>
     private SKElement? _skiaElement;
     private bool _isDrawingLoopRunning = false;
 
     static MotionCanvas()
     {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(MotionCanvas), new FrameworkPropertyMetadata(typeof(MotionCanvas)));
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(MotionCanvas),
+            new FrameworkPropertyMetadata(typeof(MotionCanvas)));
     }
 
     /// <summary>
@@ -58,26 +54,6 @@ public class MotionCanvas : Control
     {
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-    }
-
-    /// <summary>
-    /// The paint tasks property
-    /// </summary>
-    public static readonly DependencyProperty PaintTasksProperty =
-        DependencyProperty.Register(
-            nameof(PaintTasks), typeof(List<PaintSchedule<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
-            new PropertyMetadata(new List<PaintSchedule<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
-
-    /// <summary>
-    /// Gets or sets the paint tasks.
-    /// </summary>
-    /// <value>
-    /// The paint tasks.
-    /// </value>
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
-    {
-        get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
-        set => SetValue(PaintTasksProperty, value);
     }
 
     /// <summary>
@@ -131,15 +107,11 @@ public class MotionCanvas : Control
         return new((float)matrix.M11, (float)matrix.M22);
     }
 
-    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-    {
+    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         RunDrawingLoop();
-    }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
+    private void OnLoaded(object sender, RoutedEventArgs e) =>
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-    }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
@@ -160,20 +132,5 @@ public class MotionCanvas : Control
         }
 
         _isDrawingLoopRunning = false;
-    }
-
-    private static void OnPaintTaskChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-    {
-        var motionCanvas = (MotionCanvas)sender;
-
-        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-        foreach (var item in motionCanvas.PaintTasks)
-        {
-            item.PaintTask.SetGeometries(motionCanvas.CanvasCore, item.Geometries);
-            _ = tasks.Add(item.PaintTask);
-        }
-
-        motionCanvas.CanvasCore.SetPaintTasks(tasks);
     }
 }

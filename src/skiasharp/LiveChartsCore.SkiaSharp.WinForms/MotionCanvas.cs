@@ -21,12 +21,9 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
@@ -40,7 +37,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 public partial class MotionCanvas : UserControl
 {
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -48,23 +44,6 @@ public partial class MotionCanvas : UserControl
     public MotionCanvas()
     {
         InitializeComponent();
-    }
-
-    /// <summary>
-    /// Gets or sets the paint tasks.
-    /// </summary>
-    /// <value>
-    /// The paint tasks.
-    /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
-    {
-        get => _paintTasksSchedule;
-        set
-        {
-            _paintTasksSchedule = value;
-            OnPaintTasksChanged();
-        }
     }
 
     /// <summary>
@@ -84,12 +63,6 @@ public partial class MotionCanvas : UserControl
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
-    /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
-    protected override void OnParentChanged(EventArgs e)
-    {
-        base.OnParentChanged(e);
-    }
-
     /// <inheritdoc cref="Control.CreateHandle()"/>
     protected override void CreateHandle()
     {
@@ -106,15 +79,12 @@ public partial class MotionCanvas : UserControl
         CanvasCore.Dispose();
     }
 
-    private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
-    {
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-    }
+    private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e) =>
+        CanvasCore.DrawFrame(
+            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 
-    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-    {
+    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         RunDrawingLoop();
-    }
 
     private async void RunDrawingLoop()
     {
@@ -129,18 +99,5 @@ public partial class MotionCanvas : UserControl
         }
 
         _isDrawingLoopRunning = false;
-    }
-
-    private void OnPaintTasksChanged()
-    {
-        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-        foreach (var item in _paintTasksSchedule)
-        {
-            item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
-            _ = tasks.Add(item.PaintTask);
-        }
-
-        CanvasCore.SetPaintTasks(tasks);
     }
 }

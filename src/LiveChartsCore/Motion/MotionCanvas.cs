@@ -37,10 +37,11 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 {
     internal HashSet<IPaint<TDrawingContext>> _paintTasks = [];
     private readonly Stopwatch _stopwatch = new();
-    private readonly List<double> _fpsStack = [];
-    private long _previousFrameTime;
-    private long _previousLogTime;
     private object _sync = new();
+
+    private int _frames = 0;
+    private Stopwatch? _fspSw;
+    private double _lastKnowFps = 0;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
@@ -97,6 +98,8 @@ public class MotionCanvas<TDrawingContext> : IDisposable
                 $"thread: {Environment.CurrentManagedThreadId}");
 #endif
 
+        var showFps = LiveCharts.ShowFPS;
+
         lock (Sync)
         {
             context.OnBeginDraw();
@@ -151,20 +154,12 @@ public class MotionCanvas<TDrawingContext> : IDisposable
                 isValid = false;
             }
 
-#if DEBUG
-            var dt = frameTime - _previousFrameTime;
-            if (dt == 0) dt = 1;
-            _fpsStack.Add(1000 / dt);
-            if (_fpsStack.Count > 15) _fpsStack.RemoveAt(0);
-            if (frameTime - _previousLogTime > 500)
+            if (showFps)
             {
-                if (LiveCharts.EnableLogging)
-                    Trace.WriteLine($"[LiveCharts] fps = {_fpsStack.DefaultIfEmpty(0).Average():0.00}");
-                _previousLogTime = frameTime;
+                MeasureFPS();
+                context.DrawFPS(_lastKnowFps);
             }
-#endif
 
-            _previousFrameTime = frameTime;
             IsValid = isValid;
 
             context.OnEndDraw();
@@ -196,20 +191,14 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     /// </summary>
     /// <param name="task">The task.</param>
     /// <returns></returns>
-    public void AddDrawableTask(IPaint<TDrawingContext> task)
-    {
-        _ = _paintTasks.Add(task);
-    }
+    public void AddDrawableTask(IPaint<TDrawingContext> task) => _ = _paintTasks.Add(task);
 
     /// <summary>
     /// Sets the paint tasks.
     /// </summary>
     /// <param name="tasks">The tasks.</param>
     /// <returns></returns>
-    public void SetPaintTasks(HashSet<IPaint<TDrawingContext>> tasks)
-    {
-        _paintTasks = tasks;
-    }
+    public void SetPaintTasks(HashSet<IPaint<TDrawingContext>> tasks) => _paintTasks = tasks;
 
     /// <summary>
     /// Removes the paint task.
@@ -258,5 +247,19 @@ public class MotionCanvas<TDrawingContext> : IDisposable
         _paintTasks.Clear();
         Trackers.Clear();
         IsValid = true;
+    }
+
+    private void MeasureFPS()
+    {
+        const int logEach = 20;
+        _frames++;
+
+        if (_frames % logEach == 0)
+        {
+            _fspSw ??= new Stopwatch();
+            var elapsedSeconds = _fspSw.ElapsedMilliseconds / 1000d;
+            _lastKnowFps = logEach / elapsedSeconds;
+            _fspSw.Restart();
+        }
     }
 }

@@ -46,6 +46,11 @@ public static class LiveCharts
     public static bool EnableLogging { get; set; } = false;
 
     /// <summary>
+    /// Gets a value indicating whether LiveCharts should show the frames per second.
+    /// </summary>
+    public static bool ShowFPS { get; set; } = true;
+
+    /// <summary>
     /// Gets a value indicating whether LiveCharts has a backend registered.
     /// </summary>
     public static bool HasBackend { get; internal set; } = false;

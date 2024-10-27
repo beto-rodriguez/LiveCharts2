@@ -21,22 +21,19 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using SkiaSharp.Views.Windows;
-using Windows.Graphics.Display;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
-/// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
-public sealed partial class MotionCanvas : UserControl
+/// <summary>
+/// Defines the motion cavnas class for Uno.WinUI.
+/// </summary>
+public partial class MotionCanvas : UserControl
 {
     private readonly SKXamlCanvas _skiaElement;
     private bool _isDrawingLoopRunning;
@@ -46,36 +43,14 @@ public sealed partial class MotionCanvas : UserControl
     /// </summary>
     public MotionCanvas()
     {
-        InitializeComponent();
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
 
-        var canvas = (SKXamlCanvas)FindName("canvas");
-        _skiaElement = canvas;
+        Content = _skiaElement = new();
         _skiaElement.PaintSurface += OnPaintSurface;
     }
 
     #region properties
-
-    /// <summary>
-    /// The paint tasks property
-    /// </summary>
-    public static readonly DependencyProperty PaintTasksProperty =
-        DependencyProperty.Register(
-            nameof(PaintTasks), typeof(List<PaintSchedule<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
-            new PropertyMetadata(new List<PaintSchedule<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
-
-    /// <summary>
-    /// Gets or sets the paint tasks.
-    /// </summary>
-    /// <value>
-    /// The paint tasks.
-    /// </value>
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
-    {
-        get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
-        set => SetValue(PaintTasksProperty, value);
-    }
 
     /// <summary>
     /// Gets or sets the frames per second.
@@ -95,21 +70,19 @@ public sealed partial class MotionCanvas : UserControl
 
     #endregion
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
+    private void OnLoaded(object sender, RoutedEventArgs e) =>
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-    }
 
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
 #if HAS_UNO_WINUI
-        var scale = DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
+        var scale = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
         args.Surface.Canvas.Scale((float)scale, (float)scale);
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
 #else
         var scaleFactor = XamlRoot.RasterizationScale;
         args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
 #endif
     }
 
@@ -128,25 +101,8 @@ public sealed partial class MotionCanvas : UserControl
         _isDrawingLoopRunning = false;
     }
 
-    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-    {
+    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         RunDrawingLoop();
-    }
-
-    private static void OnPaintTaskChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-    {
-        var motionCanvas = (MotionCanvas)sender;
-
-        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-        foreach (var item in motionCanvas.PaintTasks ?? Enumerable.Empty<PaintSchedule<SkiaSharpDrawingContext>>())
-        {
-            item.PaintTask.SetGeometries(motionCanvas.CanvasCore, item.Geometries);
-            _ = tasks.Add(item.PaintTask);
-        }
-
-        motionCanvas.CanvasCore.SetPaintTasks(tasks);
-    }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {

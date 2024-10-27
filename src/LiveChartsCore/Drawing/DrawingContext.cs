@@ -34,6 +34,12 @@ public abstract class DrawingContext
     { }
 
     /// <summary>
+    /// Draws the Frames per second.
+    /// </summary>
+    /// <param name="fps"></param>
+    public abstract void DrawFPS(double fps);
+
+    /// <summary>
     /// Called when the frame ends.
     /// </summary>
     public virtual void OnEndDraw()

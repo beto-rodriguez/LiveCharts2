@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Runtime.InteropServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -129,5 +130,22 @@ public class SkiaSharpDrawingContext(
         {
             Canvas.DrawRect(Info.Rect, new SKPaint { Color = Background });
         }
+    }
+
+    /// <inheritdoc cref="DrawingContext.DrawFPS(double)"/>
+    public override void DrawFPS(double fps)
+    {
+        using var p = new SKPaint
+        {
+            Color = SKColors.Blue,
+            TextSize = 14,
+            IsAntialias = true,
+            FakeBoldText = true
+        };
+
+        Canvas.DrawText(
+            $"FPS: {fps:N2}",
+            new SKPoint(10, 10 + p.TextSize),
+            p);
     }
 }
