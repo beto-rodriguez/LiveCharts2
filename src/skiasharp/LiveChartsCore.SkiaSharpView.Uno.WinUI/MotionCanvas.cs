@@ -50,16 +50,6 @@ public partial class MotionCanvas : UserControl
         _skiaElement.PaintSurface += OnPaintSurface;
     }
 
-    #region properties
-
-    /// <summary>
-    /// Gets or sets the frames per second.
-    /// </summary>
-    /// <value>
-    /// The frames per second.
-    /// </value>
-    public double MaxFps { get; set; } = 60;
-
     /// <summary>
     /// Gets the canvas core.
     /// </summary>
@@ -67,8 +57,6 @@ public partial class MotionCanvas : UserControl
     /// The canvas core.
     /// </value>
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
-
-    #endregion
 
     private void OnLoaded(object sender, RoutedEventArgs e) =>
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
@@ -91,7 +79,8 @@ public partial class MotionCanvas : UserControl
         if (_isDrawingLoopRunning || _skiaElement == null) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+
         while (!CanvasCore.IsValid)
         {
             _skiaElement.Invalidate();

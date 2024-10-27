@@ -53,14 +53,6 @@ public class MotionCanvas : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the frames per second.
-    /// </summary>
-    /// <value>
-    /// The frames per second.
-    /// </value>
-    public double MaxFps { get; set; } = 60;
-
-    /// <summary>
     /// Gets the canvas core.
     /// </summary>
     /// <value>
@@ -83,7 +75,8 @@ public class MotionCanvas : UserControl
         if (_isDrawingLoopRunning || _skiaElement == null) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+
         while (!CanvasCore.IsValid)
         {
             _skiaElement?.Invalidate();

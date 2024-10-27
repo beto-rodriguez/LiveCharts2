@@ -59,12 +59,6 @@ public partial class MotionCanvas : IDisposable
     public bool UseGLView { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the FPS.
-    /// </summary>
-    [Parameter]
-    public double MaxFps { get; set; } = 60;
-
-    /// <summary>
     /// Gets or sets the paint tasks.
     /// </summary>
     [Parameter]
@@ -173,7 +167,7 @@ public partial class MotionCanvas : IDisposable
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
 
         if (UseGLView)
         {

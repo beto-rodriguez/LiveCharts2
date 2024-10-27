@@ -41,14 +41,20 @@ public static class LiveCharts
     public static string IgnoreSeriesName { get; } = "{{Series Name not set}}";
 
     /// <summary>
-    /// Gets a value indicating whether LiveCharts should create a log as it renders the charts.
+    /// Gets or sets a value indicating whether LiveCharts should create a log in the console as
+    /// it renders the charts.
     /// </summary>
     public static bool EnableLogging { get; set; } = false;
 
     /// <summary>
-    /// Gets a value indicating whether LiveCharts should show the frames per second.
+    /// Gets or sets a value indicating whether LiveCharts should show the frames per second.
     /// </summary>
     public static bool ShowFPS { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the maximum fps requested.
+    /// </summary>
+    public static double MaxFps { get; set; } = 65;
 
     /// <summary>
     /// Gets a value indicating whether LiveCharts has a backend registered.

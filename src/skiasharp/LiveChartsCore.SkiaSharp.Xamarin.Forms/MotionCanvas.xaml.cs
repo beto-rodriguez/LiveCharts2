@@ -73,14 +73,6 @@ public partial class MotionCanvas : ContentView
     public SKCanvasView SkCanvasView => skiaElement;
 
     /// <summary>
-    /// Gets or sets the frames per second.
-    /// </summary>
-    /// <value>
-    /// The frames per second.
-    /// </value>
-    public double FramesPerSecond { get; set; } = 60;
-
-    /// <summary>
     /// Gets or sets the paint tasks.
     /// </summary>
     /// <value>
@@ -139,7 +131,8 @@ public partial class MotionCanvas : ContentView
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+
         while (!CanvasCore.IsValid)
         {
             skiaElement.InvalidateSurface();

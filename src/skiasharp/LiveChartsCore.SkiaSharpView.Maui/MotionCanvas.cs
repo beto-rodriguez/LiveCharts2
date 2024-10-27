@@ -58,14 +58,6 @@ public class MotionCanvas : ContentView
     }
 
     /// <summary>
-    /// Gets or sets the frames per second.
-    /// </summary>
-    /// <value>
-    /// The frames per second.
-    /// </value>
-    public double MaxFps { get; set; } = 200;
-
-    /// <summary>
     /// Gets the canvas core.
     /// </summary>
     /// <value>
@@ -106,7 +98,8 @@ public class MotionCanvas : ContentView
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+
         while (!CanvasCore.IsValid && _isLoaded)
         {
             _skiaElement?.InvalidateSurface();
