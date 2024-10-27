@@ -159,7 +159,10 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             if (showFps)
             {
                 MeasureFPS();
-                context.LogOnCanvas($"[fps] last {_lastKnowFps:N2}, average {_totalFrames / _totalSeconds:N2}");
+
+                if (_totalSeconds > 0)
+                    context.LogOnCanvas(
+                        $"[fps] last {_lastKnowFps:N2}, average {_totalFrames / _totalSeconds:N2}");
             }
 
             IsValid = isValid;
@@ -167,7 +170,16 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             context.OnEndDraw();
         }
 
-        if (IsValid) Validated?.Invoke(this);
+        if (IsValid)
+        {
+            Validated?.Invoke(this);
+
+            if (showFps)
+            {
+                _frames = 0;
+                _fspSw = null;
+            }
+        }
     }
 
     /// <summary>
@@ -253,12 +265,17 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
     private void MeasureFPS()
     {
+        if (_fspSw is null)
+        {
+            _fspSw = new();
+            _fspSw.Start();
+        }
+
         const int logEach = 20;
         _frames++;
 
         if (_frames % logEach == 0)
         {
-            _fspSw ??= new Stopwatch();
             var elapsedSeconds = _fspSw.ElapsedMilliseconds / 1000d;
             _lastKnowFps = logEach / elapsedSeconds;
 
