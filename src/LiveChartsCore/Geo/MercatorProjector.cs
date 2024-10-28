@@ -62,23 +62,23 @@ public class MercatorProjector : MapProjector
     /// </value>
     public static float[] PreferredRatio => new[] { 1f, 1f };
 
-    /// <inheritdoc cref="MapProjector.ToMap(double[])"/>
-    public override float[] ToMap(double[] point)
+    /// <inheritdoc cref="MapProjector.ToMap(LvcPointD)"/>
+    public override LvcPoint ToMap(LvcPointD point)
     {
-        var lat = point[1];
-        var lon = point[0];
+        var lat = point.Y;
+        var lon = point.X;
 
         var latRad = lat * Math.PI / 180d;
         var mercN = Math.Log(Math.Tan(Math.PI / 4d + latRad / 2d), Math.E);
         var y = _h / 2d - _h * mercN / (2 * Math.PI);
 
-        return new[]
+        return new LvcPoint
         {
             // x' =
-            (float)((lon + 180) * (_w / 360d) + _ox),
+            X = (float)((lon + 180) * (_w / 360d) + _ox),
 
             // y' =
-            (float) y + _oy
+            Y = (float) y + _oy
         };
     }
 }

@@ -60,18 +60,18 @@ public class ControlCoordinatesProjector : MapProjector
     /// </value>
     public static float[] PreferredRatio => new[] { 2f, 1f };
 
-    /// <inheritdoc cref="MapProjector.ToMap(double[])"/>
+    /// <inheritdoc cref="MapProjector.ToMap(LvcPointD)"/>
     public override float[] ToMap(double[] point)
     {
         // simplified formula
-        return new[]
+        return new LvcPoint
         {
-                // x' =
-                (float)(_ox + (point[0] + 180) / 360d * _w),
+            // x' =
+            X = (float)(_ox + (point.X + 180) / 360d * _w),
 
-                // y' =
-                (float)(_oy + (90 - point[1]) / 180d * _h)
-            };
+            // y' =
+            Y = (float)(_oy + (90 - point.Y) / 180d * _h)
+        };
 
         // the following code explains the formula better:
 
