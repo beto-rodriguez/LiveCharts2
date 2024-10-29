@@ -268,11 +268,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <summary>
-    /// Called when a point is measured.
-    /// </summary>
-    public Action<ChartPoint<TModel, TVisual, TLabel>>? WhenPointMeasured { get; set; }
-
-    /// <summary>
     /// Gets or sets the size of the legend shape.
     /// </summary>
     /// <value>
@@ -434,11 +429,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Called when a point was measured.
     /// </summary>
     /// <param name="chartPoint">The chart point.</param>
-    protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
-    {
-        WhenPointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
+    protected internal virtual void OnPointMeasured(ChartPoint chartPoint) =>
         PointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
-    }
 
     /// <summary>
     /// Called when a point is created.
