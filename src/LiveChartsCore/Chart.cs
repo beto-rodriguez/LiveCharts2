@@ -636,7 +636,7 @@ public abstract class Chart<TDrawingContext> : IChart
         var x = _pointerPosition.X;
         var y = _pointerPosition.Y;
 
-        if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn ||
+        if (Tooltip is null || !_isPointerIn ||
             x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
             y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
         {
@@ -657,6 +657,7 @@ public abstract class Chart<TDrawingContext> : IChart
         CleanHoveredPoints(o);
 
         if (isEmpty) return true;
+        if (TooltipPosition == TooltipPosition.Hidden) return false;
 
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
