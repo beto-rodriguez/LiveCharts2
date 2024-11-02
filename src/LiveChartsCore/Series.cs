@@ -455,7 +455,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
-        ChartPointPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+        if (ChartPointPointerHover is null || point.IsPointerOver) return;
+        point.IsPointerOver = true;
+        ChartPointPointerHover.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
     }
 
     /// <summary>
@@ -464,7 +466,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
-        ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+        if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
+        point.IsPointerOver = false;
+        ChartPointPointerHoverLost.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.OnPaintChanged(string?)"/>
