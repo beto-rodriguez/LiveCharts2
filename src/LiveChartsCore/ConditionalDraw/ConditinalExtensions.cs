@@ -45,6 +45,7 @@ public static class ConditionalDrawExtensions
     /// <remarks>
     /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event.
     /// </remarks>
+    [Obsolete("Changed Namespace to LiveChartsCore.Kernel.Events")]
     public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointMeasured<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
             where TDrawingContext : DrawingContext

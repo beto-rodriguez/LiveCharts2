@@ -39,4 +39,4 @@ public delegate void ChartPointHandler(IChartView chart, ChartPoint? point);
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <param name="chart">The sender chart.</param>
 /// <param name="point">The found points.</param>
-public delegate void ChartPointHandler<TModel, TVisual, TLabel>(IChartView chart, ChartPoint<TModel, TVisual, TLabel>? point);
+public delegate void ChartPointHandler<TModel, TVisual, TLabel>(IChartView chart, ChartPoint<TModel, TVisual, TLabel> point);
