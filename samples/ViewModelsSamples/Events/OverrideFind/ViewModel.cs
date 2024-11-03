@@ -24,21 +24,35 @@ public class ViewModel
         protected override IEnumerable<ChartPoint> FindPointsInPosition(
             IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
         {
-            // use the default implementation for pointer down events.
+            // Overriding the FindPointsInPosition method allows us to customize the way the library
+            // finds the points in the chart for a given position.
+            // this is used for tooltips, pointer down events, or the Chart.GetPointsAt() method.
+
+            // you can use the findPointFor parameter to determine the context of the search.
+
             // if (findPointFor == FindPointFor.PointerDownEvent)
-            //     return base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
+            //     return ...
+
+            // in this case we want only the points that are exactly under the pointer position.
 
             return Fetch(chart).Where(point =>
             {
                 var animatable = (Animatable)point.Context.Visual!;
 
+                // we use the GetTargetValue to get the target value of the animation
                 var x = GetTargetValue(animatable, nameof(RoundedRectangleGeometry.X));
                 var y = GetTargetValue(animatable, nameof(RoundedRectangleGeometry.Y));
                 var w = GetTargetValue(animatable, nameof(RoundedRectangleGeometry.Width));
                 var h = GetTargetValue(animatable, nameof(RoundedRectangleGeometry.Height));
 
+                // hover areas, are used to determine the zone in the chart where the point
+                // is considered hovered, in this case we are updating the suggested tooltip location,
+                // to place it at the top of the column.
                 var hoverArea = (RectangleHoverArea)point.Context.HoverArea!;
                 hoverArea.SuggestedTooltipLocation = new LvcPoint(x + w * 0.5f, y);
+
+                // finally we return true when the pointerPosition is contained
+                // in the rectangle of the drawn column.
 
                 var isInsideX = x <= pointerPosition.X && pointerPosition.X <= x + w;
                 var isInsideY = y <= pointerPosition.Y && pointerPosition.Y <= y + h;
