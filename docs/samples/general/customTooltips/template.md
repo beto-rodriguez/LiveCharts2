@@ -190,19 +190,20 @@ see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more 
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)
 
-# Customize the area that fires tooltips
+# Override Series.FindPointsInPosition 
 
-Each drawn point defines a `HoverArea`, when the pointer is over this area, the drawn point will be marked as selectable
-by a tooltip depending on the [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), LiveCharts depending on the series type determines the `TooltipFindingStrategy`,
-but sometimes we need define our own logic, one way to do it is to define the `HoverArea` for each point:
+Depending on the series type and [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), LiveCharts decides the logic to show points on tooltips and also the points passed
+to any pointer event in the library (like `Hover`, `HoverLeft` or `PointerDown`), lets take as an example the default behavior of the
+`ColumnSeries<T>`, it selects all the points that share the same `X` coordinate:
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TooltipHoverArea/ViewModel.cs" ~}}
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha-compare.gif)
 
-Now, the tooltip only opens when the pointer is exactly over the column:
+But for this example, we want to override this behavior, instead we only need the tooltip to display the exact column where the pointer is in:
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha.gif)
 
-Because we are comparing Column series, the default hover area was shared for both drawn columns, this way tooltips
-are able to compare points that share the same position in the X axis.
+When the [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), 
+is not enough, we can override the logic to determine whether a given point is inside a drawn `ChartPoint`. This method
+will be used by the library to resolve the points to show in a tooltip, or the points passed in any pointer event:
 
-![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha-compare.gif)
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
