@@ -95,6 +95,7 @@ public static class Index
         "Events/Cartesian",
         "Events/Pie",
         "Events/Polar",
+        //"Events/OverrideFind",
 
         "General/MapPoints",
         "General/RealTime",
