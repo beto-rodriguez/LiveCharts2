@@ -131,7 +131,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         return VisibleSeries
             .Where(series => series.IsHoverable)
-            .SelectMany(series => series.FindHitPoints(this, pointerPosition, actualStrategy));
+            .SelectMany(series => series.FindHitPoints(this, pointerPosition, actualStrategy, FindPointFor.Tooltip));
     }
 
     /// <summary>
