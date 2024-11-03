@@ -85,7 +85,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         if (tooltip is not null) this.tooltip = tooltip;
         if (legend is not null) this.legend = legend;
 
-        motionCanvas = new MotionCanvas { MaxFps = 65 };
+        motionCanvas = new MotionCanvas();
         motionCanvas.SizeChanged += OnResized;
 
         UpdateLegendLayout();
