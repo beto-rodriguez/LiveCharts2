@@ -103,5 +103,5 @@ public class ChartPointContext
     /// <summary>
     /// Gets or sets the area that triggers the ToolTip.
     /// </summary>
-    public HoverArea? HoverArea { get; internal set; }
+    public HoverArea? HoverArea { get; set; }
 }
