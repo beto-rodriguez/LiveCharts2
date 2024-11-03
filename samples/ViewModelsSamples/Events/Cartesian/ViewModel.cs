@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using LiveChartsCore;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
