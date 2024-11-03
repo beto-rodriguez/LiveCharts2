@@ -11,7 +11,7 @@ article:
 
 You can quickly change the position, the font, the text size or the background color:
 
-## View
+#### View
 
 {{~ if xaml ~}}
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/NamedLabels/$PlatformViewFile" ~}}
@@ -29,7 +29,7 @@ You can quickly change the position, the font, the text size or the background c
 {{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/NamedLabels.razor" ~}}
 {{~ end ~}}
 
-## View model
+#### View model
 
 ```c#
 [ObservableObject]
@@ -180,12 +180,29 @@ Alternatively, you can build your own Tooltips and use the power of your UI fram
 see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info.
 :::
 
-## CustomTooltip.cs
+#### CustomTooltip.cs
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
 
-## View
+#### View
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)
+
+# Customize the area that fires tooltips
+
+Each drawn point defines a `HoverArea`, when the pointer is over this area, the drawn point will be marked as selectable
+by a tooltip depending on the [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), LiveCharts depending on the series type determines the `TooltipFindingStrategy`,
+but sometimes we need define our own logic, one way to do it is to define the `HoverArea` for each point:
+
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TooltipHoverArea/ViewModel.cs" ~}}
+
+Now, the tooltip only opens when the pointer is exactly over the column:
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha.gif)
+
+Because we are comparing Column series, the default hover area was shared for both drawn columns, this way tooltips
+are able to compare points that share the same position in the X axis.
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha-compare.gif)
