@@ -53,12 +53,6 @@ public partial class MotionCanvas : IDisposable
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
     /// <summary>
-    /// Gets or sets whether the web GL view should be used.
-    /// </summary>
-    [Parameter]
-    public bool UseGLView { get; set; } = true;
-
-    /// <summary>
     /// Gets or sets the paint tasks.
     /// </summary>
     [Parameter]
@@ -169,7 +163,7 @@ public partial class MotionCanvas : IDisposable
 
         var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
 
-        if (UseGLView)
+        if (LiveCharts.UseGPU)
         {
             while (!CanvasCore.IsValid && !_disposing)
             {

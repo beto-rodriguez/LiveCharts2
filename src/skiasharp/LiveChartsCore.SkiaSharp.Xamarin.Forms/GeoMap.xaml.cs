@@ -58,8 +58,16 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
 
-        canvas.SkCanvasView.EnableTouchEvents = true;
-        canvas.SkCanvasView.Touch += OnSkCanvasTouched;
+        if (canvas.SkCanvasView is not null)
+        {
+            canvas.SkCanvasView.EnableTouchEvents = true;
+            canvas.SkCanvasView.Touch += OnSkCanvasTouched;
+        }
+        else if (canvas.SkGlView is not null)
+        {
+            canvas.SkGlView.EnableTouchEvents = true;
+            canvas.SkGlView.Touch += OnSkCanvasTouched;
+        }
 
         SizeChanged += GeoMap_SizeChanged;
 

@@ -38,6 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 public class MotionCanvas : Control
 {
     private SKElement? _skiaElement;
+    private SKGLElement? _skiaGlElement;
     private bool _isDrawingLoopRunning = false;
 
     static MotionCanvas()
@@ -52,6 +53,7 @@ public class MotionCanvas : Control
     /// </summary>
     public MotionCanvas()
     {
+        InitializeElement();
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }
@@ -71,13 +73,33 @@ public class MotionCanvas : Control
     {
         base.OnApplyTemplate();
 
-        _skiaElement = Template.FindName("skiaElement", this) as SKElement;
-        if (_skiaElement is null)
+        var templateElement = Template.FindName("skiaElement", this);
+        if (templateElement is null)
             throw new Exception(
                 $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                 $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
 
-        _skiaElement.PaintSurface += OnPaintSurface;
+        if (_skiaElement is not null)
+        {
+            _skiaElement.PaintSurface -= OnPaintSurface;
+            _skiaElement = null;
+        }
+        else if (_skiaGlElement is not null)
+        {
+            _skiaGlElement.PaintSurface -= OnPaintGlSurface;
+            _skiaGlElement = null;
+        }
+
+        if (templateElement is SKElement element)
+        {
+            _skiaElement = element;
+            _skiaElement.PaintSurface += OnPaintSurface;
+        }
+        else if (templateElement is SKGLElement glElement)
+        {
+            _skiaGlElement = glElement;
+            _skiaGlElement.PaintSurface += OnPaintGlSurface;
+        }
     }
 
     /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
@@ -86,6 +108,28 @@ public class MotionCanvas : Control
         var density = GetPixelDensity();
         args.Surface.Canvas.Scale(density.dpix, density.dpiy);
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+    }
+
+    /// <inheritdoc cref="OnPaintGlSurface(object?, SKPaintGLSurfaceEventArgs)" />
+    protected virtual void OnPaintGlSurface(object? sender, SKPaintGLSurfaceEventArgs args)
+    {
+        var density = GetPixelDensity();
+        args.Surface.Canvas.Scale(density.dpix, density.dpiy);
+        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+    }
+
+    private void InitializeElement()
+    {
+        if (LiveCharts.UseGPU)
+        {
+            _skiaGlElement = new SKGLElement();
+            _skiaGlElement.PaintSurface += OnPaintGlSurface;
+        }
+        else
+        {
+            _skiaElement = new SKElement();
+            _skiaElement.PaintSurface += OnPaintSurface;
+        }
     }
 
     private ResolutionHelper GetPixelDensity()
@@ -113,14 +157,15 @@ public class MotionCanvas : Control
 
     private async void RunDrawingLoop()
     {
-        if (_isDrawingLoopRunning || _skiaElement is null) return;
+        if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
         var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
 
         while (!CanvasCore.IsValid)
         {
-            _skiaElement.InvalidateVisual();
+            _skiaElement?.InvalidateVisual();
+            _skiaGlElement?.InvalidateVisual();
             await Task.Delay(ts);
         }
 

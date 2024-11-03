@@ -85,8 +85,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
         SetValue(SyncContextProperty, new object());
 
-        canvas.SkCanvasView.EnableTouchEvents = true;
-        canvas.SkCanvasView.Touch += OnSkCanvasTouched;
+        if (canvas.SkCanvasView is not null)
+        {
+            canvas.SkCanvasView.EnableTouchEvents = true;
+            canvas.SkCanvasView.Touch += OnSkCanvasTouched;
+        }
+        else if (canvas.SkGlView is not null)
+        {
+            canvas.SkGlView.EnableTouchEvents = true;
+            canvas.SkGlView.Touch += OnSkCanvasTouched;
+        }
 
         if (core is null) throw new Exception("Core not found!");
         core.Measuring += OnCoreMeasuring;

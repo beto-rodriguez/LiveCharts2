@@ -30,30 +30,24 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 
 /// <summary>
 /// The motion canvas control fro Xamarin, <see cref="MotionCanvas{TDrawingContext}"/>.
 /// </summary>
-[XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class MotionCanvas : ContentView
 {
     private bool _isDrawingLoopRunning = false;
+    private SKCanvasView? _canvasView;
+    private SKGLView? _glView;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
-        InitializeComponent();
-        if (skiaElement is null)
-            throw new Exception(
-                $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
-                $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");
-
-        skiaElement.PaintSurface += OnCanvasViewPaintSurface;
+        InitializeView();
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
     }
 
@@ -70,7 +64,15 @@ public partial class MotionCanvas : ContentView
     /// <value>
     /// The sk canvas view.
     /// </value>
-    public SKCanvasView SkCanvasView => skiaElement;
+    public SKCanvasView? SkCanvasView => _canvasView;
+
+    /// <summary>
+    /// Gets the sk gl view.
+    /// </summary>
+    /// <value>
+    /// The sk gl view.
+    /// </value>
+    public SKGLView? SkGlView => _glView;
 
     /// <summary>
     /// Gets or sets the paint tasks.
@@ -121,9 +123,33 @@ public partial class MotionCanvas : ContentView
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
+    private void OnGlViewPaintSurface(object sender, SKPaintGLSurfaceEventArgs args)
+    {
+        var scale = DeviceDisplay.MainDisplayInfo.Density;
+        args.Surface.Canvas.Scale((float)scale, (float)scale);
+
+        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
+    }
+
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
     {
         Invalidate();
+    }
+
+    private void InitializeView()
+    {
+        if (LiveCharts.UseGPU)
+        {
+            _glView = new SKGLView();
+            _glView.PaintSurface += OnGlViewPaintSurface;
+            Content = _glView;
+        }
+        else
+        {
+            _canvasView = new SKCanvasView();
+            _canvasView.PaintSurface += OnCanvasViewPaintSurface;
+            Content = _canvasView;
+        }
     }
 
     private async void RunDrawingLoop()
@@ -135,7 +161,8 @@ public partial class MotionCanvas : ContentView
 
         while (!CanvasCore.IsValid)
         {
-            skiaElement.InvalidateSurface();
+            _canvasView?.InvalidateSurface();
+            _glView?.InvalidateSurface();
             await Task.Delay(ts);
         }
 
