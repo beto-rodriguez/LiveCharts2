@@ -105,6 +105,7 @@ public static class Index
         "General/VisualElements",
         "General/ChartToImage",
         "General/Tooltips",
+        //"General/TooltipHoverArea",
         "General/Legends",
         "General/Animations",
         "General/Visibility",
