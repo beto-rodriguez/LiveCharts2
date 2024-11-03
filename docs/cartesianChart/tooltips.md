@@ -141,6 +141,25 @@ the properly [unit width]({{ website_url }}/docs/{{ platform }}/{{ version }}/Ca
 cartesianChart1.TooltipFindingStrategy = LiveChartsCore.Measure.TooltipFindingStrategy.CompareOnlyX;</code></pre>
 {{~ end ~}}
 
+## Customize TooltipFindingStrategy
+
+You can override all the previous strategies if required. Each drawn point defines a `HoverArea`, when the pointer 
+is over this area, the drawn point will be marked as selectable by a tooltip depending on the 
+[TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), 
+LiveCharts depending on the series type determines the `TooltipFindingStrategy`,
+but sometimes we need define our own logic, one way to do it is to define the `HoverArea` for each point:
+
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TooltipHoverArea/ViewModel.cs" ~}}
+
+Now, the tooltip only opens when the pointer is exactly over the column:
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha.gif)
+
+Because we are comparing Column series, the default hover area was shared for both drawn columns, this way tooltips
+are able to compare points that share the same position in the X axis.
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha-compare.gif)
+
 ## Tooltip text
 
 You can define the text the tooltip will display for a given point, using the 
