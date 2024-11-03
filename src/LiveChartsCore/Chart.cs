@@ -338,14 +338,14 @@ public abstract class Chart<TDrawingContext> : IChart
             {
                 if (!series.RequiresFindClosestOnPointerDown) continue;
 
-                var points = series.FindHitPoints(this, point, strategy, FindPointFor.Pointer);
+                var points = series.FindHitPoints(this, point, strategy, FindPointFor.PointerDownEvent);
                 if (!points.Any()) continue;
 
                 series.OnDataPointerDown(View, points, point);
             }
 
             // fire the chart event.
-            var iterablePoints = VisibleSeries.SelectMany(x => x.FindHitPoints(this, point, strategy, FindPointFor.Pointer));
+            var iterablePoints = VisibleSeries.SelectMany(x => x.FindHitPoints(this, point, strategy, FindPointFor.PointerDownEvent));
             View.OnDataPointerDown(iterablePoints, point);
 
             // fire the visual elements event.

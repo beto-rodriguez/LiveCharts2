@@ -260,9 +260,9 @@ public interface IChartView<TDrawingContext> : IChartView
     /// </summary>
     /// <param name="point">The given point.</param>
     /// <param name="strategy">The finding strategy, default is <see cref="TooltipFindingStrategy.Automatic"/>.</param>
-    /// <param name="findPointFor">The find point for, default is <see cref="FindPointFor.Tooltip"/>.</param>
+    /// <param name="findPointFor">The find point for, default is <see cref="FindPointFor.HoverEvent"/>.</param>
     /// <returns>An enumerable of <see cref="ChartPoint"/>.</returns>
-    IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.Tooltip);
+    IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent);
 
     /// <summary>
     /// Gets all the <see cref="VisualElement{TDrawingContext}"/> that contain the given point.

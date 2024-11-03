@@ -28,12 +28,12 @@ namespace LiveChartsCore.Measure;
 public enum FindPointFor
 {
     /// <summary>
-    /// The request was made to find a point for a tooltip.
+    /// The request was made to find a point on the hover event.
     /// </summary>
-    Tooltip,
+    HoverEvent,
 
     /// <summary>
-    /// The request was made to find a point for a pointer event.
+    /// The request was made to find a point for the pointer down event.
     /// </summary>
-    Pointer
+    PointerDownEvent
 }

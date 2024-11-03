@@ -158,10 +158,10 @@ public interface ISeries : IChartElement
     string? GetDataLabelText(ChartPoint point);
 
     /// <summary>
-    /// Gets a <see cref="ChartPoint"/> array with the points used to generate the plot.
+    /// Gets a <see cref="ChartPoint"/> IEnumerable with the points used to generate the plot.
     /// </summary>
     /// <param name="chart">the chart</param>
-    /// <returns></returns>
+    /// <returns>The IEnumerable of <see cref="ChartPoint"/>.</returns>
     IEnumerable<ChartPoint> Fetch(IChart chart);
 
     /// <summary>
