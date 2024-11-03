@@ -656,8 +656,12 @@ public abstract class Chart<TDrawingContext> : IChart
 
         CleanHoveredPoints(o);
 
-        if (isEmpty) return true;
-        if (TooltipPosition == TooltipPosition.Hidden) return false;
+        if (isEmpty || TooltipPosition == TooltipPosition.Hidden)
+        {
+            _isToolTipOpen = false;
+            Tooltip?.Hide(this);
+            return false;
+        }
 
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
