@@ -158,12 +158,6 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         IsWeighted = weightBounds.Max - weightBounds.Min > 0;
         var wm = -(GeometrySize - MinGeometrySize) / (weightBounds.Max - weightBounds.Min);
 
-        var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
-        var uwy = yScale.MeasureInPixels(secondaryAxis.UnitWidth);
-
-        uwx = uwx < gs ? gs : uwx;
-        uwy = uwy < gs ? gs : uwy;
-
         var hy = chart.ControlSize.Height * .5f;
         var hasSvg = this.HasVariableSvgGeometry();
 
@@ -273,7 +267,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
                 point.Context.HoverArea = ha = new RectangleHoverArea();
-            _ = ha.SetDimensions(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy).CenterXToolTip().CenterYToolTip();
+            _ = ha.SetDimensions(x - hgs, y - hgs, gs, gs).CenterXToolTip().CenterYToolTip();
 
             pointsCleanup.Clean(point);
 
