@@ -173,7 +173,7 @@ public class ScatterSeriesTest
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
             "Tool tip on top failed [AUTO]");
 
-        chart.Core._pointerPosition = new(300 * 4 / 5d, 300 * 1 / 5d);
+        chart.Core._pointerPosition = new(300 * 3 / 4d, 300 * 1 / 4d);
         _ = chart.GetImage();
         Assert.IsTrue(
             Math.Abs(tp.X - (300 * 3 / 4d - tp.Width * 0.5f)) < 0.1 &&
