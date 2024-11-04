@@ -710,11 +710,6 @@ public abstract class Chart<TDrawingContext> : IChart
                     var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
                     var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
 
-                    // we need to send a dummy value indicating the direction (val > 0)
-                    // so the core is able to bounce the panning when the user reaches the limit.
-                    if (dx == 0) dx = _pointerPanningStartPosition.X - _pointerPanningPosition.X > 0 ? -0.01f : 0.01f;
-                    if (dy == 0) dy = _pointerPanningStartPosition.Y - _pointerPanningPosition.Y > 0 ? -0.01f : 0.01f;
-
                     cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
                     _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                 }
