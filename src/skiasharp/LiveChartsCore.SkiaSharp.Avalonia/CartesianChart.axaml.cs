@@ -786,6 +786,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     {
         if (_core is null) return;
 
+        e.Handled = true;
+
         var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
         var p = e.GetPosition(this);
 
