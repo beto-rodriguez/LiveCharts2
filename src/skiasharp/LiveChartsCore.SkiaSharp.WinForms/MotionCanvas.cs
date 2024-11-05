@@ -75,6 +75,10 @@ public partial class MotionCanvas : UserControl
         CanvasCore.DrawFrame(
             new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 
+    private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
+        CanvasCore.DrawFrame(
+            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+
     private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         RunDrawingLoop();
 
@@ -87,7 +91,9 @@ public partial class MotionCanvas : UserControl
 
         while (!CanvasCore.IsValid)
         {
-            skControl2.Invalidate();
+            _skControl?.Invalidate();
+            _skglControl?.Invalidate();
+
             await Task.Delay(ts);
         }
 
