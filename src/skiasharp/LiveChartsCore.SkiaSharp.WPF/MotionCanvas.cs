@@ -35,18 +35,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// Defines the motion canvas control for WPF, <see cref="MotionCanvas{TDrawingContext}"/>.
 /// </summary>
 /// <seealso cref="Control" />
-public class MotionCanvas : Control
+public class MotionCanvas : UserControl
 {
     private SKElement? _skiaElement;
     private SKGLElement? _skiaGlElement;
     private bool _isDrawingLoopRunning = false;
-
-    static MotionCanvas()
-    {
-        DefaultStyleKeyProperty.OverrideMetadata(
-            typeof(MotionCanvas),
-            new FrameworkPropertyMetadata(typeof(MotionCanvas)));
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -65,42 +58,6 @@ public class MotionCanvas : Control
     /// The canvas core.
     /// </value>
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
-
-    /// <summary>
-    /// Called when the template is applied.
-    /// </summary>
-    public override void OnApplyTemplate()
-    {
-        base.OnApplyTemplate();
-
-        var templateElement = Template.FindName("skiaElement", this);
-        if (templateElement is null)
-            throw new Exception(
-                $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
-                $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
-
-        if (_skiaElement is not null)
-        {
-            _skiaElement.PaintSurface -= OnPaintSurface;
-            _skiaElement = null;
-        }
-        else if (_skiaGlElement is not null)
-        {
-            _skiaGlElement.PaintSurface -= OnPaintGlSurface;
-            _skiaGlElement = null;
-        }
-
-        if (templateElement is SKElement element)
-        {
-            _skiaElement = element;
-            _skiaElement.PaintSurface += OnPaintSurface;
-        }
-        else if (templateElement is SKGLElement glElement)
-        {
-            _skiaGlElement = glElement;
-            _skiaGlElement.PaintSurface += OnPaintGlSurface;
-        }
-    }
 
     /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
     protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
@@ -122,12 +79,12 @@ public class MotionCanvas : Control
     {
         if (LiveCharts.UseGPU)
         {
-            _skiaGlElement = new SKGLElement();
+            Content = _skiaGlElement = new SKGLElement();
             _skiaGlElement.PaintSurface += OnPaintGlSurface;
         }
         else
         {
-            _skiaElement = new SKElement();
+            Content = _skiaElement = new SKElement();
             _skiaElement.PaintSurface += OnPaintSurface;
         }
     }
