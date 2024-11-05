@@ -49,11 +49,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 
     #endregion
 
-    static PolarChart()
-    {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(PolarChart), new FrameworkPropertyMetadata(typeof(PolarChart)));
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarChart"/> class.
     /// </summary>

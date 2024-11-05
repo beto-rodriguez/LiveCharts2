@@ -88,7 +88,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         motionCanvas = new MotionCanvas();
         SuspendLayout();
         motionCanvas.Dock = DockStyle.Fill;
-        motionCanvas.MaxFps = 65;
         motionCanvas.Location = new Point(0, 0);
         motionCanvas.Name = "motionCanvas";
         motionCanvas.Size = new Size(150, 150);

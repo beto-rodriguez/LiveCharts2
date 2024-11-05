@@ -24,8 +24,10 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.WPF;
 
@@ -35,25 +37,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// Defines the motion canvas control for WPF, <see cref="MotionCanvas{TDrawingContext}"/>.
 /// </summary>
 /// <seealso cref="Control" />
-public class MotionCanvas : Control
+public class MotionCanvas : UserControl
 {
     private SKElement? _skiaElement;
     private SKGLElement? _skiaGlElement;
     private bool _isDrawingLoopRunning = false;
-
-    static MotionCanvas()
-    {
-        DefaultStyleKeyProperty.OverrideMetadata(
-            typeof(MotionCanvas),
-            new FrameworkPropertyMetadata(typeof(MotionCanvas)));
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
-        InitializeElement();
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }
@@ -66,48 +60,12 @@ public class MotionCanvas : Control
     /// </value>
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
-    /// <summary>
-    /// Called when the template is applied.
-    /// </summary>
-    public override void OnApplyTemplate()
-    {
-        base.OnApplyTemplate();
-
-        var templateElement = Template.FindName("skiaElement", this);
-        if (templateElement is null)
-            throw new Exception(
-                $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
-                $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
-
-        if (_skiaElement is not null)
-        {
-            _skiaElement.PaintSurface -= OnPaintSurface;
-            _skiaElement = null;
-        }
-        else if (_skiaGlElement is not null)
-        {
-            _skiaGlElement.PaintSurface -= OnPaintGlSurface;
-            _skiaGlElement = null;
-        }
-
-        if (templateElement is SKElement element)
-        {
-            _skiaElement = element;
-            _skiaElement.PaintSurface += OnPaintSurface;
-        }
-        else if (templateElement is SKGLElement glElement)
-        {
-            _skiaGlElement = glElement;
-            _skiaGlElement.PaintSurface += OnPaintGlSurface;
-        }
-    }
-
     /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
     protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
         var density = GetPixelDensity();
         args.Surface.Canvas.Scale(density.dpix, density.dpiy);
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
     /// <inheritdoc cref="OnPaintGlSurface(object?, SKPaintGLSurfaceEventArgs)" />
@@ -115,19 +73,27 @@ public class MotionCanvas : Control
     {
         var density = GetPixelDensity();
         args.Surface.Canvas.Scale(density.dpix, density.dpiy);
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+
+        var c = (((Control)Parent).Background is not SolidColorBrush bg)
+            ? Colors.White
+            : bg.Color;
+
+        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas)
+        {
+            Background = new SKColor(c.R, c.G, c.B)
+        });
     }
 
     private void InitializeElement()
     {
         if (LiveCharts.UseGPU)
         {
-            _skiaGlElement = new SKGLElement();
+            Content = _skiaGlElement = new SKGLElement();
             _skiaGlElement.PaintSurface += OnPaintGlSurface;
         }
         else
         {
-            _skiaElement = new SKElement();
+            Content = _skiaElement = new SKElement();
             _skiaElement.PaintSurface += OnPaintSurface;
         }
     }
@@ -146,8 +112,11 @@ public class MotionCanvas : Control
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         RunDrawingLoop();
 
-    private void OnLoaded(object sender, RoutedEventArgs e) =>
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        InitializeElement();
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+    }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {

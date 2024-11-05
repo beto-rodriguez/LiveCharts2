@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Windows.Forms;
+using SkiaSharp.Views.Desktop;
+
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
     partial class MotionCanvas
@@ -50,32 +53,34 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.skControl2 = new SkiaSharp.Views.Desktop.SKControl();
-            this.SuspendLayout();
-            // 
-            // skControl2
-            // 
-            this.skControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.skControl2.Location = new System.Drawing.Point(0, 0);
-            this.skControl2.Name = "skControl2";
-            this.skControl2.Size = new System.Drawing.Size(150, 150);
-            this.skControl2.TabIndex = 1;
-            this.skControl2.Text = "skControl2";
-            this.skControl2.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs>(this.SkControl_PaintSurface);
-            // 
-            // MotionCanvas
-            // 
+            if (LiveCharts.UseGPU)
+            {
+                this._skglControl = new SKGLControl();
+                this._skglControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+                this._skglControl.Size = new System.Drawing.Size(1000, 1000);
+                this._skglControl.TabIndex = 1;
+                this._skglControl.PaintSurface += new System.EventHandler<SKPaintGLSurfaceEventArgs>(this.SkglControl_PaintSurface);
+                this.Controls.Add(this._skglControl);
+            }
+            else
+            {
+                this._skControl = new SKControl();
+                this._skControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+                this._skControl.Size = new System.Drawing.Size(1000, 1000);
+                this._skControl.TabIndex = 1;
+                this._skControl.PaintSurface += new System.EventHandler<SKPaintSurfaceEventArgs>(this.SkControl_PaintSurface);
+                this.Controls.Add(this._skControl);
+            }
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.skControl2);
-            this.Name = "MotionCanvas";
+
             this.ResumeLayout(false);
         }
 
         #endregion
 
-        private SkiaSharp.Views.Desktop.SKControl skControl2;
+        private SKControl _skControl;
+        private SKGLControl _skglControl;
     }
 }
