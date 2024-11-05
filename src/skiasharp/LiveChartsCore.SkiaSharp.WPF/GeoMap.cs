@@ -42,15 +42,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// Defines a geographic map.
 /// </summary>
 /// <seealso cref="Control" />
-public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
+public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private GeoMap<SkiaSharpDrawingContext>? _core;
-
-    static GeoMap()
-    {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoMap), new FrameworkPropertyMetadata(typeof(GeoMap)));
-    }
+    private MotionCanvas? _canvas;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -169,12 +165,9 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas =>
-        Template.FindName("canvas", this) is not MotionCanvas canvas
-        ? throw new Exception(
-            $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-            $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'")
-        : canvas.CanvasCore;
+    public MotionCanvas<SkiaSharpDrawingContext> Canvas => _canvas is null
+        ? throw new Exception($"Canvas not found")
+        : _canvas.CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
     public CoreMap<SkiaSharpDrawingContext> ActiveMap
@@ -233,7 +226,7 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-
+        Content = _canvas = new MotionCanvas();
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
     }
 

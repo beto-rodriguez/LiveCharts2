@@ -24,8 +24,10 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.WPF;
 
@@ -46,7 +48,6 @@ public class MotionCanvas : UserControl
     /// </summary>
     public MotionCanvas()
     {
-        InitializeElement();
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }
@@ -64,7 +65,7 @@ public class MotionCanvas : UserControl
     {
         var density = GetPixelDensity();
         args.Surface.Canvas.Scale(density.dpix, density.dpiy);
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
     /// <inheritdoc cref="OnPaintGlSurface(object?, SKPaintGLSurfaceEventArgs)" />
@@ -72,7 +73,15 @@ public class MotionCanvas : UserControl
     {
         var density = GetPixelDensity();
         args.Surface.Canvas.Scale(density.dpix, density.dpiy);
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+
+        var c = (((Control)Parent).Background is not SolidColorBrush bg)
+            ? Colors.White
+            : bg.Color;
+
+        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas)
+        {
+            Background = new SKColor(c.R, c.G, c.B)
+        });
     }
 
     private void InitializeElement()
@@ -103,8 +112,11 @@ public class MotionCanvas : UserControl
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         RunDrawingLoop();
 
-    private void OnLoaded(object sender, RoutedEventArgs e) =>
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        InitializeElement();
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+    }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {

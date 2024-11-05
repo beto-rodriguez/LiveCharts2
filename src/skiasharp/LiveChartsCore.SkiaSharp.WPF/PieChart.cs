@@ -43,11 +43,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
 
-    static PieChart()
-    {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(PieChart), new FrameworkPropertyMetadata(typeof(PieChart)));
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
     /// </summary>

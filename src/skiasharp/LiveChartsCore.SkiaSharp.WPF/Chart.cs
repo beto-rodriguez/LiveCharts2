@@ -40,7 +40,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
 /// <inheritdoc cref="IChartView{TDrawingContext}" />
-public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
+public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -359,7 +359,9 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
         : new LvcSize { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas is null ? throw new Exception("Canvas not found") : canvas.CanvasCore;
+    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas is null
+        ? throw new Exception("Canvas not found")
+        : canvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     public TimeSpan AnimationsSpeed
@@ -541,14 +543,7 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     public override void OnApplyTemplate()
     {
-        base.OnApplyTemplate();
-
-        if (Template.FindName("canvas", this) is not MotionCanvas canvas)
-            throw new Exception(
-                $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-                $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
-
-        this.canvas = canvas;
+        Content = canvas = new MotionCanvas();
 
         if (SyncContext != null)
             this.canvas.CanvasCore.Sync = SyncContext;

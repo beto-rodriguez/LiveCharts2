@@ -52,11 +52,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
     #endregion
 
-    static CartesianChart()
-    {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(CartesianChart), new FrameworkPropertyMetadata(typeof(CartesianChart)));
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart"/> class.
     /// </summary>
