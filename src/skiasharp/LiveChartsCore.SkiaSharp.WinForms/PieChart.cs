@@ -104,15 +104,15 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
     public double MinValue { get => _minValue; set { _minValue = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
-    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (core is not PieChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
         if (strategy == TooltipFindingStrategy.Automatic)
             strategy = cc.Series.GetTooltipFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>

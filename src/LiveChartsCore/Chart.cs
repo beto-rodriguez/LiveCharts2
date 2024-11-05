@@ -338,14 +338,14 @@ public abstract class Chart<TDrawingContext> : IChart
             {
                 if (!series.RequiresFindClosestOnPointerDown) continue;
 
-                var points = series.FindHitPoints(this, point, strategy);
+                var points = series.FindHitPoints(this, point, strategy, FindPointFor.PointerDownEvent);
                 if (!points.Any()) continue;
 
                 series.OnDataPointerDown(View, points, point);
             }
 
             // fire the chart event.
-            var iterablePoints = VisibleSeries.SelectMany(x => x.FindHitPoints(this, point, strategy));
+            var iterablePoints = VisibleSeries.SelectMany(x => x.FindHitPoints(this, point, strategy, FindPointFor.PointerDownEvent));
             View.OnDataPointerDown(iterablePoints, point);
 
             // fire the visual elements event.
@@ -656,8 +656,12 @@ public abstract class Chart<TDrawingContext> : IChart
 
         CleanHoveredPoints(o);
 
-        if (isEmpty) return true;
-        if (TooltipPosition == TooltipPosition.Hidden) return false;
+        if (isEmpty || TooltipPosition == TooltipPosition.Hidden)
+        {
+            _isToolTipOpen = false;
+            Tooltip?.Hide(this);
+            return false;
+        }
 
         Tooltip?.Show(points, this);
         _isToolTipOpen = true;
@@ -705,11 +709,6 @@ public abstract class Chart<TDrawingContext> : IChart
                 {
                     var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
                     var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
-
-                    // we need to send a dummy value indicating the direction (val > 0)
-                    // so the core is able to bounce the panning when the user reaches the limit.
-                    if (dx == 0) dx = _pointerPanningStartPosition.X - _pointerPanningPosition.X > 0 ? -0.01f : 0.01f;
-                    if (dy == 0) dy = _pointerPanningStartPosition.Y - _pointerPanningPosition.Y > 0 ? -0.01f : 0.01f;
 
                     cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
                     _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);

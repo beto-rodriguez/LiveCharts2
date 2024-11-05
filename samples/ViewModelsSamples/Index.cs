@@ -95,6 +95,7 @@ public static class Index
         "Events/Cartesian",
         "Events/Pie",
         "Events/Polar",
+        //"Events/OverrideFind",
 
         "General/MapPoints",
         "General/RealTime",
@@ -105,6 +106,7 @@ public static class Index
         "General/VisualElements",
         "General/ChartToImage",
         "General/Tooltips",
+        //"General/TooltipHoverArea",
         "General/Legends",
         "General/Animations",
         "General/Visibility",

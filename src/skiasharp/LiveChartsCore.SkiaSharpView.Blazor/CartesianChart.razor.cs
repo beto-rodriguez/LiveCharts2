@@ -194,15 +194,15 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
-    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
         if (strategy == TooltipFindingStrategy.Automatic)
             strategy = cc.Series.GetTooltipFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>

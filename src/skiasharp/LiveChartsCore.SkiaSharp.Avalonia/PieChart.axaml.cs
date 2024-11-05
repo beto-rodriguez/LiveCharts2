@@ -547,15 +547,15 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
     #endregion
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (_core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
         if (strategy == TooltipFindingStrategy.Automatic)
             strategy = cc.Series.GetTooltipFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>

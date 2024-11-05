@@ -20,23 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel.Sketches;
-
-namespace LiveChartsCore.Kernel.Events;
+namespace LiveChartsCore.Measure;
 
 /// <summary>
-/// Defines a method to handle chart point events.
+/// Defines the kind of lookip to find a point.
 /// </summary>
-/// <param name="chart">The sender chart.</param>
-/// <param name="point">The found points.</param>
-public delegate void ChartPointHandler(IChartView chart, ChartPoint? point);
+public enum FindPointFor
+{
+    /// <summary>
+    /// The request was made to find a point on the hover event.
+    /// </summary>
+    HoverEvent,
 
-/// <summary>
-/// Defines a method to handle chart point events.
-/// </summary>
-/// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <param name="chart">The sender chart.</param>
-/// <param name="point">The found points.</param>
-public delegate void ChartPointHandler<TModel, TVisual, TLabel>(IChartView chart, ChartPoint<TModel, TVisual, TLabel> point);
+    /// <summary>
+    /// The request was made to find a point for the pointer down event.
+    /// </summary>
+    PointerDownEvent
+}

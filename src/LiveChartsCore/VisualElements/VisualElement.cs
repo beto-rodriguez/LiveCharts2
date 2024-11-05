@@ -189,6 +189,15 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     protected internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
+
+        // Note #241104
+        // we only translate the location for now, scale and rotation are not supported yet.
+        // do visual elements need to be that complex?
+        // actually rotation is not working properly when labels are used.
+        // this for sure needs a review.
+        location.X += _translate.X;
+        location.Y += _translate.Y;
+
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element

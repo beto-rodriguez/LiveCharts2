@@ -121,7 +121,7 @@ public class PolarChart<TDrawingContext>(
     {
         return VisibleSeries
             .Where(series => series.IsHoverable)
-            .SelectMany(series => series.FindHitPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
+            .SelectMany(series => series.FindHitPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll, FindPointFor.HoverEvent));
     }
 
     /// <summary>

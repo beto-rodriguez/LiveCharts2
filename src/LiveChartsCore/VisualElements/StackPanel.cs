@@ -117,6 +117,11 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     protected internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
+
+        // see note #241104
+        location.X += _translate.X;
+        location.Y += _translate.Y;
+
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element

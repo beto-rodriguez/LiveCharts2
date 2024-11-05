@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -63,7 +64,7 @@ public class EventsTests
         // Charts use the Series.FindHitPoints method to check if the mouse is over a point.
         var strategy = chart.Series.GetTooltipFindingStrategy();
         var s = chart.Series
-            .SelectMany(x => x.FindHitPoints(chart.Core, new LvcPoint(251, 251), strategy))
+            .SelectMany(x => x.FindHitPoints(chart.Core, new LvcPoint(251, 251), strategy, FindPointFor.HoverEvent))
             .ToArray();
         Assert.IsTrue(s.Length == 1);
 

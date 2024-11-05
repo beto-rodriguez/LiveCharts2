@@ -85,7 +85,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         if (tooltip is not null) this.tooltip = tooltip;
         if (legend is not null) this.legend = legend;
 
-        motionCanvas = new MotionCanvas { MaxFps = 65 };
+        motionCanvas = new MotionCanvas();
         motionCanvas.SizeChanged += OnResized;
 
         UpdateLegendLayout();
@@ -254,8 +254,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
     #endregion
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
-    public abstract IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic);
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    public abstract IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent);
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
     public abstract IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point);

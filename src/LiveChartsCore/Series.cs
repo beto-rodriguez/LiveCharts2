@@ -268,11 +268,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <summary>
-    /// Called when a point is measured.
-    /// </summary>
-    public Action<ChartPoint<TModel, TVisual, TLabel>>? WhenPointMeasured { get; set; }
-
-    /// <summary>
     /// Gets or sets the size of the legend shape.
     /// </summary>
     /// <value>
@@ -318,12 +313,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         ChartPointPointerDown?.Invoke(chart, new ChartPoint<TModel, TVisual, TLabel>(points.FindClosestTo<TModel, TVisual, TLabel>(pointer)!));
     }
 
-    IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
-    {
-        return Fetch(chart);
-    }
-
-    IEnumerable<ChartPoint> ISeries.FindHitPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
+    ///<inheritdoc cref="ISeries.FindHitPoints(IChart, LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    protected virtual IEnumerable<ChartPoint> FindPointsInPosition(
+        IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
     {
         var query =
             Fetch(chart)
@@ -343,6 +335,18 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
         return query;
     }
+
+    IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
+    {
+        return Fetch(chart);
+    }
+
+    IEnumerable<ChartPoint> ISeries.FindHitPoints(
+        IChart chart,
+        LvcPoint pointerPosition,
+        TooltipFindingStrategy strategy,
+        FindPointFor findPointFor) =>
+            FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
 
     void ISeries.OnPointerEnter(ChartPoint point)
     {
@@ -434,11 +438,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Called when a point was measured.
     /// </summary>
     /// <param name="chartPoint">The chart point.</param>
-    protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
-    {
-        WhenPointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
+    protected internal virtual void OnPointMeasured(ChartPoint chartPoint) =>
         PointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
-    }
 
     /// <summary>
     /// Called when a point is created.
@@ -463,7 +464,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
-        ChartPointPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+        if (ChartPointPointerHover is null || point.IsPointerOver) return;
+        point.IsPointerOver = true;
+        ChartPointPointerHover.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
     }
 
     /// <summary>
@@ -472,7 +475,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
-        ChartPointPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+        if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
+        point.IsPointerOver = false;
+        ChartPointPointerHoverLost.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.OnPaintChanged(string?)"/>

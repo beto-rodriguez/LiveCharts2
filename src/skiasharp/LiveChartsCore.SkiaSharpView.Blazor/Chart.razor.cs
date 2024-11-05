@@ -268,8 +268,8 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     #endregion
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy)"/>
-    public virtual IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    public virtual IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         throw new NotImplementedException();
     }

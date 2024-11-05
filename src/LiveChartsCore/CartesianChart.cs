@@ -131,7 +131,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         return VisibleSeries
             .Where(series => series.IsHoverable)
-            .SelectMany(series => series.FindHitPoints(this, pointerPosition, actualStrategy));
+            .SelectMany(series => series.FindHitPoints(this, pointerPosition, actualStrategy, FindPointFor.HoverEvent));
     }
 
     /// <summary>
@@ -317,21 +317,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 var max = limits.Max;
                 var min = limits.Min;
 
-                var xm = max - min;
-                xm = isActive ? xm * MaxAxisActiveBound : xm * MaxAxisBound;
-
-                if (max + dx > limits.DataMax && delta.X < 0)
-                {
-                    xi.SetLimits(limits.DataMax - (max - xm - min), limits.DataMax + xm);
-                    continue;
-                }
-
-                if (min + dx < limits.DataMin && delta.X > 0)
-                {
-                    xi.SetLimits(limits.DataMin - xm, limits.DataMin + max - min - xm);
-                    continue;
-                }
-
                 xi.SetLimits(min + dx, max + dx);
             }
         }
@@ -348,21 +333,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
                 var max = limits.Max;
                 var min = limits.Min;
-
-                var ym = max - min;
-                ym = isActive ? ym * MaxAxisActiveBound : ym * MaxAxisBound;
-
-                if (max + dy > limits.DataMax)
-                {
-                    yi.SetLimits(limits.DataMax - (max - ym - min), limits.DataMax + ym);
-                    continue;
-                }
-
-                if (min + dy < limits.DataMin)
-                {
-                    yi.SetLimits(limits.DataMin - ym, limits.DataMin + max - min - ym);
-                    continue;
-                }
 
                 yi.SetLimits(min + dy, max + dy);
             }
@@ -1097,6 +1067,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             return;
         }
 
+        BouncePanningBack();
         base.InvokePointerUp(point, isSecondaryAction);
     }
 
@@ -1121,6 +1092,53 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         _sharedEvents = instance;
         _ = _sharedEvents.Add(this);
+    }
+
+    private void BouncePanningBack()
+    {
+        // this method ensures that the current panning is inside the data bounds.
+
+        if ((_zoomMode & ZoomAndPanMode.PanX) == ZoomAndPanMode.PanX)
+        {
+            for (var index = 0; index < XAxes.Length; index++)
+            {
+                var xi = XAxes[index];
+
+                var limits = xi.GetLimits();
+
+                var max = limits.Max;
+                var min = limits.Min;
+
+                var xm = max - min;
+
+                if (xi.MinLimit < limits.DataMin)
+                    xi.SetLimits(limits.DataMin, limits.DataMin + xm);
+
+                if (xi.MaxLimit > limits.DataMax)
+                    xi.SetLimits(limits.DataMax - xm, limits.DataMax);
+            }
+        }
+
+        if ((_zoomMode & ZoomAndPanMode.PanY) == ZoomAndPanMode.PanY)
+        {
+            for (var index = 0; index < YAxes.Length; index++)
+            {
+                var yi = YAxes[index];
+
+                var limits = yi.GetLimits();
+
+                var max = limits.Max;
+                var min = limits.Min;
+
+                var ym = max - min;
+
+                if (yi.MinLimit < limits.DataMin)
+                    yi.SetLimits(limits.DataMin, limits.DataMin + ym);
+
+                if (yi.MaxLimit > limits.DataMax)
+                    yi.SetLimits(limits.DataMax - ym, limits.DataMax);
+            }
+        }
     }
 
     private void OnPointerLeft() => base.InvokePointerLeft();

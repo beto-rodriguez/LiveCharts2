@@ -101,6 +101,8 @@ public class ChartPoint
     /// </value>
     public ChartPointContext Context { get; }
 
+    internal bool IsPointerOver { get; set; }
+
     internal bool RemoveOnCompleted { get; set; }
 
     /// <summary>

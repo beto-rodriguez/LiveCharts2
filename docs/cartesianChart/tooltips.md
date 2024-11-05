@@ -141,6 +141,29 @@ the properly [unit width]({{ website_url }}/docs/{{ platform }}/{{ version }}/Ca
 cartesianChart1.TooltipFindingStrategy = LiveChartsCore.Measure.TooltipFindingStrategy.CompareOnlyX;</code></pre>
 {{~ end ~}}
 
+## Customize TooltipFindingStrategy
+
+Depending on the series type and [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), LiveCharts decides the logic to show points on tooltips and also the points passed
+to any pointer event in the library (like `Hover`, `HoverLeft` or `PointerDown`), lets take as an example the default behavior of the
+`ColumnSeries<T>`, it selects all the points that share the same `X` coordinate:
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha-compare.gif)
+
+But for this example, we want to override this behavior, instead we only need the tooltip to display the exact column where the pointer is in:
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha.gif)
+
+When the [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), 
+is not enough, we can override the logic to determine whether a given point is inside a drawn `ChartPoint`. This method
+will be used by the library to resolve the points to show in a tooltip, or the points passed in any pointer event:
+
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+
+:::tip
+Another alternative is to override the `HoverArea`, this area defines a section in the UI where the point is "selectable", you can find
+an example [here](https://github.com/beto-rodriguez/LiveCharts2/blob/dev/samples/ViewModelsSamples/General/TooltipHoverArea/ViewModel.cs).
+:::
+
 ## Tooltip text
 
 You can define the text the tooltip will display for a given point, using the 

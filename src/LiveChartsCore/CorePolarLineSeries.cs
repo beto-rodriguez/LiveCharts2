@@ -957,7 +957,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     private static SeriesProperties GetProperties(bool isStacked = false)
     {
         return SeriesProperties.Polar | SeriesProperties.PolarLine |
-            SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips |
+            SeriesProperties.Sketch | SeriesProperties.PrefersXYStrategyTooltips |
             (isStacked ? SeriesProperties.Stacked : 0);
     }
 }
