@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -77,7 +78,10 @@ public partial class MotionCanvas : UserControl
 
     private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
+            {
+                Background = new SKColor(Parent.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
+            });
 
     private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         RunDrawingLoop();
