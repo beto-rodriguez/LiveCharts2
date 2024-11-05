@@ -36,18 +36,18 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class MotionCanvas : ContentView
 {
-    private readonly SKCanvasView _skiaElement;
     private bool _isDrawingLoopRunning = false;
     private bool _isLoaded = true;
     private double _density = 1;
+    private SKCanvasView? _canvasView;
+    private SKGLView? _glView;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
-        Content = _skiaElement = new();
-        _skiaElement.PaintSurface += OnCanvasViewPaintSurface;
+        InitializeView();
 
         _density = DeviceDisplay.MainDisplayInfo.Density;
         DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
@@ -90,8 +90,30 @@ public class MotionCanvas : ContentView
         CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
+    private void OnGlViewPaintSurface(object? sender, SKPaintGLSurfaceEventArgs args)
+    {
+        args.Surface.Canvas.Scale((float)_density, (float)_density);
+        CanvasCore.DrawFrame(new(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
+    }
+
     private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
         Invalidate();
+
+    private void InitializeView()
+    {
+        if (LiveCharts.UseGPU)
+        {
+            _glView = new SKGLView();
+            _glView.PaintSurface += OnGlViewPaintSurface;
+            Content = _glView;
+        }
+        else
+        {
+            _canvasView = new SKCanvasView();
+            _canvasView.PaintSurface += OnCanvasViewPaintSurface;
+            Content = _canvasView;
+        }
+    }
 
     private async void RunDrawingLoop()
     {
@@ -102,7 +124,8 @@ public class MotionCanvas : ContentView
 
         while (!CanvasCore.IsValid && _isLoaded)
         {
-            _skiaElement?.InvalidateSurface();
+            _canvasView?.InvalidateSurface();
+            _glView?.InvalidateSurface();
             await Task.Delay(ts);
         }
 
