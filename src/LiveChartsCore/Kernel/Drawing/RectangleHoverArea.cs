@@ -205,6 +205,7 @@ public class RectangleHoverArea : HoverArea
             TooltipFindingStrategy.CompareOnlyX or TooltipFindingStrategy.CompareOnlyXTakeClosest => isInX,
             TooltipFindingStrategy.CompareOnlyY or TooltipFindingStrategy.CompareOnlyYTakeClosest => isInY,
             TooltipFindingStrategy.CompareAll or TooltipFindingStrategy.CompareAllTakeClosest => isInX && isInY,
+            TooltipFindingStrategy.ExactMatch => isInX && isInY,
             TooltipFindingStrategy.Automatic => throw new Exception($"The strategy {strategy} is not supported."),
             _ => throw new NotImplementedException()
         };

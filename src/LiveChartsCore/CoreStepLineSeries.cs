@@ -428,6 +428,30 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         _geometrySvgChanged = false;
     }
 
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    protected override IEnumerable<ChartPoint> FindPointsInPosition(
+        IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
+    {
+        return strategy == TooltipFindingStrategy.ExactMatch
+            ? Fetch(chart)
+                .Select(ConvertToTypedChartPoint)
+                .Where(point =>
+                {
+                    var v = point.Visual;
+                    if (v is null) return false;
+
+                    var t = v.TranslateTransform;
+
+                    var x = v.X - t.X;
+                    var y = v.Y - t.Y;
+
+                    return
+                        x > pointerPosition.X && x < pointerPosition.X + v.Width &&
+                        y > pointerPosition.Y && y < pointerPosition.Y + v.Height;
+                })
+            : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
+    }
+
     /// <inheritdoc cref="GetRequestedGeometrySize"/>
     protected override double GetRequestedGeometrySize()
     {

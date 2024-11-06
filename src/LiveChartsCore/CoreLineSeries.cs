@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.VisualElements;
+using Microsoft.VisualBasic;
 
 namespace LiveChartsCore;
 
@@ -497,6 +498,28 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
 
         _geometrySvgChanged = false;
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    protected override IEnumerable<ChartPoint> FindPointsInPosition(
+        IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
+    {
+        return strategy == TooltipFindingStrategy.ExactMatch
+            ? Fetch(chart)
+                .Select(ConvertToTypedChartPoint)
+                .Where(point =>
+                {
+                    var v = point.Visual;
+                    if (v is null) return false;
+
+                    var x = v.X + v.TranslateTransform.X;
+                    var y = v.Y + v.TranslateTransform.Y;
+
+                    return
+                        pointerPosition.X > x && pointerPosition.X < x + v.Width &&
+                        pointerPosition.Y > y && pointerPosition.Y < y + v.Height;
+                })
+            : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>

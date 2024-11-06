@@ -286,6 +286,11 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
             _ = ha.SetDimensions(cx, secondary - helper.actualUw * 0.5f, b, helper.actualUw)
                 .CenterXToolTip().StartYToolTip();
 
+            if (chart.TooltipFindingStrategy == TooltipFindingStrategy.ExactMatch)
+                _ = ha
+                    .SetDimensions(cx, y, b, helper.uw)
+                    .CenterXToolTip().StartYToolTip();
+
             pointsCleanup.Clean(point);
 
             if (DataLabelsPaint is not null)
