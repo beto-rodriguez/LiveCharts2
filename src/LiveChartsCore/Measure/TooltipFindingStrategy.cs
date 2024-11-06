@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Kernel.Drawing;
+
 namespace LiveChartsCore.Measure;
 
 /// <summary>
@@ -33,32 +35,40 @@ public enum TooltipFindingStrategy
     Automatic,
 
     /// <summary>
-    /// Looks for all the points that contain the pointer positon.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in both X and Y axis.
     /// </summary>
     CompareAll,
 
     /// <summary>
-    /// Looks for all the points that contain the pointer positon ignoring the Y axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the X axis.
     /// </summary>
     CompareOnlyX,
 
     /// <summary>
-    /// Looks for all the points that contain the pointer positon ignoring the X axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the Y axis.
     /// </summary>
     CompareOnlyY,
 
     /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in both X and Y axis, then takes
+    /// the closest to the pointer.
     /// </summary>
     CompareAllTakeClosest,
 
     /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the Y axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the X axis, then takes
+    /// the closest to the pointer.
     /// </summary>
     CompareOnlyXTakeClosest,
 
     /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the X axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the Y axis, then takes
+    /// the closest to the pointer.
     /// </summary>
-    CompareOnlyYTakeClosest
+    CompareOnlyYTakeClosest,
+
+    /// <summary>
+    /// Compares whether the pointer is inside the drawn shape.
+    /// </summary>
+    ExactMatch
 }
