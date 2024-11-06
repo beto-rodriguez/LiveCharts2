@@ -30,7 +30,6 @@ using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.VisualElements;
-using Microsoft.VisualBasic;
 
 namespace LiveChartsCore;
 
