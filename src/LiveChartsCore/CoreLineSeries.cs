@@ -503,8 +503,9 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
         IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
     {
-        return strategy == TooltipFindingStrategy.ExactMatch
-            ? Fetch(chart)
+        return strategy switch
+        {
+            TooltipFindingStrategy.ExactMatch => Fetch(chart)
                 .Select(ConvertToTypedChartPoint)
                 .Where(point =>
                 {
@@ -517,8 +518,21 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     return
                         pointerPosition.X > x && pointerPosition.X < x + v.Width &&
                         pointerPosition.Y > y && pointerPosition.Y < y + v.Height;
-                })
-            : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
+                }),
+            TooltipFindingStrategy.ExactMatchTakeClosest => Fetch(chart)
+                .Select(x => new { distance = x.DistanceTo(pointerPosition), point = x })
+                .OrderBy(x => x.distance)
+                .SelectFirst(x => x.point),
+            TooltipFindingStrategy.Automatic or
+            TooltipFindingStrategy.CompareAll or
+            TooltipFindingStrategy.CompareOnlyX or
+            TooltipFindingStrategy.CompareOnlyY or
+            TooltipFindingStrategy.CompareAllTakeClosest or
+            TooltipFindingStrategy.CompareOnlyXTakeClosest or
+            TooltipFindingStrategy.CompareOnlyYTakeClosest or
+            TooltipFindingStrategy.ExactMatchTakeClosest or
+                _ => base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor)
+        };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>

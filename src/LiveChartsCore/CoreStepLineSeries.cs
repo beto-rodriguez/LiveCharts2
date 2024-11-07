@@ -432,24 +432,36 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
         IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
     {
-        return strategy == TooltipFindingStrategy.ExactMatch
-            ? Fetch(chart)
+        return strategy switch
+        {
+            TooltipFindingStrategy.ExactMatch => Fetch(chart)
                 .Select(ConvertToTypedChartPoint)
                 .Where(point =>
                 {
                     var v = point.Visual;
                     if (v is null) return false;
 
-                    var t = v.TranslateTransform;
-
-                    var x = v.X - t.X;
-                    var y = v.Y - t.Y;
+                    var x = v.X + v.TranslateTransform.X;
+                    var y = v.Y + v.TranslateTransform.Y;
 
                     return
-                        x > pointerPosition.X && x < pointerPosition.X + v.Width &&
-                        y > pointerPosition.Y && y < pointerPosition.Y + v.Height;
-                })
-            : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
+                        pointerPosition.X > x && pointerPosition.X < x + v.Width &&
+                        pointerPosition.Y > y && pointerPosition.Y < y + v.Height;
+                }),
+            TooltipFindingStrategy.ExactMatchTakeClosest => Fetch(chart)
+                .Select(x => new { distance = x.DistanceTo(pointerPosition), point = x })
+                .OrderBy(x => x.distance)
+                .SelectFirst(x => x.point),
+            TooltipFindingStrategy.Automatic or
+            TooltipFindingStrategy.CompareAll or
+            TooltipFindingStrategy.CompareOnlyX or
+            TooltipFindingStrategy.CompareOnlyY or
+            TooltipFindingStrategy.CompareAllTakeClosest or
+            TooltipFindingStrategy.CompareOnlyXTakeClosest or
+            TooltipFindingStrategy.CompareOnlyYTakeClosest or
+            TooltipFindingStrategy.ExactMatchTakeClosest or
+                _ => base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor)
+        };
     }
 
     /// <inheritdoc cref="GetRequestedGeometrySize"/>

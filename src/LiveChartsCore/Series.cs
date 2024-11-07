@@ -324,7 +324,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
                 x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
 
         var s = (int)strategy;
-        if (s is >= 4 and <= 6)
+        if (s is (>= 4 and <= 6) or 8)
         {
             // if select closest...
             query = query
