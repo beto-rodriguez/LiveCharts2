@@ -435,10 +435,9 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         return strategy switch
         {
             TooltipFindingStrategy.ExactMatch => Fetch(chart)
-                .Select(ConvertToTypedChartPoint)
                 .Where(point =>
                 {
-                    var v = point.Visual;
+                    var v = (TVisual?)point.Context.Visual;
                     if (v is null) return false;
 
                     var x = v.X + v.TranslateTransform.X;

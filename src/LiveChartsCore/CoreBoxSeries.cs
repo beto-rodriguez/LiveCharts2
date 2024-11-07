@@ -288,10 +288,9 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     {
         return strategy == TooltipFindingStrategy.ExactMatch
             ? Fetch(chart)
-                .Select(ConvertToTypedChartPoint)
                 .Where(point =>
                 {
-                    var v = point.Visual;
+                    var v = (TVisual?)point.Context.Visual;
 
                     return
                         v is not null &&
