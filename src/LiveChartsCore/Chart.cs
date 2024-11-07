@@ -61,7 +61,7 @@ public abstract class Chart<TDrawingContext> : IChart
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private readonly HashSet<ChartPoint> _activePoints = [];
+    private readonly Dictionary<ChartPoint, object> _activePoints = [];
     private LvcSize _previousSize = new();
 #if NET5_0_OR_GREATER
     private readonly bool _isMobile;
@@ -648,20 +648,16 @@ public abstract class Chart<TDrawingContext> : IChart
 
         var points = FindHoveredPointsBy(_pointerPosition);
 
+        var o = new object();
         var isEmpty = true;
-        var active = new HashSet<int>();
-
         foreach (var tooltipPoint in points)
         {
             tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
-
-            _ = _activePoints.Add(tooltipPoint);
-            _ = active.Add(tooltipPoint.Context.Entity.MetaData?.EntityIndex ?? -1);
-
+            _activePoints[tooltipPoint] = o;
             isEmpty = false;
         }
 
-        CleanHoveredPoints(active);
+        CleanHoveredPoints(o);
 
         if (isEmpty || TooltipPosition == TooltipPosition.Hidden)
         {
@@ -676,12 +672,11 @@ public abstract class Chart<TDrawingContext> : IChart
         return true;
     }
 
-    private void CleanHoveredPoints(HashSet<int> active)
+    private void CleanHoveredPoints(object comparer)
     {
-        foreach (var point in _activePoints)
+        foreach (var point in _activePoints.Keys.ToArray())
         {
-            var key = point.Context.Entity.MetaData?.EntityIndex ?? -1;
-            if (active.Contains(key)) continue; // the points was used, don't remove it.
+            if (_activePoints[point] == comparer) continue; // the points was used, don't remove it.
 
             point.Context.Series.OnPointerLeft(point);
             _ = _activePoints.Remove(point);
@@ -728,7 +723,7 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         _isToolTipOpen = false;
         Tooltip?.Hide(this);
-        CleanHoveredPoints([]);
+        CleanHoveredPoints(new());
 
         if (this is CartesianChart<TDrawingContext> cartesianChart)
         {
