@@ -50,25 +50,31 @@ public enum TooltipFindingStrategy
     CompareOnlyY,
 
     /// <summary>
-    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in both X and Y axis, then takes
-    /// the closest to the pointer.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in both X and Y axis,
+    /// if overlapped then takes the closest to the pointer in each series.
     /// </summary>
     CompareAllTakeClosest,
 
     /// <summary>
-    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the X axis, then takes
-    /// the closest to the pointer.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the X axis,
+    /// if overlapped then takes the closest to the pointer in each series.
     /// </summary>
     CompareOnlyXTakeClosest,
 
     /// <summary>
-    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the Y axis, then takes
-    /// the closest to the pointer.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the Y axis,
+    /// if overlapped then takes the closest to the pointer in each series.
     /// </summary>
     CompareOnlyYTakeClosest,
 
     /// <summary>
     /// Compares whether the pointer is inside the drawn shape.
     /// </summary>
-    ExactMatch
+    ExactMatch,
+
+    /// <summary>
+    /// Compares whether the pointer is inside the drawn shape,
+    /// if overlapped then takes the closest to the pointer in each series.
+    /// </summary>
+    ExactMatchTakeClosest
 }
