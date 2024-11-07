@@ -331,7 +331,10 @@ public abstract class Chart<TDrawingContext> : IChart
             if (_isMobile) _isTooltipCanceled = false;
 #endif
 
-            var strategy = VisibleSeries.GetTooltipFindingStrategy();
+            var strategy = TooltipFindingStrategy;
+
+            if (strategy == TooltipFindingStrategy.Automatic)
+                strategy = VisibleSeries.GetTooltipFindingStrategy();
 
             // fire the series event.
             foreach (var series in VisibleSeries)
