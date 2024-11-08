@@ -20,16 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Kernel.Drawing;
 
 namespace LiveChartsCore.Measure;
 
 /// <summary>
-/// Defines the tool tip finding strategy.
+/// Defines the strategy to find points in a chart.
 /// </summary>
-[Obsolete($"Renamed to {nameof(FindingStrategy)}")]
-public enum TooltipFindingStrategy
+public enum FindingStrategy
 {
     /// <summary>
     /// The automatic mode, it will be calculated automatically based on the series and the chart.
@@ -79,37 +77,4 @@ public enum TooltipFindingStrategy
     /// if overlapped then takes the closest to the pointer in each series.
     /// </summary>
     ExactMatchTakeClosest
-}
-
-internal static class ObsoleteMapper
-{
-    public static FindingStrategy AsNew(this TooltipFindingStrategy oldName)
-        => oldName switch
-        {
-            TooltipFindingStrategy.Automatic => FindingStrategy.Automatic,
-            TooltipFindingStrategy.CompareAll => FindingStrategy.CompareAll,
-            TooltipFindingStrategy.CompareOnlyX => FindingStrategy.CompareOnlyX,
-            TooltipFindingStrategy.CompareOnlyY => FindingStrategy.CompareOnlyY,
-            TooltipFindingStrategy.CompareAllTakeClosest => FindingStrategy.CompareAllTakeClosest,
-            TooltipFindingStrategy.CompareOnlyXTakeClosest => FindingStrategy.CompareOnlyXTakeClosest,
-            TooltipFindingStrategy.CompareOnlyYTakeClosest => FindingStrategy.CompareOnlyYTakeClosest,
-            TooltipFindingStrategy.ExactMatch => FindingStrategy.ExactMatch,
-            TooltipFindingStrategy.ExactMatchTakeClosest => FindingStrategy.ExactMatchTakeClosest,
-            _ => throw new NotImplementedException()
-        };
-
-    public static TooltipFindingStrategy AsOld(this FindingStrategy newName)
-        => newName switch
-        {
-            FindingStrategy.Automatic => TooltipFindingStrategy.Automatic,
-            FindingStrategy.CompareAll => TooltipFindingStrategy.CompareAll,
-            FindingStrategy.CompareOnlyX => TooltipFindingStrategy.CompareOnlyX,
-            FindingStrategy.CompareOnlyY => TooltipFindingStrategy.CompareOnlyY,
-            FindingStrategy.CompareAllTakeClosest => TooltipFindingStrategy.CompareAllTakeClosest,
-            FindingStrategy.CompareOnlyXTakeClosest => TooltipFindingStrategy.CompareOnlyXTakeClosest,
-            FindingStrategy.CompareOnlyYTakeClosest => TooltipFindingStrategy.CompareOnlyYTakeClosest,
-            FindingStrategy.ExactMatch => TooltipFindingStrategy.ExactMatch,
-            FindingStrategy.ExactMatchTakeClosest => TooltipFindingStrategy.ExactMatchTakeClosest,
-            _ => throw new NotImplementedException()
-        };
 }

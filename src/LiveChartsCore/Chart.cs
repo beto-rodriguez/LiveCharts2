@@ -228,7 +228,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The tooltip finding strategy.
     /// </value>
-    public TooltipFindingStrategy TooltipFindingStrategy { get; protected set; }
+    public FindingStrategy FindingStrategy { get; protected set; }
 
     /// <summary>
     /// Gets the tooltip.
@@ -331,10 +331,10 @@ public abstract class Chart<TDrawingContext> : IChart
             if (_isMobile) _isTooltipCanceled = false;
 #endif
 
-            var strategy = TooltipFindingStrategy;
+            var strategy = FindingStrategy;
 
-            if (strategy == TooltipFindingStrategy.Automatic)
-                strategy = VisibleSeries.GetTooltipFindingStrategy();
+            if (strategy == FindingStrategy.Automatic)
+                strategy = VisibleSeries.GetFindingStrategy();
 
             // fire the series event.
             foreach (var series in VisibleSeries)

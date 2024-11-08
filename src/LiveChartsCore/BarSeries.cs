@@ -230,11 +230,11 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         return [Stroke, Fill, DataLabelsPaint, _errorPaint];
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
+        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
-        return strategy == TooltipFindingStrategy.ExactMatch
+        return strategy == FindingStrategy.ExactMatch
             ? Fetch(chart)
                 .Where(point =>
                 {

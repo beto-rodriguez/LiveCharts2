@@ -43,7 +43,7 @@ public abstract class HoverArea
     /// <param name="pointerLocation">The pointer location.</param>
     /// <param name="strategy">The strategy.</param>
     /// <returns></returns>
-    public abstract bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy);
+    public abstract bool IsPointerOver(LvcPoint pointerLocation, FindingStrategy strategy);
 
     /// <summary>
     /// Suggests the tooltip placement.

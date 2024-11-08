@@ -70,12 +70,12 @@ public interface IChart
     TooltipPosition TooltipPosition { get; }
 
     /// <summary>
-    /// Gets the toolTip finding strategy.
+    /// Gets the finding strategy.
     /// </summary>
     /// <value>
-    /// The toolTip finding strategy.
+    /// The finding strategy.
     /// </value>
-    TooltipFindingStrategy TooltipFindingStrategy { get; }
+    FindingStrategy FindingStrategy { get; }
 
     /// <summary>
     /// Updates the chart in the user interface.

@@ -428,13 +428,13 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
+        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
         return strategy switch
         {
-            TooltipFindingStrategy.ExactMatch => Fetch(chart)
+            FindingStrategy.ExactMatch => Fetch(chart)
                 .Where(point =>
                 {
                     var v = (TVisual?)point.Context.Visual;
@@ -447,18 +447,18 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                         pointerPosition.X > x && pointerPosition.X < x + v.Width &&
                         pointerPosition.Y > y && pointerPosition.Y < y + v.Height;
                 }),
-            TooltipFindingStrategy.ExactMatchTakeClosest => Fetch(chart)
+            FindingStrategy.ExactMatchTakeClosest => Fetch(chart)
                 .Select(x => new { distance = x.DistanceTo(pointerPosition), point = x })
                 .OrderBy(x => x.distance)
                 .SelectFirst(x => x.point),
-            TooltipFindingStrategy.Automatic or
-            TooltipFindingStrategy.CompareAll or
-            TooltipFindingStrategy.CompareOnlyX or
-            TooltipFindingStrategy.CompareOnlyY or
-            TooltipFindingStrategy.CompareAllTakeClosest or
-            TooltipFindingStrategy.CompareOnlyXTakeClosest or
-            TooltipFindingStrategy.CompareOnlyYTakeClosest or
-            TooltipFindingStrategy.ExactMatchTakeClosest or
+            FindingStrategy.Automatic or
+            FindingStrategy.CompareAll or
+            FindingStrategy.CompareOnlyX or
+            FindingStrategy.CompareOnlyY or
+            FindingStrategy.CompareAllTakeClosest or
+            FindingStrategy.CompareOnlyXTakeClosest or
+            FindingStrategy.CompareOnlyYTakeClosest or
+            FindingStrategy.ExactMatchTakeClosest or
                 _ => base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor)
         };
     }

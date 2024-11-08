@@ -190,8 +190,8 @@ public class RectangleHoverArea : HoverArea
         return Math.Sqrt(Math.Pow(point.X - cx, 2) + Math.Pow(point.Y - cy, 2));
     }
 
-    /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
-    public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
+    /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, FindingStrategy)"/>
+    public override bool IsPointerOver(LvcPoint pointerLocation, FindingStrategy strategy)
     {
         // at least one pixel to fire the tooltip.
         var w = Width < 1 ? 1 : Width;
@@ -202,11 +202,11 @@ public class RectangleHoverArea : HoverArea
 
         return strategy switch
         {
-            TooltipFindingStrategy.CompareOnlyX or TooltipFindingStrategy.CompareOnlyXTakeClosest => isInX,
-            TooltipFindingStrategy.CompareOnlyY or TooltipFindingStrategy.CompareOnlyYTakeClosest => isInY,
-            TooltipFindingStrategy.CompareAll or TooltipFindingStrategy.CompareAllTakeClosest => isInX && isInY,
-            TooltipFindingStrategy.ExactMatch => isInX && isInY,
-            TooltipFindingStrategy.Automatic => throw new Exception($"The strategy {strategy} is not supported."),
+            FindingStrategy.CompareOnlyX or FindingStrategy.CompareOnlyXTakeClosest => isInX,
+            FindingStrategy.CompareOnlyY or FindingStrategy.CompareOnlyYTakeClosest => isInY,
+            FindingStrategy.CompareAll or FindingStrategy.CompareAllTakeClosest => isInX && isInY,
+            FindingStrategy.ExactMatch => isInX && isInY,
+            FindingStrategy.Automatic => throw new Exception($"The strategy {strategy} is not supported."),
             _ => throw new NotImplementedException()
         };
     }

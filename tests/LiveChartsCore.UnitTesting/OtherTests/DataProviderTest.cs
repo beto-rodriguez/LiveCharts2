@@ -299,7 +299,7 @@ public class DataProviderTest
         {
             Width = 100,
             Height = 100,
-            TooltipFindingStrategy = Measure.TooltipFindingStrategy.ExactMatch,
+            FindingStrategy = Measure.FindingStrategy.ExactMatch,
             Series = [sutSeries]
         };
 
