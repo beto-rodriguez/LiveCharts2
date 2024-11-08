@@ -1,5 +1,4 @@
-﻿
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -21,33 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using System.Collections.Generic;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Kernel.Events;
 
 /// <summary>
-/// Command arguments that describe a pointer event in a LiveChart view.
+/// Defines a method to handle chart point hover events.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="PointerCommandArgs"/> class.
-/// </remarks>
-/// <param name="chart">The chart that fired the event.</param>
-/// <param name="pointerPosition">The pointer position.</param>
-/// <param name="originalEventArgs">The original event args.</param>
-public class PointerCommandArgs(
-    IChartView chart,
-    LvcPointD pointerPosition,
-    object originalEventArgs)
-        : ChartCommandArgs(chart)
-{
-    /// <summary>
-    /// Gets the pointer position relative to the chart.
-    /// </summary>
-    public LvcPointD PointerPosition { get; } = pointerPosition;
-
-    /// <summary>
-    /// Gets the framework-specific event arguments.
-    /// </summary>
-    public object OriginalEventArgs { get; } = originalEventArgs;
-}
+/// <param name="chart">The sender chart.</param>
+/// <param name="newItems">The new items.</param>
+/// <param name="oldItems">The old items.</param>
+public delegate void ChartPointHoverHandler(
+    IChartView chart, IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems);
