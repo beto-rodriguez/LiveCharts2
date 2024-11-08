@@ -577,23 +577,23 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
     #endregion
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, FindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (core is not PieChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
         if (strategy == FindingStrategy.Automatic)
             strategy = cc.Series.GetFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
         return core is not PieChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action)

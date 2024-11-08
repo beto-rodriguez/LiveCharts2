@@ -556,11 +556,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         core.UpdateFinished += OnCoreUpdateFinished;
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, FindingStrategy, FindPointFor)"/>
-    public abstract IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent);
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public abstract IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent);
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public abstract IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point);
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public abstract IEnumerable<IChartElement> GetVisualsAt(LvcPointD point);
 
     internal Point GetCanvasPosition()
     {
