@@ -159,6 +159,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     public double ZoomingSpeed { get; set; } = LiveCharts.DefaultSettings.ZoomSpeed;
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
     public TooltipFindingStrategy TooltipFindingStrategy { get => FindingStrategy.AsOld(); set => FindingStrategy = value.AsNew(); }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />

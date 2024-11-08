@@ -161,6 +161,7 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
     [Parameter]
+    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
     public TooltipFindingStrategy TooltipFindingStrategy
     {
         get => FindingStrategy.AsOld();

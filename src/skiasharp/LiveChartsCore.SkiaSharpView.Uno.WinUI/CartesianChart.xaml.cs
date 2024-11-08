@@ -516,6 +516,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
     public TooltipFindingStrategy TooltipFindingStrategy
     {
         get => ((FindingStrategy)GetValue(FindingStrategyProperty)!).AsOld();
