@@ -62,7 +62,7 @@ public class EventsTests
 
         // Test points.
         // Charts use the Series.FindHitPoints method to check if the mouse is over a point.
-        var strategy = chart.Series.GetTooltipFindingStrategy();
+        var strategy = chart.Series.GetFindingStrategy();
         var s = chart.Series
             .SelectMany(x => x.FindHitPoints(chart.Core, new LvcPoint(251, 251), strategy, FindPointFor.HoverEvent))
             .ToArray();
