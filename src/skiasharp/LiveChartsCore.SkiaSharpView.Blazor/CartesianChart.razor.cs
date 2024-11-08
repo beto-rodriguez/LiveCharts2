@@ -28,8 +28,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.VisualElements;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -49,7 +47,7 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     private IEnumerable<ICartesianAxis>? _yAxes;
     private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
-    private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.DefaultSettings.TooltipFindingStrategy;
+    private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
     /// <inheritdoc cref="Chart.OnInitialized"/>
     protected override void OnInitialized()
@@ -161,14 +159,22 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     [Parameter]
     public double ZoomingSpeed { get; set; } = LiveCharts.DefaultSettings.ZoomSpeed;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
     [Parameter]
     public TooltipFindingStrategy TooltipFindingStrategy
     {
-        get => _tooltipFindingStrategy;
+        get => FindingStrategy.AsOld();
+        set => FindingStrategy = value.AsNew();
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    [Parameter]
+    public FindingStrategy FindingStrategy
+    {
+        get => _findingStrategy;
         set
         {
-            _tooltipFindingStrategy = value;
+            _findingStrategy = value;
             OnPropertyChanged();
         }
     }
@@ -194,13 +200,13 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, FindingStrategy, FindPointFor)"/>
+    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
         return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
     }

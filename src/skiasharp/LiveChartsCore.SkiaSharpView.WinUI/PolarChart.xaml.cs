@@ -663,13 +663,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (_core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
         return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
     }

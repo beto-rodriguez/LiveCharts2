@@ -40,7 +40,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
@@ -218,9 +217,9 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <summary>
     /// The tool tip finding strategy property
     /// </summary>
-    public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
-        AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
-            nameof(LegendPosition), LiveCharts.DefaultSettings.TooltipFindingStrategy, inherits: true);
+    public static readonly AvaloniaProperty<FindingStrategy> FindingStrategyProperty =
+        AvaloniaProperty.Register<CartesianChart, FindingStrategy>(
+            nameof(FindingStrategy), LiveCharts.DefaultSettings.FindingStrategy, inherits: true);
 
     /// <summary>
     /// The tooltip background paint property
@@ -472,11 +471,18 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    public FindingStrategy FindingStrategy
+    {
+        get => (FindingStrategy)GetValue(FindingStrategyProperty)!;
+        set => SetValue(FindingStrategyProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
     public TooltipFindingStrategy TooltipFindingStrategy
     {
-        get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty)!;
-        set => SetValue(TooltipFindingStrategyProperty, value);
+        get => ((FindingStrategy)GetValue(FindingStrategyProperty)!).AsOld();
+        set => SetValue(FindingStrategyProperty, value.AsNew());
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
@@ -623,13 +629,13 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (_core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
         return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
     }

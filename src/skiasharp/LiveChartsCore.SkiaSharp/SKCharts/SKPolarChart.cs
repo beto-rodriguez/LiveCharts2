@@ -208,11 +208,11 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = Core.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = Core.Series.GetFindingStrategy();
 
         return Core.Series.SelectMany(series => series.FindHitPoints(Core, point, strategy, findPointFor));
     }
