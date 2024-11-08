@@ -175,7 +175,11 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
+    public event ChartPointHoverHandler? HoveredPointsChanged;
+
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
@@ -224,6 +228,9 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
+
+    void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints) =>
+        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
