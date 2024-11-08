@@ -1,12 +1,12 @@
-﻿@page "/Events/Cartesian"
+﻿@page "/Events/Tutorial"
 @using LiveChartsCore.Kernel
 @using LiveChartsCore.Kernel.Sketches
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Events.Cartesian
+@using ViewModelsSamples.Events.Tutorial
 
 <CartesianChart
-	Series="ViewModel.Series"
-	FindingStrategy="LiveChartsCore.Measure.FindingStrategy.CompareOnlyX">
+	Series="ViewModel.SeriesCollection"
+	FindingStrategy="ViewModel.Strategy">
 </CartesianChart>
 
 @code {

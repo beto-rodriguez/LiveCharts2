@@ -22,7 +22,7 @@ public class ViewModel
     public class CustomColumnSeries<T> : ColumnSeries<T>
     {
         protected override IEnumerable<ChartPoint> FindPointsInPosition(
-            IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
+            IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
         {
             // Overriding the FindPointsInPosition method allows us to customize the way the library
             // finds the points in the chart for a given position.

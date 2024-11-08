@@ -15,7 +15,7 @@ public partial class ViewModel
 {
     private readonly HashSet<ChartPoint> _activePoints = [];
 
-    public TooltipFindingStrategy Strategy { get; } = TooltipFindingStrategy.Automatic;
+    public FindingStrategy Strategy { get; } = FindingStrategy.Automatic;
 
     public ISeries[] SeriesCollection { get; set; } = [
         new ColumnSeries<int>([1, 5, 4, 3]),
