@@ -313,9 +313,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         ChartPointPointerDown?.Invoke(chart, new ChartPoint<TModel, TVisual, TLabel>(points.FindClosestTo<TModel, TVisual, TLabel>(pointer)!));
     }
 
-    ///<inheritdoc cref="ISeries.FindHitPoints(IChart, LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    ///<inheritdoc cref="ISeries.FindHitPoints(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected virtual IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
+        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
         var query =
             Fetch(chart)
@@ -344,7 +344,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     IEnumerable<ChartPoint> ISeries.FindHitPoints(
         IChart chart,
         LvcPoint pointerPosition,
-        TooltipFindingStrategy strategy,
+        FindingStrategy strategy,
         FindPointFor findPointFor) =>
             FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
 

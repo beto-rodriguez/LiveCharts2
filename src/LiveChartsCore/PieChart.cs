@@ -101,7 +101,7 @@ public class PieChart<TDrawingContext>(
         return view.Series
             .Where(series => (series is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
             .Where(series => series.IsHoverable)
-            .SelectMany(series => series.FindHitPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll, FindPointFor.HoverEvent));
+            .SelectMany(series => series.FindHitPoints(this, pointerPosition, FindingStrategy.CompareAll, FindPointFor.HoverEvent));
     }
 
     /// <summary>

@@ -226,7 +226,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
             _ = ha.SetDimensions(secondary - helper.actualUw * 0.5f, high, helper.actualUw, Math.Abs(low - high));
 
-            if (chart.TooltipFindingStrategy == TooltipFindingStrategy.ExactMatch)
+            if (chart.FindingStrategy == FindingStrategy.ExactMatch)
                 _ = ha
                     .SetDimensions(x, high, helper.uw, low)
                     .CenterXToolTip();
@@ -282,11 +282,11 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor)
+        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
-        return strategy == TooltipFindingStrategy.ExactMatch
+        return strategy == FindingStrategy.ExactMatch
             ? Fetch(chart)
                 .Where(point =>
                 {
