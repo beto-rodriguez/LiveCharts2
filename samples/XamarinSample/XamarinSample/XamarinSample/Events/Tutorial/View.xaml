@@ -9,10 +9,14 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
+
+    <!--
+    NOT SUPPORTED IN XAMARIN, YOU COULD USE THE DataPointerDownCommand INSTEAD
+    -->
     <lvc:CartesianChart
         Series="{Binding SeriesCollection}"
         FindingStrategy="{Binding Strategy}"
-        DataPointerDownCommand="{Binding DataDownCommand}">
+        DataPointerDownCommand="{Binding PressedCommand}">
     </lvc:CartesianChart>
 
 </ContentPage>

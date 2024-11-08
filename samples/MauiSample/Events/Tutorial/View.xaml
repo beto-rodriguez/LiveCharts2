@@ -13,7 +13,7 @@
     <lvc:CartesianChart
         Series="{Binding SeriesCollection}"
         FindingStrategy="{Binding Strategy}"
-        DataPointerDownCommand="{Binding DataDownCommand}">
+        PressedCommand="{Binding PressedCommand}">
     </lvc:CartesianChart>
 
 </ContentPage>

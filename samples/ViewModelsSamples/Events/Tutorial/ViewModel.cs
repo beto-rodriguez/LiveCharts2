@@ -3,6 +3,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -23,8 +24,10 @@ public partial class ViewModel
     ];
 
     [RelayCommand]
-    public void OnDataDown(IEnumerable<ChartPoint> foundPoints)
+    public void OnPressed(PointerCommandArgs args)
     {
+        var foundPoints = args.Chart.GetPointsAt(args.PointerPosition);
+
         foreach (var point in foundPoints)
         {
             var geometry = (Geometry)point.Context.Visual!;

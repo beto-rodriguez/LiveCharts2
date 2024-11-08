@@ -48,7 +48,7 @@ public class View : Panel
         _data.Add(new ObservablePoint(dataCoordinates.X, dataCoordinates.Y));
 
         // You can also get all the points or visual elements in a given location.
-        var points = chart.GetPointsAt(new LvcPoint(p.X, p.Y));
-        var visuals = chart.GetVisualsAt(new LvcPoint(p.X, p.Y));
+        var points = chart.GetPointsAt(p);
+        var visuals = chart.GetVisualsAt(p);
     }
 }

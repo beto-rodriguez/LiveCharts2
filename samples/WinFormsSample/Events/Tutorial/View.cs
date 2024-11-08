@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Events.Tutorial;
@@ -11,6 +12,7 @@ namespace WinFormsSample.Events.Tutorial;
 public partial class View : UserControl
 {
     private readonly ViewModel _viewModel;
+    private readonly CartesianChart _chart;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="View"/> class.
@@ -22,7 +24,7 @@ public partial class View : UserControl
 
         _viewModel = new ViewModel();
 
-        var cartesianChart = new CartesianChart
+        _chart = new CartesianChart
         {
             Series = _viewModel.SeriesCollection,
             FindingStrategy = _viewModel.Strategy,
@@ -33,11 +35,11 @@ public partial class View : UserControl
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        cartesianChart.DataPointerDown += CartesianChart_DataPointerDown;
+        _chart.MouseDown += CartesianChart_MouseDown;
 
-        Controls.Add(cartesianChart);
+        Controls.Add(_chart);
     }
 
-    private void CartesianChart_DataPointerDown(IChartView chart, IEnumerable<ChartPoint> points)
-        => _viewModel.OnDataDown(points);
+    private void CartesianChart_MouseDown(object sender, MouseEventArgs e) =>
+        _viewModel.OnPressed(new PointerCommandArgs(_chart, new(e.Location.X, e.Location.Y), e));
 }
