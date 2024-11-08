@@ -131,7 +131,14 @@ public interface IChartView
     /// <param name="strategy">The finding strategy, default is <see cref="FindingStrategy.Automatic"/>.</param>
     /// <param name="findPointFor">The find point for, default is <see cref="FindPointFor.HoverEvent"/>.</param>
     /// <returns>An enumerable of <see cref="ChartPoint"/>.</returns>
-    IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent);
+    IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent);
+
+    /// <summary>
+    /// Gets all the <see cref="IChartElement"/> that contain the given point.
+    /// </summary>
+    /// <param name="point">The given point.</param>
+    /// <returns>An enumerable of <see cref="VisualElement{TDrawingContext}"/>.</returns>
+    IEnumerable<IChartElement> GetVisualsAt(LvcPointD point);
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.
@@ -263,11 +270,4 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <param name="visualElements">The visual elements.</param>
     /// <param name="pointer">The pointer location.</param>
     void OnVisualElementPointerDown(IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointer);
-
-    /// <summary>
-    /// Gets all the <see cref="VisualElement{TDrawingContext}"/> that contain the given point.
-    /// </summary>
-    /// <param name="point">The given point.</param>
-    /// <returns>An enumerable of <see cref="VisualElement{TDrawingContext}"/>.</returns>
-    IEnumerable<VisualElement<TDrawingContext>> GetVisualsAt(LvcPoint point);
 }
