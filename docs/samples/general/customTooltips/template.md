@@ -192,7 +192,7 @@ see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more 
 
 # Override Series.FindPointsInPosition 
 
-Depending on the series type and [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), LiveCharts decides the logic to show points on tooltips and also the points passed
+Depending on the series type and [FindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#findingstrategy-property), LiveCharts decides the logic to show points on tooltips and also the points passed
 to any pointer event in the library (like `Hover`, `HoverLeft` or `PointerDown`), lets take as an example the default behavior of the
 `ColumnSeries<T>`, it selects all the points that share the same `X` coordinate:
 
@@ -202,7 +202,7 @@ But for this example, we want to override this behavior, instead we only need th
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha.gif)
 
-When the [TooltipFindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#tooltipfindingstrategy-property), 
+When the [FindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#findingstrategy-property), 
 is not enough, we can override the logic to determine whether a given point is inside a drawn `ChartPoint`. This method
 will be used by the library to resolve the points to show in a tooltip, or the points passed in any pointer event:
 
