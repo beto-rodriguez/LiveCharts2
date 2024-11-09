@@ -17,7 +17,7 @@ public partial class ViewModel
 {
     private readonly HashSet<ChartPoint> _activePoints = [];
 
-    public FindingStrategy Strategy { get; } = FindingStrategy.ExactMatch;
+    public FindingStrategy Strategy { get; } = FindingStrategy.Automatic;
 
     public ISeries[] SeriesCollection { get; set; } = [
         new ColumnSeries<int>([1, 5, 4, 3]),
