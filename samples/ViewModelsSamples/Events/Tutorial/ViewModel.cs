@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
@@ -16,7 +17,7 @@ public partial class ViewModel
 {
     private readonly HashSet<ChartPoint> _activePoints = [];
 
-    public FindingStrategy Strategy { get; } = FindingStrategy.Automatic;
+    public FindingStrategy Strategy { get; } = FindingStrategy.ExactMatch;
 
     public ISeries[] SeriesCollection { get; set; } = [
         new ColumnSeries<int>([1, 5, 4, 3]),
@@ -46,5 +47,24 @@ public partial class ViewModel
 
             Trace.WriteLine($"found {point.Context.DataSource}");
         }
+    }
+
+    [RelayCommand]
+    public void OnHoveredPointsChanged(HoverCommandArgs args)
+    {
+        foreach (var hovered in args.NewPoints ?? [])
+        {
+            var geometry = (Geometry)hovered.Context.Visual!;
+            geometry.Stroke = new SolidColorPaint(SKColors.Black, 3);
+        }
+
+        foreach (var hovered in args.OldPoints ?? [])
+        {
+            var geometry = (Geometry)hovered.Context.Visual!;
+            geometry.Stroke = null;
+        }
+
+        Trace.WriteLine(
+            $"hovered, {args.NewPoints?.Count()} added, {args.OldPoints?.Count()} removed");
     }
 }

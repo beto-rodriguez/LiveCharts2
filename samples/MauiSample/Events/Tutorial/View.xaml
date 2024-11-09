@@ -13,7 +13,8 @@
     <lvc:CartesianChart
         Series="{Binding SeriesCollection}"
         FindingStrategy="{Binding Strategy}"
-        PressedCommand="{Binding PressedCommand}">
+        PressedCommand="{Binding PressedCommand}"
+        HoveredPointsChangedCommand="{Binding HoveredPointsChangedCommand}">
     </lvc:CartesianChart>
 
 </ContentPage>

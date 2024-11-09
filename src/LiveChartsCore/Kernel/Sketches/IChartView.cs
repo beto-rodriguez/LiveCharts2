@@ -120,8 +120,14 @@ public interface IChartView
     event ChartPointsHandler? DataPointerDown;
 
     /// <summary>
+    /// Occurs when the hovered points in the chart change.
+    /// </summary>
+    event ChartPointHoverHandler? HoveredPointsChanged;
+
+    /// <summary>
     /// Occurs when the pointer goes down over a chart point, if there are multiple points, the closest one will be selected.
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     event ChartPointHandler? ChartPointPointerDown;
 
     /// <summary>
@@ -146,6 +152,13 @@ public interface IChartView
     /// <param name="points">The found points.</param>
     /// <param name="pointer">The pointer location.</param>
     void OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer);
+
+    /// <summary>
+    /// Called when the hovered points change.
+    /// </summary>
+    /// <param name="newItems">The new points.</param>
+    /// <param name="oldItems">The old points.</param>
+    void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems);
 
     /// <summary>
     /// Gets or sets the Synchronization Context, use this property to

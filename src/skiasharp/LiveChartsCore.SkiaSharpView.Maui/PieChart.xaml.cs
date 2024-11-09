@@ -308,8 +308,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             null, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
+    /// The hovered points chaanged command property
+    /// </summary>
+    public static readonly BindableProperty HoveredPointsChangedCommandProperty =
+        BindableProperty.Create(
+            nameof(HoveredPointsChangedCommand), typeof(ICommand), typeof(PieChart), null);
+
+    /// <summary>
     /// The chart point pointer down command property
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public static readonly BindableProperty ChartPointPointerDownCommandProperty =
         BindableProperty.Create(
             nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PieChart), null);
@@ -337,7 +345,11 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
+    public event ChartPointHoverHandler? HoveredPointsChanged;
+
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
@@ -568,8 +580,18 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <summary>
+    /// Gets or sets a command to execute when the hovered points change.
+    /// </summary>
+    public ICommand? HoveredPointsChangedCommand
+    {
+        get => (ICommand?)GetValue(HoveredPointsChangedCommandProperty);
+        set => SetValue(HoveredPointsChangedCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a chart point.
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public ICommand? ChartPointPointerDownCommand
     {
         get => (ICommand?)GetValue(ChartPointPointerDownCommandProperty);
@@ -712,9 +734,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         DataPointerDown?.Invoke(this, points);
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
-        var closest = points.FindClosestTo(pointer);
-        ChartPointPointerDown?.Invoke(this, closest);
-        if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+        ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+    }
+
+    void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
+    {
+        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
+
+        var args = new HoverCommandArgs(this, newPoints, oldPoints);
+        if (HoveredPointsChangedCommand is not null && HoveredPointsChangedCommand.CanExecute(args)) HoveredPointsChangedCommand.Execute(args);
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(

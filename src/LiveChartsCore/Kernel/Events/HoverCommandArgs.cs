@@ -21,33 +21,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using System.Collections.Generic;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Kernel.Events;
 
 /// <summary>
-/// Command arguments that describe a pointer event in a LiveChart view.
+/// Command arguments that defines the changes in the hovered points in a chart.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="PointerCommandArgs"/> class.
+/// Initializes a new instance of the <see cref="HoverCommandArgs"/> class.
 /// </remarks>
 /// <param name="chart">The chart that fired the event.</param>
-/// <param name="pointerPosition">The pointer position.</param>
-/// <param name="originalEventArgs">The original event args.</param>
-public class PointerCommandArgs(
+/// <param name="newPoints">The new points.</param>
+/// <param name="oldPoints">The old points.</param>
+public class HoverCommandArgs(
     IChartView chart,
-    LvcPointD pointerPosition,
-    object originalEventArgs)
+    IEnumerable<ChartPoint>? newPoints,
+    IEnumerable<ChartPoint>? oldPoints)
         : ChartCommandArgs(chart)
 {
     /// <summary>
-    /// Gets the pointer position relative to the chart.
+    /// Gets the new hovered points in the chart.
     /// </summary>
-    public LvcPointD PointerPosition { get; } = pointerPosition;
+    public IEnumerable<ChartPoint>? NewPoints { get; set; } = newPoints;
 
     /// <summary>
-    /// Gets the framework-specific event arguments.
+    /// Gets the points that are no longer hovered in the chart.
     /// </summary>
-    public object OriginalEventArgs { get; } = originalEventArgs;
+    public IEnumerable<ChartPoint>? OldPoints { get; } = oldPoints;
 }
