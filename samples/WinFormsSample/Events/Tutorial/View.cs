@@ -36,10 +36,15 @@ public partial class View : UserControl
         };
 
         _chart.MouseDown += CartesianChart_MouseDown;
+        _chart.HoveredPointsChanged += OnHoveredChanged;
 
         Controls.Add(_chart);
     }
 
     private void CartesianChart_MouseDown(object sender, MouseEventArgs e) =>
         _viewModel.OnPressed(new PointerCommandArgs(_chart, new(e.Location.X, e.Location.Y), e));
+
+    private void OnHoveredChanged(
+        IChartView chart, IEnumerable<ChartPoint> newItems, IEnumerable<ChartPoint> oldItems) =>
+            _viewModel.OnHoveredPointsChanged(new HoverCommandArgs(chart, newItems, oldItems));
 }

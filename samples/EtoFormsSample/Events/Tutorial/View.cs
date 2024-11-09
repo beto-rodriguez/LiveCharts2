@@ -27,6 +27,7 @@ public class View : Panel
         };
 
         _cartesianChart.MouseDown += CartesianChart_MouseDown;
+        _cartesianChart.HoveredPointsChanged += _cartesianChart_HoveredPointsChanged;
 
         Content = _cartesianChart;
     }
@@ -37,4 +38,11 @@ public class View : Panel
                 _cartesianChart,
                 new(e.Location.X, e.Location.Y),
                 e));
+
+    private void CartesianChart_HoveredPointsChanged(IChartView chart, IEnumerable<ChartPoint> newItems, IEnumerable<ChartPoint> oldItems) =>
+        _viewModel.OnHoveredPointsChanged(
+            new HoverCommandArgs(
+                chart,
+                newItems,
+                oldItems));
 }
