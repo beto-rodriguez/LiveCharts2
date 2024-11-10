@@ -17,7 +17,7 @@ public partial class ViewModel
 {
     private readonly HashSet<ChartPoint> _activePoints = [];
 
-    public FindingStrategy Strategy { get; } = FindingStrategy.Automatic;
+    public FindingStrategy Strategy { get; } = FindingStrategy.ExactMatch;
 
     public ISeries[] SeriesCollection { get; set; } = [
         new ColumnSeries<int>([1, 5, 4, 3]),
@@ -52,14 +52,18 @@ public partial class ViewModel
     [RelayCommand]
     public void OnHoveredPointsChanged(HoverCommandArgs args)
     {
+        // the NewPoints contains the new hovered points // mark
         foreach (var hovered in args.NewPoints ?? [])
         {
+            // in this case, we will set a black stroke on the drawn gemetry. // mark
             var geometry = (Geometry)hovered.Context.Visual!;
             geometry.Stroke = new SolidColorPaint(SKColors.Black, 3);
         }
 
+        // the OldPoints contains the points that are not hovered anymore // mark
         foreach (var hovered in args.OldPoints ?? [])
         {
+            // now, we will clear the stroke. // mark
             var geometry = (Geometry)hovered.Context.Visual!;
             geometry.Stroke = null;
         }
