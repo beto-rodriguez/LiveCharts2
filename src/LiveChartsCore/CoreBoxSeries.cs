@@ -21,8 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -64,7 +64,8 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             var c = p.Coordinate;
             return
                 $"Max {c.PrimaryValue}, Min {c.QuinaryValue}{Environment.NewLine}" +
-                $"1stQ {c.TertiaryValue}, 2dnQ {c.QuaternaryValue}, M {c.SenaryValue}";
+                $"1stQ {c.TertiaryValue}, 2dnQ {c.QuaternaryValue}{Environment.NewLine}" +
+                $"Med {c.SenaryValue}";
         };
 
         DataLabelsFormatter = p =>
@@ -72,7 +73,8 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             var c = p.Coordinate;
             return
                 $"Max {c.PrimaryValue}, Min {c.QuinaryValue}{Environment.NewLine}" +
-                $"1stQ {c.TertiaryValue}, 2dnQ {c.QuaternaryValue}, M {c.SenaryValue}"; ;
+                $"1stQ {c.TertiaryValue}, 2dnQ {c.QuaternaryValue}{Environment.NewLine}" +
+                $"Med {c.SenaryValue}"; ;
         };
 
         DataPadding = new LvcPoint(0, 1);
@@ -224,6 +226,11 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
             _ = ha.SetDimensions(secondary - helper.actualUw * 0.5f, high, helper.actualUw, Math.Abs(low - high));
 
+            if (chart.FindingStrategy == FindingStrategy.ExactMatch)
+                _ = ha
+                    .SetDimensions(x, high, helper.uw, low)
+                    .CenterXToolTip();
+
             switch (tp)
             {
                 case TooltipPosition.Hidden:
@@ -273,6 +280,24 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
         pointsCleanup.CollectPoints(
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    protected override IEnumerable<ChartPoint> FindPointsInPosition(
+        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+    {
+        return strategy == FindingStrategy.ExactMatch
+            ? Fetch(chart)
+                .Where(point =>
+                {
+                    var v = (TVisual?)point.Context.Visual;
+
+                    return
+                        v is not null &&
+                        pointerPosition.X > v.X && pointerPosition.X < v.X + v.Width &&
+                        pointerPosition.Y > v.Y && pointerPosition.Y < v.Y + Math.Abs(v.Min - v.Y);
+                })
+            : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
     }
 
     /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>

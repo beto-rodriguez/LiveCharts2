@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -228,5 +228,23 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
     {
         return [Stroke, Fill, DataLabelsPaint, _errorPaint];
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    protected override IEnumerable<ChartPoint> FindPointsInPosition(
+        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+    {
+        return strategy == FindingStrategy.ExactMatch
+            ? Fetch(chart)
+                .Where(point =>
+                {
+                    var v = (TVisual?)point.Context.Visual;
+
+                    return
+                        v is not null &&
+                        pointerPosition.X > v.X && pointerPosition.X < v.X + v.Width &&
+                        pointerPosition.Y > v.Y && pointerPosition.Y < v.Y + v.Height;
+                })
+            : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
     }
 }

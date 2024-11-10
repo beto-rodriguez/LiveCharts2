@@ -12,8 +12,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <lvc:CartesianChart
-                Series="{Binding Series}"
-                TooltipFindingStrategy="CompareOnlyX">
+            Series="{Binding Series}"
+            FindingStrategy="CompareOnlyX">
         </lvc:CartesianChart>
     </Grid>
 </ContentPage>

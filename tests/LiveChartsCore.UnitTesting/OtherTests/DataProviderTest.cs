@@ -285,6 +285,39 @@ public class DataProviderTest
         Assert.IsTrue(emptyCount == 2);
     }
 
+    [TestMethod]
+    public void FetchReturnEqualityOnValueTypes()
+    {
+        int[] values = [1, 2, 3];
+
+        var sutSeries = new ColumnSeries<int>
+        {
+            Values = values
+        };
+
+        var chart = new SKCartesianChart
+        {
+            Width = 100,
+            Height = 100,
+            FindingStrategy = Measure.FindingStrategy.ExactMatch,
+            Series = [sutSeries]
+        };
+
+        _ = chart.GetImage();
+
+        var datafactory = sutSeries.DataFactory;
+
+        var fetch0 = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var fetch1 = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+
+        Assert.IsTrue(fetch0.Length == fetch1.Length);
+
+        for (var i = 0; i < fetch0.Length; i++)
+        {
+            Assert.IsTrue(fetch0[i] == fetch1[i]);
+        }
+    }
+
     public class City(double? population)
     {
         public double? Population { get; set; } = population;

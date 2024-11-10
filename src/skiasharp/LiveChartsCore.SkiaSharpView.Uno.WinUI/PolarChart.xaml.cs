@@ -211,8 +211,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// </summary>
     public static readonly DependencyProperty TooltipFindingStrategyProperty =
         DependencyProperty.Register(
-            nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PolarChart),
-            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipFindingStrategy, OnDependencyPropertyChanged));
+            nameof(FindingStrategy), typeof(FindingStrategy), typeof(PolarChart),
+            new PropertyMetadata(LiveCharts.DefaultSettings.FindingStrategy, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The animations speed property.
@@ -334,8 +334,16 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
             nameof(DataPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null));
 
     /// <summary>
+    /// The hovered points chaanged command property
+    /// </summary>
+    public static readonly DependencyProperty HoveredPointsChangedCommandProperty =
+        DependencyProperty.Register(
+            nameof(HoveredPointsChangedCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null));
+
+    /// <summary>
     /// The chart point pointer down command property
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public static readonly DependencyProperty ChartPointPointerDownCommandProperty =
         DependencyProperty.Register(
             nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null));
@@ -363,7 +371,11 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
+    public event ChartPointHoverHandler? HoveredPointsChanged;
+
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
@@ -626,8 +638,18 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     }
 
     /// <summary>
+    /// Gets or sets a command to execute when the hovered points change.
+    /// </summary>
+    public ICommand? HoveredPointsChangedCommand
+    {
+        get => (ICommand?)GetValue(HoveredPointsChangedCommandProperty);
+        set => SetValue(HoveredPointsChangedCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a data or data points.
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public ICommand ChartPointPointerDownCommand
     {
         get => (ICommand)GetValue(ChartPointPointerDownCommandProperty);
@@ -671,23 +693,23 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (_core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
         return _core is not PolarChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action)
@@ -817,10 +839,16 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
         DataPointerDown?.Invoke(this, points);
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
-        var closest = points.FindClosestTo(pointer);
-        ChartPointPointerDown?.Invoke(this, closest);
-        if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest))
-            ChartPointPointerDownCommand.Execute(closest);
+        ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+    }
+
+    void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
+    {
+        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
+
+        var args = new HoverCommandArgs(this, newPoints, oldPoints);
+        if (HoveredPointsChangedCommand is not null && HoveredPointsChangedCommand.CanExecute(args)) HoveredPointsChangedCommand.Execute(args);
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(

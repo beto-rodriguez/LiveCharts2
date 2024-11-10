@@ -61,7 +61,7 @@ public abstract class Chart<TDrawingContext> : IChart
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private readonly Dictionary<ChartPoint, object> _activePoints = [];
+    private readonly HashSet<ChartPoint> _activePoints = [];
     private LvcSize _previousSize = new();
 #if NET5_0_OR_GREATER
     private readonly bool _isMobile;
@@ -87,7 +87,7 @@ public abstract class Chart<TDrawingContext> : IChart
         LiveCharts.Configure(defaultPlatformConfig);
 
         _updateThrottler = view.DesignerMode
-                ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
+                ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(100))
                 : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _updateThrottler.ThrottlerTimeSpan = view.UpdaterThrottler;
 
@@ -228,7 +228,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The tooltip finding strategy.
     /// </value>
-    public TooltipFindingStrategy TooltipFindingStrategy { get; protected set; }
+    public FindingStrategy FindingStrategy { get; protected set; }
 
     /// <summary>
     /// Gets the tooltip.
@@ -331,7 +331,10 @@ public abstract class Chart<TDrawingContext> : IChart
             if (_isMobile) _isTooltipCanceled = false;
 #endif
 
-            var strategy = VisibleSeries.GetTooltipFindingStrategy();
+            var strategy = FindingStrategy;
+
+            if (strategy == FindingStrategy.Automatic)
+                strategy = VisibleSeries.GetFindingStrategy();
 
             // fire the series event.
             foreach (var series in VisibleSeries)
@@ -406,6 +409,9 @@ public abstract class Chart<TDrawingContext> : IChart
     /// </summary>
     protected internal virtual void InvokePointerLeft()
     {
+        View.OnHoveredPointsChanged(null, _activePoints);
+        _activePoints.Clear();
+
         View.InvokeOnUIThread(CloseTooltip);
         _isPointerIn = false;
     }
@@ -643,41 +649,51 @@ public abstract class Chart<TDrawingContext> : IChart
             return false;
         }
 
-        var points = FindHoveredPointsBy(_pointerPosition);
+        var hovered = new HashSet<ChartPoint>(FindHoveredPointsBy(_pointerPosition));
+        var added = new HashSet<ChartPoint>();
 
-        var o = new object();
-        var isEmpty = true;
-        foreach (var tooltipPoint in points)
+        foreach (var point in hovered)
         {
-            tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
-            _activePoints[tooltipPoint] = o;
-            isEmpty = false;
+            if (_activePoints.Contains(point)) continue;
+
+            point.Context.Series.OnPointerEnter(point);
+
+            _ = _activePoints.Add(point);
+            _ = added.Add(point);
         }
 
-        CleanHoveredPoints(o);
+        var removed = CleanHoveredPoints(hovered);
 
-        if (isEmpty || TooltipPosition == TooltipPosition.Hidden)
+        if (added.Count > 0 || removed.Count > 0)
+            View.OnHoveredPointsChanged(added, removed);
+
+        if (hovered.Count == 0 || TooltipPosition == TooltipPosition.Hidden)
         {
             _isToolTipOpen = false;
             Tooltip?.Hide(this);
             return false;
         }
 
-        Tooltip?.Show(points, this);
+        Tooltip?.Show(hovered, this);
         _isToolTipOpen = true;
 
         return true;
     }
 
-    private void CleanHoveredPoints(object comparer)
+    private List<ChartPoint> CleanHoveredPoints(HashSet<ChartPoint> hovered)
     {
-        foreach (var point in _activePoints.Keys.ToArray())
+        var removed = new List<ChartPoint>();
+
+        foreach (var point in _activePoints)
         {
-            if (_activePoints[point] == comparer) continue; // the points was used, don't remove it.
+            if (hovered.Contains(point)) continue;
 
             point.Context.Series.OnPointerLeft(point);
             _ = _activePoints.Remove(point);
+            removed.Add(point);
         }
+
+        return removed;
     }
 
     private Task TooltipThrottlerUnlocked()

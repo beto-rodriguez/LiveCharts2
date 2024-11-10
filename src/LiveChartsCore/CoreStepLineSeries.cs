@@ -428,6 +428,41 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         _geometrySvgChanged = false;
     }
 
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    protected override IEnumerable<ChartPoint> FindPointsInPosition(
+        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+    {
+        return strategy switch
+        {
+            FindingStrategy.ExactMatch => Fetch(chart)
+                .Where(point =>
+                {
+                    var v = (TVisual?)point.Context.Visual;
+                    if (v is null) return false;
+
+                    var x = v.X + v.TranslateTransform.X;
+                    var y = v.Y + v.TranslateTransform.Y;
+
+                    return
+                        pointerPosition.X > x && pointerPosition.X < x + v.Width &&
+                        pointerPosition.Y > y && pointerPosition.Y < y + v.Height;
+                }),
+            FindingStrategy.ExactMatchTakeClosest => Fetch(chart)
+                .Select(x => new { distance = x.DistanceTo(pointerPosition), point = x })
+                .OrderBy(x => x.distance)
+                .SelectFirst(x => x.point),
+            FindingStrategy.Automatic or
+            FindingStrategy.CompareAll or
+            FindingStrategy.CompareOnlyX or
+            FindingStrategy.CompareOnlyY or
+            FindingStrategy.CompareAllTakeClosest or
+            FindingStrategy.CompareOnlyXTakeClosest or
+            FindingStrategy.CompareOnlyYTakeClosest or
+            FindingStrategy.ExactMatchTakeClosest or
+                _ => base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor)
+        };
+    }
+
     /// <inheritdoc cref="GetRequestedGeometrySize"/>
     protected override double GetRequestedGeometrySize()
     {

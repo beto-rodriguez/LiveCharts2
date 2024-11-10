@@ -166,14 +166,14 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets the <see cref="ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
-    /// to the chart's <see cref="TooltipFindingStrategy"/> property.
+    /// to the chart's <see cref="FindingStrategy"/> property.
     /// </summary>
     /// <param name="chart">the chart.</param>
     /// <param name="pointerPosition">the pointer position.</param>
     /// <param name="strategy">the strategy.</param>
     /// <param name="findPointFor">the trigger that fired the search.</param>
     /// <returns></returns>
-    IEnumerable<ChartPoint> FindHitPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy, FindPointFor findPointFor);
+    IEnumerable<ChartPoint> FindHitPoints(IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor);
 
     /// <summary>
     /// Called when the pointer enters a chart point.

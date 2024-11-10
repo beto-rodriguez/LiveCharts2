@@ -38,16 +38,16 @@ namespace LiveChartsCore.Kernel.Events;
 public class PointerCommandArgs(
     IChartView chart,
     LvcPointD pointerPosition,
-    object originalEventArgs) : ChartCommandArgs(chart)
+    object originalEventArgs)
+        : ChartCommandArgs(chart)
 {
-
     /// <summary>
     /// Gets the pointer position relative to the chart.
     /// </summary>
-    public LvcPointD PointerPosition { get; set; } = pointerPosition;
+    public LvcPointD PointerPosition { get; } = pointerPosition;
 
     /// <summary>
     /// Gets the framework-specific event arguments.
     /// </summary>
-    public object OriginalEventArgs { get; set; } = originalEventArgs;
+    public object OriginalEventArgs { get; } = originalEventArgs;
 }

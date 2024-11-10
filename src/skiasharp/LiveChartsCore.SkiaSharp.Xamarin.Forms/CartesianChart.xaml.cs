@@ -35,8 +35,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 using SkiaSharp.Views.Forms;
@@ -316,10 +314,10 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <summary>
     /// The tool tip finding strategy property.
     /// </summary>
-    public static readonly BindableProperty TooltipFindingStrategyProperty =
+    public static readonly BindableProperty FindingStrategyProperty =
         BindableProperty.Create(
-            nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.TooltipFindingStrategy);
+            nameof(FindingStrategy), typeof(FindingStrategy), typeof(CartesianChart),
+            LiveCharts.DefaultSettings.FindingStrategy);
 
     /// <summary>
     /// The tooltip background paint property.
@@ -398,6 +396,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
+
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
+    public event ChartPointHoverHandler? HoveredPointsChanged;
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
@@ -565,11 +566,19 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
     public TooltipFindingStrategy TooltipFindingStrategy
     {
-        get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
-        set => SetValue(TooltipFindingStrategyProperty, value);
+        get => ((FindingStrategy)GetValue(FindingStrategyProperty)!).AsOld();
+        set => SetValue(FindingStrategyProperty, value.AsNew());
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    public FindingStrategy FindingStrategy
+    {
+        get => (FindingStrategy)GetValue(FindingStrategyProperty);
+        set => SetValue(FindingStrategyProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
@@ -679,23 +688,23 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
         return core is not CartesianChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action)
@@ -889,4 +898,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         CoreCanvas.Invalidate();
     }
+
+    public void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems) =>
+        throw new NotImplementedException();
 }

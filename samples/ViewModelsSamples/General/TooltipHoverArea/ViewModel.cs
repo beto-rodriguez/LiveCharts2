@@ -66,7 +66,7 @@ public class CustomColumnSeries<T> : ColumnSeries<T>
 
 public class CustomHoverArea : RectangleHoverArea
 {
-    public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
+    public override bool IsPointerOver(LvcPoint pointerLocation, FindingStrategy strategy)
     {
         // lets override the logic to determine if the pointer is over the hover area.
         // in this case, we ignore the strategy parameter, we only want to show the tooltip

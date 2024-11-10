@@ -132,12 +132,12 @@ public class LiveChartsSettings
     public double MaxTooltipsAndLegendsLabelsWidth { get; set; } = 170;
 
     /// <summary>
-    /// Gets or sets the default tooltip finding strategy.
+    /// Gets or sets the default finding strategy.
     /// </summary>
     /// <value>
-    /// The default tooltip finding strategy.
+    /// The default finding strategy.
     /// </value>
-    public TooltipFindingStrategy TooltipFindingStrategy { get; set; } = TooltipFindingStrategy.Automatic;
+    public FindingStrategy FindingStrategy { get; set; } = FindingStrategy.Automatic;
 
     /// <summary>
     /// Gets or sets the default polar initial rotation.

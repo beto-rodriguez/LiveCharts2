@@ -821,7 +821,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         ChartPoint? closestPoint = null;
         foreach (var series in allSeries)
         {
-            var hitpoints = series.FindHitPoints(cartesianChart, pointerPosition, allSeries.GetTooltipFindingStrategy(), FindPointFor.PointerDownEvent);
+            var hitpoints = series.FindHitPoints(cartesianChart, pointerPosition, allSeries.GetFindingStrategy(), FindPointFor.PointerDownEvent);
             var hitpoint = hitpoints.FirstOrDefault();
             if (hitpoint == null) continue;
 

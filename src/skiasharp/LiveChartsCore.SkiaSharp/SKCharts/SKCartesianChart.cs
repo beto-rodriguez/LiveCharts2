@@ -109,7 +109,10 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy"/>
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy"/>
+    public FindingStrategy FindingStrategy { get; set; }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy"/>
     public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
@@ -181,7 +184,11 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
+    public event ChartPointHoverHandler? HoveredPointsChanged;
+
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
@@ -205,20 +212,18 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = Core.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = Core.Series.GetFindingStrategy();
 
-        return Core.Series.SelectMany(series => series.FindHitPoints(Core, point, strategy, findPointFor));
+        return Core.Series.SelectMany(series => series.FindHitPoints(Core, new(point), strategy, findPointFor));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
-    {
-        return Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, point));
-    }
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
+        Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, new(point)));
 
     void IChartView.InvokeOnUIThread(Action action)
     {
@@ -250,6 +255,9 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
         DataPointerDown?.Invoke(this, points);
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
+
+    void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints) =>
+        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)

@@ -279,6 +279,11 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
                 .SetDimensions(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b)
                 .CenterXToolTip();
 
+            if (chart.FindingStrategy == FindingStrategy.ExactMatch)
+                _ = ha
+                    .SetDimensions(x, cy, helper.uw, b)
+                    .CenterXToolTip();
+
             _ = coordinate.PrimaryValue >= pivot ? ha.StartYToolTip() : ha.EndYToolTip().IsLessThanPivot();
 
             pointsCleanup.Clean(point);

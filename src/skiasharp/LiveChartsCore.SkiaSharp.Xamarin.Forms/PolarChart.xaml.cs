@@ -290,8 +290,8 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty TooltipFindingStrategyProperty =
         BindableProperty.Create(
-            nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PolarChart),
-            LiveCharts.DefaultSettings.TooltipFindingStrategy);
+            nameof(FindingStrategy), typeof(FindingStrategy), typeof(PolarChart),
+            LiveCharts.DefaultSettings.FindingStrategy);
 
     /// <summary>
     /// The tooltip background paint property.
@@ -368,6 +368,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
+
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
+    public event ChartPointHoverHandler? HoveredPointsChanged;
 
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
     public event ChartPointHandler? ChartPointPointerDown;
@@ -648,23 +651,23 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
         return core is not PolarChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action)
@@ -787,6 +790,8 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
     }
+    public void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems) =>
+        throw new NotImplementedException();
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
         IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)

@@ -39,7 +39,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.VisualElements;
 using System.Linq;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -226,10 +225,10 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// <summary>
     /// The tool tip finding strategy property
     /// </summary>
-    public static readonly DependencyProperty TooltipFindingStrategyProperty =
+    public static readonly DependencyProperty FindingStrategyProperty =
         DependencyProperty.Register(
-            nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipFindingStrategy, OnDependencyPropertyChanged));
+            nameof(FindingStrategy), typeof(FindingStrategy), typeof(CartesianChart),
+            new PropertyMetadata(LiveCharts.DefaultSettings.FindingStrategy, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The draw margin property
@@ -358,8 +357,16 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             nameof(DataPointerDownCommand), typeof(ICommand), typeof(CartesianChart), new PropertyMetadata(null));
 
     /// <summary>
+    /// The hovered points chaanged command property
+    /// </summary>
+    public static readonly DependencyProperty HoveredPointsChangedCommandProperty =
+        DependencyProperty.Register(
+            nameof(HoveredPointsChangedCommand), typeof(ICommand), typeof(CartesianChart), new PropertyMetadata(null));
+
+    /// <summary>
     /// The chart point pointer down command property
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public static readonly DependencyProperty ChartPointPointerDownCommandProperty =
         DependencyProperty.Register(
             nameof(ChartPointPointerDownCommand), typeof(ICommand), typeof(CartesianChart), new PropertyMetadata(null));
@@ -387,7 +394,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
+    public event ChartPointHoverHandler? HoveredPointsChanged;
+
     /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
@@ -516,11 +527,19 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         set => SetValue(ZoomingSpeedProperty, value);
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
     public TooltipFindingStrategy TooltipFindingStrategy
     {
-        get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
-        set => SetValue(TooltipFindingStrategyProperty, value);
+        get => ((FindingStrategy)GetValue(FindingStrategyProperty)!).AsOld();
+        set => SetValue(FindingStrategyProperty, value.AsNew());
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    public FindingStrategy FindingStrategy
+    {
+        get => (FindingStrategy)GetValue(FindingStrategyProperty);
+        set => SetValue(FindingStrategyProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
@@ -669,8 +688,18 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     }
 
     /// <summary>
+    /// Gets or sets a command to execute when the hovered points change.
+    /// </summary>
+    public ICommand? HoveredPointsChangedCommand
+    {
+        get => (ICommand?)GetValue(HoveredPointsChangedCommandProperty);
+        set => SetValue(HoveredPointsChangedCommandProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a command to execute when the pointer goes down on a chart point.
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public ICommand ChartPointPointerDownCommand
     {
         get => (ICommand)GetValue(ChartPointPointerDownCommandProperty);
@@ -709,23 +738,23 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (_core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
         return _core is not CartesianChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action)
@@ -877,9 +906,16 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         DataPointerDown?.Invoke(this, points);
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
-        var closest = points.FindClosestTo(pointer);
-        ChartPointPointerDown?.Invoke(this, closest);
-        if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
+        ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+    }
+
+    void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
+    {
+        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
+
+        var args = new HoverCommandArgs(this, newPoints, oldPoints);
+        if (HoveredPointsChangedCommand is not null && HoveredPointsChangedCommand.CanExecute(args)) HoveredPointsChangedCommand.Execute(args);
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(

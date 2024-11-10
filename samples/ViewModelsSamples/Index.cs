@@ -91,6 +91,7 @@ public static class Index
         "Axes/Style",
         "Axes/Paging",
 
+        "Events/Tutorial",
         "Events/AddPointOnClick",
         "Events/Cartesian",
         "Events/Pie",

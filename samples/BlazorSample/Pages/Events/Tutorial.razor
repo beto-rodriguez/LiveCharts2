@@ -1,0 +1,25 @@
+﻿@page "/Events/Tutorial"
+@using LiveChartsCore.Drawing
+@using LiveChartsCore.Kernel
+@using LiveChartsCore.Kernel.Events
+@using LiveChartsCore.Kernel.Sketches
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Events.Tutorial
+
+<CartesianChart
+    @ref="_chart"
+	Series="ViewModel.SeriesCollection"
+	FindingStrategy="ViewModel.Strategy"
+    OnPointerDownCallback="OnPointerDown">
+</CartesianChart>
+
+@code {
+    private CartesianChart _chart;
+    public ViewModel ViewModel { get; set; } = new();
+
+    private void OnPointerDown(PointerEventArgs e)
+    {
+        var p = new LvcPointD(e.OffsetX, e.OffsetY);
+        ViewModel.OnPressed(new PointerCommandArgs(_chart, p, e));
+    }
+}

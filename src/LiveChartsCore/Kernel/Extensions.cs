@@ -505,11 +505,11 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Calculates the tooltips finding strategy based on the series properties.
+    /// Calculates the finding strategy based on the series properties.
     /// </summary>
     /// <param name="seriesCollection">The series collection.</param>
     /// <returns></returns>
-    public static TooltipFindingStrategy GetTooltipFindingStrategy(this IEnumerable<ISeries> seriesCollection)
+    public static FindingStrategy GetFindingStrategy(this IEnumerable<ISeries> seriesCollection)
     {
         var areAllX = true;
         var areAllY = true;
@@ -521,10 +521,10 @@ public static class Extensions
         }
 
         return areAllX
-            ? TooltipFindingStrategy.CompareOnlyXTakeClosest
+            ? FindingStrategy.CompareOnlyXTakeClosest
             : (areAllY
-                ? TooltipFindingStrategy.CompareOnlyYTakeClosest
-                : TooltipFindingStrategy.CompareAllTakeClosest);
+                ? FindingStrategy.CompareOnlyYTakeClosest
+                : FindingStrategy.CompareAllTakeClosest);
     }
 
     /// <summary>

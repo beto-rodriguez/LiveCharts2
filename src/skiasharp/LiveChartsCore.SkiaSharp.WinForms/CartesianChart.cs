@@ -32,8 +32,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -50,7 +48,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
     private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
-    private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.DefaultSettings.TooltipFindingStrategy;
+    private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart"/> class.
@@ -168,9 +166,14 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public double ZoomingSpeed { get; set; } = LiveCharts.DefaultSettings.ZoomSpeed;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
+    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
+    public TooltipFindingStrategy TooltipFindingStrategy { get => FindingStrategy.AsOld(); set => FindingStrategy = value.AsNew(); }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public FindingStrategy FindingStrategy { get => _findingStrategy; set { _findingStrategy = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Initializes the core.
@@ -205,23 +208,23 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetPointsAt(LvcPoint, TooltipFindingStrategy, FindPointFor)"/>
-    public override IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public override IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
         if (core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
 
-        if (strategy == TooltipFindingStrategy.Automatic)
-            strategy = cc.Series.GetTooltipFindingStrategy();
+        if (strategy == FindingStrategy.Automatic)
+            strategy = cc.Series.GetFindingStrategy();
 
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, point, strategy, findPointFor));
+        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.GetVisualsAt(LvcPoint)"/>
-    public override IEnumerable<VisualElement<SkiaSharpDrawingContext>> GetVisualsAt(LvcPoint point)
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public override IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
         return core is not CartesianChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, point));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

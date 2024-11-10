@@ -20,11 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using LiveChartsCore.Kernel.Drawing;
+
 namespace LiveChartsCore.Measure;
 
 /// <summary>
 /// Defines the tool tip finding strategy.
 /// </summary>
+[Obsolete($"Renamed to {nameof(FindingStrategy)}")]
 public enum TooltipFindingStrategy
 {
     /// <summary>
@@ -33,32 +37,79 @@ public enum TooltipFindingStrategy
     Automatic,
 
     /// <summary>
-    /// Looks for all the points that contain the pointer positon.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in both X and Y axis.
     /// </summary>
     CompareAll,
 
     /// <summary>
-    /// Looks for all the points that contain the pointer positon ignoring the Y axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the X axis.
     /// </summary>
     CompareOnlyX,
 
     /// <summary>
-    /// Looks for all the points that contain the pointer positon ignoring the X axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the Y axis.
     /// </summary>
     CompareOnlyY,
 
     /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in both X and Y axis,
+    /// if overlapped then takes the closest to the pointer in each series.
     /// </summary>
     CompareAllTakeClosest,
 
     /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the Y axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the X axis,
+    /// if overlapped then takes the closest to the pointer in each series.
     /// </summary>
     CompareOnlyXTakeClosest,
 
     /// <summary>
-    /// Looks for the closest point (to the pointer) per series that contains the pointer positon ignoring the X axis.
+    /// Compares whether the pointer is inside the <see cref="HoverArea"/> in the Y axis,
+    /// if overlapped then takes the closest to the pointer in each series.
     /// </summary>
-    CompareOnlyYTakeClosest
+    CompareOnlyYTakeClosest,
+
+    /// <summary>
+    /// Compares whether the pointer is inside the drawn shape.
+    /// </summary>
+    ExactMatch,
+
+    /// <summary>
+    /// Compares whether the pointer is inside the drawn shape,
+    /// if overlapped then takes the closest to the pointer in each series.
+    /// </summary>
+    ExactMatchTakeClosest
+}
+
+internal static class ObsoleteMapper
+{
+    public static FindingStrategy AsNew(this TooltipFindingStrategy oldName)
+        => oldName switch
+        {
+            TooltipFindingStrategy.Automatic => FindingStrategy.Automatic,
+            TooltipFindingStrategy.CompareAll => FindingStrategy.CompareAll,
+            TooltipFindingStrategy.CompareOnlyX => FindingStrategy.CompareOnlyX,
+            TooltipFindingStrategy.CompareOnlyY => FindingStrategy.CompareOnlyY,
+            TooltipFindingStrategy.CompareAllTakeClosest => FindingStrategy.CompareAllTakeClosest,
+            TooltipFindingStrategy.CompareOnlyXTakeClosest => FindingStrategy.CompareOnlyXTakeClosest,
+            TooltipFindingStrategy.CompareOnlyYTakeClosest => FindingStrategy.CompareOnlyYTakeClosest,
+            TooltipFindingStrategy.ExactMatch => FindingStrategy.ExactMatch,
+            TooltipFindingStrategy.ExactMatchTakeClosest => FindingStrategy.ExactMatchTakeClosest,
+            _ => throw new NotImplementedException()
+        };
+
+    public static TooltipFindingStrategy AsOld(this FindingStrategy newName)
+        => newName switch
+        {
+            FindingStrategy.Automatic => TooltipFindingStrategy.Automatic,
+            FindingStrategy.CompareAll => TooltipFindingStrategy.CompareAll,
+            FindingStrategy.CompareOnlyX => TooltipFindingStrategy.CompareOnlyX,
+            FindingStrategy.CompareOnlyY => TooltipFindingStrategy.CompareOnlyY,
+            FindingStrategy.CompareAllTakeClosest => TooltipFindingStrategy.CompareAllTakeClosest,
+            FindingStrategy.CompareOnlyXTakeClosest => TooltipFindingStrategy.CompareOnlyXTakeClosest,
+            FindingStrategy.CompareOnlyYTakeClosest => TooltipFindingStrategy.CompareOnlyYTakeClosest,
+            FindingStrategy.ExactMatch => TooltipFindingStrategy.ExactMatch,
+            FindingStrategy.ExactMatchTakeClosest => TooltipFindingStrategy.ExactMatchTakeClosest,
+            _ => throw new NotImplementedException()
+        };
 }

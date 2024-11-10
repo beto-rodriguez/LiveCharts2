@@ -48,14 +48,16 @@ public partial class View : UserControl
     {
         var chart = (CartesianChart)sender;
 
+        var p = new LvcPointD(e.Location.X, e.Location.Y);
+
         // scales the UI coordinates to the corresponding data in the chart.
-        var dataCoordinates = chart.ScalePixelsToData(new LvcPointD(e.Location.X, e.Location.Y));
+        var dataCoordinates = chart.ScalePixelsToData(p);
 
         // finally add the new point to the data in our chart.
         _data.Add(new ObservablePoint(dataCoordinates.X, dataCoordinates.Y));
 
         // You can also get all the points or visual elements in a given location.
-        var points = chart.GetPointsAt(new LvcPoint(e.Location.X, e.Location.Y));
-        var visuals = chart.GetVisualsAt(new LvcPoint(e.Location.X, e.Location.Y));
+        var points = chart.GetPointsAt(p);
+        var visuals = chart.GetVisualsAt(p);
     }
 }

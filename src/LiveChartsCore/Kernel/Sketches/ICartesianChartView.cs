@@ -91,12 +91,12 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     ZoomAndPanMode ZoomMode { get; set; }
 
     /// <summary>
-    /// Gets or sets the tool tip finding strategy.
+    /// Gets or sets the finding strategy.
     /// </summary>
     /// <value>
-    /// The tool tip finding strategy.
+    /// The finding strategy.
     /// </value>
-    TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+    FindingStrategy FindingStrategy { get; set; }
 
     /// <summary>
     /// Gets or sets the zooming speed from 0 to 1, where 0 is the slowest and 1 the fastest.
