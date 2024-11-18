@@ -188,12 +188,12 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Gets or sets the legend default text paint, when null the library will use the default text paint.
     /// </summary>
-    IPaint<TDrawingContext>? LegendTextPaint { get; set; }
+    IPaint? LegendTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the legend background paint, when null the library will use the default background paint.
     /// </summary>
-    IPaint<TDrawingContext>? LegendBackgroundPaint { get; set; }
+    IPaint? LegendBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the legend text size, when null the library will use the default text size.
@@ -203,12 +203,12 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
     /// </summary>
-    IPaint<TDrawingContext>? TooltipTextPaint { get; set; }
+    IPaint? TooltipTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the tooltip background paint, when null the library will use the default background paint.
     /// </summary>
-    IPaint<TDrawingContext>? TooltipBackgroundPaint { get; set; }
+    IPaint? TooltipBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the tooltip text size, when null the library will use the default text size.

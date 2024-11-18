@@ -37,7 +37,7 @@ public interface IStrokedAndFilled<TDrawingContext>
     /// <value>
     /// The fill.
     /// </value>
-    IPaint<TDrawingContext>? Fill { get; set; }
+    IPaint? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -45,5 +45,5 @@ public interface IStrokedAndFilled<TDrawingContext>
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint<TDrawingContext>? Stroke { get; set; }
+    IPaint? Stroke { get; set; }
 }

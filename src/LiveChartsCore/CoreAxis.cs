@@ -71,24 +71,24 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Padding _padding = new();
     private double? _minLimit = null;
     private double? _maxLimit = null;
-    private IPaint<TDrawingContext>? _namePaint;
+    private IPaint? _namePaint;
     private double _nameTextSize = 20;
     private Padding _namePadding = new(5);
-    private IPaint<TDrawingContext>? _labelsPaint;
+    private IPaint? _labelsPaint;
     private double _unitWidth = 1;
     private double _textSize = 16;
-    private IPaint<TDrawingContext>? _separatorsPaint;
-    private IPaint<TDrawingContext>? _subseparatorsPaint;
+    private IPaint? _separatorsPaint;
+    private IPaint? _subseparatorsPaint;
     private bool _drawTicksPath;
     private ILineGeometry<TDrawingContext>? _ticksPath;
-    private IPaint<TDrawingContext>? _ticksPaint;
-    private IPaint<TDrawingContext>? _subticksPaint;
-    private IPaint<TDrawingContext>? _zeroPaint;
+    private IPaint? _ticksPaint;
+    private IPaint? _subticksPaint;
+    private IPaint? _zeroPaint;
     private ILineGeometry<TDrawingContext>? _zeroLine;
     private ILineGeometry<TDrawingContext>? _crosshairLine;
     private ILabelGeometry<TDrawingContext>? _crosshairLabel;
-    private IPaint<TDrawingContext>? _crosshairPaint;
-    private IPaint<TDrawingContext>? _crosshairLabelsPaint;
+    private IPaint? _crosshairPaint;
+    private IPaint? _crosshairLabelsPaint;
     private LvcColor? _crosshairLabelsBackground;
     private bool _showSeparatorLines = true;
     private bool _isInverted;
@@ -190,28 +190,28 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     public bool TicksAtCenter { get => _ticksAtCenter; set => SetProperty(ref _ticksAtCenter, value); }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
-    public IPaint<TDrawingContext>? NamePaint
+    public IPaint? NamePaint
     {
         get => _namePaint;
         set => SetPaintProperty(ref _namePaint, value);
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
-    public IPaint<TDrawingContext>? LabelsPaint
+    public IPaint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
-    public IPaint<TDrawingContext>? SeparatorsPaint
+    public IPaint? SeparatorsPaint
     {
         get => _separatorsPaint;
         set => SetPaintProperty(ref _separatorsPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsPaint"/>
-    public IPaint<TDrawingContext>? SubseparatorsPaint
+    public IPaint? SubseparatorsPaint
     {
         get => _subseparatorsPaint;
         set => SetPaintProperty(ref _subseparatorsPaint, value, true);
@@ -224,21 +224,21 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     public bool DrawTicksPath { get => _drawTicksPath; set => SetProperty(ref _drawTicksPath, value); }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
-    public IPaint<TDrawingContext>? TicksPaint
+    public IPaint? TicksPaint
     {
         get => _ticksPaint;
         set => SetPaintProperty(ref _ticksPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubticksPaint"/>
-    public IPaint<TDrawingContext>? SubticksPaint
+    public IPaint? SubticksPaint
     {
         get => _subticksPaint;
         set => SetPaintProperty(ref _subticksPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ZeroPaint"/>
-    public IPaint<TDrawingContext>? ZeroPaint
+    public IPaint? ZeroPaint
     {
         get => _zeroPaint;
         set
@@ -252,14 +252,14 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPaint"/>
-    public IPaint<TDrawingContext>? CrosshairPaint
+    public IPaint? CrosshairPaint
     {
         get => _crosshairPaint;
         set => SetPaintProperty(ref _crosshairPaint, value, true);
     }
 
     /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsPaint"/>
-    public IPaint<TDrawingContext>? CrosshairLabelsPaint
+    public IPaint? CrosshairLabelsPaint
     {
         get => _crosshairLabelsPaint;
         set => SetPaintProperty(ref _crosshairLabelsPaint, value);
@@ -987,7 +987,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
     }

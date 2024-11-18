@@ -36,7 +36,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     where TDrawingContext : DrawingContext
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _backgroundPaint;
+    private IPaint? _backgroundPaint;
     private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = [];
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
@@ -71,7 +71,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<TDrawingContext>? BackgroundPaint
+    public IPaint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -259,7 +259,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _backgroundPaint };
     }

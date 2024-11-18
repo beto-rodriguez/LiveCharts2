@@ -63,13 +63,13 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     private Func<double, string> _labeler = Labelers.Default;
     private double? _minLimit = null;
     private double? _maxLimit = null;
-    private IPaint<TDrawingContext>? _namePaint;
+    private IPaint? _namePaint;
     private double _nameTextSize = 20;
     private Padding _namePadding = new(5);
-    private IPaint<TDrawingContext>? _labelsPaint;
+    private IPaint? _labelsPaint;
     private double _unitWidth = 1;
     private double _textSize = 16;
-    private IPaint<TDrawingContext>? _separatorsPaint;
+    private IPaint? _separatorsPaint;
     private bool _showSeparatorLines = true;
     private bool _isInverted;
     private bool _forceStepToMin;
@@ -157,21 +157,21 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
-    public IPaint<TDrawingContext>? NamePaint
+    public IPaint? NamePaint
     {
         get => _namePaint;
         set => SetPaintProperty(ref _namePaint, value);
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
-    public IPaint<TDrawingContext>? LabelsPaint
+    public IPaint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
-    public IPaint<TDrawingContext>? SeparatorsPaint
+    public IPaint? SeparatorsPaint
     {
         get => _separatorsPaint;
         set => SetPaintProperty(ref _separatorsPaint, value, true);
@@ -598,7 +598,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _separatorsPaint, _labelsPaint, _namePaint };
     }

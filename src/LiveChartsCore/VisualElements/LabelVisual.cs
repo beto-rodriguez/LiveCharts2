@@ -37,7 +37,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
     internal TLabelGeometry? _labelGeometry;
-    internal IPaint<TDrawingContext>? _paint;
+    internal IPaint? _paint;
     internal bool _isVirtual = false;
     internal string _text = string.Empty;
     internal double _textSize = 12;
@@ -51,7 +51,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Paint
+    public IPaint? Paint
     {
         get => _paint;
         set => SetPaintProperty(ref _paint, value);
@@ -98,7 +98,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     public float MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _paint };
     }

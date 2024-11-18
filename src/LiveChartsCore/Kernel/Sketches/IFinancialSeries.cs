@@ -46,7 +46,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint<TDrawingContext>? UpStroke { get; set; }
+    IPaint? UpStroke { get; set; }
 
     /// <summary>
     /// Gets or sets the up stroke, the stroke when the trend goes down.
@@ -54,7 +54,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint<TDrawingContext>? DownStroke { get; set; }
+    IPaint? DownStroke { get; set; }
 
     /// <summary>
     /// Gets or sets the up fill, the fill when the trend goes up.
@@ -62,7 +62,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The fill.
     /// </value>
-    IPaint<TDrawingContext>? UpFill { get; set; }
+    IPaint? UpFill { get; set; }
 
     /// <summary>
     /// Gets or sets the up fill, the fill when the trend goes down.
@@ -70,5 +70,5 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The fill.
     /// </value>
-    IPaint<TDrawingContext>? DownFill { get; set; }
+    IPaint? DownFill { get; set; }
 }

@@ -49,14 +49,14 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
             where TVisual : class, IGeometry<TDrawingContext>, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _dataLabelsPaint;
+    private IPaint? _dataLabelsPaint;
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
     private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
-    public IPaint<TDrawingContext>? DataLabelsPaint
+    public IPaint? DataLabelsPaint
     {
         get => _dataLabelsPaint;
         set => SetPaintProperty(ref _dataLabelsPaint, value);

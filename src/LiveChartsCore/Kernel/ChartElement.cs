@@ -39,7 +39,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     internal object _theme = new();
     internal readonly HashSet<string> _userSets = [];
     private bool _isVisible = true;
-    private readonly List<IPaint<TDrawingContext>> _deletingTasks = [];
+    private readonly List<IPaint> _deletingTasks = [];
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -89,7 +89,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// Gets the paint tasks registered by the <see cref="ChartElement{TDrawingContext}"/>.
     /// </summary>
     /// <returns>The paint tasks.</returns>
-    protected internal abstract IPaint<TDrawingContext>?[] GetPaintTasks();
+    protected internal abstract IPaint?[] GetPaintTasks();
 
     /// <summary>
     /// Sets a property value and handles the paints in the canvas.
@@ -100,8 +100,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <param name="propertyName">Name of the property.</param>
     /// <returns></returns>
     protected virtual void SetPaintProperty(
-        ref IPaint<TDrawingContext>? reference,
-        IPaint<TDrawingContext>? value,
+        ref IPaint? reference,
+        IPaint? value,
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
@@ -165,7 +165,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// Schedules the delete for thew given <see cref="IPaint{TDrawingContext}"/> instance.
     /// </summary>
     /// <returns></returns>
-    protected void ScheduleDeleteFor(IPaint<TDrawingContext> paintTask)
+    protected void ScheduleDeleteFor(IPaint paintTask)
     {
         _deletingTasks.Add(paintTask);
     }

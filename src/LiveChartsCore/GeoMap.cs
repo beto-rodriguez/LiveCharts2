@@ -42,9 +42,9 @@ public class GeoMap<TDrawingContext>
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _panningThrottler;
     private bool _isHeatInCanvas = false;
-    private IPaint<TDrawingContext> _heatPaint;
-    private IPaint<TDrawingContext>? _previousStroke;
-    private IPaint<TDrawingContext>? _previousFill;
+    private IPaint _heatPaint;
+    private IPaint? _previousStroke;
+    private IPaint? _previousFill;
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;

@@ -413,7 +413,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="geometry"></param>
     /// <returns></returns>
     protected PaintSchedule<TDrawingContext> BuildMiniatureSchedule(
-        IPaint<TDrawingContext> paint, ISizedGeometry<TDrawingContext> geometry)
+        IPaint paint, ISizedGeometry<TDrawingContext> geometry)
     {
         var paintClone = paint.CloneTask();
         var st = paint.IsStroke ? paint.StrokeThickness : 0;
@@ -492,7 +492,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="paint">the base paint.</param>
     /// <param name="zIndex">the z index.</param>
     /// <returns></returns>
-    protected virtual IPaint<TDrawingContext>? GetMiniaturePaint(IPaint<TDrawingContext>? paint, int zIndex)
+    protected virtual IPaint? GetMiniaturePaint(IPaint? paint, int zIndex)
     {
         if (paint is null) return null;
 

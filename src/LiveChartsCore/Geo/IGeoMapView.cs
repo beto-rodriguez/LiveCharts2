@@ -56,12 +56,12 @@ public interface IGeoMapView<TDrawingContext>
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
-    IPaint<TDrawingContext>? Stroke { get; set; }
+    IPaint? Stroke { get; set; }
 
     /// <summary>
     /// Gets or sets the fill.
     /// </summary>
-    IPaint<TDrawingContext>? Fill { get; set; }
+    IPaint? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets whether the chart auto-updates are enabled.

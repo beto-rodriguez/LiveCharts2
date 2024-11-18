@@ -37,7 +37,7 @@ public class StrokeAndFillDrawable<TDrawingContext>
     /// <param name="stroke">The stroke.</param>
     /// <param name="fill">The fill.</param>
     /// <param name="isHoverState">is hover state?.</param>
-    public StrokeAndFillDrawable(IPaint<TDrawingContext>? stroke, IPaint<TDrawingContext>? fill, bool isHoverState = false)
+    public StrokeAndFillDrawable(IPaint? stroke, IPaint? fill, bool isHoverState = false)
     {
         Stroke = stroke;
         if (stroke is not null)
@@ -62,7 +62,7 @@ public class StrokeAndFillDrawable<TDrawingContext>
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint<TDrawingContext>? Stroke { get; }
+    public IPaint? Stroke { get; }
 
     /// <summary>
     /// Gets the fill.
@@ -70,7 +70,7 @@ public class StrokeAndFillDrawable<TDrawingContext>
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? Fill { get; }
+    public IPaint? Fill { get; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is hover state.

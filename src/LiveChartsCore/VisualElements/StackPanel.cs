@@ -36,7 +36,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     where TDrawingContext : DrawingContext
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _backgroundPaint;
+    private IPaint? _backgroundPaint;
     private Align _verticalAlignment = Align.Middle;
     private Align _horizontalAlignment = Align.Middle;
     private Padding _padding = new();
@@ -80,7 +80,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<TDrawingContext>? BackgroundPaint
+    public IPaint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -102,7 +102,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     public double MaxHeight { get => _maxHeight; set => SetProperty(ref _maxHeight, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _backgroundPaint };
     }

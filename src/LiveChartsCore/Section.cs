@@ -36,9 +36,9 @@ namespace LiveChartsCore;
 public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
-    private IPaint<TDrawingContext>? _stroke = null;
-    private IPaint<TDrawingContext>? _fill = null;
-    private IPaint<TDrawingContext>? _labelPaint = null;
+    private IPaint? _stroke = null;
+    private IPaint? _fill = null;
+    private IPaint? _labelPaint = null;
     private double? _xi;
     private double? _xj;
     private double? _yi;
@@ -53,7 +53,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint<TDrawingContext>? Stroke
+    public IPaint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -65,7 +65,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? Fill
+    public IPaint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -77,7 +77,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? LabelPaint
+    public IPaint? LabelPaint
     {
         get => _labelPaint;
         set => SetPaintProperty(ref _labelPaint, value);
@@ -146,7 +146,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     public int? ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _stroke, _fill, _labelPaint };
     }

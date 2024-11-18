@@ -36,8 +36,8 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
 {
     private double _width;
     private double _height;
-    private IPaint<TDrawingContext>? _fill;
-    private IPaint<TDrawingContext>? _stroke;
+    private IPaint? _fill;
+    private IPaint? _stroke;
     private MeasureUnit _sizeUnit = MeasureUnit.Pixels;
 
     /// <summary>
@@ -58,7 +58,7 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Fill
+    public IPaint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -67,14 +67,14 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the stroke paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Stroke
+    public IPaint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _fill, _stroke };
     }

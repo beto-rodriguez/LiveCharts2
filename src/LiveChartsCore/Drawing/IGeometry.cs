@@ -103,5 +103,5 @@ public interface IGeometry<TDrawingContext> : IDrawable, IPaintable<TDrawingCont
     /// </summary>
     /// <param name="drawableTask">The drawable task.</param>
     /// <returns></returns>
-    LvcSize Measure(IPaint<TDrawingContext> drawableTask);
+    LvcSize Measure(IPaint drawableTask);
 }

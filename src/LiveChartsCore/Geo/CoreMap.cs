@@ -84,7 +84,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer.</returns>
     public MapLayer<TDrawingContext> AddLayerFromDirectory(
-        string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+        string path, IPaint stroke, IPaint fill, string layerName = "default")
     {
         using var sr = new StreamReader(path);
         return AddLayerFromStreamReader(sr, stroke, fill, layerName);
@@ -114,7 +114,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer.</returns>
     public MapLayer<TDrawingContext> AddLayerFromStreamReader(
-        StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+        StreamReader streamReader, IPaint stroke, IPaint fill, string layerName = "default")
     {
         if (!Layers.TryGetValue(layerName, out var layer))
         {
@@ -157,7 +157,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer as await-able task.</returns>
     public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(
-        string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+        string path, IPaint stroke, IPaint fill, string layerName = "default")
     {
         return Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
     }
@@ -186,7 +186,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer as await-able task.</returns>
     public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(
-        StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+        StreamReader streamReader, IPaint stroke, IPaint fill, string layerName = "default")
     {
         return Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
     }

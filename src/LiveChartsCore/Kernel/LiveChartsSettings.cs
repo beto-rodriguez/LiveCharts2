@@ -278,7 +278,7 @@ public class LiveChartsSettings
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendBackgroundPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+    public LiveChartsSettings WithLegendBackgroundPaint<TDrawingContext>(IPaint paint)
         where TDrawingContext : DrawingContext
     {
         LegendBackgroundPaint = paint;
@@ -291,7 +291,7 @@ public class LiveChartsSettings
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendTextPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+    public LiveChartsSettings WithLegendTextPaint<TDrawingContext>(IPaint paint)
         where TDrawingContext : DrawingContext
     {
         LegendTextPaint = paint;
@@ -315,7 +315,7 @@ public class LiveChartsSettings
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipBackgroundPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+    public LiveChartsSettings WithTooltipBackgroundPaint<TDrawingContext>(IPaint paint)
         where TDrawingContext : DrawingContext
     {
         TooltipBackgroundPaint = paint;
@@ -328,7 +328,7 @@ public class LiveChartsSettings
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipTextPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
+    public LiveChartsSettings WithTooltipTextPaint<TDrawingContext>(IPaint paint)
         where TDrawingContext : DrawingContext
     {
         TooltipTextPaint = paint;

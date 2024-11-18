@@ -42,7 +42,7 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <value>
     /// The data labels paint.
     /// </value>
-    IPaint<TDrawingContext>? DataLabelsPaint { get; set; }
+    IPaint? DataLabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the size of the data labels.

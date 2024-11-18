@@ -58,7 +58,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     private bool _ignoresBarPosition = false;
     private double _rx;
     private double _ry;
-    private IPaint<TDrawingContext>? _errorPaint;
+    private IPaint? _errorPaint;
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
@@ -76,7 +76,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
     /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint<TDrawingContext>? ErrorPaint
+    public IPaint? ErrorPaint
     {
         get => _errorPaint;
         set => SetPaintProperty(ref _errorPaint, value, true);
@@ -225,7 +225,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return [Stroke, Fill, DataLabelsPaint, _errorPaint];
     }

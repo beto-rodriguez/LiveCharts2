@@ -42,7 +42,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     private string _label = string.Empty;
     private float _labelSize = 12;
     internal TLabelGeometry? _labelGeometry;
-    private IPaint<TDrawingContext>? _labelPaint = null;
+    private IPaint? _labelPaint = null;
 
     /// <summary>
     /// Gets or sets the label, a string to be displayed within the section.
@@ -65,7 +65,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? LabelPaint
+    public IPaint? LabelPaint
     {
         get => _labelPaint;
         set => SetPaintProperty(ref _labelPaint, value);
@@ -186,7 +186,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { Fill, Stroke, _labelPaint };
     }

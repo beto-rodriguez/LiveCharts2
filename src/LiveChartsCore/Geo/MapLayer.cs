@@ -36,7 +36,7 @@ namespace LiveChartsCore.Geo;
 /// <param name="layerName">The layer name.</param>
 /// <param name="stroke">The stroke.</param>
 /// <param name="fill">The fill.</param>
-public class MapLayer<TDrawingContext>(string layerName, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill)
+public class MapLayer<TDrawingContext>(string layerName, IPaint stroke, IPaint fill)
     where TDrawingContext : DrawingContext
 {
 
@@ -61,12 +61,12 @@ public class MapLayer<TDrawingContext>(string layerName, IPaint<TDrawingContext>
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
-    public IPaint<TDrawingContext>? Stroke { get; set; } = stroke;
+    public IPaint? Stroke { get; set; } = stroke;
 
     /// <summary>
     /// Gets or sets the fill.
     /// </summary>
-    public IPaint<TDrawingContext>? Fill { get; set; } = fill;
+    public IPaint? Fill { get; set; } = fill;
 
     /// <summary>
     /// Gets or sets the X bounds.

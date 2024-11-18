@@ -51,10 +51,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _upStroke = null;
-    private IPaint<TDrawingContext>? _upFill = null;
-    private IPaint<TDrawingContext>? _downStroke = null;
-    private IPaint<TDrawingContext>? _downFill = null;
+    private IPaint? _upStroke = null;
+    private IPaint? _upFill = null;
+    private IPaint? _downStroke = null;
+    private IPaint? _downFill = null;
     private double _maxBarWidth = 25;
 
     /// <summary>
@@ -84,28 +84,28 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpStroke"/>
-    public IPaint<TDrawingContext>? UpStroke
+    public IPaint? UpStroke
     {
         get => _upStroke;
         set => SetPaintProperty(ref _upStroke, value, true);
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpFill"/>
-    public IPaint<TDrawingContext>? UpFill
+    public IPaint? UpFill
     {
         get => _upFill;
         set => SetPaintProperty(ref _upFill, value);
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownStroke"/>
-    public IPaint<TDrawingContext>? DownStroke
+    public IPaint? DownStroke
     {
         get => _downStroke;
         set => SetPaintProperty(ref _downStroke, value, true);
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownFill"/>
-    public IPaint<TDrawingContext>? DownFill
+    public IPaint? DownFill
     {
         get => _downFill;
         set => SetPaintProperty(ref _downFill, value);
@@ -440,7 +440,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
     }

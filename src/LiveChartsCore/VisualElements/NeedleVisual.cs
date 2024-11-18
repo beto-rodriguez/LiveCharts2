@@ -38,7 +38,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     where TGeometry : INeedleGeometry<TDrawingContext>, new()
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _fill;
+    private IPaint? _fill;
     private double _value;
     private TGeometry? _geometry;
 
@@ -50,7 +50,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Fill
+    public IPaint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -133,7 +133,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _fill };
     }

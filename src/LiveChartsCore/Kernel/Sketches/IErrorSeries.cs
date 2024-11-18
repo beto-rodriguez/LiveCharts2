@@ -37,5 +37,5 @@ public interface IErrorSeries<TDrawingContext>
     /// <value>
     /// The shapes fill.
     /// </value>
-    IPaint<TDrawingContext>? ErrorPaint { get; set; }
+    IPaint? ErrorPaint { get; set; }
 }

@@ -68,7 +68,7 @@ public interface IPolarLineSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The shapes fill.
     /// </value>
-    IPaint<TDrawingContext>? GeometryFill { get; set; }
+    IPaint? GeometryFill { get; set; }
 
     /// <summary>
     /// Gets or sets the geometry stroke.
@@ -76,5 +76,5 @@ public interface IPolarLineSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The shapes stroke.
     /// </value>
-    IPaint<TDrawingContext>? GeometryStroke { get; set; }
+    IPaint? GeometryStroke { get; set; }
 }

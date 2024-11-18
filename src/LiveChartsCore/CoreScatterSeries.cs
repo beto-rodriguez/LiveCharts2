@@ -48,7 +48,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         where TDrawingContext : DrawingContext
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _errorPaint;
+    private IPaint? _errorPaint;
     private int? _stackGroup;
     private double _minGeometrySize = 6d;
     private double _geometrySize = 24d;
@@ -97,7 +97,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     public bool IsWeighted { get; private set; }
 
     /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint<TDrawingContext>? ErrorPaint
+    public IPaint? ErrorPaint
     {
         get => _errorPaint;
         set => SetPaintProperty(ref _errorPaint, value, true);

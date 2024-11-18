@@ -42,7 +42,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         ClippingMode = ClipMode.None;
     }
 
-    private IPaint<TDrawingContext>? _backgroundPaint;
+    private IPaint? _backgroundPaint;
 
     /// <summary>
     /// Gets or sets the size.
@@ -57,7 +57,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<TDrawingContext>? BackgroundPaint
+    public IPaint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -69,7 +69,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _backgroundPaint };
     }

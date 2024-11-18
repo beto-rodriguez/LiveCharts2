@@ -42,8 +42,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     where TLineGeometry : ILineGeometry<TDrawingContext>, new()
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _stroke;
-    private IPaint<TDrawingContext>? _labelsPaint;
+    private IPaint? _stroke;
+    private IPaint? _labelsPaint;
     private TArcGeometry? _arc;
     private double _labelsOuterOffset;
     private double _outerOffset;
@@ -56,7 +56,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <summary>
     /// Gets or sets the labels paint.
     /// </summary>
-    public IPaint<TDrawingContext>? LabelsPaint
+    public IPaint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
@@ -65,7 +65,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Stroke
+    public IPaint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -287,7 +287,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return new[] { _stroke, _labelsPaint };
     }

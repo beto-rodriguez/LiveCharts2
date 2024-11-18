@@ -205,7 +205,7 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The text paint.
     /// </value>
-    IPaint<TDrawingContext>? NamePaint { get; set; }
+    IPaint? NamePaint { get; set; }
 
     /// <summary>
     /// Gets or sets the text paint.
@@ -213,7 +213,7 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The text paint.
     /// </value>
-    IPaint<TDrawingContext>? LabelsPaint { get; set; }
+    IPaint? LabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the separators paint.
@@ -221,7 +221,7 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? SeparatorsPaint { get; set; }
+    IPaint? SeparatorsPaint { get; set; }
 
     /// <summary>
     /// Gets the size of the possible.

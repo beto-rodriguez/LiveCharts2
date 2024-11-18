@@ -64,7 +64,7 @@ public abstract class ChartEngine<TDrawingContext>
     /// Gets a new paint of the given color.
     /// </summary>
     /// <returns></returns>
-    public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new());
+    public abstract IPaint GetSolidColorPaint(LvcColor color = new());
 
     /// <summary>
     /// Initializes the zooming section for a cartesian chart in a given canvas.

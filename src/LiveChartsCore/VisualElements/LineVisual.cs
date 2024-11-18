@@ -108,5 +108,5 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks() => [Fill, Stroke];
+    protected internal override IPaint?[] GetPaintTasks() => [Fill, Stroke];
 }

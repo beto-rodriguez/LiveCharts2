@@ -41,7 +41,7 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     where TModel : IWeigthedMapLand
     where TDrawingContext : DrawingContext
 {
-    private IPaint<TDrawingContext>? _heatPaint;
+    private IPaint? _heatPaint;
     private bool _isHeatInCanvas = false;
     private LvcColor[] _heatMap = [];
     private double[]? _colorStops;
@@ -165,7 +165,7 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     /// <summary>
     /// Initializes the series.
     /// </summary>
-    protected void IntitializeSeries(IPaint<TDrawingContext> heatPaint)
+    protected void IntitializeSeries(IPaint heatPaint)
     {
         _heatPaint = heatPaint;
     }

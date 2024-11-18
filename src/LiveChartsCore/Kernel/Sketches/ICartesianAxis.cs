@@ -175,7 +175,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? SubseparatorsPaint { get; set; }
+    IPaint? SubseparatorsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the number of subseparators to draw.
@@ -193,7 +193,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? TicksPaint { get; set; }
+    IPaint? TicksPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the separators paint.
@@ -201,7 +201,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? SubticksPaint { get; set; }
+    IPaint? SubticksPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the zero paint.
@@ -209,7 +209,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? ZeroPaint { get; set; }
+    IPaint? ZeroPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair paint.
@@ -217,7 +217,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? CrosshairPaint { get; set; }
+    IPaint? CrosshairPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair labels paint.
@@ -225,7 +225,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? CrosshairLabelsPaint { get; set; }
+    IPaint? CrosshairLabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair background.

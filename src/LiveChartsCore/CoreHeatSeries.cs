@@ -44,7 +44,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint<TDrawingContext>? _paintTaks;
+    private IPaint? _paintTaks;
     private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
@@ -371,7 +371,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    protected internal override IPaint?[] GetPaintTasks()
     {
         return [_paintTaks];
     }
