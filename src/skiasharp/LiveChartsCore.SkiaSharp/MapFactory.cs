@@ -173,7 +173,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                 {
                     foreach (var landData in landDefinition.Data)
                     {
-                        var shape = (IDrawable<SkiaSharpDrawingContext>?)landData.Shape;
+                        var shape = (IDrawable?)landData.Shape;
                         if (shape is null) continue;
 
                         stroke?.RemoveGeometryFromPainTask(_mapView.Canvas, shape);

@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class Paint : Animatable, IDisposable, IPaint
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
-    private readonly Dictionary<CoreMotionCanvas, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = [];
+    private readonly Dictionary<CoreMotionCanvas, HashSet<IDrawable>> _geometriesByCanvas = [];
     private readonly Dictionary<CoreMotionCanvas, LvcRectangle> _clipRectangles = [];
     internal SKPaint? _skiaPaint;
     internal FloatMotionProperty _strokeWidthTransition;
@@ -172,9 +172,9 @@ public abstract class Paint : Animatable, IDisposable, IPaint
     public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.GetGeometries(CoreMotionCanvas{TDrawingContext})" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries(CoreMotionCanvas canvas)
+    public IEnumerable<IDrawable> GetGeometries(CoreMotionCanvas canvas)
     {
-        var enumerable = GetGeometriesByCanvas(canvas) ?? Enumerable.Empty<IDrawable<SkiaSharpDrawingContext>>();
+        var enumerable = GetGeometriesByCanvas(canvas) ?? Enumerable.Empty<IDrawable>();
         foreach (var item in enumerable)
         {
             yield return item;
@@ -182,14 +182,14 @@ public abstract class Paint : Animatable, IDisposable, IPaint
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.SetGeometries(CoreMotionCanvas{TDrawingContext}, HashSet{IDrawable{TDrawingContext}})" />
-    public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
+    public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawable> geometries)
     {
         _geometriesByCanvas[canvas] = geometries;
         IsValid = false;
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.AddGeometryToPaintTask(CoreMotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
-    public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawable<SkiaSharpDrawingContext> geometry)
+    public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawable geometry)
     {
         var g = GetGeometriesByCanvas(canvas);
         if (g is null)
@@ -202,7 +202,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.RemoveGeometryFromPainTask(CoreMotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
-    public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawable<SkiaSharpDrawingContext> geometry)
+    public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawable geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
         IsValid = false;
@@ -267,7 +267,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint
         return LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
     }
 
-    private HashSet<IDrawable<SkiaSharpDrawingContext>>? GetGeometriesByCanvas(CoreMotionCanvas canvas)
+    private HashSet<IDrawable>? GetGeometriesByCanvas(CoreMotionCanvas canvas)
     {
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
             ? geometries
