@@ -43,7 +43,7 @@ public abstract class InMemorySkiaSharpChart
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
+    public CoreMotionCanvas CoreCanvas { get; } = new();
 
     /// <inheritdoc cref="IChartView.CoreChart"/>
     public IChart CoreChart { get; protected set; } = null!;

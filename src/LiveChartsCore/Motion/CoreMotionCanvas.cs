@@ -31,7 +31,7 @@ namespace LiveChartsCore.Motion;
 /// <summary>
 /// Defines a canvas that is able to animate the shapes inside it.
 /// </summary>
-public class MotionCanvas : IDisposable
+public class CoreMotionCanvas : IDisposable
 {
     internal HashSet<IPaint> _paintTasks = [];
     private readonly Stopwatch _stopwatch = new();
@@ -44,9 +44,9 @@ public class MotionCanvas : IDisposable
     private double _totalSeconds = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
+    /// Initializes a new instance of the <see cref="CoreMotionCanvas"/> class.
     /// </summary>
-    public MotionCanvas()
+    public CoreMotionCanvas()
     {
         _stopwatch.Start();
     }
@@ -56,12 +56,12 @@ public class MotionCanvas : IDisposable
     /// <summary>
     /// Occurs when the visual is invalidated.
     /// </summary>
-    public event Action<MotionCanvas>? Invalidated;
+    public event Action<CoreMotionCanvas>? Invalidated;
 
     /// <summary>
     /// Occurs when all the visuals in the canvas are valid.
     /// </summary>
-    public event Action<MotionCanvas>? Validated;
+    public event Action<CoreMotionCanvas>? Validated;
 
     /// <summary>
     /// Returns true if the visual is valid.

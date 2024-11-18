@@ -371,7 +371,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         : new LvcSize { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas is null
+    public CoreMotionCanvas CoreCanvas => canvas is null
         ? throw new Exception("Canvas not found")
         : canvas.CanvasCore;
 

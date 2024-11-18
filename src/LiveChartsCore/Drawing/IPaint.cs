@@ -83,7 +83,7 @@ public interface IPaint : IAnimatable, IDisposable
     /// <param name="canvas">The canvas.</param>
     /// The clip rectangle.
     /// </returns>
-    LvcRectangle GetClipRectangle(MotionCanvas canvas);
+    LvcRectangle GetClipRectangle(CoreMotionCanvas canvas);
 
     /// <summary>
     /// Gets or sets the clip rectangle.
@@ -92,7 +92,7 @@ public interface IPaint : IAnimatable, IDisposable
     /// <param name="value">
     /// The clip rectangle.
     /// </param>
-    void SetClipRectangle(MotionCanvas canvas, LvcRectangle value);
+    void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value);
 
     /// <summary>
     /// Initializes the task.
@@ -105,40 +105,40 @@ public interface IPaint : IAnimatable, IDisposable
     /// </summary>
     /// <returns></returns>
     /// <param name="canvas">The canvas.</param>
-    IEnumerable<IDrawable> GetGeometries(MotionCanvas canvas);
+    IEnumerable<IDrawable> GetGeometries(CoreMotionCanvas canvas);
 
     /// <summary>
     /// Sets the geometries.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometries">The geometries.</param>
-    void SetGeometries(MotionCanvas canvas, HashSet<IDrawable> geometries);
+    void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawable> geometries);
 
     /// <summary>
     /// Adds the geometry to paint task.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    void AddGeometryToPaintTask(MotionCanvas canvas, IDrawable geometry);
+    void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawable geometry);
 
     /// <summary>
     /// Removes the geometry from pain task.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    void RemoveGeometryFromPainTask(MotionCanvas canvas, IDrawable geometry);
+    void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawable geometry);
 
     /// <summary>
     /// Removes all geometry from paint task.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    void ClearGeometriesFromPaintTask(MotionCanvas canvas);
+    void ClearGeometriesFromPaintTask(CoreMotionCanvas canvas);
 
     /// <summary>
     /// Releases the canvas resources.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    void ReleaseCanvas(MotionCanvas canvas);
+    void ReleaseCanvas(CoreMotionCanvas canvas);
 
     /// <summary>
     /// Sets the opacity according to the given geometry.

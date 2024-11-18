@@ -51,8 +51,8 @@ public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
     public override IPaint GetSolidColorPaint(LvcColor color)
         => new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.InitializeZoommingSection(MotionCanvas{TDrawingContext})"/>
-    public override ISizedGeometry<SkiaSharpDrawingContext> InitializeZoommingSection(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    /// <inheritdoc cref="ChartEngine{TDrawingContext}.InitializeZoommingSection(CoreMotionCanvas{TDrawingContext})"/>
+    public override ISizedGeometry<SkiaSharpDrawingContext> InitializeZoommingSection(CoreMotionCanvas canvas)
     {
         var rectangle = new RectangleGeometry();
 

@@ -40,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// <param name="canvas">The canvas.</param>
 /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
 public class SkiaSharpDrawingContext(
-    MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+    CoreMotionCanvas motionCanvas,
     SKImageInfo info,
     SKSurface? surface,
     SKCanvas canvas,
@@ -57,7 +57,7 @@ public class SkiaSharpDrawingContext(
     /// <param name="background">The background.</param>
     /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
     public SkiaSharpDrawingContext(
-        MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+        CoreMotionCanvas motionCanvas,
         SKImageInfo info,
         SKSurface? surface,
         SKCanvas canvas,
@@ -74,7 +74,7 @@ public class SkiaSharpDrawingContext(
     /// <value>
     /// The motion canvas.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> MotionCanvas { get; set; } = motionCanvas;
+    public CoreMotionCanvas MotionCanvas { get; set; } = motionCanvas;
 
     /// <summary>
     /// Gets or sets the information.

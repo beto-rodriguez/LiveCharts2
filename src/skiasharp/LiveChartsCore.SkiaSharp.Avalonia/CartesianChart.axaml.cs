@@ -360,7 +360,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;
+    public CoreMotionCanvas CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
         _core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;

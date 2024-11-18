@@ -442,7 +442,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         : new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     public TimeSpan AnimationsSpeed

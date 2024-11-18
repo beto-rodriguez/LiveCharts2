@@ -36,8 +36,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class Paint : Animatable, IDisposable, IPaint
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
-    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = [];
-    private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, LvcRectangle> _clipRectangles = [];
+    private readonly Dictionary<CoreMotionCanvas, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = [];
+    private readonly Dictionary<CoreMotionCanvas, LvcRectangle> _clipRectangles = [];
     internal SKPaint? _skiaPaint;
     internal FloatMotionProperty _strokeWidthTransition;
 
@@ -171,8 +171,8 @@ public abstract class Paint : Animatable, IDisposable, IPaint
     /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
     public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.GetGeometries(MotionCanvas{TDrawingContext})" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.GetGeometries(CoreMotionCanvas{TDrawingContext})" />
+    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries(CoreMotionCanvas canvas)
     {
         var enumerable = GetGeometriesByCanvas(canvas) ?? Enumerable.Empty<IDrawable<SkiaSharpDrawingContext>>();
         foreach (var item in enumerable)
@@ -181,15 +181,15 @@ public abstract class Paint : Animatable, IDisposable, IPaint
         }
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.SetGeometries(MotionCanvas{TDrawingContext}, HashSet{IDrawable{TDrawingContext}})" />
-    public void SetGeometries(MotionCanvas<SkiaSharpDrawingContext> canvas, HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.SetGeometries(CoreMotionCanvas{TDrawingContext}, HashSet{IDrawable{TDrawingContext}})" />
+    public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
     {
         _geometriesByCanvas[canvas] = geometries;
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.AddGeometryToPaintTask(MotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
-    public void AddGeometryToPaintTask(MotionCanvas<SkiaSharpDrawingContext> canvas, IDrawable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.AddGeometryToPaintTask(CoreMotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
+    public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawable<SkiaSharpDrawingContext> geometry)
     {
         var g = GetGeometriesByCanvas(canvas);
         if (g is null)
@@ -201,34 +201,34 @@ public abstract class Paint : Animatable, IDisposable, IPaint
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.RemoveGeometryFromPainTask(MotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
-    public void RemoveGeometryFromPainTask(MotionCanvas<SkiaSharpDrawingContext> canvas, IDrawable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.RemoveGeometryFromPainTask(CoreMotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
+    public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawable<SkiaSharpDrawingContext> geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ClearGeometriesFromPaintTask(MotionCanvas{TDrawingContext})"/>
-    public void ClearGeometriesFromPaintTask(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.ClearGeometriesFromPaintTask(CoreMotionCanvas{TDrawingContext})"/>
+    public void ClearGeometriesFromPaintTask(CoreMotionCanvas canvas)
     {
         GetGeometriesByCanvas(canvas)?.Clear();
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})"/>
-    public void ReleaseCanvas(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(CoreMotionCanvas{TDrawingContext})"/>
+    public void ReleaseCanvas(CoreMotionCanvas canvas)
     {
         _ = _geometriesByCanvas.Remove(canvas);
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
-    public LvcRectangle GetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(CoreMotionCanvas{TDrawingContext})" />
+    public LvcRectangle GetClipRectangle(CoreMotionCanvas canvas)
     {
         return _clipRectangles.TryGetValue(canvas, out var clip) ? clip : LvcRectangle.Empty;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, LvcRectangle)" />
-    public void SetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas, LvcRectangle value)
+    /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(CoreMotionCanvas{TDrawingContext}, LvcRectangle)" />
+    public void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value)
     {
         _clipRectangles[canvas] = value;
     }
@@ -267,7 +267,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint
         return LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
     }
 
-    private HashSet<IDrawable<SkiaSharpDrawingContext>>? GetGeometriesByCanvas(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    private HashSet<IDrawable<SkiaSharpDrawingContext>>? GetGeometriesByCanvas(CoreMotionCanvas canvas)
     {
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
             ? geometries

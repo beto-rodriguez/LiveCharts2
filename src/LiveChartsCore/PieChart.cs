@@ -46,7 +46,7 @@ namespace LiveChartsCore;
 public class PieChart<TDrawingContext>(
     IPieChartView<TDrawingContext> view,
     Action<LiveChartsSettings> defaultPlatformConfig,
-    MotionCanvas<TDrawingContext> canvas) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
+    CoreMotionCanvas<TDrawingContext> canvas) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
     where TDrawingContext : DrawingContext
 {
     private int _nextSeries = 0;

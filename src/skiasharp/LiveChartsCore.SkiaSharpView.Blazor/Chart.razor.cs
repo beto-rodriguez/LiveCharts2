@@ -163,7 +163,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         : new LvcSize { Width = (float)_canvasWidth, Height = (float)_canvasHeight };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas?.CanvasCore ?? throw new Exception("canvas not found!");
+    public CoreMotionCanvas CoreCanvas => motionCanvas?.CanvasCore ?? throw new Exception("canvas not found!");
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
     [Parameter]

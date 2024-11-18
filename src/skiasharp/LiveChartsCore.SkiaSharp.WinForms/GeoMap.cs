@@ -80,7 +80,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas => motionCanvas1.CanvasCore;
+    public CoreMotionCanvas Canvas => motionCanvas1.CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

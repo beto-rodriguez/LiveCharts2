@@ -447,7 +447,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         : new LvcSize { Width = (float)_motionCanvas.ActualWidth, Height = (float)_motionCanvas.ActualHeight };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _motionCanvas == null ? throw new Exception("Canvas not found") : _motionCanvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => _motionCanvas == null ? throw new Exception("Canvas not found") : _motionCanvas.CanvasCore;
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
         _core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;

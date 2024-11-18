@@ -165,7 +165,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas => _canvas is null
+    public CoreMotionCanvas Canvas => _canvas is null
         ? throw new Exception($"Canvas not found")
         : _canvas.CanvasCore;
 

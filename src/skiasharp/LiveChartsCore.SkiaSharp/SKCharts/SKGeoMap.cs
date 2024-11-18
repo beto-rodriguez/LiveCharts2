@@ -79,7 +79,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     float IGeoMapView<SkiaSharpDrawingContext>.Height => Height;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas { get; } = new();
+    public CoreMotionCanvas Canvas { get; } = new();
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
     public MapProjection MapProjection { get; set; }

@@ -51,7 +51,7 @@ public class MotionCanvas : SkiaDrawable
     /// <value>
     /// The canvas core.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
     protected override void OnUnLoad(EventArgs e)
@@ -66,7 +66,7 @@ public class MotionCanvas : SkiaDrawable
         CanvasCore.DrawFrame(
             new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 
-    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
+    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
 
     private async void RunDrawingLoop()

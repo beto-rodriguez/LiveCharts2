@@ -435,7 +435,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => canvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext

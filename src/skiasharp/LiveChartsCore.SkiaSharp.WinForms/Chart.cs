@@ -175,7 +175,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => motionCanvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

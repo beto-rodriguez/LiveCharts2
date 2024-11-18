@@ -92,7 +92,7 @@ public partial class MotionCanvas : ContentView
     /// <value>
     /// The canvas core.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <summary>
     /// Invalidates this instance.
@@ -131,7 +131,7 @@ public partial class MotionCanvas : ContentView
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
     }
 
-    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender)
     {
         Invalidate();
     }

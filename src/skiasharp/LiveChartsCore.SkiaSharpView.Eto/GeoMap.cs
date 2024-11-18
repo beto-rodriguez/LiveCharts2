@@ -82,7 +82,7 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas => _motionCanvas.CanvasCore;
+    public CoreMotionCanvas Canvas => _motionCanvas.CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

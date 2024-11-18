@@ -165,7 +165,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas => canvas.CanvasCore;
+    public CoreMotionCanvas Canvas => canvas.CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
     public CoreMap<SkiaSharpDrawingContext> ActiveMap

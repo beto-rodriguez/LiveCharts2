@@ -50,7 +50,7 @@ public partial class MotionCanvas : IDisposable
     /// <summary>
     /// Gets the <see cref="MotionCanvas{TDrawingContext}"/> (core).
     /// </summary>
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <summary>
     /// Gets or sets the paint tasks.
@@ -151,7 +151,7 @@ public partial class MotionCanvas : IDisposable
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
     }
 
-    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+    private void CanvasCore_Invalidated(CoreMotionCanvas sender)
     {
         RunDrawingLoop();
     }

@@ -340,7 +340,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;
+    public CoreMotionCanvas CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;
 
     PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
         _core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)_core;

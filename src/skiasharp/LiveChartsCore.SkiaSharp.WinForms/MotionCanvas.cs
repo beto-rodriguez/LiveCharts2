@@ -54,7 +54,7 @@ public partial class MotionCanvas : UserControl
     /// The canvas core.
     /// </value>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <inheritdoc cref="Control.CreateHandle()"/>
     protected override void CreateHandle()
@@ -83,7 +83,7 @@ public partial class MotionCanvas : UserControl
                 Background = new SKColor(Parent.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
             });
 
-    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
+    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
 
     private async void RunDrawingLoop()

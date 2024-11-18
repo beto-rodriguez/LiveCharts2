@@ -190,7 +190,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
             : new LvcSize() { Width = motionCanvas.Width, Height = motionCanvas.Height };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => motionCanvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }

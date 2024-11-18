@@ -60,7 +60,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public CartesianChart(
         ICartesianChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
-        MotionCanvas<TDrawingContext> canvas)
+        CoreMotionCanvas<TDrawingContext> canvas)
             : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
