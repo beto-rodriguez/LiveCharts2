@@ -88,7 +88,7 @@ public class CandlestickGeometry : Geometry, IFinancialGeometry<SkiaSharpDrawing
         context.Canvas.DrawLine(cx, yj, cx, l, paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
     protected override LvcSize OnMeasure(IPaint paintTasks)
     {
         return new LvcSize(Width, Math.Abs(Low - Y));

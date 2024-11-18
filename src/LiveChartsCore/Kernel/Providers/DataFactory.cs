@@ -90,7 +90,7 @@ public class DataFactory<TModel, TDrawingContext>
     {
         if (_isTModelChartEntity) return;
 
-        var canvas = (CoreMotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
+        var canvas = (CoreMotionCanvas)point.Context.Chart.CoreChart.Canvas;
         _ = _chartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
         var map = d;
         if (map is null) return;
@@ -106,7 +106,7 @@ public class DataFactory<TModel, TDrawingContext>
         _series = null;
         if (_isTModelChartEntity) return;
 
-        var canvas = (CoreMotionCanvas<TDrawingContext>)chart.Canvas;
+        var canvas = (CoreMotionCanvas)chart.Canvas;
         _ = _chartIndexEntityMap.Remove(canvas.Sync);
     }
 
@@ -368,7 +368,7 @@ public class DataFactory<TModel, TDrawingContext>
     {
         if (series.Values is null) yield break;
 
-        var canvas = (CoreMotionCanvas<TDrawingContext>)chart.Canvas;
+        var canvas = (CoreMotionCanvas)chart.Canvas;
         var mapper = series.Mapping ?? LiveCharts.DefaultSettings.GetMap<TModel>();
         var index = 0;
 

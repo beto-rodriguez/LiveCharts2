@@ -30,7 +30,7 @@ using SkiaSharp.Views.Blazor;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
 
-/// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
+/// <inheritdoc cref="CoreMotionCanvas"/>
 public partial class MotionCanvas : IDisposable
 {
     private SKGLView? _glView;
@@ -48,7 +48,7 @@ public partial class MotionCanvas : IDisposable
     }
 
     /// <summary>
-    /// Gets the <see cref="MotionCanvas{TDrawingContext}"/> (core).
+    /// Gets the <see cref="CoreMotionCanvas"/> (core).
     /// </summary>
     public CoreMotionCanvas CanvasCore { get; } = new();
 

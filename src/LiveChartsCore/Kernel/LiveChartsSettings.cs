@@ -288,11 +288,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default legend text paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendTextPaint<TDrawingContext>(IPaint paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithLegendTextPaint(IPaint paint)
     {
         LegendTextPaint = paint;
         return this;
@@ -312,11 +310,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default tooltip background paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipBackgroundPaint<TDrawingContext>(IPaint paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithTooltipBackgroundPaint(IPaint paint)
     {
         TooltipBackgroundPaint = paint;
         return this;
@@ -325,11 +321,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default tooltip text paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipTextPaint<TDrawingContext>(IPaint paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithTooltipTextPaint(IPaint paint)
     {
         TooltipTextPaint = paint;
         return this;

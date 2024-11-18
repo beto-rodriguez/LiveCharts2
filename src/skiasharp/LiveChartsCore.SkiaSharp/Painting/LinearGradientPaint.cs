@@ -96,7 +96,7 @@ public class LinearGradientPaint(
     public LinearGradientPaint(SKColor start, SKColor end)
         : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
+    /// <inheritdoc cref="IPaint.CloneTask" />
     public override IPaint CloneTask()
     {
         return new LinearGradientPaint(gradientStops, startPoint, endPoint, colorPos, tileMode)
@@ -118,12 +118,13 @@ public class LinearGradientPaint(
         };
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="IPaint.ApplyOpacityMask(DrawingContext, IDrawable)" />
+    public override void ApplyOpacityMask(DrawingContext context, IDrawable geometry)
     {
         if (_skiaPaint is null) return;
+        var skiaContext = (SkiaSharpDrawingContext)context;
 
-        var size = GetDrawRectangleSize(context);
+        var size = GetDrawRectangleSize(skiaContext);
 
         var xf = size.Location.X;
         var xt = xf + size.Width;
@@ -142,12 +143,12 @@ public class LinearGradientPaint(
             tileMode);
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="IPaint.RestoreOpacityMask(DrawingContext, IDrawable)" />
+    public override void RestoreOpacityMask(DrawingContext context, IDrawable geometry)
     {
         if (_skiaPaint is null) return;
 
-        var size = GetDrawRectangleSize(context);
+        var size = GetDrawRectangleSize((SkiaSharpDrawingContext)context);
 
         var xf = size.Location.X;
         var xt = xf + size.Width;
@@ -166,12 +167,13 @@ public class LinearGradientPaint(
             tileMode);
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
-    public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
+    /// <inheritdoc cref="IPaint.InitializeTask(DrawingContext)" />
+    public override void InitializeTask(DrawingContext drawingContext)
     {
+        var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
 
-        var size = GetDrawRectangleSize(drawingContext);
+        var size = GetDrawRectangleSize(skiaContext);
 
         var xf = size.Location.X;
         var xt = xf + size.Width;
@@ -201,26 +203,26 @@ public class LinearGradientPaint(
 
         if (PathEffect is not null)
         {
-            PathEffect.CreateEffect(drawingContext);
+            PathEffect.CreateEffect(skiaContext);
             _skiaPaint.PathEffect = PathEffect.SKPathEffect;
         }
 
         if (ImageFilter is not null)
         {
-            ImageFilter.CreateFilter(drawingContext);
+            ImageFilter.CreateFilter(skiaContext);
             _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
         }
 
-        var clip = GetClipRectangle(drawingContext.MotionCanvas);
+        var clip = GetClipRectangle(skiaContext.MotionCanvas);
         if (clip != LvcRectangle.Empty)
         {
-            _ = drawingContext.Canvas.Save();
-            drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = drawingContext;
+            _ = skiaContext.Canvas.Save();
+            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+            _drawingContext = skiaContext;
         }
 
-        drawingContext.Paint = _skiaPaint;
-        drawingContext.PaintTask = this;
+        skiaContext.Paint = _skiaPaint;
+        skiaContext.PaintTask = this;
     }
 
     /// <summary>

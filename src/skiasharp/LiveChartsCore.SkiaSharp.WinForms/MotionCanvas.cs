@@ -32,7 +32,7 @@ using SkiaSharp.Views.Desktop;
 namespace LiveChartsCore.SkiaSharpView.WinForms;
 
 /// <summary>
-/// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// The motion canvas control for windows forms, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="UserControl" />
 public partial class MotionCanvas : UserControl

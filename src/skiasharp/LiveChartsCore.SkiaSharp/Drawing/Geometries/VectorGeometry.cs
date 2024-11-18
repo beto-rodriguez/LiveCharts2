@@ -37,15 +37,13 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
 {
     private readonly FloatMotionProperty _pivotProperty;
 
-    private readonly FloatMotionProperty _opacityProperty;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="VectorGeometry{TSegment}"/> class.
     /// </summary>
     public VectorGeometry()
+        : base()
     {
         _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
-        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
     }
 
     /// <summary>
@@ -64,9 +62,6 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
     public IPaint? Fill { get; set; }
-
-    /// <inheritdoc cref="IPaintable{TDrawingContext}.Opacity" />
-    public float Opacity { get => _opacityProperty.GetMovement(this); set => _opacityProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
     public override void CompleteTransition(params string[]? propertyName)

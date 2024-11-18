@@ -25,14 +25,13 @@ using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting;
 
-/// <inheritdoc cref="IPaint{TDrawingContext}" />
+/// <inheritdoc cref="IPaint" />
 public abstract class Paint : Animatable, IDisposable, IPaint
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
@@ -59,10 +58,10 @@ public abstract class Paint : Animatable, IDisposable, IPaint
         Color = color;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ZIndex"/>
+    /// <inheritdoc cref="IPaint.ZIndex"/>
     public double ZIndex { get; set; }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.StrokeThickness" />
+    /// <inheritdoc cref="IPaint.StrokeThickness" />
     public float StrokeThickness { get => _strokeWidthTransition.GetMovement(this); set => _strokeWidthTransition.SetMovement(value, this); }
 
     /// <summary>
@@ -73,13 +72,13 @@ public abstract class Paint : Animatable, IDisposable, IPaint
     /// </value>
     public SKPaintStyle Style { get; set; }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.IsStroke" />
+    /// <inheritdoc cref="IPaint.IsStroke" />
     public bool IsStroke { get; set; }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.IsFill" />
+    /// <inheritdoc cref="IPaint.IsFill" />
     public bool IsFill { get; set; }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.FontFamily" />
+    /// <inheritdoc cref="IPaint.FontFamily" />
     public string? FontFamily { get; set; }
 
     /// <summary>
@@ -168,10 +167,10 @@ public abstract class Paint : Animatable, IDisposable, IPaint
     /// </value>
     public ImageFilter? ImageFilter { get; set; }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
-    public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
+    /// <inheritdoc cref="IPaint.InitializeTask(DrawingContext)" />
+    public abstract void InitializeTask(DrawingContext drawingContext);
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.GetGeometries(CoreMotionCanvas{TDrawingContext})" />
+    /// <inheritdoc cref="IPaint.GetGeometries(CoreMotionCanvas)" />
     public IEnumerable<IDrawable> GetGeometries(CoreMotionCanvas canvas)
     {
         var enumerable = GetGeometriesByCanvas(canvas) ?? Enumerable.Empty<IDrawable>();
@@ -181,14 +180,14 @@ public abstract class Paint : Animatable, IDisposable, IPaint
         }
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.SetGeometries(CoreMotionCanvas{TDrawingContext}, HashSet{IDrawable{TDrawingContext}})" />
+    /// <inheritdoc cref="IPaint.SetGeometries(CoreMotionCanvas, HashSet{IDrawable})" />
     public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawable> geometries)
     {
         _geometriesByCanvas[canvas] = geometries;
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.AddGeometryToPaintTask(CoreMotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
+    /// <inheritdoc cref="IPaint.AddGeometryToPaintTask(CoreMotionCanvas, IDrawable)" />
     public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawable geometry)
     {
         var g = GetGeometriesByCanvas(canvas);
@@ -201,46 +200,46 @@ public abstract class Paint : Animatable, IDisposable, IPaint
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.RemoveGeometryFromPainTask(CoreMotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
+    /// <inheritdoc cref="IPaint.RemoveGeometryFromPainTask(CoreMotionCanvas, IDrawable)" />
     public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawable geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ClearGeometriesFromPaintTask(CoreMotionCanvas{TDrawingContext})"/>
+    /// <inheritdoc cref="IPaint.ClearGeometriesFromPaintTask(CoreMotionCanvas)"/>
     public void ClearGeometriesFromPaintTask(CoreMotionCanvas canvas)
     {
         GetGeometriesByCanvas(canvas)?.Clear();
         IsValid = false;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(CoreMotionCanvas{TDrawingContext})"/>
+    /// <inheritdoc cref="IPaint.ReleaseCanvas(CoreMotionCanvas)"/>
     public void ReleaseCanvas(CoreMotionCanvas canvas)
     {
         _ = _geometriesByCanvas.Remove(canvas);
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(CoreMotionCanvas{TDrawingContext})" />
+    /// <inheritdoc cref="IPaint.GetClipRectangle(CoreMotionCanvas)" />
     public LvcRectangle GetClipRectangle(CoreMotionCanvas canvas)
     {
         return _clipRectangles.TryGetValue(canvas, out var clip) ? clip : LvcRectangle.Empty;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(CoreMotionCanvas{TDrawingContext}, LvcRectangle)" />
+    /// <inheritdoc cref="IPaint.SetClipRectangle(CoreMotionCanvas, LvcRectangle)" />
     public void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value)
     {
         _clipRectangles[canvas] = value;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
+    /// <inheritdoc cref="IPaint.CloneTask" />
     public abstract IPaint CloneTask();
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public abstract void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry);
+    /// <inheritdoc cref="IPaint.ApplyOpacityMask(DrawingContext, IDrawable)" />
+    public abstract void ApplyOpacityMask(DrawingContext context, IDrawable geometry);
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public abstract void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry);
+    /// <inheritdoc cref="IPaint.ApplyOpacityMask(DrawingContext, IDrawable)" />
+    public abstract void RestoreOpacityMask(DrawingContext context, IDrawable geometry);
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

@@ -77,7 +77,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="view">The chart view.</param>
     protected Chart(
-        CoreMotionCanvas<TDrawingContext> canvas,
+        CoreMotionCanvas canvas,
         Action<LiveChartsSettings> defaultPlatformConfig,
         IChartView view)
     {
@@ -141,7 +141,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The canvas.
     /// </value>
-    public CoreMotionCanvas<TDrawingContext> Canvas { get; private set; }
+    public CoreMotionCanvas Canvas { get; private set; }
 
     /// <summary>
     /// Gets the visible series.
@@ -745,7 +745,7 @@ public abstract class Chart<TDrawingContext> : IChart
         }
     }
 
-    private void OnCanvasValidated(CoreMotionCanvas<TDrawingContext> chart)
+    private void OnCanvasValidated(CoreMotionCanvas chart)
     {
         InvokeOnUpdateFinished();
     }

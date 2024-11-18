@@ -30,7 +30,7 @@ using LiveChartsCore.Motion;
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <summary>
-/// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// The motion canvas control for windows forms, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 public class MotionCanvas : SkiaDrawable
 {

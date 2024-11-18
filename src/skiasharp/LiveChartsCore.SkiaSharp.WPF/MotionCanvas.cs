@@ -34,7 +34,7 @@ using SkiaSharp.Views.WPF;
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
 /// <summary>
-/// Defines the motion canvas control for WPF, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// Defines the motion canvas control for WPF, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="Control" />
 public class MotionCanvas : UserControl

@@ -47,7 +47,7 @@ public class NeedleGeometry : Geometry, INeedleGeometry<SkiaSharpDrawingContext>
         context.Canvas.DrawCircle(X, Y, w, paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})"/>
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)"/>
     protected override LvcSize OnMeasure(IPaint paintTasks)
     {
         return new();

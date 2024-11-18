@@ -28,6 +28,8 @@ namespace LiveChartsCore.Drawing;
 /// <seealso cref="IAnimatable" />
 public interface IDrawable : IAnimatable
 {
+    float Opacity { get; set; }
+
     /// <summary>
     /// Draws the instance in the user interface with for the specified context.
     /// </summary>

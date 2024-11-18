@@ -38,12 +38,4 @@ public interface IPaintable<TDrawingContext> : IDrawable
     /// Gets or sets the fill paint.
     /// </summary>
     IPaint? Fill { get; set; }
-
-    /// <summary>
-    /// Gets or sets the opacity.
-    /// </summary>
-    /// <value>
-    /// The opacity.
-    /// </value>
-    float Opacity { get; set; }
 }

@@ -35,7 +35,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <summary>
-/// The motion canvas control for avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// The motion canvas control for avalonia, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 public class MotionCanvas : UserControl
 {
@@ -106,7 +106,7 @@ public class MotionCanvas : UserControl
             using var lease = leaseFeature.Lease();
 
             motionCanvas.DrawFrame(
-                new(motionCanvas,
+                new SkiaSharpDrawingContext(motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
                     lease.SkSurface,
                     lease.SkCanvas,

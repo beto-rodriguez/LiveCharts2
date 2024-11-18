@@ -174,7 +174,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         shaper?.Dispose();
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
     protected override LvcSize OnMeasure(IPaint paint)
     {
         var skiaPaint = (Paint)paint;

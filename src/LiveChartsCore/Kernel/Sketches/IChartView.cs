@@ -254,7 +254,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <value>
     /// The core canvas.
     /// </value>
-    CoreMotionCanvas<TDrawingContext> CoreCanvas { get; }
+    CoreMotionCanvas CoreCanvas { get; }
 
     /// <summary>
     /// Gets or sets the legend.

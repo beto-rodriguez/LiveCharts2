@@ -26,7 +26,7 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines a schedule to be drawn by an <see cref="IPaint{TDrawingContext}"/> instance.
+/// Defines a schedule to be drawn by an <see cref="IPaint"/> instance.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class PaintSchedule<TDrawingContext>

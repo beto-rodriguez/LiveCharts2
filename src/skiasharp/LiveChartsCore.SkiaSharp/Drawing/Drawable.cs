@@ -21,12 +21,30 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
 
 /// <inheritdoc cref="IDrawable" />
 public abstract class Drawable : Animatable, IDrawable
 {
+    private readonly FloatMotionProperty _opacityProperty;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Drawable"/> class.
+    /// </summary>
+    protected Drawable()
+    {
+        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
+    }
+
+    /// <inheritdoc cref="IDrawable.Opacity" />
+    public float Opacity
+    {
+        get => _opacityProperty.GetMovement(this);
+        set => _opacityProperty.SetMovement(value, this);
+    }
+
     /// <inheritdoc cref="IDrawable.Draw(DrawingContext)" />
     public abstract void Draw(SkiaSharpDrawingContext context);
 

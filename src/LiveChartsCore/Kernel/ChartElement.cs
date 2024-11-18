@@ -162,7 +162,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     }
 
     /// <summary>
-    /// Schedules the delete for thew given <see cref="IPaint{TDrawingContext}"/> instance.
+    /// Schedules the delete for thew given <see cref="IPaint"/> instance.
     /// </summary>
     /// <returns></returns>
     protected void ScheduleDeleteFor(IPaint paintTask)

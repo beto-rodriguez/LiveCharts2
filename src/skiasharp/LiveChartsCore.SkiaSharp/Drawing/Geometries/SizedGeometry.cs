@@ -70,7 +70,7 @@ public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaSharpDrawingC
         }
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
     protected override LvcSize OnMeasure(IPaint paint)
     {
         return new LvcSize(Width, Height);

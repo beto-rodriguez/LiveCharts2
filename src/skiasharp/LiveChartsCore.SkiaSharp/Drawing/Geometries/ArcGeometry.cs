@@ -70,7 +70,7 @@ public class ArcGeometry : Geometry, IArcGeometry<SkiaSharpDrawingContext>
         context.Canvas.DrawPath(path, context.Paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})"/>
+    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)"/>
     protected override LvcSize OnMeasure(IPaint paintTasks)
     {
         return new();

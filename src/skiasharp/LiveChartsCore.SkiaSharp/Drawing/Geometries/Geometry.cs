@@ -32,7 +32,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
 {
     private readonly bool _hasGeometryTransform = false;
-    private readonly FloatMotionProperty _opacityProperty;
     private readonly FloatMotionProperty _xProperty;
     private readonly FloatMotionProperty _yProperty;
     private readonly FloatMotionProperty _rotationProperty;
@@ -51,11 +50,11 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// Initializes a new instance of the <see cref="Geometry"/> class.
     /// </summary>
     protected Geometry(bool hasGeometryTransform = false)
+        : base()
     {
         _hasGeometryTransform = hasGeometryTransform;
         _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
         _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
         _transformOriginProperty = RegisterMotionProperty(
             new PointMotionProperty(nameof(TransformOrigin), new LvcPoint(0.5f, 0.5f)));
         _translateProperty = RegisterMotionProperty(
@@ -156,9 +155,6 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
             _hasTransform = true;
         }
     }
-
-    /// <inheritdoc cref="IPaintable{TDrawingContext}.Opacity" />
-    public float Opacity { get => _opacityProperty.GetMovement(this); set => _opacityProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
     public IPaint? Stroke { get; set; }

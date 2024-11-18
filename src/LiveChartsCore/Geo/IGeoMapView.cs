@@ -41,7 +41,7 @@ public interface IGeoMapView<TDrawingContext>
     /// <summary>
     /// Gets the motion canvas.
     /// </summary>
-    CoreMotionCanvas<TDrawingContext> Canvas { get; }
+    CoreMotionCanvas Canvas { get; }
 
     /// <summary>
     /// Gets the control width.

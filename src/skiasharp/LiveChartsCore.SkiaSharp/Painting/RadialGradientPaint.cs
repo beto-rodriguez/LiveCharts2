@@ -81,7 +81,7 @@ public class RadialGradientPaint : Paint
     public RadialGradientPaint(SKColor centerColor, SKColor outerColor)
         : this(new[] { centerColor, outerColor }) { }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
+    /// <inheritdoc cref="IPaint.CloneTask" />
     public override IPaint CloneTask()
     {
         return new RadialGradientPaint(_gradientStops, _center, _radius, _colorPos, _tileMode)
@@ -103,12 +103,13 @@ public class RadialGradientPaint : Paint
         };
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
-    public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
+    /// <inheritdoc cref="IPaint.InitializeTask(DrawingContext)" />
+    public override void InitializeTask(DrawingContext drawingContext)
     {
+        var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
 
-        var size = GetDrawRectangleSize(drawingContext);
+        var size = GetDrawRectangleSize(skiaContext);
         var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
         var r = size.Location.X + size.Width > size.Location.Y + size.Height
             ? size.Location.Y + size.Height
@@ -134,34 +135,35 @@ public class RadialGradientPaint : Paint
 
         if (PathEffect is not null)
         {
-            PathEffect.CreateEffect(drawingContext);
+            PathEffect.CreateEffect(skiaContext);
             _skiaPaint.PathEffect = PathEffect.SKPathEffect;
         }
 
         if (ImageFilter is not null)
         {
-            ImageFilter.CreateFilter(drawingContext);
+            ImageFilter.CreateFilter(skiaContext);
             _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
         }
 
-        var clip = GetClipRectangle(drawingContext.MotionCanvas);
+        var clip = GetClipRectangle(skiaContext.MotionCanvas);
         if (clip != LvcRectangle.Empty)
         {
-            _ = drawingContext.Canvas.Save();
-            drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = drawingContext;
+            _ = skiaContext.Canvas.Save();
+            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+            _drawingContext = skiaContext;
         }
 
-        drawingContext.Paint = _skiaPaint;
-        drawingContext.PaintTask = this;
+        skiaContext.Paint = _skiaPaint;
+        skiaContext.PaintTask = this;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="IPaint.ApplyOpacityMask(DrawingContext, IDrawable)" />
+    public override void ApplyOpacityMask(DrawingContext context, IDrawable geometry)
     {
+        var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
 
-        var size = GetDrawRectangleSize(context);
+        var size = GetDrawRectangleSize(skiaContext);
         var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
         var r = size.Location.X + size.Width > size.Location.Y + size.Height
             ? size.Location.Y + size.Height
@@ -176,12 +178,13 @@ public class RadialGradientPaint : Paint
                 _tileMode);
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="IPaint.RestoreOpacityMask(DrawingContext, IDrawable)" />
+    public override void RestoreOpacityMask(DrawingContext context, IDrawable geometry)
     {
+        var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
 
-        var size = GetDrawRectangleSize(context);
+        var size = GetDrawRectangleSize(skiaContext);
         var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
         var r = size.Location.X + size.Width > size.Location.Y + size.Height
             ? size.Location.Y + size.Height
