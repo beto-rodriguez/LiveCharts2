@@ -22,13 +22,13 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -51,10 +51,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private IPaint? _upStroke = null;
-    private IPaint? _upFill = null;
-    private IPaint? _downStroke = null;
-    private IPaint? _downFill = null;
+    private Paint? _upStroke = null;
+    private Paint? _upFill = null;
+    private Paint? _downStroke = null;
+    private Paint? _downFill = null;
     private double _maxBarWidth = 25;
 
     /// <summary>
@@ -84,28 +84,28 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpStroke"/>
-    public IPaint? UpStroke
+    public Paint? UpStroke
     {
         get => _upStroke;
         set => SetPaintProperty(ref _upStroke, value, true);
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpFill"/>
-    public IPaint? UpFill
+    public Paint? UpFill
     {
         get => _upFill;
         set => SetPaintProperty(ref _upFill, value);
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownStroke"/>
-    public IPaint? DownStroke
+    public Paint? DownStroke
     {
         get => _downStroke;
         set => SetPaintProperty(ref _downStroke, value, true);
     }
 
     /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownFill"/>
-    public IPaint? DownFill
+    public Paint? DownFill
     {
         get => _downFill;
         set => SetPaintProperty(ref _downFill, value);
@@ -391,10 +391,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
-    protected override double GetRequestedSecondaryOffset()
-    {
-        return 0.5f;
-    }
+    protected override double GetRequestedSecondaryOffset() => 0.5f;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
@@ -440,10 +437,8 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)

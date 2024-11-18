@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 namespace LiveChartsCore;
 
@@ -413,7 +414,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="geometry"></param>
     /// <returns></returns>
     protected PaintSchedule<TDrawingContext> BuildMiniatureSchedule(
-        IPaint paint, ISizedGeometry<TDrawingContext> geometry)
+        Paint paint, ISizedGeometry<TDrawingContext> geometry)
     {
         var paintClone = paint.CloneTask();
         var st = paint.IsStroke ? paint.StrokeThickness : 0;
@@ -492,7 +493,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="paint">the base paint.</param>
     /// <param name="zIndex">the z index.</param>
     /// <returns></returns>
-    protected virtual IPaint? GetMiniaturePaint(IPaint? paint, int zIndex)
+    protected virtual Paint? GetMiniaturePaint(Paint? paint, int zIndex)
     {
         if (paint is null) return null;
 

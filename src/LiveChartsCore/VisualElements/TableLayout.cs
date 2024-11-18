@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -36,7 +37,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     where TDrawingContext : DrawingContext
     where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private IPaint? _backgroundPaint;
+    private Paint? _backgroundPaint;
     private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = [];
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
@@ -71,7 +72,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -253,16 +254,12 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { BackgroundGeometry };
-    }
+    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+        [BackgroundGeometry];
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _backgroundPaint };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_backgroundPaint];
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
     protected internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)

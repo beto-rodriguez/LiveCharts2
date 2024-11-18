@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
@@ -70,9 +71,7 @@ public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaSharpDrawingC
         }
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
-    protected override LvcSize OnMeasure(IPaint paint)
-    {
-        return new LvcSize(Width, Height);
-    }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint paint) =>
+        new(Width, Height);
 }

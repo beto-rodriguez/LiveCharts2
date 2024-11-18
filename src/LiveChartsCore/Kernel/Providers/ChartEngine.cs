@@ -24,6 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Providers;
 
@@ -64,7 +65,7 @@ public abstract class ChartEngine<TDrawingContext>
     /// Gets a new paint of the given color.
     /// </summary>
     /// <returns></returns>
-    public abstract IPaint GetSolidColorPaint(LvcColor color = new());
+    public abstract Paint GetSolidColorPaint(LvcColor color = new());
 
     /// <summary>
     /// Initializes the zooming section for a cartesian chart in a given canvas.

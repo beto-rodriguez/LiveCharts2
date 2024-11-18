@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -53,8 +54,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
             where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
 {
-    private IPaint? _stroke = null;
-    private IPaint? _fill = null;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
     private double _pushout = 0;
     private double _innerRadius = 0;
     private double _outerRadiusOffset = 0;
@@ -76,7 +77,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -88,7 +89,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -448,10 +449,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
-    public virtual DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
-    {
-        return DataFactory.GetPieBounds(chart, this).Bounds;
-    }
+    public virtual DimensionalBounds GetBounds(PieChart<TDrawingContext> chart) =>
+        DataFactory.GetPieBounds(chart, this).Bounds;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     [Obsolete]
@@ -491,26 +490,20 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>
-    public override string? GetSecondaryToolTipText(ChartPoint point)
-    {
-        return LiveCharts.IgnoreToolTipLabel;
-    }
+    public override string? GetSecondaryToolTipText(ChartPoint point) =>
+        LiveCharts.IgnoreToolTipLabel;
 
     /// <summary>
     /// GEts the stack group
     /// </summary>
     /// <returns></returns>
     /// <inheritdoc />
-    public override int GetStackGroup()
-    {
-        return 0;
-    }
+    public override int GetStackGroup() =>
+        0;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [_fill, _stroke, DataLabelsPaint];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_fill, _stroke, DataLabelsPaint];
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
@@ -670,7 +663,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? Fill;
@@ -684,7 +677,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Stroke ?? Stroke;

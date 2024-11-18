@@ -22,9 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -36,8 +36,8 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
 {
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
     private object? _viewCommand;
-    private IPaint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private IPaint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
@@ -85,7 +85,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     public MapProjection MapProjection { get; set; }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set
@@ -96,7 +96,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set
@@ -107,7 +107,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
-    public IEnumerable<IGeoSeries> Series { get; set; } = Array.Empty<IGeoSeries>();
+    public IEnumerable<IGeoSeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand"/>
     public object? ViewCommand
@@ -139,8 +139,6 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
         _core.Unload();
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
         action();
-    }
 }

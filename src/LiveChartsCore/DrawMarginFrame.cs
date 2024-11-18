@@ -23,6 +23,7 @@
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -33,8 +34,8 @@ namespace LiveChartsCore;
 public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
-    private IPaint? _stroke = null;
-    private IPaint? _fill = null;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -42,7 +43,7 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -54,17 +55,15 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _stroke, _fill };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_stroke, _fill];
 
     /// <summary>
     /// Called when the fill changes.

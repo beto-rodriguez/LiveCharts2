@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -54,8 +55,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _geometrySize = 14f;
-    private IPaint? _geometryFill;
-    private IPaint? _geometryStroke;
+    private Paint? _geometryFill;
+    private Paint? _geometryStroke;
     private bool _enableNullSplitting = true;
 
     /// <summary>
@@ -76,14 +77,14 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
     /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometryFill"/>
-    public IPaint? GeometryFill
+    public Paint? GeometryFill
     {
         get => _geometryFill;
         set => SetPaintProperty(ref _geometryFill, value);
     }
 
     /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometrySize"/>
-    public IPaint? GeometryStroke
+    public Paint? GeometryStroke
     {
         get => _geometryStroke;
         set => SetPaintProperty(ref _geometryStroke, value, true);
@@ -464,10 +465,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     }
 
     /// <inheritdoc cref="GetRequestedGeometrySize"/>
-    protected override double GetRequestedGeometrySize()
-    {
-        return (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
-    }
+    protected override double GetRequestedGeometrySize() =>
+        (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     [Obsolete]
@@ -516,7 +515,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     }
 
     /// <inheritdoc cref="GetMiniatureFill(ChartPoint?, int)"/>
-    protected override IPaint? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected override Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? GeometryFill;
@@ -525,7 +524,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     }
 
     /// <inheritdoc cref="GetMiniatureStroke(ChartPoint?, int)"/>
-    protected override IPaint? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected override Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? GeometryStroke;
@@ -638,10 +637,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     /// Gets the paint tasks.
     /// </summary>
     /// <returns></returns>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {

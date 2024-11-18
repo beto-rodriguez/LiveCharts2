@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -48,7 +49,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         where TDrawingContext : DrawingContext
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
-    private IPaint? _errorPaint;
+    private Paint? _errorPaint;
     private int? _stackGroup;
     private double _minGeometrySize = 6d;
     private double _geometrySize = 24d;
@@ -89,7 +90,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     /// <value>
     /// The size of the geometry.
     /// </value>
-    public double GeometrySize { get => _geometrySize; set =>SetProperty(ref _geometrySize, value); }
+    public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, value); }
 
     /// <summary>
     /// Gets a value indicating whether the points in this series use weight.
@@ -97,7 +98,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     public bool IsWeighted { get; private set; }
 
     /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint? ErrorPaint
+    public Paint? ErrorPaint
     {
         get => _errorPaint;
         set => SetPaintProperty(ref _errorPaint, value, true);
@@ -442,8 +443,6 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         label.RemoveOnCompleted = true;
     }
 
-    private static SeriesProperties GetProperties()
-    {
-        return SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips;
-    }
+    private static SeriesProperties GetProperties() =>
+        SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips;
 }

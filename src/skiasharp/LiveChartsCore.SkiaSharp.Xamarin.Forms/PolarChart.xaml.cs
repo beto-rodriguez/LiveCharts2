@@ -258,7 +258,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
-            nameof(LegendBackgroundPaint), typeof(IPaint), typeof(PolarChart),
+            nameof(LegendBackgroundPaint), typeof(Paint), typeof(PolarChart),
             LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -266,7 +266,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
-            nameof(LegendTextPaint), typeof(IPaint), typeof(PolarChart),
+            nameof(LegendTextPaint), typeof(Paint), typeof(PolarChart),
             LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -298,7 +298,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
-            nameof(TooltipBackgroundPaint), typeof(IPaint), typeof(PolarChart),
+            nameof(TooltipBackgroundPaint), typeof(Paint), typeof(PolarChart),
             LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -306,7 +306,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
-            nameof(TooltipTextPaint), typeof(IPaint), typeof(PolarChart),
+            nameof(TooltipTextPaint), typeof(Paint), typeof(PolarChart),
             LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -509,16 +509,16 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
-    public IPaint? LegendBackgroundPaint
+    public Paint? LegendBackgroundPaint
     {
-        get => (IPaint?)GetValue(LegendBackgroundPaintProperty);
+        get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
-    public IPaint? LegendTextPaint
+    public Paint? LegendTextPaint
     {
-        get => (IPaint?)GetValue(LegendTextPaintProperty);
+        get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
@@ -540,16 +540,16 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
-    public IPaint? TooltipBackgroundPaint
+    public Paint? TooltipBackgroundPaint
     {
-        get => (IPaint?)GetValue(TooltipBackgroundPaintProperty);
+        get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
-    public IPaint? TooltipTextPaint
+    public Paint? TooltipTextPaint
     {
-        get => (IPaint?)GetValue(TooltipTextPaintProperty);
+        get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 

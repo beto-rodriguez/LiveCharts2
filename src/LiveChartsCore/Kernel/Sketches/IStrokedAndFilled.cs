@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -37,7 +38,7 @@ public interface IStrokedAndFilled<TDrawingContext>
     /// <value>
     /// The fill.
     /// </value>
-    IPaint? Fill { get; set; }
+    Paint? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -45,5 +46,5 @@ public interface IStrokedAndFilled<TDrawingContext>
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint? Stroke { get; set; }
+    Paint? Stroke { get; set; }
 }

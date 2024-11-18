@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Motion;
 using SkiaSharp;
 
@@ -156,11 +157,11 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
-    public IPaint? Stroke { get; set; }
+    /// <inheritdoc cref="Paintable{TDrawingContext}.Stroke" />
+    public Paint? Stroke { get; set; }
 
-    /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
-    public IPaint? Fill { get; set; }
+    /// <inheritdoc cref="Paintable{TDrawingContext}.Fill" />
+    public Paint? Fill { get; set; }
 
     /// <inheritdoc cref="IGeometry{TDrawingContext}.Parent"/>
     public IGeometry<SkiaSharpDrawingContext>? Parent { get; set; }
@@ -280,7 +281,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// </summary>
     /// <param name="drawableTask">The drawable task.</param>
     /// <returns>the size of the geometry.</returns>
-    public LvcSize Measure(IPaint drawableTask)
+    public LvcSize Measure(Paint drawableTask)
     {
         var measure = OnMeasure(drawableTask);
 
@@ -311,5 +312,5 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// </summary>
     /// <param name="paintTasks">The paint task.</param>
     /// <returns>the size of the geometry</returns>
-    protected abstract LvcSize OnMeasure(IPaint paintTasks);
+    protected abstract LvcSize OnMeasure(Paint paintTasks);
 }

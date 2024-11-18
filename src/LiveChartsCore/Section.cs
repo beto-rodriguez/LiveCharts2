@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -36,9 +37,9 @@ namespace LiveChartsCore;
 public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
-    private IPaint? _stroke = null;
-    private IPaint? _fill = null;
-    private IPaint? _labelPaint = null;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
+    private Paint? _labelPaint = null;
     private double? _xi;
     private double? _xj;
     private double? _yi;
@@ -53,7 +54,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -65,7 +66,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -77,7 +78,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? LabelPaint
+    public Paint? LabelPaint
     {
         get => _labelPaint;
         set => SetPaintProperty(ref _labelPaint, value);
@@ -146,10 +147,8 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     public int? ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _stroke, _fill, _labelPaint };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_stroke, _fill, _labelPaint];
 
     /// <summary>
     /// Called when the fill changes.

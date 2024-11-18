@@ -29,6 +29,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -41,7 +42,7 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     where TModel : IWeigthedMapLand
     where TDrawingContext : DrawingContext
 {
-    private IPaint? _heatPaint;
+    private Paint? _heatPaint;
     private bool _isHeatInCanvas = false;
     private LvcColor[] _heatMap = [];
     private double[]? _colorStops;
@@ -165,18 +166,14 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     /// <summary>
     /// Initializes the series.
     /// </summary>
-    protected void IntitializeSeries(IPaint heatPaint)
-    {
+    protected void IntitializeSeries(Paint heatPaint) =>
         _heatPaint = heatPaint;
-    }
 
     /// <summary>
     /// Called to invoke the property changed event.
     /// </summary>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 
     private void NotifySubscribers()
     {

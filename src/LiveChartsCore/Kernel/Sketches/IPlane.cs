@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -205,7 +206,7 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The text paint.
     /// </value>
-    IPaint? NamePaint { get; set; }
+    Paint? NamePaint { get; set; }
 
     /// <summary>
     /// Gets or sets the text paint.
@@ -213,7 +214,7 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The text paint.
     /// </value>
-    IPaint? LabelsPaint { get; set; }
+    Paint? LabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the separators paint.
@@ -221,7 +222,7 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint? SeparatorsPaint { get; set; }
+    Paint? SeparatorsPaint { get; set; }
 
     /// <summary>
     /// Gets the size of the possible.

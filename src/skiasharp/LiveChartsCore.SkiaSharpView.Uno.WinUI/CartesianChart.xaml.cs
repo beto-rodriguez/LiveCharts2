@@ -266,7 +266,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty LegendBackgroundPaintProperty =
         DependencyProperty.Register(
-            nameof(LegendBackgroundPaint), typeof(IPaint), typeof(CartesianChart),
+            nameof(LegendBackgroundPaint), typeof(Paint), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -274,7 +274,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty LegendTextPaintProperty =
         DependencyProperty.Register(
-            nameof(LegendTextPaint), typeof(IPaint), typeof(CartesianChart),
+            nameof(LegendTextPaint), typeof(Paint), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -298,7 +298,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty TooltipBackgroundPaintProperty =
         DependencyProperty.Register(
-            nameof(TooltipBackgroundPaint), typeof(IPaint), typeof(CartesianChart),
+            nameof(TooltipBackgroundPaint), typeof(Paint), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -306,7 +306,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty TooltipTextPaintProperty =
         DependencyProperty.Register(
-            nameof(TooltipTextPaint), typeof(IPaint), typeof(CartesianChart),
+            nameof(TooltipTextPaint), typeof(Paint), typeof(CartesianChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -589,16 +589,16 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
-    public IPaint? TooltipBackgroundPaint
+    public Paint? TooltipBackgroundPaint
     {
-        get => (IPaint?)GetValue(TooltipBackgroundPaintProperty);
+        get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
-    public IPaint? TooltipTextPaint
+    public Paint? TooltipTextPaint
     {
-        get => (IPaint?)GetValue(TooltipTextPaintProperty);
+        get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
@@ -613,16 +613,16 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
-    public IPaint? LegendBackgroundPaint
+    public Paint? LegendBackgroundPaint
     {
-        get => (IPaint?)GetValue(LegendBackgroundPaintProperty);
+        get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
-    public IPaint? LegendTextPaint
+    public Paint? LegendTextPaint
     {
-        get => (IPaint?)GetValue(LegendTextPaintProperty);
+        get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 

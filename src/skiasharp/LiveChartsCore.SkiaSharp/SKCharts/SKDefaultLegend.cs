@@ -24,6 +24,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -39,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 {
     private static readonly int s_zIndex = 10050;
-    private IPaint? _backgroundPaint = null;
+    private Paint? _backgroundPaint = null;
 
     // marked as internal only for testing purposes
     internal readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
@@ -60,12 +61,12 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets the legend font paint.
     /// </summary>
-    public IPaint? FontPaint { get; set; }
+    public Paint? FontPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set
@@ -73,7 +74,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
             _backgroundPaint = value;
             if (value is not null)
             {
-                value.IsFill = true;
+                value.IsStroke = false;
             }
         }
     }

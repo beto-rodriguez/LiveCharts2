@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -30,10 +32,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <summary>
 /// Defines a set of geometries that will be painted using a radial gradient shader.
 /// </summary>
-/// <seealso cref="Paint" />
-public class RadialGradientPaint : Paint
+/// <seealso cref="SkiaPaint" />
+public class RadialGradientPaint : SkiaPaint
 {
     private SkiaSharpDrawingContext? _drawingContext;
+    private SKPaint? _skiaPaint;
     private readonly SKColor[] _gradientStops;
     private readonly SKPoint _center;
     private readonly float _radius;
@@ -79,17 +82,15 @@ public class RadialGradientPaint : Paint
     /// <param name="centerColor">Color of the center.</param>
     /// <param name="outerColor">Color of the outer.</param>
     public RadialGradientPaint(SKColor centerColor, SKColor outerColor)
-        : this(new[] { centerColor, outerColor }) { }
+        : this([centerColor, outerColor]) { }
 
-    /// <inheritdoc cref="IPaint.CloneTask" />
-    public override IPaint CloneTask()
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override Paint CloneTask()
     {
         return new RadialGradientPaint(_gradientStops, _center, _radius, _colorPos, _tileMode)
         {
             Style = Style,
             IsStroke = IsStroke,
-            IsFill = IsFill,
-            Color = Color,
             IsAntialias = IsAntialias,
             StrokeThickness = StrokeThickness,
             StrokeCap = StrokeCap,
@@ -103,7 +104,7 @@ public class RadialGradientPaint : Paint
         };
     }
 
-    /// <inheritdoc cref="IPaint.InitializeTask(DrawingContext)" />
+    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
     public override void InitializeTask(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
@@ -157,7 +158,7 @@ public class RadialGradientPaint : Paint
         skiaContext.PaintTask = this;
     }
 
-    /// <inheritdoc cref="IPaint.ApplyOpacityMask(DrawingContext, IDrawable)" />
+    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, IDrawable)" />
     public override void ApplyOpacityMask(DrawingContext context, IDrawable geometry)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
@@ -178,7 +179,7 @@ public class RadialGradientPaint : Paint
                 _tileMode);
     }
 
-    /// <inheritdoc cref="IPaint.RestoreOpacityMask(DrawingContext, IDrawable)" />
+    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, IDrawable)" />
     public override void RestoreOpacityMask(DrawingContext context, IDrawable geometry)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
@@ -218,11 +219,12 @@ public class RadialGradientPaint : Paint
             _drawingContext = null;
         }
 
-        base.Dispose();
+        _skiaPaint?.Dispose();
+        _skiaPaint = null;
+
+        GC.SuppressFinalize(this);
     }
 
-    private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
-    {
-        return new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
-    }
+    private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
+        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
 }

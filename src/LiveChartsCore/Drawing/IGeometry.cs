@@ -20,13 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Painting;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a geometry in the user interface.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IGeometry<TDrawingContext> : IDrawable, IPaintable<TDrawingContext>
+public interface IGeometry<TDrawingContext> : IDrawable, Paintable<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -103,5 +105,5 @@ public interface IGeometry<TDrawingContext> : IDrawable, IPaintable<TDrawingCont
     /// </summary>
     /// <param name="drawableTask">The drawable task.</param>
     /// <returns></returns>
-    LvcSize Measure(IPaint drawableTask);
+    LvcSize Measure(Paint drawableTask);
 }

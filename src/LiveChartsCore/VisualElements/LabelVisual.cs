@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -37,7 +38,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
     internal TLabelGeometry? _labelGeometry;
-    internal IPaint? _paint;
+    internal Paint? _paint;
     internal bool _isVirtual = false;
     internal string _text = string.Empty;
     internal double _textSize = 12;
@@ -51,7 +52,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint? Paint
+    public Paint? Paint
     {
         get => _paint;
         set => SetPaintProperty(ref _paint, value);
@@ -98,16 +99,12 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     public float MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _paint };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_paint];
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { _labelGeometry };
-    }
+    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+        [_labelGeometry];
 
     internal override void AlignToTopLeftCorner()
     {
@@ -131,7 +128,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
             y = PrimaryScaler.ToPixels(y);
         }
 
-        InitializeLabel(chart);
+        InitializeLabel();
         _ = Measure(chart);
 
         _labelGeometry!.Text = Text;
@@ -167,7 +164,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     {
         ApplyTheme<LabelVisual<TLabelGeometry, TDrawingContext>>();
 
-        InitializeLabel(chart);
+        InitializeLabel();
 
         _labelGeometry!.Text = Text;
         _labelGeometry.TextSize = (float)TextSize;
@@ -185,7 +182,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
             : _labelGeometry.Measure(_paint);
     }
 
-    private void InitializeLabel(Chart<TDrawingContext> chart)
+    private void InitializeLabel()
     {
         if (_labelGeometry is not null) return;
 

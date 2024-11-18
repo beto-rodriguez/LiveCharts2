@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel;
 
@@ -37,20 +38,18 @@ public class StrokeAndFillDrawable<TDrawingContext>
     /// <param name="stroke">The stroke.</param>
     /// <param name="fill">The fill.</param>
     /// <param name="isHoverState">is hover state?.</param>
-    public StrokeAndFillDrawable(IPaint? stroke, IPaint? fill, bool isHoverState = false)
+    public StrokeAndFillDrawable(Paint? stroke, Paint? fill, bool isHoverState = false)
     {
         Stroke = stroke;
         if (stroke is not null)
         {
             stroke.IsStroke = true;
-            stroke.IsFill = false;
         }
 
         Fill = fill;
         if (fill is not null)
         {
             fill.IsStroke = false;
-            fill.IsFill = true;
             fill.StrokeThickness = 0;
         }
         IsHoverState = isHoverState;
@@ -62,7 +61,7 @@ public class StrokeAndFillDrawable<TDrawingContext>
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint? Stroke { get; }
+    public Paint? Stroke { get; }
 
     /// <summary>
     /// Gets the fill.
@@ -70,7 +69,7 @@ public class StrokeAndFillDrawable<TDrawingContext>
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? Fill { get; }
+    public Paint? Fill { get; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is hover state.

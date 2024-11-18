@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -42,9 +42,9 @@ public class GeoMap<TDrawingContext>
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _panningThrottler;
     private bool _isHeatInCanvas = false;
-    private IPaint _heatPaint;
-    private IPaint? _previousStroke;
-    private IPaint? _previousFill;
+    private Paint _heatPaint;
+    private Paint? _previousStroke;
+    private Paint? _previousFill;
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
@@ -84,16 +84,10 @@ public class GeoMap<TDrawingContext>
     public IGeoMapView<TDrawingContext> View { get; private set; }
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
-    public virtual void ViewTo(object? command)
-    {
-        _mapFactory.ViewTo(this, command);
-    }
+    public virtual void ViewTo(object? command) => _mapFactory.ViewTo(this, command);
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
-    public virtual void Pan(LvcPoint delta)
-    {
-        _mapFactory.Pan(this, delta);
-    }
+    public virtual void Pan(LvcPoint delta) => _mapFactory.Pan(this, delta);
 
     /// <summary>
     /// Queues a measure request to update the chart.
@@ -140,36 +134,24 @@ public class GeoMap<TDrawingContext>
     /// Invokes the pointer down event.
     /// </summary>
     /// <param name="point">The pointer position.</param>
-    protected internal void InvokePointerDown(LvcPoint point)
-    {
-        PointerDown?.Invoke(point);
-    }
+    protected internal void InvokePointerDown(LvcPoint point) => PointerDown?.Invoke(point);
 
     /// <summary>
     /// Invokes the pointer move event.
     /// </summary>
     /// <param name="point">The pointer position.</param>
-    protected internal void InvokePointerMove(LvcPoint point)
-    {
-        PointerMove?.Invoke(point);
-    }
+    protected internal void InvokePointerMove(LvcPoint point) => PointerMove?.Invoke(point);
 
     /// <summary>
     /// Invokes the pointer up event.
     /// </summary>
     /// <param name="point">The pointer position.</param>
-    protected internal void InvokePointerUp(LvcPoint point)
-    {
-        PointerUp?.Invoke(point);
-    }
+    protected internal void InvokePointerUp(LvcPoint point) => PointerUp?.Invoke(point);
 
     /// <summary>
     /// Invokes the pointer left event.
     /// </summary>
-    protected internal void InvokePointerLeft()
-    {
-        PointerLeft?.Invoke();
-    }
+    protected internal void InvokePointerLeft() => PointerLeft?.Invoke();
 
     /// <summary>
     /// Called to measure the chart.
@@ -221,8 +203,7 @@ public class GeoMap<TDrawingContext>
             if (View.Stroke is not null)
             {
                 if (View.Stroke.ZIndex == 0) View.Stroke.ZIndex = 2;
-                View.Stroke.IsStroke = true; // ToDo: why both properties? IsStroke? IsFill?
-                View.Stroke.IsFill = false;
+                View.Stroke.IsStroke = true;
                 View.Canvas.AddDrawableTask(View.Stroke);
             }
 
@@ -236,8 +217,7 @@ public class GeoMap<TDrawingContext>
 
             if (View.Fill is not null)
             {
-                View.Fill.IsStroke = false; // ToDo: why both properties? IsStroke? IsFill?
-                View.Fill.IsFill = true;
+                View.Fill.IsStroke = false;
                 View.Canvas.AddDrawableTask(View.Fill);
             }
 
@@ -249,7 +229,7 @@ public class GeoMap<TDrawingContext>
 
         var context = new MapContext<TDrawingContext>(
             this, View, View.ActiveMap,
-            Maps.BuildProjector(View.MapProjection, new[] { View.Width, View.Height }));
+            Maps.BuildProjector(View.MapProjection, [View.Width, View.Height]));
 
         _mapFactory.GenerateLands(context);
 

@@ -20,22 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Painting;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a paintable object, an object that has can have its own paint definition.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IPaintable<TDrawingContext> : IDrawable
+public interface Paintable<TDrawingContext> : IDrawable
     where TDrawingContext : DrawingContext
 {
     /// <summary>
     /// Gets or sets the stroke paint.
     /// </summary>
-    IPaint? Stroke { get; set; }
+    Paint? Stroke { get; set; }
 
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    IPaint? Fill { get; set; }
+    Paint? Fill { get; set; }
 }

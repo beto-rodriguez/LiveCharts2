@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -55,9 +56,9 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
-    private IPaint? _geometryFill;
-    private IPaint? _geometryStroke;
-    private IPaint? _errorPaint;
+    private Paint? _geometryFill;
+    private Paint? _geometryStroke;
+    private Paint? _errorPaint;
 
     /// <summary>
     /// Initializes a new instance of the
@@ -92,21 +93,21 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
-    public IPaint? GeometryFill
+    public Paint? GeometryFill
     {
         get => _geometryFill;
         set => SetPaintProperty(ref _geometryFill, value);
     }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
-    public IPaint? GeometryStroke
+    public Paint? GeometryStroke
     {
         get => _geometryStroke;
         set => SetPaintProperty(ref _geometryStroke, value, true);
     }
 
     /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint? ErrorPaint
+    public Paint? ErrorPaint
     {
         get => _errorPaint;
         set => SetPaintProperty(ref _errorPaint, value, true);
@@ -555,10 +556,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="GetRequestedGeometrySize"/>
-    protected override double GetRequestedGeometrySize()
-    {
-        return (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
-    }
+    protected override double GetRequestedGeometrySize() =>
+        (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     [Obsolete]
@@ -607,7 +606,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="GetMiniatureFill(ChartPoint?, int)"/>
-    protected override IPaint? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected override Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? GeometryFill;
@@ -616,7 +615,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="GetMiniatureStroke(ChartPoint?, int)"/>
-    protected override IPaint? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected override Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? GeometryStroke;
@@ -658,10 +657,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint];
 
     /// <summary>
     /// Builds an spline from the given points.

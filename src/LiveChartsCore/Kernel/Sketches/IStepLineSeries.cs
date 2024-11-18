@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -52,7 +53,7 @@ public interface IStepLineSeries<TDrawingContext> : IChartSeries<TDrawingContext
     /// <value>
     /// The shapes fill.
     /// </value>
-    IPaint? GeometryFill { get; set; }
+    Paint? GeometryFill { get; set; }
 
     /// <summary>
     /// Gets or sets the geometry stroke.
@@ -60,5 +61,5 @@ public interface IStepLineSeries<TDrawingContext> : IChartSeries<TDrawingContext
     /// <value>
     /// The shapes stroke.
     /// </value>
-    IPaint? GeometryStroke { get; set; }
+    Paint? GeometryStroke { get; set; }
 }

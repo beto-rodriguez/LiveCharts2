@@ -67,11 +67,11 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
-    private IPaint? _legendTextPaint = (IPaint?)LiveCharts.DefaultSettings.LegendTextPaint;
-    private IPaint? _legendBackgroundPaint = (IPaint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
+    private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
+    private Paint? _legendBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
     private double? _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
-    private IPaint? _tooltipTextPaint = (IPaint?)LiveCharts.DefaultSettings.TooltipTextPaint;
-    private IPaint? _tooltipBackgroundPaint = (IPaint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
+    private Paint? _tooltipTextPaint = (Paint?)LiveCharts.DefaultSettings.TooltipTextPaint;
+    private Paint? _tooltipBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
     private double? _tooltipTextSize = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <summary>
@@ -208,10 +208,10 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; UpdateLegendLayout(); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
-    public IPaint? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
+    public Paint? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
-    public IPaint? LegendBackgroundPaint { get => _legendBackgroundPaint; set { _legendBackgroundPaint = value; OnPropertyChanged(); } }
+    public Paint? LegendBackgroundPaint { get => _legendBackgroundPaint; set { _legendBackgroundPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
     public double? LegendTextSize { get => _legendTextSize; set { _legendTextSize = value; OnPropertyChanged(); } }
@@ -226,10 +226,10 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set { tooltip = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
-    public IPaint? TooltipTextPaint { get => _tooltipTextPaint; set { _tooltipTextPaint = value; OnPropertyChanged(); } }
+    public Paint? TooltipTextPaint { get => _tooltipTextPaint; set { _tooltipTextPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
-    public IPaint? TooltipBackgroundPaint { get => _tooltipBackgroundPaint; set { _tooltipBackgroundPaint = value; OnPropertyChanged(); } }
+    public Paint? TooltipBackgroundPaint { get => _tooltipBackgroundPaint; set { _tooltipBackgroundPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
     public double? TooltipTextSize { get => _tooltipTextSize; set { _tooltipTextSize = value; OnPropertyChanged(); } }

@@ -173,7 +173,7 @@ public partial class MotionCanvas : ContentView
     {
         var motionCanvas = (MotionCanvas)bindable;
 
-        var tasks = new HashSet<IPaint>();
+        var tasks = new HashSet<Paint>();
 
         foreach (var item in motionCanvas.PaintTasks)
         {

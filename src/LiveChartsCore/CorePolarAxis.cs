@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -63,13 +64,13 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     private Func<double, string> _labeler = Labelers.Default;
     private double? _minLimit = null;
     private double? _maxLimit = null;
-    private IPaint? _namePaint;
+    private Paint? _namePaint;
     private double _nameTextSize = 20;
     private Padding _namePadding = new(5);
-    private IPaint? _labelsPaint;
+    private Paint? _labelsPaint;
     private double _unitWidth = 1;
     private double _textSize = 16;
-    private IPaint? _separatorsPaint;
+    private Paint? _separatorsPaint;
     private bool _showSeparatorLines = true;
     private bool _isInverted;
     private bool _forceStepToMin;
@@ -157,21 +158,21 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
-    public IPaint? NamePaint
+    public Paint? NamePaint
     {
         get => _namePaint;
         set => SetPaintProperty(ref _namePaint, value);
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
-    public IPaint? LabelsPaint
+    public Paint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
     }
 
     /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
-    public IPaint? SeparatorsPaint
+    public Paint? SeparatorsPaint
     {
         get => _separatorsPaint;
         set => SetPaintProperty(ref _separatorsPaint, value, true);
@@ -598,10 +599,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _separatorsPaint, _labelsPaint, _namePaint };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_separatorsPaint, _labelsPaint, _namePaint];
 
     private IEnumerable<double> EnumerateSeparators(double start, double s, double max)
     {

@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -46,8 +47,8 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
             where TVisual : class, IGeometry<TDrawingContext>, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint? _stroke = null;
-    private IPaint? _fill = null;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -55,7 +56,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -67,17 +68,15 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [_stroke, _fill, DataLabelsPaint];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_stroke, _fill, DataLabelsPaint];
 
     /// <summary>
     /// Gets the fill paint for the miniature.
@@ -85,7 +84,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? Fill;
@@ -99,7 +98,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Stroke ?? Stroke;

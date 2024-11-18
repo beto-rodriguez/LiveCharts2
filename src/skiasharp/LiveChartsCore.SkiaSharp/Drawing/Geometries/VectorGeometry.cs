@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -57,11 +58,11 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Pivot" />
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
-    public IPaint? Stroke { get; set; }
+    /// <inheritdoc cref="Paintable{TDrawingContext}.Stroke" />
+    public Paint? Stroke { get; set; }
 
-    /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
-    public IPaint? Fill { get; set; }
+    /// <inheritdoc cref="Paintable{TDrawingContext}.Fill" />
+    public Paint? Fill { get; set; }
 
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
     public override void CompleteTransition(params string[]? propertyName)

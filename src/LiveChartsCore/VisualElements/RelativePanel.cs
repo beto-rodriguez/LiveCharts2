@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -42,7 +43,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         ClippingMode = ClipMode.None;
     }
 
-    private IPaint? _backgroundPaint;
+    private Paint? _backgroundPaint;
 
     /// <summary>
     /// Gets or sets the size.
@@ -57,7 +58,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -69,16 +70,11 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _backgroundPaint };
-    }
+    protected internal override Paint?[] GetPaintTasks() => [_backgroundPaint];
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { BackgroundGeometry };
-    }
+    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+        [BackgroundGeometry];
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
@@ -146,10 +142,8 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
-    {
-        return Size;
-    }
+    public override LvcSize Measure(Chart<TDrawingContext> chart) =>
+        Size;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
     public override void RemoveFromUI(Chart<TDrawingContext> chart)

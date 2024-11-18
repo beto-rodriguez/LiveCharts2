@@ -55,7 +55,7 @@ public interface IChartElement<TDrawingContext> : IChartElement
     void Invalidate(Chart<TDrawingContext> chart);
 
     /// <summary>
-    /// Deletes the <see cref="IPaint"/> instances that changed from the user interface.
+    /// Deletes the <see cref="Paint"/> instances that changed from the user interface.
     /// </summary>
     /// <param name="chart">The chart.</param>
     void RemoveOldPaints(IChartView<TDrawingContext> chart);

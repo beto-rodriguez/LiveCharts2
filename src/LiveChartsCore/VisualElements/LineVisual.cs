@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -108,5 +109,5 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks() => [Fill, Stroke];
+    protected internal override Paint?[] GetPaintTasks() => [Fill, Stroke];
 }

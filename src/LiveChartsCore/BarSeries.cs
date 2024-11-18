@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -58,7 +59,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     private bool _ignoresBarPosition = false;
     private double _rx;
     private double _ry;
-    private IPaint? _errorPaint;
+    private Paint? _errorPaint;
 
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
@@ -76,7 +77,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
     /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint? ErrorPaint
+    public Paint? ErrorPaint
     {
         get => _errorPaint;
         set => SetPaintProperty(ref _errorPaint, value, true);
@@ -225,10 +226,8 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [Stroke, Fill, DataLabelsPaint, _errorPaint];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Stroke, Fill, DataLabelsPaint, _errorPaint];
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(

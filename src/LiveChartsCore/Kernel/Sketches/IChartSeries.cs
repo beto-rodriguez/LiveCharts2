@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -42,7 +43,7 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <value>
     /// The data labels paint.
     /// </value>
-    IPaint? DataLabelsPaint { get; set; }
+    Paint? DataLabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the size of the data labels.

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -47,9 +48,7 @@ public class NeedleGeometry : Geometry, INeedleGeometry<SkiaSharpDrawingContext>
         context.Canvas.DrawCircle(X, Y, w, paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)"/>
-    protected override LvcSize OnMeasure(IPaint paintTasks)
-    {
-        return new();
-    }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)"/>
+    protected override LvcSize OnMeasure(Paint paintTasks) =>
+        new();
 }

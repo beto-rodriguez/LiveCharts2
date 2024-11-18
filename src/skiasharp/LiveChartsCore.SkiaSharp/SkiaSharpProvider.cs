@@ -25,6 +25,7 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -48,7 +49,7 @@ public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
         => new PolarAxis();
 
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
-    public override IPaint GetSolidColorPaint(LvcColor color)
+    public override Paint GetSolidColorPaint(LvcColor color)
         => new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
 
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.InitializeZoommingSection(CoreMotionCanvas)"/>
@@ -58,7 +59,7 @@ public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
 
         var zoomingSectionPaint = new SolidColorPaint
         {
-            IsFill = true,
+            IsStroke = false,
             Color = new SKColor(33, 150, 243, 50),
             ZIndex = int.MaxValue
         };

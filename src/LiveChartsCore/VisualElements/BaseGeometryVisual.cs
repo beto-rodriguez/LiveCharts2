@@ -23,6 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -36,8 +37,8 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
 {
     private double _width;
     private double _height;
-    private IPaint? _fill;
-    private IPaint? _stroke;
+    private Paint? _fill;
+    private Paint? _stroke;
     private MeasureUnit _sizeUnit = MeasureUnit.Pixels;
 
     /// <summary>
@@ -58,7 +59,7 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -67,17 +68,15 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the stroke paint.
     /// </summary>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _fill, _stroke };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_fill, _stroke];
 
     /// <summary>
     /// Called when [paint changed].

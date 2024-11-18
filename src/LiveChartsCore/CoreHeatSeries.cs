@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -44,7 +45,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint? _paintTaks;
+    private Paint? _paintTaks;
     private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
@@ -281,16 +282,10 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
-    protected override double GetRequestedSecondaryOffset()
-    {
-        return 0.5f;
-    }
+    protected override double GetRequestedSecondaryOffset() => 0.5f;
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedPrimaryOffset"/>
-    protected override double GetRequestedPrimaryOffset()
-    {
-        return 0.5f;
-    }
+    protected override double GetRequestedPrimaryOffset() => 0.5f;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
@@ -334,7 +329,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         var solidPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
         var st = solidPaint.StrokeThickness;
-        solidPaint.IsFill = true;
+        solidPaint.IsStroke = false;
 
         if (st > MAX_MINIATURE_STROKE_WIDTH)
         {
@@ -371,10 +366,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [_paintTaks];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_paintTaks];
 
     private static SeriesProperties GetProperties()
     {

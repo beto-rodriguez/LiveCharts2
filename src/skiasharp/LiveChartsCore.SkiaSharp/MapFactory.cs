@@ -26,6 +26,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Segments;
@@ -38,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView;
 public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 {
     private readonly HashSet<HeatPathShape> _usedPathShapes = [];
-    private readonly HashSet<IPaint> _usedPaints = [];
+    private readonly HashSet<Paint> _usedPaints = [];
     private readonly HashSet<string> _usedLayers = [];
     private IGeoMapView<SkiaSharpDrawingContext>? _mapView;
 
@@ -49,7 +50,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
         var toRemoveLayers = new HashSet<string>(_usedLayers);
         var toRemovePathShapes = new HashSet<HeatPathShape>(_usedPathShapes);
-        var toRemovePaints = new HashSet<IPaint>(_usedPaints);
+        var toRemovePaints = new HashSet<Paint>(_usedPaints);
 
         var layersQuery = context.View.ActiveMap.Layers.Values
             .Where(x => x.IsVisible)
@@ -106,7 +107,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
                     foreach (var point in landData.Coordinates)
                     {
-                        var p = projector.ToMap(new double[] { point.X, point.Y });
+                        var p = projector.ToMap([point.X, point.Y]);
 
                         var x = p[0];
                         var y = p[1];

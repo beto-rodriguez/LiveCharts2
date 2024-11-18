@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -46,7 +47,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint? UpStroke { get; set; }
+    Paint? UpStroke { get; set; }
 
     /// <summary>
     /// Gets or sets the up stroke, the stroke when the trend goes down.
@@ -54,7 +55,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint? DownStroke { get; set; }
+    Paint? DownStroke { get; set; }
 
     /// <summary>
     /// Gets or sets the up fill, the fill when the trend goes up.
@@ -62,7 +63,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The fill.
     /// </value>
-    IPaint? UpFill { get; set; }
+    Paint? UpFill { get; set; }
 
     /// <summary>
     /// Gets or sets the up fill, the fill when the trend goes down.
@@ -70,5 +71,5 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The fill.
     /// </value>
-    IPaint? DownFill { get; set; }
+    Paint? DownFill { get; set; }
 }

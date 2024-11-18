@@ -185,7 +185,7 @@ public partial class MotionCanvas : IDisposable
 
     private void OnPaintTasksChanged()
     {
-        var tasks = new HashSet<IPaint>();
+        var tasks = new HashSet<Paint>();
 
         foreach (var item in _paintTasksSchedule)
         {

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -37,5 +38,5 @@ public interface IErrorSeries<TDrawingContext>
     /// <value>
     /// The shapes fill.
     /// </value>
-    IPaint? ErrorPaint { get; set; }
+    Paint? ErrorPaint { get; set; }
 }

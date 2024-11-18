@@ -65,7 +65,6 @@ public static class VisualElementsExtensions
 
                 schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + baseZIndex;
 
-                if (schedule.PaintTask.IsFill) vgv.Fill = schedule.PaintTask;
                 if (schedule.PaintTask.IsStroke) vgv.Stroke = schedule.PaintTask;
                 _ = relativePanel.Children.Add(vgv);
             }

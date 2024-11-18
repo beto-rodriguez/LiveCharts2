@@ -26,6 +26,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel;
 
@@ -39,7 +40,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     internal object _theme = new();
     internal readonly HashSet<string> _userSets = [];
     private bool _isVisible = true;
-    private readonly List<IPaint> _deletingTasks = [];
+    private readonly List<Paint> _deletingTasks = [];
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -89,7 +90,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// Gets the paint tasks registered by the <see cref="ChartElement{TDrawingContext}"/>.
     /// </summary>
     /// <returns>The paint tasks.</returns>
-    protected internal abstract IPaint?[] GetPaintTasks();
+    protected internal abstract Paint?[] GetPaintTasks();
 
     /// <summary>
     /// Sets a property value and handles the paints in the canvas.
@@ -100,8 +101,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <param name="propertyName">Name of the property.</param>
     /// <returns></returns>
     protected virtual void SetPaintProperty(
-        ref IPaint? reference,
-        IPaint? value,
+        ref Paint? reference,
+        Paint? value,
         bool isStroke = false,
         [CallerMemberName] string? propertyName = null)
     {
@@ -117,7 +118,6 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         if (reference is not null)
         {
             reference.IsStroke = isStroke;
-            reference.IsFill = !isStroke; // seems unnecessary ????
             if (!isStroke) reference.StrokeThickness = 0;
         }
 
@@ -162,10 +162,10 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     }
 
     /// <summary>
-    /// Schedules the delete for thew given <see cref="IPaint"/> instance.
+    /// Schedules the delete for thew given <see cref="Paint"/> instance.
     /// </summary>
     /// <returns></returns>
-    protected void ScheduleDeleteFor(IPaint paintTask)
+    protected void ScheduleDeleteFor(Paint paintTask)
     {
         _deletingTasks.Add(paintTask);
     }

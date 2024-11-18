@@ -22,6 +22,7 @@
 
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -70,9 +71,7 @@ public class ArcGeometry : Geometry, IArcGeometry<SkiaSharpDrawingContext>
         context.Canvas.DrawPath(path, context.Paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)"/>
-    protected override LvcSize OnMeasure(IPaint paintTasks)
-    {
-        return new();
-    }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)"/>
+    protected override LvcSize OnMeasure(Paint paintTasks) =>
+        new();
 }

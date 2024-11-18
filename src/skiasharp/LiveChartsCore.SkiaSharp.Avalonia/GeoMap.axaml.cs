@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -37,6 +36,7 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -107,21 +107,21 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<IGeoSeries>> SeriesProperty =
       AvaloniaProperty.Register<CartesianChart, IEnumerable<IGeoSeries>>(nameof(Series),
-          Enumerable.Empty<IGeoSeries>(), inherits: true);
+          [], inherits: true);
 
     /// <summary>
     /// The stroke property.
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint> StrokeProperty =
-      AvaloniaProperty.Register<CartesianChart, IPaint>(nameof(Stroke),
+    public static readonly AvaloniaProperty<Paint> StrokeProperty =
+      AvaloniaProperty.Register<CartesianChart, Paint>(nameof(Stroke),
           new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
 
     /// <summary>
     /// The fill color property.
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint> FillProperty =
-      AvaloniaProperty.Register<CartesianChart, IPaint>(nameof(Fill),
-           new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
+    public static readonly AvaloniaProperty<Paint> FillProperty =
+      AvaloniaProperty.Register<CartesianChart, Paint>(nameof(Fill),
+           new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false }, inherits: true);
 
     #endregion
 
@@ -178,9 +178,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
-        get => (IPaint?)GetValue(StrokeProperty);
+        get => (Paint?)GetValue(StrokeProperty);
         set
         {
             if (value is not null) value.IsStroke = true;
@@ -189,12 +189,12 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint? Fill
+    public Paint? Fill
     {
-        get => (IPaint?)GetValue(FillProperty);
+        get => (Paint?)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.IsStroke = false;
             _ = SetValue(FillProperty, value);
         }
     }
@@ -208,10 +208,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     #endregion
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
         Dispatcher.UIThread.Post(action);
-    }
 
     /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -269,10 +267,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
     }
 
-    private void OnPointerLeave(object? sender, PointerEventArgs e)
-    {
+    private void OnPointerLeave(object? sender, PointerEventArgs e) =>
         _core?.InvokePointerLeft();
-    }
 
     private void GeoMap_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
@@ -280,8 +276,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core.Unload();
     }
 
-    private void InitializeComponent()
-    {
+    private void InitializeComponent() =>
         AvaloniaXamlLoader.Load(this);
-    }
 }

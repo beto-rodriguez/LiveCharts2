@@ -26,6 +26,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -42,8 +43,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     where TLineGeometry : ILineGeometry<TDrawingContext>, new()
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint? _stroke;
-    private IPaint? _labelsPaint;
+    private Paint? _stroke;
+    private Paint? _labelsPaint;
     private TArcGeometry? _arc;
     private double _labelsOuterOffset;
     private double _outerOffset;
@@ -56,7 +57,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <summary>
     /// Gets or sets the labels paint.
     /// </summary>
-    public IPaint? LabelsPaint
+    public Paint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
@@ -65,7 +66,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -252,10 +253,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
-    {
-        return new();
-    }
+    public override LvcSize Measure(Chart<TDrawingContext> chart) => new();
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
@@ -287,10 +285,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _stroke, _labelsPaint };
-    }
+    protected internal override Paint?[] GetPaintTasks() => [_stroke, _labelsPaint];
 
     private class TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)
     {

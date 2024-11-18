@@ -26,6 +26,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -188,12 +189,12 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Gets or sets the legend default text paint, when null the library will use the default text paint.
     /// </summary>
-    IPaint? LegendTextPaint { get; set; }
+    Paint? LegendTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the legend background paint, when null the library will use the default background paint.
     /// </summary>
-    IPaint? LegendBackgroundPaint { get; set; }
+    Paint? LegendBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the legend text size, when null the library will use the default text size.
@@ -203,12 +204,12 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
     /// </summary>
-    IPaint? TooltipTextPaint { get; set; }
+    Paint? TooltipTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the tooltip background paint, when null the library will use the default background paint.
     /// </summary>
-    IPaint? TooltipBackgroundPaint { get; set; }
+    Paint? TooltipBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the tooltip text size, when null the library will use the default text size.

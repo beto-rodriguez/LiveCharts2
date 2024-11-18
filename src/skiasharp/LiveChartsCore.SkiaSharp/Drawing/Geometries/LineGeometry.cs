@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -61,14 +62,10 @@ public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-    {
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint) =>
         context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-    }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
-    protected override LvcSize OnMeasure(IPaint drawable)
-    {
-        return new LvcSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
-    }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint drawable) =>
+        new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
 }

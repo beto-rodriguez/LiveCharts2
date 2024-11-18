@@ -129,7 +129,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     /// </summary>
     public static readonly DependencyProperty StrokeProperty =
         DependencyProperty.Register(
-            nameof(Stroke), typeof(IPaint), typeof(GeoMap),
+            nameof(Stroke), typeof(Paint), typeof(GeoMap),
             new PropertyMetadata(new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true }, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -137,7 +137,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     /// </summary>
     public static readonly DependencyProperty FillProperty =
         DependencyProperty.Register(
-            nameof(Fill), typeof(IPaint), typeof(GeoMap),
+            nameof(Fill), typeof(Paint), typeof(GeoMap),
             new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, OnDependencyPropertyChanged));
 
     #endregion
@@ -188,9 +188,9 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
-        get => (IPaint)GetValue(StrokeProperty);
+        get => (Paint)GetValue(StrokeProperty);
         set
         {
             if (value is not null) value.IsStroke = true;
@@ -199,9 +199,9 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint? Fill
+    public Paint? Fill
     {
-        get => (IPaint)GetValue(FillProperty);
+        get => (Paint)GetValue(FillProperty);
         set
         {
             if (value is not null) value.IsFill = true;

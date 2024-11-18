@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.Themes;
 
 namespace LiveChartsCore.Kernel;
@@ -278,7 +279,7 @@ public class LiveChartsSettings
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendBackgroundPaint<TDrawingContext>(IPaint paint)
+    public LiveChartsSettings WithLegendBackgroundPaint<TDrawingContext>(Paint paint)
         where TDrawingContext : DrawingContext
     {
         LegendBackgroundPaint = paint;
@@ -290,7 +291,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendTextPaint(IPaint paint)
+    public LiveChartsSettings WithLegendTextPaint(Paint paint)
     {
         LegendTextPaint = paint;
         return this;
@@ -312,7 +313,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipBackgroundPaint(IPaint paint)
+    public LiveChartsSettings WithTooltipBackgroundPaint(Paint paint)
     {
         TooltipBackgroundPaint = paint;
         return this;
@@ -323,7 +324,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipTextPaint(IPaint paint)
+    public LiveChartsSettings WithTooltipTextPaint(Paint paint)
     {
         TooltipTextPaint = paint;
         return this;
@@ -374,10 +375,8 @@ public class LiveChartsSettings
     /// <returns></returns>
     /// <exception cref="Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
     public Theme<TDrawingContext> GetTheme<TDrawingContext>()
-        where TDrawingContext : DrawingContext
-    {
-        return (Theme<TDrawingContext>?)_theme ?? throw new Exception("A theme is required.");
-    }
+        where TDrawingContext : DrawingContext =>
+            (Theme<TDrawingContext>?)_theme ?? throw new Exception("A theme is required.");
 
     /// <summary>
     /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?.

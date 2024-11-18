@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
 
@@ -56,12 +57,12 @@ public interface IGeoMapView<TDrawingContext>
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
-    IPaint? Stroke { get; set; }
+    Paint? Stroke { get; set; }
 
     /// <summary>
     /// Gets or sets the fill.
     /// </summary>
-    IPaint? Fill { get; set; }
+    Paint? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets whether the chart auto-updates are enabled.

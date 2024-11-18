@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -104,9 +105,7 @@ public class BoxGeometry : Geometry, IBoxGeometry<SkiaSharpDrawingContext>
         context.Canvas.DrawRect(x, yi, w, Math.Abs(o - c), paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
-    protected override LvcSize OnMeasure(IPaint paintTasks)
-    {
-        return new LvcSize(Width, Math.Abs(Min - Y));
-    }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint paintTasks) =>
+        new(Width, Math.Abs(Min - Y));
 }

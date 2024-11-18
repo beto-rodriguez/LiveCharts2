@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -85,16 +86,16 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes"/>
-    public IEnumerable<IPolarAxis> AngleAxes { get; set; } = new[] { new PolarAxis() };
+    public IEnumerable<IPolarAxis> AngleAxes { get; set; } = [new PolarAxis()];
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes"/>
-    public IEnumerable<IPolarAxis> RadiusAxes { get; set; } = new[] { new PolarAxis() };
+    public IEnumerable<IPolarAxis> RadiusAxes { get; set; } = [new PolarAxis()];
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series"/>
-    public IEnumerable<ISeries> Series { get; set; } = Array.Empty<ISeries>();
+    public IEnumerable<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements"/>
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
     public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; } = new SKDefaultLegend();
@@ -148,19 +149,19 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public bool AutoUpdateEnabled { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint"/>
-    public IPaint? LegendTextPaint { get; set; }
+    public Paint? LegendTextPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint"/>
-    public IPaint? LegendBackgroundPaint { get; set; }
+    public Paint? LegendBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize"/>
     public double? LegendTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint"/>
-    public IPaint? TooltipTextPaint { get; set; }
+    public Paint? TooltipTextPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint"/>
-    public IPaint? TooltipBackgroundPaint { get; set; }
+    public Paint? TooltipBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize"/>
     public double? TooltipTextSize { get; set; }
@@ -225,30 +226,18 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
         Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, new(point)));
 
-    void IChartView.InvokeOnUIThread(Action action)
-    {
-        action();
-    }
+    void IChartView.InvokeOnUIThread(Action action) => action();
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
         UpdateFinished?.Invoke(this);
-    }
 
-    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart) =>
         UpdateStarted?.Invoke(this);
-    }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
         Measuring?.Invoke(this);
-    }
 
-    private LvcSize GetControlSize()
-    {
-        return new(Width, Height);
-    }
+    private LvcSize GetControlSize() => new(Width, Height);
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
@@ -260,13 +249,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
-    {
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
-    }
+        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
 
-    void IChartView.Invalidate()
-    {
-        throw new NotImplementedException();
-    }
+    void IChartView.Invalidate() => throw new NotImplementedException();
 }

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
 
@@ -36,7 +37,7 @@ namespace LiveChartsCore.Geo;
 /// <param name="layerName">The layer name.</param>
 /// <param name="stroke">The stroke.</param>
 /// <param name="fill">The fill.</param>
-public class MapLayer<TDrawingContext>(string layerName, IPaint stroke, IPaint fill)
+public class MapLayer<TDrawingContext>(string layerName, Paint stroke, Paint fill)
     where TDrawingContext : DrawingContext
 {
 
@@ -61,12 +62,12 @@ public class MapLayer<TDrawingContext>(string layerName, IPaint stroke, IPaint f
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
-    public IPaint? Stroke { get; set; } = stroke;
+    public Paint? Stroke { get; set; } = stroke;
 
     /// <summary>
     /// Gets or sets the fill.
     /// </summary>
-    public IPaint? Fill { get; set; } = fill;
+    public Paint? Fill { get; set; } = fill;
 
     /// <summary>
     /// Gets or sets the X bounds.
@@ -127,7 +128,7 @@ public class MapLayer<TDrawingContext>(string layerName, IPaint stroke, IPaint f
                 }
             }
 
-            definition.Data = dataCollection.OrderByDescending(x => x.BoundsHypotenuse).ToArray();
+            definition.Data = [.. dataCollection.OrderByDescending(x => x.BoundsHypotenuse)];
             Lands.Add(shortName, definition);
         }
     }

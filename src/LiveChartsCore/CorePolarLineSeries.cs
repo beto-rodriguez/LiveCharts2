@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -55,10 +56,10 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
-    private IPaint? _geometryFill;
-    private IPaint? _geometryStroke;
-    private IPaint? _stroke = null;
-    private IPaint? _fill = null;
+    private Paint? _geometryFill;
+    private Paint? _geometryStroke;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
     private int _scalesAngleAt;
     private int _scalesRadiusAt;
     private bool _isClosed = true;
@@ -83,7 +84,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set => SetPaintProperty(ref _stroke, value, true);
@@ -95,7 +96,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -127,14 +128,14 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
-    public IPaint? GeometryFill
+    public Paint? GeometryFill
     {
         get => _geometryFill;
         set => SetPaintProperty(ref _geometryFill, value);
     }
 
     /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
-    public IPaint? GeometryStroke
+    public Paint? GeometryStroke
     {
         get => _geometryStroke;
         set => SetPaintProperty(ref _geometryStroke, value, true);
@@ -805,10 +806,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
 
     /// <summary>
     /// Gets the label polar position.
@@ -875,7 +874,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? GeometryFill;
@@ -889,7 +888,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Stroke ?? GeometryStroke;

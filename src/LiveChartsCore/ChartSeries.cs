@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -49,14 +50,14 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
             where TVisual : class, IGeometry<TDrawingContext>, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint? _dataLabelsPaint;
+    private Paint? _dataLabelsPaint;
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
     private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
 
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
-    public IPaint? DataLabelsPaint
+    public Paint? DataLabelsPaint
     {
         get => _dataLabelsPaint;
         set => SetPaintProperty(ref _dataLabelsPaint, value);
@@ -74,8 +75,6 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsMaxWidth"/>
     public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
 
-    void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
-    {
+    void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer) =>
         OnDataPointerDown(chart, points, pointer);
-    }
 }

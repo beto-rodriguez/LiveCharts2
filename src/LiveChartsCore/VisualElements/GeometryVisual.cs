@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -42,7 +43,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     private string _label = string.Empty;
     private float _labelSize = 12;
     internal TLabelGeometry? _labelGeometry;
-    private IPaint? _labelPaint = null;
+    private Paint? _labelPaint = null;
 
     /// <summary>
     /// Gets or sets the label, a string to be displayed within the section.
@@ -65,17 +66,15 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint? LabelPaint
+    public Paint? LabelPaint
     {
         get => _labelPaint;
         set => SetPaintProperty(ref _labelPaint, value);
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { _geometry, _labelGeometry };
-    }
+    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+        [_geometry, _labelGeometry];
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
     protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
@@ -186,8 +185,6 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { Fill, Stroke, _labelPaint };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Fill, Stroke, _labelPaint];
 }

@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -30,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <summary>
 /// Defines a set of geometries that will be painted using a linear gradient shader.
 /// </summary>
-/// <seealso cref="Paint" />
+/// <seealso cref="SkiaPaint" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
 /// </remarks>
@@ -54,8 +56,11 @@ public class LinearGradientPaint(
     SKPoint startPoint,
     SKPoint endPoint,
     float[]? colorPos = null,
-    SKShaderTileMode tileMode = SKShaderTileMode.Repeat) : Paint
+    SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
+        : SkiaPaint
 {
+    private SKPaint? _skiaPaint;
+
     /// <summary>
     /// Default start point.
     /// </summary>
@@ -86,7 +91,7 @@ public class LinearGradientPaint(
     /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
     /// </param>
     public LinearGradientPaint(SKColor startColor, SKColor endColor, SKPoint startPoint, SKPoint endPoint)
-        : this(new[] { startColor, endColor }, startPoint, endPoint) { }
+        : this([startColor, endColor], startPoint, endPoint) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
@@ -96,15 +101,13 @@ public class LinearGradientPaint(
     public LinearGradientPaint(SKColor start, SKColor end)
         : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
 
-    /// <inheritdoc cref="IPaint.CloneTask" />
-    public override IPaint CloneTask()
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override Paint CloneTask()
     {
         return new LinearGradientPaint(gradientStops, startPoint, endPoint, colorPos, tileMode)
         {
             Style = Style,
             IsStroke = IsStroke,
-            IsFill = IsFill,
-            Color = Color,
             IsAntialias = IsAntialias,
             StrokeThickness = StrokeThickness,
             StrokeCap = StrokeCap,
@@ -118,7 +121,7 @@ public class LinearGradientPaint(
         };
     }
 
-    /// <inheritdoc cref="IPaint.ApplyOpacityMask(DrawingContext, IDrawable)" />
+    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, IDrawable)" />
     public override void ApplyOpacityMask(DrawingContext context, IDrawable geometry)
     {
         if (_skiaPaint is null) return;
@@ -143,7 +146,7 @@ public class LinearGradientPaint(
             tileMode);
     }
 
-    /// <inheritdoc cref="IPaint.RestoreOpacityMask(DrawingContext, IDrawable)" />
+    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, IDrawable)" />
     public override void RestoreOpacityMask(DrawingContext context, IDrawable geometry)
     {
         if (_skiaPaint is null) return;
@@ -167,7 +170,7 @@ public class LinearGradientPaint(
             tileMode);
     }
 
-    /// <inheritdoc cref="IPaint.InitializeTask(DrawingContext)" />
+    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
     public override void InitializeTask(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
@@ -244,11 +247,12 @@ public class LinearGradientPaint(
             _drawingContext = null;
         }
 
-        base.Dispose();
+        _skiaPaint?.Dispose();
+        _skiaPaint = null;
+
+        GC.SuppressFinalize(this);
     }
 
-    private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
-    {
-        return new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
-    }
+    private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
+        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
 }

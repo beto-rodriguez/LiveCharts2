@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
 
@@ -39,7 +40,7 @@ namespace LiveChartsCore.Geo;
 /// <param name="bounds">The bounds.</param>
 public class MapShapeContext<TDrawingContext>(
     IGeoMapView<TDrawingContext> chart,
-    IPaint heatPaint,
+    Paint heatPaint,
     List<Tuple<double, LvcColor>> heatStops,
     Bounds bounds)
     where TDrawingContext : DrawingContext
@@ -53,7 +54,7 @@ public class MapShapeContext<TDrawingContext>(
     /// <summary>
     /// Gets the heat paint.
     /// </summary>
-    public IPaint HeatPaint { get; } = heatPaint;
+    public Paint HeatPaint { get; } = heatPaint;
 
     /// <summary>
     /// Gets the heat stops.

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -42,7 +43,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10100;
-    private IPaint? _backgroundPaint;
+    private Paint? _backgroundPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
@@ -59,12 +60,12 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets the legend font paint.
     /// </summary>
-    public IPaint? FontPaint { get; set; }
+    public Paint? FontPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set
@@ -72,7 +73,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
             _backgroundPaint = value;
             if (value is not null)
             {
-                value.IsFill = true;
+                value.IsStroke = false;
             }
         }
     }

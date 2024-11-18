@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -38,7 +39,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     where TGeometry : INeedleGeometry<TDrawingContext>, new()
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {
-    private IPaint? _fill;
+    private Paint? _fill;
     private double _value;
     private TGeometry? _geometry;
 
@@ -50,7 +51,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -114,10 +115,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
-    {
-        return new();
-    }
+    public override LvcSize Measure(Chart<TDrawingContext> chart) => new();
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)
@@ -127,14 +125,10 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     }
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { _geometry };
-    }
+    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+        [_geometry];
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint?[] GetPaintTasks()
-    {
-        return new[] { _fill };
-    }
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_fill];
 }

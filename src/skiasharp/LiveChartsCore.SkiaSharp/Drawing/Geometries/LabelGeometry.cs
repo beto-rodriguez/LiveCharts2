@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
@@ -174,15 +175,14 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         shaper?.Dispose();
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
-    protected override LvcSize OnMeasure(IPaint paint)
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint paint)
     {
-        var skiaPaint = (Paint)paint;
+        var skiaPaint = (SkiaPaint)paint;
         var typeface = skiaPaint.GetSKTypeface();
 
         using var p = new SKPaint
         {
-            Color = skiaPaint.Color,
             IsAntialias = skiaPaint.IsAntialias,
             IsStroke = skiaPaint.IsStroke,
             StrokeWidth = skiaPaint.StrokeThickness,
@@ -219,7 +219,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
     internal IEnumerable<string> GetLines(SKPaint paint)
     {
-        IEnumerable<string> lines = Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+        IEnumerable<string> lines = Text.Split([Environment.NewLine], StringSplitOptions.None);
 
         if (MaxWidth != float.MaxValue)
             lines = lines.SelectMany(x => GetLinesByMaxWidth(x, paint));
@@ -251,7 +251,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
         var sb = new StringBuilder();
         var sb2 = new StringBuilder();
-        var words = source.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
+        var words = source.Split([" ", Environment.NewLine], StringSplitOptions.None);
         var bounds = new SKRect();
         var mw = MaxWidth - Padding.Left - Padding.Right;
 

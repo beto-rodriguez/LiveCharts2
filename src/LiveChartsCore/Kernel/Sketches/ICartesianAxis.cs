@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -175,7 +176,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint? SubseparatorsPaint { get; set; }
+    Paint? SubseparatorsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the number of subseparators to draw.
@@ -193,7 +194,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint? TicksPaint { get; set; }
+    Paint? TicksPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the separators paint.
@@ -201,7 +202,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint? SubticksPaint { get; set; }
+    Paint? SubticksPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the zero paint.
@@ -209,7 +210,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint? ZeroPaint { get; set; }
+    Paint? ZeroPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair paint.
@@ -217,7 +218,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint? CrosshairPaint { get; set; }
+    Paint? CrosshairPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair labels paint.
@@ -225,7 +226,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint? CrosshairLabelsPaint { get; set; }
+    Paint? CrosshairLabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair background.

@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -88,9 +89,7 @@ public class CandlestickGeometry : Geometry, IFinancialGeometry<SkiaSharpDrawing
         context.Canvas.DrawLine(cx, yj, cx, l, paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
-    protected override LvcSize OnMeasure(IPaint paintTasks)
-    {
-        return new LvcSize(Width, Math.Abs(Low - Y));
-    }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint paintTasks) =>
+        new(Width, Math.Abs(Low - Y));
 }

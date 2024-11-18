@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -90,28 +91,26 @@ public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingCont
     /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InvertedCornerRadius" />
     public bool InvertedCornerRadius { get; set; }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint)" />
-    protected override LvcSize OnMeasure(IPaint paint)
-    {
-        return new LvcSize(Width, Height);
-    }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint paint) =>
+        new(Width, Height);
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         if (CornerRadius == 0)
         {
-            ClassicDraw(context, paint);
+            ClassicDraw(context);
         }
         else
         {
             // this method should be able to draw the doughnut with rounded corners
             // but this is probably not working as expected, so we will use the classic draw method
-            RoundedDraw(context, paint);
+            RoundedDraw(context);
         }
     }
 
-    private void ClassicDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    private void ClassicDraw(SkiaSharpDrawingContext context)
     {
         using var path = new SKPath();
         var cx = CenterX;
@@ -165,7 +164,7 @@ public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingCont
         if (pushout > 0) context.Canvas.Restore();
     }
 
-    private void RoundedDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    private void RoundedDraw(SkiaSharpDrawingContext context)
     {
         using var path = new SKPath();
         var cx = CenterX;

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Motion;
 
@@ -33,7 +34,7 @@ namespace LiveChartsCore.Motion;
 /// </summary>
 public class CoreMotionCanvas : IDisposable
 {
-    internal HashSet<IPaint> _paintTasks = [];
+    internal HashSet<Paint> _paintTasks = [];
     private readonly Stopwatch _stopwatch = new();
     private object _sync = new();
 
@@ -107,7 +108,7 @@ public class CoreMotionCanvas : IDisposable
             var isValid = true;
             var frameTime = _stopwatch.ElapsedMilliseconds;
 
-            var toRemoveGeometries = new List<Tuple<IPaint, IDrawable>>();
+            var toRemoveGeometries = new List<Tuple<Paint, IDrawable>>();
 
             foreach (var task in _paintTasks.Where(x => x is not null).OrderBy(x => x.ZIndex))
             {
@@ -129,7 +130,7 @@ public class CoreMotionCanvas : IDisposable
 
                     if (geometry.IsValid && geometry.RemoveOnCompleted)
                         toRemoveGeometries.Add(
-                            new Tuple<IPaint, IDrawable>(task, geometry));
+                            new Tuple<Paint, IDrawable>(task, geometry));
                 }
 
                 isValid = isValid && task.IsValid;
@@ -203,21 +204,21 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     /// <param name="task">The task.</param>
     /// <returns></returns>
-    public void AddDrawableTask(IPaint task) => _ = _paintTasks.Add(task);
+    public void AddDrawableTask(Paint task) => _ = _paintTasks.Add(task);
 
     /// <summary>
     /// Sets the paint tasks.
     /// </summary>
     /// <param name="tasks">The tasks.</param>
     /// <returns></returns>
-    public void SetPaintTasks(HashSet<IPaint> tasks) => _paintTasks = tasks;
+    public void SetPaintTasks(HashSet<Paint> tasks) => _paintTasks = tasks;
 
     /// <summary>
     /// Removes the paint task.
     /// </summary>
     /// <param name="task">The task.</param>
     /// <returns></returns>
-    public void RemovePaintTask(IPaint task)
+    public void RemovePaintTask(Paint task)
     {
         task.ReleaseCanvas(this);
         _ = _paintTasks.Remove(task);

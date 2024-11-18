@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
 
@@ -70,10 +71,8 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="shortName">The short name.</param>
     /// <param name="layerName">The layer name.</param>
     /// <returns>The land, null if not found.</returns>
-    public LandDefinition? FindLand(string shortName, string layerName = "default")
-    {
-        return Layers[layerName].Lands.TryGetValue(shortName, out var land) ? land : null;
-    }
+    public LandDefinition? FindLand(string shortName, string layerName = "default") =>
+        Layers[layerName].Lands.TryGetValue(shortName, out var land) ? land : null;
 
     /// <summary>
     /// Adds a layer to the map from a directory.
@@ -84,7 +83,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer.</returns>
     public MapLayer<TDrawingContext> AddLayerFromDirectory(
-        string path, IPaint stroke, IPaint fill, string layerName = "default")
+        string path, Paint stroke, Paint fill, string layerName = "default")
     {
         using var sr = new StreamReader(path);
         return AddLayerFromStreamReader(sr, stroke, fill, layerName);
@@ -114,7 +113,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer.</returns>
     public MapLayer<TDrawingContext> AddLayerFromStreamReader(
-        StreamReader streamReader, IPaint stroke, IPaint fill, string layerName = "default")
+        StreamReader streamReader, Paint stroke, Paint fill, string layerName = "default")
     {
         if (!Layers.TryGetValue(layerName, out var layer))
         {
@@ -157,10 +156,8 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer as await-able task.</returns>
     public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(
-        string path, IPaint stroke, IPaint fill, string layerName = "default")
-    {
-        return Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
-    }
+        string path, Paint stroke, Paint fill, string layerName = "default") =>
+            Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
 
     /// <summary>
     /// Adds a layer to the map from a directory asynchronously.
@@ -186,10 +183,8 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer as await-able task.</returns>
     public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(
-        StreamReader streamReader, IPaint stroke, IPaint fill, string layerName = "default")
-    {
-        return Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
-    }
+        StreamReader streamReader, Paint stroke, Paint fill, string layerName = "default") =>
+            Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
 
     /// <summary>
     /// Adds a layer to the map from a stream reader asynchronously.
@@ -209,8 +204,6 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <summary>
     /// Disposes the map.
     /// </summary>
-    public void Dispose()
-    {
+    public void Dispose() =>
         Layers.Clear();
-    }
 }
