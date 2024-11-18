@@ -6,6 +6,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -80,7 +81,7 @@ public class MotionGeometry : Geometry
         context.Canvas.DrawCircle(X, Y, Diameter, paint);
     }
 
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks)
+    protected override LvcSize OnMeasure(Paint paintTasks)
     {
         // you can measure the geometry here, this method is used when the geometry
         // is used inside a layout, in this case it is not necessary.

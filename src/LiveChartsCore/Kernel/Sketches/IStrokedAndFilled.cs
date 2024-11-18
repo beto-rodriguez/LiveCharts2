@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -28,9 +27,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines an object with a stroke and fill.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IStrokedAndFilled<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IStrokedAndFilled
 {
     /// <summary>
     /// Gets or sets the fill.
