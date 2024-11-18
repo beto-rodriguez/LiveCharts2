@@ -37,7 +37,7 @@ using SkiaSharp.Views.Maui.Controls;
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <summary>
-/// Defines the motion cavnas class for Maui.
+/// Defines the motion canvas class for MAUI.
 /// </summary>
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class MotionCanvas : ContentView

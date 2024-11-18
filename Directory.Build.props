@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <MauiVersion>8.0.82</MauiVersion>
+    <!-- TODO: Move here other global properties like Version, Author -->
+  </PropertyGroup>
+</Project>
