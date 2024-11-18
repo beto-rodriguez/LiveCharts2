@@ -32,7 +32,7 @@ namespace LiveChartsCore.Drawing;
 /// <typeparam name="TPathArgs">The type of the path.</typeparam>
 /// <seealso cref="IDrawable{TDrawingContext}" />
 [Obsolete("Replaced by IAreaGeometry<T1, T2>")]
-public interface IPathGeometry<TDrawingContext, TPathArgs> : IDrawable<TDrawingContext>
+public interface IPathGeometry<TDrawingContext, TPathArgs> : IDrawable
      where TDrawingContext : DrawingContext
 {
     /// <summary>

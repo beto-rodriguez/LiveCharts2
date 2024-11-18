@@ -25,14 +25,12 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a drawable object, an object that can be represented in the user interface.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IAnimatable" />
-public interface IDrawable<TDrawingContext> : IAnimatable
-    where TDrawingContext : DrawingContext
+public interface IDrawable : IAnimatable
 {
     /// <summary>
     /// Draws the instance in the user interface with for the specified context.
     /// </summary>
     /// <param name="context">The context.</param>
-    void Draw(TDrawingContext context);
+    void Draw(DrawingContext context);
 }

@@ -37,7 +37,7 @@ public class PaintSchedule<TDrawingContext>
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="geometries">The geometries.</param>
-    public PaintSchedule(IPaint<TDrawingContext> task, HashSet<IDrawable<TDrawingContext>> geometries)
+    public PaintSchedule(IPaint<TDrawingContext> task, HashSet<IDrawable> geometries)
     {
         PaintTask = task;
         Geometries = geometries;
@@ -48,10 +48,10 @@ public class PaintSchedule<TDrawingContext>
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="geometries">The geometries.</param>
-    public PaintSchedule(IPaint<TDrawingContext> task, params IDrawable<TDrawingContext>[] geometries)
+    public PaintSchedule(IPaint<TDrawingContext> task, params IDrawable[] geometries)
     {
         PaintTask = task;
-        Geometries = new HashSet<IDrawable<TDrawingContext>>(geometries);
+        Geometries = new HashSet<IDrawable>(geometries);
     }
 
     /// <summary>
@@ -68,5 +68,5 @@ public class PaintSchedule<TDrawingContext>
     /// <value>
     /// The geometries.
     /// </value>
-    public HashSet<IDrawable<TDrawingContext>> Geometries { get; set; }
+    public HashSet<IDrawable> Geometries { get; set; }
 }

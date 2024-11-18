@@ -31,11 +31,9 @@ namespace LiveChartsCore.Motion;
 /// <summary>
 /// Defines a canvas that is able to animate the shapes inside it.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class MotionCanvas<TDrawingContext> : IDisposable
-    where TDrawingContext : DrawingContext
+public class MotionCanvas : IDisposable
 {
-    internal HashSet<IPaint<TDrawingContext>> _paintTasks = [];
+    internal HashSet<IPaint> _paintTasks = [];
     private readonly Stopwatch _stopwatch = new();
     private object _sync = new();
 
@@ -46,7 +44,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     private double _totalSeconds = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
@@ -58,12 +56,12 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     /// <summary>
     /// Occurs when the visual is invalidated.
     /// </summary>
-    public event Action<MotionCanvas<TDrawingContext>>? Invalidated;
+    public event Action<MotionCanvas>? Invalidated;
 
     /// <summary>
     /// Occurs when all the visuals in the canvas are valid.
     /// </summary>
-    public event Action<MotionCanvas<TDrawingContext>>? Validated;
+    public event Action<MotionCanvas>? Validated;
 
     /// <summary>
     /// Returns true if the visual is valid.
@@ -91,7 +89,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns></returns>
-    public void DrawFrame(TDrawingContext context)
+    public void DrawFrame(DrawingContext context)
     {
 #if DEBUG
         if (LiveCharts.EnableLogging)
@@ -109,7 +107,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             var isValid = true;
             var frameTime = _stopwatch.ElapsedMilliseconds;
 
-            var toRemoveGeometries = new List<Tuple<IPaint<TDrawingContext>, IDrawable<TDrawingContext>>>();
+            var toRemoveGeometries = new List<Tuple<IPaint, IDrawable>>();
 
             foreach (var task in _paintTasks.Where(x => x is not null).OrderBy(x => x.ZIndex))
             {
@@ -131,7 +129,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
                     if (geometry.IsValid && geometry.RemoveOnCompleted)
                         toRemoveGeometries.Add(
-                            new Tuple<IPaint<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
+                            new Tuple<IPaint, IDrawable>(task, geometry));
                 }
 
                 isValid = isValid && task.IsValid;
@@ -205,21 +203,21 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     /// </summary>
     /// <param name="task">The task.</param>
     /// <returns></returns>
-    public void AddDrawableTask(IPaint<TDrawingContext> task) => _ = _paintTasks.Add(task);
+    public void AddDrawableTask(IPaint task) => _ = _paintTasks.Add(task);
 
     /// <summary>
     /// Sets the paint tasks.
     /// </summary>
     /// <param name="tasks">The tasks.</param>
     /// <returns></returns>
-    public void SetPaintTasks(HashSet<IPaint<TDrawingContext>> tasks) => _paintTasks = tasks;
+    public void SetPaintTasks(HashSet<IPaint> tasks) => _paintTasks = tasks;
 
     /// <summary>
     /// Removes the paint task.
     /// </summary>
     /// <param name="task">The task.</param>
     /// <returns></returns>
-    public void RemovePaintTask(IPaint<TDrawingContext> task)
+    public void RemovePaintTask(IPaint task)
     {
         task.ReleaseCanvas(this);
         _ = _paintTasks.Remove(task);

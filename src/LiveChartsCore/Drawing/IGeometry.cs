@@ -26,8 +26,7 @@ namespace LiveChartsCore.Drawing;
 /// Defines a geometry in the user interface.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IDrawable{TDrawingContext}" />
-public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaintable<TDrawingContext>
+public interface IGeometry<TDrawingContext> : IDrawable, IPaintable<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>

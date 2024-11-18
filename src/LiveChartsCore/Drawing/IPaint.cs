@@ -29,9 +29,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a set of geometries that will be drawn according to this instance specifications.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IPaint<TDrawingContext> : IAnimatable, IDisposable
-    where TDrawingContext : DrawingContext
+public interface IPaint : IAnimatable, IDisposable
 {
     /// <summary>
     /// Gets or sets a value indicating whether this instance is stroke.
@@ -85,7 +83,7 @@ public interface IPaint<TDrawingContext> : IAnimatable, IDisposable
     /// <param name="canvas">The canvas.</param>
     /// The clip rectangle.
     /// </returns>
-    LvcRectangle GetClipRectangle(MotionCanvas<TDrawingContext> canvas);
+    LvcRectangle GetClipRectangle(MotionCanvas canvas);
 
     /// <summary>
     /// Gets or sets the clip rectangle.
@@ -94,71 +92,71 @@ public interface IPaint<TDrawingContext> : IAnimatable, IDisposable
     /// <param name="value">
     /// The clip rectangle.
     /// </param>
-    void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, LvcRectangle value);
+    void SetClipRectangle(MotionCanvas canvas, LvcRectangle value);
 
     /// <summary>
     /// Initializes the task.
     /// </summary>
     /// <param name="context">The context.</param>
-    void InitializeTask(TDrawingContext context);
+    void InitializeTask(DrawingContext context);
 
     /// <summary>
     /// Gets the geometries.
     /// </summary>
     /// <returns></returns>
     /// <param name="canvas">The canvas.</param>
-    IEnumerable<IDrawable<TDrawingContext>> GetGeometries(MotionCanvas<TDrawingContext> canvas);
+    IEnumerable<IDrawable> GetGeometries(MotionCanvas canvas);
 
     /// <summary>
     /// Sets the geometries.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometries">The geometries.</param>
-    void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries);
+    void SetGeometries(MotionCanvas canvas, HashSet<IDrawable> geometries);
 
     /// <summary>
     /// Adds the geometry to paint task.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    void AddGeometryToPaintTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry);
+    void AddGeometryToPaintTask(MotionCanvas canvas, IDrawable geometry);
 
     /// <summary>
     /// Removes the geometry from pain task.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    void RemoveGeometryFromPainTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry);
+    void RemoveGeometryFromPainTask(MotionCanvas canvas, IDrawable geometry);
 
     /// <summary>
     /// Removes all geometry from paint task.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    void ClearGeometriesFromPaintTask(MotionCanvas<TDrawingContext> canvas);
+    void ClearGeometriesFromPaintTask(MotionCanvas canvas);
 
     /// <summary>
     /// Releases the canvas resources.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    void ReleaseCanvas(MotionCanvas<TDrawingContext> canvas);
+    void ReleaseCanvas(MotionCanvas canvas);
 
     /// <summary>
     /// Sets the opacity according to the given geometry.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="geometry">The geometry.</param>
-    void ApplyOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry);
+    void ApplyOpacityMask(DrawingContext context, IDrawable geometry);
 
     /// <summary>
     /// Resets the opacity.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="geometry">The geometry.</param>
-    void RestoreOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry);
+    void RestoreOpacityMask(DrawingContext context, IDrawable geometry);
 
     /// <summary>
     /// Clones the task.
     /// </summary>
     /// <returns></returns>
-    IPaint<TDrawingContext> CloneTask();
+    IPaint CloneTask();
 }
