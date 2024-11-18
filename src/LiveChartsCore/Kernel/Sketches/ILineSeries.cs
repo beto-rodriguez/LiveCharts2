@@ -32,7 +32,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <seealso cref="IChartSeries{TDrawingContext}" />
 public interface ILineSeries<TDrawingContext>
     : IChartSeries<TDrawingContext>, IStrokedAndFilled,
-        ICartesianSeries<TDrawingContext>, IErrorSeries<TDrawingContext>
+        ICartesianSeries<TDrawingContext>, IErrorSeries
             where TDrawingContext : DrawingContext
 {
     /// <summary>

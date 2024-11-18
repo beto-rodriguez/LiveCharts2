@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -28,9 +27,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a seeries that can draw error bars.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context</typeparam>
-public interface IErrorSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IErrorSeries
 {
     /// <summary>
     /// Gets or sets the error paint.
