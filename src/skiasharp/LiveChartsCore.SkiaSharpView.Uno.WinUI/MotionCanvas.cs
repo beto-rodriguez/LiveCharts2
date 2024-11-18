@@ -66,11 +66,13 @@ public partial class MotionCanvas : UserControl
 #if HAS_UNO_WINUI
         var scale = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
         args.Surface.Canvas.Scale((float)scale, (float)scale);
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
 #else
         var scaleFactor = XamlRoot.RasterizationScale;
         args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(new
+            SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
 #endif
     }
 

@@ -65,7 +65,8 @@ public class MotionCanvas : UserControl
     {
         var density = GetPixelDensity();
         args.Surface.Canvas.Scale(density.dpix, density.dpiy);
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
     /// <inheritdoc cref="OnPaintGlSurface(object?, SKPaintGLSurfaceEventArgs)" />
@@ -78,10 +79,11 @@ public class MotionCanvas : UserControl
             ? Colors.White
             : bg.Color;
 
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas)
-        {
-            Background = new SKColor(c.R, c.G, c.B)
-        });
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas)
+            {
+                Background = new SKColor(c.R, c.G, c.B)
+            });
     }
 
     private void InitializeElement()

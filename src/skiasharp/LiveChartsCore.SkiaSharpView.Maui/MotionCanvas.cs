@@ -87,13 +87,15 @@ public class MotionCanvas : ContentView
     private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
         args.Surface.Canvas.Scale((float)_density, (float)_density);
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
     private void OnGlViewPaintSurface(object? sender, SKPaintGLSurfaceEventArgs args)
     {
         args.Surface.Canvas.Scale((float)_density, (float)_density);
-        CanvasCore.DrawFrame(new(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
     }
 
     private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>

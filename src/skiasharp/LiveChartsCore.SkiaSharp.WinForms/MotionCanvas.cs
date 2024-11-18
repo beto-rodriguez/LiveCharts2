@@ -74,11 +74,11 @@ public partial class MotionCanvas : UserControl
 
     private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 
     private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
             {
                 Background = new SKColor(Parent.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
             });

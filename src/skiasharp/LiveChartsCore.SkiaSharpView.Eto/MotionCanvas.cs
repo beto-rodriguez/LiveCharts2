@@ -64,7 +64,7 @@ public class MotionCanvas : SkiaDrawable
 
     private void SkControl_PaintSurface(object sender, SKPaintEventArgs e) =>
         CanvasCore.DrawFrame(
-            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 
     private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
