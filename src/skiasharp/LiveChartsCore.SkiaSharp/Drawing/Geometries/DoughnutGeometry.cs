@@ -91,7 +91,7 @@ public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingCont
     public bool InvertedCornerRadius { get; set; }
 
     /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paint)
+    protected override LvcSize OnMeasure(IPaint paint)
     {
         return new LvcSize(Width, Height);
     }

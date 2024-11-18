@@ -82,7 +82,7 @@ public class RadialGradientPaint : Paint
         : this(new[] { centerColor, outerColor }) { }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
-    public override IPaint<SkiaSharpDrawingContext> CloneTask()
+    public override IPaint CloneTask()
     {
         return new RadialGradientPaint(_gradientStops, _center, _radius, _colorPos, _tileMode)
         {

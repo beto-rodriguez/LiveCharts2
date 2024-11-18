@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
 {
     private static readonly int s_zIndex = 10050;
-    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint = null;
+    private IPaint? _backgroundPaint = null;
 
     // marked as internal only for testing purposes
     internal readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
@@ -60,12 +60,12 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets the legend font paint.
     /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
+    public IPaint? FontPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
+    public IPaint? BackgroundPaint
     {
         get => _backgroundPaint;
         set

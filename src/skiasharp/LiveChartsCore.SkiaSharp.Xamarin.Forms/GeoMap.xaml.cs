@@ -122,7 +122,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly BindableProperty StrokeProperty =
         BindableProperty.Create(
-            nameof(Stroke), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
+            nameof(Stroke), typeof(IPaint), typeof(GeoMap),
               new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true },
               BindingMode.Default, null, OnBindablePropertyChanged);
 
@@ -131,7 +131,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly BindableProperty FillProperty =
        BindableProperty.Create(
-           nameof(Fill), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
+           nameof(Fill), typeof(IPaint), typeof(GeoMap),
             new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true },
             BindingMode.Default, null, OnBindablePropertyChanged);
 
@@ -199,9 +199,9 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    public IPaint? Stroke
     {
-        get => (IPaint<SkiaSharpDrawingContext>)GetValue(StrokeProperty);
+        get => (IPaint)GetValue(StrokeProperty);
         set
         {
             if (value is not null) value.IsStroke = true;
@@ -210,9 +210,9 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    public IPaint? Fill
     {
-        get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
+        get => (IPaint)GetValue(FillProperty);
         set
         {
             if (value is not null) value.IsFill = true;

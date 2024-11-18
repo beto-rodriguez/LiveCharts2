@@ -60,10 +60,10 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
-    public IPaint<SkiaSharpDrawingContext>? Stroke { get; set; }
+    public IPaint? Stroke { get; set; }
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
-    public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
+    public IPaint? Fill { get; set; }
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Opacity" />
     public float Opacity { get => _opacityProperty.GetMovement(this); set => _opacityProperty.SetMovement(value, this); }

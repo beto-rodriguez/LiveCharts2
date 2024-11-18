@@ -195,13 +195,13 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
     [Parameter]
-    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get; set; }
-        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint;
+    public IPaint? LegendTextPaint { get; set; }
+        = (IPaint?)LiveCharts.DefaultSettings.LegendTextPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
     [Parameter]
-    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get; set; }
-        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
+    public IPaint? LegendBackgroundPaint { get; set; }
+        = (IPaint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
     [Parameter]
@@ -217,13 +217,13 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
     [Parameter]
-    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get; set; }
-        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint;
+    public IPaint? TooltipTextPaint { get; set; }
+        = (IPaint?)LiveCharts.DefaultSettings.TooltipTextPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
     [Parameter]
-    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get; set; }
-        = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
+    public IPaint? TooltipBackgroundPaint { get; set; }
+        = (IPaint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
     [Parameter]

@@ -67,11 +67,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     private VisualElement<SkiaSharpDrawingContext>? _title;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
-    private IPaint<SkiaSharpDrawingContext>? _legendTextPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint;
-    private IPaint<SkiaSharpDrawingContext>? _legendBackgroundPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
+    private IPaint? _legendTextPaint = (IPaint?)LiveCharts.DefaultSettings.LegendTextPaint;
+    private IPaint? _legendBackgroundPaint = (IPaint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
     private double? _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
-    private IPaint<SkiaSharpDrawingContext>? _tooltipTextPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint;
-    private IPaint<SkiaSharpDrawingContext>? _tooltipBackgroundPaint = (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
+    private IPaint? _tooltipTextPaint = (IPaint?)LiveCharts.DefaultSettings.TooltipTextPaint;
+    private IPaint? _tooltipBackgroundPaint = (IPaint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
     private double? _tooltipTextSize = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <summary>
@@ -203,11 +203,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
+    public IPaint? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get => _legendBackgroundPaint; set { _legendBackgroundPaint = value; OnPropertyChanged(); } }
+    public IPaint? LegendBackgroundPaint { get => _legendBackgroundPaint; set { _legendBackgroundPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -223,11 +223,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get => _tooltipTextPaint; set { _tooltipTextPaint = value; OnPropertyChanged(); } }
+    public IPaint? TooltipTextPaint { get => _tooltipTextPaint; set { _tooltipTextPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get => _tooltipBackgroundPaint; set { _tooltipBackgroundPaint = value; OnPropertyChanged(); } }
+    public IPaint? TooltipBackgroundPaint { get => _tooltipBackgroundPaint; set { _tooltipBackgroundPaint = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

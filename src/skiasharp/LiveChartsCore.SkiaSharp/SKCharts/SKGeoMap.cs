@@ -36,8 +36,8 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
 {
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
     private object? _viewCommand;
-    private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private IPaint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
+    private IPaint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
@@ -85,7 +85,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     public MapProjection MapProjection { get; set; }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    public IPaint? Stroke
     {
         get => _stroke;
         set
@@ -96,7 +96,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    public IPaint? Fill
     {
         get => _fill;
         set

@@ -33,7 +33,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Painting;
 
 /// <inheritdoc cref="IPaint{TDrawingContext}" />
-public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingContext>
+public abstract class Paint : Animatable, IDisposable, IPaint
 {
     private readonly FloatMotionProperty _strokeMiterTransition;
     private readonly Dictionary<MotionCanvas<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = [];
@@ -234,7 +234,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
-    public abstract IPaint<SkiaSharpDrawingContext> CloneTask();
+    public abstract IPaint CloneTask();
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
     public abstract void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry);

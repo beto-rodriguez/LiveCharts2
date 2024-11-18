@@ -148,19 +148,19 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public bool AutoUpdateEnabled { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint"/>
-    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint { get; set; }
+    public IPaint? LegendTextPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint"/>
-    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint { get; set; }
+    public IPaint? LegendBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize"/>
     public double? LegendTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint"/>
-    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint { get; set; }
+    public IPaint? TooltipTextPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint"/>
-    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint { get; set; }
+    public IPaint? TooltipBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize"/>
     public double? TooltipTextSize { get; set; }

@@ -173,7 +173,7 @@ public partial class MotionCanvas : ContentView
     {
         var motionCanvas = (MotionCanvas)bindable;
 
-        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
+        var tasks = new HashSet<IPaint>();
 
         foreach (var item in motionCanvas.PaintTasks)
         {

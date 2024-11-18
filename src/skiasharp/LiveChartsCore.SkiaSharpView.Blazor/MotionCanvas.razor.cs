@@ -185,7 +185,7 @@ public partial class MotionCanvas : IDisposable
 
     private void OnPaintTasksChanged()
     {
-        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
+        var tasks = new HashSet<IPaint>();
 
         foreach (var item in _paintTasksSchedule)
         {

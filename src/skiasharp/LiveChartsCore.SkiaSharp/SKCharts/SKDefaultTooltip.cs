@@ -42,7 +42,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 {
     internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10100;
-    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
+    private IPaint? _backgroundPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
@@ -59,12 +59,12 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets the legend font paint.
     /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
+    public IPaint? FontPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
+    public IPaint? BackgroundPaint
     {
         get => _backgroundPaint;
         set

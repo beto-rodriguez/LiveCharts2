@@ -67,7 +67,7 @@ public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> drawable)
+    protected override LvcSize OnMeasure(IPaint drawable)
     {
         return new LvcSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
     }

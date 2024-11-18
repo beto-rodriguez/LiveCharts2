@@ -220,7 +220,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
-            nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(LegendBackgroundPaint), typeof(IPaint), typeof(PieChart),
             LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -228,7 +228,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
-            nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(LegendTextPaint), typeof(IPaint), typeof(PieChart),
             LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -252,7 +252,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
-            nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(TooltipBackgroundPaint), typeof(IPaint), typeof(PieChart),
             LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -260,7 +260,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// </summary>
     public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
-            nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(TooltipTextPaint), typeof(IPaint), typeof(PieChart),
             LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -474,16 +474,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint
+    public IPaint? LegendBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendBackgroundPaintProperty);
+        get => (IPaint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint
+    public IPaint? LegendTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendTextPaintProperty);
+        get => (IPaint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
@@ -505,16 +505,16 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint
+    public IPaint? TooltipBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipBackgroundPaintProperty);
+        get => (IPaint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint
+    public IPaint? TooltipTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipTextPaintProperty);
+        get => (IPaint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 

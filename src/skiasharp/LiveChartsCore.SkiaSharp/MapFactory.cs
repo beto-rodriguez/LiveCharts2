@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView;
 public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 {
     private readonly HashSet<HeatPathShape> _usedPathShapes = [];
-    private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _usedPaints = [];
+    private readonly HashSet<IPaint> _usedPaints = [];
     private readonly HashSet<string> _usedLayers = [];
     private IGeoMapView<SkiaSharpDrawingContext>? _mapView;
 
@@ -49,7 +49,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
         var toRemoveLayers = new HashSet<string>(_usedLayers);
         var toRemovePathShapes = new HashSet<HeatPathShape>(_usedPathShapes);
-        var toRemovePaints = new HashSet<IPaint<SkiaSharpDrawingContext>>(_usedPaints);
+        var toRemovePaints = new HashSet<IPaint>(_usedPaints);
 
         var layersQuery = context.View.ActiveMap.Layers.Values
             .Where(x => x.IsVisible)

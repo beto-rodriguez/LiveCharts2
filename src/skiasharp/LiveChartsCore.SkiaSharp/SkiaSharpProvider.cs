@@ -48,7 +48,7 @@ public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
         => new PolarAxis();
 
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
-    public override IPaint<SkiaSharpDrawingContext> GetSolidColorPaint(LvcColor color)
+    public override IPaint GetSolidColorPaint(LvcColor color)
         => new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
 
     /// <inheritdoc cref="ChartEngine{TDrawingContext}.InitializeZoommingSection(MotionCanvas{TDrawingContext})"/>

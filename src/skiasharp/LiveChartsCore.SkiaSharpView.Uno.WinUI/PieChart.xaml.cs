@@ -202,7 +202,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty LegendBackgroundPaintProperty =
         DependencyProperty.Register(
-            nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(LegendBackgroundPaint), typeof(IPaint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -210,7 +210,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty LegendTextPaintProperty =
         DependencyProperty.Register(
-            nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(LegendTextPaint), typeof(IPaint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -234,7 +234,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty TooltipBackgroundPaintProperty =
         DependencyProperty.Register(
-            nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(TooltipBackgroundPaint), typeof(IPaint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -242,7 +242,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty TooltipTextPaintProperty =
         DependencyProperty.Register(
-            nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(TooltipTextPaint), typeof(IPaint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -485,16 +485,16 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint
+    public IPaint? TooltipBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipBackgroundPaintProperty);
+        get => (IPaint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint
+    public IPaint? TooltipTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipTextPaintProperty);
+        get => (IPaint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
@@ -509,16 +509,16 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint
+    public IPaint? LegendBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendBackgroundPaintProperty);
+        get => (IPaint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint
+    public IPaint? LegendTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendTextPaintProperty);
+        get => (IPaint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 

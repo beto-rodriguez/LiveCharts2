@@ -105,7 +105,7 @@ public class BoxGeometry : Geometry, IBoxGeometry<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks)
+    protected override LvcSize OnMeasure(IPaint paintTasks)
     {
         return new LvcSize(Width, Math.Abs(Min - Y));
     }

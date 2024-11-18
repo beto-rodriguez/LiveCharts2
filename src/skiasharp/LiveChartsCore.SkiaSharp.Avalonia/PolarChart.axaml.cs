@@ -208,16 +208,16 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The tooltip background paint property
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipBackgroundPaintProperty =
-        AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipBackgroundPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipBackgroundPaint, inherits: true);
+    public static readonly AvaloniaProperty<IPaint?> TooltipBackgroundPaintProperty =
+        AvaloniaProperty.Register<PolarChart, IPaint?>(
+            nameof(TooltipBackgroundPaint), (IPaint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text paint property
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> TooltipTextPaintProperty =
-        AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(TooltipTextPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.TooltipTextPaint, inherits: true);
+    public static readonly AvaloniaProperty<IPaint?> TooltipTextPaintProperty =
+        AvaloniaProperty.Register<PolarChart, IPaint?>(
+            nameof(TooltipTextPaint), (IPaint?)LiveCharts.DefaultSettings.TooltipTextPaint, inherits: true);
 
     /// <summary>
     /// The tooltip text size property
@@ -236,16 +236,16 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The legend background paint property
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendBackgroundPaintProperty =
-        AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendBackgroundPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendBackgroundPaint, inherits: true);
+    public static readonly AvaloniaProperty<IPaint?> LegendBackgroundPaintProperty =
+        AvaloniaProperty.Register<PolarChart, IPaint?>(
+            nameof(LegendBackgroundPaint), (IPaint?)LiveCharts.DefaultSettings.LegendBackgroundPaint, inherits: true);
 
     /// <summary>
     /// The legend text paint property
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>?> LegendTextPaintProperty =
-        AvaloniaProperty.Register<PolarChart, IPaint<SkiaSharpDrawingContext>?>(
-            nameof(LegendTextPaint), (IPaint<SkiaSharpDrawingContext>?)LiveCharts.DefaultSettings.LegendTextPaint, inherits: true);
+    public static readonly AvaloniaProperty<IPaint?> LegendTextPaintProperty =
+        AvaloniaProperty.Register<PolarChart, IPaint?>(
+            nameof(LegendTextPaint), (IPaint?)LiveCharts.DefaultSettings.LegendTextPaint, inherits: true);
 
     /// <summary>
     /// The legend text size property
@@ -456,16 +456,16 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint
+    public IPaint? TooltipBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipBackgroundPaintProperty);
+        get => (IPaint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint
+    public IPaint? TooltipTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipTextPaintProperty);
+        get => (IPaint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
@@ -487,16 +487,16 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint
+    public IPaint? LegendBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendBackgroundPaintProperty);
+        get => (IPaint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint
+    public IPaint? LegendTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendTextPaintProperty);
+        get => (IPaint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 

@@ -97,7 +97,7 @@ public class LinearGradientPaint(
         : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
-    public override IPaint<SkiaSharpDrawingContext> CloneTask()
+    public override IPaint CloneTask()
     {
         return new LinearGradientPaint(gradientStops, startPoint, endPoint, colorPos, tileMode)
         {

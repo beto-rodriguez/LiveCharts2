@@ -175,7 +175,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paint)
+    protected override LvcSize OnMeasure(IPaint paint)
     {
         var skiaPaint = (Paint)paint;
         var typeface = skiaPaint.GetSKTypeface();

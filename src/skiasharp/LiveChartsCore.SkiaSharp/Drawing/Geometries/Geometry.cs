@@ -161,10 +161,10 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     public float Opacity { get => _opacityProperty.GetMovement(this); set => _opacityProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
-    public IPaint<SkiaSharpDrawingContext>? Stroke { get; set; }
+    public IPaint? Stroke { get; set; }
 
     /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
-    public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
+    public IPaint? Fill { get; set; }
 
     /// <inheritdoc cref="IGeometry{TDrawingContext}.Parent"/>
     public IGeometry<SkiaSharpDrawingContext>? Parent { get; set; }
@@ -284,7 +284,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// </summary>
     /// <param name="drawableTask">The drawable task.</param>
     /// <returns>the size of the geometry.</returns>
-    public LvcSize Measure(IPaint<SkiaSharpDrawingContext> drawableTask)
+    public LvcSize Measure(IPaint drawableTask)
     {
         var measure = OnMeasure(drawableTask);
 
@@ -315,5 +315,5 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// </summary>
     /// <param name="paintTasks">The paint task.</param>
     /// <returns>the size of the geometry</returns>
-    protected abstract LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks);
+    protected abstract LvcSize OnMeasure(IPaint paintTasks);
 }

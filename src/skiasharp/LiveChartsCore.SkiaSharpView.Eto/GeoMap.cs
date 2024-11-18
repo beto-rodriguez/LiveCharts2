@@ -48,8 +48,8 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private IPaint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
+    private IPaint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
     private object? _viewCommand = null;
 
     /// <summary>
@@ -116,7 +116,7 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    public IPaint? Stroke
     {
         get => _stroke;
         set
@@ -128,7 +128,7 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    public IPaint? Fill
     {
         get => _fill;
         set

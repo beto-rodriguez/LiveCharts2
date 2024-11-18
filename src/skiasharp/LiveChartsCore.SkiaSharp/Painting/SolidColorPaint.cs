@@ -65,7 +65,7 @@ public class SolidColorPaint : Paint
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
-    public override IPaint<SkiaSharpDrawingContext> CloneTask()
+    public override IPaint CloneTask()
     {
         var clone = new SolidColorPaint
         {

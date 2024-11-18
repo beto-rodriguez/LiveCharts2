@@ -51,8 +51,8 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
     private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext>? _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private IPaint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
+    private IPaint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
     private object? _viewCommand = null;
 
     /// <summary>
@@ -154,7 +154,7 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
     [Parameter]
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    public IPaint? Stroke
     {
         get => _stroke;
         set
@@ -167,7 +167,7 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
     [Parameter]
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    public IPaint? Fill
     {
         get => _fill;
         set

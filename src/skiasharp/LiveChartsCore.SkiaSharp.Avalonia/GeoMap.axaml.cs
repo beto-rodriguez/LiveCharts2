@@ -112,15 +112,15 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// <summary>
     /// The stroke property.
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
-      AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
+    public static readonly AvaloniaProperty<IPaint> StrokeProperty =
+      AvaloniaProperty.Register<CartesianChart, IPaint>(nameof(Stroke),
           new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
 
     /// <summary>
     /// The fill color property.
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
-      AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
+    public static readonly AvaloniaProperty<IPaint> FillProperty =
+      AvaloniaProperty.Register<CartesianChart, IPaint>(nameof(Fill),
            new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
 
     #endregion
@@ -178,9 +178,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    public IPaint? Stroke
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(StrokeProperty);
+        get => (IPaint?)GetValue(StrokeProperty);
         set
         {
             if (value is not null) value.IsStroke = true;
@@ -189,9 +189,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    public IPaint? Fill
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(FillProperty);
+        get => (IPaint?)GetValue(FillProperty);
         set
         {
             if (value is not null) value.IsFill = true;
