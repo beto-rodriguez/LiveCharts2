@@ -36,7 +36,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TGeometry : INeedleGeometry<TDrawingContext>, new()
+    where TGeometry : INeedleGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()
 {
     private Paint? _fill;

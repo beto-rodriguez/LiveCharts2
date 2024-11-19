@@ -26,10 +26,10 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="INeedleGeometry{TDrawingContext}"/>
-public class NeedleGeometry : Geometry, INeedleGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="INeedleGeometry"/>
+public class NeedleGeometry : Geometry, INeedleGeometry
 {
-    /// <inheritdoc cref="INeedleGeometry{TDrawingContext}.Radius"/>
+    /// <inheritdoc cref="INeedleGeometry.Radius"/>
     public float Radius { get; set; }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)"/>
