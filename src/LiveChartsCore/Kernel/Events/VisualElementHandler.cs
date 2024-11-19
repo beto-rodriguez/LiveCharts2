@@ -32,6 +32,6 @@ namespace LiveChartsCore.Kernel.Events;
 /// <param name="visual">The sender visual.</param>
 /// <param name="visualElementsArgs">The visual elements arguments.</param>
 public delegate void VisualElementHandler<TDrawingContext>(
-    VisualElement<TDrawingContext> visual,
+    CoreVisualElement<TDrawingContext> visual,
     VisualElementEventArgs<TDrawingContext> visualElementsArgs)
         where TDrawingContext : DrawingContext;

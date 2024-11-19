@@ -70,7 +70,7 @@ public class TableLayoutTest
                     Values = new double[] { 1, 2, 3 }
                 }
             },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new CoreVisualElement<SkiaSharpDrawingContext>[]
             {
                 table
             }
@@ -159,7 +159,7 @@ public class TableLayoutTest
                     Values = new double[] { 1, 2, 3 }
                 }
             },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new CoreVisualElement<SkiaSharpDrawingContext>[]
             {
                 table
             }
@@ -259,7 +259,7 @@ public class TableLayoutTest
                     Values = new double[] { 1, 2, 3 }
                 }
             },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new CoreVisualElement<SkiaSharpDrawingContext>[]
             {
                 table
             }
@@ -348,7 +348,7 @@ public class TableLayoutTest
                     Values = new double[] { 1, 2, 3 }
                 }
             },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new CoreVisualElement<SkiaSharpDrawingContext>[]
             {
                 table
             }
@@ -436,7 +436,7 @@ public class TableLayoutTest
                     Values = new double[] { 1, 2, 3 }
                 }
             },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new CoreVisualElement<SkiaSharpDrawingContext>[]
             {
                 table
             }
@@ -519,7 +519,7 @@ public class TableLayoutTest
                     Values = new double[] { 1, 2, 3 }
                 }
             },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new CoreVisualElement<SkiaSharpDrawingContext>[]
             {
                 table
             }

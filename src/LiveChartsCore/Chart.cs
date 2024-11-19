@@ -359,8 +359,8 @@ public abstract class Chart<TDrawingContext> : IChart
 
             // fire the visual elements event.
             var hitElements =
-                _everMeasuredElements.OfType<VisualElement<TDrawingContext>>()
-                    .Cast<VisualElement<TDrawingContext>>()
+                _everMeasuredElements.OfType<CoreVisualElement<TDrawingContext>>()
+                    .Cast<CoreVisualElement<TDrawingContext>>()
                     .SelectMany(x => x.IsHitBy(this, point));
 
             foreach (var ve in hitElements)

@@ -99,7 +99,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
        DependencyProperty.Register(
-           nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(Chart), new PropertyMetadata(null));
+           nameof(Title), typeof(CoreVisualElement<SkiaSharpDrawingContext>), typeof(Chart), new PropertyMetadata(null));
 
     /// <summary>
     /// The sync context property.
@@ -341,9 +341,9 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
-    public VisualElement<SkiaSharpDrawingContext>? Title
+    public CoreVisualElement<SkiaSharpDrawingContext>? Title
     {
-        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        get => (CoreVisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -725,7 +725,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 

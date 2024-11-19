@@ -141,7 +141,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
-    public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
+    public CoreVisualElement<SkiaSharpDrawingContext>? Title { get; set; }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise"/>
     public bool IsClockwise { get; set; } = true;
@@ -197,7 +197,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
 
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
-        Core.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, new(point)));
+        Core.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, new(point)));
 
     void IChartView.InvokeOnUIThread(Action action) => action();
 
@@ -222,7 +222,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
+        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
 
     void IChartView.Invalidate() => throw new NotImplementedException();
 }

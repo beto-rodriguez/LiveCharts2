@@ -164,7 +164,7 @@ public class SKDefaultTooltip : IChartTooltip
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild((VisualElement<SkiaSharpDrawingContext>)series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
+                tableLayout.AddChild((CoreVisualElement<SkiaSharpDrawingContext>)series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
                     tableLayout.AddChild(

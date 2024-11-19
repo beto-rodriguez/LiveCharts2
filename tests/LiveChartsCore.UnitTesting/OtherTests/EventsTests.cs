@@ -34,7 +34,7 @@ public class EventsTests
             },
             XAxes = new[] { new Axis { IsVisible = false, } },
             YAxes = new[] { new Axis { IsVisible = false, } },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new CoreVisualElement<SkiaSharpDrawingContext>[]
             {
                 new LabelVisual
                 {
@@ -71,7 +71,7 @@ public class EventsTests
         // Test visual elements.
         // Charts use the VisualElement.IsHitBy method to check if the mouse is over a visual element.
         var v = chart.VisualElements
-            .Cast<VisualElement<SkiaSharpDrawingContext>>()
+            .Cast<CoreVisualElement<SkiaSharpDrawingContext>>()
             .SelectMany(x => x.IsHitBy(chart.Core, new LvcPoint(251, 251)))
             .ToArray();
         Assert.IsTrue(v.Length == 2);

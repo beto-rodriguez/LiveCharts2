@@ -168,7 +168,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
     [Parameter]
-    public VisualElement<SkiaSharpDrawingContext>? Title { get; set; }
+    public CoreVisualElement<SkiaSharpDrawingContext>? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     [Parameter]
@@ -373,7 +373,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-       IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
+       IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints) =>
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);

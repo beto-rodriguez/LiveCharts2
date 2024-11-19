@@ -34,7 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
+public class LabelVisual<TLabelGeometry, TDrawingContext> : CoreVisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TLabelGeometry : ILabelGeometry, new()
 {
@@ -103,7 +103,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
     protected internal override Paint?[] GetPaintTasks() =>
         [_paint];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.GetDrawnGeometries"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [_labelGeometry];
 
@@ -113,7 +113,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         HorizontalAlignment = Align.Start;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         var x = (float)X;
@@ -153,14 +153,14 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)
     {
         if (_labelGeometry is null) return;
         _labelGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart)
     {
         ApplyTheme<LabelVisual<TLabelGeometry, TDrawingContext>>();

@@ -37,7 +37,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
+public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext> : CoreVisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TArcGeometry : IArcGeometry, new()
     where TLineGeometry : ILineGeometry, new()
@@ -97,7 +97,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// </summary>
     public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         if (chart is not PieChart<TDrawingContext> pieChart)
@@ -252,14 +252,14 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart) => new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)
     { }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.GetDrawnGeometries"/>
     protected internal override IAnimatable?[] GetDrawnGeometries()
     {
         var count =

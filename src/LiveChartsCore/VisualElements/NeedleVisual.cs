@@ -34,7 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
+public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : CoreVisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TGeometry : INeedleGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()
@@ -57,7 +57,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext>>();
@@ -114,17 +114,17 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart) => new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)
     {
         if (_geometry is null) return;
         _geometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.GetDrawnGeometries"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [_geometry];
 

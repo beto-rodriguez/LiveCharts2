@@ -190,7 +190,7 @@ public interface IChartView
     /// Gets all the <see cref="IChartElement"/> that contain the given point.
     /// </summary>
     /// <param name="point">The given point.</param>
-    /// <returns>An enumerable of <see cref="VisualElement{TDrawingContext}"/>.</returns>
+    /// <returns>An enumerable of <see cref="CoreVisualElement{TDrawingContext}"/>.</returns>
     IEnumerable<IChartElement> GetVisualsAt(LvcPointD point);
 
     /// <summary>
@@ -235,7 +235,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Gets or sets the chart title.
     /// </summary>
-    VisualElement<TDrawingContext>? Title { get; set; }
+    CoreVisualElement<TDrawingContext>? Title { get; set; }
 
     /// <summary>
     /// Occurs before the chart is measured, this is the first step before the chart updates.
@@ -283,5 +283,5 @@ public interface IChartView<TDrawingContext> : IChartView
     /// </summary>
     /// <param name="visualElements">The visual elements.</param>
     /// <param name="pointer">The pointer location.</param>
-    void OnVisualElementPointerDown(IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointer);
+    void OnVisualElementPointerDown(IEnumerable<CoreVisualElement<TDrawingContext>> visualElements, LvcPoint pointer);
 }

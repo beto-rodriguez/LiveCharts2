@@ -39,7 +39,7 @@ public class VisualElementEventArgs<TDrawingContext>
     /// <param name="pointerLocation">The pointer location.</param>
     /// <param name="visualElement">The visual elements.</param>
     public VisualElementEventArgs(
-        Chart<TDrawingContext> chart, VisualElement<TDrawingContext> visualElement, LvcPoint pointerLocation)
+        Chart<TDrawingContext> chart, CoreVisualElement<TDrawingContext> visualElement, LvcPoint pointerLocation)
     {
         Chart = chart;
         PointerLocation = pointerLocation;
@@ -53,7 +53,7 @@ public class VisualElementEventArgs<TDrawingContext>
     /// <param name="pointerLocation">The pointer location.</param>
     /// <param name="visualElement">The visual element.</param>
     public VisualElementEventArgs(
-        IChart chart, VisualElement<TDrawingContext> visualElement, LvcPoint pointerLocation)
+        IChart chart, CoreVisualElement<TDrawingContext> visualElement, LvcPoint pointerLocation)
     {
         Chart = (Chart<TDrawingContext>)chart;
         PointerLocation = pointerLocation;
@@ -73,5 +73,5 @@ public class VisualElementEventArgs<TDrawingContext>
     /// <summary>
     /// Gets the visual elements found.
     /// </summary>
-    public VisualElement<TDrawingContext> VisualElement { get; }
+    public CoreVisualElement<TDrawingContext> VisualElement { get; }
 }

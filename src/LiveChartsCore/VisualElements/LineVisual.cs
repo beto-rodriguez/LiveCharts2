@@ -43,7 +43,7 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() => [_geometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         var l = GetActualCoordinate();
@@ -84,14 +84,14 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)
     {
         if (_geometry is null) return;
         _geometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart)
     {
         var w = (float)Width;

@@ -32,7 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the relative panel class.
 /// </summary>
-public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
+public class RelativePanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TBackgroundGeometry : ISizedGeometry, new()
 {
@@ -54,7 +54,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public HashSet<VisualElement<TDrawingContext>> Children { get; } = [];
+    public HashSet<CoreVisualElement<TDrawingContext>> Children { get; } = [];
 
     /// <summary>
     /// Gets or sets the background paint.
@@ -73,11 +73,11 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() => [_backgroundPaint];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.GetDrawnGeometries"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         // NOTE #20231605
@@ -107,15 +107,15 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         BackgroundGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
-    protected internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
+    protected internal override IEnumerable<CoreVisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -142,7 +142,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart) =>
         Size;
 

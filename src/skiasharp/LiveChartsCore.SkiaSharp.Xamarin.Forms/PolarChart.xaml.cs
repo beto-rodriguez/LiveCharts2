@@ -165,7 +165,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(PolarChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(CoreVisualElement<SkiaSharpDrawingContext>), typeof(PolarChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -454,9 +454,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
-    public VisualElement<SkiaSharpDrawingContext>? Title
+    public CoreVisualElement<SkiaSharpDrawingContext>? Title
     {
-        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        get => (CoreVisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -668,7 +668,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     {
         return core is not PolarChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>
@@ -783,7 +783,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     { }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 
