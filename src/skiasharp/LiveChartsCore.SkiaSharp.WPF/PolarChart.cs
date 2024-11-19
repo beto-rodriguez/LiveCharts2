@@ -294,10 +294,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded()
-    {
+    protected override void OnUnloaded() =>
         core?.Unload();
-    }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

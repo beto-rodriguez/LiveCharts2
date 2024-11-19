@@ -192,10 +192,8 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded()
-    {
+    protected override void OnUnloaded() =>
         core?.Unload();
-    }
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {

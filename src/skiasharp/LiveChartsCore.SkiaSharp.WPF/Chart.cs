@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
@@ -370,7 +371,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         ? throw new Exception("Canvas not found")
         : new LvcSize { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
+    /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => canvas is null
         ? throw new Exception("Canvas not found")
         : canvas.CanvasCore;
@@ -415,21 +416,21 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    /// <inheritdoc cref="IChartView.TooltipTextPaint" />
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    /// <inheritdoc cref="IChartView.TooltipTextSize" />
     public double? TooltipTextSize
     {
         get => (double?)GetValue(TooltipTextSizeProperty);
@@ -439,21 +440,21 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    /// <inheritdoc cref="IChartView.LegendTextPaint" />
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double? LegendTextSize
     {
         get => (double?)GetValue(LegendTextSizeProperty);
@@ -463,7 +464,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     public IChartLegend? Legend { get => legend; set => legend = value; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
@@ -568,7 +569,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         Content = canvas = new MotionCanvas();
 
         if (SyncContext != null)
-            this.canvas.CanvasCore.Sync = SyncContext;
+            canvas.CanvasCore.Sync = SyncContext;
 
         InitializeCore();
 
@@ -584,15 +585,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public abstract IEnumerable<IChartElement> GetVisualsAt(LvcPointD point);
 
-    internal Point GetCanvasPosition()
-    {
-        return canvas is null ? throw new Exception("Canvas not found") : canvas.TranslatePoint(new Point(0, 0), this);
-    }
+    internal Point GetCanvasPosition() =>
+        canvas is null ? throw new Exception("Canvas not found") : canvas.TranslatePoint(new Point(0, 0), this);
 
-    void IChartView.InvokeOnUIThread(Action action)
-    {
+    void IChartView.InvokeOnUIThread(Action action) =>
         Dispatcher.Invoke(action);
-    }
 
     /// <summary>
     /// Initializes the core.
@@ -619,10 +616,8 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         core.Update();
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
         UpdateFinished?.Invoke(this);
-    }
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
@@ -635,10 +630,8 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
         Measuring?.Invoke(this);
-    }
 
     /// <summary>
     /// Sets the local value of a dependency property, specified by its dependency property identifier.
@@ -691,15 +684,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
     }
 
-    private void OnMouseLeave(object sender, MouseEventArgs e)
-    {
+    private void OnMouseLeave(object sender, MouseEventArgs e) =>
         core?.InvokePointerLeft();
-    }
 
-    private void Chart_Loaded(object sender, RoutedEventArgs e)
-    {
+    private void Chart_Loaded(object sender, RoutedEventArgs e) =>
         core?.Load();
-    }
 
     private void Chart_Unloaded(object sender, RoutedEventArgs e)
     {
@@ -707,15 +696,11 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         OnUnloaded();
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         core?.Update();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         core?.Update();
-    }
 
     /// <summary>
     /// Called before the chart is unloaded.
@@ -728,7 +713,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
-        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+        ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
     }
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
@@ -749,8 +734,5 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
             VisualElementsPointerDownCommand.Execute(args);
     }
 
-    void IChartView.Invalidate()
-    {
-        CoreCanvas.Invalidate();
-    }
+    void IChartView.Invalidate() => CoreCanvas.Invalidate();
 }

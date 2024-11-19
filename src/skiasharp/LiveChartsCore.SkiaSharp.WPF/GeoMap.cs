@@ -32,6 +32,7 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -44,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <seealso cref="Control" />
 public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private GeoMap<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _canvas;
 
@@ -138,7 +139,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     public static readonly DependencyProperty FillProperty =
         DependencyProperty.Register(
             nameof(Fill), typeof(Paint), typeof(GeoMap),
-            new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, OnDependencyPropertyChanged));
+            new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false }, OnDependencyPropertyChanged));
 
     #endregion
 
@@ -206,7 +207,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         get => (Paint)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.IsStroke = false;
             SetValue(FillProperty, value);
         }
     }
@@ -230,15 +231,11 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core = new GeoMap<SkiaSharpDrawingContext>(this);
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
         Dispatcher.Invoke(action);
-    }
 
-    private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
+    private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e) =>
         _core?.Update();
-    }
 
     private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
@@ -260,10 +257,8 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         ReleaseMouseCapture();
     }
 
-    private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
+    private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e) =>
         _core?.InvokePointerLeft();
-    }
 
     private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
     {
@@ -274,10 +269,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
                 new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
     }
 
-    private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
-    {
-        _core?.Unload();
-    }
+    private void GeoMap_Unloaded(object sender, RoutedEventArgs e) => _core?.Unload();
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
