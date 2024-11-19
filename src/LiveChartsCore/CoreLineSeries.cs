@@ -116,7 +116,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -627,7 +627,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     public override void SoftDeleteOrDispose(IChartView chart)
     {
         base.SoftDeleteOrDispose(chart);
-        var canvas = ((ICartesianChartView<TDrawingContext>)chart).CoreCanvas;
+        var canvas = ((ICartesianChartView)chart).CoreCanvas;
 
         if (Fill is not null)
         {

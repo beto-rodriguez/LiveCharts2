@@ -63,7 +63,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -363,7 +363,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
+        var chartView = (ICartesianChartView)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
             visual.CompleteTransition(null);

@@ -42,7 +42,7 @@ public static class SharedAxes
     public static void Set<TDrawingContext>(params ICartesianAxis[] axes)
         where TDrawingContext : DrawingContext
     {
-        var sharedInstance = new HashSet<CartesianChart<TDrawingContext>>();
+        var sharedInstance = new HashSet<CartesianChartEngine>();
 
         foreach (var axis in axes)
         {
@@ -52,7 +52,7 @@ public static class SharedAxes
 
             axis.MeasureStarted += (Chart chart, ICartesianAxis obj) =>
             {
-                var cc = (CartesianChart<TDrawingContext>)chart;
+                var cc = (CartesianChartEngine)chart;
                 cc.SubscribeSharedEvents(sharedInstance);
             };
         }

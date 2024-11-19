@@ -175,7 +175,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
 
         if (label is null)
         {
-            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cc = (CartesianChartEngine)point.Context.Chart.CoreChart;
             var cs = (ICartesianSeries)point.Context.Series;
 
             var ax = cc.YAxes[cs.ScalesYAt];
@@ -200,7 +200,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
 
         if (label is null)
         {
-            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cc = (CartesianChartEngine)point.Context.Chart.CoreChart;
             var cs = (ICartesianSeries)point.Context.Series;
 
             var ax = cc.XAxes[cs.ScalesXAt];
@@ -222,7 +222,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// </summary>
     /// <param name="cartesianChart">The cartesian chart.</param>
     /// <returns></returns>
-    protected virtual LvcRectangle GetClipRectangle(CartesianChart<TDrawingContext> cartesianChart) =>
+    protected virtual LvcRectangle GetClipRectangle(CartesianChartEngine cartesianChart) =>
         Clipping.GetClipRectangle(ClippingMode, cartesianChart);
 
     /// <summary>
@@ -250,7 +250,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose(IChartView)" />
     public override void SoftDeleteOrDispose(IChartView chart)
     {
-        var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
+        var core = ((ICartesianChartView)chart).Core;
 
         var secondaryAxis = core.XAxes.Length > ScalesXAt ? core.XAxes[ScalesXAt] : null;
         var primaryAxis = core.YAxes.Length > ScalesYAt ? core.YAxes[ScalesYAt] : null;

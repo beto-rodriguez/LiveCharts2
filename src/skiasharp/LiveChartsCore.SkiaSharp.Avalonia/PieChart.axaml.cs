@@ -572,7 +572,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (_core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (_core is not CartesianChartEngine cc) throw new Exception("core not found");
 
         if (strategy == FindingStrategy.Automatic)
             strategy = cc.Series.GetFindingStrategy();
@@ -583,7 +583,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
-        return _core is not CartesianChart<SkiaSharpDrawingContext> cc
+        return _core is not CartesianChartEngine cc
             ? throw new Exception("core not found")
             : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(cc, new(point)));
     }

@@ -300,7 +300,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
 
         var controlSize = cartesianChart.ControlSize;
         var drawLocation = cartesianChart.DrawMarginLocation;
@@ -638,7 +638,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.InvalidateCrosshair(Chart, LvcPoint)"/>
     public void InvalidateCrosshair(Chart chart, LvcPoint pointerPosition)
     {
-        if (CrosshairPaint is null || chart is not CartesianChart<TDrawingContext> cartesianChart) return;
+        if (CrosshairPaint is null || chart is not CartesianChartEngine cartesianChart) return;
 
         var location = chart.DrawMarginLocation;
         var size = chart.DrawMarginSize;
@@ -814,7 +814,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     private static ChartPoint? FindClosestPoint(
         LvcPoint pointerPosition,
-        CartesianChart<TDrawingContext> cartesianChart,
+        CartesianChartEngine cartesianChart,
         IEnumerable<ICartesianSeries> allSeries)
     {
         ChartPoint? closestPoint = null;
@@ -1044,7 +1044,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void DrawName(
-        CartesianChart<TDrawingContext> cartesianChart,
+        CartesianChartEngine cartesianChart,
         float size,
         float lxi,
         float lxj,
@@ -1102,7 +1102,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSeparator(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart, TLineGeometry? separatorGeometry = null)
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? separatorGeometry = null)
     {
         TLineGeometry lineGeometry;
 
@@ -1121,7 +1121,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSubseparators(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart)
     {
         visualSeparator.Subseparators = new TLineGeometry[_subseparatorsCount];
 
@@ -1133,11 +1133,11 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    private void InitializeLine(ILineGeometry lineGeometry, CartesianChart<TDrawingContext> cartesianChart) =>
+    private void InitializeLine(ILineGeometry lineGeometry, CartesianChartEngine cartesianChart) =>
         lineGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
 
     private void InitializeTick(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart, TLineGeometry? subTickGeometry = null)
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? subTickGeometry = null)
     {
         TLineGeometry tickGeometry;
 
@@ -1155,7 +1155,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSubticks(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
+        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart)
     {
         visualSeparator.Subticks = new TLineGeometry[_subseparatorsCount];
 
@@ -1169,7 +1169,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     private void IntializeLabel(
         AxisVisualSeprator<TDrawingContext> visualSeparator,
-        CartesianChart<TDrawingContext> cartesianChart,
+        CartesianChartEngine cartesianChart,
         float size,
         bool hasRotation,
         float r)

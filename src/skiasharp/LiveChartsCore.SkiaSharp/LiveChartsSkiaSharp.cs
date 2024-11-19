@@ -117,7 +117,7 @@ public static class LiveChartsSkiaSharp
         LvcPointD dataCoordinates;
         double x, y;
 
-        if (target.Context is ICartesianChartView<SkiaSharpDrawingContext> cartesianChart)
+        if (target.Context is ICartesianChartView cartesianChart)
         {
             dataCoordinates = cartesianChart.ScalePixelsToData(new LvcPointD(location));
 

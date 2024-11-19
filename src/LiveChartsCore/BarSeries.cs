@@ -131,7 +131,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         /// <param name="isRow">Indicates whether the serie is row or not.</param>
         public MeasureHelper(
             Scaler scaler,
-            CartesianChart<TDrawingContext> cartesianChart,
+            CartesianChartEngine cartesianChart,
             IBarSeries barSeries,
             ICartesianAxis axis,
             float p,

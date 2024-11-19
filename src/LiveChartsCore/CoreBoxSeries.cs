@@ -88,7 +88,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -410,7 +410,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
+        var chartView = (ICartesianChartView)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
             visual.CompleteTransition(null);
@@ -487,7 +487,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         /// <param name="maxP">The max pivot allowed.</param>
         public MeasureHelper(
             Scaler scaler,
-            CartesianChart<TDrawingContext> cartesianChart,
+            CartesianChartEngine cartesianChart,
             IBoxSeries boxSeries,
             ICartesianAxis axis,
             float p,

@@ -29,10 +29,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartView" />
-public interface ICartesianChartView<TDrawingContext> : IChartView
-    where TDrawingContext : DrawingContext
+public interface ICartesianChartView : IChartView
 {
     /// <summary>
     /// Gets the core.
@@ -40,7 +38,7 @@ public interface ICartesianChartView<TDrawingContext> : IChartView
     /// <value>
     /// The core.
     /// </value>
-    CartesianChart<TDrawingContext> Core { get; }
+    CartesianChartEngine Core { get; }
 
     /// <summary>
     /// Gets or sets the x axes.

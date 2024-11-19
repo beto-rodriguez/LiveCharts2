@@ -110,7 +110,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -401,7 +401,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
+        var chartView = (ICartesianChartView)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
             visual.CompleteTransition(null);

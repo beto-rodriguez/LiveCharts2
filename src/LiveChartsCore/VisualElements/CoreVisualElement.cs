@@ -82,7 +82,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.YAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -91,7 +91,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.YAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.

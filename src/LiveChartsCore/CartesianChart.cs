@@ -35,22 +35,20 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a Cartesian chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Chart" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="CartesianChartEngine"/> class.
 /// </remarks>
 /// <param name="view">The view.</param>
 /// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
-public class CartesianChart<TDrawingContext>(
-    ICartesianChartView<TDrawingContext> view,
+public class CartesianChartEngine(
+    ICartesianChartView view,
     Action<LiveChartsSettings> defaultPlatformConfig,
     CoreMotionCanvas canvas)
         : Chart(canvas, defaultPlatformConfig, view, ChartKind.Cartesian)
-            where TDrawingContext : DrawingContext
 {
-    private readonly ICartesianChartView<TDrawingContext> _chartView = view;
+    private readonly ICartesianChartView _chartView = view;
     private ISizedGeometry? _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
@@ -58,7 +56,7 @@ public class CartesianChart<TDrawingContext>(
     private CoreDrawMarginFrame? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
-    private HashSet<CartesianChart<TDrawingContext>>? _sharedEvents;
+    private HashSet<CartesianChartEngine>? _sharedEvents;
     private HashSet<ICartesianAxis> _crosshair = [];
 
     /// <summary>
@@ -859,7 +857,7 @@ public class CartesianChart<TDrawingContext>(
     /// <param name="isSecondaryAction">Flags the action as secondary (normally rigth click or double tap on mobile)</param>
     protected internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
-        var caretesianView = (ICartesianChartView<TDrawingContext>)View;
+        var caretesianView = (ICartesianChartView)View;
         if ((caretesianView.ZoomMode & ZoomAndPanMode.InvertPanningPointerTrigger) != 0)
             isSecondaryAction = !isSecondaryAction;
 
@@ -1078,7 +1076,7 @@ public class CartesianChart<TDrawingContext>(
         }
     }
 
-    internal void SubscribeSharedEvents(HashSet<CartesianChart<TDrawingContext>> instance)
+    internal void SubscribeSharedEvents(HashSet<CartesianChartEngine> instance)
     {
         // An experimental feature, it allows a chart to propagate some events to other charts,
         // this feature was created to share crosshairs between multiple charts.

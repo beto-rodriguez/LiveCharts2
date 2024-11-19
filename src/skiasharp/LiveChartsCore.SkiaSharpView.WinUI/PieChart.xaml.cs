@@ -728,7 +728,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     {
         if (_core is null) return;
 
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        var c = (CartesianChartEngine)_core;
         var p = args.PinchStart;
         var s = c.ControlSize;
         var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));

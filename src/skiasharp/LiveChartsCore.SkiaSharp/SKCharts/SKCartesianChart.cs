@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// In-memory chart that is able to generate a chart images.
 /// </summary>
-public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<SkiaSharpDrawingContext>
+public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
 {
     private LvcColor _backColor;
 
@@ -49,7 +49,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        Core = new CartesianChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), CoreCanvas);
+        Core = new CartesianChartEngine(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;
@@ -61,7 +61,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
     /// </summary>
     /// <param name="view">The view.</param>
-    public SKCartesianChart(ICartesianChartView<SkiaSharpDrawingContext> view) : this()
+    public SKCartesianChart(ICartesianChartView view) : this()
     {
         XAxes = view.XAxes;
         YAxes = view.YAxes;
@@ -77,43 +77,43 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     /// <inheritdoc cref="IChartView.DesignerMode" />
     public bool DesignerMode => false;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Core"/>
-    public CartesianChart<SkiaSharpDrawingContext> Core { get; }
+    /// <inheritdoc cref="ICartesianChartView.Core"/>
+    public CartesianChartEngine Core { get; }
 
     /// <inheritdoc cref="IChartView.SyncContext"/>
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes"/>
+    /// <inheritdoc cref="ICartesianChartView.XAxes"/>
     public IEnumerable<ICartesianAxis> XAxes { get; set; } = [new Axis()];
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes"/>
+    /// <inheritdoc cref="ICartesianChartView.YAxes"/>
     public IEnumerable<ICartesianAxis> YAxes { get; set; } = [new Axis()];
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
+    /// <inheritdoc cref="ICartesianChartView.Sections"/>
     public IEnumerable<CoreSection> Sections { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
     public IEnumerable<ChartElement> VisualElements { get; set; } = [];
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="ICartesianChartView.Series"/>
     public IEnumerable<ISeries> Series { get; set; } = [];
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame"/>
+    /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame"/>
     public CoreDrawMarginFrame? DrawMarginFrame { get; set; }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode"/>
+    /// <inheritdoc cref="ICartesianChartView.ZoomMode"/>
     public ZoomAndPanMode ZoomMode { get; set; }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed"/>
+    /// <inheritdoc cref="ICartesianChartView.ZoomingSpeed"/>
     public double ZoomingSpeed { get; set; }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy"/>
+    /// <inheritdoc cref="ICartesianChartView.FindingStrategy"/>
     public FindingStrategy FindingStrategy { get; set; }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy"/>
+    /// <inheritdoc cref="ICartesianChartView.FindingStrategy"/>
     public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
     /// <inheritdoc cref="IChartView.Legend"/>
@@ -195,7 +195,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
     public event VisualElementsHandler? VisualElementsPointerDown;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
         var xScaler = new Scaler(Core.DrawMarginLocation, Core.DrawMarginSize, Core.XAxes[xAxisIndex]);
@@ -204,7 +204,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
         return new LvcPointD { X = xScaler.ToChartValues(point.X), Y = yScaler.ToChartValues(point.Y) };
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleDataToPixels(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
         var xScaler = new Scaler(Core.DrawMarginLocation, Core.DrawMarginSize, Core.XAxes[xAxisIndex]);

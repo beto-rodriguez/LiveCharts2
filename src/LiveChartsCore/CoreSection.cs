@@ -120,7 +120,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the X plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.XAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -129,7 +129,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the Y plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.YAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -208,7 +208,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry, TDrawingContex
         var drawLocation = chart.DrawMarginLocation;
         var drawMarginSize = chart.DrawMarginSize;
 
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
