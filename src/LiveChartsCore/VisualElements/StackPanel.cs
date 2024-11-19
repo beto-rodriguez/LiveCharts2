@@ -103,7 +103,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// </summary>
     public double MaxHeight { get => _maxHeight; set => SetProperty(ref _maxHeight, value); }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_backgroundPaint];
 
@@ -282,7 +282,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(IChart)"/>
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
     public override void RemoveFromUI(IChart chart)
     {
         foreach (var child in Children)

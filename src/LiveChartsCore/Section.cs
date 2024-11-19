@@ -33,8 +33,8 @@ namespace LiveChartsCore;
 /// Defines a visual section in a chart.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="ChartElement{TDrawingContext}" />
-public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
+/// <seealso cref="ChartElement" />
+public abstract class Section<TDrawingContext> : ChartElement, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
     private Paint? _stroke = null;
@@ -146,7 +146,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
     /// </value>
     public int? ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_stroke, _fill, _labelPaint];
 
@@ -167,7 +167,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
 /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label geometry.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="ChartElement{TDrawingContext}" />
+/// <seealso cref="ChartElement" />
 public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> : Section<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TSizedGeometry : ISizedGeometry, new()

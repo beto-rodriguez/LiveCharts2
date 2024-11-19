@@ -74,7 +74,7 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
         set => SetPaintProperty(ref _stroke, value, true);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_fill, _stroke];
 

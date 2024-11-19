@@ -73,7 +73,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         set => SetPaintProperty(ref _labelPaint, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [_geometry, _labelGeometry];
 
@@ -185,7 +185,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         return new LvcSize(w, h);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [Fill, Stroke, _labelPaint];
 }

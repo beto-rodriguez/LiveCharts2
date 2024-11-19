@@ -66,8 +66,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private VisualElement<SkiaSharpDrawingContext>? _title;
-    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
-    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = [];
+    private CollectionDeepObserver<ChartElement> _visualsObserver;
+    private IEnumerable<ChartElement> _visuals = [];
     private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
     private Paint? _legendBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
     private double? _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
@@ -108,7 +108,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
         Load += Chart_Load;
 
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
     }
 
@@ -242,7 +242,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    public IEnumerable<ChartElement> VisualElements
     {
         get => _visuals;
         set

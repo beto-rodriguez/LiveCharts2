@@ -34,7 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the base visual element class, inheriting from this class makes it easy to implement a visual element.
 /// </summary>
-public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
+public abstract class VisualElement<TDrawingContext> : ChartElement, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
     internal double _x;
@@ -110,7 +110,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// </summary>
     public event VisualElementHandler<TDrawingContext>? PointerDown;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
     public override void Invalidate(IChart chart)
     {
         if (chart is CartesianChart<TDrawingContext> cc)

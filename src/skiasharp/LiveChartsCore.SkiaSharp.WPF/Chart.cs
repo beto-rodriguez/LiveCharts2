@@ -65,7 +65,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     protected IChartTooltip? tooltip;
 
-    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
 
     #endregion
 
@@ -77,7 +77,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         MouseDown += Chart_MouseDown;
@@ -279,21 +279,21 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly DependencyProperty VisualElementsProperty =
         DependencyProperty.Register(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(Chart), new PropertyMetadata(null,
+            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(Chart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (Chart)o;
                     var observer = chart._visualsObserver;
-                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    observer?.Dispose((IEnumerable<ChartElement>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
                 (DependencyObject o, object value) =>
                 {
-                    return value is IEnumerable<ChartElement<SkiaSharpDrawingContext>>
+                    return value is IEnumerable<ChartElement>
                     ? value
-                    : new List<ChartElement<SkiaSharpDrawingContext>>();
+                    : new List<ChartElement>();
                 }));
 
     #endregion
@@ -553,9 +553,9 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    public IEnumerable<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 

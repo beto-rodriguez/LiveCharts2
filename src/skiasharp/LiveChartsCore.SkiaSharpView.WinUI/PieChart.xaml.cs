@@ -49,7 +49,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _canvas;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
@@ -63,7 +63,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         _seriesObserver = new CollectionDeepObserver<ISeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update());
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(
            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
@@ -71,7 +71,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         Unloaded += OnUnloaded;
 
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetValue(SyncContextProperty, new object());
     }
 
@@ -105,13 +105,13 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty VisualElementsProperty =
         DependencyProperty.Register(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(PieChart), new PropertyMetadata(null,
+            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(PieChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (PieChart)o;
                     var observer = chart._visualsObserver;
-                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    observer?.Dispose((IEnumerable<ChartElement>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement>)args.NewValue);
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -382,9 +382,9 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    public IEnumerable<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 

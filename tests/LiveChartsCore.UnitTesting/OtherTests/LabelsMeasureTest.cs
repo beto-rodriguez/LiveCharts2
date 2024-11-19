@@ -20,7 +20,7 @@ public class LabelsMeasureTest
     [TestMethod]
     public void BasicCase()
     {
-        var visuls = new List<ChartElement<SkiaSharpDrawingContext>>();
+        var visuls = new List<ChartElement>();
 
         var y = 10;
         var h = 20;
@@ -60,7 +60,7 @@ public class LabelsMeasureTest
     [TestMethod]
     public void MultiLine()
     {
-        var visuls = new List<ChartElement<SkiaSharpDrawingContext>>();
+        var visuls = new List<ChartElement>();
 
         var y = 10f;
         var h = 25;

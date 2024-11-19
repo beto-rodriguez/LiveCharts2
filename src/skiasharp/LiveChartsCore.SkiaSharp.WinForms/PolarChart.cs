@@ -76,7 +76,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             ];
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        VisualElements = new ObservableCollection<ChartElement>();
 
         var c = Controls[0].Controls[0];
 

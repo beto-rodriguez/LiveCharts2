@@ -67,7 +67,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
-    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
 
     #endregion
 
@@ -94,7 +94,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(
            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes =
@@ -106,7 +106,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
             LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
         ];
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        VisualElements = new ObservableCollection<ChartElement>();
 
         PointerPressed += CartesianChart_PointerPressed;
         PointerMoved += CartesianChart_PointerMoved;
@@ -169,8 +169,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <summary>
     /// The visual elements property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
-        AvaloniaProperty.Register<CartesianChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(
+    public static readonly AvaloniaProperty<IEnumerable<ChartElement>> VisualElementsProperty =
+        AvaloniaProperty.Register<CartesianChart, IEnumerable<ChartElement>>(
             nameof(VisualElements), [], inherits: true);
 
     /// <summary>
@@ -432,9 +432,9 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    public IEnumerable<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty)!;
+        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
@@ -733,8 +733,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
         if (change.Property.Name == nameof(VisualElementsProperty))
         {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.OldValue);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.NewValue);
+            _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
+            _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
         }
 
         _core.Update();

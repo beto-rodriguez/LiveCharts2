@@ -32,7 +32,7 @@ namespace LiveChartsCore;
 /// Defines a draw margin frame visual in a chart.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
+public abstract class DrawMarginFrame<TDrawingContext> : ChartElement, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
     private Paint? _stroke = null;
@@ -62,7 +62,7 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_stroke, _fill];
 

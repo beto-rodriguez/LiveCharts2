@@ -63,7 +63,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private MotionCanvas? _avaloniaCanvas;
 
     #endregion
@@ -89,12 +89,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         _seriesObserver = new CollectionDeepObserver<ISeries>(
            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
            (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(
           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
           (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
 
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        VisualElements = new ObservableCollection<ChartElement>();
         PointerExited += Chart_PointerLeave;
 
         PointerMoved += Chart_PointerMoved;
@@ -132,8 +132,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The visual elements property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
-        AvaloniaProperty.Register<PieChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(
+    public static readonly AvaloniaProperty<IEnumerable<ChartElement>> VisualElementsProperty =
+        AvaloniaProperty.Register<PieChart, IEnumerable<ChartElement>>(
             nameof(VisualElements), [], inherits: true);
 
     /// <summary>
@@ -371,9 +371,9 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    public IEnumerable<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty)!;
+        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
@@ -632,8 +632,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
         if (change.Property.Name == nameof(VisualElements))
         {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.OldValue);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>?)change.NewValue);
+            _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
+            _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
             return;
         }
 

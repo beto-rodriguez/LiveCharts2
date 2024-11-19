@@ -284,7 +284,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         return l;
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() => [_stroke, _labelsPaint];
 
     private class TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)

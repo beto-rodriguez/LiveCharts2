@@ -203,7 +203,7 @@ public class PolarChart<TDrawingContext>(
         // restart axes bounds and meta data
         foreach (var axis in AngleAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
             if (ce._theme != themeId)
@@ -215,7 +215,7 @@ public class PolarChart<TDrawingContext>(
         }
         foreach (var axis in RadiusAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
             if (ce._theme != themeId)
@@ -232,7 +232,7 @@ public class PolarChart<TDrawingContext>(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement<TDrawingContext>)series;
+            var ce = (ChartElement)series;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -265,7 +265,7 @@ public class PolarChart<TDrawingContext>(
 
         foreach (var axis in AngleAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -288,7 +288,7 @@ public class PolarChart<TDrawingContext>(
         }
         foreach (var axis in RadiusAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -483,7 +483,7 @@ public class PolarChart<TDrawingContext>(
                 // correction by geometry size
                 var p = 0d;
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                var ce = (ChartElement<TDrawingContext>)axis;
+                var ce = (ChartElement)axis;
                 ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
@@ -496,15 +496,15 @@ public class PolarChart<TDrawingContext>(
                 // correction by geometry size
                 var p = 0d; // Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                var ce = (ChartElement<TDrawingContext>)axis;
+                var ce = (ChartElement)axis;
                 ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
                 ce._isInternalSet = false;
             }
 
-            if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
-            ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
+            if (axis.IsVisible) AddVisual((ChartElement)axis);
+            ((ChartElement)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
@@ -516,7 +516,7 @@ public class PolarChart<TDrawingContext>(
         foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement<TDrawingContext>)series);
+            AddVisual((ChartElement)series);
             _drawnSeries.Add(series.SeriesId);
         }
 
@@ -526,7 +526,7 @@ public class PolarChart<TDrawingContext>(
         {
             if (!axis.IsVisible) continue;
 
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
             ce._isInternalSet = false;

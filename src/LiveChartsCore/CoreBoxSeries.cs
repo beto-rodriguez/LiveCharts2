@@ -85,7 +85,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="IBoxSeries.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
     public override void Invalidate(IChart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;

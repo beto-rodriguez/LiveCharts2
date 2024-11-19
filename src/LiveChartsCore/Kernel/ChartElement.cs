@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 
@@ -33,8 +32,7 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a visual element in a chart.
 /// </summary>
-public abstract class ChartElement<TDrawingContext> : IChartElement, INotifyPropertyChanged
-    where TDrawingContext : DrawingContext
+public abstract class ChartElement : IChartElement, INotifyPropertyChanged
 {
     internal bool _isInternalSet = false;
     internal object _theme = new();
@@ -87,7 +85,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement, INotifyProp
     }
 
     /// <summary>
-    /// Gets the paint tasks registered by the <see cref="ChartElement{TDrawingContext}"/>.
+    /// Gets the paint tasks registered by the <see cref="ChartElement"/>.
     /// </summary>
     /// <returns>The paint tasks.</returns>
     protected internal abstract Paint?[] GetPaintTasks();

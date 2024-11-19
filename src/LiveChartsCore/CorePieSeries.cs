@@ -147,7 +147,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
     public override void Invalidate(IChart chart)
     {
         var pieChart = (PieChart<TDrawingContext>)chart;
@@ -501,7 +501,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     public override int GetStackGroup() =>
         0;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_fill, _stroke, DataLabelsPaint];
 

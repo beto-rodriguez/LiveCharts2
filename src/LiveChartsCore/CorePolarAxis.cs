@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
 /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry>
-    : ChartElement<TDrawingContext>, IPolarAxis, IPlane, INotifyPropertyChanged
+    : ChartElement, IPolarAxis, IPlane, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry, new()
         where TLineGeometry : ILineGeometry, new()
@@ -189,7 +189,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <inheritdoc cref="IPolarAxis.Initialized"/>
     public event Action<IPolarAxis>? Initialized;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
     public override void Invalidate(IChart chart)
     {
         var polarChart = (PolarChart<TDrawingContext>)chart;
@@ -598,7 +598,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         OnPropertyChanged(propertyName);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_separatorsPaint, _labelsPaint, _namePaint];
 

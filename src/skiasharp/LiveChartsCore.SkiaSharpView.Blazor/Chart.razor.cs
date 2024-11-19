@@ -60,11 +60,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     private double _canvasWidth;
     private double _canvasHeight;
 
-    private CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>? _visualsObserver;
+    private CollectionDeepObserver<ChartElement>? _visualsObserver;
     private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
-    private IEnumerable<ChartElement<SkiaSharpDrawingContext>> _visuals = [];
+    private IEnumerable<ChartElement> _visuals = [];
 
     /// <summary>
     /// Called when the control is initialized.
@@ -76,7 +76,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
         LiveCharts.Configure(config => config.UseDefaults());
 
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
     }
 
@@ -241,7 +241,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
     [Parameter]
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    public IEnumerable<ChartElement> VisualElements
     {
         get => _visuals;
         set

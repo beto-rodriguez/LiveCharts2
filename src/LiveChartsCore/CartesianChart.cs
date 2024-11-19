@@ -416,7 +416,7 @@ public class CartesianChart<TDrawingContext>(
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.X);
             if (ce._theme != themeId)
@@ -429,7 +429,7 @@ public class CartesianChart<TDrawingContext>(
         }
         foreach (var axis in YAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.Y);
             if (ce._theme != themeId)
@@ -448,7 +448,7 @@ public class CartesianChart<TDrawingContext>(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement<TDrawingContext>)series;
+            var ce = (ChartElement)series;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -477,7 +477,7 @@ public class CartesianChart<TDrawingContext>(
 
         foreach (var axis in XAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -499,7 +499,7 @@ public class CartesianChart<TDrawingContext>(
         }
         foreach (var axis in YAxes)
         {
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -756,7 +756,7 @@ public class CartesianChart<TDrawingContext>(
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                var ce = (ChartElement<TDrawingContext>)axis;
+                var ce = (ChartElement)axis;
                 ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
@@ -770,15 +770,15 @@ public class CartesianChart<TDrawingContext>(
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                var ce = (ChartElement<TDrawingContext>)axis;
+                var ce = (ChartElement)axis;
                 ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
                 ce._isInternalSet = false;
             }
 
-            if (axis.IsVisible) AddVisual((ChartElement<TDrawingContext>)axis);
-            ((ChartElement<TDrawingContext>)axis).RemoveOldPaints(View); // <- this is probably obsolete.
+            if (axis.IsVisible) AddVisual((ChartElement)axis);
+            ((ChartElement)axis).RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
@@ -791,7 +791,7 @@ public class CartesianChart<TDrawingContext>(
         foreach (var visual in VisualElements.Where(static x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement<TDrawingContext>)series);
+            AddVisual((ChartElement)series);
             _drawnSeries.Add(series.SeriesId);
         }
 
@@ -804,7 +804,7 @@ public class CartesianChart<TDrawingContext>(
         }
         if (_chartView.DrawMarginFrame is not null)
         {
-            var ce = (ChartElement<TDrawingContext>)_chartView.DrawMarginFrame;
+            var ce = (ChartElement)_chartView.DrawMarginFrame;
             if (ce._theme != themeId)
             {
                 ce._isInternalSet = true;
@@ -823,7 +823,7 @@ public class CartesianChart<TDrawingContext>(
         {
             if (!axis.IsVisible) continue;
 
-            var ce = (ChartElement<TDrawingContext>)axis;
+            var ce = (ChartElement)axis;
             ce._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
             ce._isInternalSet = false;

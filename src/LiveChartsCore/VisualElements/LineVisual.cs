@@ -40,7 +40,7 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
 {
     internal TGeometry? _geometry;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() => [_geometry];
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
@@ -109,6 +109,6 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
         return new LvcSize(w, h);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() => [Fill, Stroke];
 }

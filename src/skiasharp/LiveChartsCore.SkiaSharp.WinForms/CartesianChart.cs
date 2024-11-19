@@ -78,7 +78,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             ];
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
+        VisualElements = new ObservableCollection<ChartElement>();
 
         var c = Controls[0].Controls[0];
 

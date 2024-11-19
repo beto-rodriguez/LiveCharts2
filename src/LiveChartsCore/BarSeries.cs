@@ -225,7 +225,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         base.OnPointerLeft(point);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [Stroke, Fill, DataLabelsPaint, _errorPaint];
 

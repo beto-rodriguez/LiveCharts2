@@ -266,7 +266,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The visual elements.
     /// </value>
-    public IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; protected set; } =
+    public IEnumerable<ChartElement> VisualElements { get; protected set; } =
         [];
 
     CoreMotionCanvas IChart.Canvas => Canvas;

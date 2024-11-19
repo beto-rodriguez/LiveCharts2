@@ -70,7 +70,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() => [_backgroundPaint];
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
@@ -146,7 +146,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     public override LvcSize Measure(IChart chart) =>
         Size;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(IChart)"/>
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
     public override void RemoveFromUI(IChart chart)
     {
         foreach (var child in Children)

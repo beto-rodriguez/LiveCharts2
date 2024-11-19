@@ -103,7 +103,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IHeatSeries.MaxValue"/>
     public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
     public override void Invalidate(IChart chart)
     {
         _paintTaks ??= LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
@@ -365,7 +365,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         };
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_paintTaks];
 

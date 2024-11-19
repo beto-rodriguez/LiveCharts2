@@ -49,7 +49,7 @@ namespace LiveChartsCore;
 /// <seealso cref="IDisposable" />
 /// <seealso cref="INotifyPropertyChanged" />
 public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
-    : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, IInternalSeries, INotifyPropertyChanged
+    : ChartElement, ISeries, ISeries<TModel>, IInternalSeries, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TVisual : class, IGeometry, new()
         where TLabel : class, ILabelGeometry, new()
@@ -367,7 +367,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         ? null
         : DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(IChart)"/>
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
     public override void RemoveFromUI(IChart chart)
     {
         base.RemoveFromUI(chart);
@@ -468,7 +468,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         ChartPointPointerHoverLost.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.OnPaintChanged(string?)"/>
+    /// <inheritdoc cref="ChartElement.OnPaintChanged(string?)"/>
     protected override void OnPaintChanged(string? propertyName) => base.OnPaintChanged(propertyName);
 
     /// <summary>

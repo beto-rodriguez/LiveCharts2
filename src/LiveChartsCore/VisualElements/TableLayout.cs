@@ -127,7 +127,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         return new(maxW + Padding.Right, maxH + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(IChart)"/>
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
     public override void RemoveFromUI(IChart chart)
     {
         foreach (var child in EnumerateChildren())
@@ -258,7 +258,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [_backgroundPaint];
 

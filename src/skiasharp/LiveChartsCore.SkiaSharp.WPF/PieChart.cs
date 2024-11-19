@@ -54,7 +54,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             true);
 
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
         MouseDown += OnMouseDown;
 

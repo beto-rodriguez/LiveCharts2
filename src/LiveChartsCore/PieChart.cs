@@ -160,7 +160,7 @@ public class PieChart<TDrawingContext>(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement<TDrawingContext>)series;
+            var ce = (ChartElement)series;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -233,7 +233,7 @@ public class PieChart<TDrawingContext>(
         foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement<TDrawingContext>)series);
+            AddVisual((ChartElement)series);
             _drawnSeries.Add(series.SeriesId);
         }
 

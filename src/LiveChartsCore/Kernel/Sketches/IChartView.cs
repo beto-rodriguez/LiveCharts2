@@ -276,7 +276,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <summary>
     /// Gets or sets the visual elements.
     /// </summary>
-    IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; set; }
+    IEnumerable<ChartElement> VisualElements { get; set; }
 
     /// <summary>
     /// Called when the pointer goes down on a visual element(s).

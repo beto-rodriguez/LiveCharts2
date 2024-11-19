@@ -132,6 +132,6 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 
         Series = Array.Empty<ISeries>();
         _seriesObserver = null!;
-        VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+        VisualElements = Array.Empty<ChartElement>();
     }
 }

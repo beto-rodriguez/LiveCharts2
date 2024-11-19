@@ -95,7 +95,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public IEnumerable<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements"/>
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; } = [];
+    public IEnumerable<ChartElement> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
     public IChartLegend? Legend { get; set; } = new SKDefaultLegend();

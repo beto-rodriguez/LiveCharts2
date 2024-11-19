@@ -236,7 +236,7 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
         Series = Array.Empty<ISeries>();
         AngleAxes = Array.Empty<IPolarAxis>();
         RadiusAxes = Array.Empty<IPolarAxis>();
-        VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+        VisualElements = Array.Empty<ChartElement>();
         _seriesObserver = null!;
         _angleObserver = null!;
         _radiusObserver = null!;

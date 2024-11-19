@@ -397,7 +397,7 @@ public static class LiveChartsStylerExtensions
         this Theme<TDrawingContext> styler,
         Action<TChartElement> predicate)
             where TDrawingContext : DrawingContext
-            where TChartElement : ChartElement<TDrawingContext>
+            where TChartElement : ChartElement
     {
         styler.ChartElementElementBuilder.Add(typeof(TChartElement), predicate);
         return styler;
