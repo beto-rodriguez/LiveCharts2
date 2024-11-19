@@ -39,7 +39,7 @@ public static class SharedAxes
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="axes">The axes to share.</param>
-    public static void Set<TDrawingContext>(params ICartesianAxis<TDrawingContext>[] axes)
+    public static void Set<TDrawingContext>(params ICartesianAxis[] axes)
         where TDrawingContext : DrawingContext
     {
         var sharedInstance = new HashSet<CartesianChart<TDrawingContext>>();

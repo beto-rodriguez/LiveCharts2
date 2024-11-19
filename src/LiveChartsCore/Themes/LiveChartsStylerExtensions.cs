@@ -42,7 +42,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForAxes<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IPlane<TDrawingContext>> predicate)
+        Action<IPlane> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.AxisBuilder.Add(predicate);

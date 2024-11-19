@@ -49,7 +49,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The axis builder.
     /// </value>
-    public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = [];
+    public List<Action<IPlane>> AxisBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the draw margin frame builder.
@@ -244,7 +244,7 @@ public class Theme<TDrawingContext>
     /// Applies the theme to an axis.
     /// </summary>
     /// <param name="axis">The axis.</param>
-    public void ApplyStyleToAxis(IPlane<TDrawingContext> axis)
+    public void ApplyStyleToAxis(IPlane axis)
     {
         foreach (var rule in AxisBuilder) rule(axis);
     }

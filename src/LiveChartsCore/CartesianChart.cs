@@ -37,10 +37,20 @@ namespace LiveChartsCore;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Chart{TDrawingContext}" />
-public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <remarks>
+/// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
+/// </remarks>
+/// <param name="view">The view.</param>
+/// <param name="defaultPlatformConfig">The default platform configuration.</param>
+/// <param name="canvas">The canvas.</param>
+public class CartesianChart<TDrawingContext>(
+    ICartesianChartView<TDrawingContext> view,
+    Action<LiveChartsSettings> defaultPlatformConfig,
+    CoreMotionCanvas canvas)
+        : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
+            where TDrawingContext : DrawingContext
 {
-    private readonly ICartesianChartView<TDrawingContext> _chartView;
+    private readonly ICartesianChartView<TDrawingContext> _chartView = view;
     private ISizedGeometry? _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
@@ -49,22 +59,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
     private HashSet<CartesianChart<TDrawingContext>>? _sharedEvents;
-    private HashSet<ICartesianAxis<TDrawingContext>> _crosshair = [];
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="view">The view.</param>
-    /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-    /// <param name="canvas">The canvas.</param>
-    public CartesianChart(
-        ICartesianChartView<TDrawingContext> view,
-        Action<LiveChartsSettings> defaultPlatformConfig,
-        CoreMotionCanvas canvas)
-            : base(canvas, defaultPlatformConfig, view)
-    {
-        _chartView = view;
-    }
+    private HashSet<ICartesianAxis> _crosshair = [];
 
     /// <summary>
     /// Gets the x axes.
@@ -72,7 +67,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The x axes.
     /// </value>
-    public ICartesianAxis<TDrawingContext>[] XAxes { get; private set; } =
+    public ICartesianAxis[] XAxes { get; private set; } =
         [];
 
     /// <summary>
@@ -81,7 +76,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The y axes.
     /// </value>
-    public ICartesianAxis<TDrawingContext>[] YAxes { get; private set; } =
+    public ICartesianAxis[] YAxes { get; private set; } =
         [];
 
     /// <summary>
@@ -91,7 +86,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// The sections.
     /// </value>
     public IEnumerable<Section<TDrawingContext>> Sections { get; private set; } =
-        Array.Empty<Section<TDrawingContext>>();
+        [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
     public override IEnumerable<IChartSeries> Series =>
@@ -99,7 +94,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
     public override IEnumerable<IChartSeries> VisibleSeries =>
-        Series.Where(x => x.IsVisible);
+        Series.Where(static x => x.IsVisible);
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is zooming or panning.
@@ -149,7 +144,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         var xScaler = new Scaler(DrawMarginLocation, DrawMarginSize, xAxis);
         var yScaler = new Scaler(DrawMarginLocation, DrawMarginSize, yAxis);
 
-        return new double[] { xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y) };
+        return [xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y)];
     }
 
     /// <summary>
@@ -387,8 +382,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             y = [provider.GetDefaultCartesianAxis()];
         }
 
-        XAxes = x.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
-        YAxes = y.Cast<ICartesianAxis<TDrawingContext>>().ToArray();
+        XAxes = x.Cast<ICartesianAxis>().ToArray();
+        YAxes = y.Cast<ICartesianAxis>().ToArray();
 
         if (XAxes.Length == 0 || YAxes.Length == 0)
         {
@@ -410,8 +405,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         AnimationsSpeed = _chartView.AnimationsSpeed;
         EasingFunction = _chartView.EasingFunction;
 
-        Sections = _chartView.Sections?.Where(x => x.IsVisible) ?? Array.Empty<Section<TDrawingContext>>();
-        VisualElements = _chartView.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
+        Sections = _chartView.Sections?.Where(static x => x.IsVisible) ?? [];
+        VisualElements = _chartView.VisualElements ?? [];
 
         #endregion
 
@@ -426,7 +421,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.OnMeasureStarted(this, AxisOrientation.X);
             if (ce._theme != themeId)
             {
-                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                theme.ApplyStyleToAxis(axis);
                 ce._theme = themeId;
             }
             ce._isInternalSet = false;
@@ -439,7 +434,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             axis.OnMeasureStarted(this, AxisOrientation.Y);
             if (ce._theme != themeId)
             {
-                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                theme.ApplyStyleToAxis(axis);
                 ce._theme = themeId;
             }
             ce._isInternalSet = false;
@@ -565,9 +560,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
             }
 
-            var drawablePlane = (IPlane<TDrawingContext>)axis;
-            var ns = drawablePlane.GetNameLabelSize(this);
-            var s = drawablePlane.GetPossibleSize(this);
+            var ns = axis.GetNameLabelSize(this);
+            var s = axis.GetPossibleSize(this);
             axis.Size = s;
 
             if (axis.Position == AxisPosition.Start)
@@ -648,9 +642,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
             }
 
-            var drawablePlane = (IPlane<TDrawingContext>)axis;
-            var ns = drawablePlane.GetNameLabelSize(this);
-            var s = drawablePlane.GetPossibleSize(this);
+            var ns = axis.GetNameLabelSize(this);
+            var s = axis.GetPossibleSize(this);
             axis.Size = s;
             var w = s.Width;
 
@@ -794,8 +787,8 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         // it means that invisible series have a performance impact, it should not be a big deal
         // but ideally, do not keep invisible series in the chart, instead, add/remove them when needed.
 
-        foreach (var section in Sections.Where(x => x.IsVisible)) AddVisual(section);
-        foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
+        foreach (var section in Sections.Where(static x => x.IsVisible)) AddVisual(section);
+        foreach (var visual in VisualElements.Where(static x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
             AddVisual((ChartElement<TDrawingContext>)series);
@@ -1176,13 +1169,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         y.DataBounds.AppendValue(bounds.PrimaryBounds);
         y.VisibleDataBounds.AppendValue(bounds.VisiblePrimaryBounds);
 
-        foreach (var sharedX in x.SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        foreach (var sharedX in x.SharedWith ?? [])
         {
             sharedX.DataBounds.AppendValue(bounds.SecondaryBounds);
             sharedX.VisibleDataBounds.AppendValue(bounds.VisibleSecondaryBounds);
         }
 
-        foreach (var sharedY in y.SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        foreach (var sharedY in y.SharedWith ?? [])
         {
             sharedY.DataBounds.AppendValue(bounds.PrimaryBounds);
             sharedY.VisibleDataBounds.AppendValue(bounds.VisiblePrimaryBounds);

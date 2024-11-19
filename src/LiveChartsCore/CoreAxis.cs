@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
-    : ChartElement<TDrawingContext>, ICartesianAxis<TDrawingContext>, IPlane<TDrawingContext>
+    : ChartElement<TDrawingContext>, ICartesianAxis, IPlane
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry, new()
         where TLineGeometry : class, ILineGeometry, new()
@@ -188,55 +188,55 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.TicksAtCenter"/>
     public bool TicksAtCenter { get => _ticksAtCenter; set => SetProperty(ref _ticksAtCenter, value); }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
+    /// <inheritdoc cref="IPlane.NamePaint"/>
     public Paint? NamePaint
     {
         get => _namePaint;
         set => SetPaintProperty(ref _namePaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
+    /// <inheritdoc cref="IPlane.LabelsPaint"/>
     public Paint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
+    /// <inheritdoc cref="IPlane.SeparatorsPaint"/>
     public Paint? SeparatorsPaint
     {
         get => _separatorsPaint;
         set => SetPaintProperty(ref _separatorsPaint, value, true);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsPaint"/>
+    /// <inheritdoc cref="ICartesianAxis.SubseparatorsPaint"/>
     public Paint? SubseparatorsPaint
     {
         get => _subseparatorsPaint;
         set => SetPaintProperty(ref _subseparatorsPaint, value, true);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsCount"/>
+    /// <inheritdoc cref="ICartesianAxis.SubseparatorsCount"/>
     public int SubseparatorsCount { get => _subseparatorsCount; set => SetProperty(ref _subseparatorsCount, value); }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
+    /// <inheritdoc cref="ICartesianAxis.DrawTicksPath"/>
     public bool DrawTicksPath { get => _drawTicksPath; set => SetProperty(ref _drawTicksPath, value); }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
+    /// <inheritdoc cref="ICartesianAxis.TicksPaint"/>
     public Paint? TicksPaint
     {
         get => _ticksPaint;
         set => SetPaintProperty(ref _ticksPaint, value, true);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubticksPaint"/>
+    /// <inheritdoc cref="ICartesianAxis.SubticksPaint"/>
     public Paint? SubticksPaint
     {
         get => _subticksPaint;
         set => SetPaintProperty(ref _subticksPaint, value, true);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ZeroPaint"/>
+    /// <inheritdoc cref="ICartesianAxis.ZeroPaint"/>
     public Paint? ZeroPaint
     {
         get => _zeroPaint;
@@ -250,31 +250,31 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPaint"/>
+    /// <inheritdoc cref="ICartesianAxis.CrosshairPaint"/>
     public Paint? CrosshairPaint
     {
         get => _crosshairPaint;
         set => SetPaintProperty(ref _crosshairPaint, value, true);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsPaint"/>
+    /// <inheritdoc cref="ICartesianAxis.CrosshairLabelsPaint"/>
     public Paint? CrosshairLabelsPaint
     {
         get => _crosshairLabelsPaint;
         set => SetPaintProperty(ref _crosshairLabelsPaint, value);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsBackground"/>
+    /// <inheritdoc cref="ICartesianAxis.CrosshairLabelsBackground"/>
     public LvcColor? CrosshairLabelsBackground
     {
         get => _crosshairLabelsBackground;
         set => SetProperty(ref _crosshairLabelsBackground, value);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPadding"/>
+    /// <inheritdoc cref="ICartesianAxis.CrosshairPadding"/>
     public Padding? CrosshairPadding { get; set; }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairSnapEnabled" />
+    /// <inheritdoc cref="ICartesianAxis.CrosshairSnapEnabled" />
     public bool CrosshairSnapEnabled { get => _crosshairSnapEnabled; set => SetProperty(ref _crosshairSnapEnabled, value); }
 
     /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
@@ -635,8 +635,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.InvalidateCrosshair(Chart{TDrawingContext}, LvcPoint)"/>
-    public void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition)
+    /// <inheritdoc cref="ICartesianAxis.InvalidateCrosshair(IChart, LvcPoint)"/>
+    public void InvalidateCrosshair(IChart chart, LvcPoint pointerPosition)
     {
         if (CrosshairPaint is null || chart is not CartesianChart<TDrawingContext> cartesianChart) return;
 
@@ -780,8 +780,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         chart.Canvas.Invalidate();
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ClearCrosshair(Chart{TDrawingContext})"/>
-    public void ClearCrosshair(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ICartesianAxis.ClearCrosshair(IChart)"/>
+    public void ClearCrosshair(IChart chart)
     {
         if (_crosshairLine is not null)
             CrosshairPaint?.RemoveGeometryFromPainTask(chart.Canvas, _crosshairLine);
@@ -834,8 +834,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         return closestPoint;
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
-    public LvcSize GetNameLabelSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetNameLabelSize(IChart)"/>
+    public LvcSize GetNameLabelSize(IChart chart)
     {
         if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new LvcSize(0, 0);
 
@@ -852,8 +852,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         return textGeometry.Measure(NamePaint);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
-    public virtual LvcSize GetPossibleSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetPossibleSize(IChart)"/>
+    public virtual LvcSize GetPossibleSize(IChart chart)
     {
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);

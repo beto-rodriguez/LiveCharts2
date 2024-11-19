@@ -193,7 +193,7 @@ public class PolarChart<TDrawingContext>(
         InnerRadius = (float)view.InnerRadius;
         InitialRotation = (float)view.InitialRotation;
 
-        VisualElements = view.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
+        VisualElements = view.VisualElements ?? [];
 
         #endregion
 
@@ -208,7 +208,7 @@ public class PolarChart<TDrawingContext>(
             axis.Initialize(PolarAxisOrientation.Angle);
             if (ce._theme != themeId)
             {
-                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                theme.ApplyStyleToAxis(axis);
                 ce._theme = themeId;
             }
             ce._isInternalSet = false;
@@ -220,7 +220,7 @@ public class PolarChart<TDrawingContext>(
             axis.Initialize(PolarAxisOrientation.Radius);
             if (ce._theme != themeId)
             {
-                theme.ApplyStyleToAxis((IPlane<TDrawingContext>)axis);
+                theme.ApplyStyleToAxis(axis);
                 ce._theme = themeId;
             }
             ce._isInternalSet = false;
@@ -413,9 +413,8 @@ public class PolarChart<TDrawingContext>(
                     axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
                 }
 
-                var drawablePlane = (IPlane<TDrawingContext>)axis;
-                var ns = drawablePlane.GetNameLabelSize(this);
-                var s = drawablePlane.GetPossibleSize(this);
+                var ns = axis.GetNameLabelSize(this);
+                var s = axis.GetPossibleSize(this);
 
                 var radius = s.Height; // <- this type needs to be changed... it is not the height it is the radius.
 

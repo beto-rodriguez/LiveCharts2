@@ -190,16 +190,7 @@ public interface IPlane : IChartElement
     /// Defalut is null.
     /// </summary>
     IEnumerable<double>? CustomSeparators { get; set; }
-}
 
-/// <summary>
-/// Defines an Axis in a Cartesian chart.
-/// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IDisposable" />
-public interface IPlane<TDrawingContext> : IPlane
-    where TDrawingContext : DrawingContext
-{
     /// <summary>
     /// Gets or sets the name paint.
     /// </summary>
@@ -229,12 +220,12 @@ public interface IPlane<TDrawingContext> : IPlane
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    LvcSize GetPossibleSize(Chart<TDrawingContext> chart);
+    LvcSize GetPossibleSize(IChart chart);
 
     /// <summary>
     /// Gets the size of the axis name label.
     /// </summary>
     /// <param name="chart">the chart.</param>
     /// <returns></returns>
-    LvcSize GetNameLabelSize(Chart<TDrawingContext> chart);
+    LvcSize GetNameLabelSize(IChart chart);
 }

@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
 /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry>
-    : ChartElement<TDrawingContext>, IPolarAxis, IPlane<TDrawingContext>, INotifyPropertyChanged
+    : ChartElement<TDrawingContext>, IPolarAxis, IPlane, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry, new()
         where TLineGeometry : ILineGeometry, new()
@@ -157,21 +157,21 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <inheritdoc cref="IPlane.IsInverted"/>
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
+    /// <inheritdoc cref="IPlane.NamePaint"/>
     public Paint? NamePaint
     {
         get => _namePaint;
         set => SetPaintProperty(ref _namePaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
+    /// <inheritdoc cref="IPlane.LabelsPaint"/>
     public Paint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
+    /// <inheritdoc cref="IPlane.SeparatorsPaint"/>
     public Paint? SeparatorsPaint
     {
         get => _separatorsPaint;
@@ -425,8 +425,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         }
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
-    public LvcSize GetNameLabelSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetNameLabelSize(IChart)"/>
+    public LvcSize GetNameLabelSize(IChart chart)
     {
         if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new LvcSize(0, 0);
 
@@ -440,8 +440,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         return textGeometry.Measure(NamePaint);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
-    public virtual LvcSize GetPossibleSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetPossibleSize(IChart)"/>
+    public virtual LvcSize GetPossibleSize(IChart chart)
     {
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
