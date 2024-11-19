@@ -105,11 +105,11 @@ public class SKDefaultTooltip : IChartTooltip
             _panel.BackgroundGeometry.Wedge = wedge;
             _panel.BackgroundGeometry.WedgeThickness = 3;
 
-            //_panel
-            //    .Animate(
-            //        new Animation(EasingFunctions.EaseOut, TimeSpan.FromMilliseconds(150)),
-            //        nameof(RoundedRectangleGeometry.X),
-            //        nameof(RoundedRectangleGeometry.Y));
+            _panel
+                .Animate(
+                    new Animation(EasingFunctions.EaseOut, TimeSpan.FromMilliseconds(150)),
+                    nameof(RoundedRectangleGeometry.X),
+                    nameof(RoundedRectangleGeometry.Y));
         }
 
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
