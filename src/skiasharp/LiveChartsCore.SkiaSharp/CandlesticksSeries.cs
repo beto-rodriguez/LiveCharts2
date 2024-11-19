@@ -82,7 +82,7 @@ public class CandlesticksSeries<TModel>
 /// </typeparam>
 public class CandlesticksSeries<TModel, TVisual>
     : CandlesticksSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, IFinancialGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.
@@ -128,7 +128,7 @@ public class CandlesticksSeries<TModel, TVisual>
 /// </typeparam>
 public class CandlesticksSeries<TModel, TVisual, TLabel>
     : CoreFinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-        where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, IFinancialGeometry, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>

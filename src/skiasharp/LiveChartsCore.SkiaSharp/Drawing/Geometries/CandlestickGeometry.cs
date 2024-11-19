@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a candlestick geometry.
 /// </summary>
-public class CandlestickGeometry : Geometry, IFinancialGeometry<SkiaSharpDrawingContext>
+public class CandlestickGeometry : Geometry, IFinancialGeometry
 {
     private readonly FloatMotionProperty _wProperty;
     private readonly FloatMotionProperty _oProperty;
@@ -49,16 +49,16 @@ public class CandlestickGeometry : Geometry, IFinancialGeometry<SkiaSharpDrawing
         _lProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Low), 0f));
     }
 
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Width" />
+    /// <inheritdoc cref="IFinancialGeometry.Width" />
     public float Width { get => _wProperty.GetMovement(this); set => _wProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Open" />
+    /// <inheritdoc cref="IFinancialGeometry.Open" />
     public float Open { get => _oProperty.GetMovement(this); set => _oProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Close" />
+    /// <inheritdoc cref="IFinancialGeometry.Close" />
     public float Close { get => _cProperty.GetMovement(this); set => _cProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Low" />
+    /// <inheritdoc cref="IFinancialGeometry.Low" />
     public float Low { get => _lProperty.GetMovement(this); set => _lProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
