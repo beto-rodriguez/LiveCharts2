@@ -37,6 +37,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
@@ -140,7 +141,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
     public static readonly DependencyProperty FillProperty =
         DependencyProperty.Register(
             nameof(Fill), typeof(Paint), typeof(GeoMap),
-            new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, OnDependencyPropertyChanged));
+            new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false }, OnDependencyPropertyChanged));
 
     #endregion
 
@@ -206,7 +207,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
         get => (Paint)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.IsStroke = false;
             SetValue(FillProperty, value);
         }
     }
@@ -220,20 +221,14 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
 
     #endregion
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
         UnoPlatformHelpers.InvokeOnUIThread(action, DispatcherQueue);
-    }
 
-    private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
+    private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e) =>
         _core.Update();
-    }
 
-    private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
-    {
+    private void GeoMap_Unloaded(object sender, RoutedEventArgs e) =>
         _core.Unload();
-    }
 
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
@@ -255,10 +250,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingCo
         ReleasePointerCapture(e.Pointer);
     }
 
-    private void OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        _core?.InvokePointerLeft();
-    }
+    private void OnPointerExited(object sender, PointerRoutedEventArgs e) => _core?.InvokePointerLeft();
 
     private void OnWheelChanged(object sender, PointerRoutedEventArgs e)
     {
