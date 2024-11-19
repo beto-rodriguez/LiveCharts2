@@ -26,8 +26,8 @@ using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ISizedGeometry{TDrawingContext}" />
-public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="ISizedGeometry" />
+public abstract class SizedGeometry : Geometry, ISizedGeometry
 {
     /// <summary>
     /// The width
@@ -53,10 +53,10 @@ public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaSharpDrawingC
         heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
     }
 
-    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Width" />
+    /// <inheritdoc cref="ISizedGeometry.Width" />
     public float Width { get => widthProperty.GetMovement(this); set => widthProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
+    /// <inheritdoc cref="ISizedGeometry.Height" />
     public float Height
     {
         get => matchDimensions ? widthProperty.GetMovement(this) : heightProperty.GetMovement(this);

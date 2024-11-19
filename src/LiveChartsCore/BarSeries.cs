@@ -50,7 +50,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
         : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IBarSeries<TDrawingContext>
-            where TVisual : class, ISizedGeometry<TDrawingContext>, new()
+            where TVisual : class, ISizedGeometry, new()
             where TDrawingContext : DrawingContext
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {

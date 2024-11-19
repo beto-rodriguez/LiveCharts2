@@ -36,7 +36,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
+    where TBackgroundGeometry : ISizedGeometry, new()
 {
     private Paint? _backgroundPaint;
     private Align _verticalAlignment = Align.Middle;

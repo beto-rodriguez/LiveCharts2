@@ -34,7 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
+    where TBackgroundGeometry : ISizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry, TDrawingContext}"/> class.

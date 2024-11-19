@@ -401,7 +401,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="geometry"></param>
     /// <returns></returns>
     protected PaintSchedule BuildMiniatureSchedule(
-        Paint paint, ISizedGeometry<TDrawingContext> geometry)
+        Paint paint, ISizedGeometry geometry)
     {
         var paintClone = paint.CloneTask();
         var st = paint.IsStroke ? paint.StrokeThickness : 0;

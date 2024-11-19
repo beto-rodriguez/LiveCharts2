@@ -29,5 +29,5 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <inheritdoc cref="GeometryVisual{TGeometry, TLabelGeometry, TDrawingContext}"/>
 public class GeometryVisual<TGeometry> : GeometryVisual<TGeometry, LabelGeometry, SkiaSharpDrawingContext>
-    where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
+    where TGeometry : ISizedGeometry, new()
 { }

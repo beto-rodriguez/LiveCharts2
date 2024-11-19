@@ -26,7 +26,7 @@ namespace LiveChartsCore.Drawing;
 /// Defines a box geometry.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="ISizedGeometry{TDrawingContext}" />
+/// <seealso cref="ISizedGeometry" />
 public interface IBoxGeometry<TDrawingContext> : IGeometry
     where TDrawingContext : DrawingContext
 {

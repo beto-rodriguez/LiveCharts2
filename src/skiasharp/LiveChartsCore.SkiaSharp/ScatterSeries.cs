@@ -82,7 +82,7 @@ public class ScatterSeries<TModel>
 /// </typeparam>
 public class ScatterSeries<TModel, TVisual>
     : ScatterSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class.
@@ -128,7 +128,7 @@ public class ScatterSeries<TModel, TVisual>
 /// </typeparam>
 public class ScatterSeries<TModel, TVisual, TLabel>
     : CoreScatterSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>

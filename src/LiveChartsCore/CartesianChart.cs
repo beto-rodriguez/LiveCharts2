@@ -41,7 +41,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     private readonly ICartesianChartView<TDrawingContext> _chartView;
-    private ISizedGeometry<TDrawingContext>? _zoomingSection;
+    private ISizedGeometry? _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;

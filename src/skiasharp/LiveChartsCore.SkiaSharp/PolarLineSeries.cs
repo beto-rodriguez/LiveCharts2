@@ -82,7 +82,7 @@ public class PolarLineSeries<TModel>
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual>
     : PolarLineSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class.
@@ -128,7 +128,7 @@ public class PolarLineSeries<TModel, TVisual>
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual, TLabel>
     : CorePolarLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, LineGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>

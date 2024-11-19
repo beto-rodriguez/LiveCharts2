@@ -36,7 +36,7 @@ namespace LiveChartsCore.VisualElements;
 /// Initializes a new instance of the <see cref="VariableGeometryVisual{TDrawingContext}"/> class.
 /// </remarks>
 /// <param name="geometry"></param>
-public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingContext> geometry)
+public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry geometry)
     : BaseGeometryVisual<TDrawingContext>
         where TDrawingContext : DrawingContext
 {
@@ -45,7 +45,7 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
     /// <summary>
     /// Gets or sets the geometry.
     /// </summary>
-    public ISizedGeometry<TDrawingContext> Geometry
+    public ISizedGeometry Geometry
     {
         get => geometry;
         set
@@ -60,7 +60,7 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
     /// <summary>
     /// Occurs when the geometry is initialized.
     /// </summary>
-    public event Action<ISizedGeometry<TDrawingContext>>? GeometryInitialized;
+    public event Action<ISizedGeometry>? GeometryInitialized;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() =>

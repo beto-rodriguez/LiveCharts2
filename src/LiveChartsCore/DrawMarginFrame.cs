@@ -84,7 +84,7 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMarginFrame<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TSizedGeometry : ISizedGeometry<TDrawingContext>, new()
+    where TSizedGeometry : ISizedGeometry, new()
 {
     private TSizedGeometry? _fillSizedGeometry;
     private TSizedGeometry? _strokeSizedGeometry;

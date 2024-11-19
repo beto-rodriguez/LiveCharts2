@@ -25,10 +25,8 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines an arc geometry.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IGeometry" />
-public interface IArcGeometry<TDrawingContext> : IGeometry
-    where TDrawingContext : DrawingContext
+public interface IArcGeometry : IGeometry
 {
     /// <summary>
     /// Gets or sets the center x.

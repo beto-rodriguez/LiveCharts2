@@ -82,7 +82,7 @@ public class StackedStepAreaSeries<TModel>
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual>
     : StackedStepAreaSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.
@@ -128,7 +128,7 @@ public class StackedStepAreaSeries<TModel, TVisual>
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual, TLabel>
     : CoreStackedStepAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry, LineGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>

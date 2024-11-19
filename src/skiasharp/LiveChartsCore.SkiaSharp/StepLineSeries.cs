@@ -81,7 +81,7 @@ public class StepLineSeries<TModel> : StepLineSeries<TModel, CircleGeometry, Lab
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual>
     : StepLineSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class.
@@ -127,7 +127,7 @@ public class StepLineSeries<TModel, TVisual>
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual, TLabel>
     : CoreStepLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry, LineGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>

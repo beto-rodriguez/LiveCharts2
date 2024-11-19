@@ -30,7 +30,7 @@ namespace LiveChartsCore.Drawing;
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public class BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>
     : BezierVisualPoint<TDrawingContext, TVisual>
-        where TVisual : ISizedGeometry<TDrawingContext>, new()
+        where TVisual : ISizedGeometry, new()
         where TDrawingContext : DrawingContext
 {
     /// <summary>

@@ -39,7 +39,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TArcGeometry : IArcGeometry<TDrawingContext>, new()
+    where TArcGeometry : IArcGeometry, new()
     where TLineGeometry : ILineGeometry<TDrawingContext>, new()
     where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
 {

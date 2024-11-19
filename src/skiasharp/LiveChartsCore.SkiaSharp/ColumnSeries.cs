@@ -82,7 +82,7 @@ public class ColumnSeries<TModel>
 /// </typeparam>
 public class ColumnSeries<TModel, TVisual>
     : ColumnSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.
@@ -128,7 +128,7 @@ public class ColumnSeries<TModel, TVisual>
 /// </typeparam>
 public class ColumnSeries<TModel, TVisual, TLabel>
     : CoreColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>

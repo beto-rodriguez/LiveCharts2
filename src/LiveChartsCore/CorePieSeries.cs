@@ -52,7 +52,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             where TDrawingContext : DrawingContext
             where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-            where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
+            where TMiniatureGeometry : ISizedGeometry, new()
 {
     private Paint? _stroke = null;
     private Paint? _fill = null;

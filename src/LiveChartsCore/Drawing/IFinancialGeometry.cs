@@ -26,7 +26,7 @@ namespace LiveChartsCore.Drawing;
 /// Defines a financial geometry.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="ISizedGeometry{TDrawingContext}" />
+/// <seealso cref="ISizedGeometry" />
 public interface IFinancialGeometry<TDrawingContext> : IGeometry
     where TDrawingContext : DrawingContext
 {

@@ -49,7 +49,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         where TVisual : class, IFinancialGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
+        where TMiniatureGeometry : ISizedGeometry, new()
 {
     private Paint? _upStroke = null;
     private Paint? _upFill = null;

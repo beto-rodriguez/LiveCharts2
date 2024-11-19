@@ -48,7 +48,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         where TVisual : class, IBoxGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
+        where TMiniatureGeometry : ISizedGeometry, new()
 {
     private double _pading = 5;
     private double _maxBarWidth = 25;

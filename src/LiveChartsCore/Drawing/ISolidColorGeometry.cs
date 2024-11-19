@@ -25,7 +25,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a sized and solid color geometry.
 /// </summary>
-public interface ISolidColorGeometry<TDrawingContext> : ISizedGeometry<TDrawingContext>
+public interface ISolidColorGeometry<TDrawingContext> : ISizedGeometry
     where TDrawingContext : DrawingContext
 {
     /// <summary>

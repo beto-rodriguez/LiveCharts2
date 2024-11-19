@@ -72,5 +72,5 @@ public abstract class ChartEngine<TDrawingContext>
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <returns>The created geometry.</returns>
-    public abstract ISizedGeometry<TDrawingContext> InitializeZoommingSection(CoreMotionCanvas canvas);
+    public abstract ISizedGeometry InitializeZoommingSection(CoreMotionCanvas canvas);
 }

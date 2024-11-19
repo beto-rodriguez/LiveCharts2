@@ -27,25 +27,25 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="IArcGeometry{TDrawingContext}" />
-public class ArcGeometry : Geometry, IArcGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IArcGeometry" />
+public class ArcGeometry : Geometry, IArcGeometry
 {
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.CenterX"/>
+    /// <inheritdoc cref="IArcGeometry.CenterX"/>
     public float CenterX { get; set; }
 
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.CenterY"/>
+    /// <inheritdoc cref="IArcGeometry.CenterY"/>
     public float CenterY { get; set; }
 
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.Width"/>
+    /// <inheritdoc cref="IArcGeometry.Width"/>
     public float Width { get; set; }
 
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.Height"/>
+    /// <inheritdoc cref="IArcGeometry.Height"/>
     public float Height { get; set; }
 
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.StartAngle"/>
+    /// <inheritdoc cref="IArcGeometry.StartAngle"/>
     public float StartAngle { get; set; }
 
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.SweepAngle"/>
+    /// <inheritdoc cref="IArcGeometry.SweepAngle"/>
     public float SweepAngle { get; set; }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)"/>

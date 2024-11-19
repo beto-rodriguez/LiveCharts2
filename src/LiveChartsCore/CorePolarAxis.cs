@@ -46,7 +46,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
-        where TCircleGeometry : ISizedGeometry<TDrawingContext>, new()
+        where TCircleGeometry : ISizedGeometry, new()
 {
     #region fields
 

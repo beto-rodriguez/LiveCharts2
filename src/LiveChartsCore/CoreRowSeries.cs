@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
     : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
