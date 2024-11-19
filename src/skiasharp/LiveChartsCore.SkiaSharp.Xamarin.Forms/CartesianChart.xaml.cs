@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
@@ -434,7 +435,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
     LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
+    /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => canvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.SyncContext" />
@@ -535,21 +536,21 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         set => SetValue(LegendPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    /// <inheritdoc cref="IChartView.LegendTextPaint" />
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double? LegendTextSize
     {
         get => (double?)GetValue(LegendTextSizeProperty);
@@ -581,21 +582,21 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         set => SetValue(FindingStrategyProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    /// <inheritdoc cref="IChartView.TooltipTextPaint" />
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    /// <inheritdoc cref="IChartView.TooltipTextSize" />
     public double? TooltipTextSize
     {
         get => (double?)GetValue(TooltipTextSizeProperty);
@@ -605,7 +606,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip? Tooltip { get; set; } = new SKDefaultTooltip();
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
@@ -707,10 +708,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
-    void IChartView.InvokeOnUIThread(Action action)
-    {
+    void IChartView.InvokeOnUIThread(Action action) =>
         MainThread.BeginInvokeOnMainThread(action);
-    }
 
     /// <summary>
     /// Initializes the core.
@@ -751,20 +750,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         core?.Load();
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         core?.Update();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         core?.Update();
-    }
 
-    private void OnSizeChanged(object? sender, EventArgs e)
-    {
-        core?.Update();
-    }
+    private void OnSizeChanged(object? sender, EventArgs e) => core?.Update();
 
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
     {
@@ -821,10 +813,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, _lastScale < 1 ? 0.99999 : 1.00001, false);
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
-    {
-        UpdateFinished?.Invoke(this);
-    }
+    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) => UpdateFinished?.Invoke(this);
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
@@ -869,10 +858,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             });
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
-    {
-        Measuring?.Invoke(this);
-    }
+    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) => Measuring?.Invoke(this);
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
@@ -894,11 +880,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             VisualElementsPointerDownCommand.Execute(args);
     }
 
-    void IChartView.Invalidate()
-    {
-        CoreCanvas.Invalidate();
-    }
+    void IChartView.Invalidate() => CoreCanvas.Invalidate();
 
-    public void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems) =>
-        throw new NotImplementedException();
+    public void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems)
+    { }
 }

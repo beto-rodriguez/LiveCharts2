@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
@@ -55,7 +56,7 @@ public partial class MotionCanvas : ContentView
     /// The paint tasks property
     /// </summary>
     public static readonly BindableProperty PaintTasksProperty = BindableProperty.Create(
-        nameof(PaintTasks), typeof(List<PaintSchedule<SkiaSharpDrawingContext>>),
+        nameof(PaintTasks), typeof(List<PaintSchedule>),
         typeof(MotionCanvas), propertyChanged: PaintTasksChanged);
 
     /// <summary>
@@ -80,9 +81,9 @@ public partial class MotionCanvas : ContentView
     /// <value>
     /// The paint tasks.
     /// </value>
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+    public List<PaintSchedule> PaintTasks
     {
-        get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+        get => (List<PaintSchedule>)GetValue(PaintTasksProperty);
         set => SetValue(PaintTasksProperty, value);
     }
 
@@ -98,10 +99,8 @@ public partial class MotionCanvas : ContentView
     /// Invalidates this instance.
     /// </summary>
     /// <returns></returns>
-    public void Invalidate()
-    {
+    public void Invalidate() =>
         MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
-    }
 
     /// <inheritdoc cref="NavigableElement.OnParentSet"/>
     protected override void OnParentSet()
@@ -131,10 +130,8 @@ public partial class MotionCanvas : ContentView
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
     }
 
-    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender)
-    {
+    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
         Invalidate();
-    }
 
     private void InitializeView()
     {
