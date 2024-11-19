@@ -42,7 +42,7 @@ public class ColoredRectangleGeometry : SizedGeometry, IColoredGeometry
         _colorProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Color)));
     }
 
-    /// <inheritdoc cref="ISolidColorGeometry{TDrawingContext}.Color" />
+    /// <inheritdoc cref="ISolidColorGeometry.Color" />
     public LvcColor Color
     {
         get => _colorProperty.GetMovement(this);
