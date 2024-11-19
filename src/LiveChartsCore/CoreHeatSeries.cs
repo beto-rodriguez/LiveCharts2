@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
-    : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
+    : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries
         where TVisual : class, ISizedGeometry, IColoredGeometry, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry, new()
@@ -84,23 +84,23 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         DataLabelsPosition = DataLabelsPosition.Middle;
     }
 
-    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
+    /// <inheritdoc cref="IHeatSeries.HeatMap"/>
     public LvcColor[] HeatMap
     {
         get => _heatMap;
         set => SetProperty(ref _heatMap, value);
     }
 
-    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
+    /// <inheritdoc cref="IHeatSeries.ColorStops"/>
     public double[]? ColorStops { get => _colorStops; set => SetProperty(ref _colorStops, value); }
 
-    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
+    /// <inheritdoc cref="IHeatSeries.PointPadding"/>
     public Padding PointPadding { get => _pointPadding; set => SetProperty(ref _pointPadding, value); }
 
-    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.MinValue"/>
+    /// <inheritdoc cref="IHeatSeries.MinValue"/>
     public double? MinValue { get => _minValue; set => SetProperty(ref _minValue, value); }
 
-    /// <inheritdoc cref="IHeatSeries{TDrawingContext}.MaxValue"/>
+    /// <inheritdoc cref="IHeatSeries.MaxValue"/>
     public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>

@@ -42,7 +42,6 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="ICartesianSeries" />
-/// <seealso cref="IHeatSeries{TDrawingContext}" />
 public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBoxSeries
         where TVisual : class, IBoxGeometry, new()

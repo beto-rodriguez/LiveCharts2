@@ -322,7 +322,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IHeatSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IHeatSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -330,7 +330,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForHeatSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IHeatSeries<TDrawingContext>> predicate)
+        Action<IHeatSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.HeatSeriesBuilder.Add(predicate);

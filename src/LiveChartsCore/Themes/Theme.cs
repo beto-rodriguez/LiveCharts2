@@ -153,7 +153,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = [];
+    public List<Action<IHeatSeries>> HeatSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the financial series builder.
@@ -371,7 +371,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Heat) == SeriesProperties.Heat)
         {
-            var heatSeries = (IHeatSeries<TDrawingContext>)series;
+            var heatSeries = (IHeatSeries)series;
             foreach (var rule in HeatSeriesBuilder) rule(heatSeries);
         }
 

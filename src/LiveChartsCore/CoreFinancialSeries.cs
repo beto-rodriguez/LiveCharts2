@@ -43,7 +43,6 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
 /// <seealso cref="ICartesianSeries" />
-/// <seealso cref="IHeatSeries{TDrawingContext}" />
 public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries
         where TVisual : class, IFinancialGeometry, new()
