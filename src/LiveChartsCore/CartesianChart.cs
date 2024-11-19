@@ -36,7 +36,7 @@ namespace LiveChartsCore;
 /// Defines a Cartesian chart.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="Chart{TDrawingContext}" />
+/// <seealso cref="Chart" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
 /// </remarks>
@@ -47,7 +47,7 @@ public class CartesianChart<TDrawingContext>(
     ICartesianChartView<TDrawingContext> view,
     Action<LiveChartsSettings> defaultPlatformConfig,
     CoreMotionCanvas canvas)
-        : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view, ChartKind.Cartesian)
+        : Chart(canvas, defaultPlatformConfig, view, ChartKind.Cartesian)
             where TDrawingContext : DrawingContext
 {
     private readonly ICartesianChartView<TDrawingContext> _chartView = view;
@@ -88,11 +88,11 @@ public class CartesianChart<TDrawingContext>(
     public IEnumerable<CoreSection> Sections { get; private set; } =
         [];
 
-    ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
+    ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<IChartSeries> Series =>
         _chartView.Series?.Cast<IChartSeries>() ?? [];
 
-    ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
+    ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<IChartSeries> VisibleSeries =>
         Series.Where(static x => x.IsVisible);
 
@@ -840,7 +840,7 @@ public class CartesianChart<TDrawingContext>(
         _isFirstDraw = false;
     }
 
-    /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
+    /// <inheritdoc cref="Chart.Unload"/>
     public override void Unload()
     {
         base.Unload();
@@ -1136,7 +1136,7 @@ public class CartesianChart<TDrawingContext>(
 
     private void OnPointerLeft() => base.InvokePointerLeft();
 
-    private void InvalidateCrosshairs(Chart<TDrawingContext> chart, LvcPoint point)
+    private void InvalidateCrosshairs(Chart chart, LvcPoint point)
     {
         foreach (var axis in _crosshair)
             axis.InvalidateCrosshair(chart, point);

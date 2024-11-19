@@ -90,8 +90,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         set => SetPaintProperty(ref _geometryStroke, value, true);
     }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -429,9 +429,9 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+        Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
         return strategy switch
         {
@@ -624,8 +624,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
     }
 
-    /// <inheritdoc cref="IChartElement.RemoveFromUI(IChart)"/>
-    public override void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
 

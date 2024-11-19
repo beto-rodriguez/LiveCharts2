@@ -54,7 +54,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <summary>
     /// The core
     /// </summary>
-    protected Chart<SkiaSharpDrawingContext>? core;
+    protected Chart? core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private TimeSpan _tooltipCloseInterval = TimeSpan.FromMilliseconds(3500);
@@ -354,7 +354,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {

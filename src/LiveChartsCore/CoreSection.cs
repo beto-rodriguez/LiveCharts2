@@ -203,7 +203,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry, TDrawingContex
     /// Measures the specified chart.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    public override void Invalidate(IChart chart)
+    public override void Invalidate(Chart chart)
     {
         var drawLocation = chart.DrawMarginLocation;
         var drawMarginSize = chart.DrawMarginSize;

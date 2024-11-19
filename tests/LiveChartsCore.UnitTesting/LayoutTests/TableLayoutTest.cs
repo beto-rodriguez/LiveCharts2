@@ -81,7 +81,7 @@ public class TableLayoutTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var tableSize = table.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             // 100 left + 10 padding + 20 column width
@@ -170,7 +170,7 @@ public class TableLayoutTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var tableSize = table.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             // 100 left + 10 padding + 20 column width
@@ -270,7 +270,7 @@ public class TableLayoutTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var tableSize = table.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             // 100 left + 10 padding + 15 column width
@@ -359,7 +359,7 @@ public class TableLayoutTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var tableSize = table.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             g1Geometry.X == 135 &&
@@ -447,7 +447,7 @@ public class TableLayoutTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var tableSize = table.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             g1Geometry.X == 140 &&
@@ -540,7 +540,7 @@ public class TableLayoutTest
         var wc0 = g00m.Width > g01m.Width ? g00m.Width : g10m.Width;
         var wc1 = g10m.Width > g11m.Width ? g01m.Width : g11m.Width;
 
-        var tableSize = table.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var tableSize = table.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             // 10 padding + columns width + 10 padding

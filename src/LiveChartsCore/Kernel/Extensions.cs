@@ -51,7 +51,7 @@ public static class Extensions
     public static LvcPoint GetTooltipLocation(
         this IEnumerable<ChartPoint> foundPoints,
         LvcSize tooltipSize,
-        IChart chart)
+        Chart chart)
     {
         var location = chart.Kind is ChartKind.Cartesian or ChartKind.Polar
             ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
@@ -68,7 +68,7 @@ public static class Extensions
     }
 
     private static LvcPoint _getCartesianTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, IChart chart, LvcSize tooltipSize)
+        IEnumerable<ChartPoint> foundPoints, Chart chart, LvcSize tooltipSize)
     {
         var count = 0f;
         var placementContext = new TooltipPlacementContext(chart.TooltipPosition);
@@ -155,7 +155,7 @@ public static class Extensions
     }
 
     private static LvcPoint _getPieTooltipLocation(
-        IEnumerable<ChartPoint> foundPoints, IChart chart, LvcSize tooltipSize)
+        IEnumerable<ChartPoint> foundPoints, Chart chart, LvcSize tooltipSize)
     {
         var placementContext = new TooltipPlacementContext(TooltipPosition.Auto);
 
@@ -315,13 +315,13 @@ public static class Extensions
     /// </summary>
     /// <param name="animatable">The animatable object.</param>
     /// <param name="chart">
-    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
-    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// The chart, an animation will be built based on the <see cref="Chart.AnimationsSpeed"/>
+    /// and <see cref="Chart.EasingFunction"/>.
     /// </param>
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this IAnimatable animatable, IChart chart, params string[]? properties) =>
+    public static void Animate(this IAnimatable animatable, Chart chart, params string[]? properties) =>
         Animate(animatable, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
 
     /// <summary>
@@ -364,8 +364,8 @@ public static class Extensions
     /// </summary>
     /// <param name="visual">The visual`` object.</param>
     /// <param name="chart">
-    /// The chart, an animation will be built based on the <see cref="Chart{TDrawingContext}.AnimationsSpeed"/>
-    /// and <see cref="Chart{TDrawingContext}.EasingFunction"/>.
+    /// The chart, an animation will be built based on the <see cref="Chart.AnimationsSpeed"/>
+    /// and <see cref="Chart.EasingFunction"/>.
     /// </param>
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.

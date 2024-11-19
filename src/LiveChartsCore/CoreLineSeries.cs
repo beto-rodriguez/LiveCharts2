@@ -113,8 +113,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         set => SetPaintProperty(ref _errorPaint, value, true);
     }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -500,9 +500,9 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+        Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
         return strategy switch
         {
@@ -648,7 +648,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc/>
-    public override void RemoveFromUI(IChart chart)
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
 

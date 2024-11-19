@@ -80,5 +80,5 @@ public interface ICartesianSeries : IChartSeries
     /// <param name="x">The x.</param>
     /// <param name="y">The y.</param>
     /// <returns>the series bounds</returns>
-    SeriesBounds GetBounds(IChart chart, ICartesianAxis x, ICartesianAxis y);
+    SeriesBounds GetBounds(Chart chart, ICartesianAxis x, ICartesianAxis y);
 }

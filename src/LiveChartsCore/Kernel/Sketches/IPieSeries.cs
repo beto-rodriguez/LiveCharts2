@@ -141,5 +141,5 @@ public interface IPieSeries : IChartSeries, IStrokedAndFilled
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    DimensionalBounds GetBounds(IChart chart);
+    DimensionalBounds GetBounds(Chart chart);
 }

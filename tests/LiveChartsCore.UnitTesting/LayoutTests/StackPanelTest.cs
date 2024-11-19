@@ -65,7 +65,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var panelSize = stackPanel.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             // 100 left + 10 padding
@@ -270,7 +270,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.Core);
+        var panelSize = stackPanel.Measure((Chart)chart.Core);
 
         Assert.IsTrue(
             // 100 left + 10 padding 
@@ -556,7 +556,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+        var panelSize = stackPanel.Measure((Chart)chart.CoreChart);
 
         Assert.IsTrue(
             g0Geometry.X == 100 + 25 &&
@@ -703,7 +703,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+        var panelSize = stackPanel.Measure((Chart)chart.CoreChart);
 
         Assert.IsTrue(
             g0Geometry.X == 100 + 25 &&
@@ -850,7 +850,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+        var panelSize = stackPanel.Measure((Chart)chart.CoreChart);
 
         Assert.IsTrue(
             g0Geometry.X == 100 + 25 &&
@@ -997,7 +997,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+        var panelSize = stackPanel.Measure((Chart)chart.CoreChart);
 
         Assert.IsTrue(
             g0Geometry.X == 200 &&
@@ -1144,7 +1144,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+        var panelSize = stackPanel.Measure((Chart)chart.CoreChart);
 
         Assert.IsTrue(
             g0Geometry.X == 205 &&
@@ -1291,7 +1291,7 @@ public class StackPanelTest
         var g1Geometry = (RectangleGeometry)g1.GetDrawnGeometries()[0];
         var g2Geometry = (RectangleGeometry)g2.GetDrawnGeometries()[0];
 
-        var panelSize = stackPanel.Measure((Chart<SkiaSharpDrawingContext>)chart.CoreChart);
+        var panelSize = stackPanel.Measure((Chart)chart.CoreChart);
 
         Assert.IsTrue(
             g0Geometry.X == 210 &&

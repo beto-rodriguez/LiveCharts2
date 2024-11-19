@@ -63,7 +63,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="series">The series.</param>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    public virtual IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, IChart chart)
+    public virtual IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, Chart chart)
     {
         if (series.Values is null) yield break;
         _series = series;
@@ -100,7 +100,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// Disposes the data provider from the given chart.
     /// </summary>
     /// <param name="chart"></param>
-    public virtual void Dispose(IChart chart)
+    public virtual void Dispose(Chart chart)
     {
         _series = null;
         if (_isTModelChartEntity) return;
@@ -118,7 +118,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="plane2">The y.</param>
     /// <returns></returns>
     public virtual SeriesBounds GetCartesianBounds(
-        IChart chart,
+        Chart chart,
         IChartSeries series,
         IPlane plane1,
         IPlane plane2)
@@ -200,7 +200,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="y">The y.</param>
     /// <returns></returns>
     public virtual SeriesBounds GetFinancialBounds(
-        IChart chart,
+        Chart chart,
         IChartSeries series,
         ICartesianAxis x,
         ICartesianAxis y)
@@ -265,7 +265,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <returns></returns>
     /// <exception cref="NullReferenceException">Unexpected null stacker</exception>
     public virtual SeriesBounds GetPieBounds(
-        IChart chart,
+        Chart chart,
         IPieSeries series)
     {
         var stack =
@@ -327,14 +327,14 @@ public class DataFactory<TModel, TDrawingContext>
         _chartIndexEntityMap.Clear();
     }
 
-    private IEnumerable<IChartEntity?> GetEntities(ISeries<TModel> series, IChart chart)
+    private IEnumerable<IChartEntity?> GetEntities(ISeries<TModel> series, Chart chart)
     {
         return _isTModelChartEntity
             ? EnumerateChartEntities(series, chart)
             : EnumerateIndexedEntities(series, chart);
     }
 
-    private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries<TModel> series, IChart chart)
+    private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries<TModel> series, Chart chart)
     {
         if (series.Values is null) yield break;
         var entities = (IEnumerable<IChartEntity>)series.Values;
@@ -364,7 +364,7 @@ public class DataFactory<TModel, TDrawingContext>
         }
     }
 
-    private IEnumerable<IChartEntity?> EnumerateIndexedEntities(ISeries<TModel> series, IChart chart)
+    private IEnumerable<IChartEntity?> EnumerateIndexedEntities(ISeries<TModel> series, Chart chart)
     {
         if (series.Values is null) yield break;
 

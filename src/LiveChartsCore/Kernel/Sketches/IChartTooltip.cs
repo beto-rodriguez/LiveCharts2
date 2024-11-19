@@ -34,11 +34,11 @@ public interface IChartTooltip
     /// </summary>
     /// <param name="foundPoints">The found points.</param>
     /// <param name="chart">The chart.</param>
-    void Show(IEnumerable<ChartPoint> foundPoints, IChart chart);
+    void Show(IEnumerable<ChartPoint> foundPoints, Chart chart);
 
     /// <summary>
     /// Hides this tool tip instance.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void Hide(IChart chart);
+    void Hide(Chart chart);
 }

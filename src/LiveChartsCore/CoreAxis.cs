@@ -51,7 +51,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <summary>
     /// The active separators
     /// </summary>
-    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = [];
+    protected internal readonly Dictionary<Chart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = [];
 
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
@@ -295,10 +295,10 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     #endregion
 
     /// <inheritdoc cref="ICartesianAxis.MeasureStarted"/>
-    public event Action<IChart, ICartesianAxis>? MeasureStarted;
+    public event Action<Chart, ICartesianAxis>? MeasureStarted;
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
@@ -635,8 +635,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    /// <inheritdoc cref="ICartesianAxis.InvalidateCrosshair(IChart, LvcPoint)"/>
-    public void InvalidateCrosshair(IChart chart, LvcPoint pointerPosition)
+    /// <inheritdoc cref="ICartesianAxis.InvalidateCrosshair(Chart, LvcPoint)"/>
+    public void InvalidateCrosshair(Chart chart, LvcPoint pointerPosition)
     {
         if (CrosshairPaint is null || chart is not CartesianChart<TDrawingContext> cartesianChart) return;
 
@@ -780,8 +780,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         chart.Canvas.Invalidate();
     }
 
-    /// <inheritdoc cref="ICartesianAxis.ClearCrosshair(IChart)"/>
-    public void ClearCrosshair(IChart chart)
+    /// <inheritdoc cref="ICartesianAxis.ClearCrosshair(Chart)"/>
+    public void ClearCrosshair(Chart chart)
     {
         if (_crosshairLine is not null)
             CrosshairPaint?.RemoveGeometryFromPainTask(chart.Canvas, _crosshairLine);
@@ -834,8 +834,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         return closestPoint;
     }
 
-    /// <inheritdoc cref="IPlane.GetNameLabelSize(IChart)"/>
-    public LvcSize GetNameLabelSize(IChart chart)
+    /// <inheritdoc cref="IPlane.GetNameLabelSize(Chart)"/>
+    public LvcSize GetNameLabelSize(Chart chart)
     {
         if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new LvcSize(0, 0);
 
@@ -852,8 +852,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         return textGeometry.Measure(NamePaint);
     }
 
-    /// <inheritdoc cref="IPlane.GetPossibleSize(IChart)"/>
-    public virtual LvcSize GetPossibleSize(IChart chart)
+    /// <inheritdoc cref="IPlane.GetPossibleSize(Chart)"/>
+    public virtual LvcSize GetPossibleSize(Chart chart)
     {
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
@@ -937,8 +937,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         MaxLimit = max;
     }
 
-    /// <inheritdoc cref="ICartesianAxis.OnMeasureStarted(IChart, AxisOrientation)"/>
-    void ICartesianAxis.OnMeasureStarted(IChart chart, AxisOrientation orientation)
+    /// <inheritdoc cref="ICartesianAxis.OnMeasureStarted(Chart, AxisOrientation)"/>
+    void ICartesianAxis.OnMeasureStarted(Chart chart, AxisOrientation orientation)
     {
         _orientation = orientation;
         _dataBounds = new Bounds();
@@ -953,7 +953,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    public virtual void Delete(Chart<TDrawingContext> chart)
+    public virtual void Delete(Chart chart)
     {
         foreach (var paint in GetPaintTasks())
         {
@@ -966,8 +966,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         _ = activeSeparators.Remove(chart);
     }
 
-    /// <inheritdoc cref="IChartElement.RemoveFromUI(IChart)"/>
-    public override void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
         _animatableBounds = new();

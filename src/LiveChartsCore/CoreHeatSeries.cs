@@ -103,8 +103,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IHeatSeries.MaxValue"/>
     public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         _paintTaks ??= LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
 
@@ -272,8 +272,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
-    public override SeriesBounds GetBounds(IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
+    public override SeriesBounds GetBounds(Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
         var b = seriesBounds.Bounds.TertiaryBounds;

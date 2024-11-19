@@ -61,7 +61,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// </summary>
     protected IChartTooltip? tooltip;
 
-    private Chart<SkiaSharpDrawingContext>? _core;
+    private Chart? _core;
     private MotionCanvas? _avaloniaCanvas;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
@@ -358,7 +358,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     bool IChartView.DesignerMode => Design.IsDesignMode;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;

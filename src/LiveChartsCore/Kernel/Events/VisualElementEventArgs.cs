@@ -36,7 +36,7 @@ namespace LiveChartsCore.Kernel.Events;
 /// <param name="pointerLocation">The pointer location.</param>
 /// <param name="visualElement">The visual element.</param>
 public class VisualElementEventArgs(
-    IChart chart,
+    Chart chart,
     CoreVisualElement visualElement,
     LvcPoint pointerLocation)
 {
@@ -44,7 +44,7 @@ public class VisualElementEventArgs(
     /// <summary>
     /// Gets the chart.
     /// </summary>
-    public IChart Chart { get; } = chart;
+    public Chart Chart { get; } = chart;
 
     /// <summary>
     /// Gets or sets the pointer location.

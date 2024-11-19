@@ -54,7 +54,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <summary>
     /// The core
     /// </summary>
-    protected Chart<SkiaSharpDrawingContext>? core;
+    protected Chart? core;
 
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
@@ -420,7 +420,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {

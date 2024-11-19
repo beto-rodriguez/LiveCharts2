@@ -97,8 +97,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// </summary>
     public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
-    protected internal override void OnInvalidated(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         if (chart is not PieChart<TDrawingContext> pieChart)
             throw new Exception("The AngularThicksVisual can only be added to a pie chart");
@@ -252,8 +252,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
-    public override LvcSize Measure(IChart chart) => new();
+    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart) => new();
 
     /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)

@@ -45,7 +45,7 @@ public interface IChartElement : INotifyPropertyChanged
     /// Invalidates the <see cref="IChartElement"/> in the user interface.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void Invalidate(IChart chart);
+    void Invalidate(Chart chart);
 
     /// <summary>
     /// Deletes the <see cref="Paint"/> instances that changed from the user interface.
@@ -57,5 +57,5 @@ public interface IChartElement : INotifyPropertyChanged
     /// Removes the element from the UI.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void RemoveFromUI(IChart chart);
+    void RemoveFromUI(Chart chart);
 }

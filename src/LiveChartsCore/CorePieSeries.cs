@@ -147,8 +147,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var pieChart = (PieChart<TDrawingContext>)chart;
 
@@ -448,8 +448,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
     }
 
-    /// <inheritdoc cref="IPieSeries.GetBounds(IChart)"/>
-    public virtual DimensionalBounds GetBounds(IChart chart) =>
+    /// <inheritdoc cref="IPieSeries.GetBounds(Chart)"/>
+    public virtual DimensionalBounds GetBounds(Chart chart) =>
         DataFactory.GetPieBounds(chart, this).Bounds;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>

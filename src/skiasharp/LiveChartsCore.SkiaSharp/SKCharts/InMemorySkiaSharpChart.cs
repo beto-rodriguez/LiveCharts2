@@ -46,7 +46,7 @@ public abstract class InMemorySkiaSharpChart
     public CoreMotionCanvas CoreCanvas { get; } = new();
 
     /// <inheritdoc cref="IChartView.CoreChart"/>
-    public IChart CoreChart { get; protected set; } = null!;
+    public Chart CoreChart { get; protected set; } = null!;
 
     internal bool ExplicitDisposing { get; set; }
 
@@ -134,7 +134,7 @@ public abstract class InMemorySkiaSharpChart
     /// <exception cref="Exception"></exception>
     public virtual void DrawOnCanvas(SKCanvas canvas, SKSurface? surface = null, bool clearCanvasOnBeginDraw = false)
     {
-        if (CoreChart is null || CoreChart is not Chart<SkiaSharpDrawingContext> skiaChart)
+        if (CoreChart is null || CoreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
 
         skiaChart.Canvas.DisableAnimations = true;

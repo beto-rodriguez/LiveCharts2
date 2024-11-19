@@ -39,7 +39,7 @@ public static class Clipping
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     public static LvcRectangle GetClipRectangle(
-        ClipMode mode, IChart chart)
+        ClipMode mode, Chart chart)
     {
         return mode switch
         {

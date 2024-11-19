@@ -107,8 +107,8 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     /// <inheritdoc cref="IScatterSeries.StackGroup"/>
     public int? StackGroup { get => _stackGroup; set => SetProperty(ref _stackGroup, value); }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -308,8 +308,8 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
-    public override SeriesBounds GetBounds(IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
+    public override SeriesBounds GetBounds(Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 

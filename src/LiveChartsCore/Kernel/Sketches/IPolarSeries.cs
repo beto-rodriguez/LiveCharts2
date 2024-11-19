@@ -63,5 +63,5 @@ public interface IPolarSeries : IChartSeries
     /// <param name="angleAxis">The angle axis.</param>
     /// <param name="radiusAxis">The radius axis.</param>
     /// <returns>the series bounds</returns>
-    SeriesBounds GetBounds(IChart chart, IPolarAxis angleAxis, IPolarAxis radiusAxis);
+    SeriesBounds GetBounds(Chart chart, IPolarAxis angleAxis, IPolarAxis radiusAxis);
 }

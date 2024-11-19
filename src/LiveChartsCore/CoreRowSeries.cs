@@ -60,8 +60,8 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         _isRounded = typeof(IRoundedGeometry).IsAssignableFrom(typeof(TVisual));
     }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -402,8 +402,8 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         label.RemoveOnCompleted = true;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
-    public override SeriesBounds GetBounds(IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
+    public override SeriesBounds GetBounds(Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var rawBounds = DataFactory.GetCartesianBounds(chart, this, primaryAxis, secondaryAxis);
         if (rawBounds.HasData) return rawBounds;

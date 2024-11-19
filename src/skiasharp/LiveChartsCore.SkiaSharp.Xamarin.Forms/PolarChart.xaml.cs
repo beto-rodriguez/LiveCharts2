@@ -54,7 +54,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// <summary>
     /// The core
     /// </summary>
-    protected Chart<SkiaSharpDrawingContext>? core;
+    protected Chart? core;
 
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
@@ -392,7 +392,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {

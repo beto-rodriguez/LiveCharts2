@@ -63,7 +63,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     protected IChartTooltip? tooltip;
 
     private MotionCanvas? _avaloniaCanvas;
-    private Chart<SkiaSharpDrawingContext>? _core;
+    private Chart? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
@@ -338,7 +338,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     bool IChartView.DesignerMode => Design.IsDesignMode;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;

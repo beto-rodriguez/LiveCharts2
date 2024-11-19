@@ -36,7 +36,7 @@ namespace LiveChartsCore;
 /// Defines a pie chart.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="Chart{TDrawingContext}" />
+/// <seealso cref="Chart" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
 /// </remarks>
@@ -46,16 +46,16 @@ namespace LiveChartsCore;
 public class PieChart<TDrawingContext>(
     IPieChartView<TDrawingContext> view,
     Action<LiveChartsSettings> defaultPlatformConfig,
-    CoreMotionCanvas canvas) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view, ChartKind.Pie)
+    CoreMotionCanvas canvas) : Chart(canvas, defaultPlatformConfig, view, ChartKind.Pie)
     where TDrawingContext : DrawingContext
 {
     private int _nextSeries = 0;
 
-    ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
+    ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<IChartSeries> Series =>
         view.Series?.Cast<IChartSeries>() ?? [];
 
-    ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
+    ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<IChartSeries> VisibleSeries =>
         Series.Where(x => x.IsVisible);
 
@@ -247,7 +247,7 @@ public class PieChart<TDrawingContext>(
         _isFirstDraw = false;
     }
 
-    /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
+    /// <inheritdoc cref="Chart.Unload"/>
     public override void Unload()
     {
         base.Unload();

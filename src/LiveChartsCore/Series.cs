@@ -57,7 +57,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// The subscribed to
     /// </summary>
-    protected readonly HashSet<IChart> subscribedTo = [];
+    protected readonly HashSet<Chart> subscribedTo = [];
 
     /// <summary>
     /// The implements icp
@@ -87,7 +87,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <summary>
     /// The custom measure handler.
     /// </summary>
-    protected Action<Chart<TDrawingContext>>? _customMeasureHandler = null;
+    protected Action<Chart>? _customMeasureHandler = null;
 
     /// <summary>
     /// Indicates whether the geometry svg changed.
@@ -296,8 +296,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries.GetStackGroup"/>
     public virtual int GetStackGroup() => 0;
 
-    /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
-    protected IEnumerable<ChartPoint> Fetch(IChart chart)
+    /// <inheritdoc cref="ISeries.Fetch(Chart)"/>
+    protected IEnumerable<ChartPoint> Fetch(Chart chart)
     {
         _ = subscribedTo.Add(chart);
         return DataFactory.Fetch(this, chart);
@@ -310,9 +310,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         ChartPointPointerDown?.Invoke(chart, new ChartPoint<TModel, TVisual, TLabel>(points.FindClosestTo<TModel, TVisual, TLabel>(pointer)!));
     }
 
-    ///<inheritdoc cref="ISeries.FindHitPoints(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    ///<inheritdoc cref="ISeries.FindHitPoints(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected virtual IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+        Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
         var query =
             Fetch(chart)
@@ -333,10 +333,10 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         return query;
     }
 
-    IEnumerable<ChartPoint> ISeries.Fetch(IChart chart) => Fetch(chart);
+    IEnumerable<ChartPoint> ISeries.Fetch(Chart chart) => Fetch(chart);
 
     IEnumerable<ChartPoint> ISeries.FindHitPoints(
-        IChart chart,
+        Chart chart,
         LvcPoint pointerPosition,
         FindingStrategy strategy,
         FindPointFor findPointFor) =>
@@ -367,8 +367,8 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         ? null
         : DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
 
-    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
-    public override void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
         DataFactory?.Dispose(chart);

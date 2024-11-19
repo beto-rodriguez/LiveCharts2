@@ -109,8 +109,8 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// </summary>
     public event VisualElementHandler? PointerDown;
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         //if (chart is CartesianChart<TDrawingContext> cc)
         //{
@@ -134,7 +134,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// Measures the element and returns the size.
     /// </summary>
     /// <param name = "chart" > The chart.</param>
-    public abstract LvcSize Measure(IChart chart);
+    public abstract LvcSize Measure(Chart chart);
 
     /// <summary>
     /// Called when [paint changed].
@@ -151,7 +151,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// Called when the visual is drawn.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    protected internal abstract void OnInvalidated(IChart chart);
+    protected internal abstract void OnInvalidated(Chart chart);
 
     /// <summary>
     /// Sets the parent to all the geometries in the visual.
@@ -185,7 +185,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// <param name="chart">The chart.</param>
     /// <param name="point">The point in the UI.</param>
     /// <returns>The visual or visuals touched by the point.</returns>
-    protected internal virtual IEnumerable<CoreVisualElement> IsHitBy(IChart chart, LvcPoint point)
+    protected internal virtual IEnumerable<CoreVisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 

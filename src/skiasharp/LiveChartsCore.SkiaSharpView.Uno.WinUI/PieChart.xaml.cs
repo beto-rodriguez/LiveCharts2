@@ -48,7 +48,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
 public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 {
-    private Chart<SkiaSharpDrawingContext>? _core;
+    private Chart? _core;
     private MotionCanvas? _canvas;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
@@ -349,7 +349,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
         => _core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)_core;

@@ -173,8 +173,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         set => SetProperty(ref _radiusTooltipLabelFormatter, value);
     }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var polarChart = (PolarChart<TDrawingContext>)chart;
         var angleAxis = polarChart.AngleAxes[ScalesAngleAt];
@@ -454,9 +454,9 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="IPolarSeries.GetBounds(IChart, IPolarAxis, IPolarAxis)"/>
+    /// <inheritdoc cref="IPolarSeries.GetBounds(Chart, IPolarAxis, IPolarAxis)"/>
     public virtual SeriesBounds GetBounds(
-        IChart chart, IPolarAxis angleAxis, IPolarAxis radiusAxis)
+        Chart chart, IPolarAxis angleAxis, IPolarAxis radiusAxis)
     {
         var baseSeriesBounds = DataFactory is null
             ? throw new Exception("A data provider is required")

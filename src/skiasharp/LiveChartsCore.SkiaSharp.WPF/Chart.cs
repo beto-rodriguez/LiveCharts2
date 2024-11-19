@@ -48,7 +48,7 @@ public abstract class Chart : UserControl, IChartView
     /// <summary>
     /// The core
     /// </summary>
-    protected Chart<SkiaSharpDrawingContext>? core;
+    protected LiveChartsCore.Chart? core;
 
     /// <summary>
     /// The canvas
@@ -330,7 +330,7 @@ public abstract class Chart : UserControl, IChartView
     bool IChartView.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+    public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {

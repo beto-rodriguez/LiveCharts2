@@ -48,7 +48,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 {
     #region fields
 
-    private Chart<SkiaSharpDrawingContext>? _core;
+    private Chart? _core;
     private MotionCanvas? _canvas;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
@@ -382,7 +382,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {

@@ -77,8 +77,8 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : CoreVisualEle
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
-    protected internal override void OnInvalidated(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         // NOTE #20231605
         // force the background to have at least an invisible geometry
@@ -114,8 +114,8 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : CoreVisualEle
         BackgroundGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.IsHitBy(IChart, LvcPoint)"/>
-    protected internal override IEnumerable<CoreVisualElement> IsHitBy(IChart chart, LvcPoint point)
+    /// <inheritdoc cref="CoreVisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<CoreVisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -142,12 +142,12 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : CoreVisualEle
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
-    public override LvcSize Measure(IChart chart) =>
+    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart) =>
         Size;
 
-    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
-    public override void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         foreach (var child in Children)
         {

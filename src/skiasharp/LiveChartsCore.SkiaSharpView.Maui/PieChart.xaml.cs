@@ -50,7 +50,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 {
     #region fields
 
-    private Chart<SkiaSharpDrawingContext>? _core;
+    private Chart? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private IChartLegend? _legend = new SKDefaultLegend();
@@ -364,7 +364,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     bool IChartView.DesignerMode => false;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {

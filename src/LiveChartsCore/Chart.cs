@@ -37,10 +37,7 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a chart,
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChart" />
-public abstract class Chart<TDrawingContext> : IChart
-    where TDrawingContext : DrawingContext
+public abstract class Chart
 {
     #region fields
 
@@ -71,7 +68,7 @@ public abstract class Chart<TDrawingContext> : IChart
     #endregion
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Chart{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="Chart"/> class.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
@@ -133,7 +130,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// </value>
     public object MeasureWork { get; protected set; } = new();
 
-    /// <inheritdoc cref="IChart.Kind" />
+    /// <inheritdoc cref="Kind" />
     public ChartKind Kind { get; protected set; }
 
     /// <summary>
@@ -172,8 +169,6 @@ public abstract class Chart<TDrawingContext> : IChart
     /// The view.
     /// </value>
     public abstract IChartView View { get; }
-
-    IChartView IChart.View => View;
 
     /// <summary>
     /// The series context
@@ -269,11 +264,9 @@ public abstract class Chart<TDrawingContext> : IChart
     public IEnumerable<ChartElement> VisualElements { get; protected set; } =
         [];
 
-    CoreMotionCanvas IChart.Canvas => Canvas;
-
     #endregion region
 
-    /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
+    /// <inheritdoc cref="Update(ChartUpdateParams?)" />
     public virtual void Update(ChartUpdateParams? chartUpdateParams = null)
     {
         chartUpdateParams ??= new ChartUpdateParams();
@@ -538,7 +531,7 @@ public abstract class Chart<TDrawingContext> : IChart
         _ = _toDeleteElements.Remove(element);
     }
 
-    /// <inheritdoc cref="IChart.GetLegendPosition"/>
+    /// <inheritdoc cref="GetLegendPosition"/>
     public LvcPoint GetLegendPosition()
     {
         var actualChartSize = ControlSize;
@@ -568,7 +561,12 @@ public abstract class Chart<TDrawingContext> : IChart
         return new(x, y);
     }
 
-    bool IChart.IsDrawn(int seriesId) => _drawnSeries.Contains(seriesId);
+    /// <summary>
+    /// Determines whether the specified series is drawn in the UI already for the given chart.
+    /// </summary>
+    /// <param name="seriesId">The series id.</param>
+    /// <returns>A boolean indicating whether the series is drawn.</returns>
+    public bool IsDrawn(int seriesId) => _drawnSeries.Contains(seriesId);
 
     /// <summary>
     /// Collects and deletes from the UI the unused visuals.
@@ -710,16 +708,16 @@ public abstract class Chart<TDrawingContext> : IChart
         return Task.Run(() =>
             View.InvokeOnUIThread(() =>
             {
-                if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
+                //if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
 
-                lock (Canvas.Sync)
-                {
-                    var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
-                    var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
+                //lock (Canvas.Sync)
+                //{
+                //    var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
+                //    var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
 
-                    cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
-                    _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-                }
+                //    cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
+                //    _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                //}
             }));
     }
 
@@ -729,11 +727,11 @@ public abstract class Chart<TDrawingContext> : IChart
         Tooltip?.Hide(this);
         _ = CleanHoveredPoints([]);
 
-        if (this is CartesianChart<TDrawingContext> cartesianChart)
-        {
-            foreach (var ax in cartesianChart.XAxes) ax.ClearCrosshair(cartesianChart);
-            foreach (var ay in cartesianChart.YAxes) ay.ClearCrosshair(cartesianChart);
-        }
+        //if (this is CartesianChart<TDrawingContext> cartesianChart)
+        //{
+        //    foreach (var ax in cartesianChart.XAxes) ax.ClearCrosshair(cartesianChart);
+        //    foreach (var ay in cartesianChart.YAxes) ay.ClearCrosshair(cartesianChart);
+        //}
     }
 
     private void OnCanvasValidated(CoreMotionCanvas chart) => InvokeOnUpdateFinished();

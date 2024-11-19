@@ -85,8 +85,8 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="IBoxSeries.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -281,9 +281,9 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(IChart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
-        IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+        Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
         return strategy == FindingStrategy.ExactMatch
             ? Fetch(chart)
@@ -299,9 +299,9 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
     }
 
-    /// <inheritdoc cref="ICartesianSeries.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
+    /// <inheritdoc cref="ICartesianSeries.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public override SeriesBounds GetBounds(
-        IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+        Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var rawBounds = DataFactory.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
         if (rawBounds.HasData) return rawBounds;

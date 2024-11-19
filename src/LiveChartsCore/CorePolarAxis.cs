@@ -53,7 +53,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <summary>
     /// The active separators
     /// </summary>
-    protected readonly Dictionary<IChart, Dictionary<double, IVisualSeparator<TDrawingContext>>> activeSeparators = [];
+    protected readonly Dictionary<Chart, Dictionary<double, IVisualSeparator<TDrawingContext>>> activeSeparators = [];
 
     internal PolarAxisOrientation _orientation;
     private double _minStep = 0;
@@ -189,8 +189,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <inheritdoc cref="IPolarAxis.Initialized"/>
     public event Action<IPolarAxis>? Initialized;
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var polarChart = (PolarChart<TDrawingContext>)chart;
 
@@ -425,8 +425,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         }
     }
 
-    /// <inheritdoc cref="IPlane.GetNameLabelSize(IChart)"/>
-    public LvcSize GetNameLabelSize(IChart chart)
+    /// <inheritdoc cref="IPlane.GetNameLabelSize(Chart)"/>
+    public LvcSize GetNameLabelSize(Chart chart)
     {
         if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new LvcSize(0, 0);
 
@@ -440,8 +440,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         return textGeometry.Measure(NamePaint);
     }
 
-    /// <inheritdoc cref="IPlane.GetPossibleSize(IChart)"/>
-    public virtual LvcSize GetPossibleSize(IChart chart)
+    /// <inheritdoc cref="IPlane.GetPossibleSize(Chart)"/>
+    public virtual LvcSize GetPossibleSize(Chart chart)
     {
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
@@ -517,7 +517,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    public virtual void Delete(Chart<TDrawingContext> chart)
+    public virtual void Delete(Chart chart)
     {
         if (_labelsPaint is not null)
         {
@@ -533,8 +533,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         _ = activeSeparators.Remove(chart);
     }
 
-    /// <inheritdoc cref="IChartElement.RemoveFromUI(IChart)"/>
-    public override void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
         _animatableBounds = null!;
@@ -549,7 +549,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <param name="scaler">The scale.</param>
     /// <returns></returns>
     protected virtual void SoftDeleteSeparator(
-        Chart<TDrawingContext> chart,
+        Chart chart,
         IVisualSeparator<TDrawingContext> separator,
         PolarScaler scaler)
     {

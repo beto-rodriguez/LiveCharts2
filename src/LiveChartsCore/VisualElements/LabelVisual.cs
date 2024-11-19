@@ -113,8 +113,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : CoreVisualElement
         HorizontalAlignment = Align.Start;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
-    protected internal override void OnInvalidated(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var x = (float)X;
         var y = (float)Y;
@@ -160,8 +160,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : CoreVisualElement
         _labelGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
-    public override LvcSize Measure(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         ApplyTheme<LabelVisual<TLabelGeometry, TDrawingContext>>();
 

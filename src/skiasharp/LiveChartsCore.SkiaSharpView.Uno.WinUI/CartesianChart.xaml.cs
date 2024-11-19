@@ -53,7 +53,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 {
     #region fields
 
-    private Chart<SkiaSharpDrawingContext>? _core;
+    private Chart? _core;
     private MotionCanvas? _motionCanvas;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
@@ -413,7 +413,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext

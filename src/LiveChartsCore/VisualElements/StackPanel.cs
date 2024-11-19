@@ -111,8 +111,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElemen
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
-    /// <inheritdoc cref="CoreVisualElement.IsHitBy(IChart, LvcPoint)"/>
-    protected internal override IEnumerable<CoreVisualElement> IsHitBy(IChart chart, LvcPoint point)
+    /// <inheritdoc cref="CoreVisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<CoreVisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -139,8 +139,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElemen
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
-    protected internal override void OnInvalidated(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var controlSize = Measure(chart);
 
@@ -172,8 +172,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElemen
         BackgroundGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
-    public override LvcSize Measure(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var xl = Padding.Left;
         var yl = Padding.Top;
@@ -282,8 +282,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElemen
         return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
-    public override void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         foreach (var child in Children)
         {

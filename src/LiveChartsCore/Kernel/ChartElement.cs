@@ -56,8 +56,8 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         set => SetProperty(ref _isVisible, value);
     }
 
-    /// <inheritdoc cref="IChartElement.Invalidate(IChart)" />
-    public abstract void Invalidate(IChart chart);
+    /// <inheritdoc cref="IChartElement.Invalidate(Chart)" />
+    public abstract void Invalidate(Chart chart);
 
     /// <inheritdoc cref="IChartElement.RemoveOldPaints(IChartView)" />
     public void RemoveOldPaints(IChartView chart)
@@ -73,8 +73,8 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         _deletingTasks.Clear();
     }
 
-    /// <inheritdoc cref="IChartElement.RemoveFromUI(IChart)" />
-    public virtual void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(Chart)" />
+    public virtual void RemoveFromUI(Chart chart)
     {
         foreach (var item in GetPaintTasks())
         {

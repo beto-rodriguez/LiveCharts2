@@ -84,8 +84,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
-    public override LvcSize Measure(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var maxH = Padding.Top;
         _measuredSizes = new LvcSize[_maxRow + 2, _maxColumn + 2];
@@ -127,8 +127,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
         return new(maxW + Padding.Right, maxH + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement.RemoveFromUI(IChart)"/>
-    public override void RemoveFromUI(IChart chart)
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         foreach (var child in EnumerateChildren())
             chart.RemoveVisual(child.VisualElement);
@@ -180,8 +180,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
                 yield return _positions[r][c];
     }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
-    protected internal override void OnInvalidated(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var controlSize = Measure(chart);
         var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
@@ -262,8 +262,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     protected internal override Paint?[] GetPaintTasks() =>
         [_backgroundPaint];
 
-    /// <inheritdoc cref="CoreVisualElement.IsHitBy(IChart, LvcPoint)"/>
-    protected internal override IEnumerable<CoreVisualElement> IsHitBy(IChart chart, LvcPoint point)
+    /// <inheritdoc cref="CoreVisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<CoreVisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 

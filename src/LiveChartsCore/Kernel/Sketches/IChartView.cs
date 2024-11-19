@@ -42,7 +42,7 @@ public interface IChartView
     /// <value>
     /// The core.
     /// </value>
-    IChart CoreChart { get; }
+    Chart CoreChart { get; }
 
     /// <summary>
     /// Gets whether the control is in designer mode.

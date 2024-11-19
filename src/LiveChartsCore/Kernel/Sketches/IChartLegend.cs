@@ -33,11 +33,11 @@ public interface IChartLegend
     /// Draws the legend for the specified chart.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void Draw(IChart chart);
+    void Draw(Chart chart);
 
     /// <summary>
     /// Measures the control.
     /// </summary>
     /// <param name="chart">The chart that holds the control.</param>
-    LvcSize Measure(IChart chart);
+    LvcSize Measure(Chart chart);
 }

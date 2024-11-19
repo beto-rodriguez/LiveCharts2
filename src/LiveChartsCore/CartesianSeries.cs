@@ -101,9 +101,9 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// <inheritdoc cref="ICartesianSeries.ClippingMode"/>
     public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
 
-    /// <inheritdoc cref="ICartesianSeries.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
+    /// <inheritdoc cref="ICartesianSeries.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(
-        IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+        Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var rawBounds = DataFactory.GetCartesianBounds(chart, this, secondaryAxis, primaryAxis);
         if (rawBounds.HasData) return rawBounds;

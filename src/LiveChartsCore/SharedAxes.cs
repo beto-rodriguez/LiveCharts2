@@ -50,7 +50,7 @@ public static class SharedAxes
                 .Where(x => x != axis)
                 .ToArray();
 
-            axis.MeasureStarted += (IChart chart, ICartesianAxis obj) =>
+            axis.MeasureStarted += (Chart chart, ICartesianAxis obj) =>
             {
                 var cc = (CartesianChart<TDrawingContext>)chart;
                 cc.SubscribeSharedEvents(sharedInstance);

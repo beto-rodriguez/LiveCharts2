@@ -84,8 +84,8 @@ public class SKDefaultLegend : IChartLegend
     /// </summary>
     public double TextSize { get; set; } = 15;
 
-    /// <inheritdoc cref="IChartLegend.Draw(IChart)"/>
-    public void Draw(IChart chart)
+    /// <inheritdoc cref="IChartLegend.Draw(Chart)"/>
+    public void Draw(Chart chart)
     {
         var legendPosition = chart.GetLegendPosition();
 
@@ -96,14 +96,14 @@ public class SKDefaultLegend : IChartLegend
         if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
     }
 
-    /// <inheritdoc cref="IChartLegend.Measure(IChart)"/>
-    public LvcSize Measure(IChart chart)
+    /// <inheritdoc cref="IChartLegend.Measure(Chart)"/>
+    public LvcSize Measure(Chart chart)
     {
         BuildLayout(chart);
         return _stackPanel.Measure(chart);
     }
 
-    private void BuildLayout(IChart chart)
+    private void BuildLayout(Chart chart)
     {
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
         if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;

@@ -77,8 +77,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [_geometry, _labelGeometry];
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
-    protected internal override void OnInvalidated(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var l = GetActualCoordinate();
         var size = Measure(chart);
@@ -167,8 +167,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         _geometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
-    public override LvcSize Measure(IChart chart)
+    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var w = (float)Width;
         var h = (float)Height;

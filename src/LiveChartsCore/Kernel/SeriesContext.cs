@@ -36,7 +36,7 @@ namespace LiveChartsCore.Kernel;
 /// </remarks>
 /// <param name="series">The series.</param>
 /// <param name="chart">The chart</param>
-public class SeriesContext(IEnumerable<IChartSeries> series, IChart chart)
+public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
 {
     private int _columnsCount = 0;
     private int _rowsCount = 0;

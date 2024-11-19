@@ -83,8 +83,8 @@ public class SKDefaultTooltip : IChartTooltip
     /// </summary>
     public double TextSize { get; set; } = 16;
 
-    /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, IChart)" />
-    public void Show(IEnumerable<ChartPoint> foundPoints, IChart chart)
+    /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
+    public void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
         const int wedge = 10;
 
@@ -227,7 +227,7 @@ public class SKDefaultTooltip : IChartTooltip
     }
 
     /// <inheritdoc cref="IChartTooltip.Hide"/>
-    public void Hide(IChart chart)
+    public void Hide(Chart chart)
     {
         if (chart is null || _panel is null) return;
         chart.RemoveVisual(_panel);

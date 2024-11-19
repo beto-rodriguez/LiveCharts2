@@ -110,8 +110,8 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         set => SetPaintProperty(ref _downFill, value);
     }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -325,9 +325,9 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
-    /// <inheritdoc cref="ICartesianSeries.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
+    /// <inheritdoc cref="ICartesianSeries.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public override SeriesBounds GetBounds(
-        IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+        Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var rawBounds = DataFactory.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
         if (rawBounds.HasData) return rawBounds;

@@ -163,7 +163,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
+    /// <see cref="Chart.AnimationsSpeed"/> property will be used.
     /// </summary>
     /// <value>
     /// The animations speed.
@@ -172,7 +172,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the easing function to animate the series, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.EasingFunction"/> property will be used.
+    /// <see cref="Chart.EasingFunction"/> property will be used.
     /// </summary>
     /// <value>
     /// The easing function.
@@ -220,12 +220,12 @@ public interface IPlane : IChartElement
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    LvcSize GetPossibleSize(IChart chart);
+    LvcSize GetPossibleSize(Chart chart);
 
     /// <summary>
     /// Gets the size of the axis name label.
     /// </summary>
     /// <param name="chart">the chart.</param>
     /// <returns></returns>
-    LvcSize GetNameLabelSize(IChart chart);
+    LvcSize GetNameLabelSize(Chart chart);
 }

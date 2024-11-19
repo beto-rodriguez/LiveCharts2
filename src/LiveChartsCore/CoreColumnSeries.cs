@@ -57,8 +57,8 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
         _isRounded = typeof(IRoundedGeometry).IsAssignableFrom(typeof(TVisual));
     }
 
-    /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
-    public override void Invalidate(IChart chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];

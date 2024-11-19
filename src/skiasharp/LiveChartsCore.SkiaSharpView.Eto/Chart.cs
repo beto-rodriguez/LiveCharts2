@@ -45,7 +45,7 @@ public abstract class Chart : Panel, IChartView
     /// <summary>
     /// The core
     /// </summary>
-    protected Chart<SkiaSharpDrawingContext>? core;
+    protected LiveChartsCore.Chart? core;
 
     /// <summary>
     /// The legend
@@ -175,7 +175,7 @@ public abstract class Chart : Panel, IChartView
     bool IChartView.DesignerMode => false;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+    public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {
