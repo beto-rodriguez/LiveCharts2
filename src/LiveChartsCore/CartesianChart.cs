@@ -55,7 +55,7 @@ public class CartesianChart<TDrawingContext>(
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;
-    private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
+    private CoreDrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
     private HashSet<CartesianChart<TDrawingContext>>? _sharedEvents;
