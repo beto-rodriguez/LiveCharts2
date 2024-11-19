@@ -40,6 +40,7 @@ using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Graphics;
+using Paint = LiveChartsCore.Painting.Paint;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -386,7 +387,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
 
     LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
+    /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => canvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
@@ -473,21 +474,21 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(LegendPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    /// <inheritdoc cref="IChartView.LegendTextPaint" />
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double? LegendTextSize
     {
         get => (double?)GetValue(LegendTextSizeProperty);
@@ -504,21 +505,21 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    /// <inheritdoc cref="IChartView.TooltipTextPaint" />
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    /// <inheritdoc cref="IChartView.TooltipTextSize" />
     public double? TooltipTextSize
     {
         get => (double?)GetValue(TooltipTextSizeProperty);
@@ -528,7 +529,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip? Tooltip { get => _tooltip; set { _tooltip = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
@@ -628,10 +629,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, new(point)));
     }
 
-    void IChartView.InvokeOnUIThread(Action action)
-    {
+    void IChartView.InvokeOnUIThread(Action action) =>
         _ = MainThread.InvokeOnMainThreadAsync(action);
-    }
 
     /// <summary>
     /// Initializes the core.
@@ -692,15 +691,11 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         _core?.InvokePointerMove(location);
     }
 
-    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
-    {
+    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) =>
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
-    }
 
-    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
-    {
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
-    }
 
     private void OnSizeChanged(object? sender, EventArgs e)
     {
@@ -708,10 +703,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         _core.Update();
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
         UpdateFinished?.Invoke(this);
-    }
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
@@ -724,10 +717,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
         Measuring?.Invoke(this);
-    }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
@@ -735,7 +726,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
-        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+        ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
     }
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
@@ -756,8 +747,6 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
             VisualElementsPointerDownCommand.Execute(args);
     }
 
-    void IChartView.Invalidate()
-    {
+    void IChartView.Invalidate() =>
         CoreCanvas.Invalidate();
-    }
 }

@@ -28,7 +28,6 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -37,9 +36,8 @@ using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Devices;
 using SkiaSharp;
-using SkiaSharp.Views.Maui;
+using Paint = LiveChartsCore.Painting.Paint;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -47,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
     /// <summary>
@@ -122,7 +120,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     public static readonly BindableProperty FillProperty =
        BindableProperty.Create(
            nameof(Fill), typeof(Paint), typeof(GeoMap),
-            new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true },
+            new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false },
             BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
@@ -205,7 +203,7 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         get => (Paint)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.IsStroke = false;
             SetValue(FillProperty, value);
         }
     }
@@ -230,15 +228,11 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
         _ = MainThread.InvokeOnMainThreadAsync(action);
-    }
 
-    private void GeoMap_SizeChanged(object? sender, EventArgs e)
-    {
+    private void GeoMap_SizeChanged(object? sender, EventArgs e) =>
         _core?.Update();
-    }
 
     private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
     {
