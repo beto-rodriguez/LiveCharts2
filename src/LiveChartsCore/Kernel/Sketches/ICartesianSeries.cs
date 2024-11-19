@@ -28,10 +28,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a Cartesian series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface ICartesianSeries<TDrawingContext> : IChartSeries
-    where TDrawingContext : DrawingContext
+public interface ICartesianSeries : IChartSeries
 {
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
@@ -82,5 +80,5 @@ public interface ICartesianSeries<TDrawingContext> : IChartSeries
     /// <param name="x">The x.</param>
     /// <param name="y">The y.</param>
     /// <returns>the series bounds</returns>
-    SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y);
+    SeriesBounds GetBounds(IChart chart, ICartesianAxis x, ICartesianAxis y);
 }

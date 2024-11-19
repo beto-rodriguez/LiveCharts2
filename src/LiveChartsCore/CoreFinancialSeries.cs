@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam> 
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-/// <seealso cref="ICartesianSeries{TDrawingContext}" />
+/// <seealso cref="ICartesianSeries" />
 /// <seealso cref="IHeatSeries{TDrawingContext}" />
 public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
@@ -326,9 +326,9 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             everFetched, cartesianChart.View, primaryScale, secondaryScale, SoftDeleteOrDisposePoint);
     }
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
+    /// <inheritdoc cref="ICartesianSeries.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
     public override SeriesBounds GetBounds(
-        CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+        IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var rawBounds = DataFactory.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
         if (rawBounds.HasData) return rawBounds;

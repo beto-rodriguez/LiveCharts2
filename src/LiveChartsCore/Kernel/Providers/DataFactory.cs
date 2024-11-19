@@ -27,7 +27,6 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Kernel.Providers;
 
@@ -119,7 +118,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="plane2">The y.</param>
     /// <returns></returns>
     public virtual SeriesBounds GetCartesianBounds(
-        Chart<TDrawingContext> chart,
+        IChart chart,
         IChartSeries series,
         IPlane plane1,
         IPlane plane2)
@@ -201,7 +200,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <param name="y">The y.</param>
     /// <returns></returns>
     public virtual SeriesBounds GetFinancialBounds(
-        CartesianChart<TDrawingContext> chart,
+        IChart chart,
         IChartSeries series,
         ICartesianAxis x,
         ICartesianAxis y)
@@ -266,7 +265,8 @@ public class DataFactory<TModel, TDrawingContext>
     /// <returns></returns>
     /// <exception cref="NullReferenceException">Unexpected null stacker</exception>
     public virtual SeriesBounds GetPieBounds(
-        PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
+        IChart chart,
+        IPieSeries<TDrawingContext> series)
     {
         var stack =
             chart.SeriesContext.GetStackPosition(series, series.GetStackGroup())

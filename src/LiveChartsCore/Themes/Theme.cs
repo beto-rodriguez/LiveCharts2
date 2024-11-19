@@ -97,7 +97,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = [];
+    public List<Action<ICartesianSeries>> CartesianSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stepline series builder.
@@ -278,7 +278,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.CartesianSeries) == SeriesProperties.CartesianSeries)
         {
-            foreach (var rule in CartesianSeriesBuilder) rule((ICartesianSeries<TDrawingContext>)series);
+            foreach (var rule in CartesianSeriesBuilder) rule((ICartesianSeries)series);
         }
 
         if ((series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar &&

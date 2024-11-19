@@ -29,7 +29,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface IHeatSeries<TDrawingContext> : ICartesianSeries<TDrawingContext>
+public interface IHeatSeries<TDrawingContext> : ICartesianSeries
     where TDrawingContext : DrawingContext
 {
     /// <summary>

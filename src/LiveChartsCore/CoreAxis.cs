@@ -685,7 +685,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart,
                     cartesianChart.VisibleSeries
-                        .Cast<ICartesianSeries<TDrawingContext>>()
+                        .Cast<ICartesianSeries>()
                         .Where(s => s.ScalesXAt == axisIndex));
 
                 var c = closestPoint?.Coordinate;
@@ -711,7 +711,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart,
                     cartesianChart.VisibleSeries
-                        .Cast<ICartesianSeries<TDrawingContext>>()
+                        .Cast<ICartesianSeries>()
                         .Where(s => s.ScalesYAt == axisIndex));
 
                 var c = closestPoint?.Coordinate;
@@ -815,7 +815,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private static ChartPoint? FindClosestPoint(
         LvcPoint pointerPosition,
         CartesianChart<TDrawingContext> cartesianChart,
-        IEnumerable<ICartesianSeries<TDrawingContext>> allSeries)
+        IEnumerable<ICartesianSeries> allSeries)
     {
         ChartPoint? closestPoint = null;
         foreach (var series in allSeries)

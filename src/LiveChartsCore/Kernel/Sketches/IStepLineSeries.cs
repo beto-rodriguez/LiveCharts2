@@ -30,7 +30,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface IStepLineSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled, ICartesianSeries<TDrawingContext>
+public interface IStepLineSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled, ICartesianSeries
     where TDrawingContext : DrawingContext
 {
     /// <summary>

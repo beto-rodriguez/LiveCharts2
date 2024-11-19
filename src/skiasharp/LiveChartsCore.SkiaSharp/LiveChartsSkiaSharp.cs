@@ -127,7 +127,7 @@ public static class LiveChartsSkiaSharp
         {
             dataCoordinates = cartesianChart.ScalePixelsToData(new LvcPointD(location));
 
-            var cartesianSeries = (ICartesianSeries<SkiaSharpDrawingContext>)target.Context.Series;
+            var cartesianSeries = (ICartesianSeries)target.Context.Series;
 
             if (target.Context.Series.SeriesProperties.HasFlag(SeriesProperties.PrimaryAxisHorizontalOrientation))
             {

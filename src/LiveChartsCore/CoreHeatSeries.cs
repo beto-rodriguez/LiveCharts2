@@ -70,7 +70,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         YToolTipLabelFormatter = (point) =>
         {
             var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
-            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+            var cs = (ICartesianSeries)point.Context.Series;
 
             var ax = cc.YAxes[cs.ScalesYAt];
 
@@ -272,8 +272,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
-    public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(IChart, ICartesianAxis, ICartesianAxis)"/>
+    public override SeriesBounds GetBounds(IChart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
         var b = seriesBounds.Bounds.TertiaryBounds;

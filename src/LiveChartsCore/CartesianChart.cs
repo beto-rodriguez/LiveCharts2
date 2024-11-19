@@ -449,7 +449,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
 
-        foreach (var series in VisibleSeries.Cast<ICartesianSeries<TDrawingContext>>())
+        foreach (var series in VisibleSeries.Cast<ICartesianSeries>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
