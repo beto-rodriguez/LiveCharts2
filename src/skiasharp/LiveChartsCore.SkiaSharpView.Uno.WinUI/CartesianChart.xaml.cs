@@ -205,7 +205,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty DrawMarginFrameProperty =
         DependencyProperty.Register(
-            nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame<SkiaSharpDrawingContext>), typeof(CartesianChart), new PropertyMetadata(null));
+            nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame), typeof(CartesianChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The zoom mode property
@@ -496,9 +496,9 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-    public CoreDrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+    public CoreDrawMarginFrame? DrawMarginFrame
     {
-        get => (CoreDrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
+        get => (CoreDrawMarginFrame)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 

@@ -222,7 +222,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty DrawMarginFrameProperty =
         BindableProperty.Create(
-            nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame<SkiaSharpDrawingContext>), typeof(CartesianChart), null,
+            nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame), typeof(CartesianChart), null,
             BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
@@ -502,9 +502,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-    public CoreDrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+    public CoreDrawMarginFrame? DrawMarginFrame
     {
-        get => (CoreDrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
+        get => (CoreDrawMarginFrame)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 

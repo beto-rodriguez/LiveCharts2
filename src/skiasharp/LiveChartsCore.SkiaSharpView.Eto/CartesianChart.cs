@@ -47,7 +47,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
     private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = [];
-    private CoreDrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
+    private CoreDrawMarginFrame? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
     /// <summary>
@@ -142,7 +142,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-    public CoreDrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+    public CoreDrawMarginFrame? DrawMarginFrame
     {
         get => _drawMarginFrame;
         set

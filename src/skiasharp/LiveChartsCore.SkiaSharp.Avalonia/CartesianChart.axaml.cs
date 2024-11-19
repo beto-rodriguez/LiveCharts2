@@ -176,8 +176,8 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <summary>
     /// The draw margin frame property
     /// </summary>
-    public static readonly AvaloniaProperty<CoreDrawMarginFrame<SkiaSharpDrawingContext>?> DrawMarginFrameProperty =
-        AvaloniaProperty.Register<CartesianChart, CoreDrawMarginFrame<SkiaSharpDrawingContext>?>(
+    public static readonly AvaloniaProperty<CoreDrawMarginFrame?> DrawMarginFrameProperty =
+        AvaloniaProperty.Register<CartesianChart, CoreDrawMarginFrame?>(
             nameof(DrawMarginFrame), null, inherits: true);
 
     /// <summary>
@@ -439,9 +439,9 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-    public CoreDrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+    public CoreDrawMarginFrame? DrawMarginFrame
     {
-        get => (CoreDrawMarginFrame<SkiaSharpDrawingContext>?)GetValue(DrawMarginFrameProperty);
+        get => (CoreDrawMarginFrame?)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 

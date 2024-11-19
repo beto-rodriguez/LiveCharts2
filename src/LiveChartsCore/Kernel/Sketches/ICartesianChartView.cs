@@ -80,7 +80,7 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// <value>
     /// The draw margin frame.
     /// </value>
-    CoreDrawMarginFrame<TDrawingContext>? DrawMarginFrame { get; set; }
+    CoreDrawMarginFrame? DrawMarginFrame { get; set; }
 
     /// <summary>
     /// Gets or sets the zoom mode.

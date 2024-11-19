@@ -57,7 +57,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The draw margin frame builder.
     /// </value>
-    public List<Action<CoreDrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = [];
+    public List<Action<CoreDrawMarginFrame>> DrawMarginFrameBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the series builder.
@@ -386,7 +386,7 @@ public class Theme<TDrawingContext>
     /// Applies the theme to  a draw margin.
     /// </summary>
     /// <param name="drawMarginFrame"></param>
-    public void ApplyStyleToDrawMargin(CoreDrawMarginFrame<TDrawingContext> drawMarginFrame)
+    public void ApplyStyleToDrawMargin(CoreDrawMarginFrame drawMarginFrame)
     {
         foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
     }

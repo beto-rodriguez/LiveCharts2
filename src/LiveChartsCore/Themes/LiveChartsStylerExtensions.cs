@@ -50,7 +50,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    /// Defines a style builder for <see cref="CoreDrawMarginFrame{TDrawingContext}"/> objects.
+    /// Defines a style builder for <see cref="CoreDrawMarginFrame"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -58,7 +58,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForDrawMargin<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<CoreDrawMarginFrame<TDrawingContext>> predicate)
+        Action<CoreDrawMarginFrame> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.DrawMarginFrameBuilder.Add(predicate);
