@@ -33,6 +33,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
@@ -434,7 +435,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
                 ? throw new Exception("Canvas not found")
                 : new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight };
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
+    /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
 
     CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
@@ -570,21 +571,21 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         set => SetValue(LegendPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    /// <inheritdoc cref="IChartView.LegendTextPaint" />
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double? LegendTextSize
     {
         get => (double?)GetValue(LegendTextSizeProperty);
@@ -601,21 +602,21 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    /// <inheritdoc cref="IChartView.TooltipTextPaint" />
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    /// <inheritdoc cref="IChartView.TooltipTextSize" />
     public double? TooltipTextSize
     {
         get => (double?)GetValue(TooltipTextSizeProperty);
@@ -625,7 +626,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip? Tooltip { get; set; } = new SKDefaultTooltip();
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
@@ -791,15 +792,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         _core.Update();
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         _core?.Update();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         _core?.Update();
-    }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
@@ -854,15 +851,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
     }
 
-    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
-    {
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
-    }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
         UpdateFinished?.Invoke(this);
-    }
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
@@ -875,15 +868,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
         Measuring?.Invoke(this);
-    }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
+    private void OnUnloaded(object sender, RoutedEventArgs e) =>
         _core?.Unload();
-    }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
@@ -899,7 +888,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
-        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+        ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
     }
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
@@ -920,8 +909,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
             VisualElementsPointerDownCommand.Execute(args);
     }
 
-    void IChartView.Invalidate()
-    {
+    void IChartView.Invalidate() =>
         CoreCanvas.Invalidate();
-    }
 }
