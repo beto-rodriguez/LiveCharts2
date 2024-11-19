@@ -129,7 +129,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = [];
+    public List<Action<IPolarSeries>> PolarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -137,7 +137,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarLineSeries<TDrawingContext>>> PolarLineSeriesBuilder { get; set; } = [];
+    public List<Action<IPolarLineSeries>> PolarLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -145,7 +145,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = [];
+    public List<Action<IPolarSeries>> StackedPolarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -349,7 +349,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Polar) == SeriesProperties.Polar)
         {
-            var polarSeries = (IPolarSeries<TDrawingContext>)series;
+            var polarSeries = (IPolarSeries)series;
             foreach (var rule in PolarSeriesBuilder) rule(polarSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
@@ -360,7 +360,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.PolarLine)
         {
-            var polarSeries = (IPolarLineSeries<TDrawingContext>)series;
+            var polarSeries = (IPolarLineSeries)series;
             foreach (var rule in PolarLineSeriesBuilder) rule(polarSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)

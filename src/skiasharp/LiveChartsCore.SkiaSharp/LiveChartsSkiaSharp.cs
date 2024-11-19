@@ -165,7 +165,7 @@ public static class LiveChartsSkiaSharp
         {
             dataCoordinates = polarChart.ScalePixelsToData(new LvcPointD(location));
 
-            var polarSeries = (IPolarSeries<SkiaSharpDrawingContext>)target.Context.Series;
+            var polarSeries = (IPolarSeries)target.Context.Series;
 
             var angleAxis = polarChart.Core.AngleAxes[polarSeries.ScalesAngleAt];
             var radiusAxis = polarChart.Core.RadiusAxes[polarSeries.ScalesRadiusAt];

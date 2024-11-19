@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
-    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
+    : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPolarLineSeries, IPolarSeries
         where TPathGeometry : IVectorGeometry<CubicBezierSegment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
@@ -105,10 +105,10 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <inheritdoc cref="ILineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
-    /// <inheritdoc cref="IPolarSeries{TDrawingContext}.ScalesAngleAt"/>
+    /// <inheritdoc cref="IPolarSeries.ScalesAngleAt"/>
     public int ScalesAngleAt { get => _scalesAngleAt; set => SetProperty(ref _scalesAngleAt, value); }
 
-    /// <inheritdoc cref="IPolarSeries{TDrawingContext}.ScalesRadiusAt"/>
+    /// <inheritdoc cref="IPolarSeries.ScalesRadiusAt"/>
     public int ScalesRadiusAt { get => _scalesRadiusAt; set => SetProperty(ref _scalesRadiusAt, value); }
 
     /// <inheritdoc cref="ILineSeries.LineSmoothness"/>
@@ -141,10 +141,10 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         set => SetPaintProperty(ref _geometryStroke, value, true);
     }
 
-    /// <inheritdoc cref="IPolarLineSeries{TDrawingContext}.IsClosed"/>
+    /// <inheritdoc cref="IPolarLineSeries.IsClosed"/>
     public bool IsClosed { get => _isClosed; set => SetProperty(ref _isClosed, value); }
 
-    /// <inheritdoc cref="IPolarSeries{TDrawingContext}.DataLabelsPosition"/>
+    /// <inheritdoc cref="IPolarSeries.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
     /// <summary>
@@ -454,9 +454,9 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="IPolarSeries{TDrawingContext}.GetBounds(PolarChart{TDrawingContext}, IPolarAxis, IPolarAxis)"/>
+    /// <inheritdoc cref="IPolarSeries.GetBounds(IChart, IPolarAxis, IPolarAxis)"/>
     public virtual SeriesBounds GetBounds(
-        PolarChart<TDrawingContext> chart, IPolarAxis angleAxis, IPolarAxis radiusAxis)
+        IChart chart, IPolarAxis angleAxis, IPolarAxis radiusAxis)
     {
         var baseSeriesBounds = DataFactory is null
             ? throw new Exception("A data provider is required")
@@ -465,7 +465,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         if (baseSeriesBounds.HasData) return baseSeriesBounds;
         var baseBounds = baseSeriesBounds.Bounds;
 
-        var tickPrimary = radiusAxis.GetTick(chart, baseBounds.VisiblePrimaryBounds);
+        var tickPrimary = radiusAxis.GetTick((PolarChart<TDrawingContext>)chart, baseBounds.VisiblePrimaryBounds);
 
         var tp = tickPrimary.Value * DataPadding.Y;
 
@@ -570,7 +570,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         if (label is null)
         {
             var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
-            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+            var cs = (IPolarSeries)point.Context.Series;
 
             var ax = cc.RadiusAxes[cs.ScalesRadiusAt];
 
@@ -593,7 +593,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         if (label is null)
         {
             var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
-            var cs = (IPolarSeries<TDrawingContext>)point.Context.Series;
+            var cs = (IPolarSeries)point.Context.Series;
 
             var ax = cc.AngleAxes[cs.ScalesAngleAt];
 

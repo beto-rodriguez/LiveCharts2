@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -28,10 +27,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a polar line series plot.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface IPolarLineSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled, IPolarSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IPolarLineSeries : IPolarSeries, IStrokedAndFilled
 {
     /// <summary>
     /// Gets or sets a value indicating whether this series path is closed, default is true.

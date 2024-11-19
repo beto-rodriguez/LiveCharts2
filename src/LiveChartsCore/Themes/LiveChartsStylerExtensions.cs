@@ -354,7 +354,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPolarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IPolarSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -362,7 +362,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForPolaSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IPolarSeries<TDrawingContext>> predicate)
+        Action<IPolarSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.PolarSeriesBuilder.Add(predicate);
@@ -370,7 +370,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPolarLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IPolarLineSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -378,7 +378,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForPolarLineSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IPolarLineSeries<TDrawingContext>> predicate)
+        Action<IPolarLineSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.PolarLineSeriesBuilder.Add(predicate);

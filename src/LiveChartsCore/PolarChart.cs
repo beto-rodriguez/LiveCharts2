@@ -228,7 +228,7 @@ public class PolarChart<TDrawingContext>(
 
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
-        foreach (var series in VisibleSeries.Cast<IPolarSeries<TDrawingContext>>())
+        foreach (var series in VisibleSeries.Cast<IPolarSeries>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
@@ -318,7 +318,7 @@ public class PolarChart<TDrawingContext>(
         {
             float mt = 0, mb = 0, ml = 0, mr = 0;
 
-            foreach (var series in VisibleSeries.Cast<IPolarSeries<TDrawingContext>>())
+            foreach (var series in VisibleSeries.Cast<IPolarSeries>())
             {
                 var scaler = new PolarScaler(
                     DrawMarginLocation, DrawMarginSize, AngleAxes[series.ScalesAngleAt], RadiusAxes[series.ScalesRadiusAt],
