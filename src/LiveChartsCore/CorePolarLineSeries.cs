@@ -303,11 +303,11 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
                 var y = cp.Y;
 
                 var visual =
-                    (BezierVisualPoint<TDrawingContext, TVisual>?)data.TargetPoint.Context.AdditionalVisuals;
+                    (BezierVisualPoint<TVisual>?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {
-                    var v = new BezierVisualPoint<TDrawingContext, TVisual>();
+                    var v = new BezierVisualPoint<TVisual>();
 
                     visual = v;
 
@@ -723,7 +723,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not BezierVisualPoint<TDrawingContext, TVisual> visual)
+        if (chartPoint.Context.AdditionalVisuals is not BezierVisualPoint<TVisual> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
@@ -737,7 +737,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <param name="scaler">The scaler.</param>
     protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, PolarScaler scaler)
     {
-        var visual = (BezierVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
+        var visual = (BezierVisualPoint<TVisual>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -926,7 +926,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         {
             if (point.IsEmpty || !IsVisible)
             {
-                if (point.Context.Visual is BezierVisualPoint<TDrawingContext, TVisual> visual)
+                if (point.Context.Visual is BezierVisualPoint<TVisual> visual)
                 {
                     var s = scaler.ToPixels(point);
                     var x = s.X;

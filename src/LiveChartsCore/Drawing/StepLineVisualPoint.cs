@@ -27,11 +27,9 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a stepline visual point.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class StepLineVisualPoint<TDrawingContext, TVisual>
+public class StepLineVisualPoint<TVisual>
     where TVisual : ISizedGeometry, new()
-    where TDrawingContext : DrawingContext
 {
     /// <summary>
     /// Gets the geometry.

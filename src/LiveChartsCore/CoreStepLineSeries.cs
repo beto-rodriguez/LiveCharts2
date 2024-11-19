@@ -232,7 +232,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                         ? stacker.GetStack(point).Start
                         : stacker.GetStack(point).NegativeStart;
 
-                var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
+                var visual = (StepLineVisualPoint<TVisual>?)point.Context.AdditionalVisuals;
                 var dp = coordinate.PrimaryValue + s - previousPrimary;
                 var ds = coordinate.SecondaryValue - previousSecondary;
 
@@ -260,7 +260,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
 
                 if (visual is null)
                 {
-                    var v = new StepLineVisualPoint<TDrawingContext, TVisual>();
+                    var v = new StepLineVisualPoint<TVisual>();
                     visual = v;
 
                     if (isFirstDraw)
@@ -557,7 +557,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not StepLineVisualPoint<TDrawingContext, TVisual> visual)
+        if (chartPoint.Context.AdditionalVisuals is not StepLineVisualPoint<TVisual> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
@@ -567,7 +567,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (StepLineVisualPoint<TDrawingContext, TVisual>?)point.Context.AdditionalVisuals;
+        var visual = (StepLineVisualPoint<TVisual>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -642,7 +642,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not StepLineVisualPoint<TDrawingContext, TVisual> visual) return;
+        if (point.Context.Visual is not StepLineVisualPoint<TVisual> visual) return;
 
         var coordinate = point.Coordinate;
 

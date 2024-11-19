@@ -25,13 +25,11 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a line bezier visual point.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>
-    : BezierVisualPoint<TDrawingContext, TVisual>
+public class BezierErrorVisualPoint<TVisual, TErrorGeometry>
+    : BezierVisualPoint<TVisual>
         where TVisual : ISizedGeometry, new()
-        where TDrawingContext : DrawingContext
 {
     /// <summary>
     /// Gets or sets the y error geometry.

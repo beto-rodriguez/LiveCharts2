@@ -260,7 +260,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
                 var visual =
-                    (BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>?)
+                    (BezierErrorVisualPoint<TVisual, TErrorGeometry>?)
                     data.TargetPoint.Context.AdditionalVisuals;
 
                 if (!IsVisible)
@@ -289,7 +289,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 if (visual is null)
                 {
-                    var v = new BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>();
+                    var v = new BezierErrorVisualPoint<TVisual, TErrorGeometry>();
                     if (ErrorPaint is not null)
                     {
                         v.YError = new TErrorGeometry();
@@ -775,7 +775,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry> visual)
+        if (chartPoint.Context.AdditionalVisuals is not BezierErrorVisualPoint<TVisual, TErrorGeometry> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         var easing = EasingFunction ?? chart.EasingFunction;
@@ -790,7 +790,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>?)point.Context.AdditionalVisuals;
+        var visual = (BezierErrorVisualPoint<TVisual, TErrorGeometry>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -830,7 +830,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry> visual) return;
+        if (point.Context.Visual is not BezierErrorVisualPoint<TVisual, TErrorGeometry> visual) return;
 
         var c = point.Coordinate;
 

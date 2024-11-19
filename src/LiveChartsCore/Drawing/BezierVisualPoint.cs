@@ -27,11 +27,9 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a line bezier visual point.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class BezierVisualPoint<TDrawingContext, TVisual>
+public class BezierVisualPoint<TVisual>
     where TVisual : ISizedGeometry, new()
-    where TDrawingContext : DrawingContext
 {
     /// <summary>
     /// Gets the geometry.
