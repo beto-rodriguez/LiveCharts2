@@ -146,7 +146,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IStepLineSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -154,7 +154,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForStepLineSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IStepLineSeries<TDrawingContext>> predicate)
+        Action<IStepLineSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.StepLineSeriesBuilder.Add(predicate);
@@ -162,7 +162,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked <see cref="IStepLineSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -170,7 +170,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForStackedStepLineSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IStepLineSeries<TDrawingContext>> predicate)
+        Action<IStepLineSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.StackedStepLineSeriesBuilder.Add(predicate);
@@ -178,7 +178,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked <see cref="IStepLineSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>

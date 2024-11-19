@@ -105,7 +105,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = [];
+    public List<Action<IStepLineSeries>> StepLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the  stacked stepline series builder.
@@ -113,7 +113,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = [];
+    public List<Action<IStepLineSeries>> StackedStepLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -322,7 +322,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
         {
-            var stepSeries = (IStepLineSeries<TDrawingContext>)series;
+            var stepSeries = (IStepLineSeries)series;
             foreach (var rule in StepLineSeriesBuilder) rule(stepSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)

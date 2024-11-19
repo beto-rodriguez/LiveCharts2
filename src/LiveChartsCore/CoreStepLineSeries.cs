@@ -45,7 +45,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStepLineSeries
         where TPathGeometry : IVectorGeometry<StepLineSegment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
@@ -70,20 +70,20 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         DataPadding = new LvcPoint(0.5f, 1f);
     }
 
-    /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.EnableNullSplitting"/>
+    /// <inheritdoc cref="IStepLineSeries.EnableNullSplitting"/>
     public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
-    /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometrySize"/>
+    /// <inheritdoc cref="IStepLineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
-    /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometryFill"/>
+    /// <inheritdoc cref="IStepLineSeries.GeometryFill"/>
     public Paint? GeometryFill
     {
         get => _geometryFill;
         set => SetPaintProperty(ref _geometryFill, value);
     }
 
-    /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometrySize"/>
+    /// <inheritdoc cref="IStepLineSeries.GeometrySize"/>
     public Paint? GeometryStroke
     {
         get => _geometryStroke;
