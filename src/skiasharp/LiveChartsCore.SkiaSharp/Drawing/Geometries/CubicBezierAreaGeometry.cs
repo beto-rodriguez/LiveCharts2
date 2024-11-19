@@ -31,10 +31,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public class CubicBezierAreaGeometry : VectorGeometry<CubicBezierSegment>
 {
     /// <inheritdoc cref="VectorGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
-    {
+    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment) =>
         path.CubicTo(segment.Xi, segment.Yi, segment.Xm, segment.Ym, segment.Xj, segment.Yj);
-    }
 
     /// <inheritdoc cref="VectorGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)

@@ -30,10 +30,8 @@ namespace LiveChartsCore.Drawing;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment"></typeparam>
-/// <typeparam name="TDrawingContext"></typeparam>
-public interface IVectorGeometry<TSegment, TDrawingContext> : IDrawable
+public interface IVectorGeometry<TSegment> : IDrawable
     where TSegment : IConsecutivePathSegment
-    where TDrawingContext : DrawingContext
 {
     /// <summary>
     /// Gets or sets the commands.

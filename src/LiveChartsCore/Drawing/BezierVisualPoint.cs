@@ -55,7 +55,7 @@ public class BezierVisualPoint<TDrawingContext, TVisual>
     /// <value>
     /// The path.
     /// </value>
-    public IVectorGeometry<CubicBezierSegment, TDrawingContext>? FillPath { get; set; }
+    public IVectorGeometry<CubicBezierSegment>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -63,5 +63,5 @@ public class BezierVisualPoint<TDrawingContext, TVisual>
     /// <value>
     /// The stroke path.
     /// </value>
-    public IVectorGeometry<CubicBezierSegment, TDrawingContext>? StrokePath { get; set; }
+    public IVectorGeometry<CubicBezierSegment>? StrokePath { get; set; }
 }

@@ -55,7 +55,7 @@ public class StepLineVisualPoint<TDrawingContext, TVisual>
     /// <value>
     /// The path.
     /// </value>
-    public IVectorGeometry<StepLineSegment, TDrawingContext>? FillPath { get; set; }
+    public IVectorGeometry<StepLineSegment>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -63,5 +63,5 @@ public class StepLineVisualPoint<TDrawingContext, TVisual>
     /// <value>
     /// The stroke path.
     /// </value>
-    public IVectorGeometry<StepLineSegment, TDrawingContext>? StrokePath { get; set; }
+    public IVectorGeometry<StepLineSegment>? StrokePath { get; set; }
 }

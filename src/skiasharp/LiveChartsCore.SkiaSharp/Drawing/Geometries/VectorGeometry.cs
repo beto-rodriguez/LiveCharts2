@@ -33,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegment, SkiaSharpDrawingContext>
+public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegment>
     where TSegment : class, IAnimatable, IConsecutivePathSegment
 {
     private readonly FloatMotionProperty _pivotProperty;
@@ -52,16 +52,16 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// </summary>
     public LinkedList<TSegment> Commands { get; } = new();
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.ClosingMethod" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment}.ClosingMethod" />
     public VectorClosingMethod ClosingMethod { get; set; }
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Pivot" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment}.Pivot" />
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Stroke"/>
+    /// <inheritdoc cref="IVectorGeometry{TSegment}.Stroke"/>
     public Paint? Stroke { get; set; }
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Fill"/>
+    /// <inheritdoc cref="IVectorGeometry{TSegment}.Fill"/>
     public Paint? Fill { get; set; }
 
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
