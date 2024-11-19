@@ -82,7 +82,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IPieSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -90,7 +90,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForPieSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IPieSeries<TDrawingContext>> predicate)
+        Action<IPieSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.PieSeriesBuilder.Add(predicate);
@@ -98,7 +98,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects when used as gauges.
+    ///  Defines a style builder for <see cref="IPieSeries"/> objects when used as gauges.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -106,7 +106,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForGaugeSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IPieSeries<TDrawingContext>> predicate)
+        Action<IPieSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.GaugeSeriesBuilder.Add(predicate);
@@ -114,7 +114,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects when used as gauges fills.
+    ///  Defines a style builder for <see cref="IPieSeries"/> objects when used as gauges fills.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -122,7 +122,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForGaugeFillSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IPieSeries<TDrawingContext>> predicate)
+        Action<IPieSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.GaugeFillSeriesBuilder.Add(predicate);

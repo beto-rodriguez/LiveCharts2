@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -28,10 +27,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a pie series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface IPieSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled
-    where TDrawingContext : DrawingContext
+public interface IPieSeries : IChartSeries, IStrokedAndFilled
 {
     /// <summary>
     /// Gets or sets the push out, it is the distance in pixels between the center of the control and the pie slice.
@@ -144,5 +141,5 @@ public interface IPieSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    DimensionalBounds GetBounds(PieChart<TDrawingContext> chart);
+    DimensionalBounds GetBounds(IChart chart);
 }

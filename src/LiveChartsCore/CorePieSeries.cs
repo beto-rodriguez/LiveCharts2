@@ -48,7 +48,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     IReadOnlyCollection<TModel>? values,
     bool isGauge = false,
     bool isGaugeFill = false)
-        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
+        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries
             where TDrawingContext : DrawingContext
             where TVisual : class, IDoughnutGeometry, new()
             where TLabel : class, ILabelGeometry, new()
@@ -95,43 +95,43 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.Pushout"/>
+    /// <inheritdoc cref="IPieSeries.Pushout"/>
     public double Pushout { get => _pushout; set => SetProperty(ref _pushout, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.InnerRadius"/>
+    /// <inheritdoc cref="IPieSeries.InnerRadius"/>
     public double InnerRadius { get => _innerRadius; set => SetProperty(ref _innerRadius, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.OuterRadiusOffset"/>
+    /// <inheritdoc cref="IPieSeries.OuterRadiusOffset"/>
     public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
+    /// <inheritdoc cref="IPieSeries.HoverPushout"/>
     public double HoverPushout { get => _hoverPushout; set => SetProperty(ref _hoverPushout, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeInnerRadius"/>
+    /// <inheritdoc cref="IPieSeries.RelativeInnerRadius"/>
     public double RelativeInnerRadius { get => _innerPadding; set => SetProperty(ref _innerPadding, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeOuterRadius"/>
+    /// <inheritdoc cref="IPieSeries.RelativeOuterRadius"/>
     public double RelativeOuterRadius { get => _outerPadding; set => SetProperty(ref _outerPadding, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxRadialColumnWidth"/>
+    /// <inheritdoc cref="IPieSeries.MaxRadialColumnWidth"/>
     public double MaxRadialColumnWidth { get => _maxRadialColW; set => SetProperty(ref _maxRadialColW, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.RadialAlign"/>
+    /// <inheritdoc cref="IPieSeries.RadialAlign"/>
     public RadialAlignment RadialAlign { get => _radialAlign; set => SetProperty(ref _radialAlign, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.CornerRadius"/>
+    /// <inheritdoc cref="IPieSeries.CornerRadius"/>
     public double CornerRadius { get => _cornerRadius; set => SetProperty(ref _cornerRadius, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.InvertedCornerRadius"/>
+    /// <inheritdoc cref="IPieSeries.InvertedCornerRadius"/>
     public bool InvertedCornerRadius { get => _invertedCornerRadius; set => SetProperty(ref _invertedCornerRadius, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
+    /// <inheritdoc cref="IPieSeries.IsFillSeries"/>
     public bool IsFillSeries { get => _isFillSeries; set => SetProperty(ref _isFillSeries, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsRelativeToMinValue"/>
+    /// <inheritdoc cref="IPieSeries.IsRelativeToMinValue"/>
     public bool IsRelativeToMinValue { get => _isRelativeToMin; set => SetProperty(ref _isRelativeToMin, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.DataLabelsPosition"/>
+    /// <inheritdoc cref="IPieSeries.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
     /// <summary>
@@ -448,8 +448,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
     }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
-    public virtual DimensionalBounds GetBounds(PieChart<TDrawingContext> chart) =>
+    /// <inheritdoc cref="IPieSeries.GetBounds(IChart)"/>
+    public virtual DimensionalBounds GetBounds(IChart chart) =>
         DataFactory.GetPieBounds(chart, this).Bounds;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>

@@ -99,7 +99,7 @@ public class PieChart<TDrawingContext>(
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
         return view.Series
-            .Where(series => (series is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
+            .Where(series => (series is IPieSeries pieSeries) && !pieSeries.IsFillSeries)
             .Where(series => series.IsHoverable)
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, FindingStrategy.CompareAll, FindPointFor.HoverEvent));
     }
@@ -156,7 +156,7 @@ public class PieChart<TDrawingContext>(
         IndexBounds = new Bounds();
         PushoutBounds = new Bounds();
 
-        foreach (var series in VisibleSeries.Cast<IPieSeries<TDrawingContext>>())
+        foreach (var series in VisibleSeries.Cast<IPieSeries>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 

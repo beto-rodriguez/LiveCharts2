@@ -291,7 +291,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, IChart chart)
         foreach (var series in series)
         {
             if (!series.IsPieSeries()) continue;
-            var pieSeries = (IPieSeries<TDrawingContext>)series;
+            var pieSeries = (IPieSeries)series;
             if (pieSeries.DataLabelsPosition != PolarLabelsPosition.Outer) continue;
             if (series.DataLabelsPaint is null) continue;
 

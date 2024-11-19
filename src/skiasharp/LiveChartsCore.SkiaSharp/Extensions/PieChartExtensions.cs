@@ -102,7 +102,7 @@ public static class PieChartExtensions
         this IEnumerable<TModel> source,
         Action<TModel, TSeries>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
-            where TSeries : IPieSeries<SkiaSharpDrawingContext>, new()
+            where TSeries : IPieSeries, new()
     {
         var count = source.Count();
         builder ??= (instance, series) => { };
@@ -118,7 +118,7 @@ public static class PieChartExtensions
         int i,
         int count,
         GaugeOptions gaugeOptions)
-            where TSeries : IPieSeries<SkiaSharpDrawingContext>, new()
+            where TSeries : IPieSeries, new()
     {
         var isGauge = gaugeOptions > 0;
         var series = new TSeries();

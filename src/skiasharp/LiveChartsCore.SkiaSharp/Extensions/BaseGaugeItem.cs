@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Extensions;
 /// </summary>
 /// <typeparam name="TSeries">The type of the series.</typeparam>
 public class BaseGaugeItem<TSeries>
-    where TSeries : IPieSeries<SkiaSharpDrawingContext>, new()
+    where TSeries : IPieSeries, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="GaugeItem"/> class.

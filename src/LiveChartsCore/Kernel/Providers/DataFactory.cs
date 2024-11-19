@@ -266,7 +266,7 @@ public class DataFactory<TModel, TDrawingContext>
     /// <exception cref="NullReferenceException">Unexpected null stacker</exception>
     public virtual SeriesBounds GetPieBounds(
         IChart chart,
-        IPieSeries<TDrawingContext> series)
+        IPieSeries series)
     {
         var stack =
             chart.SeriesContext.GetStackPosition(series, series.GetStackGroup())

@@ -73,7 +73,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = [];
+    public List<Action<IPieSeries>> PieSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the gauge series builder.
@@ -81,7 +81,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = [];
+    public List<Action<IPieSeries>> GaugeSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the gauge fill series builder.
@@ -89,7 +89,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = [];
+    public List<Action<IPieSeries>> GaugeFillSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the Cartesian series builder.
@@ -263,16 +263,16 @@ public class Theme<TDrawingContext>
             {
                 if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
                 {
-                    foreach (var rule in GaugeFillSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                    foreach (var rule in GaugeFillSeriesBuilder) rule((IPieSeries)series);
                 }
                 else
                 {
-                    foreach (var rule in GaugeSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                    foreach (var rule in GaugeSeriesBuilder) rule((IPieSeries)series);
                 }
             }
             else
             {
-                foreach (var rule in PieSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                foreach (var rule in PieSeriesBuilder) rule((IPieSeries)series);
             }
         }
 
