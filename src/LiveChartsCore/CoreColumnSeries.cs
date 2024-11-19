@@ -54,7 +54,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0, 1);
-        _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
+        _isRounded = typeof(IRoundedGeometry).IsAssignableFrom(typeof(TVisual));
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
@@ -177,7 +177,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
 
                 if (_isRounded)
                 {
-                    var rounded = (IRoundedGeometry<TDrawingContext>)r;
+                    var rounded = (IRoundedGeometry)r;
                     rounded.BorderRadius = new LvcPoint(rx, ry);
                 }
 
@@ -267,7 +267,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
 
             if (_isRounded)
             {
-                var rounded = (IRoundedGeometry<TDrawingContext>)visual;
+                var rounded = (IRoundedGeometry)visual;
                 rounded.BorderRadius = new LvcPoint(rx, ry);
             }
             visual.RemoveOnCompleted = false;

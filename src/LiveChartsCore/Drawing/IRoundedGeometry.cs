@@ -25,10 +25,8 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a geometry in the user interface with rounded corners.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IGeometry" />
-public interface IRoundedGeometry<TDrawingContext> : IGeometry
-    where TDrawingContext : DrawingContext
+public interface IRoundedGeometry : IGeometry
 {
     /// <summary>
     /// Gets or sets the border radius.

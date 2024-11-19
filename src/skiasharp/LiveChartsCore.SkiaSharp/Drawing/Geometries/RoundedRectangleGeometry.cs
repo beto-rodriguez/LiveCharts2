@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a rounded rectangle geometry.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class RoundedRectangleGeometry : SizedGeometry, IRoundedGeometry<SkiaSharpDrawingContext>
+public class RoundedRectangleGeometry : SizedGeometry, IRoundedGeometry
 {
     private readonly PointMotionProperty _borderRadius;
 
@@ -42,7 +42,7 @@ public class RoundedRectangleGeometry : SizedGeometry, IRoundedGeometry<SkiaShar
         _borderRadius = RegisterMotionProperty(new PointMotionProperty(nameof(BorderRadius), new LvcPoint(8f, 8f)));
     }
 
-    /// <inheritdoc cref="IRoundedGeometry{TDrawingContext}.BorderRadius"/>
+    /// <inheritdoc cref="IRoundedGeometry.BorderRadius"/>
     public LvcPoint BorderRadius { get => _borderRadius.GetMovement(this); set => _borderRadius.SetMovement(value, this); }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
