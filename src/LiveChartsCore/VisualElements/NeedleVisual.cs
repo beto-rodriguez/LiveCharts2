@@ -37,7 +37,7 @@ namespace LiveChartsCore.VisualElements;
 public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TGeometry : INeedleGeometry<TDrawingContext>, new()
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+    where TLabelGeometry : ILabelGeometry, new()
 {
     private Paint? _fill;
     private double _value;

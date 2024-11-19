@@ -40,7 +40,7 @@ public class CoreStackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPa
     : CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

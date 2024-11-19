@@ -129,7 +129,7 @@ public class CandlesticksSeries<TModel, TVisual>
 public class CandlesticksSeries<TModel, TVisual, TLabel>
     : CoreFinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
         where TVisual : class, IFinancialGeometry, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.

@@ -143,7 +143,7 @@ public class PieSeries<TModel, TVisual>
 public class PieSeries<TModel, TVisual, TLabel>
     : CorePieSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
         where TVisual : class, IDoughnutGeometry, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.

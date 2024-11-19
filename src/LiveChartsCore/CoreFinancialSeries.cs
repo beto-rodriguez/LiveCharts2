@@ -48,7 +48,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
         where TVisual : class, IFinancialGeometry, new()
         where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TMiniatureGeometry : ISizedGeometry, new()
 {
     private Paint? _upStroke = null;

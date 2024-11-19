@@ -41,7 +41,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     where TDrawingContext : DrawingContext
     where TArcGeometry : IArcGeometry, new()
     where TLineGeometry : ILineGeometry<TDrawingContext>, new()
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+    where TLabelGeometry : ILabelGeometry, new()
 {
     private Paint? _stroke;
     private Paint? _labelsPaint;

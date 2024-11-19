@@ -33,8 +33,8 @@ using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ILabelGeometry{TDrawingContext}" />
-public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="ILabelGeometry" />
+public class LabelGeometry : Geometry, ILabelGeometry
 {
     private readonly FloatMotionProperty _textSizeProperty;
     private readonly ColorMotionProperty _backgroundProperty;
@@ -68,22 +68,22 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// </value>
     public Align HorizontalAlign { get; set; } = Align.Middle;
 
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Text" />
+    /// <inheritdoc cref="ILabelGeometry.Text" />
     public string Text { get; set; } = string.Empty;
 
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.TextSize" />
+    /// <inheritdoc cref="ILabelGeometry.TextSize" />
     public float TextSize { get => _textSizeProperty.GetMovement(this); set => _textSizeProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Background" />
+    /// <inheritdoc cref="ILabelGeometry.Background" />
     public LvcColor Background { get => _backgroundProperty.GetMovement(this); set => _backgroundProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Padding" />
+    /// <inheritdoc cref="ILabelGeometry.Padding" />
     public Padding Padding { get; set; } = new();
 
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
+    /// <inheritdoc cref="ILabelGeometry.LineHeight" />
     public float LineHeight { get; set; } = 1.45f;
 
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.MaxWidth" />
+    /// <inheritdoc cref="ILabelGeometry.MaxWidth" />
     public float MaxWidth { get; set; } = float.MaxValue;
 
 #if DEBUG

@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
     : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

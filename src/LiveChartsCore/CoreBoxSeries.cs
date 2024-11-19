@@ -47,7 +47,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBoxSeries<TDrawingContext>
         where TVisual : class, IBoxGeometry, new()
         where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TMiniatureGeometry : ISizedGeometry, new()
 {
     private double _pading = 5;

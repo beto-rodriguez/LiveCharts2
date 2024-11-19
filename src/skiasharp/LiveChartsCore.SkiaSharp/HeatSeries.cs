@@ -129,7 +129,7 @@ public class HeatSeries<TModel, TVisual>
 public class HeatSeries<TModel, TVisual, TLabel>
     : CoreHeatSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
         where TVisual : class, ISizedGeometry, IColoredGeometry, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.

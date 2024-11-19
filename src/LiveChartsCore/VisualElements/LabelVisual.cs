@@ -36,7 +36,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+    where TLabelGeometry : ILabelGeometry, new()
 {
     internal TLabelGeometry? _labelGeometry;
     internal Paint? _paint;

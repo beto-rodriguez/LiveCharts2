@@ -171,7 +171,7 @@ public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, 
 public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> : Section<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TSizedGeometry : ISizedGeometry, new()
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+    where TLabelGeometry : ILabelGeometry, new()
 {
     private string _label = string.Empty;
     private float _labelSize = 12;

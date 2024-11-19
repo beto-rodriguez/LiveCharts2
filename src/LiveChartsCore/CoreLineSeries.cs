@@ -47,7 +47,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

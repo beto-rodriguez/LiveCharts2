@@ -50,7 +50,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
         : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), ICartesianSeries<TDrawingContext>
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry, new()
 {
     private int _scalesXAt;
     private int _scalesYAt;

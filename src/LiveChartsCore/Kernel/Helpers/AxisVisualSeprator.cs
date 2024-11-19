@@ -45,7 +45,7 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     /// <value>
     /// The text.
     /// </value>
-    public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    public ILabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets or sets the line.

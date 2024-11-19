@@ -45,7 +45,7 @@ public interface IVisualSeparator<TDrawingContext>
     /// <value>
     /// The text.
     /// </value>
-    public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    public ILabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets the geometry.

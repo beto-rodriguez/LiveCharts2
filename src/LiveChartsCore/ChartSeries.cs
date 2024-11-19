@@ -48,7 +48,7 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
         : Series<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IChartSeries
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry, new()
 {
     private Paint? _dataLabelsPaint;
     private double _dataLabelsSize = 16;

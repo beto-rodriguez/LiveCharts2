@@ -43,7 +43,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
         where TVisual : class, ISizedGeometry, IColoredGeometry, new()
         where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
 {
     private Paint? _paintTaks;
     private Bounds _weightBounds = new();

@@ -50,7 +50,7 @@ public static class ConditionalDrawExtensions
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry, new()
     {
         series.PointMeasured += predicate;
         return series;

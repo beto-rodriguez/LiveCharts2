@@ -43,7 +43,7 @@ namespace LiveChartsCore;
 public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     : ChartElement<TDrawingContext>, ICartesianAxis<TDrawingContext>, IPlane<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
+        where TTextGeometry : ILabelGeometry, new()
         where TLineGeometry : class, ILineGeometry<TDrawingContext>, new()
 {
     #region fields
@@ -85,7 +85,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Paint? _zeroPaint;
     private ILineGeometry<TDrawingContext>? _zeroLine;
     private ILineGeometry<TDrawingContext>? _crosshairLine;
-    private ILabelGeometry<TDrawingContext>? _crosshairLabel;
+    private ILabelGeometry? _crosshairLabel;
     private Paint? _crosshairPaint;
     private Paint? _crosshairLabelsPaint;
     private LvcColor? _crosshairLabelsBackground;
@@ -1284,7 +1284,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateLabel(
-        ILabelGeometry<TDrawingContext> label,
+        ILabelGeometry label,
         float x,
         float y,
         string text,

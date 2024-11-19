@@ -40,7 +40,7 @@ public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext,
     : CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

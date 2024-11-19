@@ -38,7 +38,7 @@ namespace LiveChartsCore.VisualElements;
 public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TGeometry : ISizedGeometry, new()
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+    where TLabelGeometry : ILabelGeometry, new()
 {
     internal TGeometry? _geometry;
     private string _label = string.Empty;

@@ -48,7 +48,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 public class CoreStackedRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
     : CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries<TDrawingContext>
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {

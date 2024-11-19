@@ -33,7 +33,7 @@ public class GeneralSeriesTests
         Series<int, TVisual, TLabel, TDrawingContext> series)
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;
@@ -70,7 +70,7 @@ public class GeneralSeriesTests
         Series<int, TVisual, TLabel, TDrawingContext> series)
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;
@@ -107,7 +107,7 @@ public class GeneralSeriesTests
         Series<int, TVisual, TLabel, TDrawingContext> series)
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;

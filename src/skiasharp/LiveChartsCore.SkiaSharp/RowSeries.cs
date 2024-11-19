@@ -129,7 +129,7 @@ public class RowSeries<TModel, TVisual>
 public class RowSeries<TModel, TVisual, TLabel>
     : CoreRowSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel}"/> class.

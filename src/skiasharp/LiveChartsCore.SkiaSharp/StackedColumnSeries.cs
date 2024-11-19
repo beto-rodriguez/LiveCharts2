@@ -129,7 +129,7 @@ public class StackedColumnSeries<TModel, TVisual>
 public class StackedColumnSeries<TModel, TVisual, TLabel>
     : CoreStackedColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
         where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedColumnSeries{TModel, TVisual, TLabel}"/> class.

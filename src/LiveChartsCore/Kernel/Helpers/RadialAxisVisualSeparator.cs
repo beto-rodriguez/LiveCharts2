@@ -45,7 +45,7 @@ public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDraw
     /// <value>
     /// The text.
     /// </value>
-    public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    public ILabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets or sets the circle.

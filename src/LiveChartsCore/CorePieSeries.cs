@@ -51,7 +51,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
             where TDrawingContext : DrawingContext
             where TVisual : class, IDoughnutGeometry, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry, new()
             where TMiniatureGeometry : ISizedGeometry, new()
 {
     private Paint? _stroke = null;
