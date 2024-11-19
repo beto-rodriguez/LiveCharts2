@@ -708,16 +708,16 @@ public abstract class Chart
         return Task.Run(() =>
             View.InvokeOnUIThread(() =>
             {
-                //if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
+                if (this is not CartesianChartEngine cartesianChart) return;
 
-                //lock (Canvas.Sync)
-                //{
-                //    var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
-                //    var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
+                lock (Canvas.Sync)
+                {
+                    var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
+                    var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
 
-                //    cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
-                //    _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-                //}
+                    cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
+                    _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                }
             }));
     }
 
@@ -727,11 +727,11 @@ public abstract class Chart
         Tooltip?.Hide(this);
         _ = CleanHoveredPoints([]);
 
-        //if (this is CartesianChart<TDrawingContext> cartesianChart)
-        //{
-        //    foreach (var ax in cartesianChart.XAxes) ax.ClearCrosshair(cartesianChart);
-        //    foreach (var ay in cartesianChart.YAxes) ay.ClearCrosshair(cartesianChart);
-        //}
+        if (this is CartesianChartEngine cartesianChart)
+        {
+            foreach (var ax in cartesianChart.XAxes) ax.ClearCrosshair(cartesianChart);
+            foreach (var ay in cartesianChart.YAxes) ay.ClearCrosshair(cartesianChart);
+        }
     }
 
     private void OnCanvasValidated(CoreMotionCanvas chart) => InvokeOnUpdateFinished();
