@@ -63,11 +63,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
         SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
             {
-               LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+               LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             });
         SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(SectionsProperty, new ObservableCollection<CoreSection>());
@@ -127,7 +127,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                         ? value
                         : new List<ICartesianAxis>()
                         {
-                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
                         };
                 }));
 
@@ -152,7 +152,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                         ? value
                         : new List<ICartesianAxis>()
                         {
-                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
                         };
                 }));
 

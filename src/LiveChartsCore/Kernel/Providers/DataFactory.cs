@@ -34,9 +34,7 @@ namespace LiveChartsCore.Kernel.Providers;
 /// Defines the default data factory.
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
-/// <typeparam name="TDrawingContext"></typeparam>
-public class DataFactory<TModel, TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class DataFactory<TModel>
 {
     private readonly bool _isTModelChartEntity = false;
     private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = [];
@@ -48,7 +46,7 @@ public class DataFactory<TModel, TDrawingContext>
     protected DimensionalBounds PreviousKnownBounds { get; set; } = new DimensionalBounds(true);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DataFactory{TModel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="DataFactory{TModel}"/> class.
     /// </summary>
     public DataFactory()
     {

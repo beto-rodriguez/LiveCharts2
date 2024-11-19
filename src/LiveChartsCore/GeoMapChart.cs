@@ -34,11 +34,9 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a geo map chart.
 /// </summary>
-/// <typeparam name="TDrawingContext"></typeparam>
-public class GeoMap<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class GeoMapChart
 {
-    private readonly HashSet<IGeoSeries<TDrawingContext>> _everMeasuredSeries = [];
+    private readonly HashSet<IGeoSeries> _everMeasuredSeries = [];
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _panningThrottler;
     private bool _isHeatInCanvas = false;
@@ -48,22 +46,22 @@ public class GeoMap<TDrawingContext>
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
-    private IMapFactory<TDrawingContext> _mapFactory;
-    private CoreMap<TDrawingContext>? _activeMap;
+    private IMapFactory _mapFactory;
+    private DrawnMap? _activeMap;
     private bool _isUnloaded = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="GeoMapChart"/> class.
     /// </summary>
     /// <param name="mapView"></param>
-    public GeoMap(IGeoMapView<TDrawingContext> mapView)
+    public GeoMapChart(IGeoMapView mapView)
     {
         View = mapView;
         _updateThrottler = mapView.DesignerMode
                 ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
                 : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(100));
-        _heatPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
-        _mapFactory = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetDefaultMapFactory();
+        _heatPaint = LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
+        _mapFactory = LiveCharts.DefaultSettings.GetProvider().GetDefaultMapFactory();
 
         PointerDown += Chart_PointerDown;
         PointerMove += Chart_PointerMove;
@@ -81,12 +79,12 @@ public class GeoMap<TDrawingContext>
     /// <summary>
     /// Gets the chart view.
     /// </summary>
-    public IGeoMapView<TDrawingContext> View { get; private set; }
+    public IGeoMapView View { get; private set; }
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
+    /// <inheritdoc cref="IMapFactory.ViewTo(GeoMapChart, object)"/>
     public virtual void ViewTo(object? command) => _mapFactory.ViewTo(this, command);
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
+    /// <inheritdoc cref="IMapFactory.Pan(GeoMapChart, LvcPoint)"/>
     public virtual void Pan(LvcPoint delta) => _mapFactory.Pan(this, delta);
 
     /// <summary>
@@ -227,14 +225,14 @@ public class GeoMap<TDrawingContext>
         var i = _previousFill?.ZIndex ?? 0;
         _heatPaint.ZIndex = i + 1;
 
-        var context = new MapContext<TDrawingContext>(
+        var context = new MapContext(
             this, View, View.ActiveMap,
             Maps.BuildProjector(View.MapProjection, [View.Width, View.Height]));
 
         _mapFactory.GenerateLands(context);
 
-        var toDeleteSeries = new HashSet<IGeoSeries<TDrawingContext>>(_everMeasuredSeries);
-        foreach (var series in View.Series?.Cast<IGeoSeries<TDrawingContext>>() ?? [])
+        var toDeleteSeries = new HashSet<IGeoSeries>(_everMeasuredSeries);
+        foreach (var series in View.Series?.Cast<IGeoSeries>() ?? [])
         {
             series.Measure(context);
             _ = _everMeasuredSeries.Add(series);

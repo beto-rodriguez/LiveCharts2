@@ -38,7 +38,7 @@ namespace LiveChartsCore;
 /// </summary>
 /// <typeparam name="TModel">The type fo the model.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
+public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries, INotifyPropertyChanged
     where TModel : IWeigthedMapLand
     where TDrawingContext : DrawingContext
 {
@@ -48,7 +48,7 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     private double[]? _colorStops;
     private ICollection<TModel>? _lands;
     private bool _isVisible;
-    private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = [];
+    private readonly HashSet<GeoMapChart> _subscribedTo = [];
     private readonly CollectionDeepObserver<TModel> _observer;
     private readonly HashSet<LandDefinition> _everUsed = [];
 
@@ -103,8 +103,8 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     /// <inheritdoc cref="IGeoSeries.IsVisible"/>
     public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Measure(MapContext{TDrawingContext})"/>
-    public void Measure(MapContext<TDrawingContext> context)
+    /// <inheritdoc cref="IGeoSeries.Measure(MapContext)"/>
+    public void Measure(MapContext context)
     {
         _ = _subscribedTo.Add(context.CoreMap);
 
@@ -156,8 +156,8 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
         ClearHeat(toRemove);
     }
 
-    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Delete(MapContext{TDrawingContext})"/>
-    public void Delete(MapContext<TDrawingContext> context)
+    /// <inheritdoc cref="IGeoSeries.Delete(MapContext)"/>
+    public void Delete(MapContext context)
     {
         ClearHeat(_everUsed);
         _ = _subscribedTo.Remove(context.CoreMap);

@@ -93,11 +93,11 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
 
         SetValue(XAxesProperty, new List<ICartesianAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             });
         SetValue(YAxesProperty, new List<ICartesianAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             });
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());

@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
@@ -32,30 +31,38 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a geographic map for LiveCharts controls.
 /// </summary>
-public class CoreMap<TDrawingContext> : IDisposable
-    where TDrawingContext : DrawingContext
+public class DrawnMap : IDisposable
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="DrawnMap"/> class.
     /// </summary>
-    public CoreMap() { }
+    public DrawnMap() { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
+    /// Initializes a new instance of the <see cref="DrawnMap"/> class from the given core map.
+    /// </summary>
+    /// <param name="map"></param>
+    public DrawnMap(DrawnMap map)
+    {
+        Layers = map.Layers;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DrawnMap"/> class, with the given layer.
     /// </summary>
     /// <param name="path">The path to the GeoJson file for the layer.</param>
     /// <param name="layerName">The layer name.</param>
-    public CoreMap(string path, string layerName = "default") : this(new StreamReader(path), layerName)
+    public DrawnMap(string path, string layerName = "default") : this(new StreamReader(path), layerName)
     {
         _ = AddLayerFromDirectory(path, layerName);
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
+    /// Initializes a new instance of the <see cref="DrawnMap"/> class, with the given layer.
     /// </summary>
     /// <param name="streamReader">The stream reader instance of the GeoJson file for the layer.</param>
     /// <param name="layerName">The layer name.</param>
-    public CoreMap(StreamReader streamReader, string layerName = "default")
+    public DrawnMap(StreamReader streamReader, string layerName = "default")
     {
         _ = AddLayerFromStreamReader(streamReader, layerName);
     }
@@ -63,7 +70,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <summary>
     /// Gets the map layers dictionary.
     /// </summary>
-    public Dictionary<string, MapLayer<TDrawingContext>> Layers { get; protected set; } = [];
+    public Dictionary<string, MapLayer> Layers { get; protected set; } = [];
 
     /// <summary>
     /// Finds a land by short name.
@@ -82,7 +89,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="stroke">The stroke.</param>
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer.</returns>
-    public MapLayer<TDrawingContext> AddLayerFromDirectory(
+    public MapLayer AddLayerFromDirectory(
         string path, Paint stroke, Paint fill, string layerName = "default")
     {
         using var sr = new StreamReader(path);
@@ -95,9 +102,9 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="path">The path to the GeoJson file for the layer.</param>
     /// <param name="layerName">The layer name.</param>
     /// <returns>The added layer.</returns>
-    public MapLayer<TDrawingContext> AddLayerFromDirectory(string path, string layerName = "default")
+    public MapLayer AddLayerFromDirectory(string path, string layerName = "default")
     {
-        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var provider = LiveCharts.DefaultSettings.GetProvider();
         var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
         var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
 
@@ -112,12 +119,12 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="stroke">The stroke.</param>
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer.</returns>
-    public MapLayer<TDrawingContext> AddLayerFromStreamReader(
+    public MapLayer AddLayerFromStreamReader(
         StreamReader streamReader, Paint stroke, Paint fill, string layerName = "default")
     {
         if (!Layers.TryGetValue(layerName, out var layer))
         {
-            layer = new MapLayer<TDrawingContext>(layerName, stroke, fill);
+            layer = new MapLayer(layerName, stroke, fill);
             Layers.Add(layerName, layer);
         }
 
@@ -138,9 +145,9 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="streamReader">The path to the stream reader.</param>
     /// <param name="layerName">The layer name.</param>
     /// <returns>The added layer.</returns>
-    public MapLayer<TDrawingContext> AddLayerFromStreamReader(StreamReader streamReader, string layerName = "default")
+    public MapLayer AddLayerFromStreamReader(StreamReader streamReader, string layerName = "default")
     {
-        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var provider = LiveCharts.DefaultSettings.GetProvider();
         var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
         var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
 
@@ -155,7 +162,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="stroke">The stroke.</param>
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer as await-able task.</returns>
-    public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(
+    public Task<MapLayer> AddLayerFromDirectoryAsync(
         string path, Paint stroke, Paint fill, string layerName = "default") =>
             Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
 
@@ -165,9 +172,9 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="path">The path to the GeoJson file for the layer.</param>
     /// <param name="layerName">The layer name.</param>
     /// <returns>The added layer as await-able task.</returns>
-    public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(string path, string layerName = "default")
+    public Task<MapLayer> AddLayerFromDirectoryAsync(string path, string layerName = "default")
     {
-        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var provider = LiveCharts.DefaultSettings.GetProvider();
         var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
         var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
 
@@ -182,7 +189,7 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="stroke">The stroke.</param>
     /// <param name="fill">The fill.</param>
     /// <returns>The added layer as await-able task.</returns>
-    public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(
+    public Task<MapLayer> AddLayerFromStreamReaderAsync(
         StreamReader streamReader, Paint stroke, Paint fill, string layerName = "default") =>
             Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
 
@@ -192,14 +199,34 @@ public class CoreMap<TDrawingContext> : IDisposable
     /// <param name="streamReader">The path to the stream reader.</param>
     /// <param name="layerName">The layer name.</param>
     /// <returns>The added layer as await-able task.</returns>
-    public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName = "default")
+    public Task<MapLayer> AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName = "default")
     {
-        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var provider = LiveCharts.DefaultSettings.GetProvider();
         var stroke = provider.GetSolidColorPaint(new(33, 150, 243));
         var fill = provider.GetSolidColorPaint(new(33, 150, 243, 50));
 
         return Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
     }
+
+    /// <inheritdoc cref="Maps.GetWorldMap"/>.
+    public static DrawnMap GetWorldMap() =>
+        new(Maps.GetWorldMap());
+
+    /// <inheritdoc cref="Maps.GetMapFromDirectory(string)"/>.
+    public static DrawnMap GetMapFromDirectory(string path) =>
+        new(Maps.GetMapFromDirectory(path));
+
+    /// <inheritdoc cref="Maps.GetMapFromStreamReader(StreamReader)"/>.
+    public static DrawnMap GetMapFromStreamReader(StreamReader stream) =>
+        new(Maps.GetMapFromStreamReader(stream));
+
+    /// <inheritdoc cref="Maps.GetMapFromDirectory(string)"/>.
+    public static Task<DrawnMap> GetMapFromDirectoryAsync(string path) =>
+        Task.Run(() => new DrawnMap(Maps.GetMapFromDirectory(path)));
+
+    /// <inheritdoc cref="Maps.GetMapFromStreamReader(StreamReader)"/>.
+    public static Task<DrawnMap> GetMapFromStreamReaderAsync(StreamReader stream) =>
+        Task.Run(() => new DrawnMap(Maps.GetMapFromStreamReader(stream)));
 
     /// <summary>
     /// Disposes the map.

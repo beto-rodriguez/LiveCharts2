@@ -60,13 +60,13 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
         if (_angleAxes is null)
             AngleAxes = new List<IPolarAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             };
 
         if (_radiusAxes is null)
             RadiusAxes = new List<IPolarAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             };
 
         //ToDo: pointer events.

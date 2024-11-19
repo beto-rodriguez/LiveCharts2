@@ -33,26 +33,26 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
 
-/// <inheritdoc cref="ChartEngine{TDrawingContext}"/>
-public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
+/// <inheritdoc cref="ChartEngine"/>
+public class SkiaSharpProvider : ChartEngine
 {
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultMapFactory"/>
-    public override IMapFactory<SkiaSharpDrawingContext> GetDefaultMapFactory()
+    /// <inheritdoc cref="ChartEngine.GetDefaultMapFactory"/>
+    public override IMapFactory GetDefaultMapFactory()
         => new MapFactory();
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultCartesianAxis"/>
+    /// <inheritdoc cref="ChartEngine.GetDefaultCartesianAxis"/>
     public override ICartesianAxis GetDefaultCartesianAxis()
         => new Axis();
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultPolarAxis"/>
+    /// <inheritdoc cref="ChartEngine.GetDefaultPolarAxis"/>
     public override IPolarAxis GetDefaultPolarAxis()
         => new PolarAxis();
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
+    /// <inheritdoc cref="ChartEngine.GetSolidColorPaint(LvcColor)"/>
     public override Paint GetSolidColorPaint(LvcColor color)
         => new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.InitializeZoommingSection(CoreMotionCanvas)"/>
+    /// <inheritdoc cref="ChartEngine.InitializeZoommingSection(CoreMotionCanvas)"/>
     public override ISizedGeometry InitializeZoommingSection(CoreMotionCanvas canvas)
     {
         var rectangle = new RectangleGeometry();

@@ -85,11 +85,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
         {
-            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
         });
         SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
         {
-            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
         });
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(SectionsProperty, new ObservableCollection<CoreSection>());

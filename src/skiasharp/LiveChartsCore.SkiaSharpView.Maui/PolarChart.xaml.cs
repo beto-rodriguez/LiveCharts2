@@ -82,12 +82,12 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         SetValue(AngleAxesProperty,
             new List<IPolarAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             });
         SetValue(RadiusAxesProperty,
             new List<IPolarAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             });
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());

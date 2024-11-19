@@ -60,11 +60,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 
         SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             });
         SetCurrentValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>()
             {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
@@ -149,7 +149,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                         ? value
                         : new List<IPolarAxis>()
                         {
-                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
                         };
                 }));
 
@@ -174,7 +174,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
                         ? value
                         : new List<IPolarAxis>()
                         {
-                                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
                         };
                 }));
 

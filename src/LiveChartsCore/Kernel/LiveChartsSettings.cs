@@ -202,20 +202,18 @@ public class LiveChartsSettings
             : (Func<TModel, int, Coordinate>)mapper;
     }
 
-    internal LiveChartsSettings HasProvider<TDrawingContext>(ChartEngine<TDrawingContext> factory)
-        where TDrawingContext : DrawingContext
+    internal LiveChartsSettings HasProvider(ChartEngine factory)
     {
         _currentProvider = factory;
         return this;
     }
 
-    internal ChartEngine<TDrawingContext> GetProvider<TDrawingContext>()
-        where TDrawingContext : DrawingContext
+    internal ChartEngine GetProvider()
     {
         return _currentProvider is null
             ? throw new NotImplementedException(
-                $"There is no a {nameof(ChartEngine<TDrawingContext>)} registered.")
-            : (ChartEngine<TDrawingContext>)_currentProvider;
+                $"There is no a {nameof(ChartEngine)} registered.")
+            : (ChartEngine)_currentProvider;
     }
 
     /// <summary>

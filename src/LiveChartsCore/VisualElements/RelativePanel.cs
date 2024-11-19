@@ -85,7 +85,7 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : CoreVisualEle
         // we use this geometry in the motion canvas to track the position
         // of the stack panel as the time and animations elapse.
         BackgroundPaint ??= LiveCharts.DefaultSettings
-                .GetProvider<TDrawingContext>()
+                .GetProvider()
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         var clipping = Clipping.GetClipRectangle(ClippingMode, chart);

@@ -29,25 +29,23 @@ using LiveChartsCore.Painting;
 namespace LiveChartsCore.Kernel.Providers;
 
 /// <summary>
-/// Defines the <see cref="ChartEngine{TDrawingContext}"/> class.
+/// Defines the <see cref="ChartEngine"/> class.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class ChartEngine<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public abstract class ChartEngine
 {
     /// <summary>
     /// Gets a new instance of the default data factory.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <returns></returns>
-    public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
+    public virtual DataFactory<TModel> GetDefaultDataFactory<TModel>()
         => new();
 
     /// <summary>
     /// Gets a new instance of the default map factory.
     /// </summary>
     /// <returns></returns>
-    public abstract IMapFactory<TDrawingContext> GetDefaultMapFactory();
+    public abstract IMapFactory GetDefaultMapFactory();
 
     /// <summary>
     /// Gets a new instance of the default Cartesian axis.

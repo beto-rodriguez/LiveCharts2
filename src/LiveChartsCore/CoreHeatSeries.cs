@@ -106,7 +106,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        _paintTaks ??= LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+        _paintTaks ??= LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
 
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -327,7 +327,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         var schedules = new List<PaintSchedule>();
 
-        var solidPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+        var solidPaint = LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
         var st = solidPaint.StrokeThickness;
         solidPaint.IsStroke = false;
 

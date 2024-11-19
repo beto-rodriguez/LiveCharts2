@@ -71,6 +71,6 @@ public class HeatLandSeries<TModel>
         HeatMap = heatMap;
 
         LiveCharts.Configure(config => config.UseDefaults());
-        IntitializeSeries(LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
+        IntitializeSeries(LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint());
     }
 }

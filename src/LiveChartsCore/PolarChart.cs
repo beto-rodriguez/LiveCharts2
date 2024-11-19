@@ -163,7 +163,7 @@ public class PolarChart<TDrawingContext>(
         if (a is null || r is null)
         {
             // in theory nulls are not valid, see ChartTest.cs for more context.
-            var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+            var provider = LiveCharts.DefaultSettings.GetProvider();
 
             a = [provider.GetDefaultPolarAxis()];
             r = [provider.GetDefaultPolarAxis()];

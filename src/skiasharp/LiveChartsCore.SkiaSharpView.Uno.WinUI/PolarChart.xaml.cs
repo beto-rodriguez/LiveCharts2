@@ -80,11 +80,11 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
         SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
         {
-            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
         });
         SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>()
         {
-            LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
         });
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());

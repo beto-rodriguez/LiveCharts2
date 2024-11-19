@@ -232,7 +232,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
         // we use this geometry in the motion canvas to track the position
         // of the stack panel as the time and animations elapse.
         BackgroundPaint ??= LiveCharts.DefaultSettings
-            .GetProvider<TDrawingContext>()
+            .GetProvider()
             .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         chart.Canvas.AddDrawableTask(BackgroundPaint);

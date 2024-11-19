@@ -39,7 +39,7 @@ namespace LiveChartsCore.Geo;
 /// <param name="heatStops">The heat stops.</param>
 /// <param name="bounds">The bounds.</param>
 public class MapShapeContext<TDrawingContext>(
-    IGeoMapView<TDrawingContext> chart,
+    IGeoMapView chart,
     Paint heatPaint,
     List<Tuple<double, LvcColor>> heatStops,
     Bounds bounds)
@@ -49,7 +49,7 @@ public class MapShapeContext<TDrawingContext>(
     /// <summary>
     /// Gets the chart.
     /// </summary>
-    public IGeoMapView<TDrawingContext> Chart { get; } = chart;
+    public IGeoMapView Chart { get; } = chart;
 
     /// <summary>
     /// Gets the heat paint.

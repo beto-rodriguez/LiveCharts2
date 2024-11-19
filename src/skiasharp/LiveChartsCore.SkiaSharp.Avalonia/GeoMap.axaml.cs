@@ -37,17 +37,16 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
-/// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
-public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IGeoMapView"/>
+public partial class GeoMap : UserControl, IGeoMapView
 {
     private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private readonly GeoMap<SkiaSharpDrawingContext> _core;
+    private readonly GeoMapChart _core;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -56,7 +55,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         InitializeComponent();
         LiveCharts.Configure(config => config.UseDefaults());
-        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        _core = new GeoMapChart(this);
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
@@ -70,7 +69,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         PointerExited += OnPointerLeave;
 
         //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
-        ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        ActiveMap = Maps.GetWorldMap();
         SyncContext = new object();
 
         DetachedFromVisualTree += GeoMap_DetachedFromVisualTree;
@@ -81,8 +80,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// <summary>
     /// The active map property.
     /// </summary>
-    public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>?> ActiveMapProperty =
-       AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>?>(nameof(ActiveMap), null, inherits: true);
+    public static readonly AvaloniaProperty<DrawnMap?> ActiveMapProperty =
+       AvaloniaProperty.Register<CartesianChart, DrawnMap?>(nameof(ActiveMap), null, inherits: true);
 
     /// <summary>
     /// The active map property.
@@ -127,27 +126,27 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     #region props
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IGeoMapView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => Design.IsDesignMode;
+    /// <inheritdoc cref="IGeoMapView.DesignerMode" />
+    bool IGeoMapView.DesignerMode => Design.IsDesignMode;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    /// <inheritdoc cref="IGeoMapView.SyncContext" />
     public object SyncContext
     {
         get => GetValue(SyncContextProperty)!;
         set => SetValue(SyncContextProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    /// <inheritdoc cref="IGeoMapView.ViewCommand" />
     public object? ViewCommand
     {
         get => GetValue(ViewCommandProperty);
         set => SetValue(ViewCommandProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
+    /// <inheritdoc cref="IGeoMapView.Canvas"/>
     public CoreMotionCanvas Canvas
     {
         get
@@ -157,27 +156,27 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap
+    /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
+    public DrawnMap ActiveMap
     {
-        get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty)!;
+        get => (DrawnMap)GetValue(ActiveMapProperty)!;
         set => SetValue(ActiveMapProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)Bounds.Width;
+    /// <inheritdoc cref="IGeoMapView.Width"/>
+    float IGeoMapView.Width => (float)Bounds.Width;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)Bounds.Height;
+    /// <inheritdoc cref="IGeoMapView.Height"/>
+    float IGeoMapView.Height => (float)Bounds.Height;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     public MapProjection MapProjection
     {
         get => (MapProjection)GetValue(MapProjectionProperty)!;
         set => SetValue(MapProjectionProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+    /// <inheritdoc cref="IGeoMapView.Stroke"/>
     public Paint? Stroke
     {
         get => (Paint?)GetValue(StrokeProperty);
@@ -188,7 +187,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+    /// <inheritdoc cref="IGeoMapView.Fill"/>
     public Paint? Fill
     {
         get => (Paint?)GetValue(FillProperty);
@@ -199,7 +198,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IGeoMapView.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
         get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty)!;
@@ -208,7 +207,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     #endregion
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
+    void IGeoMapView.InvokeOnUIThread(Action action) =>
         Dispatcher.UIThread.Post(action);
 
     /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>

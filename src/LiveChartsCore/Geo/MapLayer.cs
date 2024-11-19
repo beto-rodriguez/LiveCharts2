@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
@@ -32,15 +31,13 @@ namespace LiveChartsCore.Geo;
 /// Defines a map layer.
 /// </summary>
 /// <remarks>
-/// Initializes a new <see cref="MapLayer{TDrawingContext}"/> from the given <see cref="GeoJsonFile"/>.
+/// Initializes a new <see cref="MapLayer"/> from the given <see cref="GeoJsonFile"/>.
 /// </remarks>
 /// <param name="layerName">The layer name.</param>
 /// <param name="stroke">The stroke.</param>
 /// <param name="fill">The fill.</param>
-public class MapLayer<TDrawingContext>(string layerName, Paint stroke, Paint fill)
-    where TDrawingContext : DrawingContext
+public class MapLayer(string layerName, Paint stroke, Paint fill)
 {
-
     /// <summary>
     /// Gets or sets the name.
     /// </summary>
@@ -87,7 +84,7 @@ public class MapLayer<TDrawingContext>(string layerName, Paint stroke, Paint fil
     /// <summary>
     /// Gets or sets the land condition, it must return true if the land is required.
     /// </summary>
-    public Func<LandDefinition, CoreMap<TDrawingContext>, bool>? AddLandWhen { get; set; }
+    public Func<LandDefinition, DrawnMap, bool>? AddLandWhen { get; set; }
 
     /// <summary>
     /// Adds a GeoJson file to the layer.
@@ -97,7 +94,7 @@ public class MapLayer<TDrawingContext>(string layerName, Paint stroke, Paint fil
     {
         if (file.Features is null)
             throw new Exception(
-                $"The {nameof(GeoJsonFile.Features)} property is required to build a {nameof(CoreMap<TDrawingContext>)} instance. " +
+                $"The {nameof(GeoJsonFile.Features)} property is required to build a {nameof(DrawnMap)} instance. " +
                 $"Ensure the property is not null.");
 
         foreach (var feature in file.Features)

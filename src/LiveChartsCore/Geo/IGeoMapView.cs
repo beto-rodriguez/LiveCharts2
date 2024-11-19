@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
@@ -31,13 +30,12 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a geographic map.
 /// </summary>
-public interface IGeoMapView<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IGeoMapView
 {
     /// <summary>
     /// Gets or sets the active map.
     /// </summary>
-    CoreMap<TDrawingContext> ActiveMap { get; set; }
+    DrawnMap ActiveMap { get; set; }
 
     /// <summary>
     /// Gets the motion canvas.

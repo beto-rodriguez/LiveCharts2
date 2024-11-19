@@ -71,11 +71,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
         XAxes =
             [
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             ];
         YAxes =
             [
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             ];
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement>();

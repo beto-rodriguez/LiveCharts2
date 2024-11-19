@@ -43,10 +43,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// Defines a geographic map.
 /// </summary>
 /// <seealso cref="Control" />
-public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
+public class GeoMap : UserControl, IGeoMapView
 {
     private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private GeoMap<SkiaSharpDrawingContext>? _core;
+    private GeoMapChart? _core;
     private MotionCanvas? _canvas;
 
     /// <summary>
@@ -70,7 +70,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
             true);
 
         SetCurrentValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
-        SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
+        SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap());
         SetCurrentValue(SyncContextProperty, new object());
 
         Unloaded += GeoMap_Unloaded;
@@ -82,7 +82,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// The active map property
     /// </summary>
     public static readonly DependencyProperty ActiveMapProperty =
-        DependencyProperty.Register(nameof(ActiveMap), typeof(CoreMap<SkiaSharpDrawingContext>), typeof(GeoMap),
+        DependencyProperty.Register(nameof(ActiveMap), typeof(DrawnMap), typeof(GeoMap),
             new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -145,52 +145,52 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     #region props
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IGeoMapView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
+    /// <inheritdoc cref="IGeoMapView.DesignerMode" />
+    bool IGeoMapView.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    /// <inheritdoc cref="IGeoMapView.SyncContext" />
     public object SyncContext
     {
         get => GetValue(SyncContextProperty);
         set => SetValue(SyncContextProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    /// <inheritdoc cref="IGeoMapView.ViewCommand" />
     public object? ViewCommand
     {
         get => GetValue(ViewCommandProperty);
         set => SetValue(ViewCommandProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
+    /// <inheritdoc cref="IGeoMapView.Canvas"/>
     public CoreMotionCanvas Canvas => _canvas is null
         ? throw new Exception($"Canvas not found")
         : _canvas.CanvasCore;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap
+    /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
+    public DrawnMap ActiveMap
     {
-        get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
+        get => (DrawnMap)GetValue(ActiveMapProperty);
         set => SetValue(ActiveMapProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)ActualWidth;
+    /// <inheritdoc cref="IGeoMapView.Width"/>
+    float IGeoMapView.Width => (float)ActualWidth;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)ActualHeight;
+    /// <inheritdoc cref="IGeoMapView.Height"/>
+    float IGeoMapView.Height => (float)ActualHeight;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     public MapProjection MapProjection
     {
         get => (MapProjection)GetValue(MapProjectionProperty);
         set => SetValue(MapProjectionProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+    /// <inheritdoc cref="IGeoMapView.Stroke"/>
     public Paint? Stroke
     {
         get => (Paint)GetValue(StrokeProperty);
@@ -201,7 +201,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+    /// <inheritdoc cref="IGeoMapView.Fill"/>
     public Paint? Fill
     {
         get => (Paint)GetValue(FillProperty);
@@ -212,7 +212,7 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IGeoMapView.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
         get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);
@@ -228,10 +228,10 @@ public class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         base.OnApplyTemplate();
         Content = _canvas = new MotionCanvas();
-        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        _core = new GeoMapChart(this);
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
+    void IGeoMapView.InvokeOnUIThread(Action action) =>
         Dispatcher.Invoke(action);
 
     private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e) =>

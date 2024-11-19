@@ -27,7 +27,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
@@ -36,15 +35,15 @@ namespace LiveChartsCore.SkiaSharpView;
 /// <summary>
 /// Defines a map builder.
 /// </summary>
-public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
+public class MapFactory : IMapFactory
 {
     private readonly HashSet<HeatPathShape> _usedPathShapes = [];
     private readonly HashSet<Paint> _usedPaints = [];
     private readonly HashSet<string> _usedLayers = [];
-    private IGeoMapView<SkiaSharpDrawingContext>? _mapView;
+    private IGeoMapView? _mapView;
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.GenerateLands(MapContext{TDrawingContext})"/>
-    public void GenerateLands(MapContext<SkiaSharpDrawingContext> context)
+    /// <inheritdoc cref="IMapFactory.GenerateLands(MapContext)"/>
+    public void GenerateLands(MapContext context)
     {
         var projector = context.Projector;
 
@@ -148,11 +147,11 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
-    public void ViewTo(GeoMap<SkiaSharpDrawingContext> sender, object? command) { }
+    /// <inheritdoc cref="IMapFactory.ViewTo(GeoMapChart, object)"/>
+    public void ViewTo(GeoMapChart sender, object? command) { }
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
-    public void Pan(GeoMap<SkiaSharpDrawingContext> sender, LvcPoint delta) { }
+    /// <inheritdoc cref="IMapFactory.Pan(GeoMapChart, LvcPoint)"/>
+    public void Pan(GeoMapChart sender, LvcPoint delta) { }
 
     /// <summary>
     /// Disposes the map factory.

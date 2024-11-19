@@ -63,13 +63,13 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         if (_xAxes is null)
             XAxes =
             [
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             ];
 
         if (_yAxes is null)
             YAxes =
             [
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
             ];
 
         // ToDo: pointer events

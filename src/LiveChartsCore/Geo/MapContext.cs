@@ -20,34 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
 namespace LiveChartsCore.Geo;
 
 /// <summary>
 /// Defines a map context.
 /// </summary>
-/// <typeparam name="TDrawingContext"></typeparam>
 /// <remarks>
-/// Initializes a new instance of <see cref="MapContext{TDrawingContext}"/> class.
+/// Initializes a new instance of <see cref="MapContext"/> class.
 /// </remarks>
-public class MapContext<TDrawingContext>(
-    GeoMap<TDrawingContext> core,
-    IGeoMapView<TDrawingContext> view,
-    CoreMap<TDrawingContext> map,
+public class MapContext(
+    GeoMapChart core,
+    IGeoMapView view,
+    DrawnMap map,
     MapProjector projector)
-    where TDrawingContext : DrawingContext
 {
-
     /// <summary>
     /// Gets the core map.
     /// </summary>
-    public GeoMap<TDrawingContext> CoreMap { get; } = core;
+    public GeoMapChart CoreMap { get; } = core;
 
     /// <summary>
     /// Gets the map file.
     /// </summary>
-    public CoreMap<TDrawingContext> MapFile { get; } = map;
+    public DrawnMap MapFile { get; } = map;
 
     /// <summary>
     /// Gets the map projector.
@@ -57,5 +52,5 @@ public class MapContext<TDrawingContext>(
     /// <summary>
     /// Gets the map view.
     /// </summary>
-    public IGeoMapView<TDrawingContext> View { get; } = view;
+    public IGeoMapView View { get; } = view;
 }

@@ -41,12 +41,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// The geo map control.
 /// </summary>
 /// <seealso cref="UserControl" />
-public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
+public partial class GeoMap : UserControl, IGeoMapView
 {
-    private readonly GeoMap<SkiaSharpDrawingContext> _core;
+    private readonly GeoMapChart _core;
     private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private IEnumerable<IGeoSeries> _series = [];
-    private CoreMap<SkiaSharpDrawingContext> _activeMap;
+    private DrawnMap _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
     private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
     private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false };
@@ -59,9 +59,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         InitializeComponent();
         LiveCharts.Configure(config => config.UseDefaults());
-        _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        _activeMap = Maps.GetWorldMap();
 
-        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        _core = new GeoMapChart(this);
 
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
@@ -79,21 +79,21 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         Resize += GeoMap_Resize;
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
+    /// <inheritdoc cref="IGeoMapView.Canvas"/>
     public CoreMotionCanvas Canvas => motionCanvas1.CanvasCore;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IGeoMapView.AutoUpdateEnabled" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool AutoUpdateEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+    /// <inheritdoc cref="IGeoMapView.DesignerMode" />
+    bool IGeoMapView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    /// <inheritdoc cref="IGeoMapView.SyncContext" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object SyncContext { get; set; } = new();
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    /// <inheritdoc cref="IGeoMapView.ViewCommand" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object? ViewCommand
     {
@@ -104,21 +104,21 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
             if (value is not null) _core.ViewTo(value);
         }
     }
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
+    /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
+    public DrawnMap ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => ClientSize.Width;
+    /// <inheritdoc cref="IGeoMapView.Width"/>
+    float IGeoMapView.Width => ClientSize.Width;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => ClientSize.Height;
+    /// <inheritdoc cref="IGeoMapView.Height"/>
+    float IGeoMapView.Height => ClientSize.Height;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+    /// <inheritdoc cref="IGeoMapView.Stroke"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Paint? Stroke
     {
@@ -131,7 +131,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+    /// <inheritdoc cref="IGeoMapView.Fill"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Paint? Fill
     {
@@ -144,7 +144,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IGeoMapView.Series"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<IGeoSeries> Series
     {
@@ -158,7 +158,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
+    void IGeoMapView.InvokeOnUIThread(Action action)
     {
         if (!IsHandleCreated) return;
         _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();

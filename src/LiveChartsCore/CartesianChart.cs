@@ -376,7 +376,7 @@ public class CartesianChart<TDrawingContext>(
         if (x is null || y is null)
         {
             // in theory nulls are not valid, see ChartTest.cs for more context.
-            var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+            var provider = LiveCharts.DefaultSettings.GetProvider();
 
             x = [provider.GetDefaultCartesianAxis()];
             y = [provider.GetDefaultCartesianAxis()];
@@ -1153,7 +1153,7 @@ public class CartesianChart<TDrawingContext>(
 
     private void InitializeZoomingSection()
     {
-        var provider = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>();
+        var provider = LiveCharts.DefaultSettings.GetProvider();
         _zoomingSection = provider.InitializeZoommingSection(Canvas);
 
         _zoomingSection.X = -1;

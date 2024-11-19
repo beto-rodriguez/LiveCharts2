@@ -69,11 +69,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 
         AngleAxes =
             [
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             ];
         RadiusAxes =
             [
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             ];
         Series = new ObservableCollection<ISeries>();
 
