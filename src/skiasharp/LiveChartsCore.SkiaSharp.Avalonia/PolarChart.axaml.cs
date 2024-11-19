@@ -60,7 +60,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
+    protected IChartTooltip? tooltip;
 
     private MotionCanvas? _avaloniaCanvas;
     private Chart<SkiaSharpDrawingContext>? _core;
@@ -478,7 +478,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
+    public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition

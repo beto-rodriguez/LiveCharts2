@@ -62,7 +62,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
+    protected IChartTooltip? tooltip;
 
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
 
@@ -437,7 +437,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
+    public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint

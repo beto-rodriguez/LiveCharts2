@@ -59,7 +59,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The tooltip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
+    protected IChartTooltip? tooltip;
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
@@ -455,7 +455,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
+    public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public LegendPosition LegendPosition

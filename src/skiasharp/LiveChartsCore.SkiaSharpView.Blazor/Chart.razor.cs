@@ -213,7 +213,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     [Parameter]
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
+    public IChartTooltip? Tooltip { get; set; } = new SKDefaultTooltip();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
     [Parameter]

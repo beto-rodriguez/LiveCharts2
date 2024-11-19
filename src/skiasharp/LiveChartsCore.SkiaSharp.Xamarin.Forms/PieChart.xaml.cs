@@ -516,7 +516,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
+    public IChartTooltip? Tooltip { get; set; } = new SKDefaultTooltip();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

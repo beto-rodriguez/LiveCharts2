@@ -560,7 +560,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
+    public IChartTooltip? Tooltip { get; set; } = new SKDefaultTooltip();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint

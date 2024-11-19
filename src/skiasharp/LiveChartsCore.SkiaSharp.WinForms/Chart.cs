@@ -54,7 +54,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip = new SKDefaultTooltip();
+    protected IChartTooltip? tooltip = new SKDefaultTooltip();
 
     /// <summary>
     /// The motion canvas
@@ -80,7 +80,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <param name="tooltip">The default tool tip control.</param>
     /// <param name="legend">The default legend.</param>
     /// <exception cref="MotionCanvas"></exception>
-    protected Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend? legend)
+    protected Chart(IChartTooltip? tooltip, IChartLegend? legend)
     {
         if (tooltip is not null) this.tooltip = tooltip;
         if (legend is not null) this.legend = legend;
@@ -235,7 +235,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
+    public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

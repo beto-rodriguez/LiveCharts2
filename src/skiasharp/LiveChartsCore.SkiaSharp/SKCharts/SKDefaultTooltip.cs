@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// Defines the default tooltip.
 /// </summary>
-public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
+public class SKDefaultTooltip : IChartTooltip
 {
     internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
     private static readonly int s_zIndex = 10100;
@@ -83,8 +83,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// </summary>
     public double TextSize { get; set; } = 16;
 
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
-    public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, IChart)" />
+    public void Show(IEnumerable<ChartPoint> foundPoints, IChart chart)
     {
         const int wedge = 10;
 
@@ -226,8 +226,8 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         chart.AddVisual(_panel);
     }
 
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Hide"/>
-    public void Hide(Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="IChartTooltip.Hide"/>
+    public void Hide(IChart chart)
     {
         if (chart is null || _panel is null) return;
         chart.RemoveVisual(_panel);

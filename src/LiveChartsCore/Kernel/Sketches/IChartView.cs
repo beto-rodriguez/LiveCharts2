@@ -271,7 +271,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <value>
     /// The tooltip.
     /// </value>
-    IChartTooltip<TDrawingContext>? Tooltip { get; set; }
+    IChartTooltip? Tooltip { get; set; }
 
     /// <summary>
     /// Gets or sets the visual elements.

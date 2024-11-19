@@ -55,7 +55,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
     private IChartLegend? _legend = new SKDefaultLegend();
-    private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
+    private IChartTooltip? _tooltip = new SKDefaultTooltip();
 
     #endregion
 
@@ -574,7 +574,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => _tooltip; set { _tooltip = value; OnPropertyChanged(); } }
+    public IChartTooltip? Tooltip { get => _tooltip; set { _tooltip = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

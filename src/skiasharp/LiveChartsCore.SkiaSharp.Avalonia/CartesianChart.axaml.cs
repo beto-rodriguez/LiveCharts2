@@ -59,7 +59,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
+    protected IChartTooltip? tooltip;
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _avaloniaCanvas;
@@ -481,7 +481,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set => tooltip = value; }
+    public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
     public FindingStrategy FindingStrategy

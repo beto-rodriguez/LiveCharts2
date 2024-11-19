@@ -68,9 +68,19 @@ public interface IChart
     CoreMotionCanvas Canvas { get; }
 
     /// <summary>
+    /// Gets the chart kind.
+    /// </summary>
+    ChartKind Kind { get; }
+
+    /// <summary>
     /// Gets the series context.
     /// </summary>
     SeriesContext SeriesContext { get; }
+
+    /// <summary>
+    /// Gets the tooltip metadata to place the tooltip automatically.
+    /// </summary>
+    ToolTipMetaData AutoToolTipsInfo { get; }
 
     /// <summary>
     /// Gets the control size.

@@ -20,25 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
-/// Defines a tool tip.
+/// Defines a chart kind.
 /// </summary>
-public interface IChartTooltip
+public enum ChartKind
 {
     /// <summary>
-    /// Shows the tool tip in the specified chart.
+    /// The cartesian chart.
     /// </summary>
-    /// <param name="foundPoints">The found points.</param>
-    /// <param name="chart">The chart.</param>
-    void Show(IEnumerable<ChartPoint> foundPoints, IChart chart);
+    Cartesian,
 
     /// <summary>
-    /// Hides this tool tip instance.
+    /// The pie chart.
     /// </summary>
-    /// <param name="chart">The chart.</param>
-    void Hide(IChart chart);
+    Pie,
+
+    /// <summary>
+    /// The polar chart.
+    /// </summary>
+    Polar,
+
+    /// <summary>
+    /// The geo map chart.
+    /// </summary>
+    GeoMap
 }

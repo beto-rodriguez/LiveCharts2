@@ -76,11 +76,14 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <param name="canvas">The canvas.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="view">The chart view.</param>
+    /// <param name="kind">The chart kind.</param>
     protected Chart(
         CoreMotionCanvas canvas,
         Action<LiveChartsSettings> defaultPlatformConfig,
-        IChartView view)
+        IChartView view,
+        ChartKind kind)
     {
+        Kind = kind;
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
         EasingFunction = EasingFunctions.QuadraticOut;
@@ -129,6 +132,9 @@ public abstract class Chart<TDrawingContext> : IChart
     /// The measure work.
     /// </value>
     public object MeasureWork { get; protected set; } = new();
+
+    /// <inheritdoc cref="IChart.Kind" />
+    public ChartKind Kind { get; protected set; }
 
     /// <summary>
     /// Gets whether the control is loaded.
@@ -236,7 +242,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The tooltip.
     /// </value>
-    public IChartTooltip<TDrawingContext>? Tooltip { get; protected set; }
+    public IChartTooltip? Tooltip { get; protected set; }
 
     /// <summary>
     /// Gets the animations speed.

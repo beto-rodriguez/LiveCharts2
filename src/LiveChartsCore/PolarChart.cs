@@ -46,7 +46,7 @@ namespace LiveChartsCore;
 public class PolarChart<TDrawingContext>(
     IPolarChartView<TDrawingContext> view,
     Action<LiveChartsSettings> defaultPlatformConfig,
-    CoreMotionCanvas canvas) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
+    CoreMotionCanvas canvas) : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view, ChartKind.Polar)
     where TDrawingContext : DrawingContext
 {
     private int _nextSeries = 0;

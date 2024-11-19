@@ -56,7 +56,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// </summary>
     /// <param name="tooltip">The default tool tip control.</param>
     /// <param name="legend">The default legend.</param>
-    public PieChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend? legend = null)
+    public PieChart(IChartTooltip? tooltip = null, IChartLegend? legend = null)
         : base(tooltip, legend)
     {
         _seriesObserver = new CollectionDeepObserver<ISeries>(

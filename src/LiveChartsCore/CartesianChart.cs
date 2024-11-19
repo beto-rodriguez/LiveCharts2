@@ -47,7 +47,7 @@ public class CartesianChart<TDrawingContext>(
     ICartesianChartView<TDrawingContext> view,
     Action<LiveChartsSettings> defaultPlatformConfig,
     CoreMotionCanvas canvas)
-        : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view)
+        : Chart<TDrawingContext>(canvas, defaultPlatformConfig, view, ChartKind.Cartesian)
             where TDrawingContext : DrawingContext
 {
     private readonly ICartesianChartView<TDrawingContext> _chartView = view;

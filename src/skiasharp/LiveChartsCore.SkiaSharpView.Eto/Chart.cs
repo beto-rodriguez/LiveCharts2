@@ -54,7 +54,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip<SkiaSharpDrawingContext>? tooltip = new SKDefaultTooltip();
+    protected IChartTooltip? tooltip = new SKDefaultTooltip();
 
     /// <summary>
     /// The motion canvas
@@ -80,7 +80,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <param name="tooltip">The default tool tip control.</param>
     /// <param name="legend">The default legend.</param>
     /// <exception cref="MotionCanvas"></exception>
-    protected Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend? legend)
+    protected Chart(IChartTooltip? tooltip, IChartLegend? legend)
     {
         if (tooltip is not null) this.tooltip = tooltip;
         if (legend is not null) this.legend = legend;
@@ -223,7 +223,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get => tooltip; set { tooltip = value; OnPropertyChanged(); } }
+    public IChartTooltip? Tooltip { get => tooltip; set { tooltip = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
     public Paint? TooltipTextPaint { get => _tooltipTextPaint; set { _tooltipTextPaint = value; OnPropertyChanged(); } }

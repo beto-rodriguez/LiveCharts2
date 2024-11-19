@@ -51,7 +51,7 @@ public interface ISeries : IChartElement
     bool RequiresFindClosestOnPointerDown { get; }
 
     /// <summary>
-    /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip{TDrawingContext}"/> or 
+    /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip"/> or 
     /// <see cref="IChartLegend"/>, the default value is set automatically by the library.
     /// </summary>
     string? Name { get; set; }

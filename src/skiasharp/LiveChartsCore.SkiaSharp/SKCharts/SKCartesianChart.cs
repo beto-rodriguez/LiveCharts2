@@ -120,7 +120,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; }
+    public IChartTooltip? Tooltip { get; set; }
 
     LvcColor IChartView.BackColor
     {

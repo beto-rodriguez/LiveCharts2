@@ -60,7 +60,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     /// <param name="tooltip">The default tool tip control.</param>
     /// <param name="legend">The default legend control.</param>
-    public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend? legend = null)
+    public CartesianChart(IChartTooltip? tooltip = null, IChartLegend? legend = null)
         : base(tooltip, legend)
     {
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);

@@ -43,19 +43,17 @@ public static class Extensions
     /// <summary>
     /// Calculates the tooltip location.
     /// </summary>
-    /// <typeparam name="TDrawingContext"></typeparam>
     /// <param name="foundPoints">The points.</param>
     /// <param name="tooltipSize">The tooltip size.</param>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static LvcPoint GetTooltipLocation<TDrawingContext>(
+    public static LvcPoint GetTooltipLocation(
         this IEnumerable<ChartPoint> foundPoints,
         LvcSize tooltipSize,
-        Chart<TDrawingContext> chart)
-            where TDrawingContext : DrawingContext
+        IChart chart)
     {
-        var location = chart is CartesianChart<TDrawingContext> or PolarChart<TDrawingContext>
+        var location = chart.Kind is ChartKind.Cartesian or ChartKind.Polar
             ? _getCartesianTooltipLocation(foundPoints, chart, tooltipSize)
             : _getPieTooltipLocation(foundPoints, chart, tooltipSize);
 
@@ -69,11 +67,8 @@ public static class Extensions
         return location;
     }
 
-    private static LvcPoint _getCartesianTooltipLocation<TDrawingContext>(
-        IEnumerable<ChartPoint> foundPoints,
-        Chart<TDrawingContext> chart,
-        LvcSize tooltipSize)
-            where TDrawingContext : DrawingContext
+    private static LvcPoint _getCartesianTooltipLocation(
+        IEnumerable<ChartPoint> foundPoints, IChart chart, LvcSize tooltipSize)
     {
         var count = 0f;
         var placementContext = new TooltipPlacementContext(chart.TooltipPosition);
@@ -158,9 +153,9 @@ public static class Extensions
 
         return new(x, y);
     }
-    private static LvcPoint _getPieTooltipLocation<TDrawingContext>(
-        IEnumerable<ChartPoint> foundPoints, Chart<TDrawingContext> chart, LvcSize tooltipSize)
-            where TDrawingContext : DrawingContext
+
+    private static LvcPoint _getPieTooltipLocation(
+        IEnumerable<ChartPoint> foundPoints, IChart chart, LvcSize tooltipSize)
     {
         var placementContext = new TooltipPlacementContext(TooltipPosition.Auto);
 
