@@ -112,14 +112,14 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        //if (chart is CartesianChart<TDrawingContext> cc)
-        //{
-        //    var primaryAxis = cc.YAxes[ScalesYAt];
-        //    var secondaryAxis = cc.XAxes[ScalesXAt];
+        if (chart is CartesianChartEngine cc)
+        {
+            var primaryAxis = cc.YAxes[ScalesYAt];
+            var secondaryAxis = cc.XAxes[ScalesXAt];
 
-        //    SecondaryScaler = secondaryAxis.GetNextScaler(cc);
-        //    PrimaryScaler = primaryAxis.GetNextScaler(cc);
-        //}
+            SecondaryScaler = secondaryAxis.GetNextScaler(cc);
+            PrimaryScaler = primaryAxis.GetNextScaler(cc);
+        }
 
         foreach (var paintTask in GetPaintTasks())
         {
