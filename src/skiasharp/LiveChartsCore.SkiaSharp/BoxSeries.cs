@@ -82,7 +82,7 @@ public class BoxSeries<TModel>
 /// </typeparam>
 public class BoxSeries<TModel, TVisual>
     : BoxSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, IBoxGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class.
@@ -128,7 +128,7 @@ public class BoxSeries<TModel, TVisual>
 /// </typeparam>
 public class BoxSeries<TModel, TVisual, TLabel>
     : CoreBoxSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-        where TVisual : class, IBoxGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : class, IBoxGeometry, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
     /// <summary>
