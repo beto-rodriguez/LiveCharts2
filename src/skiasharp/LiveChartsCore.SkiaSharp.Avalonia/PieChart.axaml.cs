@@ -127,14 +127,14 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// The series property
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-        AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
+        AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), [], inherits: true);
 
     /// <summary>
     /// The visual elements property
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<ChartElement<SkiaSharpDrawingContext>>> VisualElementsProperty =
         AvaloniaProperty.Register<PieChart, IEnumerable<ChartElement<SkiaSharpDrawingContext>>>(
-            nameof(VisualElements), Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>(), inherits: true);
+            nameof(VisualElements), [], inherits: true);
 
     /// <summary>
     /// The IsClockwise property
@@ -344,7 +344,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(SyncContextProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
+    /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;
 
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => _core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)_core;
@@ -433,21 +433,21 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
+    /// <inheritdoc cref="IChartView.TooltipTextPaint" />
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    /// <inheritdoc cref="IChartView.TooltipTextSize" />
     public double? TooltipTextSize
     {
         get => (double?)GetValue(TooltipTextSizeProperty);
@@ -464,21 +464,21 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(LegendPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
+    /// <inheritdoc cref="IChartView.LegendTextPaint" />
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double? LegendTextSize
     {
         get => (double?)GetValue(LegendTextSizeProperty);
@@ -488,7 +488,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     public IChartLegend? Legend { get => legend; set => legend = value; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
@@ -588,10 +588,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(cc, new(point)));
     }
 
-    void IChartView.InvokeOnUIThread(Action action)
-    {
+    void IChartView.InvokeOnUIThread(Action action) =>
         Dispatcher.UIThread.Post(action);
-    }
 
     /// <summary>
     /// Initializes the core.
@@ -642,10 +640,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         _core.Update();
     }
 
-    private void InitializeComponent()
-    {
+    private void InitializeComponent() =>
         AvaloniaXamlLoader.Load(this);
-    }
 
     private void Chart_PointerMoved(object? sender, PointerEventArgs e)
     {
@@ -684,10 +680,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         }
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
         UpdateFinished?.Invoke(this);
-    }
 
     private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
     {
@@ -700,25 +694,17 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
         Measuring?.Invoke(this);
-    }
 
-    private void Chart_PointerLeave(object? sender, PointerEventArgs e)
-    {
+    private void Chart_PointerLeave(object? sender, PointerEventArgs e) =>
         _core?.InvokePointerLeft();
-    }
 
-    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
-    {
+    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e) =>
         _core?.Load();
-    }
 
-    private void PieChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
-    {
+    private void PieChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e) =>
         _core?.Unload();
-    }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
@@ -726,7 +712,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
-        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+        ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
     }
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
@@ -747,8 +733,5 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
             VisualElementsPointerDownCommand.Execute(args);
     }
 
-    void IChartView.Invalidate()
-    {
-        CoreCanvas.Invalidate();
-    }
+    void IChartView.Invalidate() => CoreCanvas.Invalidate();
 }
