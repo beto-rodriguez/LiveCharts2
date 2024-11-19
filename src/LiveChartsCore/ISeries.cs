@@ -114,7 +114,7 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the series geometry svg, this property requires the series visual to be
-    /// an <see cref="IVariableSvgPath{TDrawingContext}"/> instance.
+    /// an <see cref="IVariableSvgPath"/> instance.
     /// </summary>
     string? GeometrySvg { get; set; }
 

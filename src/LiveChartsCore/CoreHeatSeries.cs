@@ -212,7 +212,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
             if (hasSvg)
             {
-                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }

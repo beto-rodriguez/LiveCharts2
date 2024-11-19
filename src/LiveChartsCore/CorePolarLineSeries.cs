@@ -337,7 +337,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
                 if (hasSvg)
                 {
-                    var svgVisual = (IVariableSvgPath<TDrawingContext>)visual.Geometry;
+                    var svgVisual = (IVariableSvgPath)visual.Geometry;
                     if (_geometrySvgChanged || svgVisual.SVGPath is null)
                         svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
                 }

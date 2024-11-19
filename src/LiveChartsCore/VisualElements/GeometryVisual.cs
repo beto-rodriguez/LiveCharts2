@@ -97,8 +97,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
 
             if (Svg is not null)
             {
-                var svgGeometry = _geometry as IVariableSvgPath<TDrawingContext>
-                    ?? throw new Exception($"The geometry must be of type {nameof(IVariableSvgPath<TDrawingContext>)}.");
+                var svgGeometry = _geometry as IVariableSvgPath
+                    ?? throw new Exception($"The geometry must be of type {nameof(IVariableSvgPath)}.");
 
                 svgGeometry.SVGPath = Svg;
             }

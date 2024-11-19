@@ -57,7 +57,7 @@ public static class VisualElementsExtensions
                     ClippingMode = Measure.ClipMode.None
                 };
 
-                if (g is IVariableSvgPath<SkiaSharpDrawingContext> svgGeometry)
+                if (g is IVariableSvgPath svgGeometry)
                 {
                     svgGeometry.SVGPath =
                         sketch.Svg ?? throw new NullReferenceException("sketch.Svg can not be null at this point.");
