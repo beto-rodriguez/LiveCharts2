@@ -22,7 +22,7 @@
 
 // Ignore Spelling: SVG
 
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -41,8 +41,8 @@ public class SVGVisual : GeometryVisual<VariableSVGPathGeometry>
     /// </summary>
     public SKPath? Path { get => _path; set => SetProperty(ref _path, value); }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    protected internal override void OnInvalidated(IChart chart)
     {
         base.OnInvalidated(chart);
         if (_geometry is not null) _geometry.Path = Path;

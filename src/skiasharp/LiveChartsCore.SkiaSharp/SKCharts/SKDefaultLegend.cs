@@ -144,7 +144,7 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    series.GetMiniature(null, s_zIndex),
+                    (VisualElement<SkiaSharpDrawingContext>)series.GetMiniature(null, s_zIndex),
                     new LabelVisual
                     {
                         Text = series.Name ?? string.Empty,

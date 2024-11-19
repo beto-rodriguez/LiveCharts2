@@ -29,9 +29,9 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// Defines a line series plot.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
+/// <seealso cref="IChartSeries" />
 public interface ILineSeries<TDrawingContext>
-    : IChartSeries<TDrawingContext>, IStrokedAndFilled,
+    : IChartSeries, IStrokedAndFilled,
         ICartesianSeries<TDrawingContext>, IErrorSeries
             where TDrawingContext : DrawingContext
 {

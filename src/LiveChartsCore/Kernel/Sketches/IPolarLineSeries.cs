@@ -29,8 +29,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// Defines a polar line series plot.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IPolarLineSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled, IPolarSeries<TDrawingContext>
+/// <seealso cref="IChartSeries" />
+public interface IPolarLineSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled, IPolarSeries<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>

@@ -28,8 +28,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// Defines an error series series.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IBoxSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled, ICartesianSeries<TDrawingContext>
+/// <seealso cref="IChartSeries" />
+public interface IBoxSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled, ICartesianSeries<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>

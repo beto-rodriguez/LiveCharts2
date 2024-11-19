@@ -56,8 +56,5 @@ public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, T
     /// </summary>
     /// <returns></returns>
     /// <inheritdoc />
-    public override int GetStackGroup()
-    {
-        return _stackGroup;
-    }
+    public override int GetStackGroup() => _stackGroup;
 }

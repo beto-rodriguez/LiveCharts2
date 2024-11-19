@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -138,8 +139,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    protected internal override void OnInvalidated(IChart chart)
     {
         var controlSize = Measure(chart);
 
@@ -171,8 +172,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         BackgroundGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    public override LvcSize Measure(IChart chart)
     {
         var xl = Padding.Left;
         var yl = Padding.Top;
@@ -281,8 +282,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(IChart)"/>
+    public override void RemoveFromUI(IChart chart)
     {
         foreach (var child in Children)
         {

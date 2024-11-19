@@ -205,7 +205,7 @@ public abstract class Section<TSizedGeometry, TLabelGeometry, TDrawingContext> :
     /// Measures the specified chart.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    public override void Invalidate(IChart chart)
     {
         var drawLocation = chart.DrawMarginLocation;
         var drawMarginSize = chart.DrawMarginSize;

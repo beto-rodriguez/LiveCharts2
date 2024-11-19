@@ -33,7 +33,7 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a visual element in a chart.
 /// </summary>
-public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>, INotifyPropertyChanged
+public abstract class ChartElement<TDrawingContext> : IChartElement, INotifyPropertyChanged
     where TDrawingContext : DrawingContext
 {
     internal bool _isInternalSet = false;
@@ -58,11 +58,11 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         set => SetProperty(ref _isVisible, value);
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})" />
-    public abstract void Invalidate(Chart<TDrawingContext> chart);
+    /// <inheritdoc cref="IChartElement.Invalidate(IChart)" />
+    public abstract void Invalidate(IChart chart);
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveOldPaints(IChartView{TDrawingContext})" />
-    public void RemoveOldPaints(IChartView<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveOldPaints(IChartView)" />
+    public void RemoveOldPaints(IChartView chart)
     {
         if (_deletingTasks.Count == 0) return;
 
@@ -75,8 +75,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         _deletingTasks.Clear();
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})" />
-    public virtual void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(IChart)" />
+    public virtual void RemoveFromUI(IChart chart)
     {
         foreach (var item in GetPaintTasks())
         {
@@ -165,10 +165,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// Schedules the delete for thew given <see cref="Paint"/> instance.
     /// </summary>
     /// <returns></returns>
-    protected void ScheduleDeleteFor(Paint paintTask)
-    {
+    protected void ScheduleDeleteFor(Paint paintTask) =>
         _deletingTasks.Add(paintTask);
-    }
 
     /// <summary>
     /// Called when the fill changes.

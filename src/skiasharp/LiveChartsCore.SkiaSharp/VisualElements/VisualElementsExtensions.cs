@@ -38,7 +38,7 @@ public static class VisualElementsExtensions
     /// Creates a relative panel control from a given sketch.
     /// </summary>
     public static RelativePanel<RectangleGeometry, SkiaSharpDrawingContext> AsDrawnControl(
-        this Sketch<SkiaSharpDrawingContext> sketch, int baseZIndex = 10050)
+        this Sketch sketch, int baseZIndex = 10050)
     {
         var relativePanel = new RelativePanel<RectangleGeometry, SkiaSharpDrawingContext>
         {

@@ -52,11 +52,11 @@ public class PieChart<TDrawingContext>(
     private int _nextSeries = 0;
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
-    public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        view.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
+    public override IEnumerable<IChartSeries> Series =>
+        view.Series?.Cast<IChartSeries>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
-    public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
+    public override IEnumerable<IChartSeries> VisibleSeries =>
         Series.Where(x => x.IsVisible);
 
     /// <summary>
@@ -136,7 +136,7 @@ public class PieChart<TDrawingContext>(
         var viewDrawMargin = view.DrawMargin;
         ControlSize = view.ControlSize;
 
-        VisualElements = view.VisualElements ?? Array.Empty<ChartElement<TDrawingContext>>();
+        VisualElements = view.VisualElements ?? [];
 
         LegendPosition = view.LegendPosition;
         Legend = view.Legend;
@@ -147,7 +147,7 @@ public class PieChart<TDrawingContext>(
         AnimationsSpeed = view.AnimationsSpeed;
         EasingFunction = view.EasingFunction;
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
+        SeriesContext = new SeriesContext(VisibleSeries, this);
         var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();

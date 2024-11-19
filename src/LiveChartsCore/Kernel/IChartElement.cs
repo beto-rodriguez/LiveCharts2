@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.ComponentModel;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 
@@ -41,29 +40,22 @@ public interface IChartElement : INotifyPropertyChanged
     /// Gets or sets a value indicating whether the element is visible.
     /// </summary>
     bool IsVisible { get; set; }
-}
 
-/// <summary>
-/// Defines a visual element in a chart.
-/// </summary>
-public interface IChartElement<TDrawingContext> : IChartElement
-    where TDrawingContext : DrawingContext
-{
     /// <summary>
-    /// Invalidates the <see cref="IChartElement{TDrawingContext}"/> in the user interface.
+    /// Invalidates the <see cref="IChartElement"/> in the user interface.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void Invalidate(Chart<TDrawingContext> chart);
+    void Invalidate(IChart chart);
 
     /// <summary>
     /// Deletes the <see cref="Paint"/> instances that changed from the user interface.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void RemoveOldPaints(IChartView<TDrawingContext> chart);
+    void RemoveOldPaints(IChartView chart);
 
     /// <summary>
     /// Removes the element from the UI.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void RemoveFromUI(Chart<TDrawingContext> chart);
+    void RemoveFromUI(IChart chart);
 }

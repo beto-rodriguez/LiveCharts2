@@ -147,8 +147,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    public override void Invalidate(IChart chart)
     {
         var pieChart = (PieChart<TDrawingContext>)chart;
 
@@ -162,7 +162,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
         minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
 
-        var pieLabelsCorrection = chart.SeriesContext.GetPieOuterLabelsSpace<TLabel>();
+        var pieLabelsCorrection = chart.SeriesContext.GetPieOuterLabelsSpace<TLabel, TDrawingContext>();
         minDimension -= pieLabelsCorrection;
 
         var outerRadiusOffset = (float)OuterRadiusOffset;
@@ -257,7 +257,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         var i = 1f;
         var isClockWise = view.IsClockwise;
 
-        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+        var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
 
         foreach (var point in fetched)
         {
@@ -454,21 +454,21 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     [Obsolete]
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
+    public override Sketch GetMiniaturesSketch()
     {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
+        var schedules = new List<PaintSchedule>();
 
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TMiniatureGeometry()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TMiniatureGeometry()));
 
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
         };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
         {

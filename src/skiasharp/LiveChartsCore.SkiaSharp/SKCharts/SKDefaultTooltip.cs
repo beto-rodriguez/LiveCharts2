@@ -132,7 +132,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         var i = 0;
         foreach (var point in foundPoints)
         {
-            var series = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
+            var series = (IChartSeries)point.Context.Series;
 
             if (i == 0)
             {
@@ -164,7 +164,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild(series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
+                tableLayout.AddChild((VisualElement<SkiaSharpDrawingContext>)series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
                     tableLayout.AddChild(

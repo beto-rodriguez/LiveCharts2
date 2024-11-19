@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -112,8 +113,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         HorizontalAlignment = Align.Start;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    protected internal override void OnInvalidated(IChart chart)
     {
         var x = (float)X;
         var y = (float)Y;
@@ -159,8 +160,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         _labelGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    public override LvcSize Measure(IChart chart)
     {
         ApplyTheme<LabelVisual<TLabelGeometry, TDrawingContext>>();
 

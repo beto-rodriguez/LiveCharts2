@@ -25,17 +25,14 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a series a chart series that has a visual representation in the user interface.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ISeries" />
-public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
-     where TDrawingContext : DrawingContext
+public interface IChartSeries : ISeries, IChartElement
 {
     /// <summary>
     /// Gets or sets the data labels paint.
@@ -87,7 +84,7 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// </summary>
     /// <returns></returns>
     [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    Sketch<TDrawingContext> GetMiniaturesSketch();
+    Sketch GetMiniaturesSketch();
 
     /// <summary>
     /// Return the visual element shown in tooltips and legends.
@@ -95,7 +92,7 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <param name="point">The point.</param>
     /// <param name="zindex">The zindex.</param>
     /// <returns></returns>
-    VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex);
+    IChartElement GetMiniature(ChartPoint? point, int zindex);
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.

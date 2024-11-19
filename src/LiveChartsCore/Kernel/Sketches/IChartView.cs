@@ -116,6 +116,52 @@ public interface IChartView
     TooltipPosition TooltipPosition { get; set; }
 
     /// <summary>
+    /// Gets or sets the legend default text paint, when null the library will use the default text paint.
+    /// </summary>
+    Paint? LegendTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend background paint, when null the library will use the default background paint.
+    /// </summary>
+    Paint? LegendBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend text size, when null the library will use the default text size.
+    /// </summary>
+    double? LegendTextSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
+    /// </summary>
+    Paint? TooltipTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip background paint, when null the library will use the default background paint.
+    /// </summary>
+    Paint? TooltipBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip text size, when null the library will use the default text size.
+    /// </summary>
+    double? TooltipTextSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the automatic updates are enabled.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if automatic update are enabled; otherwise, <c>false</c>.
+    /// </value>
+    bool AutoUpdateEnabled { get; set; }
+
+    /// <summary>
+    /// Gets the core canvas.
+    /// </summary>
+    /// <value>
+    /// The core canvas.
+    /// </value>
+    CoreMotionCanvas CoreCanvas { get; }
+
+    /// <summary>
     /// Occurs when the pointer goes down over a chart point(s).
     /// </summary>
     event ChartPointsHandler? DataPointerDown;
@@ -187,36 +233,6 @@ public interface IChartView<TDrawingContext> : IChartView
     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets or sets the legend default text paint, when null the library will use the default text paint.
-    /// </summary>
-    Paint? LegendTextPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend background paint, when null the library will use the default background paint.
-    /// </summary>
-    Paint? LegendBackgroundPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend text size, when null the library will use the default text size.
-    /// </summary>
-    double? LegendTextSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
-    /// </summary>
-    Paint? TooltipTextPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip background paint, when null the library will use the default background paint.
-    /// </summary>
-    Paint? TooltipBackgroundPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip text size, when null the library will use the default text size.
-    /// </summary>
-    double? TooltipTextSize { get; set; }
-
-    /// <summary>
     /// Gets or sets the chart title.
     /// </summary>
     VisualElement<TDrawingContext>? Title { get; set; }
@@ -240,22 +256,6 @@ public interface IChartView<TDrawingContext> : IChartView
     /// Occurs when the pointer goes down over a visual element.
     /// </summary>
     event VisualElementsHandler<TDrawingContext> VisualElementsPointerDown;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the automatic updates are enabled.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if automatic update are enabled; otherwise, <c>false</c>.
-    /// </value>
-    bool AutoUpdateEnabled { get; set; }
-
-    /// <summary>
-    /// Gets the core canvas.
-    /// </summary>
-    /// <value>
-    /// The core canvas.
-    /// </value>
-    CoreMotionCanvas CoreCanvas { get; }
 
     /// <summary>
     /// Gets or sets the legend.

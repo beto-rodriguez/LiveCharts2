@@ -297,8 +297,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.MeasureStarted"/>
     public event Action<IChart, ICartesianAxis>? MeasureStarted;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    public override void Invalidate(IChart chart)
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
@@ -966,8 +966,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         _ = activeSeparators.Remove(chart);
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(IChart)"/>
+    public override void RemoveFromUI(IChart chart)
     {
         base.RemoveFromUI(chart);
         _animatableBounds = new();

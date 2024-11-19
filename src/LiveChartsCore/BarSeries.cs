@@ -76,7 +76,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
-    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
+    /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
         get => _errorPaint;
@@ -85,21 +85,21 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     [System.Obsolete]
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
+    public override Sketch GetMiniaturesSketch()
     {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
+        var schedules = new List<PaintSchedule>();
 
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
         };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         return new GeometryVisual<TVisual, TLabel, TDrawingContext>
         {

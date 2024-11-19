@@ -189,8 +189,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <inheritdoc cref="IPolarAxis.Initialized"/>
     public event Action<IPolarAxis>? Initialized;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    public override void Invalidate(IChart chart)
     {
         var polarChart = (PolarChart<TDrawingContext>)chart;
 
@@ -533,8 +533,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         _ = activeSeparators.Remove(chart);
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(IChart)"/>
+    public override void RemoveFromUI(IChart chart)
     {
         base.RemoveFromUI(chart);
         _animatableBounds = null!;

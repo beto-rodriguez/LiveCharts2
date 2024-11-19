@@ -36,7 +36,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Series{TModel, TVisual, TLabel, TDrawingContext}" />
-/// <seealso cref="IChartSeries{TDrawingContext}" />
+/// <seealso cref="IChartSeries" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
 /// </remarks>
@@ -45,7 +45,7 @@ namespace LiveChartsCore;
 public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
-        : Series<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IChartSeries<TDrawingContext>
+        : Series<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IChartSeries
             where TDrawingContext : DrawingContext
             where TVisual : class, IGeometry<TDrawingContext>, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -56,25 +56,25 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
     private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
+    /// <inheritdoc cref="IChartSeries.DataLabelsPaint"/>
     public Paint? DataLabelsPaint
     {
         get => _dataLabelsPaint;
         set => SetPaintProperty(ref _dataLabelsPaint, value);
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsSize"/>
+    /// <inheritdoc cref="IChartSeries.DataLabelsSize"/>
     public double DataLabelsSize { get => _dataLabelsSize; set => SetProperty(ref _dataLabelsSize, value); }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsRotation"/>
+    /// <inheritdoc cref="IChartSeries.DataLabelsRotation"/>
     public double DataLabelsRotation { get => _dataLabelsRotation; set => SetProperty(ref _dataLabelsRotation, value); }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
+    /// <inheritdoc cref="IChartSeries.DataLabelsPadding"/>
     public Padding DataLabelsPadding { get => _dataLabelsPadding; set => SetProperty(ref _dataLabelsPadding, value); }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsMaxWidth"/>
+    /// <inheritdoc cref="IChartSeries.DataLabelsMaxWidth"/>
     public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
 
-    void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer) =>
+    void IChartSeries.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer) =>
         OnDataPointerDown(chart, points, pointer);
 }

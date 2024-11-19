@@ -21,22 +21,19 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Drawing;
 
 /// <summary>
 /// Defines the paint context.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="Sketch{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="Sketch"/> class.
 /// </remarks>
 /// <param name="width">The widht.</param>
 /// <param name="height">The height.</param>
 /// <param name="svg">The svg path.</param>
-public class Sketch<TDrawingContext>(double width, double height, string? svg)
-    where TDrawingContext : DrawingContext
+public class Sketch(double width, double height, string? svg)
 {
 
     /// <summary>
@@ -66,5 +63,5 @@ public class Sketch<TDrawingContext>(double width, double height, string? svg)
     /// <value>
     /// The paint tasks schedule.
     /// </value>
-    public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = [];
+    public List<PaintSchedule> PaintSchedules { get; set; } = [];
 }

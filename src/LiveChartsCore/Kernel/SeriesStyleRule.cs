@@ -49,5 +49,5 @@ public class SeriesStyleRule<TVisual, TDrawingContext>
     /// <value>
     /// The rule.
     /// </value>
-    public Action<IChartSeries<TDrawingContext>>? Rule { get; set; }
+    public Action<IChartSeries>? Rule { get; set; }
 }

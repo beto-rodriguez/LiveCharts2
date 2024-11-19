@@ -103,8 +103,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IHeatSeries{TDrawingContext}.MaxValue"/>
     public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    public override void Invalidate(IChart chart)
     {
         _paintTaks ??= LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
 
@@ -151,7 +151,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         var hasSvg = this.HasVariableSvgGeometry();
 
-        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+        var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -272,7 +272,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
     public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
@@ -323,9 +323,9 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
     [Obsolete]
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
+    public override Sketch GetMiniaturesSketch()
     {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
+        var schedules = new List<PaintSchedule>();
 
         var solidPaint = LiveCharts.DefaultSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
         var st = solidPaint.StrokeThickness;
@@ -345,16 +345,16 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
             Width = (float)MiniatureShapeSize,
             Color = HeatMap[0] // ToDo <- draw the gradient?
         };
-        schedules.Add(new PaintSchedule<TDrawingContext>(solidPaint, visual));
+        schedules.Add(new PaintSchedule(solidPaint, visual));
 
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
         };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         // ToDo <- draw the gradient?
         // what to show in the legend?

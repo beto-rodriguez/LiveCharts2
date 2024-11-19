@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Kernel;
@@ -29,18 +28,16 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines the stacker helper class.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class Stacker<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class Stacker
 {
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = [];
+    private readonly Dictionary<IChartSeries, int> _stackPositions = [];
     private readonly List<Dictionary<double, StackedValue>> _stack = [];
     private readonly Dictionary<double, StackedTotal> _totals = [];
     private int _stackCount = 0;
     private int _knownMaxLenght = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Stacker{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="Stacker"/> class.
     /// </summary>
     public Stacker()
     {
@@ -59,7 +56,7 @@ public class Stacker<TDrawingContext>
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetSeriesStackPosition(IChartSeries<TDrawingContext> series)
+    public int GetSeriesStackPosition(IChartSeries series)
     {
         if (!_stackPositions.TryGetValue(series, out var i))
         {

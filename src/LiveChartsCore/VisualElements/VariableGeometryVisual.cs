@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
@@ -35,8 +36,9 @@ namespace LiveChartsCore.VisualElements;
 /// Initializes a new instance of the <see cref="VariableGeometryVisual{TDrawingContext}"/> class.
 /// </remarks>
 /// <param name="geometry"></param>
-public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingContext> geometry) : BaseGeometryVisual<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingContext> geometry)
+    : BaseGeometryVisual<TDrawingContext>
+        where TDrawingContext : DrawingContext
 {
     private bool _isInitialized;
 
@@ -61,13 +63,11 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
     public event Action<ISizedGeometry<TDrawingContext>>? GeometryInitialized;
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { geometry };
-    }
+    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+        [geometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    protected internal override void OnInvalidated(IChart chart)
     {
         var x = (float)X;
         var y = (float)Y;
@@ -126,8 +126,8 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
         geometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    public override LvcSize Measure(IChart chart)
     {
         var w = (float)Width;
         var h = (float)Height;

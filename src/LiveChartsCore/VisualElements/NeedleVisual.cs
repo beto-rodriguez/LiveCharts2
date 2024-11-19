@@ -57,8 +57,8 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    protected internal override void OnInvalidated(IChart chart)
     {
         ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext>>();
 
@@ -114,8 +114,8 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart) => new();
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    public override LvcSize Measure(IChart chart) => new();
 
     /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
     protected internal override void SetParent(IGeometry<TDrawingContext> parent)

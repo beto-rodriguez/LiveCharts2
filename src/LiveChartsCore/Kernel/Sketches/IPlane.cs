@@ -197,7 +197,7 @@ public interface IPlane : IChartElement
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IDisposable" />
-public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext>
+public interface IPlane<TDrawingContext> : IPlane
     where TDrawingContext : DrawingContext
 {
     /// <summary>

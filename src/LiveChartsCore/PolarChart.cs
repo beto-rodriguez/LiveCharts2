@@ -68,11 +68,11 @@ public class PolarChart<TDrawingContext>(
     public IPolarAxis[] RadiusAxes { get; private set; } = [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
-    public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        view.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
+    public override IEnumerable<IChartSeries> Series =>
+        view.Series?.Cast<IChartSeries>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
-    public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
+    public override IEnumerable<IChartSeries> VisibleSeries =>
         Series.Where(x => x.IsVisible);
 
     /// <summary>
@@ -197,7 +197,7 @@ public class PolarChart<TDrawingContext>(
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
+        SeriesContext = new SeriesContext(VisibleSeries, this);
         var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         // restart axes bounds and meta data

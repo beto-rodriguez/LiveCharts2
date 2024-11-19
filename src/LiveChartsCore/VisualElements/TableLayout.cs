@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -83,8 +84,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
+    public override LvcSize Measure(IChart chart)
     {
         var maxH = Padding.Top;
         _measuredSizes = new LvcSize[_maxRow + 2, _maxColumn + 2];
@@ -126,8 +127,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         return new(maxW + Padding.Right, maxH + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(IChart)"/>
+    public override void RemoveFromUI(IChart chart)
     {
         foreach (var child in EnumerateChildren())
             chart.RemoveVisual(child.VisualElement);
@@ -179,8 +180,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
                 yield return _positions[r][c];
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    protected internal override void OnInvalidated(IChart chart)
     {
         var controlSize = Measure(chart);
         var clipping = Clipping.GetClipRectangle(ClippingMode, chart);

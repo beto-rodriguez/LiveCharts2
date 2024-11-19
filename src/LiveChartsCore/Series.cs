@@ -35,7 +35,6 @@ using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 namespace LiveChartsCore;
 
 /// <summary>
@@ -105,7 +104,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private DataFactory<TModel, TDrawingContext>? _dataFactory;
     private bool _isVisibleAtLegend = true;
     private double _miniatureShapeSize = 12;
-    private Sketch<TDrawingContext> _miniatureSketch = new(0, 0, null);
+    private Sketch _miniatureSketch = new(0, 0, null);
     private Func<float, float>? _easingFunction;
     private TimeSpan? _animationsSpeed;
     private string? _geometrySvg;
@@ -288,17 +287,14 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Obsolete.
     /// </summary>
     [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    public Sketch<TDrawingContext> CanvasSchedule
+    public Sketch CanvasSchedule
     {
         get => _miniatureSketch;
         protected set => SetProperty(ref _miniatureSketch, value);
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetStackGroup"/>
-    public virtual int GetStackGroup()
-    {
-        return 0;
-    }
+    /// <inheritdoc cref="IChartSeries.GetStackGroup"/>
+    public virtual int GetStackGroup() => 0;
 
     /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
     protected IEnumerable<ChartPoint> Fetch(IChart chart)
@@ -307,7 +303,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         return DataFactory.Fetch(this, chart);
     }
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.OnDataPointerDown(IChartView, IEnumerable{ChartPoint}, LvcPoint)"/>
+    /// <inheritdoc cref="IChartSeries.OnDataPointerDown(IChartView, IEnumerable{ChartPoint}, LvcPoint)"/>
     protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         DataPointerDown?.Invoke(chart, points.Select(point => new ChartPoint<TModel, TVisual, TLabel>(point)));
@@ -337,10 +333,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         return query;
     }
 
-    IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
-    {
-        return Fetch(chart);
-    }
+    IEnumerable<ChartPoint> ISeries.Fetch(IChart chart) => Fetch(chart);
 
     IEnumerable<ChartPoint> ISeries.FindHitPoints(
         IChart chart,
@@ -349,15 +342,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         FindPointFor findPointFor) =>
             FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
 
-    void ISeries.OnPointerEnter(ChartPoint point)
-    {
+    void ISeries.OnPointerEnter(ChartPoint point) =>
         OnPointerEnter(point);
-    }
 
-    void ISeries.OnPointerLeft(ChartPoint point)
-    {
+    void ISeries.OnPointerLeft(ChartPoint point) =>
         OnPointerLeft(point);
-    }
 
     /// <inheritdoc cref="ISeries.RestartAnimations"/>
     public void RestartAnimations()
@@ -373,13 +362,13 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     public abstract string? GetSecondaryToolTipText(ChartPoint point);
 
     /// <inheritdoc cref="ISeries.GetDataLabelText(ChartPoint)"/>
-    public string? GetDataLabelText(ChartPoint point)
-    {
-        return DataLabelsFormatter is null ? null : DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
-    }
+    public string? GetDataLabelText(ChartPoint point) =>
+        DataLabelsFormatter is null
+        ? null
+        : DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(IChart)"/>
+    public override void RemoveFromUI(IChart chart)
     {
         base.RemoveFromUI(chart);
         DataFactory?.Dispose(chart);
@@ -392,20 +381,18 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
-    public ChartPoint<TModel, TVisual, TLabel> ConvertToTypedChartPoint(ChartPoint point)
-    {
-        return new ChartPoint<TModel, TVisual, TLabel>(point);
-    }
+    public ChartPoint<TModel, TVisual, TLabel> ConvertToTypedChartPoint(ChartPoint point) =>
+        new(point);
 
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniaturesSketch"/>
+    /// <inheritdoc cref="IChartSeries.GetMiniaturesSketch"/>
     [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    public abstract Sketch<TDrawingContext> GetMiniaturesSketch();
+    public abstract Sketch GetMiniaturesSketch();
 
-    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetMiniature"/>
-    public abstract VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex);
+    /// <inheritdoc cref="IChartSeries.GetMiniature"/>
+    public abstract IChartElement GetMiniature(ChartPoint? point, int zindex);
 
     /// <summary>
     /// Builds a paint schedule.
@@ -413,7 +400,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// <param name="paint"></param>
     /// <param name="geometry"></param>
     /// <returns></returns>
-    protected PaintSchedule<TDrawingContext> BuildMiniatureSchedule(
+    protected PaintSchedule BuildMiniatureSchedule(
         Paint paint, ISizedGeometry<TDrawingContext> geometry)
     {
         var paintClone = paint.CloneTask();
@@ -432,7 +419,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
         if (paint.IsStroke) paintClone.ZIndex = 1;
 
-        return new PaintSchedule<TDrawingContext>(paintClone, geometry);
+        return new PaintSchedule(paintClone, geometry);
     }
 
     /// <summary>
@@ -482,10 +469,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.OnPaintChanged(string?)"/>
-    protected override void OnPaintChanged(string? propertyName)
-    {
-        base.OnPaintChanged(propertyName);
-    }
+    protected override void OnPaintChanged(string? propertyName) => base.OnPaintChanged(propertyName);
 
     /// <summary>
     /// Gets the miniature paint.

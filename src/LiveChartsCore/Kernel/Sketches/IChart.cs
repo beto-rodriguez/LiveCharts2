@@ -20,7 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -51,7 +54,37 @@ public interface IChart
     /// <value>
     /// The canvas.
     /// </value>
-    object Canvas { get; }
+    CoreMotionCanvas Canvas { get; }
+
+    /// <summary>
+    /// Gets the series context.
+    /// </summary>
+    SeriesContext SeriesContext { get; }
+
+    /// <summary>
+    /// Gets the control size.
+    /// </summary>
+    LvcSize ControlSize { get; }
+
+    /// <summary>
+    /// Gets the draw margin location.
+    /// </summary>
+    LvcPoint DrawMarginLocation { get; }
+
+    /// <summary>
+    /// Gets the draw margin size.
+    /// </summary>
+    LvcSize DrawMarginSize { get; }
+
+    /// <summary>
+    /// Gets the easing function.
+    /// </summary>
+    Func<float, float>? EasingFunction { get; }
+
+    /// <summary>
+    /// Gets the animations speed.
+    /// </summary>
+    TimeSpan AnimationsSpeed { get; }
 
     /// <summary>
     /// Gets the legend position.
@@ -78,7 +111,26 @@ public interface IChart
     FindingStrategy FindingStrategy { get; }
 
     /// <summary>
+    /// Gets whether the series has been drawn in the user interface.
+    /// </summary>
+    /// <param name="seriesId">The series id.</param>
+    /// <returns>A boolean that indicates whether the series has been drawn.</returns>
+    bool IsDrawn(int seriesId);
+
+    /// <summary>
     /// Updates the chart in the user interface.
     /// </summary>
     void Update(ChartUpdateParams? chartUpdateParams = null);
+
+    /// <summary>
+    /// Adds a visual element to the chart.
+    /// </summary>
+    /// <param name="element"></param>
+    void AddVisual(IChartElement element);
+
+    /// <summary>
+    /// Removes a visual element from the chart.
+    /// </summary>
+    /// <param name="element"></param>
+    void RemoveVisual(IChartElement element);
 }

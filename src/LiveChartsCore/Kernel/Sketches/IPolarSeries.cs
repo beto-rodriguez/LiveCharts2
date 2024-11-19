@@ -29,8 +29,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// Defines a polar series.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IPolarSeries<TDrawingContext> : IChartSeries<TDrawingContext>
+/// <seealso cref="IChartSeries" />
+public interface IPolarSeries<TDrawingContext> : IChartSeries
     where TDrawingContext : DrawingContext
 {
     /// <summary>

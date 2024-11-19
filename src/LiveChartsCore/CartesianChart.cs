@@ -94,11 +94,11 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         Array.Empty<Section<TDrawingContext>>();
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>
-    public override IEnumerable<IChartSeries<TDrawingContext>> Series =>
-        _chartView.Series?.Cast<IChartSeries<TDrawingContext>>() ?? [];
+    public override IEnumerable<IChartSeries> Series =>
+        _chartView.Series?.Cast<IChartSeries>() ?? [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.VisibleSeries"/>
-    public override IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries =>
+    public override IEnumerable<IChartSeries> VisibleSeries =>
         Series.Where(x => x.IsVisible);
 
     /// <summary>
@@ -415,7 +415,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        SeriesContext = new SeriesContext<TDrawingContext>(VisibleSeries, this);
+        SeriesContext = new SeriesContext(VisibleSeries, this);
         var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
         // restart axes bounds and meta data

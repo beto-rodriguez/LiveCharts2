@@ -311,10 +311,8 @@ public static class Extensions
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this IAnimatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
-    {
+    public static void Animate(this IAnimatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties) =>
         Animate(animatable, new Animation(easingFunction, speed), properties);
-    }
 
     /// <summary>
     /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
@@ -328,11 +326,8 @@ public static class Extensions
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate<TDrawingContext>(this IAnimatable animatable, Chart<TDrawingContext> chart, params string[]? properties)
-        where TDrawingContext : DrawingContext
-    {
+    public static void Animate(this IAnimatable animatable, IChart chart, params string[]? properties) =>
         Animate(animatable, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
-    }
 
     /// <summary>
     /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart
@@ -363,10 +358,8 @@ public static class Extensions
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
     public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties)
-        where TDrawingContext : DrawingContext
-    {
-        Animate(visual, new Animation(easingFunction, speed), properties);
-    }
+        where TDrawingContext : DrawingContext =>
+            Animate(visual, new Animation(easingFunction, speed), properties);
 
     /// <summary>
     /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart,
@@ -382,10 +375,7 @@ public static class Extensions
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
     public static void Animate<TDrawingContext>(this VisualElement<TDrawingContext> visual, Chart<TDrawingContext> chart, params string[]? properties)
-        where TDrawingContext : DrawingContext
-    {
-        Animate(visual, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
-    }
+        where TDrawingContext : DrawingContext => Animate(visual, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
 
     /// <summary>
     /// Determines whether is bar series.
@@ -394,10 +384,7 @@ public static class Extensions
     /// <returns>
     ///   <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsBarSeries(this ISeries series)
-    {
-        return (series.SeriesProperties & SeriesProperties.Bar) != 0;
-    }
+    public static bool IsBarSeries(this ISeries series) => (series.SeriesProperties & SeriesProperties.Bar) != 0;
 
     /// <summary>
     /// Determines whether is column series.
@@ -432,10 +419,7 @@ public static class Extensions
     /// <returns>
     ///   <c>true</c> if [is box series] [the specified series]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsBoxSeries(this ISeries series)
-    {
-        return (series.SeriesProperties & (SeriesProperties.BoxSeries)) == SeriesProperties.BoxSeries;
-    }
+    public static bool IsBoxSeries(this ISeries series) => (series.SeriesProperties & (SeriesProperties.BoxSeries)) == SeriesProperties.BoxSeries;
 
     /// <summary>
     /// Determines whether is stacked series.
@@ -444,10 +428,7 @@ public static class Extensions
     /// <returns>
     ///   <c>true</c> if [is stacked series] [the specified series]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsStackedSeries(this ISeries series)
-    {
-        return (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
-    }
+    public static bool IsStackedSeries(this ISeries series) => (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
 
     /// <summary>
     /// Determines whether is vertical series.
@@ -456,10 +437,7 @@ public static class Extensions
     /// <returns>
     ///   <c>true</c> if [is vertical series] [the specified series]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsVerticalSeries(this ISeries series)
-    {
-        return (series.SeriesProperties & (SeriesProperties.PrimaryAxisVerticalOrientation)) != 0;
-    }
+    public static bool IsVerticalSeries(this ISeries series) => (series.SeriesProperties & (SeriesProperties.PrimaryAxisVerticalOrientation)) != 0;
 
     /// <summary>
     /// Determines whether is horizontal series.
@@ -468,29 +446,20 @@ public static class Extensions
     /// <returns>
     ///   <c>true</c> if [is horizontal series] [the specified series]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsHorizontalSeries(this ISeries series)
-    {
-        return (series.SeriesProperties & (SeriesProperties.PrimaryAxisHorizontalOrientation)) != 0;
-    }
+    public static bool IsHorizontalSeries(this ISeries series) => (series.SeriesProperties & (SeriesProperties.PrimaryAxisHorizontalOrientation)) != 0;
 
     /// <summary>
     /// Determines whether is a financial series.
     /// </summary>
     /// <param name="series"></param>
     /// <returns></returns>
-    public static bool IsFinancialSeries(this ISeries series)
-    {
-        return (series.SeriesProperties & SeriesProperties.Financial) != 0;
-    }
+    public static bool IsFinancialSeries(this ISeries series) => (series.SeriesProperties & SeriesProperties.Financial) != 0;
 
     /// <summary>
     /// Determines whether is a pie series.
     /// </summary>
     /// <param name="series">The series.</param>
-    public static bool IsPieSeries(this ISeries series)
-    {
-        return (series.SeriesProperties & SeriesProperties.PieSeries) != 0;
-    }
+    public static bool IsPieSeries(this ISeries series) => (series.SeriesProperties & SeriesProperties.PieSeries) != 0;
 
     /// <summary>
     /// Determines whether is bar series.
@@ -499,10 +468,8 @@ public static class Extensions
     /// <returns>
     ///   <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
     /// </returns>
-    public static bool HasVariableSvgGeometry(this ISeries series)
-    {
-        return (series.SeriesProperties & SeriesProperties.IsSVGPath) != 0;
-    }
+    public static bool HasVariableSvgGeometry(this ISeries series) =>
+        (series.SeriesProperties & SeriesProperties.IsSVGPath) != 0;
 
     /// <summary>
     /// Calculates the finding strategy based on the series properties.
@@ -570,10 +537,7 @@ public static class Extensions
     /// <param name="chart"></param>
     /// <returns></returns>
     public static Scaler GetNextScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
-        where TDrawingContext : DrawingContext
-    {
-        return new Scaler(chart.DrawMarginLocation, chart.DrawMarginSize, axis);
-    }
+        where TDrawingContext : DrawingContext => new(chart.DrawMarginLocation, chart.DrawMarginSize, axis);
 
     /// <summary>
     /// Gets a scaler that is built based on the dimensions of the chart at a given time, the scaler is built based on the
@@ -622,10 +586,7 @@ public static class Extensions
     /// <param name="dictionary">The points dictionary.</param>
     /// <param name="view">The view.</param>
     /// <returns></returns>
-    public static ChartPoint? GetPointForView(this Dictionary<IChartView, ChartPoint> dictionary, IChartView view)
-    {
-        return dictionary.TryGetValue(view, out var point) ? point : null;
-    }
+    public static ChartPoint? GetPointForView(this Dictionary<IChartView, ChartPoint> dictionary, IChartView view) => dictionary.TryGetValue(view, out var point) ? point : null;
 
     /// <summary>
     /// Splits an enumerable of chartpoints by each null gap.
@@ -680,10 +641,7 @@ public static class Extensions
     /// Returns <see langword="true" /> when the given type is either a reference type or of type <see cref="Nullable{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool CanBeNull(Type type)
-    {
-        return !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == s_nullableType);
-    }
+    internal static bool CanBeNull(Type type) => !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == s_nullableType);
 
     private static IEnumerable<ChartPoint> YieldReturnUntilNextNullChartPoint(
         GapsBuilder builder,
@@ -716,10 +674,7 @@ public static class Extensions
 
         public bool Finished { get; set; } = false;
 
-        public void Dispose()
-        {
-            Enumerator.Dispose();
-        }
+        public void Dispose() => Enumerator.Dispose();
     }
 
     internal class SplineData(ChartPoint start)

@@ -22,6 +22,7 @@
 
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Measure;
 
@@ -33,14 +34,12 @@ public static class Clipping
     /// <summary>
     /// Calculates the clipping rectangle based on a clipping mode.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="mode">The mode.</param>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public static LvcRectangle GetClipRectangle<TDrawingContext>(
-        ClipMode mode, Chart<TDrawingContext> chart)
-            where TDrawingContext : DrawingContext
+    public static LvcRectangle GetClipRectangle(
+        ClipMode mode, IChart chart)
     {
         return mode switch
         {

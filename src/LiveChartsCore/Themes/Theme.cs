@@ -65,7 +65,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IChartSeries<TDrawingContext>>> SeriesBuilder { get; set; } = [];
+    public List<Action<IChartSeries>> SeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the pie series builder.
@@ -253,7 +253,7 @@ public class Theme<TDrawingContext>
     /// Applies the theme to a series.
     /// </summary>
     /// <param name="series">The series.</param>
-    public virtual void ApplyStyleToSeries(IChartSeries<TDrawingContext> series)
+    public virtual void ApplyStyleToSeries(IChartSeries series)
     {
         foreach (var rule in SeriesBuilder) rule(series);
 
@@ -408,8 +408,6 @@ public class Theme<TDrawingContext>
     /// Gets the color of a series according to the theme.
     /// </summary>
     /// <returns></returns>
-    public LvcColor GetSeriesColor(ISeries series)
-    {
-        return Colors[series.SeriesId % Colors.Length];
-    }
+    public LvcColor GetSeriesColor(ISeries series) =>
+        Colors[series.SeriesId % Colors.Length];
 }

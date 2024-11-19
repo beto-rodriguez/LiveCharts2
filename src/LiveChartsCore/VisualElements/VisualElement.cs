@@ -110,8 +110,8 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// </summary>
     public event VisualElementHandler<TDrawingContext>? PointerDown;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
+    public override void Invalidate(IChart chart)
     {
         if (chart is CartesianChart<TDrawingContext> cc)
         {
@@ -135,7 +135,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Measures the element and returns the size.
     /// </summary>
     /// <param name = "chart" > The chart.</param>
-    public abstract LvcSize Measure(Chart<TDrawingContext> chart);
+    public abstract LvcSize Measure(IChart chart);
 
     /// <summary>
     /// Called when [paint changed].
@@ -152,7 +152,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Called when the visual is drawn.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart);
+    protected internal abstract void OnInvalidated(IChart chart);
 
     /// <summary>
     /// Sets the parent to all the geometries in the visual.
@@ -212,10 +212,8 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Called when the pointer goes down on the visual.
     /// </summary>
     /// <param name="args">The event arguments.</param>
-    protected internal void InvokePointerDown(VisualElementEventArgs<TDrawingContext> args)
-    {
+    protected internal void InvokePointerDown(VisualElementEventArgs<TDrawingContext> args) =>
         PointerDown?.Invoke(this, args);
-    }
 
     /// <summary>
     /// Gets the geometries to draw.
