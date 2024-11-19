@@ -85,7 +85,7 @@ public class CartesianChart<TDrawingContext>(
     /// <value>
     /// The sections.
     /// </value>
-    public IEnumerable<Section<TDrawingContext>> Sections { get; private set; } =
+    public IEnumerable<CoreSection<TDrawingContext>> Sections { get; private set; } =
         [];
 
     ///<inheritdoc cref="Chart{TDrawingContext}.Series"/>

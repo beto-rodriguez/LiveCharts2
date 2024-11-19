@@ -42,11 +42,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>> _sectionsObserver;
     private IEnumerable<ISeries> _series = [];
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
-    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = [];
+    private IEnumerable<CoreSection<SkiaSharpDrawingContext>> _sections = [];
     private CoreDrawMarginFrame? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
@@ -66,7 +66,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes =
@@ -134,7 +134,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+    public IEnumerable<CoreSection<SkiaSharpDrawingContext>> Sections
     {
         get => _sections;
         set

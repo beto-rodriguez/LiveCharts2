@@ -46,7 +46,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>> _sectionsObserver;
 
     #endregion
 
@@ -58,7 +58,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
@@ -70,7 +70,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
+        SetCurrentValue(SectionsProperty, new ObservableCollection<CoreSection<SkiaSharpDrawingContext>>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
 
@@ -161,21 +161,21 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     public static readonly DependencyProperty SectionsProperty =
         DependencyProperty.Register(
-            nameof(Sections), typeof(IEnumerable<Section<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
+            nameof(Sections), typeof(IEnumerable<CoreSection<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._sectionsObserver;
-                    observer?.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
-                    observer?.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
+                    observer?.Dispose((IEnumerable<CoreSection<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer?.Initialize((IEnumerable<CoreSection<SkiaSharpDrawingContext>>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
                 (DependencyObject o, object value) =>
                 {
-                    return value is IEnumerable<Section<SkiaSharpDrawingContext>>
+                    return value is IEnumerable<CoreSection<SkiaSharpDrawingContext>>
                     ? value
-                    : new List<Section<SkiaSharpDrawingContext>>();
+                    : new List<CoreSection<SkiaSharpDrawingContext>>();
                 }));
 
     /// <summary>
@@ -238,9 +238,9 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-    public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+    public IEnumerable<CoreSection<SkiaSharpDrawingContext>> Sections
     {
-        get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
+        get => (IEnumerable<CoreSection<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 
