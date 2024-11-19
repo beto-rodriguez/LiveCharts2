@@ -27,9 +27,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a paintable object, an object that has can have its own paint definition.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface Paintable<TDrawingContext> : IDrawable
-    where TDrawingContext : DrawingContext
+public interface IPaintable : IDrawable
 {
     /// <summary>
     /// Gets or sets the stroke paint.

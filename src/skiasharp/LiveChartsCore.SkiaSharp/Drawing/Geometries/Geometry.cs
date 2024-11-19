@@ -157,10 +157,10 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="Paintable{TDrawingContext}.Stroke" />
+    /// <inheritdoc cref="IPaintable.Stroke" />
     public Paint? Stroke { get; set; }
 
-    /// <inheritdoc cref="Paintable{TDrawingContext}.Fill" />
+    /// <inheritdoc cref="IPaintable.Fill" />
     public Paint? Fill { get; set; }
 
     /// <inheritdoc cref="IGeometry{TDrawingContext}.Parent"/>
