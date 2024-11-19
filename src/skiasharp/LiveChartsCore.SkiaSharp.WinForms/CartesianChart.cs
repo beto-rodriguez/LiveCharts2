@@ -43,10 +43,10 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
-    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private IEnumerable<ISeries> _series = [];
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
-    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
+    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = [];
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
@@ -69,14 +69,14 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        XAxes = new List<ICartesianAxis>()
-            {
+        XAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
-        YAxes = new List<ICartesianAxis>()
-            {
+            ];
+        YAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
+            ];
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
@@ -227,15 +227,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {

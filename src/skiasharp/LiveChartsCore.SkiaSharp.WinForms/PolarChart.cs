@@ -46,7 +46,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private IEnumerable<ISeries> _series = [];
     private IEnumerable<IPolarAxis> _angleAxes = new List<PolarAxis>();
     private IEnumerable<IPolarAxis> _radiusAxes = new List<PolarAxis>();
 
@@ -67,14 +67,14 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        AngleAxes = new List<IPolarAxis>()
-            {
+        AngleAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
-            };
-        RadiusAxes = new List<IPolarAxis>()
-            {
+            ];
+        RadiusAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
-            };
+            ];
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>();
 
@@ -234,15 +234,11 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {
@@ -253,13 +249,9 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         //Capture = true;
     }
 
-    private void OnMouseDown(object? sender, MouseEventArgs e)
-    {
-        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), false);
-    }
+    private void OnMouseDown(object? sender, MouseEventArgs e) =>
+        core?.InvokePointerDown(new(e.Location.X, e.Location.Y), false);
 
-    private void OnMouseUp(object? sender, MouseEventArgs e)
-    {
-        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y), false);
-    }
+    private void OnMouseUp(object? sender, MouseEventArgs e) =>
+        core?.InvokePointerUp(new(e.Location.X, e.Location.Y), false);
 }

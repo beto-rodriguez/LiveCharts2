@@ -40,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private IEnumerable<ISeries> _series = [];
     private bool _isClockwise = true;
     private double _initialRotation;
     private double _maxAngle = 360;
@@ -134,8 +134,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         core.Update();
     }
 
-    private void OnMouseDown(object? sender, MouseEventArgs e)
-    {
+    private void OnMouseDown(object? sender, MouseEventArgs e) =>
         core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), false);
-    }
 }
