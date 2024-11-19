@@ -105,11 +105,11 @@ public class SKDefaultTooltip : IChartTooltip
             _panel.BackgroundGeometry.Wedge = wedge;
             _panel.BackgroundGeometry.WedgeThickness = 3;
 
-            _panel
-                .Animate(
-                    new Animation(EasingFunctions.EaseOut, TimeSpan.FromMilliseconds(150)),
-                    nameof(RoundedRectangleGeometry.X),
-                    nameof(RoundedRectangleGeometry.Y));
+            //_panel
+            //    .Animate(
+            //        new Animation(EasingFunctions.EaseOut, TimeSpan.FromMilliseconds(150)),
+            //        nameof(RoundedRectangleGeometry.X),
+            //        nameof(RoundedRectangleGeometry.Y));
         }
 
         if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
@@ -164,7 +164,7 @@ public class SKDefaultTooltip : IChartTooltip
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild((CoreVisualElement<SkiaSharpDrawingContext>)series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
+                tableLayout.AddChild((CoreVisualElement)series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
                     tableLayout.AddChild(

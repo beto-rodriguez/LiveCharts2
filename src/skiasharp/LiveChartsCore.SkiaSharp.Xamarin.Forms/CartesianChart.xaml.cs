@@ -144,7 +144,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(CoreVisualElement<SkiaSharpDrawingContext>), typeof(CartesianChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(CoreVisualElement), typeof(CartesianChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -453,9 +453,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
-    public CoreVisualElement<SkiaSharpDrawingContext>? Title
+    public CoreVisualElement? Title
     {
-        get => (CoreVisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        get => (CoreVisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -705,7 +705,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     {
         return core is not CartesianChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>
@@ -871,7 +871,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 

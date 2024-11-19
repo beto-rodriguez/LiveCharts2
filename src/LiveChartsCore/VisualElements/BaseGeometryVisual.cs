@@ -32,7 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// <see cref="MeasureUnit.Pixels"/> or <see cref="MeasureUnit.ChartValues"/>.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context,</typeparam>
-public abstract class BaseGeometryVisual<TDrawingContext> : CoreVisualElement<TDrawingContext>
+public abstract class BaseGeometryVisual<TDrawingContext> : CoreVisualElement
     where TDrawingContext : DrawingContext
 {
     private double _width;

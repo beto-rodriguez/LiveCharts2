@@ -359,12 +359,12 @@ public abstract class Chart<TDrawingContext> : IChart
 
             // fire the visual elements event.
             var hitElements =
-                _everMeasuredElements.OfType<CoreVisualElement<TDrawingContext>>()
-                    .Cast<CoreVisualElement<TDrawingContext>>()
+                _everMeasuredElements.OfType<CoreVisualElement>()
+                    .Cast<CoreVisualElement>()
                     .SelectMany(x => x.IsHitBy(this, point));
 
             foreach (var ve in hitElements)
-                ve.InvokePointerDown(new VisualElementEventArgs<TDrawingContext>(this, ve, point));
+                ve.InvokePointerDown(new VisualElementEventArgs(this, ve, point));
 
             View.OnVisualElementPointerDown(hitElements, point);
         }

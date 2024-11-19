@@ -41,7 +41,7 @@ public class SVGVisual : GeometryVisual<VariableSVGPathGeometry>
     /// </summary>
     public SKPath? Path { get => _path; set => SetProperty(ref _path, value); }
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         base.OnInvalidated(chart);

@@ -234,7 +234,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     {
         return core is not PolarChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>

@@ -386,7 +386,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    /// Defines a style builder for <see cref= "CoreVisualElement{TDrawingContext}" /> objects.
+    /// Defines a style builder for <see cref= "CoreVisualElement" /> objects.
     /// </summary>
     /// <typeparam name="TChartElement">The type of the chart element.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>

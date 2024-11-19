@@ -66,7 +66,7 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry geometry)
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [geometry];
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         var x = (float)X;
@@ -119,14 +119,14 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry geometry)
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)
     {
         if (geometry is null) return;
         geometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.Measure(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart)
     {
         var w = (float)Width;

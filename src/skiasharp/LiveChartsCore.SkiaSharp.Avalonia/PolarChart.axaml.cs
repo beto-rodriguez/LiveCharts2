@@ -125,8 +125,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The title property.
     /// </summary>
-    public static readonly AvaloniaProperty<CoreVisualElement<SkiaSharpDrawingContext>?> TitleProperty =
-       AvaloniaProperty.Register<PolarChart, CoreVisualElement<SkiaSharpDrawingContext>?>(nameof(Title), null, inherits: true);
+    public static readonly AvaloniaProperty<CoreVisualElement?> TitleProperty =
+       AvaloniaProperty.Register<PolarChart, CoreVisualElement?>(nameof(Title), null, inherits: true);
 
     /// <summary>
     /// The series property.
@@ -299,7 +299,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
         AvaloniaProperty.Register<PolarChart, ICommand?>(nameof(ChartPointPointerDownCommand), null, inherits: true);
 
     /// <summary>
-    /// The <see cref="CoreVisualElement{TDrawingContext}"/> pointer down command property
+    /// The <see cref="CoreVisualElement"/> pointer down command property
     /// </summary>
     public static readonly AvaloniaProperty<ICommand?> VisualElementsPointerDownCommandProperty =
         AvaloniaProperty.Register<PolarChart, ICommand?>(nameof(VisualElementsPointerDownCommand), null, inherits: true);
@@ -401,9 +401,9 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
-    public CoreVisualElement<SkiaSharpDrawingContext>? Title
+    public CoreVisualElement? Title
     {
-        get => (CoreVisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        get => (CoreVisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -634,7 +634,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     {
         return _core is not PolarChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(cc, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(cc, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>
@@ -800,7 +800,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 

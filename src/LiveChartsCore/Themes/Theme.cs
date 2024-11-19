@@ -397,7 +397,7 @@ public class Theme<TDrawingContext>
     /// <typeparam name="TChartElement">The typoe of the chart element.</typeparam>
     /// <param name="visualElement">The visual element.</param>
     public void ApplyStyleTo<TChartElement>(TChartElement visualElement)
-        where TChartElement : CoreVisualElement<TDrawingContext>
+        where TChartElement : CoreVisualElement
     {
         if (!ChartElementElementBuilder.TryGetValue(typeof(TChartElement), out var builder)) return;
 

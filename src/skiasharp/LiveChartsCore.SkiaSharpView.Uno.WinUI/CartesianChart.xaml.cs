@@ -104,7 +104,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
-            nameof(Title), typeof(CoreVisualElement<SkiaSharpDrawingContext>), typeof(CartesianChart), new PropertyMetadata(null));
+            nameof(Title), typeof(CoreVisualElement), typeof(CartesianChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property.
@@ -454,9 +454,9 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
         _core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
-    public CoreVisualElement<SkiaSharpDrawingContext>? Title
+    public CoreVisualElement? Title
     {
-        get => (CoreVisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        get => (CoreVisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -755,7 +755,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     {
         return _core is not CartesianChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>
@@ -904,7 +904,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     }
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
 

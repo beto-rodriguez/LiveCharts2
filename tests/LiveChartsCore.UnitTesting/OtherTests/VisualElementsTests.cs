@@ -16,7 +16,7 @@ public class VisualElementsTests
     [TestMethod]
     public void Dispose()
     {
-        var suts = new List<CoreVisualElement<SkiaSharpDrawingContext>>
+        var suts = new List<CoreVisualElement>
         {
             new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>(),
             new RelativePanel<RectangleGeometry, SkiaSharpDrawingContext>(),
@@ -77,7 +77,7 @@ public class VisualElementsTests
             chart.CoreCanvas._paintTasks.Count > p);
 
         // clear the visuals and ensure that all the geometries and paints were removed
-        chart.VisualElements = new List<CoreVisualElement<SkiaSharpDrawingContext>>();
+        chart.VisualElements = new List<CoreVisualElement>();
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() == g &&

@@ -34,8 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the base visual element class, inheriting from this class makes it easy to implement a visual element.
 /// </summary>
-public abstract class CoreVisualElement<TDrawingContext> : ChartElement, INotifyPropertyChanged
-    where TDrawingContext : DrawingContext
+public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
 {
     internal double _x;
     internal double _y;
@@ -108,19 +107,19 @@ public abstract class CoreVisualElement<TDrawingContext> : ChartElement, INotify
     /// <summary>
     /// Called when the pointer goes down on the visual.
     /// </summary>
-    public event VisualElementHandler<TDrawingContext>? PointerDown;
+    public event VisualElementHandler? PointerDown;
 
     /// <inheritdoc cref="ChartElement.Invalidate(IChart)"/>
     public override void Invalidate(IChart chart)
     {
-        if (chart is CartesianChart<TDrawingContext> cc)
-        {
-            var primaryAxis = cc.YAxes[ScalesYAt];
-            var secondaryAxis = cc.XAxes[ScalesXAt];
+        //if (chart is CartesianChart<TDrawingContext> cc)
+        //{
+        //    var primaryAxis = cc.YAxes[ScalesYAt];
+        //    var secondaryAxis = cc.XAxes[ScalesXAt];
 
-            SecondaryScaler = secondaryAxis.GetNextScaler(cc);
-            PrimaryScaler = primaryAxis.GetNextScaler(cc);
-        }
+        //    SecondaryScaler = secondaryAxis.GetNextScaler(cc);
+        //    PrimaryScaler = primaryAxis.GetNextScaler(cc);
+        //}
 
         foreach (var paintTask in GetPaintTasks())
         {
@@ -186,7 +185,7 @@ public abstract class CoreVisualElement<TDrawingContext> : ChartElement, INotify
     /// <param name="chart">The chart.</param>
     /// <param name="point">The point in the UI.</param>
     /// <returns>The visual or visuals touched by the point.</returns>
-    protected internal virtual IEnumerable<CoreVisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    protected internal virtual IEnumerable<CoreVisualElement> IsHitBy(IChart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -212,7 +211,7 @@ public abstract class CoreVisualElement<TDrawingContext> : ChartElement, INotify
     /// Called when the pointer goes down on the visual.
     /// </summary>
     /// <param name="args">The event arguments.</param>
-    protected internal void InvokePointerDown(VisualElementEventArgs<TDrawingContext> args) =>
+    protected internal void InvokePointerDown(VisualElementEventArgs args) =>
         PointerDown?.Invoke(this, args);
 
     /// <summary>
@@ -225,14 +224,14 @@ public abstract class CoreVisualElement<TDrawingContext> : ChartElement, INotify
     /// Applies the theme to the visual.
     /// </summary>
     protected virtual void ApplyTheme<T>()
-        where T : CoreVisualElement<TDrawingContext>
+        where T : CoreVisualElement
     {
         _isInternalSet = true;
         if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
         {
-            var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
-            theme.ApplyStyleTo((T)this);
-            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
+            //var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
+            //theme.ApplyStyleTo((T)this);
+            //_theme = LiveCharts.DefaultSettings.CurrentThemeId;
         }
         _isInternalSet = false;
     }

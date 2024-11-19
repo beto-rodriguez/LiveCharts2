@@ -35,7 +35,7 @@ namespace LiveChartsCore.Kernel.Events;
 public class VisualElementsEventArgs<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private CoreVisualElement<TDrawingContext>? _closer;
+    private CoreVisualElement? _closer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VisualElementsEventArgs{TDrawingContext}"/> class.
@@ -43,7 +43,7 @@ public class VisualElementsEventArgs<TDrawingContext>
     /// <param name="chart">The chart.</param>
     /// <param name="pointerLocation">The pointer location.</param>
     /// <param name="visualElements">The visual elements.</param>
-    public VisualElementsEventArgs(Chart<TDrawingContext> chart, IEnumerable<CoreVisualElement<TDrawingContext>> visualElements, LvcPoint pointerLocation)
+    public VisualElementsEventArgs(Chart<TDrawingContext> chart, IEnumerable<CoreVisualElement> visualElements, LvcPoint pointerLocation)
     {
         Chart = chart;
         PointerLocation = pointerLocation;
@@ -56,7 +56,7 @@ public class VisualElementsEventArgs<TDrawingContext>
     /// <param name="chart">The chart.</param>
     /// <param name="pointerLocation">The pointer location.</param>
     /// <param name="visualElements">The visual elements.</param>
-    public VisualElementsEventArgs(IChart chart, IEnumerable<CoreVisualElement<TDrawingContext>> visualElements, LvcPoint pointerLocation)
+    public VisualElementsEventArgs(IChart chart, IEnumerable<CoreVisualElement> visualElements, LvcPoint pointerLocation)
     {
         Chart = (Chart<TDrawingContext>)chart;
         PointerLocation = pointerLocation;
@@ -76,14 +76,14 @@ public class VisualElementsEventArgs<TDrawingContext>
     /// <summary>
     /// Gets the closest visual element to the pointer position.
     /// </summary>
-    public CoreVisualElement<TDrawingContext>? ClosestToPointerVisualElement => _closer ??= FindClosest();
+    public CoreVisualElement? ClosestToPointerVisualElement => _closer ??= FindClosest();
 
     /// <summary>
     /// Gets all the visual elements that were found.
     /// </summary>
-    public IEnumerable<CoreVisualElement<TDrawingContext>> VisualElements { get; }
+    public IEnumerable<CoreVisualElement> VisualElements { get; }
 
-    private CoreVisualElement<TDrawingContext>? FindClosest()
+    private CoreVisualElement? FindClosest()
     {
         return VisualElements.Select(visual =>
         {

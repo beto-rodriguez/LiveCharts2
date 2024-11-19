@@ -167,7 +167,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     public double? TooltipTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
-    public CoreVisualElement<SkiaSharpDrawingContext>? Title { get; set; }
+    public CoreVisualElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
     public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
@@ -224,7 +224,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
 
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
-        Core.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(Core, new(point)));
+        Core.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(Core, new(point)));
 
     void IChartView.InvokeOnUIThread(Action action) => action();
 
@@ -249,7 +249,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
+        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
 
     void IChartView.Invalidate() => throw new NotImplementedException();
 }

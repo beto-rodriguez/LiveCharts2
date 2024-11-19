@@ -65,7 +65,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
-    private CoreVisualElement<SkiaSharpDrawingContext>? _title;
+    private CoreVisualElement? _title;
     private CollectionDeepObserver<ChartElement> _visualsObserver;
     private IEnumerable<ChartElement> _visuals = [];
     private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
@@ -255,7 +255,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
-    public CoreVisualElement<SkiaSharpDrawingContext>? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
+    public CoreVisualElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
 
     #endregion
 
@@ -354,7 +354,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
+        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
 }

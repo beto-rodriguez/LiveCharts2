@@ -34,7 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualElement<TDrawingContext>
+public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualElement
     where TDrawingContext : DrawingContext
     where TBackgroundGeometry : ISizedGeometry, new()
 {
@@ -84,7 +84,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.Measure(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart)
     {
         var maxH = Padding.Top;
@@ -145,7 +145,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
     /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
     public void AddChild(
-        CoreVisualElement<TDrawingContext> child,
+        CoreVisualElement child,
         int row, int column,
         Align? horizontalAlign = null,
         Align? verticalAlign = null)
@@ -180,7 +180,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
                 yield return _positions[r][c];
     }
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.OnInvalidated(IChart)"/>
+    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(IChart)"/>
     protected internal override void OnInvalidated(IChart chart)
     {
         var controlSize = Measure(chart);
@@ -247,14 +247,14 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
     protected internal override void SetParent(IGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         BackgroundGeometry.Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.GetDrawnGeometries"/>
+    /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
     protected internal override IAnimatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
@@ -262,8 +262,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     protected internal override Paint?[] GetPaintTasks() =>
         [_backgroundPaint];
 
-    /// <inheritdoc cref="CoreVisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
-    protected internal override IEnumerable<CoreVisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <inheritdoc cref="CoreVisualElement.IsHitBy(IChart, LvcPoint)"/>
+    protected internal override IEnumerable<CoreVisualElement> IsHitBy(IChart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -304,7 +304,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     public class TableCell(
         int row,
         int column,
-        CoreVisualElement<TDrawingContext> visualElement,
+        CoreVisualElement visualElement,
         Align? verticalAlign = null,
         Align? horizontalAlign = null)
     {
@@ -332,7 +332,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
         /// <summary>
         /// Gets the visual element.
         /// </summary>
-        public CoreVisualElement<TDrawingContext> VisualElement { get; } = visualElement;
+        public CoreVisualElement VisualElement { get; } = visualElement;
     }
 }
 

@@ -109,7 +109,7 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         return core is not PieChart<SkiaSharpDrawingContext> cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
     }
 
     /// <summary>
