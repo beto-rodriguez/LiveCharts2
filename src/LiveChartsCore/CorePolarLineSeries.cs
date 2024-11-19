@@ -176,7 +176,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var polarChart = (PolarChart<TDrawingContext>)chart;
+        var polarChart = (PolarChartEngine)chart;
         var angleAxis = polarChart.AngleAxes[ScalesAngleAt];
         var radiusAxis = polarChart.RadiusAxes[ScalesRadiusAt];
 
@@ -465,7 +465,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         if (baseSeriesBounds.HasData) return baseSeriesBounds;
         var baseBounds = baseSeriesBounds.Bounds;
 
-        var tickPrimary = radiusAxis.GetTick((PolarChart<TDrawingContext>)chart, baseBounds.VisiblePrimaryBounds);
+        var tickPrimary = radiusAxis.GetTick((PolarChartEngine)chart, baseBounds.VisiblePrimaryBounds);
 
         var tp = tickPrimary.Value * DataPadding.Y;
 
@@ -569,7 +569,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         if (label is null)
         {
-            var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cc = (PolarChartEngine)point.Context.Chart.CoreChart;
             var cs = (IPolarSeries)point.Context.Series;
 
             var ax = cc.RadiusAxes[cs.ScalesRadiusAt];
@@ -592,7 +592,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         if (label is null)
         {
-            var cc = (PolarChart<TDrawingContext>)point.Context.Chart.CoreChart;
+            var cc = (PolarChartEngine)point.Context.Chart.CoreChart;
             var cs = (IPolarSeries)point.Context.Series;
 
             var ax = cc.AngleAxes[cs.ScalesAngleAt];
@@ -763,7 +763,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDispose(IChartView)"/>
     public override void SoftDeleteOrDispose(IChartView chart)
     {
-        var core = ((IPolarChartView<TDrawingContext>)chart).Core;
+        var core = ((IPolarChartView)chart).Core;
 
         var scale = new PolarScaler(
             core.DrawMarginLocation, core.DrawMarginSize, core.AngleAxes[ScalesAngleAt], core.RadiusAxes[ScalesRadiusAt],
@@ -785,7 +785,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
 
         foreach (var item in deleted) _ = everFetched.Remove(item);
 
-        var canvas = ((IPolarChartView<TDrawingContext>)chart).CoreCanvas;
+        var canvas = ((IPolarChartView)chart).CoreCanvas;
 
         if (Fill is not null)
         {

@@ -32,7 +32,7 @@ public interface IPolarSeries : IChartSeries
 {
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the angle plane, the index must exist 
-    /// in the <see cref="IPolarChartView{TDrawingContext}.AngleAxes"/> collection.
+    /// in the <see cref="IPolarChartView.AngleAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -41,7 +41,7 @@ public interface IPolarSeries : IChartSeries
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the radius plane, the index must exist 
-    /// in the <see cref="IPolarChartView{TDrawingContext}.RadiusAxes"/> collection.
+    /// in the <see cref="IPolarChartView.RadiusAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.

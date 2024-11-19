@@ -155,7 +155,7 @@ public static class LiveChartsSkiaSharp
                 y = primaryScale.ToPixels(coordinate.PrimaryValue);
             }
         }
-        else if (target.Context is IPolarChartView<SkiaSharpDrawingContext> polarChart)
+        else if (target.Context is IPolarChartView polarChart)
         {
             dataCoordinates = polarChart.ScalePixelsToData(new LvcPointD(location));
 

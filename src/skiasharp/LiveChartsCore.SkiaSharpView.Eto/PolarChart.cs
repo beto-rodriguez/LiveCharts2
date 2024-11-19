@@ -36,8 +36,8 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
-/// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
-public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IPolarChartView" />
+public class PolarChart : Chart, IPolarChartView
 {
     private bool _fitToBounds = false;
     private double _totalAngle = 360;
@@ -84,10 +84,10 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         c.MouseUp += OnMouseUp;
     }
 
-    PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
-        core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
+    PolarChartEngine IPolarChartView.Core =>
+        core is null ? throw new Exception("core not found") : (PolarChartEngine)core;
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
+    /// <inheritdoc cref="IPolarChartView.FitToBounds" />
     public bool FitToBounds
     {
         get => _fitToBounds;
@@ -98,7 +98,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
+    /// <inheritdoc cref="IPolarChartView.TotalAngle" />
     public double TotalAngle
     {
         get => _totalAngle;
@@ -109,7 +109,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
+    /// <inheritdoc cref="IPolarChartView.InnerRadius" />
     public double InnerRadius
     {
         get => _innerRadius;
@@ -120,7 +120,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
+    /// <inheritdoc cref="IPolarChartView.InitialRotation" />
     public double InitialRotation
     {
         get => _initialRotation;
@@ -131,7 +131,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="IPolarChartView.Series" />
     public IEnumerable<ISeries> Series
     {
         get => _series;
@@ -144,7 +144,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
+    /// <inheritdoc cref="IPolarChartView.AngleAxes" />
     public IEnumerable<IPolarAxis> AngleAxes
     {
         get => _angleAxes;
@@ -157,7 +157,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
+    /// <inheritdoc cref="IPolarChartView.RadiusAxes" />
     public IEnumerable<IPolarAxis> RadiusAxes
     {
         get => _radiusAxes;
@@ -175,7 +175,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     protected override void InitializeCore()
     {
-        core = new PolarChart<SkiaSharpDrawingContext>(
+        core = new PolarChartEngine(
             this, config => config.UseDefaults(), motionCanvas.CanvasCore);
         core.Update();
     }
@@ -192,10 +192,10 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         _radiusObserver = null!;
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
     {
-        if (core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not PolarChartEngine cc) throw new Exception("core not found");
 
         var scaler = new PolarScaler(
             cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
@@ -204,10 +204,10 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         return scaler.ToChartValues(point.X, point.Y);
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleDataToPixels(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
     {
-        if (core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not PolarChartEngine cc) throw new Exception("core not found");
 
         var scaler = new PolarScaler(
             cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
@@ -221,7 +221,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (core is not PolarChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not PolarChartEngine cc) throw new Exception("core not found");
 
         if (strategy == FindingStrategy.Automatic)
             strategy = cc.Series.GetFindingStrategy();
@@ -232,7 +232,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public override IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
-        return core is not PolarChart<SkiaSharpDrawingContext> cc
+        return core is not PolarChartEngine cc
             ? throw new Exception("core not found")
             : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
     }

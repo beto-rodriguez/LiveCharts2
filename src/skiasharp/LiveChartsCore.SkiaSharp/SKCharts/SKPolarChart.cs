@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// In-memory chart that is able to generate a chart images.
 /// </summary>
-public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDrawingContext>
+public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
 {
     private LvcColor _backColor;
 
@@ -49,7 +49,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        Core = new PolarChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), CoreCanvas);
+        Core = new PolarChartEngine(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;
@@ -61,7 +61,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     /// Initializes a new instance of the <see cref="SKPolarChart"/> class.
     /// </summary>
     /// <param name="view">The view.</param>
-    public SKPolarChart(IPolarChartView<SkiaSharpDrawingContext> view) : this()
+    public SKPolarChart(IPolarChartView view) : this()
     {
         AngleAxes = view.AngleAxes;
         RadiusAxes = view.RadiusAxes;
@@ -79,19 +79,19 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     /// <inheritdoc cref="IChartView.DesignerMode" />
     public bool DesignerMode => false;
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Core"/>
-    public PolarChart<SkiaSharpDrawingContext> Core { get; }
+    /// <inheritdoc cref="IPolarChartView.Core"/>
+    public PolarChartEngine Core { get; }
 
     /// <inheritdoc cref="IChartView.SyncContext"/>
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes"/>
+    /// <inheritdoc cref="IPolarChartView.AngleAxes"/>
     public IEnumerable<IPolarAxis> AngleAxes { get; set; } = [new PolarAxis()];
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes"/>
+    /// <inheritdoc cref="IPolarChartView.RadiusAxes"/>
     public IEnumerable<IPolarAxis> RadiusAxes { get; set; } = [new PolarAxis()];
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IPolarChartView.Series"/>
     public IEnumerable<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
@@ -133,16 +133,16 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     public TooltipPosition TooltipPosition { get; set; }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds"/>
+    /// <inheritdoc cref="IPolarChartView.FitToBounds"/>
     public bool FitToBounds { get; set; }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle"/>
+    /// <inheritdoc cref="IPolarChartView.TotalAngle"/>
     public double TotalAngle { get; set; } = 360;
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius"/>
+    /// <inheritdoc cref="IPolarChartView.InnerRadius"/>
     public double InnerRadius { get; set; }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation"/>
+    /// <inheritdoc cref="IPolarChartView.InitialRotation"/>
     public double InitialRotation { get; set; } = LiveCharts.DefaultSettings.PolarInitialRotation;
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled"/>
@@ -191,7 +191,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
     /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
     public event VisualElementsHandler? VisualElementsPointerDown;
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
     {
         var scaler = new PolarScaler(
@@ -201,7 +201,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView<SkiaSharpDra
         return scaler.ToChartValues(point.X, point.Y);
     }
 
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleDataToPixels(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
     {
         var scaler = new PolarScaler(

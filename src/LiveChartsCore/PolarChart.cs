@@ -35,19 +35,18 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a Polar chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Chart" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="PolarChart{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="PolarChartEngine"/> class.
 /// </remarks>
 /// <param name="view">The view.</param>
 /// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
-public class PolarChart<TDrawingContext>(
-    IPolarChartView<TDrawingContext> view,
+public class PolarChartEngine(
+    IPolarChartView view,
     Action<LiveChartsSettings> defaultPlatformConfig,
-    CoreMotionCanvas canvas) : Chart(canvas, defaultPlatformConfig, view, ChartKind.Polar)
-    where TDrawingContext : DrawingContext
+    CoreMotionCanvas canvas)
+        : Chart(canvas, defaultPlatformConfig, view, ChartKind.Polar)
 {
     private int _nextSeries = 0;
 

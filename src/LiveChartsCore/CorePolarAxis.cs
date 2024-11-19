@@ -192,7 +192,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var polarChart = (PolarChart<TDrawingContext>)chart;
+        var polarChart = (PolarChartEngine)chart;
 
         if (_dataBounds is null) throw new Exception("DataBounds not found");
 
@@ -448,7 +448,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
 
         var ts = (float)TextSize;
         var labeler = GetActualLabeler();
-        var polarChart = (PolarChart<TDrawingContext>)chart;
+        var polarChart = (PolarChartEngine)chart;
         IPolarAxis a, b;
 
         if (_orientation == PolarAxisOrientation.Angle)

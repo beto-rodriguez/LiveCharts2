@@ -257,8 +257,7 @@ public static class Extensions
     /// <param name="chart">The chart.</param>
     /// <param name="bounds">The bounds.</param>
     /// <returns></returns> 
-    public static AxisTick GetTick<TDrawingContext>(this IPolarAxis axis, PolarChart<TDrawingContext> chart, Bounds? bounds = null)
-        where TDrawingContext : DrawingContext
+    public static AxisTick GetTick(this IPolarAxis axis, PolarChartEngine chart, Bounds? bounds = null)
     {
         bounds ??= axis.VisibleDataBounds;
 
