@@ -229,9 +229,9 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
         _isInternalSet = true;
         if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
         {
-            //var theme = LiveCharts.DefaultSettings.GetTheme();
-            //theme.ApplyStyleTo((T)this);
-            //_theme = LiveCharts.DefaultSettings.CurrentThemeId;
+            var theme = LiveCharts.DefaultSettings.GetTheme();
+            theme.ApplyStyleTo((T)this);
+            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
         }
         _isInternalSet = false;
     }
