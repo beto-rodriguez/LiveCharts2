@@ -225,7 +225,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = [];
+    public List<Action<IScatterSeries>> ScatterSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the error series builder.
@@ -317,7 +317,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Scatter) == SeriesProperties.Scatter)
         {
-            foreach (var rule in ScatterSeriesBuilder) rule((IScatterSeries<TDrawingContext>)series);
+            foreach (var rule in ScatterSeriesBuilder) rule((IScatterSeries)series);
         }
 
         if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)

@@ -41,9 +41,9 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-/// <seealso cref="IScatterSeries{TDrawingContext}" />
+/// <seealso cref="IScatterSeries" />
 public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TDrawingContext : DrawingContext
@@ -104,7 +104,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         set => SetPaintProperty(ref _errorPaint, value, true);
     }
 
-    /// <inheritdoc cref="IScatterSeries{TDrawingContext}.StackGroup"/>
+    /// <inheritdoc cref="IScatterSeries.StackGroup"/>
     public int? StackGroup { get => _stackGroup; set => SetProperty(ref _stackGroup, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>

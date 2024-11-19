@@ -306,7 +306,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IScatterSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IScatterSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -314,7 +314,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForScatterSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IScatterSeries<TDrawingContext>> predicate)
+        Action<IScatterSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.ScatterSeriesBuilder.Add(predicate);
