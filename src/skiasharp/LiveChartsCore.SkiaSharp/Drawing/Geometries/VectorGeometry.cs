@@ -58,10 +58,10 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Pivot" />
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IPaintable.Stroke" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Stroke"/>
     public Paint? Stroke { get; set; }
 
-    /// <inheritdoc cref="IPaintable.Fill" />
+    /// <inheritdoc cref="IVectorGeometry{TSegment, TDrawingContext}.Fill"/>
     public Paint? Fill { get; set; }
 
     /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />

@@ -27,12 +27,22 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a geometry in the user interface.
 /// </summary>
-public interface IGeometry : IDrawable, IPaintable
+public interface IGeometry : IDrawable
 {
     /// <summary>
     /// Gets or sets the parent shape, if any the X and Y properties will be relative to the parent.
     /// </summary>
     IGeometry? Parent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the stroke paint.
+    /// </summary>
+    Paint? Stroke { get; set; }
+
+    /// <summary>
+    /// Gets or sets the fill paint.
+    /// </summary>
+    Paint? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets the transform origin.

@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing.Segments;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
@@ -30,7 +31,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TSegment"></typeparam>
 /// <typeparam name="TDrawingContext"></typeparam>
-public interface IVectorGeometry<TSegment, TDrawingContext> : IPaintable
+public interface IVectorGeometry<TSegment, TDrawingContext> : IDrawable
     where TSegment : IConsecutivePathSegment
     where TDrawingContext : DrawingContext
 {
@@ -43,6 +44,16 @@ public interface IVectorGeometry<TSegment, TDrawingContext> : IPaintable
     /// Defines the closing method.
     /// </summary>
     VectorClosingMethod ClosingMethod { get; set; }
+
+    /// <summary>
+    /// Gets or sets the stroke paint.
+    /// </summary>
+    Paint? Stroke { get; set; }
+
+    /// <summary>
+    /// Gets or sets the fill paint.
+    /// </summary>
+    Paint? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets the pivot.

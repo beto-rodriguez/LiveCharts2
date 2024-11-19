@@ -157,10 +157,10 @@ public abstract class Geometry : Drawable, IGeometry
         }
     }
 
-    /// <inheritdoc cref="IPaintable.Stroke" />
+    /// <inheritdoc cref="IGeometry.Stroke"/>
     public Paint? Stroke { get; set; }
 
-    /// <inheritdoc cref="IPaintable.Fill" />
+    /// <inheritdoc cref="IGeometry.Fill"/>
     public Paint? Fill { get; set; }
 
     /// <inheritdoc cref="IGeometry.Parent"/>
