@@ -177,7 +177,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = [];
+    public List<Action<IBarSeries>> BarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the column series builder.
@@ -185,7 +185,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = [];
+    public List<Action<IBarSeries>> ColumnSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the row series builder.
@@ -193,7 +193,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = [];
+    public List<Action<IBarSeries>> RowSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked bar series builder.
@@ -284,7 +284,7 @@ public class Theme<TDrawingContext>
         if ((series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar &&
             (series.SeriesProperties & SeriesProperties.Stacked) != SeriesProperties.Stacked)
         {
-            var barSeries = (IBarSeries<TDrawingContext>)series;
+            var barSeries = (IBarSeries)series;
             foreach (var rule in BarSeriesBuilder) rule(barSeries);
 
             if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)

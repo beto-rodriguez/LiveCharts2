@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-/// <seealso cref="IBarSeries{TDrawingContext}" />
+/// <seealso cref="IBarSeries" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
 /// </remarks>
@@ -49,7 +49,7 @@ namespace LiveChartsCore;
 public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
-        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IBarSeries<TDrawingContext>
+        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IBarSeries
             where TVisual : class, ISizedGeometry, new()
             where TDrawingContext : DrawingContext
             where TLabel : class, ILabelGeometry, new()
@@ -61,19 +61,19 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     private double _ry;
     private Paint? _errorPaint;
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
+    /// <inheritdoc cref="IBarSeries.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
+    /// <inheritdoc cref="IBarSeries.MaxBarWidth"/>
     public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
+    /// <inheritdoc cref="IBarSeries.IgnoresBarPosition"/>
     public bool IgnoresBarPosition { get => _ignoresBarPosition; set => SetProperty(ref _ignoresBarPosition, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.Rx"/>
+    /// <inheritdoc cref="IBarSeries.Rx"/>
     public double Rx { get => _rx; set => SetProperty(ref _rx, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
+    /// <inheritdoc cref="IBarSeries.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
@@ -132,7 +132,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         public MeasureHelper(
             Scaler scaler,
             CartesianChart<TDrawingContext> cartesianChart,
-            IBarSeries<TDrawingContext> barSeries,
+            IBarSeries barSeries,
             ICartesianAxis axis,
             float p,
             float minP,

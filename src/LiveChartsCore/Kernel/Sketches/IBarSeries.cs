@@ -20,19 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a bar series point.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface IBarSeries<TDrawingContext> :
-    IChartSeries, IStrokedAndFilled,
-        ICartesianSeries, IErrorSeries
-            where TDrawingContext : DrawingContext
+public interface IBarSeries : ICartesianSeries, IStrokedAndFilled, IErrorSeries
 {
     /// <summary>
     /// Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.

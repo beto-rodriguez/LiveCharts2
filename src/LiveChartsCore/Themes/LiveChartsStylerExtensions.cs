@@ -210,7 +210,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IBarSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -218,7 +218,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForBarSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IBarSeries<TDrawingContext>> predicate)
+        Action<IBarSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.BarSeriesBuilder.Add(predicate);
@@ -226,7 +226,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for vertical <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for vertical <see cref="IBarSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -234,7 +234,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForColumnSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IBarSeries<TDrawingContext>> predicate)
+        Action<IBarSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.ColumnSeriesBuilder.Add(predicate);
@@ -242,7 +242,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for horizontal <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for horizontal <see cref="IBarSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -250,7 +250,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForRowSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IBarSeries<TDrawingContext>> predicate)
+        Action<IBarSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.ColumnSeriesBuilder.Add(predicate);
@@ -258,7 +258,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked <see cref="IBarSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -274,7 +274,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked vertical <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked vertical <see cref="IBarSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -290,7 +290,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked horizontal <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked horizontal <see cref="IBarSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
