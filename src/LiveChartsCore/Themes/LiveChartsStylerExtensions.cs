@@ -186,7 +186,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForBoxSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IBoxSeries<TDrawingContext>> predicate)
+        Action<IBoxSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.BoxSeriesBuilder.Add(predicate);

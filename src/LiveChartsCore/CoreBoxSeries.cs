@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <seealso cref="ICartesianSeries" />
 /// <seealso cref="IHeatSeries{TDrawingContext}" />
 public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBoxSeries<TDrawingContext>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBoxSeries
         where TVisual : class, IBoxGeometry, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry, new()
@@ -80,10 +80,10 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         DataPadding = new LvcPoint(0, 1);
     }
 
-    /// <inheritdoc cref="IBoxSeries{TDrawingContext}.MaxBarWidth"/>
+    /// <inheritdoc cref="IBoxSeries.MaxBarWidth"/>
     public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
-    /// <inheritdoc cref="IBoxSeries{TDrawingContext}.Padding"/>
+    /// <inheritdoc cref="IBoxSeries.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
 
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(IChart)"/>
@@ -489,7 +489,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         public MeasureHelper(
             Scaler scaler,
             CartesianChart<TDrawingContext> cartesianChart,
-            IBoxSeries<TDrawingContext> boxSeries,
+            IBoxSeries boxSeries,
             ICartesianAxis axis,
             float p,
             float minP,

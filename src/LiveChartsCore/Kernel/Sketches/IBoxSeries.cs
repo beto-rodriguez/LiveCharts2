@@ -20,17 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines an error series series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface IBoxSeries<TDrawingContext> : IChartSeries, IStrokedAndFilled, ICartesianSeries
-    where TDrawingContext : DrawingContext
+public interface IBoxSeries : ICartesianSeries, IStrokedAndFilled
 {
     /// <summary>
     /// Gets or sets the maximum width of the bar.

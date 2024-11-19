@@ -233,7 +233,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBoxSeries<TDrawingContext>>> BoxSeriesBuilder { get; set; } = [];
+    public List<Action<IBoxSeries>> BoxSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the visual element builder.
@@ -333,7 +333,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.BoxSeries) == SeriesProperties.BoxSeries)
         {
-            foreach (var rule in BoxSeriesBuilder) rule((IBoxSeries<TDrawingContext>)series);
+            foreach (var rule in BoxSeriesBuilder) rule((IBoxSeries)series);
         }
 
         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
