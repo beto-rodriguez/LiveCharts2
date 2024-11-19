@@ -584,7 +584,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; } = new SKDefaultLegend();
+    public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

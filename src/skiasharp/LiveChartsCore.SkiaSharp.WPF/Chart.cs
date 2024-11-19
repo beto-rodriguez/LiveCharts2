@@ -57,7 +57,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// <summary>
     /// The legend
     /// </summary>
-    protected IChartLegend<SkiaSharpDrawingContext>? legend;
+    protected IChartLegend? legend;
 
     /// <summary>
     /// The tool tip
@@ -461,7 +461,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend { get => legend; set => legend = value; }
+    public IChartLegend? Legend { get => legend; set => legend = value; }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -47,6 +48,16 @@ public interface IChart
     /// The view.
     /// </value>
     IChartView View { get; }
+
+    /// <summary>
+    /// Gets the visible series.
+    /// </summary>
+    IEnumerable<IChartSeries> VisibleSeries { get; }
+
+    /// <summary>
+    /// Gets the series.
+    /// </summary>
+    IEnumerable<IChartSeries> Series { get; }
 
     /// <summary>
     /// Gets the canvas.
@@ -121,6 +132,12 @@ public interface IChart
     /// Updates the chart in the user interface.
     /// </summary>
     void Update(ChartUpdateParams? chartUpdateParams = null);
+
+    /// <summary>
+    /// Gets the legend position.
+    /// </summary>
+    /// <returns>The position of the legend.</returns>
+    LvcPoint GetLegendPosition();
 
     /// <summary>
     /// Adds a visual element to the chart.

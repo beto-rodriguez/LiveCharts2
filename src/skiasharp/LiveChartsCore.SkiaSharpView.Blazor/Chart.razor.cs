@@ -191,7 +191,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     [Parameter]
-    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; } = new SKDefaultLegend();
+    public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
     [Parameter]

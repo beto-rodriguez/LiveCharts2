@@ -52,7 +52,7 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip{TDrawingContext}"/> or 
-    /// <see cref="IChartLegend{TDrawingContext}"/>, the default value is set automatically by the library.
+    /// <see cref="IChartLegend"/>, the default value is set automatically by the library.
     /// </summary>
     string? Name { get; set; }
 

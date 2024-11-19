@@ -263,7 +263,7 @@ public interface IChartView<TDrawingContext> : IChartView
     /// <value>
     /// The legend.
     /// </value>
-    IChartLegend<TDrawingContext>? Legend { get; set; }
+    IChartLegend? Legend { get; set; }
 
     /// <summary>
     /// Gets or sets the tooltip.

@@ -212,7 +212,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The legend.
     /// </value>
-    public IChartLegend<TDrawingContext>? Legend { get; protected set; }
+    public IChartLegend? Legend { get; protected set; }
 
     /// <summary>
     /// Gets the tooltip position.
@@ -532,10 +532,7 @@ public abstract class Chart<TDrawingContext> : IChart
         _ = _toDeleteElements.Remove(element);
     }
 
-    /// <summary>
-    /// Gets the legend position.
-    /// </summary>
-    /// <returns>The position of the legend.</returns>
+    /// <inheritdoc cref="IChart.GetLegendPosition"/>
     public LvcPoint GetLegendPosition()
     {
         var actualChartSize = ControlSize;

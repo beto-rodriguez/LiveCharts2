@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// Defines the default legend for a chart.
 /// </summary>
-public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
+public class SKDefaultLegend : IChartLegend
 {
     private static readonly int s_zIndex = 10050;
     private Paint? _backgroundPaint = null;
@@ -84,8 +84,8 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
     /// </summary>
     public double TextSize { get; set; } = 15;
 
-    /// <inheritdoc cref="IChartLegend{TDrawingContext}.Draw(Chart{TDrawingContext})"/>
-    public void Draw(Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="IChartLegend.Draw(IChart)"/>
+    public void Draw(IChart chart)
     {
         var legendPosition = chart.GetLegendPosition();
 
@@ -96,14 +96,14 @@ public class SKDefaultLegend : IChartLegend<SkiaSharpDrawingContext>
         if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
     }
 
-    /// <inheritdoc cref="IChartLegend{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="IChartLegend.Measure(IChart)"/>
+    public LvcSize Measure(IChart chart)
     {
         BuildLayout(chart);
         return _stackPanel.Measure(chart);
     }
 
-    private void BuildLayout(Chart<SkiaSharpDrawingContext> chart)
+    private void BuildLayout(IChart chart)
     {
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
         if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;

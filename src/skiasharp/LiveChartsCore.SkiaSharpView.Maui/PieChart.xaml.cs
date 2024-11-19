@@ -52,7 +52,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     private Chart<SkiaSharpDrawingContext>? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
-    private IChartLegend<SkiaSharpDrawingContext>? _legend = new SKDefaultLegend();
+    private IChartLegend? _legend = new SKDefaultLegend();
     private IChartTooltip<SkiaSharpDrawingContext>? _tooltip = new SKDefaultTooltip();
 
     #endregion
@@ -495,7 +495,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend { get => _legend; set { _legend = value; OnPropertyChanged(); } }
+    public IChartLegend? Legend { get => _legend; set { _legend = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
