@@ -32,10 +32,8 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a visual section in a chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ChartElement" />
-public abstract class CoreSection<TDrawingContext> : ChartElement, INotifyPropertyChanged
-    where TDrawingContext : DrawingContext
+public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 {
     private Paint? _stroke = null;
     private Paint? _fill = null;
@@ -168,7 +166,7 @@ public abstract class CoreSection<TDrawingContext> : ChartElement, INotifyProper
 /// <typeparam name="TLabelGeometry">The type of the label geometry.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ChartElement" />
-public abstract class CoreSection<TSizedGeometry, TLabelGeometry, TDrawingContext> : CoreSection<TDrawingContext>
+public abstract class CoreSection<TSizedGeometry, TLabelGeometry, TDrawingContext> : CoreSection
     where TDrawingContext : DrawingContext
     where TSizedGeometry : ISizedGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()

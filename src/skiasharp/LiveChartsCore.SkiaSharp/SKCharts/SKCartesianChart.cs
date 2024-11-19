@@ -90,7 +90,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView<Skia
     public IEnumerable<ICartesianAxis> YAxes { get; set; } = [new Axis()];
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
-    public IEnumerable<CoreSection<SkiaSharpDrawingContext>> Sections { get; set; } = [];
+    public IEnumerable<CoreSection> Sections { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
     public IEnumerable<ChartElement> VisualElements { get; set; } = [];

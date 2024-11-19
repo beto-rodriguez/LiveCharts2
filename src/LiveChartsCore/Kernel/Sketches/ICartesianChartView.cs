@@ -64,7 +64,7 @@ public interface ICartesianChartView<TDrawingContext> : IChartView
     /// <value>
     /// The sections.
     /// </value>
-    IEnumerable<CoreSection<TDrawingContext>> Sections { get; set; }
+    IEnumerable<CoreSection> Sections { get; set; }
 
     /// <summary>
     /// Gets or sets the series to plot in the user interface.

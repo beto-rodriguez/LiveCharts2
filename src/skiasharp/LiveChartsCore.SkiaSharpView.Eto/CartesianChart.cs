@@ -42,11 +42,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private CollectionDeepObserver<ISeries> _seriesObserver;
     private CollectionDeepObserver<ICartesianAxis> _xObserver;
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>> _sectionsObserver;
+    private CollectionDeepObserver<CoreSection> _sectionsObserver;
     private IEnumerable<ISeries> _series = [];
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
-    private IEnumerable<CoreSection<SkiaSharpDrawingContext>> _sections = [];
+    private IEnumerable<CoreSection> _sections = [];
     private CoreDrawMarginFrame? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
@@ -66,7 +66,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes =
@@ -129,7 +129,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-    public IEnumerable<CoreSection<SkiaSharpDrawingContext>> Sections
+    public IEnumerable<CoreSection> Sections
     {
         get => _sections;
         set

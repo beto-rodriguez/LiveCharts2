@@ -46,7 +46,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
 
     #endregion
 
@@ -58,7 +58,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
@@ -70,7 +70,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             });
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(SectionsProperty, new ObservableCollection<CoreSection<SkiaSharpDrawingContext>>());
+        SetCurrentValue(SectionsProperty, new ObservableCollection<CoreSection>());
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
 
@@ -161,21 +161,21 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     public static readonly DependencyProperty SectionsProperty =
         DependencyProperty.Register(
-            nameof(Sections), typeof(IEnumerable<CoreSection<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
+            nameof(Sections), typeof(IEnumerable<CoreSection>), typeof(CartesianChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._sectionsObserver;
-                    observer?.Dispose((IEnumerable<CoreSection<SkiaSharpDrawingContext>>)args.OldValue);
-                    observer?.Initialize((IEnumerable<CoreSection<SkiaSharpDrawingContext>>)args.NewValue);
+                    observer?.Dispose((IEnumerable<CoreSection>)args.OldValue);
+                    observer?.Initialize((IEnumerable<CoreSection>)args.NewValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 },
                 (DependencyObject o, object value) =>
                 {
-                    return value is IEnumerable<CoreSection<SkiaSharpDrawingContext>>
+                    return value is IEnumerable<CoreSection>
                     ? value
-                    : new List<CoreSection<SkiaSharpDrawingContext>>();
+                    : new List<CoreSection>();
                 }));
 
     /// <summary>
@@ -238,9 +238,9 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-    public IEnumerable<CoreSection<SkiaSharpDrawingContext>> Sections
+    public IEnumerable<CoreSection> Sections
     {
-        get => (IEnumerable<CoreSection<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
+        get => (IEnumerable<CoreSection>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 

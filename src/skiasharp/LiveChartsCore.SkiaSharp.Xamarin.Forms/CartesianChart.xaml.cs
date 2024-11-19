@@ -59,7 +59,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>> _sectionsObserver;
+    private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private double _lastScale = 0;
     private DateTime _panLocketUntil;
@@ -86,7 +86,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _visualsObserver = new CollectionDeepObserver<ChartElement>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -199,13 +199,13 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     public static readonly BindableProperty SectionsProperty =
         BindableProperty.Create(
-            nameof(Sections), typeof(IEnumerable<CoreSection<SkiaSharpDrawingContext>>), typeof(CartesianChart), new List<CoreSection<SkiaSharpDrawingContext>>(),
+            nameof(Sections), typeof(IEnumerable<CoreSection>), typeof(CartesianChart), new List<CoreSection>(),
             BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (CartesianChart)o;
                 var observer = chart._sectionsObserver;
-                observer?.Dispose((IEnumerable<CoreSection<SkiaSharpDrawingContext>>)oldValue);
-                observer?.Initialize((IEnumerable<CoreSection<SkiaSharpDrawingContext>>)newValue);
+                observer?.Dispose((IEnumerable<CoreSection>)oldValue);
+                observer?.Initialize((IEnumerable<CoreSection>)newValue);
                 if (chart.core is null) return;
                 chart.core.Update();
             });
@@ -481,9 +481,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-    public IEnumerable<CoreSection<SkiaSharpDrawingContext>> Sections
+    public IEnumerable<CoreSection> Sections
     {
-        get => (IEnumerable<CoreSection<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
+        get => (IEnumerable<CoreSection>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 
