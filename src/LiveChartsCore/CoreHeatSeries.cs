@@ -41,7 +41,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
-        where TVisual : class, ISizedGeometry, IColoredGeometry<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry, IColoredGeometry, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
