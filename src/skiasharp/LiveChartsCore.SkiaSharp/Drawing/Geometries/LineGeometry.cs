@@ -28,8 +28,8 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ILineGeometry{TDrawingContext}" />
-public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="ILineGeometry" />
+public class LineGeometry : Geometry, ILineGeometry
 {
     private readonly FloatMotionProperty _x1;
     private readonly FloatMotionProperty _y1;
@@ -43,7 +43,7 @@ public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
         _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
     }
 
-    /// <inheritdoc cref="ILineGeometry{TDrawingContext}.X1" />
+    /// <inheritdoc cref="ILineGeometry.X1" />
     public float X1
     {
         get => Parent is null
@@ -52,7 +52,7 @@ public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
         set => _x1.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="ILineGeometry{TDrawingContext}.Y1" />
+    /// <inheritdoc cref="ILineGeometry.Y1" />
     public float Y1
     {
         get => Parent is null

@@ -40,7 +40,7 @@ namespace LiveChartsCore.VisualElements;
 public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
     where TDrawingContext : DrawingContext
     where TArcGeometry : IArcGeometry, new()
-    where TLineGeometry : ILineGeometry<TDrawingContext>, new()
+    where TLineGeometry : ILineGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()
 {
     private Paint? _stroke;

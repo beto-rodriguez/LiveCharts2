@@ -43,7 +43,7 @@ public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, T
     : CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries<TDrawingContext>
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+        where TErrorGeometry : class, ILineGeometry, new()
         where TDrawingContext : DrawingContext
 {
     private int _stackGroup = 0;

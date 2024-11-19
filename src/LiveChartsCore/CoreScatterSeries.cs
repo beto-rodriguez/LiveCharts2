@@ -47,7 +47,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TDrawingContext : DrawingContext
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+        where TErrorGeometry : class, ILineGeometry, new()
 {
     private Paint? _errorPaint;
     private int? _stackGroup;

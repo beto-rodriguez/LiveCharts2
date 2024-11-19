@@ -49,7 +49,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
-        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
+        where TLineGeometry : ILineGeometry, new()
         where TDrawingContext : DrawingContext
 {
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];

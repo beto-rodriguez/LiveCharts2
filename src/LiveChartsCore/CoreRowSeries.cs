@@ -43,7 +43,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
     : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+        where TErrorGeometry : class, ILineGeometry, new()
         where TDrawingContext : DrawingContext
 {
     private readonly bool _isRounded = false;

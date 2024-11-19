@@ -48,7 +48,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+        where TErrorGeometry : class, ILineGeometry, new()
         where TDrawingContext : DrawingContext
 {
     internal readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];

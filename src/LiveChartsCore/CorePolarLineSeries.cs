@@ -48,7 +48,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
-        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
+        where TLineGeometry : ILineGeometry, new()
         where TDrawingContext : DrawingContext
 {
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];

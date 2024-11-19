@@ -36,7 +36,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
     where TDrawingContext : DrawingContext
-    where TGeometry : ILineGeometry<TDrawingContext>, new()
+    where TGeometry : ILineGeometry, new()
 {
     internal TGeometry? _geometry;
 

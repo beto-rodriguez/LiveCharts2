@@ -44,7 +44,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     : ChartElement<TDrawingContext>, ICartesianAxis<TDrawingContext>, IPlane<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry, new()
-        where TLineGeometry : class, ILineGeometry<TDrawingContext>, new()
+        where TLineGeometry : class, ILineGeometry, new()
 {
     #region fields
 
@@ -79,12 +79,12 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Paint? _separatorsPaint;
     private Paint? _subseparatorsPaint;
     private bool _drawTicksPath;
-    private ILineGeometry<TDrawingContext>? _ticksPath;
+    private ILineGeometry? _ticksPath;
     private Paint? _ticksPaint;
     private Paint? _subticksPaint;
     private Paint? _zeroPaint;
-    private ILineGeometry<TDrawingContext>? _zeroLine;
-    private ILineGeometry<TDrawingContext>? _crosshairLine;
+    private ILineGeometry? _zeroLine;
+    private ILineGeometry? _crosshairLine;
     private ILabelGeometry? _crosshairLabel;
     private Paint? _crosshairPaint;
     private Paint? _crosshairLabelsPaint;
@@ -1133,7 +1133,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    private void InitializeLine(ILineGeometry<TDrawingContext> lineGeometry, CartesianChart<TDrawingContext> cartesianChart) =>
+    private void InitializeLine(ILineGeometry lineGeometry, CartesianChart<TDrawingContext> cartesianChart) =>
         lineGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
 
     private void InitializeTick(
@@ -1182,7 +1182,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSeparator(
-        ILineGeometry<TDrawingContext> line,
+        ILineGeometry line,
         float x,
         float y,
         float lxi,
@@ -1210,7 +1210,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateTick(
-        ILineGeometry<TDrawingContext> tick, float length, float x, float y, UpdateMode mode)
+        ILineGeometry tick, float length, float x, float y, UpdateMode mode)
     {
         if (_orientation == AxisOrientation.X)
         {
@@ -1235,7 +1235,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSubseparators(
-        ILineGeometry<TDrawingContext>[] subseparators, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
+        ILineGeometry[] subseparators, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
     {
         for (var j = 0; j < subseparators.Length; j++)
         {
@@ -1259,7 +1259,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSubticks(
-        ILineGeometry<TDrawingContext>[] subticks, Scaler scale, double s, float x, float y, UpdateMode mode)
+        ILineGeometry[] subticks, Scaler scale, double s, float x, float y, UpdateMode mode)
     {
         for (var j = 0; j < subticks.Length; j++)
         {
