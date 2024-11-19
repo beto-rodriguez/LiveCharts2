@@ -24,13 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -45,11 +45,11 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     private readonly MotionCanvas _motionCanvas = new();
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
+    private IEnumerable<IGeoSeries> _series = [];
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
     private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false };
     private object? _viewCommand = null;
 
     /// <summary>
@@ -133,7 +133,7 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         get => _fill;
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.IsStroke = false;
             _fill = value;
             OnPropertyChanged();
         }
@@ -152,18 +152,13 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
         Application.Instance.InvokeAsync(action).Wait();
-    }
 
     /// <summary>
     /// Called when a property changes.
     /// </summary>
-    protected void OnPropertyChanged()
-    {
-        _core?.Update();
-    }
+    protected void OnPropertyChanged() => _core?.Update();
 
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
     protected override void OnUnLoad(EventArgs e)
@@ -172,35 +167,20 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 
         _core?.Unload();
 
-        Series = Array.Empty<IGeoSeries>();
+        Series = [];
         _seriesObserver = null!;
 
         Canvas.Dispose();
     }
 
-    private void GeoMap_Resize(object? sender, EventArgs e)
-    {
-        _core?.Update();
-    }
+    private void GeoMap_Resize(object? sender, EventArgs e) => _core?.Update();
 
-    private void OnMouseDown(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
-    }
-    private void OnMouseMove(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
-    }
+    private void OnMouseDown(object? sender, MouseEventArgs e) => _core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+    private void OnMouseMove(object? sender, MouseEventArgs e) => _core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
 
-    private void OnMouseUp(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
-    }
+    private void OnMouseUp(object? sender, MouseEventArgs e) => _core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
 
-    private void OnMouseLeave(object? sender, EventArgs e)
-    {
-        _core?.InvokePointerLeft();
-    }
+    private void OnMouseLeave(object? sender, EventArgs e) => _core?.InvokePointerLeft();
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {

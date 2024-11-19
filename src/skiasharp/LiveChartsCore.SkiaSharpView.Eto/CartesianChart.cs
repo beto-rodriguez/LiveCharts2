@@ -43,10 +43,10 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private CollectionDeepObserver<ICartesianAxis> _xObserver;
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
     private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
-    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private IEnumerable<ISeries> _series = [];
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
-    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
+    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = [];
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
@@ -69,14 +69,14 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        XAxes = new List<ICartesianAxis>()
-            {
+        XAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
-        YAxes = new List<ICartesianAxis>()
-            {
+            ];
+        YAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
+            ];
         Series = new ObservableCollection<ISeries>();
 
         var c = motionCanvas;
@@ -179,11 +179,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// <inheritdoc cref="Chart.OnUnloading"/>
     protected override void OnUnloading()
     {
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-        VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+        Series = [];
+        XAxes = [];
+        YAxes = [];
+        Sections = [];
+        VisualElements = [];
         _seriesObserver = null!;
         _xObserver = null!;
         _yObserver = null!;
@@ -230,15 +230,11 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
             : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {
@@ -255,8 +251,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), e.Buttons == MouseButtons.Alternate);
     }
 
-    private void OnMouseUp(object? sender, MouseEventArgs e)
-    {
-        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y), e.Buttons == MouseButtons.Alternate);
-    }
+    private void OnMouseUp(object? sender, MouseEventArgs e) =>
+        core?.InvokePointerUp(new(e.Location.X, e.Location.Y), e.Buttons == MouseButtons.Alternate);
 }
