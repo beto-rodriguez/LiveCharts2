@@ -156,7 +156,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<StepLineSegment, TDrawingContext>? strokeVector = null, fillVector = null;
+            VectorManager<StepLineSegment>? strokeVector = null, fillVector = null;
 
             double previousPrimary = 0, previousSecondary = 0;
 
@@ -191,8 +191,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathG
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<StepLineSegment, TDrawingContext>(strokePath);
-                    fillVector = new VectorManager<StepLineSegment, TDrawingContext>(fillPath);
+                    strokeVector = new VectorManager<StepLineSegment>(strokePath);
+                    fillVector = new VectorManager<StepLineSegment>(fillPath);
 
                     if (Fill is not null)
                     {

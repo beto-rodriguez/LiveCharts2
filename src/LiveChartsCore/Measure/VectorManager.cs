@@ -31,13 +31,11 @@ namespace LiveChartsCore.Measure;
 /// Defines the vector manager class.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="VectorManager{TSegment, TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="VectorManager{TSegment}"/> class.
 /// </remarks>
 /// <param name="areaGeometry">The area geometry</param>
-public class VectorManager<TSegment, TDrawingContext>(IVectorGeometry<TSegment> areaGeometry)
-    where TDrawingContext : DrawingContext
+public class VectorManager<TSegment>(IVectorGeometry<TSegment> areaGeometry)
     where TSegment : IConsecutivePathSegment, IAnimatable
 {
     private LinkedListNode<TSegment>? _nextNode = areaGeometry.Commands.First;
@@ -99,10 +97,7 @@ public class VectorManager<TSegment, TDrawingContext>(IVectorGeometry<TSegment> 
     /// <summary>
     /// Clears the current vector segments.
     /// </summary>
-    public void Clear()
-    {
-        AreaGeometry.Commands.Clear();
-    }
+    public void Clear() => AreaGeometry.Commands.Clear();
 
     /// <summary>
     /// Ends the vector.

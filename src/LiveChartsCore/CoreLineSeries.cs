@@ -185,7 +185,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<CubicBezierSegment, TDrawingContext>? strokeVector = null, fillVector = null;
+            VectorManager<CubicBezierSegment>? strokeVector = null, fillVector = null;
 
             foreach (var data in GetSpline(segment, stacker))
             {
@@ -218,8 +218,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<CubicBezierSegment, TDrawingContext>(strokePath);
-                    fillVector = new VectorManager<CubicBezierSegment, TDrawingContext>(fillPath);
+                    strokeVector = new VectorManager<CubicBezierSegment>(strokePath);
+                    fillVector = new VectorManager<CubicBezierSegment>(fillPath);
 
                     if (Fill is not null)
                     {
