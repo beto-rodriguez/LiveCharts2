@@ -45,9 +45,9 @@ using Xamarin.Forms.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 
-/// <inheritdoc cref="IPieChartView{TDrawingContext}" />
+/// <inheritdoc cref="IPieChartView" />
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>
+public partial class PieChart : ContentView, IPieChartView
 {
     #region fields
 
@@ -365,8 +365,8 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => Background = new SolidColorBrush(new Color(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
     }
 
-    PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
-        core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+    PieChartEngine IPieChartView.Core =>
+        core is null ? throw new Exception("core not found") : (PieChartEngine)core;
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
@@ -394,7 +394,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(TitleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="IPieChartView.Series" />
     public IEnumerable<ISeries> Series
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
@@ -408,35 +408,35 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
         set => SetValue(VisualElementsProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    /// <inheritdoc cref="IPieChartView.IsClockwise" />
     public bool IsClockwise
     {
         get => (bool)GetValue(IsClockwiseProperty);
         set => SetValue(IsClockwiseProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+    /// <inheritdoc cref="IPieChartView.InitialRotation" />
     public double InitialRotation
     {
         get => (double)GetValue(InitialRotationProperty);
         set => SetValue(InitialRotationProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+    /// <inheritdoc cref="IPieChartView.MaxAngle" />
     public double MaxAngle
     {
         get => (double)GetValue(MaxAngleProperty);
         set => SetValue(MaxAngleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    /// <inheritdoc cref="IPieChartView.MaxValue" />
     public double? MaxValue
     {
         get => (double?)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    /// <inheritdoc cref="IPieChartView.MinValue" />
     public double MinValue
     {
         get => (double)GetValue(MinValueProperty);
@@ -584,7 +584,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (core is not PieChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not PieChartEngine cc) throw new Exception("core not found");
 
         if (strategy == FindingStrategy.Automatic)
             strategy = cc.Series.GetFindingStrategy();
@@ -595,7 +595,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
-        return core is not PieChart<SkiaSharpDrawingContext> cc
+        return core is not PieChartEngine cc
             ? throw new Exception("core not found")
             : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
     }
@@ -609,7 +609,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// <returns></returns>
     protected void InitializeCore()
     {
-        core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
+        core = new PieChartEngine(this, config => config.UseDefaults(), canvas.CanvasCore);
         core.Update();
     }
 

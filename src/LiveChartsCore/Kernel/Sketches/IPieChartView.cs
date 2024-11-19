@@ -21,17 +21,14 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a pie chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartView" />
-public interface IPieChartView<TDrawingContext> : IChartView
-    where TDrawingContext : DrawingContext
+public interface IPieChartView : IChartView
 {
     /// <summary>
     /// Gets the core.
@@ -39,7 +36,7 @@ public interface IPieChartView<TDrawingContext> : IChartView
     /// <value>
     /// The core.
     /// </value>
-    PieChart<TDrawingContext> Core { get; }
+    PieChartEngine Core { get; }
 
     /// <summary>
     /// Gets or sets the series.

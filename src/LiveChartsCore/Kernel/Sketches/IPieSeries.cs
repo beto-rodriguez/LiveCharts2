@@ -132,7 +132,7 @@ public interface IPieSeries : IChartSeries, IStrokedAndFilled
 
     /// <summary>
     /// Gets or sets a value indicating whether the values in this series are relative to the
-    /// <see cref="IPieChartView{TDrawingContext}.MinValue"/> property in the chart.
+    /// <see cref="IPieChartView.MinValue"/> property in the chart.
     /// </summary>
     bool IsRelativeToMinValue { get; set; }
 

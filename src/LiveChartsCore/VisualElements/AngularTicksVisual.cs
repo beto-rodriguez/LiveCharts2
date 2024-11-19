@@ -100,7 +100,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
-        if (chart is not PieChart<TDrawingContext> pieChart)
+        if (chart is not PieChartEngine pieChart)
             throw new Exception("The AngularThicksVisual can only be added to a pie chart");
 
         ApplyTheme<AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext>>();
@@ -112,7 +112,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
             ? drawMarginSize.Width
             : drawMarginSize.Height;
 
-        var view = (IPieChartView<TDrawingContext>)pieChart.View;
+        var view = (IPieChartView)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 

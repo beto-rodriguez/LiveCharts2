@@ -35,19 +35,18 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a pie chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="Chart" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="PieChartEngine"/> class.
 /// </remarks>
 /// <param name="view">The view.</param>
 /// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
-public class PieChart<TDrawingContext>(
-    IPieChartView<TDrawingContext> view,
+public class PieChartEngine(
+    IPieChartView view,
     Action<LiveChartsSettings> defaultPlatformConfig,
-    CoreMotionCanvas canvas) : Chart(canvas, defaultPlatformConfig, view, ChartKind.Pie)
-    where TDrawingContext : DrawingContext
+    CoreMotionCanvas canvas)
+        : Chart(canvas, defaultPlatformConfig, view, ChartKind.Pie)
 {
     private int _nextSeries = 0;
 

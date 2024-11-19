@@ -150,7 +150,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        var pieChart = (PieChart<TDrawingContext>)chart;
+        var pieChart = (PieChartEngine)chart;
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
@@ -168,7 +168,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         var outerRadiusOffset = (float)OuterRadiusOffset;
         minDimension -= outerRadiusOffset;
 
-        var view = (IPieChartView<TDrawingContext>)pieChart.View;
+        var view = (IPieChartView)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
@@ -638,7 +638,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose" />
     public override void SoftDeleteOrDispose(IChartView chart)
     {
-        var core = ((IPieChartView<TDrawingContext>)chart).Core;
+        var core = ((IPieChartView)chart).Core;
         var u = new Scaler();
 
         var toDelete = new List<ChartPoint>();

@@ -62,7 +62,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : CoreVisu
     {
         ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext>>();
 
-        if (chart is not PieChart<TDrawingContext> pieChart)
+        if (chart is not PieChartEngine pieChart)
             throw new Exception("The needle visual can only be added to a pie chart");
 
         var drawLocation = pieChart.DrawMarginLocation;
@@ -77,7 +77,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : CoreVisu
 
         var h = minDimension * 0.45f;
 
-        var view = (IPieChartView<TDrawingContext>)pieChart.View;
+        var view = (IPieChartView)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 

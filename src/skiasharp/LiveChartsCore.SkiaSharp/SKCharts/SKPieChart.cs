@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// In-memory chart that is able to generate a chart images.
 /// </summary>
-public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawingContext>
+public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
 {
     private LvcColor _backColor;
 
@@ -49,7 +49,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        Core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), CoreCanvas);
+        Core = new PieChartEngine(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;
@@ -61,7 +61,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// Initializes a new instance of the <see cref="SKPieChart"/> class.
     /// </summary>
     /// <param name="view">The view.</param>
-    public SKPieChart(IPieChartView<SkiaSharpDrawingContext> view) : this()
+    public SKPieChart(IPieChartView view) : this()
     {
         Series = view.Series;
         InitialRotation = view.InitialRotation;
@@ -77,28 +77,28 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IChartView.DesignerMode" />
     public bool DesignerMode => false;
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Core"/>
-    public PieChart<SkiaSharpDrawingContext> Core { get; }
+    /// <inheritdoc cref="IPieChartView.Core"/>
+    public PieChartEngine Core { get; }
 
     /// <inheritdoc cref="IChartView.SyncContext"/>
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IPieChartView.Series"/>
     public IEnumerable<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
     public IEnumerable<ChartElement> VisualElements { get; set; } = [];
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation"/>
+    /// <inheritdoc cref="IPieChartView.InitialRotation"/>
     public double InitialRotation { get; set; }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle"/>
+    /// <inheritdoc cref="IPieChartView.MaxAngle"/>
     public double MaxAngle { get; set; } = 360;
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue"/>
+    /// <inheritdoc cref="IPieChartView.MaxValue"/>
     public double? MaxValue { get; set; }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue"/>
+    /// <inheritdoc cref="IPieChartView.MinValue"/>
     public double MinValue { get; set; }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled"/>
@@ -143,7 +143,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IChartView.Title"/>
     public CoreVisualElement? Title { get; set; }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise"/>
+    /// <inheritdoc cref="IPieChartView.IsClockwise"/>
     public bool IsClockwise { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.LegendTextPaint"/>

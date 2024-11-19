@@ -46,8 +46,8 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
-/// <inheritdoc cref="IPieChartView{TDrawingContext}" />
-public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IPieChartView" />
+public class PieChart : UserControl, IPieChartView
 {
     #region fields
 
@@ -347,7 +347,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;
 
-    PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => _core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)_core;
+    PieChartEngine IPieChartView.Core => _core is null ? throw new Exception("core not found") : (PieChartEngine)_core;
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     public Margin? DrawMargin
@@ -363,7 +363,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(TitleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="IPieChartView.Series" />
     public IEnumerable<ISeries> Series
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty)!;
@@ -377,35 +377,35 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(VisualElementsProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    /// <inheritdoc cref="IPieChartView.IsClockwise" />
     public bool IsClockwise
     {
         get => (bool)GetValue(IsClockwiseProperty)!;
         set => SetValue(IsClockwiseProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+    /// <inheritdoc cref="IPieChartView.InitialRotation" />
     public double InitialRotation
     {
         get => (double)GetValue(InitialRotationProperty)!;
         set => SetValue(InitialRotationProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+    /// <inheritdoc cref="IPieChartView.MaxAngle" />
     public double MaxAngle
     {
         get => (double)GetValue(MaxAngleProperty)!;
         set => SetValue(MaxAngleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    /// <inheritdoc cref="IPieChartView.MinValue" />
     public double MinValue
     {
         get => (double)GetValue(MinValueProperty)!;
         set => SetValue(MinValueProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    /// <inheritdoc cref="IPieChartView.MaxValue" />
     public double? MaxValue
     {
         get => (double?)GetValue(MaxValueProperty);
@@ -599,7 +599,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     {
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
-        _core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas!.CanvasCore);
+        _core = new PieChartEngine(this, config => config.UseDefaults(), canvas!.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
