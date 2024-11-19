@@ -393,7 +393,7 @@ public class CartesianChart<TDrawingContext>(
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
 
-        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
+        var theme = LiveCharts.DefaultSettings.GetTheme();
 
         LegendPosition = _chartView.LegendPosition;
         Legend = _chartView.Legend;

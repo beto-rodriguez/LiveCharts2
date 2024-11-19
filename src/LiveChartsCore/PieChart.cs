@@ -150,7 +150,7 @@ public class PieChart<TDrawingContext>(
         SeriesContext = new SeriesContext(VisibleSeries, this);
         var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
 
-        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
+        var theme = LiveCharts.DefaultSettings.GetTheme();
 
         ValueBounds = new Bounds();
         IndexBounds = new Bounds();

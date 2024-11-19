@@ -177,7 +177,7 @@ public class PolarChart<TDrawingContext>(
             throw new Exception($"{nameof(AngleAxes)} and {nameof(RadiusAxes)} must contain at least one element.");
         }
 
-        var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
+        var theme = LiveCharts.DefaultSettings.GetTheme();
 
         LegendPosition = view.LegendPosition;
         Legend = view.Legend;

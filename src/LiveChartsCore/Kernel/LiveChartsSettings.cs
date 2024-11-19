@@ -355,14 +355,12 @@ public class LiveChartsSettings
     /// <summary>
     /// Adds the default styles.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="builder">The builder.</param>
     /// <returns></returns>
-    public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings HasTheme(Action<Theme> builder)
     {
-        Theme<TDrawingContext> t;
-        _theme = t = new Theme<TDrawingContext>();
+        Theme t;
+        _theme = t = new Theme();
         builder(t);
 
         return this;
@@ -371,12 +369,10 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets the styles builder.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <returns></returns>
     /// <exception cref="Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
-    public Theme<TDrawingContext> GetTheme<TDrawingContext>()
-        where TDrawingContext : DrawingContext =>
-            (Theme<TDrawingContext>?)_theme ?? throw new Exception("A theme is required.");
+    public Theme GetTheme() =>
+        (Theme?)_theme ?? throw new Exception("A theme is required.");
 
     /// <summary>
     /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?.

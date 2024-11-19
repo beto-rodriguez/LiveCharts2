@@ -34,9 +34,7 @@ namespace LiveChartsCore.Themes;
 /// <summary>
 /// Defines a style builder.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class Theme<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class Theme
 {
     /// <summary>
     /// Gets or sets the theme colors.
