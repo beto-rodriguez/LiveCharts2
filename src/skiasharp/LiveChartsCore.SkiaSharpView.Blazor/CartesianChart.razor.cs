@@ -45,7 +45,7 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     private IEnumerable<ISeries> _series = new ObservableCollection<ISeries>();
     private IEnumerable<ICartesianAxis>? _xAxes;
     private IEnumerable<ICartesianAxis>? _yAxes;
-    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
+    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = [];
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
@@ -61,16 +61,16 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         if (_xAxes is null)
-            XAxes = new List<ICartesianAxis>()
-            {
+            XAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
+            ];
 
         if (_yAxes is null)
-            YAxes = new List<ICartesianAxis>()
-            {
+            YAxes =
+            [
                 LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
+            ];
 
         // ToDo: pointer events
         //var c = Controls[0].Controls[0];
@@ -253,24 +253,20 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     {
         core?.Unload();
 
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-        VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+        Series = [];
+        XAxes = [];
+        YAxes = [];
+        Sections = [];
+        VisualElements = [];
         _seriesObserver = null!;
         _xObserver = null!;
         _yObserver = null!;
         _sectionsObserver = null!;
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 }

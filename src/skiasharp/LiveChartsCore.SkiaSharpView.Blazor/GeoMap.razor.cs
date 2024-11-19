@@ -22,10 +22,10 @@
 
 using System.Collections.Specialized;
 using System.ComponentModel;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.AspNetCore.Components;
@@ -48,11 +48,11 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
     private double _canvasHeight;
     private CollectionDeepObserver<IGeoSeries>? _seriesObserver;
     private GeoMap<SkiaSharpDrawingContext>? _core;
-    private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
+    private IEnumerable<IGeoSeries> _series = [];
     private CoreMap<SkiaSharpDrawingContext>? _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
     private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false };
     private object? _viewCommand = null;
 
     /// <summary>
@@ -94,7 +94,7 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
 
         //Resize += GeoMap_Resize;
 
-        if (_dom is null) _dom = new DomJsInterop(JS);
+        _dom ??= new DomJsInterop(JS);
         var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
         _canvasWidth = canvasBounds.Width;
         _canvasHeight = canvasBounds.Height;
@@ -172,7 +172,7 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
         get => _fill;
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.IsStroke = false;
             _fill = value;
             OnPropertyChanged();
         }
@@ -192,18 +192,14 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
         }
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action) =>
         _ = InvokeAsync(action); //.Wait();
-    }
 
     /// <summary>
     /// Called when a property changes.
     /// </summary>
-    protected void OnPropertyChanged()
-    {
+    protected void OnPropertyChanged() =>
         _core?.Update();
-    }
 
     private async void OnResized(JsFlexibleContainer motionCanvas)
     {
@@ -218,7 +214,7 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
 
     async void IDisposable.Dispose()
     {
-        Series = Array.Empty<IGeoSeries>();
+        Series = [];
         _seriesObserver = null!;
 
         Canvas.Dispose();

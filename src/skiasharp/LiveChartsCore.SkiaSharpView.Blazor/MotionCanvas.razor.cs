@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -37,15 +37,13 @@ public partial class MotionCanvas : IDisposable
     private SKCanvasView? _canvas;
     private bool _disposing = false;
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = [];
+    private List<PaintSchedule> _paintTasksSchedule = [];
 
     /// <summary>
     /// Called when the control is initialized.
     /// </summary>
-    protected override void OnInitialized()
-    {
+    protected override void OnInitialized() =>
         CanvasCore.Invalidated += CanvasCore_Invalidated;
-    }
 
     /// <summary>
     /// Gets the <see cref="CoreMotionCanvas"/> (core).
@@ -56,7 +54,7 @@ public partial class MotionCanvas : IDisposable
     /// Gets or sets the paint tasks.
     /// </summary>
     [Parameter]
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+    public List<PaintSchedule> PaintTasks
     {
         get => _paintTasksSchedule;
         set
@@ -100,61 +98,44 @@ public partial class MotionCanvas : IDisposable
     /// Called when the pointer goes down.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerDown(PointerEventArgs e)
-    {
+    protected virtual void OnPointerDown(PointerEventArgs e) =>
         _ = OnPointerDownCallback.InvokeAsync(e);
-    }
 
     /// <summary>
     /// Called when the pointer moves.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerMove(PointerEventArgs e)
-    {
+    protected virtual void OnPointerMove(PointerEventArgs e) =>
         _ = OnPointerMoveCallback.InvokeAsync(e);
-    }
 
     /// <summary>
     /// Called when the pointer goes up.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerUp(PointerEventArgs e)
-    {
+    protected virtual void OnPointerUp(PointerEventArgs e) =>
         _ = OnPointerUpCallback.InvokeAsync(e);
-    }
 
     /// <summary>
     /// Called when the wheel moves.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnWheel(WheelEventArgs e)
-    {
-        _ = OnWheelCallback.InvokeAsync(e);
-    }
+    protected virtual void OnWheel(WheelEventArgs e) => _ = OnWheelCallback.InvokeAsync(e);
 
     /// <summary>
     /// Called when the pointer leaves the control.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerOut(PointerEventArgs e)
-    {
+    protected virtual void OnPointerOut(PointerEventArgs e) =>
         _ = OnPointerOutCallback.InvokeAsync(e);
-    }
 
-    private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
-    {
+    private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-    }
 
-    private void OnPaintSurface(SKPaintSurfaceEventArgs e)
-    {
+    private void OnPaintSurface(SKPaintSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-    }
 
-    private void CanvasCore_Invalidated(CoreMotionCanvas sender)
-    {
+    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
-    }
 
     private async void RunDrawingLoop()
     {
@@ -196,8 +177,5 @@ public partial class MotionCanvas : IDisposable
         CanvasCore.SetPaintTasks(tasks);
     }
 
-    void IDisposable.Dispose()
-    {
-        _disposing = true;
-    }
+    void IDisposable.Dispose() => _disposing = true;
 }
