@@ -54,8 +54,8 @@ public class StepLineSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var previousSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>?)previous.Context.AdditionalVisuals)?.StepSegment;
-            var sutSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
+            var previousSegment = ((StepLineVisualPoint<CircleGeometry>?)previous.Context.AdditionalVisuals)?.StepSegment;
+            var sutSegment = ((StepLineVisualPoint<CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;

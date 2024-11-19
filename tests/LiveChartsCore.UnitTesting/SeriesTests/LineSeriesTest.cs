@@ -3,7 +3,6 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -21,7 +20,7 @@ public class LineSeriesTest
     {
         var sutSeries = new LineSeries<double>
         {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 },
+            Values = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
             GeometrySize = 10
         };
 
@@ -29,9 +28,9 @@ public class LineSeriesTest
         {
             Width = 1000,
             Height = 1000,
-            Series = new[] { sutSeries },
-            XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
-            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
+            Series = [sutSeries],
+            XAxes = [new Axis { MinLimit = -1, MaxLimit = 10 }],
+            YAxes = [new Axis { MinLimit = 0, MaxLimit = 512 }]
         };
 
         _ = chart.GetImage();
@@ -57,8 +56,8 @@ public class LineSeriesTest
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
 
-            var previousBezier = ((BezierVisualPoint<SkiaSharpDrawingContext, CircleGeometry>?)previous.Context.AdditionalVisuals)?.Bezier;
-            var sutBezier = ((BezierVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)sutPoint.Context.AdditionalVisuals).Bezier;
+            var previousBezier = ((BezierVisualPoint<CircleGeometry>)previous.Context.AdditionalVisuals)?.Bezier;
+            var sutBezier = ((BezierVisualPoint<CircleGeometry>)sutPoint.Context.AdditionalVisuals).Bezier;
 
             var currentDeltaAreaX = previousBezier.Xj - sutBezier.Xj;
 
@@ -90,7 +89,7 @@ public class LineSeriesTest
         var sutSeries = new LineSeries<double>
         {
             GeometrySize = 0,
-            Values = new double[] { 1, 2, 3, 4, 5 },
+            Values = [1, 2, 3, 4, 5],
             DataPadding = new LvcPoint(0, 0)
         };
 
@@ -102,9 +101,9 @@ public class LineSeriesTest
             Height = 300,
             Tooltip = tooltip,
             TooltipPosition = TooltipPosition.Top,
-            Series = new[] { sutSeries },
-            XAxes = new[] { new Axis { IsVisible = false } },
-            YAxes = new[] { new Axis { IsVisible = false } }
+            Series = [sutSeries],
+            XAxes = [new Axis { IsVisible = false }],
+            YAxes = [new Axis { IsVisible = false }]
         };
 
         chart.Core._isPointerIn = true;
@@ -155,7 +154,7 @@ public class LineSeriesTest
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
             "Tool tip on top failed [AUTO]");
 
-        sutSeries.Values = new double[] { -1, -2, -3, -4, -5 };
+        sutSeries.Values = [-1, -2, -3, -4, -5];
         _ = chart.GetImage();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
@@ -163,7 +162,7 @@ public class LineSeriesTest
             chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
             "Tool tip on bottom failed [AUTO]");
 
-        sutSeries.Values = new double[] { 1, 2, 3, 4, 5 };
+        sutSeries.Values = [1, 2, 3, 4, 5];
         chart.Core._pointerPosition = new(299, 150);
         _ = chart.GetImage();
         Assert.IsTrue(
@@ -188,7 +187,7 @@ public class LineSeriesTest
         var gs = 5f;
         var sutSeries = new LineSeries<double, RectangleGeometry, TestLabel>
         {
-            Values = new double[] { -10, -5, -1, 0, 1, 5, 10 },
+            Values = [-10, -5, -1, 0, 1, 5, 10],
             DataPadding = new LvcPoint(0, 0),
             GeometrySize = gs * 2,
         };
@@ -200,9 +199,9 @@ public class LineSeriesTest
             DrawMargin = new Margin(100),
             DrawMarginFrame = new DrawMarginFrame { Stroke = new SolidColorPaint(SKColors.Yellow, 2) },
             TooltipPosition = TooltipPosition.Top,
-            Series = new[] { sutSeries },
-            XAxes = new[] { new Axis { IsVisible = false } },
-            YAxes = new[] { new Axis { IsVisible = false } }
+            Series = [sutSeries],
+            XAxes = [new Axis { IsVisible = false }],
+            YAxes = [new Axis { IsVisible = false }]
         };
 
         var datafactory = sutSeries.DataFactory;
