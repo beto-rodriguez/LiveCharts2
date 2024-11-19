@@ -50,7 +50,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     bool isGaugeFill = false)
         : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
             where TDrawingContext : DrawingContext
-            where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
+            where TVisual : class, IDoughnutGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
             where TMiniatureGeometry : ISizedGeometry, new()
 {

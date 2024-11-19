@@ -25,9 +25,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a doughnut geometry.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IDoughnutGeometry<TDrawingContext> : IGeometry
-    where TDrawingContext : DrawingContext
+public interface IDoughnutGeometry : IGeometry
 {
     /// <summary>
     /// Gets or sets the center x.

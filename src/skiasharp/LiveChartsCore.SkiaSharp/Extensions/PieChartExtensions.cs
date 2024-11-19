@@ -64,7 +64,7 @@ public static class PieChartExtensions
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
-            where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
+            where TVisual : class, IDoughnutGeometry, new()
     {
         return AsPieSeries<TModel, PieSeries<TModel, TVisual>>(source, builder, gaugeOptions);
     }
@@ -83,7 +83,7 @@ public static class PieChartExtensions
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual, TLabel>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
-            where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
+            where TVisual : class, IDoughnutGeometry, new()
             where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         return AsPieSeries<TModel, PieSeries<TModel, TVisual, TLabel>>(source, builder, gaugeOptions);
