@@ -161,7 +161,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = [];
+    public List<Action<IFinancialSeries>> FinancialSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked line series builder.
@@ -377,7 +377,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
         {
-            var financialSeries = (IFinancialSeries<TDrawingContext>)series;
+            var financialSeries = (IFinancialSeries)series;
             foreach (var rule in FinancialSeriesBuilder) rule(financialSeries);
         }
     }

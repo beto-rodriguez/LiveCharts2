@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -28,10 +27,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a financial series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IChartSeries" />
-public interface IFinancialSeries<TDrawingContext> : IChartSeries, ICartesianSeries
-    where TDrawingContext : DrawingContext
+public interface IFinancialSeries : ICartesianSeries
 {
     /// <summary>
     /// Gets or sets the maximum width of the bar.

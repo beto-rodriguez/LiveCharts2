@@ -45,7 +45,7 @@ namespace LiveChartsCore;
 /// <seealso cref="ICartesianSeries" />
 /// <seealso cref="IHeatSeries{TDrawingContext}" />
 public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
-    : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
+    : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries
         where TVisual : class, IFinancialGeometry, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry, new()
@@ -80,31 +80,31 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         };
     }
 
-    /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
+    /// <inheritdoc cref="IFinancialSeries.MaxBarWidth"/>
     public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
-    /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpStroke"/>
+    /// <inheritdoc cref="IFinancialSeries.UpStroke"/>
     public Paint? UpStroke
     {
         get => _upStroke;
         set => SetPaintProperty(ref _upStroke, value, true);
     }
 
-    /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpFill"/>
+    /// <inheritdoc cref="IFinancialSeries.UpFill"/>
     public Paint? UpFill
     {
         get => _upFill;
         set => SetPaintProperty(ref _upFill, value);
     }
 
-    /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownStroke"/>
+    /// <inheritdoc cref="IFinancialSeries.DownStroke"/>
     public Paint? DownStroke
     {
         get => _downStroke;
         set => SetPaintProperty(ref _downStroke, value, true);
     }
 
-    /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownFill"/>
+    /// <inheritdoc cref="IFinancialSeries.DownFill"/>
     public Paint? DownFill
     {
         get => _downFill;

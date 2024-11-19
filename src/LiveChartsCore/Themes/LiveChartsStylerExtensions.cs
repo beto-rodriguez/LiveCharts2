@@ -338,7 +338,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IFinancialSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IFinancialSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -346,7 +346,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForFinancialSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IFinancialSeries<TDrawingContext>> predicate)
+        Action<IFinancialSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.FinancialSeriesBuilder.Add(predicate);
