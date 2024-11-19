@@ -40,7 +40,7 @@ namespace LiveChartsCore;
 /// </remarks>
 /// <param name="values">The values.</param>
 public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
-    : CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries<TDrawingContext>
+    : CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry, new()
@@ -48,7 +48,7 @@ public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, T
 {
     private int _stackGroup = 0;
 
-    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
+    /// <inheritdoc cref="IStackedBarSeries.StackGroup"/>
     public int StackGroup { get => _stackGroup; set { _stackGroup = value; OnPropertyChanged(); } }
 
     /// <summary>

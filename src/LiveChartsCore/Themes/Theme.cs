@@ -201,7 +201,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = [];
+    public List<Action<IStackedBarSeries>> StackedBarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked column series builder.
@@ -209,7 +209,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = [];
+    public List<Action<IStackedBarSeries>> StackedColumnSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked row series builder.
@@ -217,7 +217,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = [];
+    public List<Action<IStackedBarSeries>> StackedRowSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the scatter series builder.
@@ -301,7 +301,7 @@ public class Theme<TDrawingContext>
         var stackedBarMask = SeriesProperties.Bar | SeriesProperties.Stacked;
         if ((series.SeriesProperties & stackedBarMask) == stackedBarMask)
         {
-            var stackedBarSeries = (IStackedBarSeries<TDrawingContext>)series;
+            var stackedBarSeries = (IStackedBarSeries)series;
             foreach (var rule in StackedBarSeriesBuilder) rule(stackedBarSeries);
 
             if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)

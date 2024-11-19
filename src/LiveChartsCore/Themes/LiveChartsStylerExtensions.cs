@@ -266,7 +266,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForStackedBarSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IStackedBarSeries<TDrawingContext>> predicate)
+        Action<IStackedBarSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.StackedBarSeriesBuilder.Add(predicate);
@@ -282,7 +282,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForStackedColumnSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IStackedBarSeries<TDrawingContext>> predicate)
+        Action<IStackedBarSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.StackedColumnSeriesBuilder.Add(predicate);
@@ -298,7 +298,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForStackedRowSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<IStackedBarSeries<TDrawingContext>> predicate)
+        Action<IStackedBarSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.StackedRowSeriesBuilder.Add(predicate);
