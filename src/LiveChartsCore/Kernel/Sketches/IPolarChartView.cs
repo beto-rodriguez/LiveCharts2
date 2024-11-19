@@ -30,7 +30,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="IPolarChartView{TDrawingContext}" />
-public interface IPolarChartView<TDrawingContext> : IChartView<TDrawingContext>
+public interface IPolarChartView<TDrawingContext> : IChartView
     where TDrawingContext : DrawingContext
 {
     /// <summary>

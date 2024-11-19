@@ -375,14 +375,14 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
 
     #region events
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
@@ -394,8 +394,8 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
+    public event VisualElementsHandler? VisualElementsPointerDown;
 
     #endregion
 
@@ -466,7 +466,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(InitialRotationProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
+    /// <inheritdoc cref="IChartView.Title" />
     public CoreVisualElement? Title
     {
         get => (CoreVisualElement?)GetValue(TitleProperty);
@@ -494,7 +494,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(RadiusAxesProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView.VisualElements" />
     public IEnumerable<ChartElement> VisualElements
     {
         get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
@@ -543,7 +543,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(LegendTextSizeProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
+    /// <inheritdoc cref="IChartView.Legend" />
     public IChartLegend? Legend { get => _legend; set { _legend = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
@@ -574,7 +574,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         set => SetValue(TooltipTextSizeProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
+    /// <inheritdoc cref="IChartView.Tooltip" />
     public IChartTooltip? Tooltip { get => _tooltip; set { _tooltip = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
@@ -783,10 +783,10 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         _core.Update();
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
+    private void OnCoreUpdateFinished(IChartView chart) =>
         UpdateFinished?.Invoke(this);
 
-    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
+    private void OnCoreUpdateStarted(IChartView chart)
     {
         if (UpdateStartedCommand is not null)
         {
@@ -797,7 +797,7 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
+    private void OnCoreMeasuring(IChartView chart) =>
         Measuring?.Invoke(this);
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
@@ -817,10 +817,10 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
         if (HoveredPointsChangedCommand is not null && HoveredPointsChangedCommand.CanExecute(args)) HoveredPointsChangedCommand.Execute(args);
     }
 
-    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+    void IChartView.OnVisualElementPointerDown(
         IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
+        var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

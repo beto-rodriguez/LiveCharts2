@@ -29,8 +29,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// Defines a pie chart.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartView{TDrawingContext}" />
-public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
+/// <seealso cref="IChartView" />
+public interface IPieChartView<TDrawingContext> : IChartView
     where TDrawingContext : DrawingContext
 {
     /// <summary>

@@ -32,46 +32,28 @@ namespace LiveChartsCore.Kernel.Events;
 /// <summary>
 /// Defines the visual elements event arguments.
 /// </summary>
-public class VisualElementsEventArgs<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <remarks>
+/// Initializes a new instance of the <see cref="VisualElementsEventArgs"/> class.
+/// </remarks>
+/// <param name="chart">The chart.</param>
+/// <param name="pointerLocation">The pointer location.</param>
+/// <param name="visualElements">The visual elements.</param>
+public class VisualElementsEventArgs(
+    IChart chart,
+    IEnumerable<CoreVisualElement> visualElements,
+    LvcPoint pointerLocation)
 {
     private CoreVisualElement? _closer;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VisualElementsEventArgs{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    /// <param name="pointerLocation">The pointer location.</param>
-    /// <param name="visualElements">The visual elements.</param>
-    public VisualElementsEventArgs(Chart<TDrawingContext> chart, IEnumerable<CoreVisualElement> visualElements, LvcPoint pointerLocation)
-    {
-        Chart = chart;
-        PointerLocation = pointerLocation;
-        VisualElements = visualElements;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VisualElementsEventArgs{TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    /// <param name="pointerLocation">The pointer location.</param>
-    /// <param name="visualElements">The visual elements.</param>
-    public VisualElementsEventArgs(IChart chart, IEnumerable<CoreVisualElement> visualElements, LvcPoint pointerLocation)
-    {
-        Chart = (Chart<TDrawingContext>)chart;
-        PointerLocation = pointerLocation;
-        VisualElements = visualElements;
-    }
-
-    /// <summary>
     /// Gets the chart.
     /// </summary>
-    public Chart<TDrawingContext> Chart { get; }
+    public IChart Chart { get; } = chart;
 
     /// <summary>
     /// Gets or sets the pointer location.
     /// </summary>
-    public LvcPoint PointerLocation { get; }
+    public LvcPoint PointerLocation { get; } = pointerLocation;
 
     /// <summary>
     /// Gets the closest visual element to the pointer position.
@@ -81,7 +63,7 @@ public class VisualElementsEventArgs<TDrawingContext>
     /// <summary>
     /// Gets all the visual elements that were found.
     /// </summary>
-    public IEnumerable<CoreVisualElement> VisualElements { get; }
+    public IEnumerable<CoreVisualElement> VisualElements { get; } = visualElements;
 
     private CoreVisualElement? FindClosest()
     {

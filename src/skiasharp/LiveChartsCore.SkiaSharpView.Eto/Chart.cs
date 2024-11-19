@@ -40,7 +40,7 @@ using LiveChartsCore.Painting;
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <inheritdoc cref="IChartView" />
-public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
+public abstract class Chart : Panel, IChartView
 {
     /// <summary>
     /// The core
@@ -145,14 +145,14 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
     #region events
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
@@ -164,8 +164,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
+    public event VisualElementsHandler? VisualElementsPointerDown;
 
     #endregion
 
@@ -217,13 +217,13 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double? LegendTextSize { get => _legendTextSize; set { _legendTextSize = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
+    /// <inheritdoc cref="IChartView.Legend" />
     public IChartLegend? Legend { get => legend; set { legend = value; UpdateLegendLayout(); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
+    /// <inheritdoc cref="IChartView.Tooltip" />
     public IChartTooltip? Tooltip { get => tooltip; set { tooltip = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
@@ -241,7 +241,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView.VisualElements" />
     public IEnumerable<ChartElement> VisualElements
     {
         get => _visuals;
@@ -254,7 +254,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    /// <inheritdoc cref="IChartView.Title"/>
     public CoreVisualElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
 
     #endregion
@@ -318,11 +318,11 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         core.Update();
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) => UpdateFinished?.Invoke(this);
+    private void OnCoreUpdateFinished(IChartView chart) => UpdateFinished?.Invoke(this);
 
-    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart) => UpdateStarted?.Invoke(this);
+    private void OnCoreUpdateStarted(IChartView chart) => UpdateStarted?.Invoke(this);
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) => Measuring?.Invoke(this);
+    private void OnCoreMeasuring(IChartView chart) => Measuring?.Invoke(this);
 
     /// <summary>
     /// Called when the mouse goes down.
@@ -353,8 +353,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints) =>
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
-    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
+    void IChartView.OnVisualElementPointerDown(
+        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(CoreChart, visualElements, pointer));
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
 }

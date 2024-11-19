@@ -110,7 +110,7 @@ public class CartesianChart<TDrawingContext>(
     /// <value>
     /// The view.
     /// </value>
-    public override IChartView<TDrawingContext> View => _chartView;
+    public override IChartView View => _chartView;
 
     /// <summary>
     /// Finds the points near to the specified location.

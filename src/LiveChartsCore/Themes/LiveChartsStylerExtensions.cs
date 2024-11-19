@@ -34,7 +34,7 @@ namespace LiveChartsCore.Themes;
 public static class LiveChartsStylerExtensions
 {
     /// <summary>
-    ///  Defines a style builder for <see cref="IChartView{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IChartView"/> objects.
     /// </summary>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>

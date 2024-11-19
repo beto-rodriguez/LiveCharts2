@@ -110,7 +110,7 @@ public class PolarChart<TDrawingContext>(
     /// <value>
     /// The view.
     /// </value>
-    public override IChartView<TDrawingContext> View => view;
+    public override IChartView View => view;
 
     /// <summary>
     /// Finds the points near to the specified point.

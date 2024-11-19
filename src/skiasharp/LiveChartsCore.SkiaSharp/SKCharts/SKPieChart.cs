@@ -86,7 +86,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series"/>
     public IEnumerable<ISeries> Series { get; set; } = [];
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements"/>
+    /// <inheritdoc cref="IChartView.VisualElements"/>
     public IEnumerable<ChartElement> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation"/>
@@ -101,13 +101,13 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue"/>
     public double MinValue { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled"/>
     public bool AutoUpdateEnabled { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
+    /// <inheritdoc cref="IChartView.Legend"/>
     public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
+    /// <inheritdoc cref="IChartView.Tooltip"/>
     public IChartTooltip? Tooltip { get; set; }
 
     LvcColor IChartView.BackColor
@@ -140,38 +140,38 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     public TooltipPosition TooltipPosition { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    /// <inheritdoc cref="IChartView.Title"/>
     public CoreVisualElement? Title { get; set; }
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise"/>
     public bool IsClockwise { get; set; } = true;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint"/>
+    /// <inheritdoc cref="IChartView.LegendTextPaint"/>
     public Paint? LegendTextPaint { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint"/>
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint"/>
     public Paint? LegendBackgroundPaint { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize"/>
+    /// <inheritdoc cref="IChartView.LegendTextSize"/>
     public double? LegendTextSize { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint"/>
+    /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
     public Paint? TooltipTextPaint { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint"/>
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint"/>
     public Paint? TooltipBackgroundPaint { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize"/>
+    /// <inheritdoc cref="IChartView.TooltipTextSize"/>
     public double? TooltipTextSize { get; set; }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
@@ -183,8 +183,8 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
+    public event VisualElementsHandler? VisualElementsPointerDown;
 
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
@@ -201,13 +201,13 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
 
     void IChartView.InvokeOnUIThread(Action action) => action();
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
+    private void OnCoreUpdateFinished(IChartView chart) =>
         UpdateFinished?.Invoke(this);
 
-    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart) =>
+    private void OnCoreUpdateStarted(IChartView chart) =>
         UpdateStarted?.Invoke(this);
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
+    private void OnCoreMeasuring(IChartView chart) =>
         Measuring?.Invoke(this);
 
     private LvcSize GetControlSize() => new(Width, Height);
@@ -221,8 +221,8 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView<SkiaSharpDrawing
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints) =>
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
-    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(Core, visualElements, pointer));
+    void IChartView.OnVisualElementPointerDown(
+        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(Core, visualElements, pointer));
 
     void IChartView.Invalidate() => throw new NotImplementedException();
 }

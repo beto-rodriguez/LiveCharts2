@@ -42,7 +42,7 @@ public abstract class InMemorySkiaSharpChart
         LiveCharts.Configure(config => config.UseDefaults());
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
+    /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public CoreMotionCanvas CoreCanvas { get; } = new();
 
     /// <inheritdoc cref="IChartView.CoreChart"/>

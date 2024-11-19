@@ -104,14 +104,14 @@ public abstract class Chart<TDrawingContext> : IChart
 #endif
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<TDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<TDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<TDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     #region properties
 
@@ -171,7 +171,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The view.
     /// </value>
-    public abstract IChartView<TDrawingContext> View { get; }
+    public abstract IChartView View { get; }
 
     IChartView IChart.View => View;
 

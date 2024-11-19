@@ -65,7 +65,7 @@ public class PieChart<TDrawingContext>(
     /// <value>
     /// The view.
     /// </value>
-    public override IChartView<TDrawingContext> View => view;
+    public override IChartView View => view;
 
     /// <summary>
     /// Gets the value bounds.

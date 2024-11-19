@@ -30,7 +30,7 @@ namespace LiveChartsCore.Kernel.Events;
 /// Defines the visual elements event arguments.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="VisualElementsEventArgs{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="VisualElementsEventArgs"/> class.
 /// </remarks>
 /// <param name="chart">The chart.</param>
 /// <param name="pointerLocation">The pointer location.</param>

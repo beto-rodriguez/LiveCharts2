@@ -289,14 +289,14 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
 
     #region events
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
@@ -308,8 +308,8 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
     [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
+    public event VisualElementsHandler? VisualElementsPointerDown;
 
     #endregion
 
@@ -356,7 +356,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(DrawMarginProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{SkiaSharpDrawingContext}.Title" />
+    /// <inheritdoc cref="IChartView.Title" />
     public CoreVisualElement? Title
     {
         get => (CoreVisualElement?)GetValue(TitleProperty);
@@ -370,7 +370,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(SeriesProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView.VisualElements" />
     public IEnumerable<ChartElement> VisualElements
     {
         get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty)!;
@@ -454,7 +454,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(TooltipTextSizeProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
+    /// <inheritdoc cref="IChartView.Tooltip" />
     public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
@@ -485,7 +485,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         set => SetValue(LegendTextSizeProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
+    /// <inheritdoc cref="IChartView.Legend" />
     public IChartLegend? Legend { get => legend; set => legend = value; }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
@@ -680,10 +680,10 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         }
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) =>
+    private void OnCoreUpdateFinished(IChartView chart) =>
         UpdateFinished?.Invoke(this);
 
-    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
+    private void OnCoreUpdateStarted(IChartView chart)
     {
         if (UpdateStartedCommand is not null)
         {
@@ -694,7 +694,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) =>
+    private void OnCoreMeasuring(IChartView chart) =>
         Measuring?.Invoke(this);
 
     private void Chart_PointerLeave(object? sender, PointerEventArgs e) =>
@@ -723,10 +723,10 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
         if (HoveredPointsChangedCommand is not null && HoveredPointsChangedCommand.CanExecute(args)) HoveredPointsChangedCommand.Execute(args);
     }
 
-    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
+    void IChartView.OnVisualElementPointerDown(
         IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
+        var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))

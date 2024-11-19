@@ -38,8 +38,8 @@ using Microsoft.JSInterop;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
 
-/// <inheritdoc cref="IChartView{TDrawingContext}" />
-public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IChartView" />
+public partial class Chart : IBlazorChart, IDisposable, IChartView
 {
     [Inject]
     private IJSRuntime JS { get; set; } = null!;
@@ -108,14 +108,14 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     #region events
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
@@ -127,8 +127,8 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
+    public event VisualElementsHandler? VisualElementsPointerDown;
 
     #endregion
 
@@ -166,7 +166,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => motionCanvas?.CanvasCore ?? throw new Exception("canvas not found!");
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Title"/>
+    /// <inheritdoc cref="IChartView.Title"/>
     [Parameter]
     public CoreVisualElement? Title { get; set; }
 
@@ -190,7 +190,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     [Parameter]
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
+    /// <inheritdoc cref="IChartView.Legend" />
     [Parameter]
     public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
 
@@ -212,7 +212,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     [Parameter]
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
+    /// <inheritdoc cref="IChartView.Tooltip" />
     [Parameter]
     public IChartTooltip? Tooltip { get; set; } = new SKDefaultTooltip();
 
@@ -239,7 +239,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     [Parameter]
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
+    /// <inheritdoc cref="IChartView.VisualElements" />
     [Parameter]
     public IEnumerable<ChartElement> VisualElements
     {
@@ -298,11 +298,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         core.Update();
     }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart) => UpdateFinished?.Invoke(this);
+    private void OnCoreUpdateFinished(IChartView chart) => UpdateFinished?.Invoke(this);
 
-    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart) => UpdateStarted?.Invoke(this);
+    private void OnCoreUpdateStarted(IChartView chart) => UpdateStarted?.Invoke(this);
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart) => Measuring?.Invoke(this);
+    private void OnCoreMeasuring(IChartView chart) => Measuring?.Invoke(this);
 
     /// <summary>
     /// Called when the pointer goes down.
@@ -372,8 +372,8 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
 
-    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-       IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer));
+    void IChartView.OnVisualElementPointerDown(
+       IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(CoreChart, visualElements, pointer));
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints) =>
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);

@@ -41,7 +41,7 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
-/// <inheritdoc cref="IChartView{TDrawingContext}" />
+/// <inheritdoc cref="IChartView" />
 public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly GeoMap<SkiaSharpDrawingContext> _core;

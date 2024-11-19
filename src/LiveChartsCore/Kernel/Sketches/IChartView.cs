@@ -162,6 +162,32 @@ public interface IChartView
     CoreMotionCanvas CoreCanvas { get; }
 
     /// <summary>
+    /// Gets or sets the chart title.
+    /// </summary>
+    CoreVisualElement? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend.
+    /// </summary>
+    /// <value>
+    /// The legend.
+    /// </value>
+    IChartLegend? Legend { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip.
+    /// </summary>
+    /// <value>
+    /// The tooltip.
+    /// </value>
+    IChartTooltip? Tooltip { get; set; }
+
+    /// <summary>
+    /// Gets or sets the visual elements.
+    /// </summary>
+    IEnumerable<ChartElement> VisualElements { get; set; }
+
+    /// <summary>
     /// Occurs when the pointer goes down over a chart point(s).
     /// </summary>
     event ChartPointsHandler? DataPointerDown;
@@ -176,6 +202,26 @@ public interface IChartView
     /// </summary>
     [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     event ChartPointHandler? ChartPointPointerDown;
+
+    /// <summary>
+    /// Occurs before the chart is measured, this is the first step before the chart updates.
+    /// </summary>
+    event ChartEventHandler? Measuring;
+
+    /// <summary>
+    /// Occurs when the chart started an update, just when the drawing loop started.
+    /// </summary>
+    event ChartEventHandler? UpdateStarted;
+
+    /// <summary>
+    /// Occurs when a chart update finished, just when the drawing loop finished.
+    /// </summary>
+    event ChartEventHandler? UpdateFinished;
+
+    /// <summary>
+    /// Occurs when the pointer goes down over a visual element.
+    /// </summary>
+    event VisualElementsHandler VisualElementsPointerDown;
 
     /// <summary>
     /// Gets all the <see cref="ChartPoint"/> that contain the given point.
@@ -223,60 +269,6 @@ public interface IChartView
     /// Invalidates the control.
     /// </summary>
     void Invalidate();
-}
-
-/// <summary>
-/// Defines a chart view.
-/// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IChartView<TDrawingContext> : IChartView
-    where TDrawingContext : DrawingContext
-{
-    /// <summary>
-    /// Gets or sets the chart title.
-    /// </summary>
-    CoreVisualElement? Title { get; set; }
-
-    /// <summary>
-    /// Occurs before the chart is measured, this is the first step before the chart updates.
-    /// </summary>
-    event ChartEventHandler<TDrawingContext>? Measuring;
-
-    /// <summary>
-    /// Occurs when the chart started an update, just when the drawing loop started.
-    /// </summary>
-    event ChartEventHandler<TDrawingContext>? UpdateStarted;
-
-    /// <summary>
-    /// Occurs when a chart update finished, just when the drawing loop finished.
-    /// </summary>
-    event ChartEventHandler<TDrawingContext>? UpdateFinished;
-
-    /// <summary>
-    /// Occurs when the pointer goes down over a visual element.
-    /// </summary>
-    event VisualElementsHandler<TDrawingContext> VisualElementsPointerDown;
-
-    /// <summary>
-    /// Gets or sets the legend.
-    /// </summary>
-    /// <value>
-    /// The legend.
-    /// </value>
-    IChartLegend? Legend { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip.
-    /// </summary>
-    /// <value>
-    /// The tooltip.
-    /// </value>
-    IChartTooltip? Tooltip { get; set; }
-
-    /// <summary>
-    /// Gets or sets the visual elements.
-    /// </summary>
-    IEnumerable<ChartElement> VisualElements { get; set; }
 
     /// <summary>
     /// Called when the pointer goes down on a visual element(s).
