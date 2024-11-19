@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -28,12 +27,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a line series plot.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries" />
-public interface ILineSeries<TDrawingContext>
-    : IChartSeries, IStrokedAndFilled,
-        ICartesianSeries, IErrorSeries
-            where TDrawingContext : DrawingContext
+public interface ILineSeries : ICartesianSeries, IStrokedAndFilled, IErrorSeries
 {
     /// <summary>
     /// Gets or sets the size of the geometry.

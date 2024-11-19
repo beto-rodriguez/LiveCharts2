@@ -102,7 +102,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
+    /// <inheritdoc cref="ILineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.ScalesAngleAt"/>
@@ -111,7 +111,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
     /// <inheritdoc cref="IPolarSeries{TDrawingContext}.ScalesRadiusAt"/>
     public int ScalesRadiusAt { get => _scalesRadiusAt; set => SetProperty(ref _scalesRadiusAt, value); }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
+    /// <inheritdoc cref="ILineSeries.LineSmoothness"/>
     public double LineSmoothness
     {
         get => _lineSmoothness;
@@ -124,17 +124,17 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         }
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.EnableNullSplitting"/>
+    /// <inheritdoc cref="ILineSeries.EnableNullSplitting"/>
     public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
+    /// <inheritdoc cref="ILineSeries.GeometryFill"/>
     public Paint? GeometryFill
     {
         get => _geometryFill;
         set => SetPaintProperty(ref _geometryFill, value);
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
+    /// <inheritdoc cref="ILineSeries.GeometryStroke"/>
     public Paint? GeometryStroke
     {
         get => _geometryStroke;

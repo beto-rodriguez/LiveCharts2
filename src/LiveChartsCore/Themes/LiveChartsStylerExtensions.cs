@@ -130,7 +130,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="ILineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="ILineSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -138,7 +138,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForLineSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<ILineSeries<TDrawingContext>> predicate)
+        Action<ILineSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.LineSeriesBuilder.Add(predicate);
@@ -194,7 +194,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for tacked <see cref="ILineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for tacked <see cref="ILineSeries"/> objects.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
@@ -202,7 +202,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme<TDrawingContext> HasRuleForStackedLineSeries<TDrawingContext>(
         this Theme<TDrawingContext> styler,
-        Action<ILineSeries<TDrawingContext>> predicate)
+        Action<ILineSeries> predicate)
         where TDrawingContext : DrawingContext
     {
         styler.StackedLineSeriesBuilder.Add(predicate);

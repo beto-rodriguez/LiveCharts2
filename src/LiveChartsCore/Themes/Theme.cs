@@ -121,7 +121,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = [];
+    public List<Action<ILineSeries>> LineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -169,7 +169,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = [];
+    public List<Action<ILineSeries>> StackedLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the bar series builder.
@@ -338,7 +338,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
         {
-            var lineSeries = (ILineSeries<TDrawingContext>)series;
+            var lineSeries = (ILineSeries)series;
             foreach (var rule in LineSeriesBuilder) rule(lineSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)

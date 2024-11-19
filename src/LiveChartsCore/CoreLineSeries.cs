@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries
         where TPathGeometry : IVectorGeometry<CubicBezierSegment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
@@ -73,10 +73,10 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         DataPadding = new LvcPoint(0.5f, 1f);
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
+    /// <inheritdoc cref="ILineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
+    /// <inheritdoc cref="ILineSeries.LineSmoothness"/>
     public double LineSmoothness
     {
         get => _lineSmoothness;
@@ -89,17 +89,17 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         }
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.EnableNullSplitting"/>
+    /// <inheritdoc cref="ILineSeries.EnableNullSplitting"/>
     public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
+    /// <inheritdoc cref="ILineSeries.GeometryFill"/>
     public Paint? GeometryFill
     {
         get => _geometryFill;
         set => SetPaintProperty(ref _geometryFill, value);
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
+    /// <inheritdoc cref="ILineSeries.GeometryStroke"/>
     public Paint? GeometryStroke
     {
         get => _geometryStroke;
