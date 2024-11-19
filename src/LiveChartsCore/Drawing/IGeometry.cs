@@ -27,14 +27,12 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a geometry in the user interface.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IGeometry<TDrawingContext> : IDrawable, IPaintable
-    where TDrawingContext : DrawingContext
+public interface IGeometry : IDrawable, IPaintable
 {
     /// <summary>
     /// Gets or sets the parent shape, if any the X and Y properties will be relative to the parent.
     /// </summary>
-    IGeometry<TDrawingContext>? Parent { get; set; }
+    IGeometry? Parent { get; set; }
 
     /// <summary>
     /// Gets or sets the transform origin.

@@ -47,7 +47,7 @@ public static class EventExtensions
     public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointMeasured<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         series.PointMeasured += predicate;
@@ -71,7 +71,7 @@ public static class EventExtensions
     public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointCreated<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         series.PointCreated += predicate;
@@ -95,7 +95,7 @@ public static class EventExtensions
     public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointDown<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         series.ChartPointPointerDown += predicate;
@@ -119,7 +119,7 @@ public static class EventExtensions
     public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointHover<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         series.ChartPointPointerHover += predicate;
@@ -143,7 +143,7 @@ public static class EventExtensions
     public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointHoverLost<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         series.ChartPointPointerHoverLost += predicate;

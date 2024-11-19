@@ -119,8 +119,8 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    protected internal override void SetParent(IGeometry parent)
     {
         if (geometry is null) return;
         geometry.Parent = parent;

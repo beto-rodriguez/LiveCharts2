@@ -58,5 +58,5 @@ public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDraw
     /// <summary>
     /// Gets the geometry.
     /// </summary>
-    public IGeometry<TDrawingContext>? Geometry => Circle;
+    public IGeometry? Geometry => Circle;
 }

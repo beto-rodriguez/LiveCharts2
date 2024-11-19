@@ -53,5 +53,5 @@ public interface IVisualSeparator<TDrawingContext>
     /// <value>
     /// The line.
     /// </value>
-    public IGeometry<TDrawingContext>? Geometry { get; }
+    public IGeometry? Geometry { get; }
 }

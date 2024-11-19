@@ -26,8 +26,8 @@ namespace LiveChartsCore.Drawing;
 /// Defines a label geometry in the user interface.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IGeometry{TDrawingContext}" />
-public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+/// <seealso cref="IGeometry" />
+public interface ILabelGeometry<TDrawingContext> : IGeometry
      where TDrawingContext : DrawingContext
 {
     /// <summary>

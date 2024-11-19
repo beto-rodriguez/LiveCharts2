@@ -44,7 +44,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     IReadOnlyCollection<TModel>? values)
         : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values)
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private Paint? _stroke = null;

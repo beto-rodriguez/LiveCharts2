@@ -49,7 +49,7 @@ public static class ConditionalDrawExtensions
     public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointMeasured<TModel, TVisual, TLabel, TDrawingContext>(
         this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         series.PointMeasured += predicate;

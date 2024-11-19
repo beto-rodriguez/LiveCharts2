@@ -165,8 +165,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    protected internal override void SetParent(IGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         BackgroundGeometry.Parent = parent;

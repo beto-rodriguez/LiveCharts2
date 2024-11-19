@@ -1409,7 +1409,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         SetUpdateMode(label, mode);
     }
 
-    private void SetUpdateMode(IGeometry<TDrawingContext> geometry, UpdateMode mode)
+    private void SetUpdateMode(IGeometry geometry, UpdateMode mode)
     {
         switch (mode)
         {

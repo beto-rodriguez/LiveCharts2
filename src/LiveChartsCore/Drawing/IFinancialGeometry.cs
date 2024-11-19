@@ -27,7 +27,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ISizedGeometry{TDrawingContext}" />
-public interface IFinancialGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+public interface IFinancialGeometry<TDrawingContext> : IGeometry
     where TDrawingContext : DrawingContext
 {
     /// <summary>

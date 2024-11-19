@@ -157,7 +157,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <summary>
     /// Sets the parent to all the geometries in the visual.
     /// </summary>
-    protected internal abstract void SetParent(IGeometry<TDrawingContext> parent);
+    protected internal abstract void SetParent(IGeometry parent);
 
     /// <summary>
     /// Gets the acdtual coordinate of the visual.

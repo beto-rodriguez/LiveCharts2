@@ -76,5 +76,5 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     /// <summary>
     /// Gets the geometry.
     /// </summary>
-    public IGeometry<TDrawingContext>? Geometry => Separator;
+    public IGeometry? Geometry => Separator;
 }

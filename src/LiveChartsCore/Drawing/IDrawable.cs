@@ -28,6 +28,9 @@ namespace LiveChartsCore.Drawing;
 /// <seealso cref="IAnimatable" />
 public interface IDrawable : IAnimatable
 {
+    /// <summary>
+    /// Gets or sets the opacity.
+    /// </summary>
     float Opacity { get; set; }
 
     /// <summary>

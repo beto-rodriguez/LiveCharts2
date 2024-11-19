@@ -26,8 +26,8 @@ namespace LiveChartsCore.Drawing;
 /// Defines a geometry in the user interface with rounded corners.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IGeometry{TDrawingContext}" />
-public interface IRoundedGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+/// <seealso cref="IGeometry" />
+public interface IRoundedGeometry<TDrawingContext> : IGeometry
     where TDrawingContext : DrawingContext
 {
     /// <summary>

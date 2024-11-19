@@ -47,7 +47,7 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(
     IReadOnlyCollection<TModel>? values)
         : Series<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IChartSeries
             where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
+            where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     private Paint? _dataLabelsPaint;

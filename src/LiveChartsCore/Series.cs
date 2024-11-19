@@ -51,7 +51,7 @@ namespace LiveChartsCore;
 public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, IInternalSeries, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
-        where TVisual : class, IGeometry<TDrawingContext>, new()
+        where TVisual : class, IGeometry, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     /// <summary>

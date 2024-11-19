@@ -153,8 +153,8 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : VisualElement<TDrawi
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    protected internal override void SetParent(IGeometry parent)
     {
         if (_labelGeometry is null) return;
         _labelGeometry.Parent = parent;

@@ -117,8 +117,8 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(IChart)"/>
     public override LvcSize Measure(IChart chart) => new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry)"/>
+    protected internal override void SetParent(IGeometry parent)
     {
         if (_geometry is null) return;
         _geometry.Parent = parent;

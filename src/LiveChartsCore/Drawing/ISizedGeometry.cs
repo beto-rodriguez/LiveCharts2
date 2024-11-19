@@ -26,8 +26,8 @@ namespace LiveChartsCore.Drawing;
 /// Defines a sized geometry in the user interface, a geometry with Height and Width properties.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IGeometry{TDrawingContext}" />
-public interface ISizedGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+/// <seealso cref="IGeometry" />
+public interface ISizedGeometry<TDrawingContext> : IGeometry
     where TDrawingContext : DrawingContext
 {
     /// <summary>

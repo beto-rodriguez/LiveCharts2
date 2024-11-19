@@ -26,8 +26,8 @@ namespace LiveChartsCore.Drawing;
 /// Defines a needle geometry in the user interface.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IGeometry{TDrawingContext}" />
-public interface INeedleGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+/// <seealso cref="IGeometry" />
+public interface INeedleGeometry<TDrawingContext> : IGeometry
     where TDrawingContext : DrawingContext
 {
     /// <summary>

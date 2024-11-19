@@ -29,8 +29,8 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="IGeometry{TDrawingContext}" />
-public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IGeometry" />
+public abstract class Geometry : Drawable, IGeometry
 {
     private readonly bool _hasGeometryTransform = false;
     private readonly FloatMotionProperty _xProperty;
@@ -72,7 +72,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
 
     private bool HasTransform => _hasGeometryTransform || _hasTranslate || _hasRotation || _hasScale || _hasSkew || _hasTransform;
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.X" />
+    /// <inheritdoc cref="IGeometry.X" />
     public float X
     {
         get => Parent is null
@@ -81,7 +81,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         set => _xProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.Y" />
+    /// <inheritdoc cref="IGeometry.Y" />
     public float Y
     {
         get => Parent is null
@@ -90,14 +90,14 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         set => _yProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.TransformOrigin" />
+    /// <inheritdoc cref="IGeometry.TransformOrigin" />
     public LvcPoint TransformOrigin
     {
         get => _transformOriginProperty.GetMovement(this);
         set => _transformOriginProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.TranslateTransform" />
+    /// <inheritdoc cref="IGeometry.TranslateTransform" />
     public LvcPoint TranslateTransform
     {
         get => _translateProperty.GetMovement(this);
@@ -108,7 +108,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.RotateTransform" />
+    /// <inheritdoc cref="IGeometry.RotateTransform" />
     public float RotateTransform
     {
         get => _rotationProperty.GetMovement(this);
@@ -119,7 +119,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.ScaleTransform" />
+    /// <inheritdoc cref="IGeometry.ScaleTransform" />
     public LvcPoint ScaleTransform
     {
         get => _scaleProperty.GetMovement(this);
@@ -130,7 +130,7 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.SkewTransform" />
+    /// <inheritdoc cref="IGeometry.SkewTransform" />
     public LvcPoint SkewTransform
     {
         get => _skewProperty.GetMovement(this);
@@ -163,8 +163,8 @@ public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IPaintable.Fill" />
     public Paint? Fill { get; set; }
 
-    /// <inheritdoc cref="IGeometry{TDrawingContext}.Parent"/>
-    public IGeometry<SkiaSharpDrawingContext>? Parent { get; set; }
+    /// <inheritdoc cref="IGeometry.Parent"/>
+    public IGeometry? Parent { get; set; }
 
     /// <summary>
     /// Draws the geometry in the user interface.
