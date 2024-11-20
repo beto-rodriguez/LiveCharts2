@@ -210,7 +210,7 @@ public static class ThemesExtensions
                     {
                         label.Paint = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
-                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>>(needle =>
+                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry>>(needle =>
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
@@ -396,7 +396,7 @@ public static class ThemesExtensions
                     {
                         label.Paint = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
-                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>>(needle =>
+                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry>>(needle =>
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(200, 200, 200));
                     })

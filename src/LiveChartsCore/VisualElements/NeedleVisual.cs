@@ -33,9 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : CoreVisualElement
-    where TDrawingContext : DrawingContext
+public class NeedleVisual<TGeometry, TLabelGeometry> : CoreVisualElement
     where TGeometry : INeedleGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()
 {
@@ -60,7 +58,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : CoreVisu
     /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
-        ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext>>();
+        ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry>>();
 
         if (chart is not PieChartEngine pieChart)
             throw new Exception("The needle visual can only be added to a pie chart");
