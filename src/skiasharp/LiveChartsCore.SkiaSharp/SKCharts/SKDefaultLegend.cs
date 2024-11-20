@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.VisualElements;
@@ -43,7 +42,7 @@ public class SKDefaultLegend : IChartLegend
     private Paint? _backgroundPaint = null;
 
     // marked as internal only for testing purposes
-    internal readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new()
+    internal readonly StackPanel<RoundedRectangleGeometry> _stackPanel = new()
     {
         Padding = new Padding(15, 4),
         HorizontalAlignment = Align.Start,
@@ -137,7 +136,7 @@ public class SKDefaultLegend : IChartLegend
 
         foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
-            _stackPanel.Children.Add(new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+            _stackPanel.Children.Add(new StackPanel<RectangleGeometry>
             {
                 Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,

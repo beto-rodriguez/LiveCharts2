@@ -18,7 +18,7 @@ public class VisualElementsTests
     {
         var suts = new List<CoreVisualElement>
         {
-            new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>(),
+            new StackPanel<RectangleGeometry>(),
             new RelativePanel<RectangleGeometry>(),
             new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>(),
             new GeometryVisual<RectangleGeometry>(),

@@ -16,7 +16,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelHorizontalStart()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(10, 20),
             X = 100,
@@ -88,7 +88,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelHorizontalMiddle()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(10, 20),
             X = 100,
@@ -155,7 +155,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelHorizontalEnd()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(10, 20),
             X = 100,
@@ -221,7 +221,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelVerticalStart()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(10, 20),
             X = 100,
@@ -292,7 +292,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelVerticalMiddle()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(10, 20),
             X = 100,
@@ -359,7 +359,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelVerticalEnd()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(10, 20),
             X = 100,
@@ -425,7 +425,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelHorizontalStartWrap()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(0),
             X = 100,
@@ -572,7 +572,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelHorizontalMiddleWrap()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(0),
             X = 100,
@@ -719,7 +719,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelHorizontalEndWrap()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(0),
             X = 100,
@@ -866,7 +866,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelVerticalStartWrap()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(0),
             X = 200,
@@ -1013,7 +1013,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelVerticalMiddleWrap()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(0),
             X = 200,
@@ -1160,7 +1160,7 @@ public class StackPanelTest
     [TestMethod]
     public void StackPanelVerticalEndWrap()
     {
-        var stackPanel = new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var stackPanel = new StackPanel<RectangleGeometry>
         {
             Padding = new Drawing.Padding(0),
             X = 200,

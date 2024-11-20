@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -33,9 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the stack panel class.
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class StackPanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElement
-    where TDrawingContext : DrawingContext
+public class StackPanel<TBackgroundGeometry> : CoreVisualElement
     where TBackgroundGeometry : ISizedGeometry, new()
 {
     private Paint? _backgroundPaint;
@@ -47,7 +44,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElemen
     private ContainerOrientation _orientation;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StackPanel{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="StackPanel{TBackgroundGeometry}"/> class.
     /// </summary>
     public StackPanel()
     {

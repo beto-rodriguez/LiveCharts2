@@ -41,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// </summary>
 public class SKDefaultTooltip : IChartTooltip
 {
-    internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
+    internal StackPanel<PopUpGeometry>? _panel;
     private static readonly int s_zIndex = 10100;
     private Paint? _backgroundPaint;
 
@@ -94,7 +94,7 @@ public class SKDefaultTooltip : IChartTooltip
 
         if (_panel is null)
         {
-            _panel = new StackPanel<PopUpGeometry, SkiaSharpDrawingContext>
+            _panel = new StackPanel<PopUpGeometry>
             {
                 Orientation = ContainerOrientation.Vertical,
                 HorizontalAlignment = Align.Middle,
@@ -154,7 +154,7 @@ public class SKDefaultTooltip : IChartTooltip
                         });
 
                     _panel.Children.Add(
-                        new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
+                        new StackPanel<RectangleGeometry> { Padding = new(0, 8) });
                 }
             }
 
