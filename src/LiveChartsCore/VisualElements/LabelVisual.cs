@@ -23,7 +23,6 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -33,9 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a label visual element.
 /// </summary>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class LabelVisual<TLabelGeometry, TDrawingContext> : CoreVisualElement
-    where TDrawingContext : DrawingContext
+public class LabelVisual<TLabelGeometry> : CoreVisualElement
     where TLabelGeometry : ILabelGeometry, new()
 {
     internal TLabelGeometry? _labelGeometry;
@@ -163,7 +160,7 @@ public class LabelVisual<TLabelGeometry, TDrawingContext> : CoreVisualElement
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
-        ApplyTheme<LabelVisual<TLabelGeometry, TDrawingContext>>();
+        ApplyTheme<LabelVisual<TLabelGeometry>>();
 
         InitializeLabel();
 

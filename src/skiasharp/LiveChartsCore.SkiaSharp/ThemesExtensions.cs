@@ -206,7 +206,7 @@ public static class ThemesExtensions
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(30, 30, 30, 10));
                     })
-                    .HasRuleFor<LabelVisual<LabelGeometry, SkiaSharpDrawingContext>>(label =>
+                    .HasRuleFor<LabelVisual<LabelGeometry>>(label =>
                     {
                         label.Paint = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
@@ -392,7 +392,7 @@ public static class ThemesExtensions
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(255, 255, 255, 30));
                     })
-                    .HasRuleFor<LabelVisual<LabelGeometry, SkiaSharpDrawingContext>>(label =>
+                    .HasRuleFor<LabelVisual<LabelGeometry>>(label =>
                     {
                         label.Paint = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
