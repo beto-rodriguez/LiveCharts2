@@ -123,25 +123,25 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
     }
 }
 
-/// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}" />
+/// <inheritdoc cref="IPathGeometry{TPathArgs}" />
 [Obsolete]
-public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
+public class PathGeometry : Drawable, IPathGeometry<SKPath>
 {
     /// <summary>
     /// The commands
     /// </summary>
     protected readonly LinkedList<IPathCommand<SKPath>> _commands = new();
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.FirstCommand" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.FirstCommand" />
     public LinkedListNode<IPathCommand<SKPath>>? FirstCommand => _commands.First;
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.LastCommand" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.LastCommand" />
     public LinkedListNode<IPathCommand<SKPath>>? LastCommand => _commands.Last;
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.CountCommands" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.CountCommands" />
     public int CountCommands => _commands.Count;
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.IsClosed" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.IsClosed" />
     public bool IsClosed { get; set; }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
@@ -177,55 +177,55 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
         if (!isValid) IsValid = false;
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddLast(IPathCommand{TPathArgs})" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.AddLast(IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddLast(IPathCommand<SKPath> command)
     {
         IsValid = false;
         return _commands.AddLast(command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddFirst(IPathCommand{TPathArgs})" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.AddFirst(IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddFirst(IPathCommand<SKPath> command)
     {
         IsValid = false;
         return _commands.AddFirst(command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddAfter(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.AddAfter(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddAfter(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
     {
         IsValid = false;
         return _commands.AddAfter(node, command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddBefore(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.AddBefore(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
     public LinkedListNode<IPathCommand<SKPath>> AddBefore(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
     {
         IsValid = false;
         return _commands.AddBefore(node, command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ContainsCommand(IPathCommand{TPathArgs})" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.ContainsCommand(IPathCommand{TPathArgs})" />
     public bool ContainsCommand(IPathCommand<SKPath> segment)
     {
         return _commands.Contains(segment);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(IPathCommand{TPathArgs})" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.RemoveCommand(IPathCommand{TPathArgs})" />
     public bool RemoveCommand(IPathCommand<SKPath> command)
     {
         IsValid = false;
         return _commands.Remove(command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(LinkedListNode{IPathCommand{TPathArgs}})" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.RemoveCommand(LinkedListNode{IPathCommand{TPathArgs}})" />
     public void RemoveCommand(LinkedListNode<IPathCommand<SKPath>> node)
     {
         IsValid = false;
         _commands.Remove(node);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ClearCommands" />
+    /// <inheritdoc cref="IPathGeometry{TPathArgs}.ClearCommands" />
     public void ClearCommands()
     {
         _commands.Clear();

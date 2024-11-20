@@ -28,11 +28,9 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a path geometry in the user interface.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path.</typeparam>
 [Obsolete("Replaced by IAreaGeometry<T1, T2>")]
-public interface IPathGeometry<TDrawingContext, TPathArgs> : IDrawable
-     where TDrawingContext : DrawingContext
+public interface IPathGeometry<TPathArgs> : IDrawable
 {
     /// <summary>
     /// Gets or sets a value indicating whether the path is closed.
