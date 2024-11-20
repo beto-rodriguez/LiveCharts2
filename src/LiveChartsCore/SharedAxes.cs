@@ -20,11 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Crosshair Subticks Subseparators
-
 using System.Collections.Generic;
 using System.Linq;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore;
@@ -37,10 +34,8 @@ public static class SharedAxes
     /// <summary>
     /// Sets the specified axes as shared.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="axes">The axes to share.</param>
-    public static void Set<TDrawingContext>(params ICartesianAxis[] axes)
-        where TDrawingContext : DrawingContext
+    public static void Set(params ICartesianAxis[] axes)
     {
         var sharedInstance = new HashSet<CartesianChartEngine>();
 
