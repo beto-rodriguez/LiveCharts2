@@ -540,7 +540,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
         var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
 
         return usesLine
-            ? new LineVisual<TLineGeometry, TDrawingContext>
+            ? new LineVisual<TLineGeometry>
             {
                 Stroke = GetMiniaturePaint(Stroke, zindex + 2),
                 Width = MiniatureShapeSize,

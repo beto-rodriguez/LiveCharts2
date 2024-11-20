@@ -586,7 +586,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
 
         return usesLine
-            ? new LineVisual<TErrorGeometry, TDrawingContext>
+            ? new LineVisual<TErrorGeometry>
             {
                 Stroke = GetMiniaturePaint(Stroke, zindex + 2),
                 Width = MiniatureShapeSize,

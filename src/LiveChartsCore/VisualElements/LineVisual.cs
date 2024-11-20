@@ -23,7 +23,6 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -33,9 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a visual element in a chart that draws a sized geometry in the user interface.
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual
-    where TDrawingContext : DrawingContext
+public class LineVisual<TGeometry> : BaseGeometryVisual
     where TGeometry : ILineGeometry, new()
 {
     internal TGeometry? _geometry;
