@@ -35,20 +35,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+/// <seealso cref="ChartSeries{TModel, TVisual, TLabel}" />
 /// <seealso cref="IDisposable" />
 /// <seealso cref="ICartesianSeries" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel}"/> class.
 /// </remarks>
 /// <param name="properties">The series properties.</param>
 /// <param name="values">The values.</param>
-public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
+public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
-        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), ICartesianSeries
-            where TDrawingContext : DrawingContext
+        : ChartSeries<TModel, TVisual, TLabel>(properties, values), ICartesianSeries
             where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry, new()
 {

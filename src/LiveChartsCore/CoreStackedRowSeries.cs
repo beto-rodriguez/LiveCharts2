@@ -33,17 +33,15 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="CoreStackedRowSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+/// Initializes a new instance of the <see cref="CoreStackedRowSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
 /// </remarks>
 /// <param name="values">The values.</param>
-public class CoreStackedRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
-    : CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries
+public class CoreStackedRowSeries<TModel, TVisual, TLabel, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
+    : CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>(values, true), IStackedBarSeries
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry, new()
-        where TDrawingContext : DrawingContext
 {
     private int _stackGroup = 0;
 
@@ -55,8 +53,5 @@ public class CoreStackedRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErr
     /// </summary>
     /// <returns></returns>
     /// <inheritdoc />
-    public override int GetStackGroup()
-    {
-        return _stackGroup;
-    }
+    public override int GetStackGroup() => _stackGroup;
 }

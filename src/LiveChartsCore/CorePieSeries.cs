@@ -40,16 +40,14 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry}"/> class.
 /// </remarks>
-public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>(
+public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>(
     IReadOnlyCollection<TModel>? values,
     bool isGauge = false,
     bool isGaugeFill = false)
-        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries
-            where TDrawingContext : DrawingContext
+        : ChartSeries<TModel, TVisual, TLabel>(GetProperties(isGauge, isGaugeFill), values), IPieSeries
             where TVisual : class, IDoughnutGeometry, new()
             where TLabel : class, ILabelGeometry, new()
             where TMiniatureGeometry : ISizedGeometry, new()
@@ -162,7 +160,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
 
         minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
 
-        var pieLabelsCorrection = chart.SeriesContext.GetPieOuterLabelsSpace<TLabel, TDrawingContext>();
+        var pieLabelsCorrection = chart.SeriesContext.GetPieOuterLabelsSpace<TLabel>();
         minDimension -= pieLabelsCorrection;
 
         var outerRadiusOffset = (float)OuterRadiusOffset;
@@ -452,7 +450,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     public virtual DimensionalBounds GetBounds(Chart chart) =>
         DataFactory.GetPieBounds(chart, this).Bounds;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
     [Obsolete]
     public override Sketch GetMiniaturesSketch()
     {
@@ -467,7 +465,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         return new GeometryVisual<TMiniatureGeometry, TLabel>
@@ -505,7 +503,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     protected internal override Paint?[] GetPaintTasks() =>
         [_fill, _stroke, DataLabelsPaint];
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -516,7 +514,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;

@@ -38,15 +38,13 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel}" />
 /// <seealso cref="IScatterSeries" />
-public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries
+public class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IScatterSeries
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
-        where TDrawingContext : DrawingContext
         where TErrorGeometry : class, ILineGeometry, new()
 {
     private Paint? _errorPaint;
@@ -55,7 +53,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     private double _geometrySize = 24d;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
     public CoreScatterSeries(IReadOnlyCollection<TModel>? values)
@@ -66,7 +64,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         DataLabelsFormatter = (point) => $"{point.Coordinate.PrimaryValue}";
         YToolTipLabelFormatter = point =>
         {
-            var series = (CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>)point.Context.Series;
+            var series = (CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>)point.Context.Series;
             var c = point.Coordinate;
             return series.IsWeighted
                 ? $"X = {c.SecondaryValue}{Environment.NewLine}" +
@@ -308,7 +306,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public override SeriesBounds GetBounds(Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
@@ -319,7 +317,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         return seriesBounds;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
     [Obsolete]
     public override Sketch GetMiniaturesSketch()
     {
@@ -334,7 +332,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
@@ -351,7 +349,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -362,7 +360,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;

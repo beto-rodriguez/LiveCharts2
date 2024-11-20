@@ -40,16 +40,14 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model to plot.</typeparam>
 /// <typeparam name="TVisual">The type of the visual point.</typeparam>
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries
+public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, ILineSeries
         where TPathGeometry : IVectorGeometry<CubicBezierSegment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry, new()
-        where TDrawingContext : DrawingContext
 {
     internal readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     internal readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
@@ -62,7 +60,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="CoreLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry}"/>
+    /// <see cref="CoreLineSeries{TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry}"/>
     /// class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
@@ -500,7 +498,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(
         Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
@@ -535,7 +533,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -545,7 +543,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -559,7 +557,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     protected override double GetRequestedGeometrySize() =>
         (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
     [Obsolete]
     public override Sketch GetMiniaturesSketch()
     {
@@ -577,7 +575,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
@@ -623,7 +621,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         return GetMiniaturePaint(paint, zIndex);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDispose(IChartView)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SoftDeleteOrDispose(IChartView)"/>
     public override void SoftDeleteOrDispose(IChartView chart)
     {
         base.SoftDeleteOrDispose(chart);
@@ -770,7 +768,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         }
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
@@ -787,7 +785,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         visual.XError?.Animate(easing, speed);
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
         var visual = (BezierErrorVisualPoint<TVisual, TErrorGeometry>?)point.Context.AdditionalVisuals;

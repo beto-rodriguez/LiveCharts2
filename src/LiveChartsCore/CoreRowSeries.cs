@@ -36,20 +36,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+/// <seealso cref="BarSeries{TModel, TVisual, TLabel}" />
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
-    : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+public class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
+    : BarSeries<TModel, TVisual, TLabel>
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry, new()
-        where TDrawingContext : DrawingContext
 {
     private readonly bool _isRounded = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreRowSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CoreRowSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     /// <param name="values">The values.</param>
@@ -334,10 +332,10 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.GetRequestedSecondaryOffset"/>
     protected override double GetRequestedSecondaryOffset() => 0.5f;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
@@ -356,7 +354,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         }
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -402,7 +400,7 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeome
         label.RemoveOnCompleted = true;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public override SeriesBounds GetBounds(Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var rawBounds = DataFactory.GetCartesianBounds(chart, this, primaryAxis, secondaryAxis);

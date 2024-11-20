@@ -43,14 +43,12 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ISeries" />
 /// <seealso cref="ISeries{TModel}" />
 /// <seealso cref="IDisposable" />
 /// <seealso cref="INotifyPropertyChanged" />
-public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
+public abstract class Series<TModel, TVisual, TLabel>
     : ChartElement, ISeries, ISeries<TModel>, IInternalSeries, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
         where TVisual : class, IGeometry, new()
         where TLabel : class, ILabelGeometry, new()
 {
@@ -110,7 +108,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     private string? _geometrySvg;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel}"/> class.
     /// </summary>
     /// <param name="properties">The properties.</param>
     /// <param name="values">The values.</param>

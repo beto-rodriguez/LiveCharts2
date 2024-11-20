@@ -32,19 +32,17 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <seealso cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}" />
+/// <seealso cref="CoreColumnSeries{TModel, TVisual, TLabel, TErrorGeometry}" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="CoreStackedColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+/// Initializes a new instance of the <see cref="CoreStackedColumnSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
 /// </remarks>
 /// <param name="values">The values.</param>
-public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
-    : CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries
+public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
+    : CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>(values, true), IStackedBarSeries
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry, new()
-        where TDrawingContext : DrawingContext
 {
     private int _stackGroup = 0;
 

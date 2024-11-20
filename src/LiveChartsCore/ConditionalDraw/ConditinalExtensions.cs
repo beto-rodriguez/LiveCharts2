@@ -33,22 +33,20 @@ public static class ConditionalDrawExtensions
 {
     /// <summary>
     /// Executes the given action when a point is measured, this metod just subscribes to the
-    /// <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event, but with a simple syntax.
+    /// <see cref="Series{TModel, TVisual, TLabel}.PointMeasured"/> event, but with a simple syntax.
     /// </summary>
     /// <typeparam name="TModel">TThe type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="series">The target series.</param>
     /// <param name="predicate">The action to execute.</param>
     /// <returns>The series.</returns>
     /// <remarks>
-    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event.
+    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel}.PointMeasured"/> event.
     /// </remarks>
     [Obsolete("Changed Namespace to LiveChartsCore.Kernel.Events")]
-    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointMeasured<TModel, TVisual, TLabel, TDrawingContext>(
-        this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
-            where TDrawingContext : DrawingContext
+    public static Series<TModel, TVisual, TLabel> OnPointMeasured<TModel, TVisual, TLabel>(
+        this Series<TModel, TVisual, TLabel> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
             where TVisual : class, IGeometry, new()
             where TLabel : class, ILabelGeometry, new()
     {

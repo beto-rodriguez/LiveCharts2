@@ -40,13 +40,11 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam> 
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel}" />
 /// <seealso cref="ICartesianSeries" />
-public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>
-    : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries
+public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
+    : CartesianSeries<TModel, TVisual, TLabel>, IFinancialSeries
         where TVisual : class, IFinancialGeometry, new()
-        where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry, new()
         where TMiniatureGeometry : ISizedGeometry, new()
 {
@@ -57,7 +55,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     private double _maxBarWidth = 25;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry}"/> class.
     /// </summary>
     protected CoreFinancialSeries(IReadOnlyCollection<TModel>? values)
         : base(GetProperties(), values)
@@ -389,10 +387,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         return new SeriesBounds(dimensionalBounds, false);
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.GetRequestedSecondaryOffset"/>
     protected override double GetRequestedSecondaryOffset() => 0.5f;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
@@ -400,7 +398,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -439,7 +437,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     protected internal override Paint?[] GetPaintTasks() =>
         [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -449,7 +447,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -470,7 +468,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         OnPropertyChanged();
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
     [Obsolete]
     public override Sketch GetMiniaturesSketch()
     {
@@ -484,7 +482,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         // No miniature.

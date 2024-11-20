@@ -32,20 +32,18 @@ namespace LiveChartsCore.Geo;
 /// Defines the map shape context class.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="MapShapeContext{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="MapShapeContext"/> class.
 /// </remarks>
 /// <param name="chart">The chart.</param>
 /// <param name="heatPaint">The heat paint.</param>
 /// <param name="heatStops">The heat stops.</param>
 /// <param name="bounds">The bounds.</param>
-public class MapShapeContext<TDrawingContext>(
+public class MapShapeContext(
     IGeoMapView chart,
     Paint heatPaint,
     List<Tuple<double, LvcColor>> heatStops,
     Bounds bounds)
-    where TDrawingContext : DrawingContext
 {
-
     /// <summary>
     /// Gets the chart.
     /// </summary>

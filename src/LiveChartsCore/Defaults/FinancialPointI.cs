@@ -30,7 +30,7 @@ namespace LiveChartsCore.Defaults;
 /// <summary>
 /// Defines a point with financial data, this point does not use <see cref="DateTime"/> in the X axis, instead it uses the position
 /// of the point the array as the X coordinate,the dates must be specified in the
-/// <see cref="CoreAxis{TDrawingContext, TTextGeometry, TLineGeometry}.Labels"/> property.
+/// <see cref="CoreAxis{TDrawingContext, TLineGeometry}.Labels"/> property.
 /// </summary>
 public class FinancialPointI : IChartEntity, INotifyPropertyChanged
 {

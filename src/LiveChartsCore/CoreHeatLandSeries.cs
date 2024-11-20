@@ -37,10 +37,8 @@ namespace LiveChartsCore;
 /// Defines the heat land series class.
 /// </summary>
 /// <typeparam name="TModel">The type fo the model.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries, INotifyPropertyChanged
+public class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyChanged
     where TModel : IWeigthedMapLand
-    where TDrawingContext : DrawingContext
 {
     private Paint? _heatPaint;
     private bool _isHeatInCanvas = false;
@@ -53,7 +51,7 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries, INotifyPr
     private readonly HashSet<LandDefinition> _everUsed = [];
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TModel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TModel}"/> class.
     /// </summary>
     /// <param name="lands">The lands.</param>
     public CoreHeatLandSeries(ICollection<TModel>? lands)
@@ -126,7 +124,7 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries, INotifyPr
         }
 
         var heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
-        var shapeContext = new MapShapeContext<TDrawingContext>(context.View, _heatPaint, heatStops, bounds);
+        var shapeContext = new MapShapeContext(context.View, _heatPaint, heatStops, bounds);
         var toRemove = new HashSet<LandDefinition>(_everUsed);
 
         foreach (var land in Lands ?? [])

@@ -23,7 +23,6 @@
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
