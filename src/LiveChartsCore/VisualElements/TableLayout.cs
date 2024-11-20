@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -33,9 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the table panel class.
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualElement
-    where TDrawingContext : DrawingContext
+public class TableLayout<TBackgroundGeometry> : CoreVisualElement
     where TBackgroundGeometry : ISizedGeometry, new()
 {
     private Paint? _backgroundPaint;
@@ -48,7 +45,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     private Align _verticalAlignment = Align.Middle;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class.
     /// </summary>
     public TableLayout()
     {
@@ -291,7 +288,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : CoreVisualEleme
     }
 
     /// <summary>
-    /// Defines a cell in the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/>.
+    /// Defines a cell in the <see cref="TableLayout{TBackgroundGeometry}"/>.
     /// </summary>
     /// <remarks>
     /// Initializes a new instance of the <see cref="TableCell"/> class.

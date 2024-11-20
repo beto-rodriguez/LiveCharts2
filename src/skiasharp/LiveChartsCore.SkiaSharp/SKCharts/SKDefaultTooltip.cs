@@ -26,7 +26,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
@@ -121,7 +120,7 @@ public class SKDefaultTooltip : IChartTooltip
             chart.RemoveVisual(child);
         }
 
-        var tableLayout = new TableLayout<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+        var tableLayout = new TableLayout<RoundedRectangleGeometry>
         {
             HorizontalAlignment = Align.Middle,
             VerticalAlignment = Align.Middle
