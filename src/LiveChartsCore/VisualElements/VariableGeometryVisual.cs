@@ -23,7 +23,6 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.VisualElements;
@@ -31,14 +30,11 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines a visual element that is useful to create series miniatures in the tool tips and legends.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="VariableGeometryVisual{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="VariableGeometryVisual"/> class.
 /// </remarks>
 /// <param name="geometry"></param>
-public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry geometry)
-    : BaseGeometryVisual
-        where TDrawingContext : DrawingContext
+public class VariableGeometryVisual(ISizedGeometry geometry) : BaseGeometryVisual
 {
     private bool _isInitialized;
 
