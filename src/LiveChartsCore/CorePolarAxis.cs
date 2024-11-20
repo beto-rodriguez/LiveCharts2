@@ -37,13 +37,11 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines an Axis in a Cartesian chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
 /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry>
+public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometry>
     : ChartElement, IPolarAxis, IPlane, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry, new()
         where TLineGeometry : ILineGeometry, new()
         where TCircleGeometry : ISizedGeometry, new()
@@ -293,7 +291,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             {
                 visualSeparator = _orientation == PolarAxisOrientation.Angle
                     ? new AxisVisualSeprator() { Value = i }
-                    : new RadialAxisVisualSeparator<TDrawingContext>() { Value = i };
+                    : new RadialAxisVisualSeparator() { Value = i };
 
                 var l = _orientation == PolarAxisOrientation.Angle
                     ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
@@ -327,7 +325,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
                         lineGeometry.CompleteTransition(null);
                     }
 
-                    if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
+                    if (visualSeparator is RadialAxisVisualSeparator polarSeparator)
                     {
                         var circleGeometry = new TCircleGeometry();
 
@@ -398,7 +396,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
                     if (!_animatableBounds.HasPreviousState) lineSeparator.Separator.CompleteTransition(null);
                 }
 
-                if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
+                if (visualSeparator is RadialAxisVisualSeparator polarSeparator && polarSeparator.Circle is not null)
                 {
                     var h = Math.Sqrt(Math.Pow(location.X - scaler.CenterX, 2) + Math.Pow(location.Y - scaler.CenterY, 2));
                     var radius = (float)h;
@@ -567,7 +565,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             lineSeparator.Separator.Y1 = location.Y;
         }
 
-        if (separator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
+        if (separator is RadialAxisVisualSeparator polarSeparator)
         {
             polarSeparator.Circle!.X = scaler.CenterX;
             polarSeparator.Circle.Y = scaler.CenterY;
