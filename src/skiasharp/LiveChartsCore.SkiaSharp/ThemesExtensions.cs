@@ -214,7 +214,7 @@ public static class ThemesExtensions
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
-                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>>(ticks =>
+                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>>(ticks =>
                     {
                         ticks.Stroke = new SolidColorPaint(new SKColor(30, 30, 30));
                         ticks.LabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30));
@@ -400,7 +400,7 @@ public static class ThemesExtensions
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
-                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>>(ticks =>
+                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>>(ticks =>
                     {
                         ticks.Stroke = new SolidColorPaint(new SKColor(200, 200, 200));
                         ticks.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));

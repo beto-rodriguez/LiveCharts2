@@ -36,9 +36,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TArcGeometry">The type of the arc geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext> : CoreVisualElement
-    where TDrawingContext : DrawingContext
+public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : CoreVisualElement
     where TArcGeometry : IArcGeometry, new()
     where TLineGeometry : ILineGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()
@@ -103,7 +101,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         if (chart is not PieChartEngine pieChart)
             throw new Exception("The AngularThicksVisual can only be added to a pie chart");
 
-        ApplyTheme<AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext>>();
+        ApplyTheme<AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry>>();
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
