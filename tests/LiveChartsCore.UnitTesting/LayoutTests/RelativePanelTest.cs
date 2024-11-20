@@ -1,5 +1,4 @@
 ﻿using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -16,7 +15,7 @@ public class RelativePanelTest
     [TestMethod]
     public void BasicCase()
     {
-        var relativePanel = new RelativePanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var relativePanel = new RelativePanel<RectangleGeometry>
         {
             X = 100,
             Y = 200

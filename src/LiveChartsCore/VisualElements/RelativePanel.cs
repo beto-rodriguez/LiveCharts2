@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -32,12 +31,11 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the relative panel class.
 /// </summary>
-public class RelativePanel<TBackgroundGeometry, TDrawingContext> : CoreVisualElement
-    where TDrawingContext : DrawingContext
+public class RelativePanel<TBackgroundGeometry> : CoreVisualElement
     where TBackgroundGeometry : ISizedGeometry, new()
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry}"/> class.
     /// </summary>
     public RelativePanel()
     {
