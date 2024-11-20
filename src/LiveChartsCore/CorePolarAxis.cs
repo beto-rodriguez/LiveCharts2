@@ -53,7 +53,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <summary>
     /// The active separators
     /// </summary>
-    protected readonly Dictionary<Chart, Dictionary<double, IVisualSeparator<TDrawingContext>>> activeSeparators = [];
+    protected readonly Dictionary<Chart, Dictionary<double, IVisualSeparator>> activeSeparators = [];
 
     internal PolarAxisOrientation _orientation;
     private double _minStep = 0;
@@ -280,7 +280,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             activeSeparators[polarChart] = separators;
         }
 
-        var measured = new HashSet<IVisualSeparator<TDrawingContext>>();
+        var measured = new HashSet<IVisualSeparator>();
 
         var separatorsSource = CustomSeparators ?? EnumerateSeparators(start, s, max);
 
@@ -292,7 +292,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             if (!separators.TryGetValue(i, out var visualSeparator))
             {
                 visualSeparator = _orientation == PolarAxisOrientation.Angle
-                    ? new AxisVisualSeprator<TDrawingContext>() { Value = i }
+                    ? new AxisVisualSeprator() { Value = i }
                     : new RadialAxisVisualSeparator<TDrawingContext>() { Value = i };
 
                 var l = _orientation == PolarAxisOrientation.Angle
@@ -315,7 +315,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
 
                 if (SeparatorsPaint is not null && ShowSeparatorLines)
                 {
-                    if (visualSeparator is AxisVisualSeprator<TDrawingContext> linearSeparator)
+                    if (visualSeparator is AxisVisualSeprator linearSeparator)
                     {
                         var lineGeometry = new TLineGeometry();
 
@@ -386,7 +386,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
 
             if (visualSeparator.Geometry is not null)
             {
-                if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSeparator && lineSeparator.Separator is not null)
+                if (visualSeparator is AxisVisualSeprator lineSeparator && lineSeparator.Separator is not null)
                 {
                     var innerPos = scaler.ToPixels(visualSeparator.Value, scaler.MinRadius);
 
@@ -550,7 +550,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <returns></returns>
     protected virtual void SoftDeleteSeparator(
         Chart chart,
-        IVisualSeparator<TDrawingContext> separator,
+        IVisualSeparator separator,
         PolarScaler scaler)
     {
         if (separator.Geometry is null) return;
@@ -559,7 +559,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             ? scaler.ToPixels(separator.Value, scaler.MaxRadius)
             : scaler.ToPixels(0, separator.Value);
 
-        if (separator is AxisVisualSeprator<TDrawingContext> lineSeparator)
+        if (separator is AxisVisualSeprator lineSeparator)
         {
             lineSeparator.Separator!.X = scaler.CenterX;
             lineSeparator.Separator.Y = scaler.CenterY;

@@ -27,9 +27,7 @@ namespace LiveChartsCore.Kernel.Helpers;
 /// <summary>
 /// Defines a visual separator.
 /// </summary>
-/// <typeparam name="TDrawingContext"></typeparam>
-public interface IVisualSeparator<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IVisualSeparator
 {
     /// <summary>
     /// Gets or sets the value.

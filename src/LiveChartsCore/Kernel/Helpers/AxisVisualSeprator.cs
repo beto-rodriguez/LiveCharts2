@@ -27,9 +27,7 @@ namespace LiveChartsCore.Kernel.Helpers;
 /// <summary>
 /// Defines an axis visual separator.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class AxisVisualSeprator : IVisualSeparator
 {
     /// <summary>
     /// Gets or sets the value.

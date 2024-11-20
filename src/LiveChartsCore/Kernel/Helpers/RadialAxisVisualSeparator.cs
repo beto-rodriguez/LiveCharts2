@@ -28,7 +28,7 @@ namespace LiveChartsCore.Kernel.Helpers;
 /// Defines an polar axis visual separator.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDrawingContext>
+public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator
     where TDrawingContext : DrawingContext
 {
     /// <summary>

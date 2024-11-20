@@ -37,12 +37,10 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines an Axis in a Cartesian chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
+public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     : ChartElement, ICartesianAxis, IPlane
-        where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry, new()
         where TLineGeometry : class, ILineGeometry, new()
 {
@@ -51,7 +49,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <summary>
     /// The active separators
     /// </summary>
-    protected internal readonly Dictionary<Chart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = [];
+    protected internal readonly Dictionary<Chart, Dictionary<string, AxisVisualSeprator>> activeSeparators = [];
 
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
@@ -410,7 +408,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
             NamePadding is not null || SeparatorsPaint is not null || LabelsPaint is not null ||
             TicksPaint is not null || SubticksPaint is not null || SubseparatorsPaint is not null;
 
-        var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
+        var measured = new HashSet<AxisVisualSeprator>();
 
         if (ZeroPaint is not null)
         {
@@ -520,7 +518,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
             if (!separators.TryGetValue(separatorKey, out var visualSeparator))
             {
-                visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
+                visualSeparator = new AxisVisualSeprator() { Value = i };
                 separators.Add(separatorKey, visualSeparator);
             }
 
@@ -1102,7 +1100,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSeparator(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? separatorGeometry = null)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? separatorGeometry = null)
     {
         TLineGeometry lineGeometry;
 
@@ -1121,7 +1119,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSubseparators(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart)
     {
         visualSeparator.Subseparators = new TLineGeometry[_subseparatorsCount];
 
@@ -1137,7 +1135,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         lineGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
 
     private void InitializeTick(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? subTickGeometry = null)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? subTickGeometry = null)
     {
         TLineGeometry tickGeometry;
 
@@ -1155,7 +1153,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSubticks(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChartEngine cartesianChart)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart)
     {
         visualSeparator.Subticks = new TLineGeometry[_subseparatorsCount];
 
@@ -1168,7 +1166,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void IntializeLabel(
-        AxisVisualSeprator<TDrawingContext> visualSeparator,
+        AxisVisualSeprator visualSeparator,
         CartesianChartEngine cartesianChart,
         float size,
         bool hasRotation,
