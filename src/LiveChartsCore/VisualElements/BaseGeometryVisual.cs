@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
@@ -31,9 +30,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a visual element that has stroke and fill, it can also be scaled in
 /// <see cref="MeasureUnit.Pixels"/> or <see cref="MeasureUnit.ChartValues"/>.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context,</typeparam>
-public abstract class BaseGeometryVisual<TDrawingContext> : CoreVisualElement
-    where TDrawingContext : DrawingContext
+public abstract class BaseGeometryVisual : CoreVisualElement
 {
     private double _width;
     private double _height;

@@ -35,7 +35,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
+public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGeometryVisual
     where TDrawingContext : DrawingContext
     where TGeometry : ISizedGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()

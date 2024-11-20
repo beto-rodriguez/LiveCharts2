@@ -37,7 +37,7 @@ namespace LiveChartsCore.VisualElements;
 /// </remarks>
 /// <param name="geometry"></param>
 public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry geometry)
-    : BaseGeometryVisual<TDrawingContext>
+    : BaseGeometryVisual
         where TDrawingContext : DrawingContext
 {
     private bool _isInitialized;
