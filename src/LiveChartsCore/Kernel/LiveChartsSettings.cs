@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
@@ -274,11 +273,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default legend background paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendBackgroundPaint<TDrawingContext>(Paint paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithLegendBackgroundPaint(Paint paint)
     {
         LegendBackgroundPaint = paint;
         return this;
@@ -300,7 +297,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="size">The size.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendTextSize<TDrawingContext>(double? size)
+    public LiveChartsSettings WithLegendTextSize(double? size)
     {
         LegendTextSize = size;
         return this;
@@ -333,7 +330,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="size">The size.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipTextSize<TDrawingContext>(double? size)
+    public LiveChartsSettings WithTooltipTextSize(double? size)
     {
         TooltipTextSize = size;
         return this;
@@ -368,7 +365,6 @@ public class LiveChartsSettings
     /// Gets the styles builder.
     /// </summary>
     /// <returns></returns>
-    /// <exception cref="Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
     public Theme GetTheme() =>
         (Theme?)_theme ?? throw new Exception("A theme is required.");
 
