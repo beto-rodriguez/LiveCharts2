@@ -19,7 +19,7 @@ public class TableLayoutTest
         var px = 10;
         var py = 20;
 
-        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        var table = new TableLayout<RectangleGeometry>
         {
             Padding = new Drawing.Padding(px, py),
             X = 100,
@@ -108,7 +108,7 @@ public class TableLayoutTest
         var px = 10;
         var py = 20;
 
-        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        var table = new TableLayout<RectangleGeometry>
         {
             Padding = new Drawing.Padding(px, py),
             X = 100,
@@ -197,7 +197,7 @@ public class TableLayoutTest
         var px = 10;
         var py = 20;
 
-        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        var table = new TableLayout<RectangleGeometry>
         {
             Padding = new Drawing.Padding(px, py),
             X = 100,
@@ -297,7 +297,7 @@ public class TableLayoutTest
         var px = 10;
         var py = 20;
 
-        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        var table = new TableLayout<RectangleGeometry>
         {
             Padding = new Drawing.Padding(px, py),
             X = 100,
@@ -385,7 +385,7 @@ public class TableLayoutTest
         var px = 10;
         var py = 20;
 
-        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        var table = new TableLayout<RectangleGeometry>
         {
             Padding = new Drawing.Padding(px, py),
             X = 100,
@@ -473,7 +473,7 @@ public class TableLayoutTest
         var px = 0;
         var py = 0;
 
-        var table = new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+        var table = new TableLayout<RectangleGeometry>
         {
             Padding = new Drawing.Padding(px, py),
             X = 100,

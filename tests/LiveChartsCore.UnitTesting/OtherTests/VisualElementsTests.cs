@@ -20,9 +20,9 @@ public class VisualElementsTests
         {
             new StackPanel<RectangleGeometry>(),
             new RelativePanel<RectangleGeometry>(),
-            new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>(),
+            new TableLayout<RectangleGeometry>(),
             new GeometryVisual<RectangleGeometry>(),
-            new VariableGeometryVisual<SkiaSharpDrawingContext>(new RectangleGeometry()),
+            new VariableGeometryVisual(new RectangleGeometry()),
             new NeedleVisual
             {
                 Fill = new SolidColorPaint(SKColors.Red)
