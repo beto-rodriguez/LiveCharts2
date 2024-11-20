@@ -547,7 +547,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPath
                 Height = 0,
                 ClippingMode = ClipMode.None
             }
-            : new GeometryVisual<TVisual, TLabel, TDrawingContext>
+            : new GeometryVisual<TVisual, TLabel>
             {
                 Fill = GetMiniatureFill(point, zindex + 1),
                 Stroke = GetMiniatureStroke(point, zindex + 2),

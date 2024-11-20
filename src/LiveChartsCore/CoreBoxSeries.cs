@@ -381,7 +381,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
-        return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
+        return new GeometryVisual<TMiniatureGeometry, TLabel>
         {
             Fill = GetMiniatureFill(point, zindex + 1),
             Stroke = GetMiniatureStroke(point, zindex + 2),

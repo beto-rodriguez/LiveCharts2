@@ -593,7 +593,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 Height = 0,
                 ClippingMode = ClipMode.None
             }
-            : new GeometryVisual<TVisual, TLabel, TDrawingContext>
+            : new GeometryVisual<TVisual, TLabel>
             {
                 Fill = GetMiniatureFill(point, zindex + 1),
                 Stroke = GetMiniatureStroke(point, zindex + 2),

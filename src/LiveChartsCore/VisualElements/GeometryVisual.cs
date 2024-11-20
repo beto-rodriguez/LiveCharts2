@@ -23,7 +23,6 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -34,9 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGeometryVisual
-    where TDrawingContext : DrawingContext
+public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     where TGeometry : ISizedGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()
 {

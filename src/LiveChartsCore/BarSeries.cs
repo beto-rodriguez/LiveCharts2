@@ -101,7 +101,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
-        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        return new GeometryVisual<TVisual, TLabel>
         {
             Fill = GetMiniatureFill(point, zindex + 1),
             Stroke = GetMiniatureStroke(point, zindex + 2),

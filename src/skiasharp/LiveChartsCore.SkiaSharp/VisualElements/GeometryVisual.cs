@@ -21,13 +21,12 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <inheritdoc cref="GeometryVisual{TGeometry, TLabelGeometry, TDrawingContext}"/>
-public class GeometryVisual<TGeometry> : GeometryVisual<TGeometry, LabelGeometry, SkiaSharpDrawingContext>
+/// <inheritdoc cref="GeometryVisual{TGeometry, TLabelGeometry}"/>
+public class GeometryVisual<TGeometry> : GeometryVisual<TGeometry, LabelGeometry>
     where TGeometry : ISizedGeometry, new()
 { }

@@ -339,7 +339,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     {
         var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
 
-        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        return new GeometryVisual<TVisual, TLabel>
         {
             Fill = GetMiniatureFill(point, zindex + 1),
             Stroke = GetMiniatureStroke(point, zindex + 2),

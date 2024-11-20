@@ -358,7 +358,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     {
         // ToDo <- draw the gradient?
         // what to show in the legend?
-        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        return new GeometryVisual<TVisual, TLabel>
         {
             Width = 0,
             Height = 0,

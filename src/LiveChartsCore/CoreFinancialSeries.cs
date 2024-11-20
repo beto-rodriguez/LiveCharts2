@@ -488,7 +488,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         // No miniature.
-        return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
+        return new GeometryVisual<TMiniatureGeometry, TLabel>
         {
             Width = 0,
             Height = 0
