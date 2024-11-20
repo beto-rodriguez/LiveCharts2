@@ -164,10 +164,8 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 /// </summary>
 /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ChartElement" />
-public abstract class CoreSection<TSizedGeometry, TLabelGeometry, TDrawingContext> : CoreSection
-    where TDrawingContext : DrawingContext
+public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
     where TSizedGeometry : ISizedGeometry, new()
     where TLabelGeometry : ILabelGeometry, new()
 {
