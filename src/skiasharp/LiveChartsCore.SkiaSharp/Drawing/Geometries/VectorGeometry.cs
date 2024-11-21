@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, IVectorGeometry<TSegment>
+public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>
     where TSegment : Segment, IAnimatable
 {
     /// <inheritdoc cref="CoreDrawable.Draw(DrawingContext)" />

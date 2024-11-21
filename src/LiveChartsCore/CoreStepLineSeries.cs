@@ -45,7 +45,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IStepLineSeries
-        where TPathGeometry : IVectorGeometry<Segment>, new()
+        where TPathGeometry : CoreVectorGeometry<Segment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TLineGeometry : ILineGeometry, new()

@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, ILineSeries
-        where TPathGeometry : IVectorGeometry<CubicBezierSegment>, new()
+        where TPathGeometry : CoreVectorGeometry<CubicBezierSegment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TErrorGeometry : class, ILineGeometry, new()

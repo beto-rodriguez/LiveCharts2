@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : ChartSeries<TModel, TVisual, TLabel>, IPolarLineSeries, IPolarSeries
-        where TPathGeometry : IVectorGeometry<CubicBezierSegment>, new()
+        where TPathGeometry : CoreVectorGeometry<CubicBezierSegment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TLineGeometry : ILineGeometry, new()

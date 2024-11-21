@@ -35,7 +35,7 @@ namespace LiveChartsCore.Measure;
 /// Initializes a new instance of the <see cref="VectorManager{TSegment}"/> class.
 /// </remarks>
 /// <param name="areaGeometry">The area geometry</param>
-public class VectorManager<TSegment>(IVectorGeometry<TSegment> areaGeometry)
+public class VectorManager<TSegment>(CoreVectorGeometry<TSegment> areaGeometry)
     where TSegment : Segment, IAnimatable
 {
     private LinkedListNode<TSegment>? _nextNode = areaGeometry.Commands.First;
@@ -44,7 +44,7 @@ public class VectorManager<TSegment>(IVectorGeometry<TSegment> areaGeometry)
     /// <summary>
     /// Gets the area geometry.
     /// </summary>
-    public IVectorGeometry<TSegment> AreaGeometry { get; private set; } = areaGeometry;
+    public CoreVectorGeometry<TSegment> AreaGeometry { get; private set; } = areaGeometry;
 
     /// <summary>
     /// Adds a segment to the area geometry.

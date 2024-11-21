@@ -31,7 +31,7 @@ namespace LiveChartsCore.Drawing;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class CoreVectorGeometry<TSegment> : CoreDrawable, IVectorGeometry<TSegment>
+public abstract class CoreVectorGeometry<TSegment> : CoreDrawable
     where TSegment : Segment, IAnimatable
 {
     private readonly FloatMotionProperty _pivotProperty;
