@@ -31,7 +31,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TSegment"></typeparam>
 public interface IVectorGeometry<TSegment> : IDrawable
-    where TSegment : IConsecutivePathSegment
+    where TSegment : Segment
 {
     /// <summary>
     /// Gets or sets the commands.

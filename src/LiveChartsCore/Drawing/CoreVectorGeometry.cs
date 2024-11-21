@@ -32,7 +32,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
 public abstract class CoreVectorGeometry<TSegment> : CoreDrawable, IVectorGeometry<TSegment>
-    where TSegment : class, IAnimatable, IConsecutivePathSegment
+    where TSegment : Segment, IAnimatable
 {
     private readonly FloatMotionProperty _pivotProperty;
 

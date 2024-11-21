@@ -45,7 +45,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IStepLineSeries
-        where TPathGeometry : IVectorGeometry<StepLineSegment>, new()
+        where TPathGeometry : IVectorGeometry<Segment>, new()
         where TVisual : class, ISizedGeometry, new()
         where TLabel : class, ILabelGeometry, new()
         where TLineGeometry : ILineGeometry, new()
@@ -154,7 +154,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<StepLineSegment>? strokeVector = null, fillVector = null;
+            VectorManager<Segment>? strokeVector = null, fillVector = null;
 
             double previousPrimary = 0, previousSecondary = 0;
 
@@ -189,8 +189,8 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<StepLineSegment>(strokePath);
-                    fillVector = new VectorManager<StepLineSegment>(fillPath);
+                    strokeVector = new VectorManager<Segment>(strokePath);
+                    fillVector = new VectorManager<Segment>(fillPath);
 
                     if (Fill is not null)
                     {

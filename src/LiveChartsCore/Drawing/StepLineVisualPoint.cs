@@ -45,7 +45,7 @@ public class StepLineVisualPoint<TVisual>
     /// <value>
     /// The stepline.
     /// </value>
-    public StepLineSegment StepSegment { get; set; } = new();
+    public Segment StepSegment { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the path.
@@ -53,7 +53,7 @@ public class StepLineVisualPoint<TVisual>
     /// <value>
     /// The path.
     /// </value>
-    public IVectorGeometry<StepLineSegment>? FillPath { get; set; }
+    public IVectorGeometry<Segment>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -61,5 +61,5 @@ public class StepLineVisualPoint<TVisual>
     /// <value>
     /// The stroke path.
     /// </value>
-    public IVectorGeometry<StepLineSegment>? StrokePath { get; set; }
+    public IVectorGeometry<Segment>? StrokePath { get; set; }
 }

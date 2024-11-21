@@ -32,9 +32,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
 public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, IVectorGeometry<TSegment>
-    where TSegment : class, IAnimatable, IConsecutivePathSegment
+    where TSegment : Segment, IAnimatable
 {
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    /// <inheritdoc cref="CoreDrawable.Draw(DrawingContext)" />
     public override void Draw(DrawingContext ctx)
     {
         var context = (SkiaSharpDrawingContext)ctx;
