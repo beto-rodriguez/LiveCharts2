@@ -230,7 +230,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
                         ? stacker.GetStack(point).Start
                         : stacker.GetStack(point).NegativeStart;
 
-                var visual = (StepLineVisualPoint<TVisual>?)point.Context.AdditionalVisuals;
+                var visual = (SegmentVisualPoint<TVisual, Segment>?)point.Context.AdditionalVisuals;
                 var dp = coordinate.PrimaryValue + s - previousPrimary;
                 var ds = coordinate.SecondaryValue - previousSecondary;
 
@@ -243,10 +243,10 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
                         visual.Geometry.Opacity = 0;
                         visual.Geometry.RemoveOnCompleted = true;
 
-                        visual.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
-                        visual.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        visual.StepSegment.Yi = p;
-                        visual.StepSegment.Yj = p;
+                        visual.Segment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
+                        visual.Segment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        visual.Segment.Yi = p;
+                        visual.Segment.Yj = p;
 
                         point.Context.Visual = null;
                     }
@@ -258,7 +258,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
 
                 if (visual is null)
                 {
-                    var v = new StepLineVisualPoint<TVisual>();
+                    var v = new SegmentVisualPoint<TVisual, Segment>();
                     visual = v;
 
                     if (isFirstDraw)
@@ -268,10 +268,10 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
                         v.Geometry.Width = 0;
                         v.Geometry.Height = 0;
 
-                        v.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
-                        v.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                        v.StepSegment.Yi = p;
-                        v.StepSegment.Yj = p;
+                        v.Segment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
+                        v.Segment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        v.Segment.Yi = p;
+                        v.Segment.Yj = p;
                     }
 
                     point.Context.Visual = v.Geometry;
@@ -293,23 +293,23 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
                 GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 GeometryStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                visual.StepSegment.Id = point.Context.Entity.MetaData!.EntityIndex;
+                visual.Segment.Id = point.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
-                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.StepSegment, !isFirstDraw);
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
 
-                visual.StepSegment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
-                visual.StepSegment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
-                visual.StepSegment.Yi = primaryScale.ToPixels(coordinate.PrimaryValue + s - dp);
-                visual.StepSegment.Yj = primaryScale.ToPixels(coordinate.PrimaryValue + s);
+                visual.Segment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
+                visual.Segment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                visual.Segment.Yi = primaryScale.ToPixels(coordinate.PrimaryValue + s - dp);
+                visual.Segment.Yj = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
                 var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
                 var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
-                    .CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Xj)]);
+                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Xj)]);
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)]
-                    .CopyFrom(visual.StepSegment.MotionProperties[nameof(visual.StepSegment.Yj)]);
+                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Yj)]);
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 
                 visual.Geometry.Width = gs;
@@ -555,17 +555,17 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not StepLineVisualPoint<TVisual> visual)
+        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, Segment> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
-        visual.StepSegment.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Segment.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (StepLineVisualPoint<TVisual>?)point.Context.AdditionalVisuals;
+        var visual = (SegmentVisualPoint<TVisual, Segment>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -640,7 +640,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not StepLineVisualPoint<TVisual> visual) return;
+        if (point.Context.Visual is not SegmentVisualPoint<TVisual, Segment> visual) return;
 
         var coordinate = point.Coordinate;
 

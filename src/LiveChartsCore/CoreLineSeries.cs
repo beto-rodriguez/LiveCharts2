@@ -258,7 +258,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
                 var visual =
-                    (BezierErrorVisualPoint<TVisual, TErrorGeometry>?)
+                    (SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>?)
                     data.TargetPoint.Context.AdditionalVisuals;
 
                 if (!IsVisible)
@@ -270,12 +270,12 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
                         visual.Geometry.Opacity = 0;
                         visual.Geometry.RemoveOnCompleted = true;
 
-                        visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
-                        visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
-                        visual.Bezier.Xj = secondaryScale.ToPixels(data.X2);
-                        visual.Bezier.Yi = p;
-                        visual.Bezier.Ym = p;
-                        visual.Bezier.Yj = p;
+                        visual.Segment.Xi = secondaryScale.ToPixels(data.X0);
+                        visual.Segment.Xm = secondaryScale.ToPixels(data.X1);
+                        visual.Segment.Xj = secondaryScale.ToPixels(data.X2);
+                        visual.Segment.Yi = p;
+                        visual.Segment.Ym = p;
+                        visual.Segment.Yj = p;
 
                         data.TargetPoint.Context.Visual = null;
                     }
@@ -287,7 +287,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
 
                 if (visual is null)
                 {
-                    var v = new BezierErrorVisualPoint<TVisual, TErrorGeometry>();
+                    var v = new SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>();
                     if (ErrorPaint is not null)
                     {
                         v.YError = new TErrorGeometry();
@@ -313,12 +313,12 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
                         v.Geometry.Width = 0;
                         v.Geometry.Height = 0;
 
-                        v.Bezier.Xi = secondaryScale.ToPixels(data.X0);
-                        v.Bezier.Xm = secondaryScale.ToPixels(data.X1);
-                        v.Bezier.Xj = secondaryScale.ToPixels(data.X2);
-                        v.Bezier.Yi = p;
-                        v.Bezier.Ym = p;
-                        v.Bezier.Yj = p;
+                        v.Segment.Xi = secondaryScale.ToPixels(data.X0);
+                        v.Segment.Xm = secondaryScale.ToPixels(data.X1);
+                        v.Segment.Xj = secondaryScale.ToPixels(data.X2);
+                        v.Segment.Yi = p;
+                        v.Segment.Ym = p;
+                        v.Segment.Yj = p;
                     }
 
                     data.TargetPoint.Context.Visual = v.Geometry;
@@ -342,25 +342,25 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
                 ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.YError!);
                 ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.XError!);
 
-                visual.Bezier.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
+                visual.Segment.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Bezier, !isFirstDraw);
-                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Bezier, !isFirstDraw);
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
 
-                visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
-                visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
-                visual.Bezier.Xj = secondaryScale.ToPixels(data.X2);
-                visual.Bezier.Yi = primaryScale.ToPixels(data.Y0);
-                visual.Bezier.Ym = primaryScale.ToPixels(data.Y1);
-                visual.Bezier.Yj = primaryScale.ToPixels(data.Y2);
+                visual.Segment.Xi = secondaryScale.ToPixels(data.X0);
+                visual.Segment.Xm = secondaryScale.ToPixels(data.X1);
+                visual.Segment.Xj = secondaryScale.ToPixels(data.X2);
+                visual.Segment.Yi = primaryScale.ToPixels(data.Y0);
+                visual.Segment.Ym = primaryScale.ToPixels(data.Y1);
+                visual.Segment.Yj = primaryScale.ToPixels(data.Y2);
 
                 var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
                 var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
-                    .CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Xj)]);
+                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Xj)]);
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)]
-                    .CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Yj)]);
+                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Yj)]);
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 
                 visual.Geometry.Width = gs;
@@ -773,14 +773,14 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not BezierErrorVisualPoint<TVisual, TErrorGeometry> visual)
+        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         var easing = EasingFunction ?? chart.EasingFunction;
         var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
 
         visual.Geometry.Animate(easing, speed);
-        visual.Bezier.Animate(easing, speed);
+        visual.Segment.Animate(easing, speed);
         visual.YError?.Animate(easing, speed);
         visual.XError?.Animate(easing, speed);
     }
@@ -788,7 +788,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (BezierErrorVisualPoint<TVisual, TErrorGeometry>?)point.Context.AdditionalVisuals;
+        var visual = (SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -828,7 +828,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeomet
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not BezierErrorVisualPoint<TVisual, TErrorGeometry> visual) return;
+        if (point.Context.Visual is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual) return;
 
         var c = point.Coordinate;
 

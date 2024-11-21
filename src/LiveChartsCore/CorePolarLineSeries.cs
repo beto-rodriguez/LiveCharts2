@@ -301,11 +301,12 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 var y = cp.Y;
 
                 var visual =
-                    (BezierVisualPoint<TVisual>?)data.TargetPoint.Context.AdditionalVisuals;
+                    (SegmentVisualPoint<TVisual, CubicBezierSegment>?)
+                    data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {
-                    var v = new BezierVisualPoint<TVisual>();
+                    var v = new SegmentVisualPoint<TVisual, CubicBezierSegment>();
 
                     visual = v;
 
@@ -321,12 +322,12 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                     v.Geometry.Width = gs;
                     v.Geometry.Height = gs;
 
-                    v.Bezier.Xi = (float)x0b;
-                    v.Bezier.Yi = y0b;
-                    v.Bezier.Xm = (float)x1b;
-                    v.Bezier.Ym = y1b;
-                    v.Bezier.Xj = (float)x2b;
-                    v.Bezier.Yj = y2b;
+                    v.Segment.Xi = (float)x0b;
+                    v.Segment.Yi = y0b;
+                    v.Segment.Xm = (float)x1b;
+                    v.Segment.Ym = y1b;
+                    v.Segment.Xj = (float)x2b;
+                    v.Segment.Yj = y2b;
 
                     data.TargetPoint.Context.Visual = v.Geometry;
                     data.TargetPoint.Context.AdditionalVisuals = v;
@@ -345,15 +346,15 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 GeometryFill?.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
                 GeometryStroke?.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
 
-                visual.Bezier.Xi = (float)data.X0;
-                visual.Bezier.Yi = (float)data.Y0;
-                visual.Bezier.Xm = (float)data.X1;
-                visual.Bezier.Ym = (float)data.Y1;
-                visual.Bezier.Xj = (float)data.X2;
-                visual.Bezier.Yj = (float)data.Y2;
+                visual.Segment.Xi = (float)data.X0;
+                visual.Segment.Yi = (float)data.Y0;
+                visual.Segment.Xm = (float)data.X1;
+                visual.Segment.Ym = (float)data.Y1;
+                visual.Segment.Xj = (float)data.X2;
+                visual.Segment.Yj = (float)data.Y2;
 
-                if (Fill is not null) _ = fillPath.Commands.AddLast(visual.Bezier);
-                if (Stroke is not null) _ = strokePath.Commands.AddLast(visual.Bezier);
+                if (Fill is not null) _ = fillPath.Commands.AddLast(visual.Segment);
+                if (Stroke is not null) _ = strokePath.Commands.AddLast(visual.Segment);
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;
@@ -721,11 +722,11 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not BezierVisualPoint<TVisual> visual)
+        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, CubicBezierSegment> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
-        visual.Bezier.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Segment.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
     }
 
     /// <summary>
@@ -735,7 +736,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
     /// <param name="scaler">The scaler.</param>
     protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, PolarScaler scaler)
     {
-        var visual = (BezierVisualPoint<TVisual>?)point.Context.AdditionalVisuals;
+        var visual = (SegmentVisualPoint<TVisual, CubicBezierSegment>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -924,7 +925,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
         {
             if (point.IsEmpty || !IsVisible)
             {
-                if (point.Context.Visual is BezierVisualPoint<TVisual> visual)
+                if (point.Context.Visual is SegmentVisualPoint<TVisual, CubicBezierSegment> visual)
                 {
                     var s = scaler.ToPixels(point);
                     var x = s.X;

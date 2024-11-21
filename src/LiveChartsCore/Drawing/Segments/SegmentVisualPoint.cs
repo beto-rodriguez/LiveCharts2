@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Segments;
-
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
 /// Defines a stepline visual point.
 /// </summary>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class StepLineVisualPoint<TVisual>
+/// <typeparam name="TSegment">The type of the segment.</typeparam>
+public class SegmentVisualPoint<TVisual, TSegment>
     where TVisual : ISizedGeometry, new()
+    where TSegment : Segment, new()
 {
     /// <summary>
     /// Gets the geometry.
@@ -45,7 +45,7 @@ public class StepLineVisualPoint<TVisual>
     /// <value>
     /// The stepline.
     /// </value>
-    public Segment StepSegment { get; set; } = new();
+    public TSegment Segment { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the path.
@@ -53,7 +53,7 @@ public class StepLineVisualPoint<TVisual>
     /// <value>
     /// The path.
     /// </value>
-    public CoreVectorGeometry<Segment>? FillPath { get; set; }
+    public CoreVectorGeometry<TSegment>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -61,5 +61,28 @@ public class StepLineVisualPoint<TVisual>
     /// <value>
     /// The stroke path.
     /// </value>
-    public CoreVectorGeometry<Segment>? StrokePath { get; set; }
+    public CoreVectorGeometry<TSegment>? StrokePath { get; set; }
+}
+
+/// <summary>
+/// Defines a stepline visual point.
+/// </summary>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TSegment">The type of the segment.</typeparam>
+/// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
+public class SegmentVisualPoint<TVisual, TSegment, TErrorGeometry>
+    : SegmentVisualPoint<TVisual, TSegment>
+        where TVisual : ISizedGeometry, new()
+        where TSegment : Segment, new()
+        where TErrorGeometry : IGeometry
+{
+    /// <summary>
+    /// Gets or sets the y error geometry.
+    /// </summary>
+    public TErrorGeometry? YError { get; set; }
+
+    /// <summary>
+    /// Gets or sets the x error geometry.
+    /// </summary>
+    public TErrorGeometry? XError { get; set; }
 }
