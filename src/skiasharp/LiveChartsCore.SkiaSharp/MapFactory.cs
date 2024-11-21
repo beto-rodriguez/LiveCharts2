@@ -24,11 +24,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
 namespace LiveChartsCore.SkiaSharpView;
 
@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public class MapFactory : IMapFactory
 {
-    private readonly HashSet<HeatPathShape> _usedPathShapes = [];
+    private readonly HashSet<LandAreaGeometry> _usedPathShapes = [];
     private readonly HashSet<Paint> _usedPaints = [];
     private readonly HashSet<string> _usedLayers = [];
     private IGeoMapView? _mapView;
@@ -48,7 +48,7 @@ public class MapFactory : IMapFactory
         var projector = context.Projector;
 
         var toRemoveLayers = new HashSet<string>(_usedLayers);
-        var toRemovePathShapes = new HashSet<HeatPathShape>(_usedPathShapes);
+        var toRemovePathShapes = new HashSet<LandAreaGeometry>(_usedPathShapes);
         var toRemovePaints = new HashSet<Paint>(_usedPaints);
 
         var layersQuery = context.View.ActiveMap.Layers.Values
@@ -82,16 +82,16 @@ public class MapFactory : IMapFactory
             {
                 foreach (var landData in landDefinition.Data)
                 {
-                    HeatPathShape shape;
+                    LandAreaGeometry shape;
 
                     if (landData.Shape is null)
                     {
-                        landData.Shape = shape = new HeatPathShape { IsClosed = true };
+                        landData.Shape = shape = new LandAreaGeometry();
                         shape.Animate(EasingFunctions.ExponentialOut, TimeSpan.FromMilliseconds(800));
                     }
                     else
                     {
-                        shape = (HeatPathShape)landData.Shape;
+                        shape = (LandAreaGeometry)landData.Shape;
                     }
 
                     _ = _usedPathShapes.Add(shape);
@@ -100,9 +100,10 @@ public class MapFactory : IMapFactory
                     stroke?.AddGeometryToPaintTask(context.View.Canvas, shape);
                     fill?.AddGeometryToPaintTask(context.View.Canvas, shape);
 
-                    shape.ClearCommands();
+                    shape.Commands.Clear();
 
                     var isFirst = true;
+                    float xp = 0, yp = 0;
 
                     foreach (var point in landData.Coordinates)
                     {
@@ -113,12 +114,17 @@ public class MapFactory : IMapFactory
 
                         if (isFirst)
                         {
-                            _ = shape.AddLast(new MoveToPathCommand { X = x, Y = y });
-                            isFirst = false;
-                            continue;
+                            xp = x;
+                            yp = y;
                         }
 
-                        _ = shape.AddLast(new LineSegment { X = x, Y = y });
+                        _ = shape.Commands.AddLast(new Segment
+                        {
+                            Xi = xp,
+                            Yi = yp,
+                            Xj = x,
+                            Yj = y,
+                        });
                     }
                 }
             }
@@ -128,7 +134,7 @@ public class MapFactory : IMapFactory
                 stroke?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
                 fill?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
 
-                shape.ClearCommands();
+                shape.Commands.Clear();
 
                 _ = _usedPathShapes.Remove(shape);
             }

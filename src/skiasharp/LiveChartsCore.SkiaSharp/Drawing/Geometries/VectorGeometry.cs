@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
@@ -84,9 +85,26 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
             context.Canvas.DrawPath(path, context.Paint);
             if (hasGeometryOpacity) context.PaintTask.RestoreOpacityMask(context, this);
         }
+        else if (Fill is not null)
+        {
+            var originalPaint = context.Paint;
+            var originalTask = context.PaintTask;
+
+            Fill.IsStroke = false;
+            Fill.InitializeTask(context);
+
+            if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, this);
+            context.Canvas.DrawPath(path, context.Paint);
+            if (hasGeometryOpacity) Fill.RestoreOpacityMask(context, this);
+
+            Fill.Dispose();
+
+            context.Paint = originalPaint;
+            context.PaintTask = originalTask;
+        }
         else
         {
-            throw new System.NotImplementedException($"Fill and strokes per vector is not implemented.");
+            throw new NotImplementedException("Fill and Stroke per vector is experiental.");
         }
 
         if (!isValid) IsValid = false;
