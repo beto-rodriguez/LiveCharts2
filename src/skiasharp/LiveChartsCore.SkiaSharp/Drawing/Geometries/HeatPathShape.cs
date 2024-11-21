@@ -62,9 +62,11 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
         set => _fillProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="PathGeometry.Draw(SkiaSharpDrawingContext)"/>
-    public override void Draw(SkiaSharpDrawingContext context)
+    /// <inheritdoc cref="PathGeometry.Draw(DrawingContext)"/>
+    public override void Draw(DrawingContext ctx)
     {
+        var context = (SkiaSharpDrawingContext)ctx;
+
         if (_commands.Count == 0) return;
 
         var toRemoveSegments = new List<IPathCommand<SKPath>>();
@@ -125,7 +127,7 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
 
 /// <inheritdoc cref="IPathGeometry{TPathArgs}" />
 [Obsolete]
-public class PathGeometry : Drawable, IPathGeometry<SKPath>
+public class PathGeometry : CoreDrawable, IPathGeometry<SKPath>
 {
     /// <summary>
     /// The commands
@@ -145,8 +147,10 @@ public class PathGeometry : Drawable, IPathGeometry<SKPath>
     public bool IsClosed { get; set; }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void Draw(SkiaSharpDrawingContext context)
+    public override void Draw(DrawingContext ctx)
     {
+        var context = (SkiaSharpDrawingContext)ctx;
+
         if (_commands.Count == 0) return;
 
         var toRemoveSegments = new List<IPathCommand<SKPath>>();

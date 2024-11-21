@@ -33,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegment>
+public abstract class VectorGeometry<TSegment> : CoreDrawable, IVectorGeometry<TSegment>
     where TSegment : class, IAnimatable, IConsecutivePathSegment
 {
     private readonly FloatMotionProperty _pivotProperty;
@@ -76,8 +76,10 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
     }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void Draw(SkiaSharpDrawingContext context)
+    public override void Draw(DrawingContext ctx)
     {
+        var context = (SkiaSharpDrawingContext)ctx;
+
         if (Commands.Count == 0) return;
 
         var toRemoveSegments = new List<TSegment>();

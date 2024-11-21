@@ -30,7 +30,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="IGeometry" />
-public abstract class Geometry : Drawable, IGeometry
+public abstract class Geometry : CoreDrawable, IGeometry
 {
     private readonly bool _hasGeometryTransform = false;
     private readonly FloatMotionProperty _xProperty;
@@ -169,9 +169,11 @@ public abstract class Geometry : Drawable, IGeometry
     /// <summary>
     /// Draws the geometry in the user interface.
     /// </summary>
-    /// <param name="context">The context.</param>
-    public override void Draw(SkiaSharpDrawingContext context)
+    /// <param name="ctx">The context.</param>
+    public override void Draw(DrawingContext ctx)
     {
+        var context = (SkiaSharpDrawingContext)ctx;
+
         if (HasTransform)
         {
             _ = context.Canvas.Save();

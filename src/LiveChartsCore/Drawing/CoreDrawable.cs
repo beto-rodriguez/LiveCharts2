@@ -20,20 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing;
+namespace LiveChartsCore.Drawing;
 
 /// <inheritdoc cref="IDrawable" />
-public abstract class Drawable : Animatable, IDrawable
+public abstract class CoreDrawable : Animatable, IDrawable
 {
     private readonly FloatMotionProperty _opacityProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Drawable"/> class.
+    /// Initializes a new instance of the <see cref="CoreDrawable"/> class.
     /// </summary>
-    protected Drawable()
+    protected CoreDrawable()
     {
         _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
     }
@@ -46,9 +45,5 @@ public abstract class Drawable : Animatable, IDrawable
     }
 
     /// <inheritdoc cref="IDrawable.Draw(DrawingContext)" />
-    public abstract void Draw(SkiaSharpDrawingContext context);
-
-    /// <inheritdoc cref="IDrawable.Draw(DrawingContext)" />
-    void IDrawable.Draw(DrawingContext context) =>
-        Draw((SkiaSharpDrawingContext)context);
+    public abstract void Draw(DrawingContext context);
 }
