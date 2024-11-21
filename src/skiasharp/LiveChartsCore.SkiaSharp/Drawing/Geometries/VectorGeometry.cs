@@ -23,8 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
-using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -33,48 +31,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : CoreDrawable, IVectorGeometry<TSegment>
+public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, IVectorGeometry<TSegment>
     where TSegment : class, IAnimatable, IConsecutivePathSegment
 {
-    private readonly FloatMotionProperty _pivotProperty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VectorGeometry{TSegment}"/> class.
-    /// </summary>
-    public VectorGeometry()
-        : base()
-    {
-        _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
-    }
-
-    /// <summary>
-    /// Gets the commands in the vector.
-    /// </summary>
-    public LinkedList<TSegment> Commands { get; } = new();
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.ClosingMethod" />
-    public VectorClosingMethod ClosingMethod { get; set; }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Pivot" />
-    public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Stroke"/>
-    public Paint? Stroke { get; set; }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Fill"/>
-    public Paint? Fill { get; set; }
-
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
-    public override void CompleteTransition(params string[]? propertyName)
-    {
-        foreach (var segment in Commands)
-        {
-            segment.CompleteTransition(propertyName);
-        }
-
-        base.CompleteTransition(propertyName);
-    }
-
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void Draw(DrawingContext ctx)
     {
