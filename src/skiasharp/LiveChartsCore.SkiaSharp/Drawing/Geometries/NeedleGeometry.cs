@@ -29,7 +29,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <inheritdoc cref="CoreNeedleGeometry"/>
 public class NeedleGeometry : CoreNeedleGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.Paint);
 

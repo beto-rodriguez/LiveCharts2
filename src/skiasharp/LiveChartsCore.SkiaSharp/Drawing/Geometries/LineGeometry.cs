@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <inheritdoc cref="CoreLineGeometry" />
 public class LineGeometry : CoreLineGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.Paint);
 

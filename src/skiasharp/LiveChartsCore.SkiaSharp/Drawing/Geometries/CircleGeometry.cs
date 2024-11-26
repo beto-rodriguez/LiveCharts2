@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <seealso cref="SizedGeometry" />
 public class CircleGeometry : CoreSizedGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.Paint);
 
