@@ -38,6 +38,8 @@ public abstract class Animatable
     private readonly PointMotionProperty _skewProperty;
     private readonly PointMotionProperty _translateProperty;
     private readonly FloatMotionProperty _opacityProperty;
+    private Paint? _stroke;
+    private Paint? _fill;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Animatable"/> class.
@@ -193,12 +195,28 @@ public abstract class Animatable
     /// <summary>
     /// Gets or sets the stroke paint.
     /// </summary>
-    public Paint? Stroke { get; set; }
+    public Paint? Stroke
+    {
+        get => _stroke;
+        set
+        {
+            _stroke = value;
+            if (_stroke is not null) _stroke.IsStroke = true;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public Paint? Fill { get; set; }
+    public Paint? Fill
+    {
+        get => _fill;
+        set
+        {
+            _fill = value;
+            if (_fill is not null) _fill.IsStroke = false;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the parent shape, if any the X and Y properties will be relative to the parent.

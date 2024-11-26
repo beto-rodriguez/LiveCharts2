@@ -225,7 +225,6 @@ public class SkiaSharpDrawingContext(
         var originalPaint = Paint;
         var originalTask = PaintTask;
 
-        paint.IsStroke = false;
         paint.InitializeTask(this);
 
         if (hasGeometryOpacity) paint.ApplyOpacityMask(this, element);
