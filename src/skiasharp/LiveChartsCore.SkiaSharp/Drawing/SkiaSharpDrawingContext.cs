@@ -192,6 +192,7 @@ public class SkiaSharpDrawingContext(
                 Canvas.Translate(-p.X - xo, -p.Y - yo);
             }
 
+            // DISABLED FOR NOW.
             //if (_hasTransform)
             //{
             //    var transform = Transform;
@@ -199,23 +200,27 @@ public class SkiaSharpDrawingContext(
             //}
         }
 
+        if (Paint.IsStroke)
+        {
+            if (element.Stroke is null) DrawByActivePaint(element);
+            else DrawByPaint(element.Stroke, element);
+        }
+        else
+        {
+            if (element.Fill is null) DrawByActivePaint(element);
+            else DrawByPaint(element.Fill, element);
+        }
+
+        if (element.HasTransform) Canvas.Restore();
+    }
+
+    private void DrawByActivePaint(IDrawable<SkiaSharpDrawingContext> element)
+    {
         var hasGeometryOpacity = element.Opacity < 1;
 
         if (hasGeometryOpacity) PaintTask.ApplyOpacityMask(this, element);
-
         element.Draw(this);
-
         if (hasGeometryOpacity) PaintTask.RestoreOpacityMask(this, element);
-
-        // Fill and Stroke paints are defined by each geometry.
-        // normally, LiveCharts initializes a paint, then draws all the geometries in the series
-        // and diposes the paint.
-        // but there are cases where each geometry needs to have its own paint.
-
-        if (element.Fill is not null) DrawByPaint(element.Fill, element);
-        if (element.Stroke is not null) DrawByPaint(element.Stroke, element);
-
-        if (element.HasTransform) Canvas.Restore();
     }
 
     private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element)
