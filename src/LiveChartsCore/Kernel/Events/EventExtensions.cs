@@ -45,8 +45,8 @@ public static class EventExtensions
     /// </remarks>
     public static Series<TModel, TVisual, TLabel> OnPointMeasured<TModel, TVisual, TLabel>(
         this Series<TModel, TVisual, TLabel> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
     {
         series.PointMeasured += predicate;
         return series;
@@ -67,8 +67,8 @@ public static class EventExtensions
     /// </remarks>
     public static Series<TModel, TVisual, TLabel> OnPointCreated<TModel, TVisual, TLabel>(
         this Series<TModel, TVisual, TLabel> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
     {
         series.PointCreated += predicate;
         return series;
@@ -89,8 +89,8 @@ public static class EventExtensions
     /// </remarks>
     public static Series<TModel, TVisual, TLabel> OnPointDown<TModel, TVisual, TLabel>(
         this Series<TModel, TVisual, TLabel> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
     {
         series.ChartPointPointerDown += predicate;
         return series;
@@ -111,8 +111,8 @@ public static class EventExtensions
     /// </remarks>
     public static Series<TModel, TVisual, TLabel> OnPointHover<TModel, TVisual, TLabel>(
         this Series<TModel, TVisual, TLabel> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
     {
         series.ChartPointPointerHover += predicate;
         return series;
@@ -133,8 +133,8 @@ public static class EventExtensions
     /// </remarks>
     public static Series<TModel, TVisual, TLabel> OnPointHoverLost<TModel, TVisual, TLabel>(
         this Series<TModel, TVisual, TLabel> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
     {
         series.ChartPointPointerHoverLost += predicate;
         return series;

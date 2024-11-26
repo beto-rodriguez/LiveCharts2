@@ -47,8 +47,8 @@ public static class ConditionalDrawExtensions
     [Obsolete("Changed Namespace to LiveChartsCore.Kernel.Events")]
     public static Series<TModel, TVisual, TLabel> OnPointMeasured<TModel, TVisual, TLabel>(
         this Series<TModel, TVisual, TLabel> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
     {
         series.PointMeasured += predicate;
         return series;

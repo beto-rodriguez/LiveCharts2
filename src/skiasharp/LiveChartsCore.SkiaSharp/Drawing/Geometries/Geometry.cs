@@ -20,125 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="IGeometry" />
-public abstract class Geometry : CoreDrawable, IGeometry
+/// <inheritdoc cref="CoreGeometry" />
+public abstract class Geometry : CoreGeometry, ISkiaGeometry
 {
-    private readonly bool _hasGeometryTransform = false;
-    private readonly FloatMotionProperty _xProperty;
-    private readonly FloatMotionProperty _yProperty;
-    private readonly FloatMotionProperty _rotationProperty;
-    private readonly PointMotionProperty _transformOriginProperty;
-    private readonly PointMotionProperty _scaleProperty;
-    private readonly PointMotionProperty _skewProperty;
-    private readonly PointMotionProperty _translateProperty;
-    private readonly SKMatrixMotionProperty _transformProperty;
-    private bool _hasTransform = false;
-    private bool _hasRotation = false;
-    private bool _hasScale = false;
-    private bool _hasSkew = false;
-    private bool _hasTranslate = false;
+    private readonly SKMatrixMotionProperty _skMatrixProperty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Geometry"/> class.
     /// </summary>
     protected Geometry(bool hasGeometryTransform = false)
-        : base()
     {
-        _hasGeometryTransform = hasGeometryTransform;
-        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
-        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-        _transformOriginProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(TransformOrigin), new LvcPoint(0.5f, 0.5f)));
-        _translateProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(TranslateTransform), new LvcPoint(0, 0)));
-        _rotationProperty = RegisterMotionProperty(
-            new FloatMotionProperty(nameof(RotateTransform), 0));
-        _scaleProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(ScaleTransform), new LvcPoint(1, 1)));
-        _skewProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(SkewTransform), new LvcPoint(1, 1)));
-        _transformProperty = RegisterMotionProperty(
-            new SKMatrixMotionProperty(nameof(Transform), SKMatrix.Identity));
-    }
-
-    private bool HasTransform => _hasGeometryTransform || _hasTranslate || _hasRotation || _hasScale || _hasSkew || _hasTransform;
-
-    /// <inheritdoc cref="IGeometry.X" />
-    public float X
-    {
-        get => Parent is null
-            ? _xProperty.GetMovement(this)
-            : _xProperty.GetMovement(this) + Parent.X;
-        set => _xProperty.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="IGeometry.Y" />
-    public float Y
-    {
-        get => Parent is null
-            ? _yProperty.GetMovement(this)
-            : _yProperty.GetMovement(this) + Parent.Y;
-        set => _yProperty.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="IGeometry.TransformOrigin" />
-    public LvcPoint TransformOrigin
-    {
-        get => _transformOriginProperty.GetMovement(this);
-        set => _transformOriginProperty.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="IGeometry.TranslateTransform" />
-    public LvcPoint TranslateTransform
-    {
-        get => _translateProperty.GetMovement(this);
-        set
-        {
-            _translateProperty.SetMovement(value, this);
-            _hasTranslate = true;
-        }
-    }
-
-    /// <inheritdoc cref="IGeometry.RotateTransform" />
-    public float RotateTransform
-    {
-        get => _rotationProperty.GetMovement(this);
-        set
-        {
-            _rotationProperty.SetMovement(value, this);
-            _hasRotation = true;
-        }
-    }
-
-    /// <inheritdoc cref="IGeometry.ScaleTransform" />
-    public LvcPoint ScaleTransform
-    {
-        get => _scaleProperty.GetMovement(this);
-        set
-        {
-            _scaleProperty.SetMovement(value, this);
-            _hasScale = true;
-        }
-    }
-
-    /// <inheritdoc cref="IGeometry.SkewTransform" />
-    public LvcPoint SkewTransform
-    {
-        get => _skewProperty.GetMovement(this);
-        set
-        {
-            _skewProperty.SetMovement(value, this);
-            _hasSkew = true;
-        }
+        //_skMatrixProperty = RegisterMotionProperty(
+        //    new SKMatrixMotionProperty(nameof(Transform), SKMatrix.Identity));
     }
 
     /// <summary>
@@ -147,33 +46,19 @@ public abstract class Geometry : CoreDrawable, IGeometry
     /// <value>
     /// The transform.
     /// </value>
-    public SKMatrix Transform
+    public SKMatrix SKMatrix
     {
-        get => _transformProperty.GetMovement(this);
+        get => _skMatrixProperty.GetMovement(this);
         set
         {
-            _transformProperty.SetMovement(value, this);
-            _hasTransform = true;
+            _skMatrixProperty.SetMovement(value, this);
+            HasTransform = true;
         }
     }
 
-    /// <inheritdoc cref="IGeometry.Stroke"/>
-    public Paint? Stroke { get; set; }
-
-    /// <inheritdoc cref="IGeometry.Fill"/>
-    public Paint? Fill { get; set; }
-
-    /// <inheritdoc cref="IGeometry.Parent"/>
-    public IGeometry? Parent { get; set; }
-
-    /// <summary>
-    /// Draws the geometry in the user interface.
-    /// </summary>
-    /// <param name="ctx">The context.</param>
-    public override void Draw(DrawingContext ctx)
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)"/>
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        var context = (SkiaSharpDrawingContext)ctx;
-
         if (HasTransform)
         {
             _ = context.Canvas.Save();
@@ -185,20 +70,20 @@ public abstract class Geometry : CoreDrawable, IGeometry
             var xo = m.Width * o.X;
             var yo = m.Height * o.Y;
 
-            if (_hasRotation)
+            if (HasRotation)
             {
                 context.Canvas.Translate(p.X + xo, p.Y + yo);
                 context.Canvas.RotateDegrees(RotateTransform);
                 context.Canvas.Translate(-p.X - xo, -p.Y - yo);
             }
 
-            if (_hasTranslate)
+            if (HasTranslate)
             {
                 var translate = TranslateTransform;
                 context.Canvas.Translate(translate.X, translate.Y);
             }
 
-            if (_hasScale)
+            if (HasScale)
             {
                 var scale = ScaleTransform;
                 context.Canvas.Translate(p.X + xo, p.Y + yo);
@@ -206,7 +91,7 @@ public abstract class Geometry : CoreDrawable, IGeometry
                 context.Canvas.Translate(-p.X - xo, -p.Y - yo);
             }
 
-            if (_hasSkew)
+            if (HasSkew)
             {
                 var skew = SkewTransform;
                 context.Canvas.Translate(p.X + xo, p.Y + yo);
@@ -214,11 +99,11 @@ public abstract class Geometry : CoreDrawable, IGeometry
                 context.Canvas.Translate(-p.X - xo, -p.Y - yo);
             }
 
-            if (_hasTransform)
-            {
-                var transform = Transform;
-                context.Canvas.Concat(ref transform);
-            }
+            //if (_hasTransform)
+            //{
+            //    var transform = Transform;
+            //    context.Canvas.Concat(ref transform);
+            //}
         }
 
         var hasGeometryOpacity = Opacity < 1;
@@ -277,42 +162,4 @@ public abstract class Geometry : CoreDrawable, IGeometry
     /// <param name="context">The context.</param>
     /// <param name="paint">The paint.</param>
     public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
-
-    /// <summary>
-    /// Measures the geometry.
-    /// </summary>
-    /// <param name="drawableTask">The drawable task.</param>
-    /// <returns>the size of the geometry.</returns>
-    public LvcSize Measure(Paint drawableTask)
-    {
-        var measure = OnMeasure(drawableTask);
-
-        var r = RotateTransform;
-        if (Math.Abs(r) > 0)
-        {
-            const double toRadians = Math.PI / 180;
-
-            r %= 360;
-            if (r < 0) r += 360;
-
-            if (r > 180) r = 360 - r;
-            if (r is > 90 and <= 180) r = 180 - r;
-
-            var rRadians = r * toRadians;
-
-            var w = (float)(Math.Cos(rRadians) * measure.Width + Math.Sin(rRadians) * measure.Height);
-            var h = (float)(Math.Sin(rRadians) * measure.Width + Math.Cos(rRadians) * measure.Height);
-
-            measure = new LvcSize(w, h);
-        }
-
-        return measure;
-    }
-
-    /// <summary>
-    /// Called when the geometry is measured.
-    /// </summary>
-    /// <param name="paintTasks">The paint task.</param>
-    /// <returns>the size of the geometry</returns>
-    protected abstract LvcSize OnMeasure(Paint paintTasks);
 }

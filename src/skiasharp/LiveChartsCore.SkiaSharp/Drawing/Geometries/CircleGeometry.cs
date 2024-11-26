@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -28,18 +30,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a circle geometry.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class CircleGeometry : SizedGeometry
+public class CircleGeometry : CoreSizedGeometry, ISkiaGeometry
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CircleGeometry"/> class.
-    /// </summary>
-    public CircleGeometry() : base()
-    {
-        matchDimensions = true;
-    }
+    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    public void Draw(SkiaSharpDrawingContext ctx) =>
+        OnDraw(ctx, ctx.Paint);
 
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         var rx = Width / 2f;
         context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);

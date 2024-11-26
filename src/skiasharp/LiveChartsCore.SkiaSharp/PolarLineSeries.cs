@@ -81,7 +81,7 @@ public class PolarLineSeries<TModel>
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual>
     : PolarLineSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class.
@@ -127,8 +127,8 @@ public class PolarLineSeries<TModel, TVisual>
 /// </typeparam>
 public class PolarLineSeries<TModel, TVisual, TLabel>
     : CorePolarLineSeries<TModel, TVisual, TLabel, CubicBezierAreaGeometry, LineGeometry>
-        where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class.

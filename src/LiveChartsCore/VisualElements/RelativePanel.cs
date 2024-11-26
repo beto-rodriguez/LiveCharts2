@@ -32,7 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the relative panel class.
 /// </summary>
 public class RelativePanel<TBackgroundGeometry> : CoreVisualElement
-    where TBackgroundGeometry : ISizedGeometry, new()
+    where TBackgroundGeometry : CoreSizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry}"/> class.
@@ -72,7 +72,7 @@ public class RelativePanel<TBackgroundGeometry> : CoreVisualElement
     protected internal override Paint?[] GetPaintTasks() => [_backgroundPaint];
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
     /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
@@ -105,8 +105,8 @@ public class RelativePanel<TBackgroundGeometry> : CoreVisualElement
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
-    protected internal override void SetParent(IGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
+    protected internal override void SetParent(CoreGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         BackgroundGeometry.Parent = parent;

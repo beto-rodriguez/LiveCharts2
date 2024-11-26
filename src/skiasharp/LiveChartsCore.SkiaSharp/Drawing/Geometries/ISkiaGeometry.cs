@@ -20,28 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
-/// Defines a square geometry.
+/// Defines a skia sharp geometry.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
-public class SquareGeometry : SizedGeometry
+public interface ISkiaGeometry : IDrawable<SkiaSharpDrawingContext>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="SquareGeometry"/> class.
+    /// Draws the geometry.
     /// </summary>
-    public SquareGeometry() : base()
-    {
-        matchDimensions = true;
-    }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-    {
-        context.Canvas.DrawRect(
-            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Width, Width = Width } }, paint);
-    }
+    /// <param name="context">The context.</param>
+    /// <param name="paint">The paint.</param>
+    abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 }

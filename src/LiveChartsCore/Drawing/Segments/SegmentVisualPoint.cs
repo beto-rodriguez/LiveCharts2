@@ -28,7 +28,7 @@ namespace LiveChartsCore.Drawing.Segments;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
 public class SegmentVisualPoint<TVisual, TSegment>
-    where TVisual : ISizedGeometry, new()
+    where TVisual : CoreSizedGeometry, new()
     where TSegment : Segment, new()
 {
     /// <summary>
@@ -72,9 +72,9 @@ public class SegmentVisualPoint<TVisual, TSegment>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public class SegmentVisualPoint<TVisual, TSegment, TErrorGeometry>
     : SegmentVisualPoint<TVisual, TSegment>
-        where TVisual : ISizedGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
         where TSegment : Segment, new()
-        where TErrorGeometry : IGeometry
+        where TErrorGeometry : CoreGeometry
 {
     /// <summary>
     /// Gets or sets the y error geometry.

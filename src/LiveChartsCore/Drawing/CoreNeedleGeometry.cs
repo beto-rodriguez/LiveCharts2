@@ -21,29 +21,47 @@
 // SOFTWARE.
 
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
-/// <inheritdoc cref="IDrawable" />
-public abstract class CoreDrawable : Animatable, IDrawable
+/// <summary>
+/// Defines a needle geometry.
+/// </summary>
+public abstract class CoreNeedleGeometry : CoreGeometry
 {
-    private readonly FloatMotionProperty _opacityProperty;
+    private readonly FloatMotionProperty _rProperty;
+    private readonly FloatMotionProperty _wProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreDrawable"/> class.
+    /// Initializes a new instance of the <see cref="CoreNeedleGeometry"/> class.
     /// </summary>
-    protected CoreDrawable()
+    public CoreNeedleGeometry()
     {
-        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
+        _rProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Radius), 0f));
+        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 20f));
     }
 
-    /// <inheritdoc cref="IDrawable.Opacity" />
-    public float Opacity
+    /// <summary>
+    /// Gets or sets the radius.
+    /// </summary>
+    public float Radius
     {
-        get => _opacityProperty.GetMovement(this);
-        set => _opacityProperty.SetMovement(value, this);
+        get => _rProperty.GetMovement(this);
+        set => _rProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.Draw(DrawingContext)" />
-    public abstract void Draw(DrawingContext context);
+    /// <summary>
+    /// Gets or sets the width.
+    /// </summary>
+    public float Width
+    {
+        get => _wProperty.GetMovement(this);
+        set => _wProperty.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)"/>
+    public override LvcSize OnMeasure(Paint paintTasks) =>
+        new(Width, Radius);
 }
+

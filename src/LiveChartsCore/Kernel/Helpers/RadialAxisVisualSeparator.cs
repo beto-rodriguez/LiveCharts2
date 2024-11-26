@@ -43,7 +43,7 @@ public class RadialAxisVisualSeparator : IVisualSeparator
     /// <value>
     /// The text.
     /// </value>
-    public ILabelGeometry? Label { get; set; }
+    public CoreLabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets or sets the circle.
@@ -51,10 +51,10 @@ public class RadialAxisVisualSeparator : IVisualSeparator
     /// <value>
     /// The line.
     /// </value>
-    public ISizedGeometry? Circle { get; set; }
+    public CoreSizedGeometry? Circle { get; set; }
 
     /// <summary>
     /// Gets the geometry.
     /// </summary>
-    public IGeometry? Geometry => Circle;
+    public CoreGeometry? Geometry => Circle;
 }

@@ -44,9 +44,9 @@ namespace LiveChartsCore;
 /// <seealso cref="IScatterSeries" />
 public class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IScatterSeries
-        where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
+        where TErrorGeometry : CoreLineGeometry, new()
 {
     private Paint? _errorPaint;
     private int? _stackGroup;

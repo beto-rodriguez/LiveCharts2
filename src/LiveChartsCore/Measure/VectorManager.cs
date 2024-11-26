@@ -36,7 +36,7 @@ namespace LiveChartsCore.Measure;
 /// </remarks>
 /// <param name="areaGeometry">The area geometry</param>
 public class VectorManager<TSegment>(CoreVectorGeometry<TSegment> areaGeometry)
-    where TSegment : Segment, IAnimatable
+    where TSegment : Segment
 {
     private LinkedListNode<TSegment>? _nextNode = areaGeometry.Commands.First;
     private LinkedListNode<TSegment>? _currentNode;

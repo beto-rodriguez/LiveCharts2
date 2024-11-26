@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -28,16 +30,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an oval geometry.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class OvalGeometry : SizedGeometry
+public class OvalGeometry : CoreSizedGeometry, ISkiaGeometry
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="OvalGeometry"/> class.
-    /// </summary>
-    public OvalGeometry() : base()
-    { }
+    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    public void Draw(SkiaSharpDrawingContext ctx) =>
+        OnDraw(ctx, ctx.Paint);
 
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         var rx = Width / 2f;
         var ry = Height / 2f;

@@ -33,7 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
 public class StackPanel<TBackgroundGeometry> : CoreVisualElement
-    where TBackgroundGeometry : ISizedGeometry, new()
+    where TBackgroundGeometry : CoreSizedGeometry, new()
 {
     private Paint? _backgroundPaint;
     private Align _verticalAlignment = Align.Middle;
@@ -105,7 +105,7 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
         [_backgroundPaint];
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
     /// <inheritdoc cref="CoreVisualElement.IsHitBy(Chart, LvcPoint)"/>
@@ -162,8 +162,8 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
-    protected internal override void SetParent(IGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
+    protected internal override void SetParent(CoreGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         BackgroundGeometry.Parent = parent;

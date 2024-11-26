@@ -30,7 +30,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// <summary>
 /// Defines a skia sharp drawing context.
 /// </summary>
-/// <seealso cref="DrawingContext" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
 /// </remarks>
@@ -44,9 +43,9 @@ public class SkiaSharpDrawingContext(
     SKImageInfo info,
     SKSurface? surface,
     SKCanvas canvas,
-    bool clearOnBeginDraw = true) : DrawingContext
+    bool clearOnBeginDraw = true)
+        : DrawingContext
 {
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
     /// </summary>
@@ -146,5 +145,97 @@ public class SkiaSharpDrawingContext(
             log,
             new SKPoint(50, 10 + p.TextSize),
             p);
+    }
+
+    /// <inheritdoc cref="DrawingContext.Draw(IDrawable)"/>
+    public override void Draw(IDrawable drawable)
+    {
+        var element = (IDrawable<SkiaSharpDrawingContext>)drawable;
+
+        if (element.HasTransform)
+        {
+            _ = Canvas.Save();
+
+            var m = element.OnMeasure(PaintTask);
+            var o = element.TransformOrigin;
+            var p = new SKPoint(element.X, element.Y);
+
+            var xo = m.Width * o.X;
+            var yo = m.Height * o.Y;
+
+            if (element.HasRotation)
+            {
+                Canvas.Translate(p.X + xo, p.Y + yo);
+                Canvas.RotateDegrees(element.RotateTransform);
+                Canvas.Translate(-p.X - xo, -p.Y - yo);
+            }
+
+            if (element.HasTranslate)
+            {
+                var translate = element.TranslateTransform;
+                Canvas.Translate(translate.X, translate.Y);
+            }
+
+            if (element.HasScale)
+            {
+                var scale = element.ScaleTransform;
+                Canvas.Translate(p.X + xo, p.Y + yo);
+                Canvas.Scale(scale.X, scale.Y);
+                Canvas.Translate(-p.X - xo, -p.Y - yo);
+            }
+
+            if (element.HasSkew)
+            {
+                var skew = element.SkewTransform;
+                Canvas.Translate(p.X + xo, p.Y + yo);
+                Canvas.Skew(skew.X, skew.Y);
+                Canvas.Translate(-p.X - xo, -p.Y - yo);
+            }
+
+            //if (_hasTransform)
+            //{
+            //    var transform = Transform;
+            //    context.Canvas.Concat(ref transform);
+            //}
+        }
+
+        var hasGeometryOpacity = element.Opacity < 1;
+
+        if (hasGeometryOpacity) PaintTask.ApplyOpacityMask(this, element);
+
+        element.Draw(this);
+
+        if (hasGeometryOpacity) PaintTask.RestoreOpacityMask(this, element);
+
+        // Fill and Stroke paints are defined by each geometry.
+        // normally, LiveCharts initializes a paint, then draws all the geometries in the series
+        // and diposes the paint.
+        // but there are cases where each geometry needs to have its own paint.
+
+        if (element.Fill is not null) DrawByPaint(element.Fill, element);
+        if (element.Stroke is not null) DrawByPaint(element.Stroke, element);
+
+        if (element.HasTransform) Canvas.Restore();
+    }
+
+    private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element)
+    {
+        var hasGeometryOpacity = element.Opacity < 1;
+
+        var originalPaint = Paint;
+        var originalTask = PaintTask;
+
+        paint.IsStroke = false;
+        paint.InitializeTask(this);
+
+        if (hasGeometryOpacity) paint.ApplyOpacityMask(this, element);
+
+        element.Draw(this);
+
+        if (hasGeometryOpacity) paint.RestoreOpacityMask(this, element);
+        paint.Dispose();
+
+        Paint = originalPaint;
+        PaintTask = originalTask;
     }
 }

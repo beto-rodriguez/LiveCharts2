@@ -21,57 +21,17 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ISizedGeometry" />
-public abstract class SizedGeometry : Geometry, ISizedGeometry
+/// <inheritdoc cref="CoreSizedGeometry" />
+public abstract class SizedGeometry : CoreSizedGeometry, ISkiaGeometry
 {
-    /// <summary>
-    /// The width
-    /// </summary>
-    protected FloatMotionProperty widthProperty;
+    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    public void Draw(SkiaSharpDrawingContext ctx) =>
+        OnDraw(ctx, ctx.Paint);
 
-    /// <summary>
-    /// The height
-    /// </summary>
-    protected FloatMotionProperty heightProperty;
-
-    /// <summary>
-    /// The match dimensions
-    /// </summary>
-    protected bool matchDimensions = false;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SizedGeometry"/> class.
-    /// </summary>
-    protected SizedGeometry() : base()
-    {
-        widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
-        heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
-    }
-
-    /// <inheritdoc cref="ISizedGeometry.Width" />
-    public float Width { get => widthProperty.GetMovement(this); set => widthProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ISizedGeometry.Height" />
-    public float Height
-    {
-        get => matchDimensions ? widthProperty.GetMovement(this) : heightProperty.GetMovement(this);
-        set
-        {
-            if (matchDimensions)
-            {
-                widthProperty.SetMovement(value, this);
-                return;
-            }
-            heightProperty.SetMovement(value, this);
-        }
-    }
-
-    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint paint) =>
-        new(Width, Height);
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 }

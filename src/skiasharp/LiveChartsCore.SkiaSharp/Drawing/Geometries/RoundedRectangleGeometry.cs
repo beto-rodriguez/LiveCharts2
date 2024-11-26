@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -30,25 +29,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a rounded rectangle geometry.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class RoundedRectangleGeometry : SizedGeometry, IRoundedGeometry
+public class RoundedRectangleGeometry : CoreRoundedRectangleGeometry, ISkiaGeometry
 {
-    private readonly PointMotionProperty _borderRadius;
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    public void Draw(SkiaSharpDrawingContext ctx) =>
+        OnDraw(ctx, ctx.Paint);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RoundedRectangleGeometry"/> class.
-    /// </summary>
-    public RoundedRectangleGeometry()
-    {
-        _borderRadius = RegisterMotionProperty(new PointMotionProperty(nameof(BorderRadius), new LvcPoint(8f, 8f)));
-    }
-
-    /// <inheritdoc cref="IRoundedGeometry.BorderRadius"/>
-    public LvcPoint BorderRadius { get => _borderRadius.GetMovement(this); set => _borderRadius.SetMovement(value, this); }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         var br = BorderRadius;
+
         context.Canvas.DrawRoundRect(
             new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, br.X, br.Y, paint);
     }

@@ -36,7 +36,7 @@ public class PaintSchedule
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="geometries">The geometries.</param>
-    public PaintSchedule(Paint task, HashSet<IDrawable> geometries)
+    public PaintSchedule(Paint task, HashSet<Animatable> geometries)
     {
         PaintTask = task;
         Geometries = geometries;
@@ -47,10 +47,10 @@ public class PaintSchedule
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="geometries">The geometries.</param>
-    public PaintSchedule(Paint task, params IDrawable[] geometries)
+    public PaintSchedule(Paint task, params Animatable[] geometries)
     {
         PaintTask = task;
-        Geometries = new HashSet<IDrawable>(geometries);
+        Geometries = new HashSet<Animatable>(geometries);
     }
 
     /// <summary>
@@ -67,5 +67,5 @@ public class PaintSchedule
     /// <value>
     /// The geometries.
     /// </value>
-    public HashSet<IDrawable> Geometries { get; set; }
+    public HashSet<Animatable> Geometries { get; set; }
 }

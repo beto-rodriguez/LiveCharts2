@@ -305,7 +305,7 @@ public class DataFactory<TModel>
             {
                 foreach (var chartPoint in entity.MetaData?.ChartPoints?.Values ?? Enumerable.Empty<ChartPoint>())
                 {
-                    if (chartPoint.Context.Visual is not IAnimatable visual) continue;
+                    if (chartPoint.Context.Visual is not Animatable visual) continue;
                     visual.RemoveTransition(null);
                 }
             }
@@ -317,7 +317,7 @@ public class DataFactory<TModel>
             {
                 foreach (var chartPoint in index.MetaData?.ChartPoints?.Values ?? Enumerable.Empty<ChartPoint>())
                 {
-                    if (chartPoint.Context.Visual is not IAnimatable visual) continue;
+                    if (chartPoint.Context.Visual is not Animatable visual) continue;
                     visual.RemoveTransition(null);
                 }
             }

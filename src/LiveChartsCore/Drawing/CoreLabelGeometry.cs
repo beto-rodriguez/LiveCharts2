@@ -20,29 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Motion;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a label geometry in the user interface.
 /// </summary>
-/// <seealso cref="IGeometry" />
-public interface ILabelGeometry : IGeometry
+public abstract class CoreLabelGeometry : CoreGeometry
 {
-    /// <summary>
-    /// Gets or sets the padding.
-    /// </summary>
-    /// <value>
-    /// The padding.
-    /// </value>
-    Padding Padding { get; set; }
+    private readonly FloatMotionProperty _textSizeProperty;
+    private readonly ColorMotionProperty _backgroundProperty;
 
     /// <summary>
-    /// Gets or sets the line height [in times the text height].
+    /// Initializes a new instance of the <see cref="CoreLabelGeometry"/> class.
     /// </summary>
-    /// <value>
-    /// The padding.
-    /// </value>
-    float LineHeight { get; set; }
+    public CoreLabelGeometry()
+        : base(true)
+    {
+        _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
+        _backgroundProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Background), LvcColor.Empty));
+        TransformOrigin = new LvcPoint(0f, 0f);
+    }
 
     /// <summary>
     /// Gets or sets the vertical align.
@@ -50,7 +49,7 @@ public interface ILabelGeometry : IGeometry
     /// <value>
     /// The vertical align.
     /// </value>
-    Align VerticalAlign { get; set; }
+    public Align VerticalAlign { get; set; } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the horizontal align.
@@ -58,31 +57,50 @@ public interface ILabelGeometry : IGeometry
     /// <value>
     /// The horizontal align.
     /// </value>
-    Align HorizontalAlign { get; set; }
+    public Align HorizontalAlign { get; set; } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the text.
     /// </summary>
-    /// <value>
-    /// The text.
-    /// </value>
-    string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the size of the text.
     /// </summary>
-    /// <value>
-    /// The size of the text.
-    /// </value>
-    float TextSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the maximum width.
-    /// </summary>
-    float MaxWidth { get; set; }
+    public float TextSize
+    {
+        get => _textSizeProperty.GetMovement(this);
+        set => _textSizeProperty.SetMovement(value, this);
+    }
 
     /// <summary>
     /// Gets or sets the background color.
     /// </summary>
-    LvcColor Background { get; set; }
+    public LvcColor Background
+    {
+        get => _backgroundProperty.GetMovement(this);
+        set => _backgroundProperty.SetMovement(value, this);
+    }
+
+    /// <summary>
+    /// Gets or sets the padding.
+    /// </summary>
+    public Padding Padding { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the line height [in times the text height].
+    /// </summary>
+    public float LineHeight { get; set; } = 1.45f;
+
+    /// <summary>
+    /// Gets or sets the maximum width, when the text exceeds this width, it will be wrapped.
+    /// </summary>
+    public float MaxWidth { get; set; } = float.MaxValue;
+
+#if DEBUG
+    /// <summary>
+    /// This property is only available on debug mode, it indicates if the debug lines should be shown.
+    /// </summary>
+    public static bool ShowDebugLines { get; set; }
+#endif
 }

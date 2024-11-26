@@ -42,8 +42,8 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
         : CartesianSeries<TModel, TVisual, TLabel>(properties, values)
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
 {
     private Paint? _stroke = null;
     private Paint? _fill = null;

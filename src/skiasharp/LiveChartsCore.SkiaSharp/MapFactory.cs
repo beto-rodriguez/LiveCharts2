@@ -179,7 +179,7 @@ public class MapFactory : IMapFactory
                 {
                     foreach (var landData in landDefinition.Data)
                     {
-                        var shape = (IDrawable?)landData.Shape;
+                        var shape = landData.Shape;
                         if (shape is null) continue;
 
                         stroke?.RemoveGeometryFromPainTask(_mapView.Canvas, shape);

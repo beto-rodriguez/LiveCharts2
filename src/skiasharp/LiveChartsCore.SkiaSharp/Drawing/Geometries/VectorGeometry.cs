@@ -32,14 +32,40 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>
-    where TSegment : Segment, IAnimatable
+public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, ISkiaGeometry
+    where TSegment : Segment
 {
-    /// <inheritdoc cref="CoreDrawable.Draw(DrawingContext)" />
-    public override void Draw(DrawingContext ctx)
-    {
-        var context = (SkiaSharpDrawingContext)ctx;
+    /// <summary>
+    /// Called when the area begins the draw.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="segment">The segment.</param>
+    protected virtual void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
 
+    /// <summary>
+    /// Called to close the area.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="segment">The segment.</param>
+    protected virtual void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
+
+    /// <summary>
+    /// Called to draw the segment.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="segment">The segment.</param>
+    protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
+
+    public void Draw(SkiaSharpDrawingContext context) => OnDraw(context, context.Paint);
+
+    public void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
         if (Commands.Count == 0) return;
 
         var toRemoveSegments = new List<TSegment>();
@@ -109,31 +135,4 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>
 
         if (!isValid) IsValid = false;
     }
-
-    /// <summary>
-    /// Called when the area begins the draw.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="path">The path.</param>
-    /// <param name="segment">The segment.</param>
-    protected virtual void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
-
-    /// <summary>
-    /// Called to close the area.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="path">The path.</param>
-    /// <param name="segment">The segment.</param>
-    protected virtual void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
-
-    /// <summary>
-    /// Called to draw the segment.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="path">The path.</param>
-    /// <param name="segment">The segment.</param>
-    protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
 }

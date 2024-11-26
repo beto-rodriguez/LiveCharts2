@@ -80,7 +80,7 @@ public class StepLineSeries<TModel> : StepLineSeries<TModel, CircleGeometry, Lab
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual>
     : StepLineSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class.
@@ -126,8 +126,8 @@ public class StepLineSeries<TModel, TVisual>
 /// </typeparam>
 public class StepLineSeries<TModel, TVisual, TLabel>
     : CoreStepLineSeries<TModel, TVisual, TLabel, StepLineAreaGeometry, LineGeometry>
-        where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class.

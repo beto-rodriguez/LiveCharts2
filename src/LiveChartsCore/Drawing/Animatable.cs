@@ -22,47 +22,215 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
-/// <inheritdoc cref="IAnimatable" />
-public abstract class Animatable : IAnimatable
+/// <inheritdoc cref="Animatable" />
+public abstract class Animatable
 {
+    private readonly FloatMotionProperty _xProperty;
+    private readonly FloatMotionProperty _yProperty;
+    private readonly FloatMotionProperty _rotationProperty;
+    private readonly PointMotionProperty _transformOriginProperty;
+    private readonly PointMotionProperty _scaleProperty;
+    private readonly PointMotionProperty _skewProperty;
+    private readonly PointMotionProperty _translateProperty;
+    private readonly FloatMotionProperty _opacityProperty;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Animatable"/> class.
     /// </summary>
-    protected Animatable() { }
+    protected Animatable(bool hasGeometryTransform = false)
+    {
+        HasTransform = hasGeometryTransform;
+        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
+        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
+        _transformOriginProperty = RegisterMotionProperty(
+            new PointMotionProperty(nameof(TransformOrigin), new LvcPoint(0.5f, 0.5f)));
+        _translateProperty = RegisterMotionProperty(
+            new PointMotionProperty(nameof(TranslateTransform), new LvcPoint(0, 0)));
+        _rotationProperty = RegisterMotionProperty(
+            new FloatMotionProperty(nameof(RotateTransform), 0));
+        _scaleProperty = RegisterMotionProperty(
+            new PointMotionProperty(nameof(ScaleTransform), new LvcPoint(1, 1)));
+        _skewProperty = RegisterMotionProperty(
+            new PointMotionProperty(nameof(SkewTransform), new LvcPoint(1, 1)));
+        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
+    }
 
-    /// <inheritdoc cref="IAnimatable.IsValid" />
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is valid, the instance is valid when all the
+    /// motion properties in the object finished their animations.
+    /// </summary>
     public bool IsValid { get; set; } = true;
 
-    /// <inheritdoc cref="IAnimatable.CurrentTime" />
+    /// <summary>
+    /// Gets or sets the current time, this property is used by the motion engine to calculate the progress of the animations.
+    /// </summary>
     public long CurrentTime { get; set; } = long.MinValue;
 
-    /// <inheritdoc cref="IAnimatable.RemoveOnCompleted" />
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance should be removed from the canvas when all the animations are completed.
+    /// </summary>
     public bool RemoveOnCompleted { get; set; }
 
-    /// <inheritdoc cref="IAnimatable.MotionProperties" />
-    public Dictionary<string, IMotionProperty> MotionProperties { get; } = [];
-
-    /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[])" />
-    public void SetTransition(Animation? animation, params string[]? propertyName)
+    /// <summary>
+    /// Gets or sets the opacity.
+    /// </summary>
+    public float Opacity
     {
-        var a = animation?.Duration == 0 ? null : animation;
-        if (propertyName is null || propertyName.Length == 0) propertyName = MotionProperties.Keys.ToArray();
+        get => _opacityProperty.GetMovement(this);
+        set => _opacityProperty.SetMovement(value, this);
+    }
 
-        foreach (var name in propertyName)
+    /// <inheritdoc cref="IDrawable.X"/>
+    public float X
+    {
+        get => Parent is null
+            ? _xProperty.GetMovement(this)
+            : _xProperty.GetMovement(this) + Parent.X;
+        set => _xProperty.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="IDrawable.Y"/>
+    public float Y
+    {
+        get => Parent is null
+            ? _yProperty.GetMovement(this)
+            : _yProperty.GetMovement(this) + Parent.Y;
+        set => _yProperty.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="IDrawable.TransformOrigin"/>
+    public LvcPoint TransformOrigin
+    {
+        get => _transformOriginProperty.GetMovement(this);
+        set => _transformOriginProperty.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="IDrawable.TranslateTransform"/>
+    public LvcPoint TranslateTransform
+    {
+        get => _translateProperty.GetMovement(this);
+        set
         {
-            MotionProperties[name].Animation = a;
+            _translateProperty.SetMovement(value, this);
+            HasTransform = true;
         }
     }
 
-    /// <inheritdoc cref="IAnimatable.RemoveTransition(string[])" />
+    /// <inheritdoc cref="IDrawable.RotateTransform"/>
+    public float RotateTransform
+    {
+        get => _rotationProperty.GetMovement(this);
+        set
+        {
+            _rotationProperty.SetMovement(value, this);
+            HasTransform = true;
+        }
+    }
+
+    /// <inheritdoc cref="IDrawable.ScaleTransform"/>
+    public LvcPoint ScaleTransform
+    {
+        get => _scaleProperty.GetMovement(this);
+        set
+        {
+            _scaleProperty.SetMovement(value, this);
+            HasTransform = true;
+        }
+    }
+
+    /// <inheritdoc cref="IDrawable.SkewTransform"/>
+    public LvcPoint SkewTransform
+    {
+        get => _skewProperty.GetMovement(this);
+        set
+        {
+            _skewProperty.SetMovement(value, this);
+            HasTransform = true;
+        }
+    }
+
+    /// <inheritdoc cref="IDrawable.HasTransform"/>
+    public bool HasTransform { get; protected set; }
+
+    /// <inheritdoc cref="IDrawable.HasTranslate"/>
+    public bool HasTranslate
+    {
+        get
+        {
+            var t = TranslateTransform;
+            return t.X != 0 || t.Y != 0;
+        }
+    }
+
+    /// <inheritdoc cref="IDrawable.HasScale"/>
+    public bool HasScale
+    {
+        get
+        {
+            var s = ScaleTransform;
+            return s.X != 1 || s.Y != 1;
+        }
+    }
+
+    /// <inheritdoc cref="IDrawable.HasSkew"/>
+    public bool HasSkew
+    {
+        get
+        {
+            var s = SkewTransform;
+            return s.X != 1 || s.Y != 1;
+        }
+    }
+
+    /// <inheritdoc cref="IDrawable.HasSkew"/>
+    public bool HasRotation => Math.Abs(RotateTransform) > 0;
+
+    /// <summary>
+    /// Gets or sets the stroke paint.
+    /// </summary>
+    public Paint? Stroke { get; set; }
+
+    /// <summary>
+    /// Gets or sets the fill paint.
+    /// </summary>
+    public Paint? Fill { get; set; }
+
+    /// <summary>
+    /// Gets or sets the parent shape, if any the X and Y properties will be relative to the parent.
+    /// </summary>
+    public CoreGeometry? Parent { get; set; }
+
+    /// <summary>
+    /// Gets the motion properties.
+    /// </summary>
+    public Dictionary<string, IMotionProperty> MotionProperties { get; } = [];
+
+    /// <summary>
+    /// Sets the transition for the specified properties.
+    /// </summary>
+    /// <param name="animation">The animation.</param>
+    /// <param name="propertyName">The property name, null to select all properties.</param>
+    public void SetTransition(Animation? animation, params string[]? propertyName)
+    {
+        var a = animation?.Duration == 0 ? null : animation;
+        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
+
+        foreach (var name in propertyName)
+            MotionProperties[name].Animation = a;
+    }
+
+    /// <summary>
+    /// Removes the transition for the specified properties.
+    /// </summary>
+    /// <param name="propertyName">The properties to remove, null to select all properties.</param>
     public void RemoveTransition(params string[]? propertyName)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = MotionProperties.Keys.ToArray();
+        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
 
         foreach (var name in propertyName)
         {
@@ -70,10 +238,13 @@ public abstract class Animatable : IAnimatable
         }
     }
 
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
+    /// <summary>
+    /// Completes the transition for the specified properties.
+    /// </summary>
+    /// <param name="propertyName">The property name, null to select all properties.</param>
     public virtual void CompleteTransition(params string[]? propertyName)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = MotionProperties.Keys.ToArray();
+        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
 
         foreach (var property in propertyName)
         {

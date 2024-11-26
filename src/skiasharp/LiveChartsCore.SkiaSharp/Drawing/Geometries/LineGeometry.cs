@@ -22,50 +22,23 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ILineGeometry" />
-public class LineGeometry : Geometry, ILineGeometry
+/// <inheritdoc cref="CoreLineGeometry" />
+public class LineGeometry : CoreLineGeometry, ISkiaGeometry
 {
-    private readonly FloatMotionProperty _x1;
-    private readonly FloatMotionProperty _y1;
+    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    public void Draw(SkiaSharpDrawingContext ctx) =>
+        OnDraw(ctx, ctx.Paint);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LineGeometry"/> class.
-    /// </summary>
-    public LineGeometry()
-    {
-        _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-        _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-    }
-
-    /// <inheritdoc cref="ILineGeometry.X1" />
-    public float X1
-    {
-        get => Parent is null
-            ? _x1.GetMovement(this)
-            : _x1.GetMovement(this) + Parent.X;
-        set => _x1.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="ILineGeometry.Y1" />
-    public float Y1
-    {
-        get => Parent is null
-            ? _y1.GetMovement(this)
-            : _y1.GetMovement(this) + Parent.Y;
-        set => _y1.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint) =>
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint) =>
         context.Canvas.DrawLine(X, Y, X1, Y1, paint);
 
-    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint drawable) =>
+    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
+    public override LvcSize OnMeasure(Paint drawable) =>
         new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
 }

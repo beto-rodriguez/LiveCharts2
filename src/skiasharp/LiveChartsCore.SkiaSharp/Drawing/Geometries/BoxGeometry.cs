@@ -22,7 +22,6 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 using SkiaSharp;
 
@@ -31,43 +30,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a box geometry.
 /// </summary>
-public class BoxGeometry : Geometry, IBoxGeometry
+public class BoxGeometry : CoreBoxGeometry, ISkiaGeometry
 {
-    private readonly FloatMotionProperty _wProperty;
-    private readonly FloatMotionProperty _tProperty;
-    private readonly FloatMotionProperty _fProperty;
-    private readonly FloatMotionProperty _minProperty;
-    private readonly FloatMotionProperty _medProperty;
+    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    public void Draw(SkiaSharpDrawingContext ctx) =>
+        OnDraw(ctx, ctx.Paint);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BoxGeometry"/> class.
-    /// </summary>
-    public BoxGeometry()
-    {
-        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0f));
-        _tProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Third), 0f));
-        _fProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(First), 0f));
-        _minProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Min), 0f));
-        _medProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Median), 0f));
-    }
-
-    /// <inheritdoc cref="IBoxGeometry.Width" />
-    public float Width { get => _wProperty.GetMovement(this); set => _wProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IBoxGeometry.Third" />
-    public float Third { get => _tProperty.GetMovement(this); set => _tProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IBoxGeometry.First" />
-    public float First { get => _fProperty.GetMovement(this); set => _fProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IBoxGeometry.Min" />
-    public float Min { get => _minProperty.GetMovement(this); set => _minProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IBoxGeometry.Median" />
-    public float Median { get => _medProperty.GetMovement(this); set => _medProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         var w = Width;
         var cx = X + w * 0.5f;
@@ -106,6 +76,6 @@ public class BoxGeometry : Geometry, IBoxGeometry
     }
 
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint paintTasks) =>
+    public override LvcSize OnMeasure(Paint paintTasks) =>
         new(Width, Math.Abs(Min - Y));
 }

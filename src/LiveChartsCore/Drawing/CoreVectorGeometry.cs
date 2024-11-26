@@ -31,8 +31,8 @@ namespace LiveChartsCore.Drawing;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class CoreVectorGeometry<TSegment> : CoreDrawable
-    where TSegment : Segment, IAnimatable
+public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
+    where TSegment : Segment
 {
     private readonly FloatMotionProperty _pivotProperty;
 
@@ -49,19 +49,13 @@ public abstract class CoreVectorGeometry<TSegment> : CoreDrawable
     /// </summary>
     public LinkedList<TSegment> Commands { get; } = new();
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.ClosingMethod" />
+    /// <inheritdoc cref="CoreVectorGeometry{TSegment}.ClosingMethod" />
     public VectorClosingMethod ClosingMethod { get; set; }
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Pivot" />
+    /// <inheritdoc cref="CoreVectorGeometry{TSegment}.Pivot" />
     public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Stroke"/>
-    public Paint? Stroke { get; set; }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Fill"/>
-    public Paint? Fill { get; set; }
-
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
+    /// <inheritdoc cref="Animatable.CompleteTransition(string[])" />
     public override void CompleteTransition(params string[]? propertyName)
     {
         foreach (var segment in Commands)
@@ -71,4 +65,7 @@ public abstract class CoreVectorGeometry<TSegment> : CoreDrawable
 
         base.CompleteTransition(propertyName);
     }
+
+    /// <inheritdoc cref="IDrawable.OnMeasure(Paint)" />
+    public LvcSize OnMeasure(Paint paint) => new();
 }

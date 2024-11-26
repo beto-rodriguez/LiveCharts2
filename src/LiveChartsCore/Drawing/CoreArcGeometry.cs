@@ -23,40 +23,27 @@
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a financial geometry.
+/// Defines an arc geometry.
 /// </summary>
-/// <seealso cref="ISizedGeometry" />
-public interface IFinancialGeometry : IGeometry
+public abstract class CoreArcGeometry : CoreSizedGeometry
 {
     /// <summary>
-    /// Gets or sets the width.
+    /// Gets or sets the center in the x axis.
     /// </summary>
-    /// <value>
-    /// The width.
-    /// </value>
-    float Width { get; set; }
+    public float CenterX { get; set; }
 
     /// <summary>
-    /// Gets or sets the open.
+    /// Gets or sets the center in the y axis.
     /// </summary>
-    /// <value>
-    /// The open.
-    /// </value>
-    float Open { get; set; }
+    public float CenterY { get; set; }
 
     /// <summary>
-    /// Gets or sets the close.
+    /// Gets or sets the start angle in degrees.
     /// </summary>
-    /// <value>
-    /// The close.
-    /// </value>
-    float Close { get; set; }
+    public float StartAngle { get; set; }
 
     /// <summary>
-    /// Gets or sets the low.
+    /// Gets or sets the sweep angle in degrees.
     /// </summary>
-    /// <value>
-    /// The low.
-    /// </value>
-    float Low { get; set; }
+    public float SweepAngle { get; set; }
 }

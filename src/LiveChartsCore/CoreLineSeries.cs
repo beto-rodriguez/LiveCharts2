@@ -45,9 +45,9 @@ namespace LiveChartsCore;
 public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, ILineSeries
         where TPathGeometry : CoreVectorGeometry<CubicBezierSegment>, new()
-        where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
+        where TErrorGeometry : CoreLineGeometry, new()
 {
     internal readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     internal readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];

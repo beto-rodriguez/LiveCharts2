@@ -83,14 +83,15 @@ public class CoreMotionCanvas : IDisposable
     /// <summary>
     /// Gets the animatables collection.
     /// </summary>
-    public HashSet<IAnimatable> Trackers { get; } = [];
+    public HashSet<Animatable> Trackers { get; } = [];
 
     /// <summary>
     /// Draws the frame.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns></returns>
-    public void DrawFrame(DrawingContext context)
+    public void DrawFrame<TDrawingContext>(TDrawingContext context)
+        where TDrawingContext : DrawingContext
     {
 #if DEBUG
         if (LiveCharts.EnableLogging)
@@ -115,6 +116,7 @@ public class CoreMotionCanvas : IDisposable
                 if (DisableAnimations) task.CompleteTransition(null);
                 task.IsValid = true;
                 task.CurrentTime = frameTime;
+
                 task.InitializeTask(context);
 
                 foreach (var geometry in task.GetGeometries(this))
@@ -124,7 +126,8 @@ public class CoreMotionCanvas : IDisposable
 
                     geometry.IsValid = true;
                     geometry.CurrentTime = frameTime;
-                    if (!task.IsPaused) geometry.Draw(context);
+
+                    if (!task.IsPaused) context.Draw(geometry);
 
                     isValid = isValid && geometry.IsValid;
 

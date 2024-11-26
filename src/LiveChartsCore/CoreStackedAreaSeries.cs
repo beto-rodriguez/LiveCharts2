@@ -38,9 +38,9 @@ namespace LiveChartsCore;
 public class CoreStackedAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
     : CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
         where TPathGeometry : CoreVectorGeometry<CubicBezierSegment>, new()
-        where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
+        where TErrorGeometry : CoreLineGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TPathGeometry, TBezierVisual}"/> class.

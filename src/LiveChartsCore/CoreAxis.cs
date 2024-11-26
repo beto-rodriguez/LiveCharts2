@@ -41,8 +41,8 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     : ChartElement, ICartesianAxis, IPlane
-        where TTextGeometry : ILabelGeometry, new()
-        where TLineGeometry : class, ILineGeometry, new()
+        where TTextGeometry : CoreLabelGeometry, new()
+        where TLineGeometry : CoreLineGeometry, new()
 {
     #region fields
 
@@ -77,13 +77,13 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     private Paint? _separatorsPaint;
     private Paint? _subseparatorsPaint;
     private bool _drawTicksPath;
-    private ILineGeometry? _ticksPath;
+    private CoreLineGeometry? _ticksPath;
     private Paint? _ticksPaint;
     private Paint? _subticksPaint;
     private Paint? _zeroPaint;
-    private ILineGeometry? _zeroLine;
-    private ILineGeometry? _crosshairLine;
-    private ILabelGeometry? _crosshairLabel;
+    private CoreLineGeometry? _zeroLine;
+    private CoreLineGeometry? _crosshairLine;
+    private CoreLabelGeometry? _crosshairLabel;
     private Paint? _crosshairPaint;
     private Paint? _crosshairLabelsPaint;
     private LvcColor? _crosshairLabelsBackground;
@@ -1131,7 +1131,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         }
     }
 
-    private void InitializeLine(ILineGeometry lineGeometry, CartesianChartEngine cartesianChart) =>
+    private void InitializeLine(CoreLineGeometry lineGeometry, CartesianChartEngine cartesianChart) =>
         lineGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
 
     private void InitializeTick(
@@ -1180,7 +1180,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSeparator(
-        ILineGeometry line,
+        CoreLineGeometry line,
         float x,
         float y,
         float lxi,
@@ -1208,7 +1208,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     private void UpdateTick(
-        ILineGeometry tick, float length, float x, float y, UpdateMode mode)
+        CoreLineGeometry tick, float length, float x, float y, UpdateMode mode)
     {
         if (_orientation == AxisOrientation.X)
         {
@@ -1233,7 +1233,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSubseparators(
-        ILineGeometry[] subseparators, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
+        CoreLineGeometry[] subseparators, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
     {
         for (var j = 0; j < subseparators.Length; j++)
         {
@@ -1257,7 +1257,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSubticks(
-        ILineGeometry[] subticks, Scaler scale, double s, float x, float y, UpdateMode mode)
+        CoreLineGeometry[] subticks, Scaler scale, double s, float x, float y, UpdateMode mode)
     {
         for (var j = 0; j < subticks.Length; j++)
         {
@@ -1282,7 +1282,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     private void UpdateLabel(
-        ILabelGeometry label,
+        CoreLabelGeometry label,
         float x,
         float y,
         string text,
@@ -1407,7 +1407,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         SetUpdateMode(label, mode);
     }
 
-    private void SetUpdateMode(IGeometry geometry, UpdateMode mode)
+    private void SetUpdateMode(CoreGeometry geometry, UpdateMode mode)
     {
         switch (mode)
         {
