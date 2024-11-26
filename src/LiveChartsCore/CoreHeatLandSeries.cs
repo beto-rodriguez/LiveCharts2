@@ -124,12 +124,14 @@ public class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyChanged
         }
 
         var heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
-        var shapeContext = new MapShapeContext(context.View, _heatPaint, heatStops, bounds);
+        _ = new MapShapeContext(context.View, _heatPaint, heatStops, bounds);
         var toRemove = new HashSet<LandDefinition>(_everUsed);
+
+        var provider = LiveCharts.DefaultSettings.GetProvider();
 
         foreach (var land in Lands ?? [])
         {
-            var projector = Maps.BuildProjector(
+            _ = Maps.BuildProjector(
                 context.View.MapProjection, [context.View.Width, context.View.Height]);
 
             var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
@@ -137,14 +139,12 @@ public class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyChanged
             var mapLand = context.View.ActiveMap.FindLand(land.Name);
             if (mapLand is null) continue;
 
-            var shapesQuery = mapLand.Data
-                .Select(x => x.Shape)
-                .Where(x => x is not null)
-                .Cast<IHeatPathShape>();
-
-            foreach (var pathShape in shapesQuery)
+            foreach (var data in mapLand.Data)
             {
-                pathShape.FillColor = heat;
+                var shape = data.Shape;
+                if (shape is null) continue;
+
+                shape.Fill = provider.GetSolidColorPaint(heat);
             }
 
             _ = _everUsed.Add(mapLand);

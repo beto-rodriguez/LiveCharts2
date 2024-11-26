@@ -20,41 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing.Segments;
+using LiveChartsCore.Drawing.Segments;
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
-/// Defines a path segment that is part of a sequence.
+/// Defines an area drawin using bezier segments.
 /// </summary>
-public interface IConsecutivePathSegment : IAnimatable
+public class LandAreaGeometry : VectorGeometry<Segment>
 {
-    /// <summary>
-    /// Gets or sets the segment id, a unique and consecutive integer.
-    /// </summary>
-    int Id { get; }
+    /// <inheritdoc cref="VectorGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, Segment segment) =>
+        path.LineTo(segment.Xi, segment.Yi);
 
-    /// <summary>
-    /// Gets the start point in the X axis.
-    /// </summary>
-    float Xi { get; }
+    /// <inheritdoc cref="VectorGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, Segment segment) =>
+        path.MoveTo(segment.Xi, segment.Yi);
 
-    /// <summary>
-    /// Gets the end point in the X axis.
-    /// </summary>
-    float Xj { get; }
-
-    /// <summary>
-    /// Gets the start point in the Y axis.
-    /// </summary>
-    float Yi { get; }
-
-    /// <summary>
-    /// Gets the end point in the Y axis.
-    /// </summary>
-    float Yj { get; }
-
-    /// <summary>
-    /// Copies the segment to the end of the given segment.
-    /// </summary>
-    /// <param name="segment">The segment.</param>
-    void Follows(IConsecutivePathSegment segment);
+    /// <inheritdoc cref="VectorGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, Segment segment)
+    { }
 }

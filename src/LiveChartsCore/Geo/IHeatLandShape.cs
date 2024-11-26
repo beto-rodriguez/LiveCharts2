@@ -27,7 +27,7 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a heat land shape.
 /// </summary>
-public interface IHeatPathShape : IAnimatable
+public interface IHeatPathShape
 {
     /// <summary>
     /// Gets or sets the color of the fill.

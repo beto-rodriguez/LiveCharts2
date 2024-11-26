@@ -20,51 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Motion;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a box geometry.
+/// Defines a rounded rectangle geometry.
 /// </summary>
-/// <seealso cref="ISizedGeometry" />
-public interface IBoxGeometry : IGeometry
+public abstract class CoreRoundedRectangleGeometry : CoreSizedGeometry
 {
-    /// <summary>
-    /// Gets or sets the width.
-    /// </summary>
-    /// <value>
-    /// The width.
-    /// </value>
-    float Width { get; set; }
+    private readonly PointMotionProperty _borderRadius;
 
     /// <summary>
-    /// Gets or sets the third quadrile.
+    /// Initializes a new instance of the <see cref="CoreRoundedRectangleGeometry"/> class.
     /// </summary>
-    /// <value>
-    /// The third quadrile.
-    /// </value>
-    float Third { get; set; }
+    public CoreRoundedRectangleGeometry()
+    {
+        _borderRadius = RegisterMotionProperty(new PointMotionProperty(nameof(BorderRadius), new LvcPoint(8f, 8f)));
+    }
 
     /// <summary>
-    /// Gets or sets the first quadrile.
+    /// Gets or sets the border radius.
     /// </summary>
-    /// <value>
-    /// The first quadrile.
-    /// </value>
-    float First { get; set; }
-
-    /// <summary>
-    /// Gets or sets the min.
-    /// </summary>
-    /// <value>
-    /// The min.
-    /// </value>
-    float Min { get; set; }
-
-    /// <summary>
-    /// Gets or sets the median.
-    /// </summary>
-    /// <value>
-    /// The median.
-    /// </value>
-    float Median { get; set; }
+    public LvcPoint BorderRadius
+    {
+        get => _borderRadius.GetMovement(this);
+        set => _borderRadius.SetMovement(value, this);
+    }
 }

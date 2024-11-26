@@ -26,7 +26,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Extensions;
 
@@ -46,10 +45,8 @@ public static class PieChartExtensions
     public static ObservableCollection<PieSeries<TModel>> AsPieSeries<TModel>(
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel>>? builder = null,
-        GaugeOptions gaugeOptions = GaugeOptions.None)
-    {
-        return AsPieSeries<TModel, PieSeries<TModel>>(source, builder, gaugeOptions);
-    }
+        GaugeOptions gaugeOptions = GaugeOptions.None) =>
+            AsPieSeries<TModel, PieSeries<TModel>>(source, builder, gaugeOptions);
 
     /// <summary>
     /// Converts an IEnumerable to an ObservableCollection of pie series.
@@ -64,10 +61,8 @@ public static class PieChartExtensions
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
-            where TVisual : class, IDoughnutGeometry, new()
-    {
-        return AsPieSeries<TModel, PieSeries<TModel, TVisual>>(source, builder, gaugeOptions);
-    }
+            where TVisual : CoreDoughnutGeometry, new() =>
+                AsPieSeries<TModel, PieSeries<TModel, TVisual>>(source, builder, gaugeOptions);
 
     /// <summary>
     /// Converts an IEnumerable to an ObservableCollection of pie series.
@@ -83,11 +78,9 @@ public static class PieChartExtensions
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual, TLabel>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
-            where TVisual : class, IDoughnutGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
-    {
-        return AsPieSeries<TModel, PieSeries<TModel, TVisual, TLabel>>(source, builder, gaugeOptions);
-    }
+            where TVisual : CoreDoughnutGeometry, new()
+            where TLabel : CoreLabelGeometry, new() =>
+                AsPieSeries<TModel, PieSeries<TModel, TVisual, TLabel>>(source, builder, gaugeOptions);
 
     /// <summary>
     /// Converts an IEnumerable to an ObservableCollection of pie series.

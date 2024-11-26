@@ -25,70 +25,49 @@ using LiveChartsCore.Motion;
 namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
-/// Defines a cubic bezier segment.
+/// Defines a cubic bezier segment, that is part of a sequence.
 /// </summary>
-public class CubicBezierSegment : Animatable, IConsecutivePathSegment
+public class CubicBezierSegment : Segment
 {
-    private readonly FloatMotionProperty _xiProperty;
-    private readonly FloatMotionProperty _yiProperty;
     private readonly FloatMotionProperty _xmProperty;
     private readonly FloatMotionProperty _ymProperty;
-    private readonly FloatMotionProperty _xjProperty;
-    private readonly FloatMotionProperty _yjProperty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CubicBezierSegment"/> class.
     /// </summary>
     public CubicBezierSegment()
     {
-        _xiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xi), 0f));
-        _yiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yi), 0f));
         _xmProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xm), 0f));
         _ymProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Ym), 0f));
-        _xjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xj), 0f));
-        _yjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yj), 0f));
     }
 
-    /// <inheritdoc cref="IConsecutivePathSegment.Xi"/>
-    public float Xi { get => _xiProperty.GetMovement(this); set => _xiProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IConsecutivePathSegment.Yi "/>
-    public float Yi { get => _yiProperty.GetMovement(this); set => _yiProperty.SetMovement(value, this); }
-
     /// <summary>
     /// Gets or sets the middle point in the Y axis.
     /// </summary>
-    public float Xm { get => _xmProperty.GetMovement(this); set => _xmProperty.SetMovement(value, this); }
-
-    /// <summary>
-    /// Gets or sets the middle point in the Y axis.
-    /// </summary>
-    public float Ym { get => _ymProperty.GetMovement(this); set => _ymProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IConsecutivePathSegment.Xj"/>
-    public float Xj { get => _xjProperty.GetMovement(this); set => _xjProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IConsecutivePathSegment.Yj"/>
-    public float Yj { get => _yjProperty.GetMovement(this); set => _yjProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IConsecutivePathSegment.Id"/>
-    public int Id { get; set; }
-
-    /// <inheritdoc cref="IConsecutivePathSegment.Follows(IConsecutivePathSegment)"/>
-    void IConsecutivePathSegment.Follows(IConsecutivePathSegment segment)
+    public float Xm
     {
-        IsValid = segment.IsValid;
-        CurrentTime = segment.CurrentTime;
-        RemoveOnCompleted = segment.RemoveOnCompleted;
+        get => _xmProperty.GetMovement(this);
+        set => _xmProperty.SetMovement(value, this);
+    }
 
-        var xProp = segment.MotionProperties[nameof(IConsecutivePathSegment.Xj)];
-        var yProp = segment.MotionProperties[nameof(IConsecutivePathSegment.Yj)];
+    /// <summary>
+    /// Gets or sets the middle point in the Y axis.
+    /// </summary>
+    public float Ym
+    {
+        get => _ymProperty.GetMovement(this);
+        set => _ymProperty.SetMovement(value, this);
+    }
 
-        MotionProperties[nameof(Xi)].CopyFrom(xProp);
+    /// <inheritdoc cref="Segment.Follows(Segment)"/>
+    public override void Follows(Segment segment)
+    {
+        base.Follows(segment);
+
+        var xProp = segment.MotionProperties[nameof(Xj)];
+        var yProp = segment.MotionProperties[nameof(Yj)];
+
         MotionProperties[nameof(Xm)].CopyFrom(xProp);
-        MotionProperties[nameof(Xj)].CopyFrom(xProp);
-        MotionProperties[nameof(Yi)].CopyFrom(yProp);
         MotionProperties[nameof(Ym)].CopyFrom(yProp);
-        MotionProperties[nameof(Yj)].CopyFrom(yProp);
     }
 }

@@ -33,7 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 public class LabelVisual<TLabelGeometry> : CoreVisualElement
-    where TLabelGeometry : ILabelGeometry, new()
+    where TLabelGeometry : CoreLabelGeometry, new()
 {
     internal TLabelGeometry? _labelGeometry;
     internal Paint? _paint;
@@ -101,7 +101,7 @@ public class LabelVisual<TLabelGeometry> : CoreVisualElement
         [_paint];
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
         [_labelGeometry];
 
     internal override void AlignToTopLeftCorner()
@@ -150,8 +150,8 @@ public class LabelVisual<TLabelGeometry> : CoreVisualElement
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
-    protected internal override void SetParent(IGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
+    protected internal override void SetParent(CoreGeometry parent)
     {
         if (_labelGeometry is null) return;
         _labelGeometry.Parent = parent;

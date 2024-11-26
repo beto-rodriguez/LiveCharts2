@@ -37,7 +37,6 @@ public partial class MotionCanvas : IDisposable
     private SKCanvasView? _canvas;
     private bool _disposing = false;
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule> _paintTasksSchedule = [];
 
     /// <summary>
     /// Called when the control is initialized.
@@ -49,20 +48,6 @@ public partial class MotionCanvas : IDisposable
     /// Gets the <see cref="CoreMotionCanvas"/> (core).
     /// </summary>
     public CoreMotionCanvas CanvasCore { get; } = new();
-
-    /// <summary>
-    /// Gets or sets the paint tasks.
-    /// </summary>
-    [Parameter]
-    public List<PaintSchedule> PaintTasks
-    {
-        get => _paintTasksSchedule;
-        set
-        {
-            _paintTasksSchedule = value;
-            OnPaintTasksChanged();
-        }
-    }
 
     /// <summary>
     /// Gets or sets the pointer down callback.
@@ -162,19 +147,6 @@ public partial class MotionCanvas : IDisposable
         }
 
         _isDrawingLoopRunning = false;
-    }
-
-    private void OnPaintTasksChanged()
-    {
-        var tasks = new HashSet<Paint>();
-
-        foreach (var item in _paintTasksSchedule)
-        {
-            item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
-            _ = tasks.Add(item.PaintTask);
-        }
-
-        CanvasCore.SetPaintTasks(tasks);
     }
 
     void IDisposable.Dispose() => _disposing = true;

@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -40,12 +41,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
     : BarSeries<TModel, TVisual, TLabel>
-        where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
+        where TErrorGeometry : CoreLineGeometry, new()
 {
-    private readonly bool _isRounded = false;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreRowSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
     /// </summary>
@@ -55,7 +54,6 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(1, 0);
-        _isRounded = typeof(IRoundedGeometry).IsAssignableFrom(typeof(TVisual));
     }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
@@ -176,11 +174,8 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     Height = uwi
                 };
 
-                if (_isRounded)
-                {
-                    var rounded = (IRoundedGeometry)r;
-                    rounded.BorderRadius = new LvcPoint(rx, ry);
-                }
+                if (r is CoreRoundedRectangleGeometry rg)
+                    rg.BorderRadius = new LvcPoint(rx, ry);
 
                 if (ErrorPaint is not null)
                 {
@@ -271,11 +266,9 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 e.XError.RemoveOnCompleted = false;
             }
 
-            if (_isRounded)
-            {
-                var rounded = (IRoundedGeometry)visual;
-                rounded.BorderRadius = new LvcPoint(rx, ry);
-            }
+            if (visual is CoreRoundedRectangleGeometry rrg)
+                rrg.BorderRadius = new LvcPoint(rx, ry);
+
             visual.RemoveOnCompleted = false;
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)

@@ -40,8 +40,8 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     : CartesianSeries<TModel, TVisual, TLabel>, IHeatSeries
-        where TVisual : class, ISizedGeometry, IColoredGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
+        where TVisual : CoreSizedGeometry, IColoredGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
 {
     private Paint? _paintTaks;
     private Bounds _weightBounds = new();
@@ -150,6 +150,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
+
+        var provider = LiveCharts.DefaultSettings.GetProvider();
 
         foreach (var point in Fetch(cartesianChart))
         {

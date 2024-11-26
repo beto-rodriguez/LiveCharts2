@@ -49,7 +49,7 @@ public class CartesianChartEngine(
         : Chart(canvas, defaultPlatformConfig, view, ChartKind.Cartesian)
 {
     private readonly ICartesianChartView _chartView = view;
-    private ISizedGeometry? _zoomingSection;
+    private CoreSizedGeometry? _zoomingSection;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;

@@ -23,24 +23,27 @@
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a line geometry in the user interface.
+/// Defines an arc geometry.
 /// </summary>
-/// <seealso cref="IGeometry" />
-public interface ILineGeometry : IGeometry
+public abstract class CoreArcGeometry : CoreSizedGeometry
 {
     /// <summary>
-    /// Gets or sets the x1.
+    /// Gets or sets the center in the x axis.
     /// </summary>
-    /// <value>
-    /// The x1.
-    /// </value>
-    float X1 { get; set; }
+    public float CenterX { get; set; }
 
     /// <summary>
-    /// Gets or sets the y1.
+    /// Gets or sets the center in the y axis.
     /// </summary>
-    /// <value>
-    /// The y1.
-    /// </value>
-    float Y1 { get; set; }
+    public float CenterY { get; set; }
+
+    /// <summary>
+    /// Gets or sets the start angle in degrees.
+    /// </summary>
+    public float StartAngle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the sweep angle in degrees.
+    /// </summary>
+    public float SweepAngle { get; set; }
 }

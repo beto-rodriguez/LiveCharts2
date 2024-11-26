@@ -156,7 +156,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// <summary>
     /// Sets the parent to all the geometries in the visual.
     /// </summary>
-    protected internal abstract void SetParent(IGeometry parent);
+    protected internal abstract void SetParent(CoreGeometry parent);
 
     /// <summary>
     /// Gets the acdtual coordinate of the visual.
@@ -218,7 +218,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// Gets the geometries to draw.
     /// </summary>
     /// <returns>The geometries.</returns>
-    protected internal abstract IAnimatable?[] GetDrawnGeometries();
+    protected internal abstract Animatable?[] GetDrawnGeometries();
 
     /// <summary>
     /// Applies the theme to the visual.

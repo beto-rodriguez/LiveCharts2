@@ -20,22 +20,135 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Painting;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a drawable object, an object that can be represented in the user interface.
 /// </summary>
-/// <seealso cref="IAnimatable" />
-public interface IDrawable : IAnimatable
+public interface IDrawable : ITimeLineElement
 {
+    /// <summary>
+    /// Gets or sets the x coordinate, if the parent is not null the x coordinate will be relative to the parent.
+    /// </summary>
+    float X { get; set; }
+
+    /// <summary>
+    /// Gets or sets the y coordinate, if the parent is not null the y coordinate will be relative to the parent.
+    /// </summary>
+    float Y { get; set; }
+
     /// <summary>
     /// Gets or sets the opacity.
     /// </summary>
     float Opacity { get; set; }
 
     /// <summary>
+    /// Gets or sets the transform origin.
+    /// </summary>
+    LvcPoint TransformOrigin { get; set; }
+
+    /// <summary>
+    /// Gets or sets the translate transform.
+    /// </summary>
+    LvcPoint TranslateTransform { get; set; }
+
+    /// <summary>
+    /// Gets or sets the rotation transform in degrees.
+    /// </summary>
+    float RotateTransform { get; set; }
+
+    /// <summary>
+    /// Gets or sets the scale transform.
+    /// </summary>
+    LvcPoint ScaleTransform { get; set; }
+
+    /// <summary>
+    /// Gets or sets the skew transform.
+    /// </summary>
+    LvcPoint SkewTransform { get; set; }
+
+    /// <summary>
+    /// Gets a value indicating whether the instance has transform.
+    /// </summary>
+    bool HasTransform { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the instance has translation.
+    /// </summary>
+    bool HasTranslate { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the instance has translation.
+    /// </summary>
+    bool HasScale { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the instance has skew.
+    /// </summary>
+    bool HasSkew { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the instance has rotation.
+    /// </summary>
+    bool HasRotation { get; }
+
+    /// <summary>
+    /// Gets or sets the fill paint.
+    /// </summary>
+    Paint? Fill { get; set; }
+
+    /// <summary>
+    /// Gets or sets the stroke paint.
+    /// </summary>
+    Paint? Stroke { get; set; }
+
+    /// <summary>
+    /// Measures the instance.
+    /// </summary>
+    /// <param name="paint">The paint.</param>
+    /// <returns>The size.</returns>
+    LvcSize OnMeasure(Paint paint);
+}
+
+/// <summary>
+/// Defines a drawable object, an object that can be represented in the user interface.
+/// </summary>
+/// <typeparam name="TDrawingContext"></typeparam>
+public interface IDrawable<TDrawingContext> : IDrawable
+    where TDrawingContext : DrawingContext
+{
+    /// <summary>
     /// Draws the instance in the user interface with for the specified context.
     /// </summary>
-    /// <param name="context">The context.</param>
-    void Draw(DrawingContext context);
+    /// <param name="context"></param>
+    void Draw(TDrawingContext context);
+}
+
+/// <summary>
+/// An object that can be animated in the user interface.
+/// </summary>
+public interface ITimeLineElement
+{
+    /// <summary>
+    /// Gets a value indicating whether the instance is valid.
+    /// </summary>
+    bool IsValid { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current time, this property is used to animate the instance.
+    /// </summary>
+    long CurrentTime { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance should be removed from the canvas when all the animations are completed.
+    /// </summary>
+    bool RemoveOnCompleted { get; set; }
+
+    /// <summary>
+    /// Completes the transition for the specified properties.
+    /// </summary>
+    /// <param name="propertyName">The properties, null to seledct all.</param>
+    void CompleteTransition(params string[]? propertyName);
 }

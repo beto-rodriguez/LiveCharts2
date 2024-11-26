@@ -20,43 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a financial geometry.
+/// Defines a needle geometry.
 /// </summary>
-/// <seealso cref="ISizedGeometry" />
-public interface IFinancialGeometry : IGeometry
+public abstract class CoreNeedleGeometry : CoreGeometry
 {
+    private readonly FloatMotionProperty _rProperty;
+    private readonly FloatMotionProperty _wProperty;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CoreNeedleGeometry"/> class.
+    /// </summary>
+    public CoreNeedleGeometry()
+    {
+        _rProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Radius), 0f));
+        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 20f));
+    }
+
+    /// <summary>
+    /// Gets or sets the radius.
+    /// </summary>
+    public float Radius
+    {
+        get => _rProperty.GetMovement(this);
+        set => _rProperty.SetMovement(value, this);
+    }
+
     /// <summary>
     /// Gets or sets the width.
     /// </summary>
-    /// <value>
-    /// The width.
-    /// </value>
-    float Width { get; set; }
+    public float Width
+    {
+        get => _wProperty.GetMovement(this);
+        set => _wProperty.SetMovement(value, this);
+    }
 
-    /// <summary>
-    /// Gets or sets the open.
-    /// </summary>
-    /// <value>
-    /// The open.
-    /// </value>
-    float Open { get; set; }
-
-    /// <summary>
-    /// Gets or sets the close.
-    /// </summary>
-    /// <value>
-    /// The close.
-    /// </value>
-    float Close { get; set; }
-
-    /// <summary>
-    /// Gets or sets the low.
-    /// </summary>
-    /// <value>
-    /// The low.
-    /// </value>
-    float Low { get; set; }
+    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)"/>
+    public override LvcSize OnMeasure(Paint paintTasks) =>
+        new(Width, Radius);
 }
+

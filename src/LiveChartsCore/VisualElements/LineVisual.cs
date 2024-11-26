@@ -33,12 +33,12 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 public class LineVisual<TGeometry> : BaseGeometryVisual
-    where TGeometry : ILineGeometry, new()
+    where TGeometry : CoreLineGeometry, new()
 {
     internal TGeometry? _geometry;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries() => [_geometry];
+    protected internal override Animatable?[] GetDrawnGeometries() => [_geometry];
 
     /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
@@ -81,8 +81,8 @@ public class LineVisual<TGeometry> : BaseGeometryVisual
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
-    protected internal override void SetParent(IGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
+    protected internal override void SetParent(CoreGeometry parent)
     {
         if (_geometry is null) return;
         _geometry.Parent = parent;

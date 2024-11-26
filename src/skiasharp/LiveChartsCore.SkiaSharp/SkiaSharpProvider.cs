@@ -26,7 +26,6 @@ using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -53,7 +52,7 @@ public class SkiaSharpProvider : ChartEngine
         => new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
 
     /// <inheritdoc cref="ChartEngine.InitializeZoommingSection(CoreMotionCanvas)"/>
-    public override ISizedGeometry InitializeZoommingSection(CoreMotionCanvas canvas)
+    public override CoreSizedGeometry InitializeZoommingSection(CoreMotionCanvas canvas)
     {
         var rectangle = new RectangleGeometry();
 

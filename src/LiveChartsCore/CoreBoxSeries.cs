@@ -43,9 +43,9 @@ namespace LiveChartsCore;
 /// <seealso cref="ICartesianSeries" />
 public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IBoxSeries
-        where TVisual : class, IBoxGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
-        where TMiniatureGeometry : ISizedGeometry, new()
+        where TVisual : CoreBoxGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
+        where TMiniatureGeometry : CoreSizedGeometry, new()
 {
     private double _pading = 5;
     private double _maxBarWidth = 25;

@@ -48,9 +48,9 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     bool isGauge = false,
     bool isGaugeFill = false)
         : ChartSeries<TModel, TVisual, TLabel>(GetProperties(isGauge, isGaugeFill), values), IPieSeries
-            where TVisual : class, IDoughnutGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
-            where TMiniatureGeometry : ISizedGeometry, new()
+            where TVisual : CoreDoughnutGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
+            where TMiniatureGeometry : CoreSizedGeometry, new()
 {
     private Paint? _stroke = null;
     private Paint? _fill = null;

@@ -32,8 +32,8 @@ namespace LiveChartsCore.Painting;
 /// </summary>
 public abstract class Paint : Animatable, IDisposable
 {
-    private readonly Dictionary<CoreMotionCanvas, HashSet<IDrawable>> _geometriesByCanvas = [];
-    private readonly Dictionary<CoreMotionCanvas, LvcRectangle> _clipRectangles = [];
+    private readonly Dictionary<object, HashSet<IDrawable>> _geometriesByCanvas = [];
+    private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
     private readonly FloatMotionProperty _strokeMiterTransition;
     private readonly FloatMotionProperty _strokeWidthTransition;
 
@@ -106,12 +106,6 @@ public abstract class Paint : Animatable, IDisposable
         get => _strokeMiterTransition.GetMovement(this);
         set => _strokeMiterTransition.SetMovement(value, this);
     }
-
-    /// <summary>
-    /// Initializes the task.
-    /// </summary>
-    /// <param name="drawingContext">The context.</param>
-    public abstract void InitializeTask(DrawingContext drawingContext);
 
     /// <summary>
     /// Gets the geometries.
@@ -203,12 +197,17 @@ public abstract class Paint : Animatable, IDisposable
         _clipRectangles[canvas] = value;
 
     /// <summary>
+    /// Initializes the task.
+    /// </summary>
+    /// <param name="drawingContext">The context.</param>
+    public abstract void InitializeTask(DrawingContext drawingContext);
+
+    /// <summary>
     /// Sets the opacity according to the given geometry.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="geometry">The geometry.</param>
     public abstract void ApplyOpacityMask(DrawingContext context, IDrawable geometry);
-
 
     /// <summary>
     /// Resets the opacity.
@@ -228,7 +227,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     public abstract void Dispose();
 
-    private HashSet<IDrawable>? GetGeometriesByCanvas(CoreMotionCanvas canvas)
+    private HashSet<IDrawable>? GetGeometriesByCanvas(object canvas)
     {
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
             ? geometries

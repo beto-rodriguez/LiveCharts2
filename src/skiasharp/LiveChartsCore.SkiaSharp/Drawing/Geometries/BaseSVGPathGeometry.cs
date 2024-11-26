@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <remarks>
 /// Initializes a new instance of the <see cref="BaseSVGPathGeometry"/> class.
 /// </remarks>
-public class BaseSVGPathGeometry : SizedGeometry
+public class BaseSVGPathGeometry : SizedGeometry, ISkiaGeometry
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseSVGPathGeometry"/> class.
@@ -58,11 +58,10 @@ public class BaseSVGPathGeometry : SizedGeometry
     /// </summary>
     public bool FitToSize { get; set; } = false;
 
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         if (Path is null) return;
-
         DrawPath(context, paint, Path);
     }
 

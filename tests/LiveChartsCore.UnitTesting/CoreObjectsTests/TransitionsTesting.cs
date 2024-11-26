@@ -12,7 +12,7 @@ public class TransitionsTesting
     public void InfiniteAnimation()
     {
         var r = new RectangleGeometry();
-        var a = (IAnimatable)r;
+        var a = (Animatable)r;
         var duration = TimeSpan.FromSeconds(1);
         var easing = EasingFunctions.Lineal;
 
@@ -80,7 +80,7 @@ public class TransitionsTesting
     public void AnimationComplete()
     {
         var r = new RectangleGeometry();
-        var a = (IAnimatable)r;
+        var a = (Animatable)r;
         var duration = TimeSpan.FromSeconds(1);
         var easing = EasingFunctions.Lineal;
 
@@ -169,7 +169,7 @@ public class TransitionsTesting
     public void NotFinishedAnimation()
     {
         var r = new RectangleGeometry();
-        var a = (IAnimatable)r;
+        var a = (Animatable)r;
         var duration = TimeSpan.FromMilliseconds(100);
         var easing = EasingFunctions.Lineal;
 

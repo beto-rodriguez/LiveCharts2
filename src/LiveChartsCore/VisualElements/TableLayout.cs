@@ -33,7 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
 public class TableLayout<TBackgroundGeometry> : CoreVisualElement
-    where TBackgroundGeometry : ISizedGeometry, new()
+    where TBackgroundGeometry : CoreSizedGeometry, new()
 {
     private Paint? _backgroundPaint;
     private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = [];
@@ -244,15 +244,15 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
-    protected internal override void SetParent(IGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
+    protected internal override void SetParent(CoreGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         BackgroundGeometry.Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries() =>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>

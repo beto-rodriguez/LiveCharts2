@@ -25,8 +25,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a colored geometry in the user interface, a geometry with a Color property.
 /// </summary>
-/// <seealso cref="IGeometry" />
-public interface IColoredGeometry : IGeometry
+public interface IColoredGeometry
 {
     /// <summary>
     /// Gets or sets the color.

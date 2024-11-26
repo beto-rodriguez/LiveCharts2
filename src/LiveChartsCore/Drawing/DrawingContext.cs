@@ -44,4 +44,10 @@ public abstract class DrawingContext
     /// </summary>
     public virtual void OnEndDraw()
     { }
+
+    /// <summary>
+    /// Draws the given element.
+    /// </summary>
+    /// <param name="drawable">The drawable element.</param>
+    public abstract void Draw(IDrawable drawable);
 }

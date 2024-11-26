@@ -42,9 +42,9 @@ namespace LiveChartsCore;
 /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometry>
     : ChartElement, IPolarAxis, IPlane, INotifyPropertyChanged
-        where TTextGeometry : ILabelGeometry, new()
-        where TLineGeometry : ILineGeometry, new()
-        where TCircleGeometry : ISizedGeometry, new()
+        where TTextGeometry : CoreLabelGeometry, new()
+        where TLineGeometry : CoreLineGeometry, new()
+        where TCircleGeometry : CoreSizedGeometry, new()
 {
     #region fields
 

@@ -45,8 +45,8 @@ public abstract class ChartSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
         : Series<TModel, TVisual, TLabel>(properties, values), IChartSeries
-            where TVisual : class, IGeometry, new()
-            where TLabel : class, ILabelGeometry, new()
+            where TVisual : CoreGeometry, new()
+            where TLabel : CoreLabelGeometry, new()
 {
     private Paint? _dataLabelsPaint;
     private double _dataLabelsSize = 16;

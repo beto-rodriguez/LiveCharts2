@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -33,11 +32,9 @@ using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ILabelGeometry" />
-public class LabelGeometry : Geometry, ILabelGeometry
+/// <inheritdoc cref="CoreLabelGeometry" />
+public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
 {
-    private readonly FloatMotionProperty _textSizeProperty;
-    private readonly ColorMotionProperty _backgroundProperty;
     internal float _maxTextHeight = 0f;
     internal int _lines;
 
@@ -45,56 +42,16 @@ public class LabelGeometry : Geometry, ILabelGeometry
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
     /// </summary>
     public LabelGeometry()
-        : base(true)
     {
-        _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
-        _backgroundProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Background), LvcColor.Empty));
         TransformOrigin = new LvcPoint(0f, 0f);
     }
 
-    /// <summary>
-    /// Gets or sets the vertical align.
-    /// </summary>
-    /// <value>
-    /// The vertical align.
-    /// </value>
-    public Align VerticalAlign { get; set; } = Align.Middle;
+    /// <inheritdoc cref="CoreGeometry.OnDraw(DrawingContext)" />
+    public void Draw(SkiaSharpDrawingContext ctx) =>
+        OnDraw(ctx, ctx.Paint);
 
-    /// <summary>
-    /// Gets or sets the horizontal align.
-    /// </summary>
-    /// <value>
-    /// The horizontal align.
-    /// </value>
-    public Align HorizontalAlign { get; set; } = Align.Middle;
-
-    /// <inheritdoc cref="ILabelGeometry.Text" />
-    public string Text { get; set; } = string.Empty;
-
-    /// <inheritdoc cref="ILabelGeometry.TextSize" />
-    public float TextSize { get => _textSizeProperty.GetMovement(this); set => _textSizeProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ILabelGeometry.Background" />
-    public LvcColor Background { get => _backgroundProperty.GetMovement(this); set => _backgroundProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ILabelGeometry.Padding" />
-    public Padding Padding { get; set; } = new();
-
-    /// <inheritdoc cref="ILabelGeometry.LineHeight" />
-    public float LineHeight { get; set; } = 1.45f;
-
-    /// <inheritdoc cref="ILabelGeometry.MaxWidth" />
-    public float MaxWidth { get; set; } = float.MaxValue;
-
-#if DEBUG
-    /// <summary>
-    /// This property is only available on debug mode, it indicates if the debug lines should be shown.
-    /// </summary>
-    public static bool ShowDebugLines { get; set; }
-#endif
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         context.Paint.TextSize = TextSize;
 
@@ -175,8 +132,8 @@ public class LabelGeometry : Geometry, ILabelGeometry
         shaper?.Dispose();
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-    protected override LvcSize OnMeasure(Paint paint)
+    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
+    public override LvcSize OnMeasure(Paint paint)
     {
         var skiaPaint = (SkiaPaint)paint;
         var typeface = skiaPaint.GetSKTypeface();

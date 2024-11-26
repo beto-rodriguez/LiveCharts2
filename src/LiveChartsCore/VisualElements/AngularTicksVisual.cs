@@ -37,9 +37,9 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : CoreVisualElement
-    where TArcGeometry : IArcGeometry, new()
-    where TLineGeometry : ILineGeometry, new()
-    where TLabelGeometry : ILabelGeometry, new()
+    where TArcGeometry : CoreArcGeometry, new()
+    where TLineGeometry : CoreLineGeometry, new()
+    where TLabelGeometry : CoreLabelGeometry, new()
 {
     private Paint? _stroke;
     private Paint? _labelsPaint;
@@ -253,12 +253,12 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : C
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart) => new();
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(IGeometry)"/>
-    protected internal override void SetParent(IGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
+    protected internal override void SetParent(CoreGeometry parent)
     { }
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
+    protected internal override Animatable?[] GetDrawnGeometries()
     {
         var count =
             _visuals.Count +                    // the ticks
@@ -266,7 +266,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : C
             _subSections * _visuals.Count +     // the subticks
             1;                                  // the arc
 
-        var l = new IAnimatable?[count];
+        var l = new Animatable?[count];
 
         var i = 0;
         foreach (var visual in _visuals.Values)

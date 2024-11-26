@@ -20,49 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using System;
 using LiveChartsCore.Painting;
 
-namespace LiveChartsCore.Motion;
+namespace LiveChartsCore.Drawing;
 
+/// <inheritdoc cref="CoreGeometry" />
 /// <summary>
-/// Defines the animatable container class.
+/// Initializes a new instance of the <see cref="CoreGeometry"/> class.
 /// </summary>
-public class AnimatableContainer : Animatable
+public abstract class CoreGeometry(bool hasGeometryTransform = false)
+    : Animatable(hasGeometryTransform), IDrawable
 {
-    private readonly PointMotionProperty _locationProperty;
-    private readonly SizeMotionProperty _sizeMotionProperty;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="AnimatableContainer"/> class.
+    /// Measures the geometry.
     /// </summary>
-    public AnimatableContainer()
+    /// <param name="drawableTask">The drawable task.</param>
+    /// <returns>the size of the geometry.</returns>
+    public LvcSize Measure(Paint drawableTask)
     {
-        _locationProperty = RegisterMotionProperty(new PointMotionProperty(nameof(Location), new LvcPoint()));
-        _sizeMotionProperty = RegisterMotionProperty(new SizeMotionProperty(nameof(Size), new LvcSize()));
+        var measure = OnMeasure(drawableTask);
+
+        var r = RotateTransform;
+        if (Math.Abs(r) > 0)
+        {
+            const double toRadians = Math.PI / 180;
+
+            r %= 360;
+            if (r < 0) r += 360;
+
+            if (r > 180) r = 360 - r;
+            if (r is > 90 and <= 180) r = 180 - r;
+
+            var rRadians = r * toRadians;
+
+            var w = (float)(Math.Cos(rRadians) * measure.Width + Math.Sin(rRadians) * measure.Height);
+            var h = (float)(Math.Sin(rRadians) * measure.Width + Math.Cos(rRadians) * measure.Height);
+
+            measure = new LvcSize(w, h);
+        }
+
+        return measure;
     }
 
     /// <summary>
-    /// Gets or sets the location.
+    /// Called when the geometry is measured.
     /// </summary>
-    public LvcPoint Location
-    {
-        get => _locationProperty.GetMovement(this);
-        set => _locationProperty.SetMovement(value, this);
-    }
-
-
-    /// <summary>
-    /// Gets or sets the size.
-    /// </summary>
-    public LvcSize Size
-    {
-        get => _sizeMotionProperty.GetMovement(this);
-        set => _sizeMotionProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets a valuea indicating whewhter the container have a previous state.
-    /// </summary>
-    public bool HasPreviousState { get; internal set; }
+    /// <param name="paintTasks">The paint task.</param>
+    /// <returns>the size of the geometry</returns>
+    public abstract LvcSize OnMeasure(Paint paintTasks);
 }

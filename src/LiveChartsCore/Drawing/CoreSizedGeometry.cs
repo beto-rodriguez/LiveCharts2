@@ -20,41 +20,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using LiveChartsCore.Drawing.Segments;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines an area geometry.
+/// Defines a geometry with width and height dimensions.
 /// </summary>
-/// <typeparam name="TSegment"></typeparam>
-public interface IVectorGeometry<TSegment> : IDrawable
-    where TSegment : IConsecutivePathSegment
+public abstract class CoreSizedGeometry : CoreGeometry
 {
-    /// <summary>
-    /// Gets or sets the commands.
-    /// </summary>
-    LinkedList<TSegment> Commands { get; }
+    private readonly FloatMotionProperty _widthProperty;
+    private readonly FloatMotionProperty _heightProperty;
 
     /// <summary>
-    /// Defines the closing method.
+    /// Initializes a new instance of the <see cref="CoreSizedGeometry"/> class.
     /// </summary>
-    VectorClosingMethod ClosingMethod { get; set; }
+    protected CoreSizedGeometry()
+    {
+        _widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
+        _heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
+    }
 
     /// <summary>
-    /// Gets or sets the stroke paint.
+    /// Gets or sets the width.
     /// </summary>
-    Paint? Stroke { get; set; }
+    public float Width
+    {
+        get => _widthProperty.GetMovement(this);
+        set => _widthProperty.SetMovement(value, this);
+    }
 
     /// <summary>
-    /// Gets or sets the fill paint.
+    /// Gets or sets the height.
     /// </summary>
-    Paint? Fill { get; set; }
+    public float Height
+    {
+        get => _heightProperty.GetMovement(this);
+        set => _heightProperty.SetMovement(value, this);
+    }
 
-    /// <summary>
-    /// Gets or sets the pivot.
-    /// </summary>
-    float Pivot { get; set; }
+    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
+    public override LvcSize OnMeasure(Paint paint) =>
+        new(Width, Height);
 }

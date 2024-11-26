@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Segments;
-
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
-/// Defines a line bezier visual point.
+/// Defines a stepline visual point.
 /// </summary>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class BezierVisualPoint<TVisual>
-    where TVisual : ISizedGeometry, new()
+/// <typeparam name="TSegment">The type of the segment.</typeparam>
+public class SegmentVisualPoint<TVisual, TSegment>
+    where TVisual : CoreSizedGeometry, new()
+    where TSegment : Segment, new()
 {
     /// <summary>
     /// Gets the geometry.
@@ -40,12 +40,12 @@ public class BezierVisualPoint<TVisual>
     public TVisual Geometry { get; set; } = new();
 
     /// <summary>
-    /// Gets the bezier.
+    /// Gets the stepline.
     /// </summary>
     /// <value>
-    /// The bezier.
+    /// The stepline.
     /// </value>
-    public CubicBezierSegment Bezier { get; set; } = new();
+    public TSegment Segment { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the path.
@@ -53,7 +53,7 @@ public class BezierVisualPoint<TVisual>
     /// <value>
     /// The path.
     /// </value>
-    public IVectorGeometry<CubicBezierSegment>? FillPath { get; set; }
+    public CoreVectorGeometry<TSegment>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -61,5 +61,28 @@ public class BezierVisualPoint<TVisual>
     /// <value>
     /// The stroke path.
     /// </value>
-    public IVectorGeometry<CubicBezierSegment>? StrokePath { get; set; }
+    public CoreVectorGeometry<TSegment>? StrokePath { get; set; }
+}
+
+/// <summary>
+/// Defines a stepline visual point.
+/// </summary>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TSegment">The type of the segment.</typeparam>
+/// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
+public class SegmentVisualPoint<TVisual, TSegment, TErrorGeometry>
+    : SegmentVisualPoint<TVisual, TSegment>
+        where TVisual : CoreSizedGeometry, new()
+        where TSegment : Segment, new()
+        where TErrorGeometry : CoreGeometry
+{
+    /// <summary>
+    /// Gets or sets the y error geometry.
+    /// </summary>
+    public TErrorGeometry? YError { get; set; }
+
+    /// <summary>
+    /// Gets or sets the x error geometry.
+    /// </summary>
+    public TErrorGeometry? XError { get; set; }
 }

@@ -43,7 +43,7 @@ public class AxisVisualSeprator : IVisualSeparator
     /// <value>
     /// The text.
     /// </value>
-    public ILabelGeometry? Label { get; set; }
+    public CoreLabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets or sets the line.
@@ -51,7 +51,7 @@ public class AxisVisualSeprator : IVisualSeparator
     /// <value>
     /// The line.
     /// </value>
-    public ILineGeometry? Separator { get; set; }
+    public CoreLineGeometry? Separator { get; set; }
 
     /// <summary>
     /// Gets or sets the line.
@@ -59,20 +59,20 @@ public class AxisVisualSeprator : IVisualSeparator
     /// <value>
     /// The line.
     /// </value>
-    public ILineGeometry? Tick { get; set; }
+    public CoreLineGeometry? Tick { get; set; }
 
     /// <summary>
     /// Gets or sets the sub separators.
     /// </summary>
-    public ILineGeometry[]? Subseparators { get; set; }
+    public CoreLineGeometry[]? Subseparators { get; set; }
 
     /// <summary>
     /// Gets or sets the sub ticks.
     /// </summary>
-    public ILineGeometry[]? Subticks { get; set; }
+    public CoreLineGeometry[]? Subticks { get; set; }
 
     /// <summary>
     /// Gets the geometry.
     /// </summary>
-    public IGeometry? Geometry => Separator;
+    public CoreGeometry? Geometry => Separator;
 }

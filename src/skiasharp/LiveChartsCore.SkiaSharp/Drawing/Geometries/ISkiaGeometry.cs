@@ -20,28 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing;
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
-/// Defines a line path segment.
+/// Defines a skia sharp geometry.
 /// </summary>
-/// <typeparam name="TPath">The type of the path.</typeparam>
-/// <seealso cref="IPathCommand{TPath}" />
-public interface ILinePathSegment<TPath> : IPathCommand<TPath>
+public interface ISkiaGeometry : IDrawable<SkiaSharpDrawingContext>
 {
     /// <summary>
-    /// Gets or sets the x.
+    /// Draws the geometry.
     /// </summary>
-    /// <value>
-    /// The x.
-    /// </value>
-    float X { get; set; }
-
-    /// <summary>
-    /// Gets or sets the y.
-    /// </summary>
-    /// <value>
-    /// The y.
-    /// </value>
-    float Y { get; set; }
+    /// <param name="context">The context.</param>
+    /// <param name="paint">The paint.</param>
+    abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 }

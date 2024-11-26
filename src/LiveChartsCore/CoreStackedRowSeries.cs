@@ -39,9 +39,9 @@ namespace LiveChartsCore;
 /// <param name="values">The values.</param>
 public class CoreStackedRowSeries<TModel, TVisual, TLabel, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
     : CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>(values, true), IStackedBarSeries
-        where TVisual : class, ISizedGeometry, new()
-        where TLabel : class, ILabelGeometry, new()
-        where TErrorGeometry : class, ILineGeometry, new()
+        where TVisual : CoreSizedGeometry, new()
+        where TLabel : CoreLabelGeometry, new()
+        where TErrorGeometry : CoreLineGeometry, new()
 {
     private int _stackGroup = 0;
 

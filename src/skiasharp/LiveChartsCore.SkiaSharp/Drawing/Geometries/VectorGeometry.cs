@@ -20,11 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
-using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -33,50 +32,39 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegment>
-    where TSegment : class, IAnimatable, IConsecutivePathSegment
+public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, ISkiaGeometry
+    where TSegment : Segment
 {
-    private readonly FloatMotionProperty _pivotProperty;
+    /// <summary>
+    /// Called when the area begins the draw.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="segment">The segment.</param>
+    protected virtual void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VectorGeometry{TSegment}"/> class.
+    /// Called to close the area.
     /// </summary>
-    public VectorGeometry()
-        : base()
-    {
-        _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
-    }
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="segment">The segment.</param>
+    protected virtual void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
 
     /// <summary>
-    /// Gets the commands in the vector.
+    /// Called to draw the segment.
     /// </summary>
-    public LinkedList<TSegment> Commands { get; } = new();
+    /// <param name="context">The context.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="segment">The segment.</param>
+    protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
+    { }
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.ClosingMethod" />
-    public VectorClosingMethod ClosingMethod { get; set; }
+    public void Draw(SkiaSharpDrawingContext context) => OnDraw(context, context.Paint);
 
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Pivot" />
-    public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Stroke"/>
-    public Paint? Stroke { get; set; }
-
-    /// <inheritdoc cref="IVectorGeometry{TSegment}.Fill"/>
-    public Paint? Fill { get; set; }
-
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
-    public override void CompleteTransition(params string[]? propertyName)
-    {
-        foreach (var segment in Commands)
-        {
-            segment.CompleteTransition(propertyName);
-        }
-
-        base.CompleteTransition(propertyName);
-    }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void Draw(SkiaSharpDrawingContext context)
+    public void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         if (Commands.Count == 0) return;
 
@@ -123,38 +111,28 @@ public abstract class VectorGeometry<TSegment> : Drawable, IVectorGeometry<TSegm
             context.Canvas.DrawPath(path, context.Paint);
             if (hasGeometryOpacity) context.PaintTask.RestoreOpacityMask(context, this);
         }
+        else if (Fill is not null)
+        {
+            var originalPaint = context.Paint;
+            var originalTask = context.PaintTask;
+
+            Fill.IsStroke = false;
+            Fill.InitializeTask(context);
+
+            if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, this);
+            context.Canvas.DrawPath(path, context.Paint);
+            if (hasGeometryOpacity) Fill.RestoreOpacityMask(context, this);
+
+            Fill.Dispose();
+
+            context.Paint = originalPaint;
+            context.PaintTask = originalTask;
+        }
         else
         {
-            throw new System.NotImplementedException($"Fill and strokes per vector is not implemented.");
+            throw new NotImplementedException("Fill and Stroke per vector is experiental.");
         }
 
         if (!isValid) IsValid = false;
     }
-
-    /// <summary>
-    /// Called when the area begins the draw.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="path">The path.</param>
-    /// <param name="segment">The segment.</param>
-    protected virtual void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
-
-    /// <summary>
-    /// Called to close the area.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="path">The path.</param>
-    /// <param name="segment">The segment.</param>
-    protected virtual void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
-
-    /// <summary>
-    /// Called to draw the segment.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="path">The path.</param>
-    /// <param name="segment">The segment.</param>
-    protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
 }

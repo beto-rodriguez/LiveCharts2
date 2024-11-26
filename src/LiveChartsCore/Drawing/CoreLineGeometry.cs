@@ -20,46 +20,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Segments;
+using System;
+using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a stepline visual point.
+/// Defines a line geometry.
 /// </summary>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
-public class StepLineVisualPoint<TVisual>
-    where TVisual : ISizedGeometry, new()
+public abstract class CoreLineGeometry : CoreGeometry
 {
-    /// <summary>
-    /// Gets the geometry.
-    /// </summary>
-    /// <value>
-    /// The geometry.
-    /// </value>
-    public TVisual Geometry { get; set; } = new();
+    private readonly FloatMotionProperty _x1;
+    private readonly FloatMotionProperty _y1;
 
     /// <summary>
-    /// Gets the stepline.
+    /// Initializes a new instance of the <see cref="CoreLineGeometry"/> class.
     /// </summary>
-    /// <value>
-    /// The stepline.
-    /// </value>
-    public StepLineSegment StepSegment { get; set; } = new();
+    public CoreLineGeometry()
+    {
+        _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
+        _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
+    }
 
     /// <summary>
-    /// Gets or sets the path.
+    /// Gets or sets the x1.
     /// </summary>
-    /// <value>
-    /// The path.
-    /// </value>
-    public IVectorGeometry<StepLineSegment>? FillPath { get; set; }
+    public float X1
+    {
+        get => Parent is null
+            ? _x1.GetMovement(this)
+            : _x1.GetMovement(this) + Parent.X;
+        set => _x1.SetMovement(value, this);
+    }
 
     /// <summary>
-    /// Gets or sets the stroke path.
+    /// Gets or sets the y1.
     /// </summary>
-    /// <value>
-    /// The stroke path.
-    /// </value>
-    public IVectorGeometry<StepLineSegment>? StrokePath { get; set; }
+    public float Y1
+    {
+        get => Parent is null
+            ? _y1.GetMovement(this)
+            : _y1.GetMovement(this) + Parent.Y;
+        set => _y1.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
+    public override LvcSize OnMeasure(Paint drawable) =>
+        new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
 }

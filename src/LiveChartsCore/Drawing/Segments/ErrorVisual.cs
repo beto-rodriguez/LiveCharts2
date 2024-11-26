@@ -20,24 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
-/// Defines a line bezier visual point.
+/// Defines an error visual.
 /// </summary>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class BezierErrorVisualPoint<TVisual, TErrorGeometry>
-    : BezierVisualPoint<TVisual>
-        where TVisual : ISizedGeometry, new()
+public class ErrorVisual<TErrorGeometry>
+    where TErrorGeometry : class, new()
 {
     /// <summary>
     /// Gets or sets the y error geometry.
     /// </summary>
-    public TErrorGeometry? YError { get; set; }
+    public TErrorGeometry YError { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the x error geometry.
     /// </summary>
-    public TErrorGeometry? XError { get; set; }
+    public TErrorGeometry XError { get; set; } = new();
 }

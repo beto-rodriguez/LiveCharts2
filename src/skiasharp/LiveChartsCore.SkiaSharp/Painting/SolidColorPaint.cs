@@ -97,6 +97,7 @@ public class SolidColorPaint : SkiaPaint
     }
 
     /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
+
     public override void InitializeTask(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
