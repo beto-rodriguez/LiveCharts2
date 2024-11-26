@@ -75,7 +75,7 @@ public class BoxGeometry : CoreBoxGeometry, ISkiaGeometry
         context.Canvas.DrawRect(x, yi, w, Math.Abs(o - c), paint);
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
     public override LvcSize OnMeasure(Paint paintTasks) =>
         new(Width, Math.Abs(Min - Y));
 }

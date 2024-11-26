@@ -42,14 +42,14 @@ public class ColoredRectangleGeometry : SizedGeometry, IColoredGeometry
         _colorProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Color)));
     }
 
-    /// <inheritdoc cref="ISolidColorGeometry.Color" />
+    /// <inheritdoc cref="IColoredGeometry.Color" />
     public LvcColor Color
     {
         get => _colorProperty.GetMovement(this);
         set => _colorProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         var c = Color;
