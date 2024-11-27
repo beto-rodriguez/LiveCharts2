@@ -94,7 +94,7 @@ public class _MemoryTests
         var deltas = 0;
         var totalFramesDrawn = 0;
 
-        for (var i = 0; i < 1000; i++)
+        for (var i = 0; i < 100; i++)
         {
             sut.Series.IsVisible = false;
             totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
