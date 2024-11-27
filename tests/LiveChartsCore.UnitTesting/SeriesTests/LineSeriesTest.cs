@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -56,8 +57,8 @@ public class LineSeriesTest
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
 
-            var previousBezier = ((BezierVisualPoint<CircleGeometry>)previous.Context.AdditionalVisuals)?.Bezier;
-            var sutBezier = ((BezierVisualPoint<CircleGeometry>)sutPoint.Context.AdditionalVisuals).Bezier;
+            var previousBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)previous.Context.AdditionalVisuals)?.Segment;
+            var sutBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             var currentDeltaAreaX = previousBezier.Xj - sutBezier.Xj;
 

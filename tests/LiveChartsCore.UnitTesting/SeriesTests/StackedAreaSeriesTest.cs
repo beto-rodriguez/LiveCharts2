@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -65,8 +66,8 @@ public class StackedAreaSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var previousBezier = ((BezierVisualPoint<CircleGeometry>)previous.Context.AdditionalVisuals)?.Bezier;
-            var sutBezier = ((BezierVisualPoint<CircleGeometry>)sutPoint.Context.AdditionalVisuals).Bezier;
+            var previousBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)previous.Context.AdditionalVisuals)?.Segment;
+            var sutBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
@@ -97,8 +98,8 @@ public class StackedAreaSeriesTest
         previousXArea = null;
         foreach (var sutPoint in toCompareGuys2)
         {
-            var previousBezier = ((BezierVisualPoint<CircleGeometry>)previous.Context.AdditionalVisuals).Bezier;
-            var sutBezier = ((BezierVisualPoint<CircleGeometry>)sutPoint.Context.AdditionalVisuals).Bezier;
+            var previousBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)previous.Context.AdditionalVisuals).Segment;
+            var sutBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;

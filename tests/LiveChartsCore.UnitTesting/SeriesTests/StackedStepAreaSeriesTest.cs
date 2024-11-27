@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -65,8 +66,8 @@ public class StackedStepAreaSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var previousSegment = ((StepLineVisualPoint<CircleGeometry>)previous.Context.AdditionalVisuals)?.StepSegment;
-            var sutSegment = ((StepLineVisualPoint<CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
+            var previousSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)previous.Context.AdditionalVisuals)?.Segment;
+            var sutSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previousSegment.Xj - sutSegment.Xj;
@@ -96,8 +97,8 @@ public class StackedStepAreaSeriesTest
         previousXArea = null;
         foreach (var sutPoint in toCompareGuys2)
         {
-            var previousSegment = ((StepLineVisualPoint<CircleGeometry>)previous.Context.AdditionalVisuals).StepSegment;
-            var sutSegment = ((StepLineVisualPoint<CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
+            var previousSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)previous.Context.AdditionalVisuals).Segment;
+            var sutSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
