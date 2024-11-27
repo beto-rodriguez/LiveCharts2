@@ -214,7 +214,6 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
 
         var dls = unchecked((float)DataLabelsSize);
 
-        var segmentI = 0;
         var pointsCleanup = ChartPointCleanupContext.For(everFetched);
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
@@ -228,9 +227,6 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
             fillPathHelperContainer = [];
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
-
-        foreach (var item in strokePathHelperContainer) item.Commands.Clear();
-        foreach (var item in fillPathHelperContainer) item.Commands.Clear();
 
         var r = (float)DataLabelsRotation;
         var isTangent = false;
@@ -248,47 +244,79 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
             isCotangent = true;
         }
 
+        var segmentI = 0;
         var hasSvg = this.HasVariableSvgGeometry();
 
         var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
 
         foreach (var segment in segments)
         {
-            TPathGeometry fillPath;
-            TPathGeometry strokePath;
-
-            if (segmentI >= fillPathHelperContainer.Count)
-            {
-                fillPath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
-                strokePath = new TPathGeometry { ClosingMethod = VectorClosingMethod.NotClosed };
-                fillPathHelperContainer.Add(fillPath);
-                strokePathHelperContainer.Add(strokePath);
-            }
-            else
-            {
-                fillPath = fillPathHelperContainer[segmentI];
-                strokePath = strokePathHelperContainer[segmentI];
-            }
-
-            if (Fill is not null)
-            {
-                Fill.AddGeometryToPaintTask(polarChart.Canvas, fillPath);
-                polarChart.Canvas.AddDrawableTask(Fill);
-                Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            }
-            if (Stroke is not null)
-            {
-                Stroke.AddGeometryToPaintTask(polarChart.Canvas, strokePath);
-                polarChart.Canvas.AddDrawableTask(Stroke);
-                Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            }
+            var hasPaths = false;
+            var isSegmentEmpty = true;
+            VectorManager<CubicBezierSegment>? strokeVector = null, fillVector = null;
 
             foreach (var data in GetSpline(segment, scaler, stacker))
             {
+                if (!hasPaths)
+                {
+                    hasPaths = true;
+
+                    var fillLookup = GetSegmentVisual(segmentI, fillPathHelperContainer, VectorClosingMethod.NotClosed);
+                    var strokeLookup = GetSegmentVisual(segmentI, strokePathHelperContainer, VectorClosingMethod.NotClosed);
+
+                    if (fillLookup.Path.Commands.Count == 1 && !data.IsNextEmpty)
+                    {
+                        Fill?.RemoveGeometryFromPainTask(polarChart.Canvas, fillLookup.Path);
+                        fillLookup.Path.Commands.Clear();
+                        fillPathHelperContainer.RemoveAt(segmentI);
+
+                        fillLookup = GetSegmentVisual(segmentI, fillPathHelperContainer, VectorClosingMethod.NotClosed);
+                    }
+
+                    if (strokeLookup.Path.Commands.Count == 1 && !data.IsNextEmpty)
+                    {
+                        Stroke?.RemoveGeometryFromPainTask(polarChart.Canvas, strokeLookup.Path);
+                        strokeLookup.Path.Commands.Clear();
+                        strokePathHelperContainer.RemoveAt(segmentI);
+
+                        strokeLookup = GetSegmentVisual(segmentI, strokePathHelperContainer, VectorClosingMethod.NotClosed);
+                    }
+
+                    var isNew = fillLookup.IsNew || strokeLookup.IsNew;
+                    var fillPath = fillLookup.Path;
+                    var strokePath = strokeLookup.Path;
+
+                    strokeVector = new VectorManager<CubicBezierSegment>(strokePath);
+                    fillVector = new VectorManager<CubicBezierSegment>(fillPath);
+
+                    if (Fill is not null)
+                    {
+                        Fill.AddGeometryToPaintTask(polarChart.Canvas, fillPath);
+                        polarChart.Canvas.AddDrawableTask(Fill);
+                        Fill.ZIndex = actualZIndex + 0.1;
+                        if (isNew)
+                        {
+                            fillPath.Animate(EasingFunction ?? polarChart.EasingFunction, AnimationsSpeed ?? polarChart.AnimationsSpeed);
+                        }
+                    }
+                    if (Stroke is not null)
+                    {
+                        Stroke.AddGeometryToPaintTask(polarChart.Canvas, strokePath);
+                        polarChart.Canvas.AddDrawableTask(Stroke);
+                        Stroke.ZIndex = actualZIndex + 0.2;
+                        if (isNew)
+                        {
+                            strokePath.Animate(EasingFunction ?? polarChart.EasingFunction, AnimationsSpeed ?? polarChart.AnimationsSpeed);
+                        }
+                    }
+
+                    strokePath.Opacity = IsVisible ? 1 : 0;
+                    fillPath.Opacity = IsVisible ? 1 : 0;
+                }
+
                 var coordinate = data.TargetPoint.Coordinate;
 
+                isSegmentEmpty = false;
                 var s = 0d;
                 if (stacker is not null)
                 {
@@ -296,9 +324,6 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 }
 
                 var cp = scaler.ToPixels(coordinate.SecondaryValue, coordinate.PrimaryValue + s);
-
-                var x = cp.X;
-                var y = cp.Y;
 
                 var visual =
                     (SegmentVisualPoint<TVisual, CubicBezierSegment>?)
@@ -346,6 +371,11 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 GeometryFill?.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
                 GeometryStroke?.AddGeometryToPaintTask(polarChart.Canvas, visual.Geometry);
 
+                visual.Segment.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
+
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
+
                 visual.Segment.Xi = (float)data.X0;
                 visual.Segment.Yi = (float)data.Y0;
                 visual.Segment.Xm = (float)data.X1;
@@ -353,8 +383,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 visual.Segment.Xj = (float)data.X2;
                 visual.Segment.Yj = (float)data.Y2;
 
-                if (Fill is not null) _ = fillPath.Commands.AddLast(visual.Segment);
-                if (Stroke is not null) _ = strokePath.Commands.AddLast(visual.Segment);
+                var x = cp.X;
+                var y = cp.Y;
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;
@@ -362,8 +392,8 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                visual.FillPath = fillPath;
-                visual.StrokePath = strokePath;
+                visual.FillPath = fillVector!.AreaGeometry;
+                visual.StrokePath = strokeVector!.AreaGeometry;
 
                 var hags = gs < 16 ? 16 : gs;
                 if (data.TargetPoint.Context.HoverArea is not RectangleHoverArea ha)
@@ -414,6 +444,9 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 OnPointMeasured(data.TargetPoint);
             }
 
+            strokeVector?.End();
+            fillVector?.End();
+
             if (GeometryFill is not null)
             {
                 polarChart.Canvas.AddDrawableTask(GeometryFill);
@@ -426,20 +459,31 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                 GeometryStroke.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 GeometryStroke.ZIndex = actualZIndex + 0.4;
             }
-            segmentI++;
+
+            if (!isSegmentEmpty) segmentI++;
         }
 
-        while (segmentI > fillPathHelperContainer.Count)
-        {
-            var iFill = fillPathHelperContainer.Count - 1;
-            var fillHelper = fillPathHelperContainer[iFill];
-            Fill?.RemoveGeometryFromPainTask(polarChart.Canvas, fillHelper);
-            fillPathHelperContainer.RemoveAt(iFill);
+        var maxSegment = fillPathHelperContainer.Count > strokePathHelperContainer.Count
+            ? fillPathHelperContainer.Count
+            : strokePathHelperContainer.Count;
 
-            var iStroke = strokePathHelperContainer.Count - 1;
-            var strokeHelper = strokePathHelperContainer[iStroke];
-            Stroke?.RemoveGeometryFromPainTask(polarChart.Canvas, strokeHelper);
-            strokePathHelperContainer.RemoveAt(iStroke);
+        for (var i = maxSegment - 1; i >= segmentI; i--)
+        {
+            if (i < fillPathHelperContainer.Count)
+            {
+                var segmentFill = fillPathHelperContainer[i];
+                Fill?.RemoveGeometryFromPainTask(polarChart.Canvas, segmentFill);
+                segmentFill.Commands.Clear();
+                fillPathHelperContainer.RemoveAt(i);
+            }
+
+            if (i < strokePathHelperContainer.Count)
+            {
+                var segmentStroke = strokePathHelperContainer[i];
+                Stroke?.RemoveGeometryFromPainTask(polarChart.Canvas, segmentStroke);
+                segmentStroke.Commands.Clear();
+                strokePathHelperContainer.RemoveAt(i);
+            }
         }
 
         if (DataLabelsPaint is not null)
@@ -449,7 +493,9 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 
-        pointsCleanup.CollectPoints(everFetched, polarChart.View, scaler, SoftDeleteOrDisposePoint);
+        pointsCleanup.CollectPoints(
+            everFetched, polarChart.View, scaler, SoftDeleteOrDisposePoint);
+
         _geometrySvgChanged = false;
     }
 
@@ -950,6 +996,32 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
         }
 
         if (l.Count > 0) yield return l.ToArray();
+    }
+
+    private SegmentVisual GetSegmentVisual(int index, List<TPathGeometry> container, VectorClosingMethod method)
+    {
+        var isNew = false;
+        TPathGeometry? path;
+
+        if (index >= container.Count)
+        {
+            isNew = true;
+            path = new TPathGeometry { ClosingMethod = method };
+            container.Add(path);
+        }
+        else
+        {
+            path = container[index];
+        }
+
+        return new SegmentVisual(isNew, path);
+    }
+
+    private class SegmentVisual(bool isNew, TPathGeometry path)
+    {
+        public bool IsNew { get; set; } = isNew;
+
+        public TPathGeometry Path { get; set; } = path;
     }
 
     private static SeriesProperties GetProperties(bool isStacked = false)
