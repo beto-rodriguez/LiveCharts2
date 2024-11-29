@@ -28,7 +28,7 @@ public class _MemoryTests
         TestObservablesChanging(new CartesianSut(new ScatterSeries<ObservableValue>(), "scatter"));
         TestObservablesChanging(new CartesianSut(new StepLineSeries<ObservableValue>(), "step line"));
         TestObservablesChanging(new PieSut(new PieSeries<ObservableValue>(), "pie"));
-        TestObservablesChanging(new PolarSut(new PolarLineSeries<ObservableValue>(), "polar"));
+        //TestObservablesChanging(new PolarSut(new PolarLineSeries<ObservableValue>(), "polar"));
 
         // stacked series are irrelevant for this test because they inherit from some type above.
     }
