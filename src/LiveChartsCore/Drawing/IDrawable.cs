@@ -95,14 +95,14 @@ public interface IDrawable : ITimeLineElement
     bool HasRotation { get; }
 
     /// <summary>
-    /// Gets or sets the fill paint.
-    /// </summary>
-    Paint? Fill { get; set; }
-
-    /// <summary>
-    /// Gets or sets the stroke paint.
+    /// Gets or sets the stroke.
     /// </summary>
     Paint? Stroke { get; set; }
+
+    /// <summary>
+    /// Gets or sets the fill.
+    /// </summary>
+    Paint? Fill { get; set; }
 
     /// <summary>
     /// Measures the instance.

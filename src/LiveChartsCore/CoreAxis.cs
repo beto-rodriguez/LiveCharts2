@@ -1407,7 +1407,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         SetUpdateMode(label, mode);
     }
 
-    private void SetUpdateMode(CoreGeometry geometry, UpdateMode mode)
+    private void SetUpdateMode(IDrawable geometry, UpdateMode mode)
     {
         switch (mode)
         {
