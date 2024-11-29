@@ -147,8 +147,8 @@ public class SkiaSharpDrawingContext(
             p);
     }
 
-    /// <inheritdoc cref="DrawingContext.Draw(IDrawable)"/>
-    public override void Draw(IDrawable drawable)
+    /// <inheritdoc cref="DrawingContext.Draw(IDrawable, float)"/>
+    public override void Draw(IDrawable drawable, float opacity)
     {
         var element = (IDrawable<SkiaSharpDrawingContext>)drawable;
 
@@ -202,28 +202,34 @@ public class SkiaSharpDrawingContext(
 
         if (Paint.IsStroke)
         {
-            if (element.Stroke is null) DrawByActivePaint(element);
-            else DrawByPaint(element.Stroke, element);
+            if (element.Stroke is null) DrawByActivePaint(element, opacity);
+            else DrawByPaint(element.Stroke, element, opacity);
         }
         else
         {
-            if (element.Fill is null) DrawByActivePaint(element);
-            else DrawByPaint(element.Fill, element);
+            if (element.Fill is null) DrawByActivePaint(element, opacity);
+            else DrawByPaint(element.Fill, element, opacity);
         }
+
+        if (element.Children is not null && element.Children.Length > 0)
+            foreach (var child in element.Children)
+            {
+                Draw(child, opacity * child.Opacity);
+            }
 
         if (element.HasTransform) Canvas.Restore();
     }
 
-    private void DrawByActivePaint(IDrawable<SkiaSharpDrawingContext> element)
+    private void DrawByActivePaint(IDrawable<SkiaSharpDrawingContext> element, float opacity)
     {
         var hasGeometryOpacity = element.Opacity < 1;
 
-        if (hasGeometryOpacity) PaintTask.ApplyOpacityMask(this, element);
+        if (hasGeometryOpacity) PaintTask.ApplyOpacityMask(this, opacity);
         element.Draw(this);
-        if (hasGeometryOpacity) PaintTask.RestoreOpacityMask(this, element);
+        if (hasGeometryOpacity) PaintTask.RestoreOpacityMask(this, opacity);
     }
 
-    private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element)
+    private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element, float opacity)
     {
         var hasGeometryOpacity = element.Opacity < 1;
 
@@ -232,11 +238,10 @@ public class SkiaSharpDrawingContext(
 
         paint.InitializeTask(this);
 
-        if (hasGeometryOpacity) paint.ApplyOpacityMask(this, element);
-
+        if (hasGeometryOpacity) paint.ApplyOpacityMask(this, opacity);
         element.Draw(this);
+        if (hasGeometryOpacity) paint.RestoreOpacityMask(this, opacity);
 
-        if (hasGeometryOpacity) paint.RestoreOpacityMask(this, element);
         paint.Dispose();
 
         Paint = originalPaint;

@@ -127,7 +127,7 @@ public class CoreMotionCanvas : IDisposable
                     geometry.IsValid = true;
                     geometry.CurrentTime = frameTime;
 
-                    if (!task.IsPaused) context.Draw(geometry);
+                    if (!task.IsPaused) context.Draw(geometry, geometry.Opacity);
 
                     isValid = isValid && geometry.IsValid;
 

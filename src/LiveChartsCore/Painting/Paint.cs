@@ -206,15 +206,15 @@ public abstract class Paint : Animatable, IDisposable
     /// Sets the opacity according to the given geometry.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <param name="geometry">The geometry.</param>
-    public abstract void ApplyOpacityMask(DrawingContext context, IDrawable geometry);
+    /// <param name="opacity">The opacity.</param>
+    public abstract void ApplyOpacityMask(DrawingContext context, float opacity);
 
     /// <summary>
     /// Resets the opacity.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <param name="geometry">The geometry.</param>
-    public abstract void RestoreOpacityMask(DrawingContext context, IDrawable geometry);
+    /// <param name="opacity">The opacity.</param>
+    public abstract void RestoreOpacityMask(DrawingContext context, float opacity);
 
     /// <summary>
     /// Clones the task.

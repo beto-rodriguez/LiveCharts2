@@ -112,9 +112,9 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
 
         if (Fill is null && Stroke is null)
         {
-            if (hasGeometryOpacity) context.PaintTask.ApplyOpacityMask(context, this);
+            if (hasGeometryOpacity) context.PaintTask.ApplyOpacityMask(context, Opacity);
             context.Canvas.DrawPath(path, context.Paint);
-            if (hasGeometryOpacity) context.PaintTask.RestoreOpacityMask(context, this);
+            if (hasGeometryOpacity) context.PaintTask.RestoreOpacityMask(context, Opacity);
         }
         else if (Fill is not null)
         {
@@ -124,9 +124,9 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
             Fill.IsStroke = false;
             Fill.InitializeTask(context);
 
-            if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, this);
+            if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, Opacity);
             context.Canvas.DrawPath(path, context.Paint);
-            if (hasGeometryOpacity) Fill.RestoreOpacityMask(context, this);
+            if (hasGeometryOpacity) Fill.RestoreOpacityMask(context, Opacity);
 
             Fill.Dispose();
 

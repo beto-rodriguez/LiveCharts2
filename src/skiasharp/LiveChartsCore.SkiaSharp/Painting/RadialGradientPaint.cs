@@ -158,8 +158,8 @@ public class RadialGradientPaint : SkiaPaint
         skiaContext.PaintTask = this;
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, IDrawable)" />
-    public override void ApplyOpacityMask(DrawingContext context, IDrawable geometry)
+    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
+    public override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
@@ -174,13 +174,13 @@ public class RadialGradientPaint : SkiaPaint
         _skiaPaint.Shader = SKShader.CreateRadialGradient(
                 center,
                 r,
-                _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * geometry.Opacity))).ToArray(),
+                _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity))).ToArray(),
                 _colorPos,
                 _tileMode);
     }
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, IDrawable)" />
-    public override void RestoreOpacityMask(DrawingContext context, IDrawable geometry)
+    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
+    public override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;

@@ -49,5 +49,6 @@ public abstract class DrawingContext
     /// Draws the given element.
     /// </summary>
     /// <param name="drawable">The drawable element.</param>
-    public abstract void Draw(IDrawable drawable);
+    /// <param name="opacity">The nested opacity.</param>
+    public abstract void Draw(IDrawable drawable, float opacity);
 }

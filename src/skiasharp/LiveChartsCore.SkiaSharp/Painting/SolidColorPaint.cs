@@ -137,8 +137,8 @@ public class SolidColorPaint : SkiaPaint
         skiaContext.PaintTask = this;
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, IDrawable)" />
-    public override void ApplyOpacityMask(DrawingContext context, IDrawable geometry)
+    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
+    public override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (skiaContext.PaintTask is null || skiaContext.Paint is null) return;
@@ -150,11 +150,11 @@ public class SolidColorPaint : SkiaPaint
                 baseColor.Red,
                 baseColor.Green,
                 baseColor.Blue,
-                (byte)(baseColor.Alpha * geometry.Opacity));
+                (byte)(baseColor.Alpha * opacity));
     }
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, IDrawable)" />
-    public override void RestoreOpacityMask(DrawingContext context, IDrawable geometry)
+    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
+    public override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (skiaContext.PaintTask is null || skiaContext.Paint is null) return;
