@@ -61,7 +61,7 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         var p = Padding;
         var bg = Background;
 
-        var size = OnMeasure(context.PaintTask);
+        var size = Measure(context.PaintTask);
 
         var isFirstLine = true;
         var verticalPos =
@@ -135,8 +135,8 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         shaper?.Dispose();
     }
 
-    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
-    public override LvcSize OnMeasure(Paint paint)
+    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
+    public override LvcSize Measure(Paint paint)
     {
         var skiaPaint = (SkiaPaint)paint;
         var typeface = skiaPaint.GetSKTypeface();
@@ -172,9 +172,11 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         // Should the user dispose typefaces manually?
         // typeface.Dispose();
 
-        return new LvcSize(
+        var size = new LvcSize(
             w + Padding.Left + Padding.Right,
             h + Padding.Top + Padding.Bottom);
+
+        return size.GetRotatedSize(RotateTransform);
     }
 
     internal IEnumerable<string> GetLines(SKPaint paint)

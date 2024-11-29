@@ -156,7 +156,7 @@ public class SkiaSharpDrawingContext(
         {
             _ = Canvas.Save();
 
-            var m = element.OnMeasure(PaintTask);
+            var m = element.Measure(PaintTask);
             var o = element.TransformOrigin;
             var p = new SKPoint(element.X, element.Y);
 

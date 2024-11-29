@@ -94,7 +94,7 @@ public abstract class CoreBoxGeometry : CoreGeometry
         set => _medProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
-    public override LvcSize OnMeasure(Paint paintTasks) =>
+    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
+    public override LvcSize Measure(Paint paintTasks) =>
         new(Width, Math.Abs(Min - Y));
 }

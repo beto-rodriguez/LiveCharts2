@@ -41,7 +41,7 @@ public class LineGeometry : CoreLineGeometry, ISkiaGeometry
     public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint) =>
         context.Canvas.DrawLine(X, Y, X1, Y1, paint);
 
-    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
-    public override LvcSize OnMeasure(Paint drawable) =>
+    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
+    public override LvcSize Measure(Paint drawable) =>
         new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
 }

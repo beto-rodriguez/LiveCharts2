@@ -66,6 +66,6 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
         base.CompleteTransition(propertyName);
     }
 
-    /// <inheritdoc cref="IDrawable.OnMeasure(Paint)" />
-    public LvcSize OnMeasure(Paint paint) => new();
+    /// <inheritdoc cref="IDrawable.Measure(Paint)" />
+    public LvcSize Measure(Paint paint) => new();
 }

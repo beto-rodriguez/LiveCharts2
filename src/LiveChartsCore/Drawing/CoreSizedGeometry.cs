@@ -60,7 +60,7 @@ public abstract class CoreSizedGeometry : CoreGeometry
         set => _heightProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
-    public override LvcSize OnMeasure(Paint paint) =>
+    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
+    public override LvcSize Measure(Paint paint) =>
         new(Width, Height);
 }

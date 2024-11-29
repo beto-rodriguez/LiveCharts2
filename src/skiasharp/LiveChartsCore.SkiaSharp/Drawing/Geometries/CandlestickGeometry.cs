@@ -67,7 +67,7 @@ public class CandlestickGeometry : CoreCandlestickGeometry, ISkiaGeometry
         context.Canvas.DrawLine(cx, yj, cx, l, paint);
     }
 
-    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)" />
-    public override LvcSize OnMeasure(Paint paintTasks) =>
+    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
+    public override LvcSize Measure(Paint paintTasks) =>
         new(Width, Math.Abs(Low - Y));
 }

@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
@@ -37,36 +36,5 @@ public abstract class CoreGeometry(bool hasGeometryTransform = false)
     /// </summary>
     /// <param name="drawableTask">The drawable task.</param>
     /// <returns>the size of the geometry.</returns>
-    public LvcSize Measure(Paint drawableTask)
-    {
-        var measure = OnMeasure(drawableTask);
-
-        var r = RotateTransform;
-        if (Math.Abs(r) > 0)
-        {
-            const double toRadians = Math.PI / 180;
-
-            r %= 360;
-            if (r < 0) r += 360;
-
-            if (r > 180) r = 360 - r;
-            if (r is > 90 and <= 180) r = 180 - r;
-
-            var rRadians = r * toRadians;
-
-            var w = (float)(Math.Cos(rRadians) * measure.Width + Math.Sin(rRadians) * measure.Height);
-            var h = (float)(Math.Sin(rRadians) * measure.Width + Math.Cos(rRadians) * measure.Height);
-
-            measure = new LvcSize(w, h);
-        }
-
-        return measure;
-    }
-
-    /// <summary>
-    /// Called when the geometry is measured.
-    /// </summary>
-    /// <param name="paintTasks">The paint task.</param>
-    /// <returns>the size of the geometry</returns>
-    public abstract LvcSize OnMeasure(Paint paintTasks);
+    public abstract LvcSize Measure(Paint drawableTask);
 }

@@ -52,7 +52,7 @@ public class NeedleGeometry : CoreNeedleGeometry, ISkiaGeometry
         context.Canvas.DrawCircle(X, Y, w, paint);
     }
 
-    /// <inheritdoc cref="CoreGeometry.OnMeasure(Paint)"/>
-    public override LvcSize OnMeasure(Paint paintTasks) =>
+    /// <inheritdoc cref="CoreGeometry.Measure(Paint)"/>
+    public override LvcSize Measure(Paint paintTasks) =>
         new();
 }

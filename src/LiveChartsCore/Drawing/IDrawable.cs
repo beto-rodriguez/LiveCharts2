@@ -109,7 +109,7 @@ public interface IDrawable : ITimeLineElement
     /// </summary>
     /// <param name="paint">The paint.</param>
     /// <returns>The size.</returns>
-    LvcSize OnMeasure(Paint paint);
+    LvcSize Measure(Paint paint);
 }
 
 /// <summary>
