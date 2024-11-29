@@ -29,7 +29,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public abstract class SizedGeometry : CoreSizedGeometry, ISkiaGeometry
 {
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IDrawable<SkiaSharpDrawingContext>? Children { get; set; }
+    public IDrawable<SkiaSharpDrawingContext>[] Children { get; set; } = [];
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>

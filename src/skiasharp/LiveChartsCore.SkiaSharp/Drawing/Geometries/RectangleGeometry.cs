@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public class RectangleGeometry : CoreSizedGeometry, ISkiaGeometry
 {
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IDrawable<SkiaSharpDrawingContext>? Children { get; set; }
+    public IDrawable<SkiaSharpDrawingContext>[] Children { get; set; } = [];
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>

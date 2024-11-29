@@ -122,7 +122,7 @@ public interface IDrawable<TDrawingContext> : IDrawable
     /// <summary>
     /// Gers or sets the children.
     /// </summary>
-    IDrawable<TDrawingContext>? Children { get; set; }
+    IDrawable<TDrawingContext>[] Children { get; set; }
 
     /// <summary>
     /// Draws the instance in the user interface with for the specified context.
