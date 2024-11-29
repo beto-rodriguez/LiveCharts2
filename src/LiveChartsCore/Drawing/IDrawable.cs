@@ -120,6 +120,11 @@ public interface IDrawable<TDrawingContext> : IDrawable
     where TDrawingContext : DrawingContext
 {
     /// <summary>
+    /// Gers or sets the children.
+    /// </summary>
+    IDrawable<TDrawingContext>? Children { get; set; }
+
+    /// <summary>
     /// Draws the instance in the user interface with for the specified context.
     /// </summary>
     /// <param name="context"></param>

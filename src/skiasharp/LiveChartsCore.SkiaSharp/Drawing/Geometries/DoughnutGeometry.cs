@@ -29,6 +29,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <inheritdoc cref="CoreDoughnutGeometry" />
 public class DoughnutGeometry : CoreDoughnutGeometry, ISkiaGeometry
 {
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
+    public IDrawable<SkiaSharpDrawingContext>? Children { get; set; }
+
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.Paint);

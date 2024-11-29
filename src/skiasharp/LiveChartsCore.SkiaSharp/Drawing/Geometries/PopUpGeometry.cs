@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using SkiaSharp;
@@ -52,6 +51,9 @@ public class PopUpGeometry : CoreSizedGeometry, ISkiaGeometry
     /// Gets or sets the placement.
     /// </summary>
     public PopUpPlacement Placement { get; set; } = PopUpPlacement.Bottom;
+
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
+    public IDrawable<SkiaSharpDrawingContext>? Children { get; set; }
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>

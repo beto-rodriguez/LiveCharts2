@@ -58,7 +58,7 @@ public class BaseSVGPathGeometry : SizedGeometry, ISkiaGeometry
     /// </summary>
     public bool FitToSize { get; set; } = false;
 
-     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         if (Path is null) return;

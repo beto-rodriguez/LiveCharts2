@@ -35,6 +35,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, ISkiaGeometry
     where TSegment : Segment
 {
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
+    public IDrawable<SkiaSharpDrawingContext>? Children { get; set; }
+
     /// <summary>
     /// Called when the area begins the draw.
     /// </summary>
@@ -62,8 +65,10 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
     protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
     { }
 
+    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext context) => OnDraw(context, context.Paint);
 
+    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
         if (Commands.Count == 0) return;
