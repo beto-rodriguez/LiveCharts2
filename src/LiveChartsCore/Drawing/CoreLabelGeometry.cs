@@ -253,6 +253,6 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
     Paint? IDrawable.Stroke { get; set; }
     Paint? IDrawable.Fill { get; set; }
 
-    /// <inheritdoc cref="IDrawable.Measure(Paint)"/>
-    public abstract LvcSize Measure(Paint drawableTask);
+    /// <inheritdoc cref="IDrawable.Measure()"/>
+    public abstract LvcSize Measure();
 }

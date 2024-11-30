@@ -426,6 +426,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     label.RotateTransform = actualRotation;
+                    label.Paint = DataLabelsPaint;
 
                     var rad = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
 
@@ -435,7 +436,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
 
                     var labelPosition = GetLabelPolarPosition(
                         scaler.CenterX, scaler.CenterY, (float)rad, scaler.GetAngle(coordinate.SecondaryValue),
-                        label.Measure(DataLabelsPaint), (float)GeometrySize, DataLabelsPosition);
+                        label.Measure(), (float)GeometrySize, DataLabelsPosition);
 
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;

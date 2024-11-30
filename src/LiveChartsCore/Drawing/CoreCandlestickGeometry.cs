@@ -83,7 +83,7 @@ public abstract class CoreCandlestickGeometry : CoreGeometry
         set => _lProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
-    public override LvcSize Measure(Paint paintTasks) =>
+    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    public override LvcSize Measure() =>
         new(Width, Math.Abs(Low - Y));
 }

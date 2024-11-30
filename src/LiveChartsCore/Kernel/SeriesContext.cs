@@ -308,7 +308,8 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
                 label.TextSize = (float)series.DataLabelsSize;
                 label.Padding = series.DataLabelsPadding;
                 label.RotateTransform = r;
-                var labelSize = label.Measure(series.DataLabelsPaint);
+                label.Paint = series.DataLabelsPaint;
+                var labelSize = label.Measure();
 
                 var h = 1.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
                 if (h > _pieLabelsSize) _pieLabelsSize = h;

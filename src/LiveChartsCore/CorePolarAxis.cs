@@ -432,10 +432,11 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
         {
             Text = Name ?? string.Empty,
             TextSize = (float)NameTextSize,
-            Padding = _labelsPadding
+            Padding = _labelsPadding,
+            Paint = NamePaint
         };
 
-        return textGeometry.Measure(NamePaint);
+        return textGeometry.Measure();
     }
 
     /// <inheritdoc cref="IPlane.GetPossibleSize(Chart)"/>
@@ -489,9 +490,10 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                 Text = labeler(i),
                 TextSize = ts,
                 RotateTransform = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0),
-                Padding = _labelsPadding
+                Padding = _labelsPadding,
+                Paint = LabelsPaint
             };
-            var m = textGeometry.Measure(LabelsPaint);
+            var m = textGeometry.Measure();
 
             var h = (float)Math.Sqrt(Math.Pow(m.Width * 0.5, 2) + Math.Pow(m.Height * 0.5, 2));
             if (h > totalH) totalH = h;

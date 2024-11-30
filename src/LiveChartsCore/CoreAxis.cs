@@ -766,6 +766,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             _crosshairLabel.Padding = CrosshairPadding ?? _padding;
             _crosshairLabel.X = x;
             _crosshairLabel.Y = y;
+            _crosshairLabel.Paint = CrosshairLabelsPaint;
 
             var r = (float)_labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
@@ -844,10 +845,11 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             RotateTransform = Orientation == AxisOrientation.X
                 ? 0
                 : InLineNamePlacement ? 0 : -90,
-            Padding = NamePadding
+            Padding = NamePadding,
+            Paint = NamePaint
         };
 
-        return textGeometry.Measure(NamePaint);
+        return textGeometry.Measure();
     }
 
     /// <inheritdoc cref="IPlane.GetPossibleSize(Chart)"/>
@@ -883,9 +885,10 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 Text = TryGetLabelOrLogError(labeler, i),
                 TextSize = ts,
                 RotateTransform = r,
-                Padding = _padding
+                Padding = _padding,
+                Paint = LabelsPaint
             };
-            var m = textGeometry.Measure(LabelsPaint);
+            var m = textGeometry.Measure();
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
         }
@@ -1028,10 +1031,11 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 Text = labeler(i),
                 TextSize = (float)_textSize,
                 RotateTransform = (float)LabelsRotation,
-                Padding = _padding
+                Padding = _padding,
+                Paint = LabelsPaint
             };
 
-            var m = textGeometry.Measure(LabelsPaint);
+            var m = textGeometry.Measure();
 
             maxLabelSize = new LvcSize(
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
@@ -1067,6 +1071,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         _nameGeometry.Padding = NamePadding;
         _nameGeometry.Text = Name ?? string.Empty;
         _nameGeometry.TextSize = (float)_nameTextSize;
+        _nameGeometry.Paint = NamePaint;
 
         if (_orientation == AxisOrientation.X)
         {
@@ -1309,8 +1314,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     x += (float)Math.Abs(rhx * 0.5f);
@@ -1324,8 +1329,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     x -= (float)Math.Abs(rhx * 0.5f);
@@ -1351,8 +1356,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     y += (float)Math.Abs(rhx * 0.5f);
@@ -1375,8 +1380,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     y -= (float)Math.Abs(rhx * 0.5f);
@@ -1401,6 +1406,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         label.Padding = _padding;
         label.X = x;
         label.Y = y;
+        label.Paint = _labelsPaint;
 
         if (hasRotation) label.RotateTransform = actualRotatation;
 

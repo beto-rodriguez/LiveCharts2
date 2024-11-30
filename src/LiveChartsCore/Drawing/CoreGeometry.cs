@@ -203,6 +203,6 @@ public abstract class CoreGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.Measure(Paint)"/>
-    public abstract LvcSize Measure(Paint drawableTask);
+    /// <inheritdoc cref="IDrawable.Measure()"/>
+    public abstract LvcSize Measure();
 }

@@ -61,7 +61,7 @@ public class ArcGeometry : CoreArcGeometry, ISkiaGeometry
         context.Canvas.DrawPath(path, context.Paint);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure(Paint)"/>
-    public override LvcSize Measure(Paint paintTasks) =>
+    /// <inheritdoc cref="CoreGeometry.Measure()"/>
+    public override LvcSize Measure() =>
         new();
 }

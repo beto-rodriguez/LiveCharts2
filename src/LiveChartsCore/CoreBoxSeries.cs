@@ -261,7 +261,9 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
-                var m = label.Measure(DataLabelsPaint);
+                label.Paint = DataLabelsPaint;
+
+                var m = label.Measure();
                 var labelPosition = GetLabelPosition(
                     x, high, helper.uw, Math.Abs(low - high), m, DataLabelsPosition,
                     SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);

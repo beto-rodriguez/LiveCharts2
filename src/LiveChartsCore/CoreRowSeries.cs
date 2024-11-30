@@ -301,15 +301,16 @@ public class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                label.Paint = DataLabelsPaint;
 
                 if (isFirstDraw)
                     label.CompleteTransition(
                         nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 
-                var m = label.Measure(DataLabelsPaint);
+                var m = label.Measure();
                 var labelPosition = GetLabelPosition(
-                    cx, y, b, helper.uw, label.Measure(DataLabelsPaint),
-                    DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                    cx, y, b, helper.uw, m, DataLabelsPosition, SeriesProperties,
+                    coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                 if (DataLabelsTranslate is not null) label.TranslateTransform =
                         new LvcPoint(m.Width * DataLabelsTranslate.Value.X, m.Height * DataLabelsTranslate.Value.Y);
 

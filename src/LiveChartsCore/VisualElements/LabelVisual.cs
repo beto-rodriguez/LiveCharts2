@@ -174,10 +174,11 @@ public class LabelVisual<TLabelGeometry> : CoreVisualElement
         _labelGeometry.Padding = Padding;
         _labelGeometry.LineHeight = LineHeight;
         _labelGeometry.MaxWidth = MaxWidth;
+        _labelGeometry.Paint = _paint;
 
         return _paint is null
             ? new LvcSize()
-            : _labelGeometry.Measure(_paint);
+            : _labelGeometry.Measure();
     }
 
     private void InitializeLabel()

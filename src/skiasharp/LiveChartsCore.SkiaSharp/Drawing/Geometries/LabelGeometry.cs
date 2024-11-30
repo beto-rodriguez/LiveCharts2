@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
@@ -61,7 +60,7 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         var p = Padding;
         var bg = Background;
 
-        var size = Measure(context.PaintTask);
+        var size = Measure();
 
         var isFirstLine = true;
         var verticalPos =
@@ -135,10 +134,15 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         shaper?.Dispose();
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
-    public override LvcSize Measure(Paint paint)
+    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    public override LvcSize Measure()
     {
-        var skiaPaint = (SkiaPaint)paint;
+        if (Paint is null)
+            throw new Exception(
+                $"A paint is required to measure a label, please set the {nameof(Paint)} " +
+                $"property with the paint that is drawing the label.");
+
+        var skiaPaint = (SkiaPaint)Paint;
         var typeface = skiaPaint.GetSKTypeface();
 
         using var p = new SKPaint

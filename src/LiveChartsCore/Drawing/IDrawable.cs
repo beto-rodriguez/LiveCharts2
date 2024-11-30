@@ -107,9 +107,8 @@ public interface IDrawable : ITimeLineElement
     /// <summary>
     /// Measures the instance.
     /// </summary>
-    /// <param name="paint">The paint.</param>
     /// <returns>The size.</returns>
-    LvcSize Measure(Paint paint);
+    LvcSize Measure();
 }
 
 /// <summary>

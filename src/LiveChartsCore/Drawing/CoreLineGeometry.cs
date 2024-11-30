@@ -65,7 +65,7 @@ public abstract class CoreLineGeometry : CoreGeometry
         set => _y1.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure(Paint)" />
-    public override LvcSize Measure(Paint drawable) =>
+    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    public override LvcSize Measure() =>
         new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
 }

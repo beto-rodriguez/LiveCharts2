@@ -415,6 +415,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
                 label.RotateTransform = actualRotation;
+                label.Paint = DataLabelsPaint;
 
                 AlignLabel(label, (float)start, initialRotation, sweep);
 
@@ -429,7 +430,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                     (stackedOuterRadius + relativeOuterRadius * 2) * 0.5f,
                     (float)(start + initialRotation),
                     (float)sweep,
-                    label.Measure(DataLabelsPaint),
+                    label.Measure(),
                     DataLabelsPosition);
 
                 label.X = labelPosition.X;

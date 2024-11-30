@@ -60,8 +60,8 @@ public abstract class CoreNeedleGeometry : CoreGeometry
         set => _wProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure(Paint)"/>
-    public override LvcSize Measure(Paint paintTasks) =>
+    /// <inheritdoc cref="IDrawable.Measure()"/>
+    public override LvcSize Measure() =>
         new(Width, Radius);
 }
 
