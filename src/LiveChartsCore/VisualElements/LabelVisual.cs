@@ -154,7 +154,7 @@ public class LabelVisual<TLabelGeometry> : CoreVisualElement
     protected internal override void SetParent(CoreGeometry parent)
     {
         if (_labelGeometry is null) return;
-        _labelGeometry.Parent = parent;
+        ((IDrawable)_labelGeometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>

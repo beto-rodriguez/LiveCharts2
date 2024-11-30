@@ -119,7 +119,7 @@ public class VariableGeometryVisual(CoreSizedGeometry geometry) : BaseGeometryVi
     protected internal override void SetParent(CoreGeometry parent)
     {
         if (geometry is null) return;
-        geometry.Parent = parent;
+        ((IDrawable)geometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>

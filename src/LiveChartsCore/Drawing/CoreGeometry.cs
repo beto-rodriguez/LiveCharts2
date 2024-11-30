@@ -42,6 +42,7 @@ public abstract class CoreGeometry : Animatable, IDrawable
     private readonly FloatMotionProperty _opacityProperty;
     private Paint? _stroke;
     private Paint? _fill;
+    private IDrawable? _parent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreGeometry"/> class.
@@ -63,9 +64,10 @@ public abstract class CoreGeometry : Animatable, IDrawable
         _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
     }
 
-    /// <summary>
-    /// Gets or sets the opacity.
-    /// </summary>
+    /// <inheritdoc cref="IDrawable.Parent"/>
+    IDrawable? IDrawable.Parent { get => _parent; set => _parent = value; }
+
+    /// <inheritdoc cref="IDrawable.Opacity"/>
     public float Opacity
     {
         get => _opacityProperty.GetMovement(this);
@@ -75,18 +77,18 @@ public abstract class CoreGeometry : Animatable, IDrawable
     /// <inheritdoc cref="IDrawable.X"/>
     public float X
     {
-        get => Parent is null
+        get => _parent is null
             ? _xProperty.GetMovement(this)
-            : _xProperty.GetMovement(this) + Parent.X;
+            : _xProperty.GetMovement(this) + _parent.X;
         set => _xProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="IDrawable.Y"/>
     public float Y
     {
-        get => Parent is null
+        get => _parent is null
             ? _yProperty.GetMovement(this)
-            : _yProperty.GetMovement(this) + Parent.Y;
+            : _yProperty.GetMovement(this) + _parent.Y;
         set => _yProperty.SetMovement(value, this);
     }
 
@@ -177,9 +179,7 @@ public abstract class CoreGeometry : Animatable, IDrawable
     /// <inheritdoc cref="IDrawable.HasSkew"/>
     public bool HasRotation => Math.Abs(RotateTransform) > 0;
 
-    /// <summary>
-    /// Gets or sets the stroke paint.
-    /// </summary>
+    /// <inheritdoc cref="IDrawable.Stroke"/>
     public Paint? Stroke
     {
         get => _stroke;
@@ -190,9 +190,7 @@ public abstract class CoreGeometry : Animatable, IDrawable
         }
     }
 
-    /// <summary>
-    /// Gets or sets the fill paint.
-    /// </summary>
+    /// <inheritdoc cref="IDrawable.Fill"/>
     public Paint? Fill
     {
         get => _fill;

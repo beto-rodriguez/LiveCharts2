@@ -119,7 +119,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry> : CoreVisualElement
     protected internal override void SetParent(CoreGeometry parent)
     {
         if (_geometry is null) return;
-        _geometry.Parent = parent;
+        ((IDrawable)_geometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>

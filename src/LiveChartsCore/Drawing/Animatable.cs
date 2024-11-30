@@ -46,11 +46,6 @@ public abstract class Animatable
     public bool RemoveOnCompleted { get; set; }
 
     /// <summary>
-    /// Gets or sets the parent shape, if any the X and Y properties will be relative to the parent.
-    /// </summary>
-    public CoreGeometry? Parent { get; set; }
-
-    /// <summary>
     /// Gets the motion properties.
     /// </summary>
     public Dictionary<string, IMotionProperty> MotionProperties { get; } = [];

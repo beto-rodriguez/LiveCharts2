@@ -166,7 +166,7 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
     protected internal override void SetParent(CoreGeometry parent)
     {
         if (BackgroundGeometry is null) return;
-        BackgroundGeometry.Parent = parent;
+        ((IDrawable)BackgroundGeometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>

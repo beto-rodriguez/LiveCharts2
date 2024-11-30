@@ -27,8 +27,14 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a drawable object, an object that can be represented in the user interface.
 /// </summary>
-public interface IDrawable : ITimeLineElement
+public interface IDrawable
 {
+    /// <summary>
+    /// Gets the parent shape, if any, the <see cref="X"/> and <see cref="Y"/>
+    /// coordinates will be relative to the parent.
+    /// </summary>
+    public IDrawable? Parent { get; set; }
+
     /// <summary>
     /// Gets or sets the x coordinate, if the parent is not null the x coordinate will be relative to the parent.
     /// </summary>
@@ -105,6 +111,27 @@ public interface IDrawable : ITimeLineElement
     Paint? Fill { get; set; }
 
     /// <summary>
+    /// Gets a value indicating whether the instance is valid.
+    /// </summary>
+    bool IsValid { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current time, this property is used to animate the instance.
+    /// </summary>
+    long CurrentTime { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the instance should be removed from the canvas when all the animations are completed.
+    /// </summary>
+    bool RemoveOnCompleted { get; set; }
+
+    /// <summary>
+    /// Completes the transition for the specified properties.
+    /// </summary>
+    /// <param name="propertyName">The properties, null to seledct all.</param>
+    void CompleteTransition(params string[]? propertyName);
+
+    /// <summary>
     /// Measures the instance.
     /// </summary>
     /// <returns>The size.</returns>
@@ -128,31 +155,4 @@ public interface IDrawable<TDrawingContext> : IDrawable
     /// </summary>
     /// <param name="context"></param>
     void Draw(TDrawingContext context);
-}
-
-/// <summary>
-/// An object that can be animated in the user interface.
-/// </summary>
-public interface ITimeLineElement
-{
-    /// <summary>
-    /// Gets a value indicating whether the instance is valid.
-    /// </summary>
-    bool IsValid { get; set; }
-
-    /// <summary>
-    /// Gets or sets the current time, this property is used to animate the instance.
-    /// </summary>
-    long CurrentTime { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the instance should be removed from the canvas when all the animations are completed.
-    /// </summary>
-    bool RemoveOnCompleted { get; set; }
-
-    /// <summary>
-    /// Completes the transition for the specified properties.
-    /// </summary>
-    /// <param name="propertyName">The properties, null to seledct all.</param>
-    void CompleteTransition(params string[]? propertyName);
 }

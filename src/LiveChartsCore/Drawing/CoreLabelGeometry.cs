@@ -41,6 +41,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
     private readonly FloatMotionProperty _opacityProperty;
     private readonly FloatMotionProperty _textSizeProperty;
     private readonly ColorMotionProperty _backgroundProperty;
+    private IDrawable? _parent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreLabelGeometry"/> class.
@@ -66,9 +67,10 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         TransformOrigin = new LvcPoint(0f, 0f);
     }
 
-    /// <summary>
-    /// Gets or sets the opacity.
-    /// </summary>
+    /// <inheritdoc cref="IDrawable.Parent"/>
+    IDrawable? IDrawable.Parent { get => _parent; set => _parent = value; }
+
+    /// <inheritdoc cref="IDrawable.Opacity"/>
     public float Opacity
     {
         get => _opacityProperty.GetMovement(this);
@@ -78,18 +80,18 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
     /// <inheritdoc cref="IDrawable.X"/>
     public float X
     {
-        get => Parent is null
+        get => _parent is null
             ? _xProperty.GetMovement(this)
-            : _xProperty.GetMovement(this) + Parent.X;
+            : _xProperty.GetMovement(this) + _parent.X;
         set => _xProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="IDrawable.Y"/>
     public float Y
     {
-        get => Parent is null
+        get => _parent is null
             ? _yProperty.GetMovement(this)
-            : _yProperty.GetMovement(this) + Parent.Y;
+            : _yProperty.GetMovement(this) + _parent.Y;
         set => _yProperty.SetMovement(value, this);
     }
 

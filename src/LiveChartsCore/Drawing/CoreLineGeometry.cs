@@ -22,7 +22,6 @@
 
 using System;
 using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
@@ -42,6 +41,8 @@ public abstract class CoreLineGeometry : CoreGeometry
         _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
         _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
     }
+
+    private IDrawable? Parent => ((IDrawable)this).Parent;
 
     /// <summary>
     /// Gets or sets the x1.

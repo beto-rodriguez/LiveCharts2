@@ -46,6 +46,7 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
     private readonly FloatMotionProperty _pivotProperty;
     private Paint? _stroke;
     private Paint? _fill;
+    private IDrawable? _parent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreVectorGeometry{TSegment}"/> class.
@@ -68,9 +69,10 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
         _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
     }
 
-    /// <summary>
-    /// Gets or sets the opacity.
-    /// </summary>
+    /// <inheritdoc cref="IDrawable.Parent"/>
+    IDrawable? IDrawable.Parent { get => _parent; set => _parent = value; }
+
+    /// <inheritdoc cref="IDrawable.Opacity"/>
     public float Opacity
     {
         get => _opacityProperty.GetMovement(this);
@@ -80,18 +82,18 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
     /// <inheritdoc cref="IDrawable.X"/>
     public float X
     {
-        get => Parent is null
+        get => _parent is null
             ? _xProperty.GetMovement(this)
-            : _xProperty.GetMovement(this) + Parent.X;
+            : _xProperty.GetMovement(this) + _parent.X;
         set => _xProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="IDrawable.Y"/>
     public float Y
     {
-        get => Parent is null
+        get => _parent is null
             ? _yProperty.GetMovement(this)
-            : _yProperty.GetMovement(this) + Parent.Y;
+            : _yProperty.GetMovement(this) + _parent.Y;
         set => _yProperty.SetMovement(value, this);
     }
 
@@ -182,9 +184,7 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
     /// <inheritdoc cref="IDrawable.HasSkew"/>
     public bool HasRotation => Math.Abs(RotateTransform) > 0;
 
-    /// <summary>
-    /// Gets or sets the stroke paint.
-    /// </summary>
+    /// <inheritdoc cref="IDrawable.Stroke"/>
     public Paint? Stroke
     {
         get => _stroke;
@@ -195,9 +195,7 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
         }
     }
 
-    /// <summary>
-    /// Gets or sets the fill paint.
-    /// </summary>
+    /// <inheritdoc cref="IDrawable.Fill"/>
     public Paint? Fill
     {
         get => _fill;
@@ -213,11 +211,19 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
     /// </summary>
     public LinkedList<TSegment> Commands { get; } = new();
 
-    /// <inheritdoc cref="CoreVectorGeometry{TSegment}.ClosingMethod" />
+    /// <summary>
+    /// Gets or sets the closing method.
+    /// </summary>
     public VectorClosingMethod ClosingMethod { get; set; }
 
-    /// <inheritdoc cref="CoreVectorGeometry{TSegment}.Pivot" />
-    public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
+    /// <summary>
+    /// Gets or sets the pivot.
+    /// </summary>
+    public float Pivot
+    {
+        get => _pivotProperty.GetMovement(this);
+        set => _pivotProperty.SetMovement(value, this);
+    }
 
     /// <inheritdoc cref="Animatable.CompleteTransition(string[])" />
     public override void CompleteTransition(params string[]? propertyName)

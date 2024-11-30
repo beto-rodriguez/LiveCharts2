@@ -161,7 +161,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     protected internal override void SetParent(CoreGeometry parent)
     {
         if (_geometry is null) return;
-        _geometry.Parent = parent;
+        ((IDrawable)_geometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
