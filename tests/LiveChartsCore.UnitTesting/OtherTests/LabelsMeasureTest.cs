@@ -139,7 +139,8 @@ public class LabelsMeasureTest
             l++;
         }
 
-        var size = label.Measure(paint);
+        label.Paint = paint;
+        var size = label.Measure();
         Assert.IsTrue(size.Width <= maxWidth);
         Assert.IsTrue(l == label._lines);
 
@@ -154,7 +155,9 @@ public class LabelsMeasureTest
             TextSize = 15,
             MaxWidth = 100
         };
-        var size2 = label2.Measure(paint);
+
+        label2.Paint = paint;
+        var size2 = label2.Measure();
 
         Assert.IsTrue(label2._lines == 5);
         Assert.IsTrue(size2.Width > label2.MaxWidth); // the text is too long, this is allowed.
@@ -165,7 +168,8 @@ public class LabelsMeasureTest
             TextSize = 15,
             MaxWidth = 100
         };
-        var size3 = label3.Measure(paint);
+        label3.Paint = paint;
+        var size3 = label3.Measure();
         var lines3 = label3.GetLines(paint._skiaPaint).ToArray();
 
         Assert.IsTrue(label3._lines == 6);

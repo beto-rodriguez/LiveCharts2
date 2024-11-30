@@ -194,6 +194,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : C
             visual.Label.X = cx + (float)Math.Cos(beta) * labelsRadius;
             visual.Label.Y = cy + (float)Math.Sin(beta) * labelsRadius;
             visual.Label.TextSize = labelsSize;
+            visual.Label.Paint = LabelsPaint;
 
             if (i + tick <= max)
             {

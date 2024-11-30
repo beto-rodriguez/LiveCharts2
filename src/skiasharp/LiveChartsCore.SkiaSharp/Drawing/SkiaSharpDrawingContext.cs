@@ -156,13 +156,6 @@ public class SkiaSharpDrawingContext(
         {
             _ = Canvas.Save();
 
-            if (drawable is CoreLabelGeometry label)
-            {
-                var a = label.Text;
-                var b = 1;
-                var m1 = element.Measure();
-            }
-
             var m = element.Measure();
             var o = element.TransformOrigin;
             var p = new SKPoint(element.X, element.Y);

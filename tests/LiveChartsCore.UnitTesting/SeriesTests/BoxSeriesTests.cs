@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
@@ -245,7 +246,8 @@ public class BoxSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&    // x is centered
@@ -267,7 +269,8 @@ public class BoxSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Min);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&       // x is centered
@@ -289,7 +292,8 @@ public class BoxSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Min);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5)) < 0.01 &&  // x is right
@@ -311,7 +315,8 @@ public class BoxSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Min);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X - (l.X + ls.Width * 0.5f)) < 0.01 &&   // x is left
@@ -333,7 +338,8 @@ public class BoxSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Min);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&      // x is centered
@@ -355,7 +361,8 @@ public class BoxSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Min);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model.Max <= 0)
             {
@@ -388,7 +395,8 @@ public class BoxSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Min);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model.Max <= 0)
             {

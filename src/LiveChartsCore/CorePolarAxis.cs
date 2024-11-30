@@ -308,6 +308,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                     textGeometry.X = l.X;
                     textGeometry.Y = l.Y;
                     textGeometry.Opacity = 0;
+                    textGeometry.Paint = LabelsPaint;
                     textGeometry.CompleteTransition(null);
                 }
 

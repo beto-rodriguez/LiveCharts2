@@ -236,7 +236,8 @@ public class LineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
@@ -257,7 +258,8 @@ public class LineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
@@ -278,7 +280,8 @@ public class LineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5 + gs)) < 0.01 &&  // x is right
@@ -299,7 +302,8 @@ public class LineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X - (l.X + ls.Width * 0.5f + gs)) < 0.01 &&   // x is left
@@ -320,7 +324,8 @@ public class LineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&      // x is centered
@@ -341,7 +346,8 @@ public class LineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model <= 0)
             {
@@ -373,7 +379,8 @@ public class LineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model <= 0)
             {

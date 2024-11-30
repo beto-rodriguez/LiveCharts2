@@ -532,10 +532,15 @@ public class TableLayoutTest
         var g10g = (LabelGeometry)g10.GetDrawnGeometries()[0];
         var g11g = (LabelGeometry)g11.GetDrawnGeometries()[0];
 
-        var g00m = g00g.Measure(g00.Paint);
-        var g01m = g01g.Measure(g01.Paint);
-        var g10m = g10g.Measure(g10.Paint);
-        var g11m = g11g.Measure(g11.Paint);
+        g00g.Paint = g00.Paint;
+        g01g.Paint = g01.Paint;
+        g10g.Paint = g10.Paint;
+        g11g.Paint = g11.Paint;
+
+        var g00m = g00g.Measure();
+        var g01m = g01g.Measure();
+        var g10m = g10g.Measure();
+        var g11m = g11g.Measure();
 
         var wc0 = g00m.Width > g01m.Width ? g00m.Width : g10m.Width;
         var wc1 = g10m.Width > g11m.Width ? g01m.Width : g11m.Width;
