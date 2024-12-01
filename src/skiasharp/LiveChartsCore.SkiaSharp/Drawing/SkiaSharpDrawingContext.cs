@@ -213,16 +213,14 @@ public class SkiaSharpDrawingContext(
 
         if (element.Children is not null && element.Children.Length > 0)
             foreach (var child in element.Children)
-            {
                 Draw(child, opacity * child.Opacity);
-            }
 
         if (element.HasTransform) Canvas.Restore();
     }
 
     private void DrawByActivePaint(IDrawable<SkiaSharpDrawingContext> element, float opacity)
     {
-        var hasGeometryOpacity = element.Opacity < 1;
+        var hasGeometryOpacity = opacity < 1;
 
         if (hasGeometryOpacity) PaintTask.ApplyOpacityMask(this, opacity);
         element.Draw(this);
@@ -231,7 +229,7 @@ public class SkiaSharpDrawingContext(
 
     private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element, float opacity)
     {
-        var hasGeometryOpacity = element.Opacity < 1;
+        var hasGeometryOpacity = opacity < 1;
 
         var originalPaint = Paint;
         var originalTask = PaintTask;
