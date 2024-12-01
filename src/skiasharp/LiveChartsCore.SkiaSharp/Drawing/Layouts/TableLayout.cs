@@ -22,8 +22,9 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Layouts;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 
 /// <inheritdoc cref="CoreTableLayout{TBackgroundGeometry, TDrawingContext}"/>
 public class TableLayout : CoreTableLayout<RectangleGeometry, SkiaSharpDrawingContext>

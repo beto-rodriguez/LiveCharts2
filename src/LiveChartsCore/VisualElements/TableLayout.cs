@@ -305,7 +305,6 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
         Align? verticalAlign = null,
         Align? horizontalAlign = null)
     {
-
         /// <summary>
         /// Gets the row.
         /// </summary>
