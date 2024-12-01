@@ -100,14 +100,6 @@ public class SkiaSharpDrawingContext(
     public SKCanvas Canvas { get; set; } = canvas;
 
     /// <summary>
-    /// Gets or sets the paint task.
-    /// </summary>
-    /// <value>
-    /// The paint task.
-    /// </value>
-    public Paint ActiveLvcPaint { get; set; } = null!;
-
-    /// <summary>
     /// Gets or sets the paint.
     /// </summary>
     /// <value>

@@ -20,45 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Painting;
+using System;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Painting;
 
 /// <summary>
-/// Defines a context that is able to draw 2D shapes in the user interface.
+/// Defines a task that will draw a set of geometries.
 /// </summary>
-public abstract class DrawingContext
+public class DrawablesTask : Paint
 {
     /// <summary>
-    /// Gets or sets the paint task.
+    /// Initializes a new instance of the <see cref="DrawablesTask"/> class.
     /// </summary>
-    /// <value>
-    /// The paint task.
-    /// </value>
-    public Paint ActiveLvcPaint { get; set; } = null!;
+    /// <param name="canvas">The canvas.</param>
+    /// <param name="drawables">The drawables.</param>
+    public DrawablesTask(CoreMotionCanvas canvas, params IDrawable[] drawables)
+    {
+        foreach (var drawable in drawables)
+            AddGeometryToPaintTask(canvas, drawable);
+    }
 
-    /// <summary>
-    /// Called when the frame starts.
-    /// </summary>
-    public virtual void OnBeginDraw()
-    { }
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
 
-    /// <summary>
-    /// Draws the given string over the canvas.
-    /// </summary>
-    /// <param name="log">the log content.</param>
-    public abstract void LogOnCanvas(string log);
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override Paint CloneTask() => throw new NotImplementedException();
 
-    /// <summary>
-    /// Called when the frame ends.
-    /// </summary>
-    public virtual void OnEndDraw()
-    { }
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override void Dispose() { }
 
-    /// <summary>
-    /// Draws the given element.
-    /// </summary>
-    /// <param name="drawable">The drawable element.</param>
-    /// <param name="opacity">The nested opacity.</param>
-    public abstract void Draw(IDrawable drawable, float opacity);
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override void InitializeTask(DrawingContext drawingContext) =>
+        drawingContext.ActiveLvcPaint = this;
+
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
 }
+
