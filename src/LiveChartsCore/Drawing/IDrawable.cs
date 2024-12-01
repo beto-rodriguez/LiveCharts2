@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
@@ -148,7 +149,7 @@ public interface IDrawable<TDrawingContext> : IDrawable
     /// <summary>
     /// Gers or sets the children.
     /// </summary>
-    IDrawable<TDrawingContext>[] Children { get; set; }
+    IEnumerable<IDrawable<TDrawingContext>> Children { get; set; }
 
     /// <summary>
     /// Draws the instance in the user interface with for the specified context.

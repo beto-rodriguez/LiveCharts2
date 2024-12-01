@@ -20,22 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using SkiaSharp;
+using LiveChartsCore.Drawing.Layouts;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="CoreSizedGeometry" />
-public abstract class SizedGeometry : CoreSizedGeometry, ISkiaGeometry
+/// <inheritdoc cref="CoreTableLayout{TBackgroundGeometry, TDrawingContext}"/>
+public class TableLayout : CoreTableLayout<RectangleGeometry, SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> Children { get; set; } = [];
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TableLayout"/> class.
+    /// </summary>
+    public TableLayout()
+    { }
+}
 
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
+/// <inheritdoc cref="CoreTableLayout{TBackgroundGeometry, TDrawingContext}"/>
+public class TableLayout<TBackgroundGeometry> : CoreTableLayout<TBackgroundGeometry, SkiaSharpDrawingContext>
+    where TBackgroundGeometry : CoreSizedGeometry, IDrawable<SkiaSharpDrawingContext>, new()
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class.
+    /// </summary>
+    public TableLayout()
+    { }
 
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class,
+    /// </summary>
+    /// <param name="backgroundGeometry">The background geometry.</param>
+    public TableLayout(TBackgroundGeometry backgroundGeometry)
+        : base(backgroundGeometry)
+    { }
 }

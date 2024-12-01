@@ -203,9 +203,8 @@ public class SkiaSharpDrawingContext(
             else DrawByPaint(element.Fill, element, opacity);
         }
 
-        if (element.Children is not null && element.Children.Length > 0)
-            foreach (var child in element.Children)
-                Draw(child, opacity * child.Opacity);
+        foreach (var child in element.Children)
+            Draw(child, opacity * child.Opacity);
 
         if (element.HasTransform) Canvas.Restore();
     }

@@ -20,22 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using SkiaSharp;
+using LiveChartsCore.Drawing.Layouts;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="CoreSizedGeometry" />
-public abstract class SizedGeometry : CoreSizedGeometry, ISkiaGeometry
+/// <inheritdoc cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/>
+public class StackLayout : CoreStackLayout<RectangleGeometry, SkiaSharpDrawingContext>
+{ }
+
+/// <inheritdoc cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/>
+public class StackLayout<TBackgroundGeometry>
+    : CoreStackLayout<TBackgroundGeometry, SkiaSharpDrawingContext>
+        where TBackgroundGeometry : CoreSizedGeometry, IDrawable<SkiaSharpDrawingContext>, new()
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> Children { get; set; } = [];
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackLayout{TBackgroundGeometry}"/> class.
+    /// </summary>
+    public StackLayout()
+    { }
 
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackLayout{TBackgroundGeometry}"/> class,
+    /// using the specified geometry as background.
+    /// </summary>
+    /// <param name="backgroundGeometry"></param>
+    public StackLayout(TBackgroundGeometry backgroundGeometry)
+        : base(backgroundGeometry)
+    { }
 }

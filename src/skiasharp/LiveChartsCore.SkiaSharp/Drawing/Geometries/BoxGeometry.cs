@@ -21,8 +21,8 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -33,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public class BoxGeometry : CoreBoxGeometry, ISkiaGeometry
 {
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IDrawable<SkiaSharpDrawingContext>[] Children { get; set; } = [];
+    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> Children { get; set; } = [];
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
