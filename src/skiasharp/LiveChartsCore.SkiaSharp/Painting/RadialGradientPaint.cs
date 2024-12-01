@@ -154,8 +154,8 @@ public class RadialGradientPaint : SkiaPaint
             _drawingContext = skiaContext;
         }
 
-        skiaContext.Paint = _skiaPaint;
-        skiaContext.PaintTask = this;
+        skiaContext.ActiveSkiaPaint = _skiaPaint;
+        skiaContext.ActiveLvcPaint = this;
     }
 
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />

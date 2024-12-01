@@ -224,8 +224,8 @@ public class LinearGradientPaint(
             _drawingContext = skiaContext;
         }
 
-        skiaContext.Paint = _skiaPaint;
-        skiaContext.PaintTask = this;
+        skiaContext.ActiveSkiaPaint = _skiaPaint;
+        skiaContext.ActiveLvcPaint = this;
     }
 
     /// <summary>

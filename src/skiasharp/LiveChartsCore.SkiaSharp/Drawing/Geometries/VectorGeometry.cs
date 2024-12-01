@@ -66,7 +66,7 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
     { }
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext context) => OnDraw(context, context.Paint);
+    public void Draw(SkiaSharpDrawingContext context) => OnDraw(context, context.ActiveSkiaPaint);
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
@@ -112,26 +112,26 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
 
         if (Fill is null && Stroke is null)
         {
-            if (hasGeometryOpacity) context.PaintTask.ApplyOpacityMask(context, Opacity);
-            context.Canvas.DrawPath(path, context.Paint);
-            if (hasGeometryOpacity) context.PaintTask.RestoreOpacityMask(context, Opacity);
+            if (hasGeometryOpacity) context.ActiveLvcPaint.ApplyOpacityMask(context, Opacity);
+            context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
+            if (hasGeometryOpacity) context.ActiveLvcPaint.RestoreOpacityMask(context, Opacity);
         }
         else if (Fill is not null)
         {
-            var originalPaint = context.Paint;
-            var originalTask = context.PaintTask;
+            var originalPaint = context.ActiveSkiaPaint;
+            var originalTask = context.ActiveLvcPaint;
 
             Fill.IsStroke = false;
             Fill.InitializeTask(context);
 
             if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, Opacity);
-            context.Canvas.DrawPath(path, context.Paint);
+            context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
             if (hasGeometryOpacity) Fill.RestoreOpacityMask(context, Opacity);
 
             Fill.Dispose();
 
-            context.Paint = originalPaint;
-            context.PaintTask = originalTask;
+            context.ActiveSkiaPaint = originalPaint;
+            context.ActiveLvcPaint = originalTask;
         }
         else
         {

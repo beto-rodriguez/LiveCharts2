@@ -33,7 +33,7 @@ public abstract class SizedGeometry : CoreSizedGeometry, ISkiaGeometry
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.Paint);
+        OnDraw(ctx, ctx.ActiveSkiaPaint);
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);

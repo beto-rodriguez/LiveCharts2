@@ -35,7 +35,7 @@ public class ArcGeometry : CoreArcGeometry, ISkiaGeometry
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.Paint);
+        OnDraw(ctx, ctx.ActiveSkiaPaint);
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
@@ -58,7 +58,7 @@ public class ArcGeometry : CoreArcGeometry, ISkiaGeometry
             sweepAngle,
             false);
 
-        context.Canvas.DrawPath(path, context.Paint);
+        context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
     }
 
     /// <inheritdoc cref="CoreGeometry.Measure()"/>

@@ -133,19 +133,19 @@ public class SolidColorPaint : SkiaPaint
             _drawingContext = skiaContext;
         }
 
-        skiaContext.Paint = _skiaPaint;
-        skiaContext.PaintTask = this;
+        skiaContext.ActiveSkiaPaint = _skiaPaint;
+        skiaContext.ActiveLvcPaint = this;
     }
 
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
     public override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
-        if (skiaContext.PaintTask is null || skiaContext.Paint is null) return;
+        if (skiaContext.ActiveLvcPaint is null || skiaContext.ActiveSkiaPaint is null) return;
 
         var baseColor = Color;
 
-        skiaContext.Paint.Color =
+        skiaContext.ActiveSkiaPaint.Color =
             new SKColor(
                 baseColor.Red,
                 baseColor.Green,
@@ -157,10 +157,10 @@ public class SolidColorPaint : SkiaPaint
     public override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
-        if (skiaContext.PaintTask is null || skiaContext.Paint is null) return;
+        if (skiaContext.ActiveLvcPaint is null || skiaContext.ActiveSkiaPaint is null) return;
 
         var baseColor = Color;
-        skiaContext.Paint.Color = baseColor;
+        skiaContext.ActiveSkiaPaint.Color = baseColor;
     }
 
     /// <summary>

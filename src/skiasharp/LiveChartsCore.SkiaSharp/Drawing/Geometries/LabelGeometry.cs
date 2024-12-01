@@ -50,12 +50,12 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.Paint);
+        OnDraw(ctx, ctx.ActiveSkiaPaint);
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
     {
-        context.Paint.TextSize = TextSize;
+        context.ActiveSkiaPaint.TextSize = TextSize;
 
         var p = Padding;
         var bg = Background;
@@ -77,9 +77,9 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         var textBounds = new SKRect();
         var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
-        foreach (var line in GetLines(context.Paint))
+        foreach (var line in GetLines(context.ActiveSkiaPaint))
         {
-            _ = context.Paint.MeasureText(line, ref textBounds);
+            _ = context.ActiveSkiaPaint.MeasureText(line, ref textBounds);
 
             var lhd = (textBounds.Height * LineHeight - _maxTextHeight) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);

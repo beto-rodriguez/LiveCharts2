@@ -105,7 +105,7 @@ public class SkiaSharpDrawingContext(
     /// <value>
     /// The paint task.
     /// </value>
-    public Paint PaintTask { get; set; } = null!;
+    public Paint ActiveLvcPaint { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the paint.
@@ -113,7 +113,7 @@ public class SkiaSharpDrawingContext(
     /// <value>
     /// The paint.
     /// </value>
-    public SKPaint Paint { get; set; } = null!;
+    public SKPaint ActiveSkiaPaint { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the background.
@@ -200,7 +200,7 @@ public class SkiaSharpDrawingContext(
             //}
         }
 
-        if (PaintTask.IsStroke)
+        if (ActiveLvcPaint.IsStroke)
         {
             if (element.Stroke is null) DrawByActivePaint(element, opacity);
             else DrawByPaint(element.Stroke, element, opacity);
@@ -222,17 +222,17 @@ public class SkiaSharpDrawingContext(
     {
         var hasGeometryOpacity = opacity < 1;
 
-        if (hasGeometryOpacity) PaintTask.ApplyOpacityMask(this, opacity);
+        if (hasGeometryOpacity) ActiveLvcPaint.ApplyOpacityMask(this, opacity);
         element.Draw(this);
-        if (hasGeometryOpacity) PaintTask.RestoreOpacityMask(this, opacity);
+        if (hasGeometryOpacity) ActiveLvcPaint.RestoreOpacityMask(this, opacity);
     }
 
     private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element, float opacity)
     {
         var hasGeometryOpacity = opacity < 1;
 
-        var originalPaint = Paint;
-        var originalTask = PaintTask;
+        var originalPaint = ActiveSkiaPaint;
+        var originalTask = ActiveLvcPaint;
 
         paint.InitializeTask(this);
 
@@ -242,7 +242,7 @@ public class SkiaSharpDrawingContext(
 
         paint.Dispose();
 
-        Paint = originalPaint;
-        PaintTask = originalTask;
+        ActiveSkiaPaint = originalPaint;
+        ActiveLvcPaint = originalTask;
     }
 }

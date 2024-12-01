@@ -34,7 +34,7 @@ public class DoughnutGeometry : CoreDoughnutGeometry, ISkiaGeometry
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.Paint);
+        OnDraw(ctx, ctx.ActiveSkiaPaint);
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
@@ -100,7 +100,7 @@ public class DoughnutGeometry : CoreDoughnutGeometry, ISkiaGeometry
             context.Canvas.Translate(x, y);
         }
 
-        context.Canvas.DrawPath(path, context.Paint);
+        context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
 
         if (pushout > 0) context.Canvas.Restore();
     }
@@ -214,7 +214,7 @@ public class DoughnutGeometry : CoreDoughnutGeometry, ISkiaGeometry
             context.Canvas.Translate(x, y);
         }
 
-        if (sweepAngle > 0.01) context.Canvas.DrawPath(path, context.Paint);
+        if (sweepAngle > 0.01) context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
         if (pushout > 0) context.Canvas.Restore();
     }
 }
