@@ -42,7 +42,7 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     /// <value>
     /// The style.
     /// </value>
-    public SKPaintStyle Style { get; set; }
+    internal SKPaintStyle Style { get; set; }
 
     /// <summary>
     /// Gets or sets the font style.
