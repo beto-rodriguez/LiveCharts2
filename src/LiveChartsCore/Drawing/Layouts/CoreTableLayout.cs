@@ -105,9 +105,10 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
     /// <param name="child">The visual to add.</param>
     /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
     /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
-    public void AddChild(
+    public CoreTableLayout<TBackgroundGeometry, TDrawingContext> AddChild(
         IDrawable<TDrawingContext> child,
-        int row, int column,
+        int row,
+        int column,
         Align? horizontalAlign = null,
         Align? verticalAlign = null)
     {
@@ -118,6 +119,8 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
 
         if (row > _maxRow) _maxRow = row;
         if (column > _maxColumn) _maxColumn = column;
+
+        return this;
     }
 
     /// <summary>

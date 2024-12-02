@@ -34,6 +34,17 @@ public class TableLayout : CoreTableLayout<RectangleGeometry, SkiaSharpDrawingCo
     /// </summary>
     public TableLayout()
     { }
+
+    /// <inheritdoc cref="TableLayout{TBackgroundGeometry}.AddChild(IDrawable{SkiaSharpDrawingContext}, int, int, Align?, Align?)"/>
+    public new TableLayout AddChild(
+        IDrawable<SkiaSharpDrawingContext> drawable, int row,
+        int column,
+        Align? horizontalAlign = null,
+        Align? verticalAlign = null)
+    {
+        _ = base.AddChild(drawable, row, column, horizontalAlign, verticalAlign);
+        return this;
+    }
 }
 
 /// <inheritdoc cref="CoreTableLayout{TBackgroundGeometry, TDrawingContext}"/>
@@ -53,4 +64,15 @@ public class TableLayout<TBackgroundGeometry> : CoreTableLayout<TBackgroundGeome
     public TableLayout(TBackgroundGeometry backgroundGeometry)
         : base(backgroundGeometry)
     { }
+
+    /// <inheritdoc cref="TableLayout{TBackgroundGeometry}.AddChild(IDrawable{SkiaSharpDrawingContext}, int, int, Align?, Align?)"/>
+    public new TableLayout<TBackgroundGeometry> AddChild(
+        IDrawable<SkiaSharpDrawingContext> drawable, int row,
+        int column,
+        Align? horizontalAlign = null,
+        Align? verticalAlign = null)
+    {
+        _ = base.AddChild(drawable, row, column, horizontalAlign, verticalAlign);
+        return this;
+    }
 }
