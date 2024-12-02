@@ -37,14 +37,6 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     : Paint(strokeThickness, strokeMiter), IDisposable
 {
     /// <summary>
-    /// Gets or sets the style.
-    /// </summary>
-    /// <value>
-    /// The style.
-    /// </value>
-    internal SKPaintStyle Style { get; set; }
-
-    /// <summary>
     /// Gets or sets the font style.
     /// </summary>
     public SKFontStyle? SKFontStyle { get; set; }

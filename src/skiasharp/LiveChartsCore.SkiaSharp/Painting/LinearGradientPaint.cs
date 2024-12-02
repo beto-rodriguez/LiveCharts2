@@ -106,7 +106,6 @@ public class LinearGradientPaint(
     {
         return new LinearGradientPaint(gradientStops, startPoint, endPoint, colorPos, tileMode)
         {
-            Style = Style,
             PaintStyle = PaintStyle,
             IsAntialias = IsAntialias,
             StrokeThickness = StrokeThickness,

@@ -78,7 +78,6 @@ public class SolidColorPaint : SkiaPaint
     {
         var clone = new SolidColorPaint
         {
-            Style = Style,
             PaintStyle = PaintStyle,
             Color = Color,
             IsAntialias = IsAntialias,

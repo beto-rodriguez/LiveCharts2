@@ -89,7 +89,6 @@ public class RadialGradientPaint : SkiaPaint
     {
         return new RadialGradientPaint(_gradientStops, _center, _radius, _colorPos, _tileMode)
         {
-            Style = Style,
             PaintStyle = PaintStyle,
             IsAntialias = IsAntialias,
             StrokeThickness = StrokeThickness,
