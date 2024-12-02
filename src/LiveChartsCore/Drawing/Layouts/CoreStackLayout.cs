@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System;
 
 namespace LiveChartsCore.Drawing.Layouts;
 
@@ -61,12 +60,12 @@ public abstract class CoreStackLayout<TBackgroundGeometry, TDrawingContext>
     /// <summary>
     /// Gets or sets the vertical alignment.
     /// </summary>
-    public Align VerticalAlignment { get; set; }
+    public Align VerticalAlignment { get; set; } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align HorizontalAlignment { get; set; }
+    public Align HorizontalAlignment { get; set; } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the padding.
@@ -76,12 +75,12 @@ public abstract class CoreStackLayout<TBackgroundGeometry, TDrawingContext>
     /// <summary>
     /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
     /// </summary>
-    public double MaxWidth { get; set; }
+    public double MaxWidth { get; set; } = double.MaxValue;
 
     /// <summary>
     /// Gets or sets the maximum height. When the maximum height is reached, a new column is created.
     /// </summary>
-    public double MaxHeight { get; set; }
+    public double MaxHeight { get; set; } = double.MaxValue;
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Children"/>
     public IEnumerable<IDrawable<TDrawingContext>> Children { get; set; } = [];
@@ -121,26 +120,31 @@ public abstract class CoreStackLayout<TBackgroundGeometry, TDrawingContext>
             foreach (var child in line)
             {
                 if (Orientation == ContainerOrientation.Horizontal)
+                {
                     child.Drawable.Y = VerticalAlignment switch
                     {
                         Align.Start => yl,
                         Align.Middle => yl + (rowHeight - child.Size.Height) / 2f,
                         Align.End => yl + rowHeight - child.Size.Height,
-                        _ => throw new NotImplementedException()
+                        _ => throw new System.NotImplementedException()
                     };
+                }
                 else
+                {
                     child.Drawable.X = HorizontalAlignment switch
                     {
                         Align.Start => xl,
                         Align.Middle => xl + (columnWidth - child.Size.Width) / 2f,
                         Align.End => xl + columnWidth - child.Size.Width,
-                        _ => throw new NotImplementedException()
+                        _ => throw new System.NotImplementedException()
                     };
+                }
 
                 child.Drawable.Parent = this;
+                var childSize = child.Drawable.Measure();
 
-                if (child.Size.Width > mx) mx = child.Size.Width;
-                if (child.Size.Height > my) my = child.Size.Height;
+                if (childSize.Width > mx) mx = childSize.Width;
+                if (childSize.Height > my) my = childSize.Height;
             }
 
             line = [];
@@ -192,9 +196,13 @@ public abstract class CoreStackLayout<TBackgroundGeometry, TDrawingContext>
             var lineSize = alignCurrentLine();
 
             if (Orientation == ContainerOrientation.Horizontal)
+            {
                 yl += lineSize.Height;
+            }
             else
+            {
                 xl += lineSize.Width;
+            }
 
             if (xl > mx) mx = xl;
             if (yl > my) my = yl;

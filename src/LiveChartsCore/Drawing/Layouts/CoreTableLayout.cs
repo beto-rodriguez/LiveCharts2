@@ -59,34 +59,19 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
     }
 
     /// <summary>
-    /// Gets or sets the panel orientation.
-    /// </summary>
-    public ContainerOrientation Orientation { get; set; }
-
-    /// <summary>
-    /// Gets or sets the vertical alignment.
-    /// </summary>
-    public Align VerticalAlignment { get; set; }
-
-    /// <summary>
-    /// Gets or sets the horizontal alignment.
-    /// </summary>
-    public Align HorizontalAlignment { get; set; }
-
-    /// <summary>
     /// Gets or sets the padding.
     /// </summary>
     public Padding Padding { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
+    /// Gets or sets the horizontal alignment.
     /// </summary>
-    public double MaxWidth { get; set; }
+    public Align HorizontalAlignment { get; set; } = Align.Middle;
 
     /// <summary>
-    /// Gets or sets the maximum height. When the maximum height is reached, a new column is created.
+    /// Gets or sets the horizontal alignment.
     /// </summary>
-    public double MaxHeight { get; set; }
+    public Align VerticalAlignment { get; set; } = Align.Middle;
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Children"/>
     IEnumerable<IDrawable<TDrawingContext>> IDrawable<TDrawingContext>.Children
