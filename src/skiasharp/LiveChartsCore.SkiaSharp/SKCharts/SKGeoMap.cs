@@ -36,8 +36,8 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
 {
     private readonly GeoMapChart _core;
     private object? _viewCommand;
-    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false };
+    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
@@ -90,7 +90,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
         get => _stroke;
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             _stroke = value;
         }
     }
@@ -101,7 +101,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
         get => _fill;
         set
         {
-            if (value is not null) value.IsStroke = false;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             _fill = value;
         }
     }

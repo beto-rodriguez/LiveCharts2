@@ -100,7 +100,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, true);
+        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="IScatterSeries.StackGroup"/>

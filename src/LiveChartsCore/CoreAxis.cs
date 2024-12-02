@@ -204,14 +204,14 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     public Paint? SeparatorsPaint
     {
         get => _separatorsPaint;
-        set => SetPaintProperty(ref _separatorsPaint, value, true);
+        set => SetPaintProperty(ref _separatorsPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="ICartesianAxis.SubseparatorsPaint"/>
     public Paint? SubseparatorsPaint
     {
         get => _subseparatorsPaint;
-        set => SetPaintProperty(ref _subseparatorsPaint, value, true);
+        set => SetPaintProperty(ref _subseparatorsPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="ICartesianAxis.SubseparatorsCount"/>
@@ -224,14 +224,14 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     public Paint? TicksPaint
     {
         get => _ticksPaint;
-        set => SetPaintProperty(ref _ticksPaint, value, true);
+        set => SetPaintProperty(ref _ticksPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="ICartesianAxis.SubticksPaint"/>
     public Paint? SubticksPaint
     {
         get => _subticksPaint;
-        set => SetPaintProperty(ref _subticksPaint, value, true);
+        set => SetPaintProperty(ref _subticksPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="ICartesianAxis.ZeroPaint"/>
@@ -240,7 +240,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         get => _zeroPaint;
         set
         {
-            SetPaintProperty(ref _zeroPaint, value, true);
+            SetPaintProperty(ref _zeroPaint, value, PaintStyle.Stroke);
 
             // clear the reference to thre previous line.
             // so a new instance will be created for the new paint task.
@@ -252,7 +252,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     public Paint? CrosshairPaint
     {
         get => _crosshairPaint;
-        set => SetPaintProperty(ref _crosshairPaint, value, true);
+        set => SetPaintProperty(ref _crosshairPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="ICartesianAxis.CrosshairLabelsPaint"/>

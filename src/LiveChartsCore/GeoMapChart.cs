@@ -201,7 +201,7 @@ public class GeoMapChart
             if (View.Stroke is not null)
             {
                 if (View.Stroke.ZIndex == 0) View.Stroke.ZIndex = 2;
-                View.Stroke.IsStroke = true;
+                View.Stroke.PaintStyle = PaintStyle.Stroke;
                 View.Canvas.AddDrawableTask(View.Stroke);
             }
 
@@ -215,7 +215,7 @@ public class GeoMapChart
 
             if (View.Fill is not null)
             {
-                View.Fill.IsStroke = false;
+                View.Fill.PaintStyle = PaintStyle.Fill;
                 View.Canvas.AddDrawableTask(View.Fill);
             }
 

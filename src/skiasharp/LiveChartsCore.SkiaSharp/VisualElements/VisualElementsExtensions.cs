@@ -23,6 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
@@ -64,7 +65,7 @@ public static class VisualElementsExtensions
 
                 schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + baseZIndex;
 
-                if (schedule.PaintTask.IsStroke) vgv.Stroke = schedule.PaintTask;
+                if (schedule.PaintTask.PaintStyle.HasFlag(PaintStyle.Stroke)) vgv.Stroke = schedule.PaintTask;
                 _ = relativePanel.Children.Add(vgv);
             }
         }

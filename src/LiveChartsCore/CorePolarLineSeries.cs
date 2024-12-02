@@ -85,7 +85,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
     public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGe
     public Paint? GeometryStroke
     {
         get => _geometryStroke;
-        set => SetPaintProperty(ref _geometryStroke, value, true);
+        set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="IPolarLineSeries.IsClosed"/>

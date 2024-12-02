@@ -95,13 +95,12 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     /// </summary>
     /// <param name="reference">The referenced paint task.</param>
     /// <param name="value">The value</param>
-    /// <param name="isStroke">if set to <c>true</c> [is stroke].</param>
+    /// <param name="style">Thed paint style.</param>
     /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
     protected virtual void SetPaintProperty(
         ref Paint? reference,
         Paint? value,
-        bool isStroke = false,
+        PaintStyle style = PaintStyle.Fill,
         [CallerMemberName] string? propertyName = null)
     {
         if (!_isInternalSet) TouchProperty(propertyName);
@@ -114,10 +113,7 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         reference = value;
 
         if (reference is not null)
-        {
-            reference.IsStroke = isStroke;
-            if (!isStroke) reference.StrokeThickness = 0;
-        }
+            reference.PaintStyle = style;
 
         OnPropertyChanged(propertyName);
     }

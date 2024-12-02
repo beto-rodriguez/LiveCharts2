@@ -192,7 +192,7 @@ public class SkiaSharpDrawingContext(
             //}
         }
 
-        if (ActiveLvcPaint.IsStroke)
+        if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
         {
             if (element.Stroke is null) DrawByActivePaint(element, opacity);
             else DrawByPaint(element.Stroke, element, opacity);

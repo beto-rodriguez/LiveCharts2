@@ -48,8 +48,8 @@ public partial class GeoMap : UserControl, IGeoMapView
     private IEnumerable<IGeoSeries> _series = [];
     private DrawnMap _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false };
+    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
     private object? _viewCommand = null;
 
     /// <summary>
@@ -125,7 +125,7 @@ public partial class GeoMap : UserControl, IGeoMapView
         get => _stroke;
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             _stroke = value;
             OnPropertyChanged();
         }
@@ -138,7 +138,7 @@ public partial class GeoMap : UserControl, IGeoMapView
         get => _fill;
         set
         {
-            if (value is not null) value.IsStroke = false;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             _fill = value;
             OnPropertyChanged();
         }

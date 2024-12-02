@@ -72,7 +72,7 @@ public class SKDefaultTooltip : IChartTooltip
             _backgroundPaint = value;
             if (value is not null)
             {
-                value.IsStroke = false;
+                value.PaintStyle = PaintStyle.Fill;
             }
         }
     }

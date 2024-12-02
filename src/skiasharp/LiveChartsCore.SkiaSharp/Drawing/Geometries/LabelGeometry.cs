@@ -106,10 +106,8 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
 #if DEBUG
             if (ShowDebugLines)
             {
-                using var r = new SKPaint { Color = new SKColor(255, 0, 0), IsStroke = true };
-                using var b = new SKPaint { Color = new SKColor(0, 0, 255), IsStroke = true };
-
-                context.Canvas.DrawRect(X - 2.5f, Y - 2.5f, 5, 5, b);
+                using var r = new SKPaint { Color = new SKColor(255, 0, 0), Style = SKPaintStyle.Stroke };
+                using var b = new SKPaint { Color = new SKColor(0, 0, 255), Style = SKPaintStyle.Stroke };
 
                 context.Canvas.DrawRect(
                     X + ao.X,
@@ -148,7 +146,6 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         using var p = new SKPaint
         {
             IsAntialias = skiaPaint.IsAntialias,
-            IsStroke = skiaPaint.IsStroke,
             StrokeWidth = skiaPaint.StrokeThickness,
             TextSize = TextSize,
             Typeface = typeface

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -121,7 +122,7 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
             var originalPaint = context.ActiveSkiaPaint;
             var originalTask = context.ActiveLvcPaint;
 
-            Fill.IsStroke = false;
+            Fill.PaintStyle = PaintStyle.Fill;
             Fill.InitializeTask(context);
 
             if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, Opacity);

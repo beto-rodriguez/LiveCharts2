@@ -330,7 +330,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
         var solidPaint = LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
         var st = solidPaint.StrokeThickness;
-        solidPaint.IsStroke = false;
+        solidPaint.PaintStyle = PaintStyle.Fill;
 
         if (st > MAX_MINIATURE_STROKE_WIDTH)
         {

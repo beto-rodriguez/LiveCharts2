@@ -44,7 +44,7 @@ public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
     public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
     /// <summary>

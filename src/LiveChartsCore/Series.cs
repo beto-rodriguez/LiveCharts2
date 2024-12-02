@@ -402,7 +402,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         Paint paint, CoreSizedGeometry geometry)
     {
         var paintClone = paint.CloneTask();
-        var st = paint.IsStroke ? paint.StrokeThickness : 0;
+        var st = paint.PaintStyle.HasFlag(PaintStyle.Stroke) ? paint.StrokeThickness : 0;
 
         if (st > MAX_MINIATURE_STROKE_WIDTH)
         {
@@ -415,7 +415,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         geometry.Height = (float)MiniatureShapeSize;
         geometry.Width = (float)MiniatureShapeSize;
 
-        if (paint.IsStroke) paintClone.ZIndex = 1;
+        if (paint.PaintStyle.HasFlag(PaintStyle.Stroke)) paintClone.ZIndex = 1;
 
         return new PaintSchedule(paintClone, geometry);
     }

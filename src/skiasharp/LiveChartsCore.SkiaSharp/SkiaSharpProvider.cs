@@ -58,7 +58,7 @@ public class SkiaSharpProvider : ChartEngine
 
         var zoomingSectionPaint = new SolidColorPaint
         {
-            IsStroke = false,
+            PaintStyle = PaintStyle.Fill,
             Color = new SKColor(33, 150, 243, 50),
             ZIndex = int.MaxValue
         };

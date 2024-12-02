@@ -85,7 +85,7 @@ public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeo
     public Paint? GeometryStroke
     {
         get => _geometryStroke;
-        set => SetPaintProperty(ref _geometryStroke, value, true);
+        set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>

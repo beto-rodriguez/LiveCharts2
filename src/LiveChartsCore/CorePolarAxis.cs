@@ -173,7 +173,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     public Paint? SeparatorsPaint
     {
         get => _separatorsPaint;
-        set => SetPaintProperty(ref _separatorsPaint, value, true);
+        set => SetPaintProperty(ref _separatorsPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="IPlane.AnimationsSpeed"/>

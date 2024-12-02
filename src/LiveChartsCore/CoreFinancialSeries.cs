@@ -84,7 +84,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     public Paint? UpStroke
     {
         get => _upStroke;
-        set => SetPaintProperty(ref _upStroke, value, true);
+        set => SetPaintProperty(ref _upStroke, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="IFinancialSeries.UpFill"/>
@@ -98,7 +98,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     public Paint? DownStroke
     {
         get => _downStroke;
-        set => SetPaintProperty(ref _downStroke, value, true);
+        set => SetPaintProperty(ref _downStroke, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="IFinancialSeries.DownFill"/>

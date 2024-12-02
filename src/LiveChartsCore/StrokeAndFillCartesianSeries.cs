@@ -57,7 +57,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
     /// <summary>

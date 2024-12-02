@@ -60,7 +60,7 @@ public abstract class Paint : Animatable, IDisposable
     /// <value>
     ///   <c>true</c> if this instance is stroke; otherwise, <c>false</c>.
     /// </value>
-    internal bool IsStroke { get; set; }
+    internal PaintStyle PaintStyle { get; set; }
 
     /// <summary>
     /// Gets or sets the font family.

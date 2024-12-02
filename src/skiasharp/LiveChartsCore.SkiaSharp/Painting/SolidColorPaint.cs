@@ -79,7 +79,7 @@ public class SolidColorPaint : SkiaPaint
         var clone = new SolidColorPaint
         {
             Style = Style,
-            IsStroke = IsStroke,
+            PaintStyle = PaintStyle,
             Color = Color,
             IsAntialias = IsAntialias,
             StrokeThickness = StrokeThickness,
@@ -109,7 +109,7 @@ public class SolidColorPaint : SkiaPaint
         _skiaPaint.StrokeJoin = StrokeJoin;
         _skiaPaint.StrokeMiter = StrokeMiter;
         _skiaPaint.StrokeWidth = StrokeThickness;
-        _skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
+        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
         if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
 

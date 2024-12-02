@@ -73,7 +73,7 @@ public class SKDefaultLegend : IChartLegend
             _backgroundPaint = value;
             if (value is not null)
             {
-                value.IsStroke = false;
+                value.PaintStyle = PaintStyle.Fill;
             }
         }
     }

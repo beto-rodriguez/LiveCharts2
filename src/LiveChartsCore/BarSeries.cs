@@ -78,7 +78,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
     public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, true);
+        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>

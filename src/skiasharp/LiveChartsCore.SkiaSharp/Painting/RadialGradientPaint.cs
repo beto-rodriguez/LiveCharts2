@@ -90,7 +90,7 @@ public class RadialGradientPaint : SkiaPaint
         return new RadialGradientPaint(_gradientStops, _center, _radius, _colorPos, _tileMode)
         {
             Style = Style,
-            IsStroke = IsStroke,
+            PaintStyle = PaintStyle,
             IsAntialias = IsAntialias,
             StrokeThickness = StrokeThickness,
             StrokeCap = StrokeCap,
@@ -125,12 +125,11 @@ public class RadialGradientPaint : SkiaPaint
                 _tileMode);
 
         _skiaPaint.IsAntialias = IsAntialias;
-        _skiaPaint.IsStroke = true;
         _skiaPaint.StrokeWidth = StrokeThickness;
         _skiaPaint.StrokeCap = StrokeCap;
         _skiaPaint.StrokeJoin = StrokeJoin;
         _skiaPaint.StrokeMiter = StrokeMiter;
-        _skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
+        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
         if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
 

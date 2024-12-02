@@ -113,14 +113,14 @@ public partial class GeoMap : UserControl, IGeoMapView
     /// </summary>
     public static readonly AvaloniaProperty<Paint> StrokeProperty =
       AvaloniaProperty.Register<CartesianChart, Paint>(nameof(Stroke),
-          new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
+          new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { PaintStyle = PaintStyle.Stroke }, inherits: true);
 
     /// <summary>
     /// The fill color property.
     /// </summary>
     public static readonly AvaloniaProperty<Paint> FillProperty =
       AvaloniaProperty.Register<CartesianChart, Paint>(nameof(Fill),
-           new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false }, inherits: true);
+           new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill }, inherits: true);
 
     #endregion
 
@@ -182,7 +182,7 @@ public partial class GeoMap : UserControl, IGeoMapView
         get => (Paint?)GetValue(StrokeProperty);
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             _ = SetValue(StrokeProperty, value);
         }
     }
@@ -193,7 +193,7 @@ public partial class GeoMap : UserControl, IGeoMapView
         get => (Paint?)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsStroke = false;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             _ = SetValue(FillProperty, value);
         }
     }

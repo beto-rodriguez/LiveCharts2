@@ -191,7 +191,7 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
         set
         {
             _stroke = value;
-            if (_stroke is not null) _stroke.IsStroke = true;
+            if (_stroke is not null) _stroke.PaintStyle = PaintStyle.Stroke;
         }
     }
 
@@ -202,7 +202,7 @@ public abstract class CoreVectorGeometry<TSegment> : Animatable, IDrawable
         set
         {
             _fill = value;
-            if (_fill is not null) _fill.IsStroke = false;
+            if (_fill is not null) _fill.PaintStyle = PaintStyle.Fill;
         }
     }
 

@@ -123,7 +123,7 @@ public partial class GeoMap : ContentView, IGeoMapView
     public static readonly BindableProperty StrokeProperty =
         BindableProperty.Create(
             nameof(Stroke), typeof(Paint), typeof(GeoMap),
-              new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true },
+              new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke },
               BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
@@ -132,7 +132,7 @@ public partial class GeoMap : ContentView, IGeoMapView
     public static readonly BindableProperty FillProperty =
        BindableProperty.Create(
            nameof(Fill), typeof(Paint), typeof(GeoMap),
-            new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false },
+            new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill },
             BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
@@ -204,7 +204,7 @@ public partial class GeoMap : ContentView, IGeoMapView
         get => (Paint)GetValue(StrokeProperty);
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             SetValue(StrokeProperty, value);
         }
     }
@@ -215,7 +215,7 @@ public partial class GeoMap : ContentView, IGeoMapView
         get => (Paint)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsStroke = false;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             SetValue(FillProperty, value);
         }
     }

@@ -131,7 +131,7 @@ public class GeoMap : UserControl, IGeoMapView
     public static readonly DependencyProperty StrokeProperty =
         DependencyProperty.Register(
             nameof(Stroke), typeof(Paint), typeof(GeoMap),
-            new PropertyMetadata(new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true }, OnDependencyPropertyChanged));
+            new PropertyMetadata(new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke }, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The fill property
@@ -139,7 +139,7 @@ public class GeoMap : UserControl, IGeoMapView
     public static readonly DependencyProperty FillProperty =
         DependencyProperty.Register(
             nameof(Fill), typeof(Paint), typeof(GeoMap),
-            new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsStroke = false }, OnDependencyPropertyChanged));
+            new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill }, OnDependencyPropertyChanged));
 
     #endregion
 
@@ -196,7 +196,7 @@ public class GeoMap : UserControl, IGeoMapView
         get => (Paint)GetValue(StrokeProperty);
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             SetValue(StrokeProperty, value);
         }
     }
@@ -207,7 +207,7 @@ public class GeoMap : UserControl, IGeoMapView
         get => (Paint)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsStroke = false;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             SetValue(FillProperty, value);
         }
     }
