@@ -28,29 +28,15 @@ namespace LiveChartsCore.Drawing.Layouts;
 /// Defines a the stack panel geometry.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-public abstract class CoreStackLayout<TBackgroundGeometry, TDrawingContext>
-    : CoreGeometry, IDrawable<TDrawingContext>
+public abstract class CoreStackLayout<TDrawingContext>
+    : Layout, IDrawable<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TBackgroundGeometry : CoreSizedGeometry, IDrawable<TDrawingContext>, new()
 {
-    private readonly TBackgroundGeometry _backgroundGeometry = new();
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreStackLayout{TDrawingContext}"/> class.
     /// </summary>
     protected CoreStackLayout()
     { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/> class,
-    /// and uses the specified geometry as background.
-    /// </summary>
-    /// <param name="backgroundGeometry">The background gemetry.</param>
-    protected CoreStackLayout(TBackgroundGeometry backgroundGeometry)
-    {
-        _backgroundGeometry = backgroundGeometry;
-    }
 
     /// <summary>
     /// Gets or sets the panel orientation.
@@ -86,19 +72,8 @@ public abstract class CoreStackLayout<TBackgroundGeometry, TDrawingContext>
     public IEnumerable<IDrawable<TDrawingContext>> Children { get; set; } = [];
 
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)"/>
-    public void Draw(TDrawingContext context)
-    {
-        var size = Measure();
-
-        _backgroundGeometry.X = X;
-        _backgroundGeometry.Y = Y;
-        _backgroundGeometry.Height = size.Height;
-        _backgroundGeometry.Width = size.Width;
-        _backgroundGeometry.Fill = Fill;
-        _backgroundGeometry.Stroke = Stroke;
-
-        _backgroundGeometry.Draw(context);
-    }
+    public void Draw(TDrawingContext context) =>
+        _ = Measure();
 
     /// <inheritdoc cref="IDrawable.Measure"/>
     public override LvcSize Measure()
@@ -140,7 +115,6 @@ public abstract class CoreStackLayout<TBackgroundGeometry, TDrawingContext>
                     };
                 }
 
-                child.Drawable.Parent = this;
                 var childSize = child.Drawable.Measure();
 
                 if (childSize.Width > mx) mx = childSize.Width;

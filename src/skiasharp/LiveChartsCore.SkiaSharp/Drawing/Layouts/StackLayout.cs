@@ -20,33 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Layouts;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 
-/// <inheritdoc cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/>
-public class StackLayout : CoreStackLayout<RectangleGeometry, SkiaSharpDrawingContext>
+/// <inheritdoc cref="CoreStackLayout{TDrawingContext}"/>
+public class StackLayout : CoreStackLayout<SkiaSharpDrawingContext>
 { }
-
-/// <inheritdoc cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/>
-public class StackLayout<TBackgroundGeometry>
-    : CoreStackLayout<TBackgroundGeometry, SkiaSharpDrawingContext>
-        where TBackgroundGeometry : CoreSizedGeometry, IDrawable<SkiaSharpDrawingContext>, new()
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StackLayout{TBackgroundGeometry}"/> class.
-    /// </summary>
-    public StackLayout()
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StackLayout{TBackgroundGeometry}"/> class,
-    /// using the specified geometry as background.
-    /// </summary>
-    /// <param name="backgroundGeometry"></param>
-    public StackLayout(TBackgroundGeometry backgroundGeometry)
-        : base(backgroundGeometry)
-    { }
-}

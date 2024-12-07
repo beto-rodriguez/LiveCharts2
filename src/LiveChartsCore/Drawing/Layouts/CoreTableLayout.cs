@@ -77,9 +77,6 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
     IEnumerable<IDrawable<TDrawingContext>> IDrawable<TDrawingContext>.Children
     {
         get => _positions.Values.SelectMany(row => row.Values.Select(col => col.Drawable));
-        set => throw new Exception(
-            $"Unable to set the Children prroperty of a table, instead please use the " +
-            $"{nameof(AddChild)} method.");
     }
 
     /// <summary>
