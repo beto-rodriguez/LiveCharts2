@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using SkiaSharp;
 
@@ -29,9 +28,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <inheritdoc cref="CoreSizedGeometry" />
 public abstract class SizedGeometry : CoreSizedGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> Children { get; set; } = [];
-
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);

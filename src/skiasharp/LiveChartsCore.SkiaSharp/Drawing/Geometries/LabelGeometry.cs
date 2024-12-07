@@ -45,9 +45,6 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         TransformOrigin = new LvcPoint(0f, 0f);
     }
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> Children { get; set; } = [];
-
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);

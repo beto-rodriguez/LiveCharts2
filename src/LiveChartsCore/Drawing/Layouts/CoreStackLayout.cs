@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing.Layouts;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class CoreStackLayout<TDrawingContext>
-    : Layout, IDrawable<TDrawingContext>
+    : Layout<TDrawingContext>, IDrawable<TDrawingContext>
         where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -68,12 +68,19 @@ public abstract class CoreStackLayout<TDrawingContext>
     /// </summary>
     public double MaxHeight { get; set; } = double.MaxValue;
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children"/>
-    public IEnumerable<IDrawable<TDrawingContext>> Children { get; set; } = [];
-
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)"/>
-    public void Draw(TDrawingContext context) =>
+    public void Draw(TDrawingContext context)
+    {
         _ = Measure();
+
+        foreach (var child in Children)
+        {
+            child.Parent = this;
+
+            context.ActiveOpacity *= Opacity;
+            context.Draw(child);
+        }
+    }
 
     /// <inheritdoc cref="IDrawable.Measure"/>
     public override LvcSize Measure()

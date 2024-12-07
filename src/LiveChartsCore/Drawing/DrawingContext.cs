@@ -30,12 +30,17 @@ namespace LiveChartsCore.Drawing;
 public abstract class DrawingContext
 {
     /// <summary>
-    /// Gets or sets the paint task.
+    /// Gets the active opacity.
+    /// </summary>
+    public float ActiveOpacity { get; internal set; }
+
+    /// <summary>
+    /// Gets the active paint task.
     /// </summary>
     /// <value>
     /// The paint task.
     /// </value>
-    public Paint ActiveLvcPaint { get; set; } = null!;
+    public Paint ActiveLvcPaint { get; internal set; } = null!;
 
     /// <summary>
     /// Called when the frame starts.
@@ -59,6 +64,5 @@ public abstract class DrawingContext
     /// Draws the given element.
     /// </summary>
     /// <param name="drawable">The drawable element.</param>
-    /// <param name="opacity">The nested opacity.</param>
-    public abstract void Draw(IDrawable drawable, float opacity);
+    public abstract void Draw(IDrawable drawable);
 }

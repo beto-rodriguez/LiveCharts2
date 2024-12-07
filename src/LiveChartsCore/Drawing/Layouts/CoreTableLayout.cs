@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LiveChartsCore.Drawing.Layouts;
 
@@ -72,12 +71,6 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
     /// Gets or sets the horizontal alignment.
     /// </summary>
     public Align VerticalAlignment { get; set; } = Align.Middle;
-
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children"/>
-    IEnumerable<IDrawable<TDrawingContext>> IDrawable<TDrawingContext>.Children
-    {
-        get => _positions.Values.SelectMany(row => row.Values.Select(col => col.Drawable));
-    }
 
     /// <summary>
     /// Adds a child to the layout.

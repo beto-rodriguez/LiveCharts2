@@ -36,9 +36,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, ISkiaGeometry
     where TSegment : Segment
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> Children { get; set; } = [];
-
     /// <summary>
     /// Called when the area begins the draw.
     /// </summary>

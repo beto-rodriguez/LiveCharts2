@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
@@ -29,7 +30,8 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a layout for drawable elements.
 /// </summary>
-public abstract class Layout : Animatable, IDrawable
+public abstract class Layout<TDrawingContext> : Animatable, IDrawable
+    where TDrawingContext : DrawingContext
 {
     private readonly FloatMotionProperty _xProperty;
     private readonly FloatMotionProperty _yProperty;
@@ -63,6 +65,11 @@ public abstract class Layout : Animatable, IDrawable
 
     /// <inheritdoc cref="IDrawable.Parent"/>
     IDrawable? IDrawable.Parent { get => _parent; set => _parent = value; }
+
+    /// <summary>
+    /// Gets or sets the children.
+    /// </summary>
+    public IEnumerable<IDrawable<TDrawingContext>> Children { get; set; } = [];
 
     /// <inheritdoc cref="IDrawable.Opacity"/>
     public float Opacity

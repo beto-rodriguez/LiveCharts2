@@ -139,9 +139,11 @@ public class SkiaSharpDrawingContext(
             p);
     }
 
-    /// <inheritdoc cref="DrawingContext.Draw(IDrawable, float)"/>
-    public override void Draw(IDrawable drawable, float opacity)
+    /// <inheritdoc cref="DrawingContext.Draw(IDrawable)"/>
+    public override void Draw(IDrawable drawable)
     {
+        var opacity = ActiveOpacity;
+
         var element = (IDrawable<SkiaSharpDrawingContext>)drawable;
 
         if (element.HasTransform)
@@ -201,12 +203,6 @@ public class SkiaSharpDrawingContext(
         {
             if (element.Fill is null) DrawByActivePaint(element, opacity);
             else DrawByPaint(element.Fill, element, opacity);
-        }
-
-        foreach (var child in element.Children)
-        {
-            child.Parent = element;
-            Draw(child, opacity * child.Opacity);
         }
 
         if (element.HasTransform) Canvas.Restore();
