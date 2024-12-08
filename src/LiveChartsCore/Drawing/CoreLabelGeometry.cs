@@ -246,11 +246,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
     /// <summary>
     /// Gets or sets the paint.
     /// </summary>
-    public Paint? Paint
-    {
-        get => ((IDrawable)this).Fill;
-        set => ((IDrawable)this).Fill = value;
-    }
+    public Paint? Paint { get; set; }
 
     Paint? IDrawable.Stroke { get; set; }
     Paint? IDrawable.Fill { get; set; }
