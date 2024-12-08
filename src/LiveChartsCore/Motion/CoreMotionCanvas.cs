@@ -117,7 +117,7 @@ public class CoreMotionCanvas : IDisposable
                 task.IsValid = true;
                 task.CurrentTime = frameTime;
 
-                task.InitializeTask(context);
+                context.InitializePaintTask(task);
 
                 foreach (var geometry in task.GetGeometries(this))
                 {
@@ -143,7 +143,8 @@ public class CoreMotionCanvas : IDisposable
                 isValid = isValid && task.IsValid;
 
                 if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
-                task.Dispose();
+
+                context.DisposePaintTask(task);
             }
 
             foreach (var tracker in Trackers)

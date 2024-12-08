@@ -223,7 +223,6 @@ public class LinearGradientPaint(
         }
 
         skiaContext.ActiveSkiaPaint = _skiaPaint;
-        skiaContext.ActiveLvcPaint = this;
     }
 
     /// <summary>

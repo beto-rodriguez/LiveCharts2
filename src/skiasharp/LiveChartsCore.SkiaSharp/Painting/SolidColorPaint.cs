@@ -133,7 +133,6 @@ public class SolidColorPaint : SkiaPaint
         }
 
         skiaContext.ActiveSkiaPaint = _skiaPaint;
-        skiaContext.ActiveLvcPaint = this;
     }
 
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />

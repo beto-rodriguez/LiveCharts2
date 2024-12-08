@@ -65,4 +65,16 @@ public abstract class DrawingContext
     /// </summary>
     /// <param name="drawable">The drawable element.</param>
     public abstract void Draw(IDrawable drawable);
+
+    /// <summary>
+    /// Initializes the task.
+    /// </summary>
+    /// <param name="paint"></param>
+    public abstract void InitializePaintTask(Paint paint);
+
+    /// <summary>
+    /// Disposes the task.
+    /// </summary>
+    /// <param name="paint"></param>
+    public abstract void DisposePaintTask(Paint paint);
 }

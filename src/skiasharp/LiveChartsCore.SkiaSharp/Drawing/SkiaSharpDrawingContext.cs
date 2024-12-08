@@ -208,6 +208,24 @@ public class SkiaSharpDrawingContext(
         if (element.HasTransform) Canvas.Restore();
     }
 
+    /// <inheritdoc cref="DrawingContext.InitializePaintTask(Paint)"/>
+    public override void InitializePaintTask(Paint paint)
+    {
+        paint.InitializeTask(this);
+
+        ActiveLvcPaint = paint;
+        //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
+    }
+
+    /// <inheritdoc cref="DrawingContext.DisposePaintTask(Paint)"/>
+    public override void DisposePaintTask(Paint paint)
+    {
+        paint.Dispose();
+
+        ActiveLvcPaint = null!;
+        ActiveSkiaPaint = null!;
+    }
+
     private void DrawByActivePaint(IDrawable<SkiaSharpDrawingContext> element, float opacity)
     {
         var hasGeometryOpacity = opacity < 1;
