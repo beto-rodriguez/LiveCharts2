@@ -55,8 +55,6 @@ public class Container<T> : CoreSizedGeometry, ISkiaGeometry
         _containerGeometry.Y = Y;
         _containerGeometry.Width = contentSize.Width;
         _containerGeometry.Height = contentSize.Height;
-        _containerGeometry.Fill = Fill;
-        _containerGeometry.Stroke = Stroke;
 
         context.Draw(_containerGeometry);
 

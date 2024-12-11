@@ -139,10 +139,7 @@ public class SolidColorPaint : SkiaPaint
     public override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
-        if (skiaContext.ActiveLvcPaint is null || skiaContext.ActiveSkiaPaint is null) return;
-
         var baseColor = Color;
-
         skiaContext.ActiveSkiaPaint.Color =
             new SKColor(
                 baseColor.Red,
@@ -155,10 +152,7 @@ public class SolidColorPaint : SkiaPaint
     public override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
-        if (skiaContext.ActiveLvcPaint is null || skiaContext.ActiveSkiaPaint is null) return;
-
-        var baseColor = Color;
-        skiaContext.ActiveSkiaPaint.Color = baseColor;
+        skiaContext.ActiveSkiaPaint.Color = Color;
     }
 
     /// <summary>

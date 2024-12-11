@@ -261,7 +261,7 @@ public class SkiaSharpDrawingContext(
         var originalPaint = ActiveSkiaPaint;
         var originalTask = ActiveLvcPaint;
 
-        paint.InitializeTask(this);
+        InitializePaintTask(paint);
 
         if (hasGeometryOpacity) paint.ApplyOpacityMask(this, opacity);
         element.Draw(this);
