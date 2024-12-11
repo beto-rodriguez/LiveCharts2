@@ -61,6 +61,20 @@ public abstract class CoreTableLayout<TDrawingContext>
     public Align VerticalAlignment { get; set; } = Align.Middle;
 
     /// <summary>
+    /// Gets or sets the cells.
+    /// </summary>
+    public TableCell[] Cells
+    {
+        get => _positions.Values.SelectMany(x => x.Values).ToArray();
+        set
+        {
+            foreach (var cell in value)
+                _ = AddChild(
+                    cell.Drawable, cell.Row, cell.Column, cell.HorizontalAlign, cell.VerticalAlign);
+        }
+    }
+
+    /// <summary>
     /// Adds a child to the layout.
     /// </summary>
     /// <param name="row">The row index.</param>
@@ -200,10 +214,18 @@ public abstract class CoreTableLayout<TDrawingContext>
     protected override IEnumerable<IDrawable<TDrawingContext>> GetChildren() =>
         _positions.Values.SelectMany(x => x.Values.Select(y => y.Drawable));
 
-    private class TableCell(
+    /// <summary>
+    /// Defines a table cell.
+    /// </summary>
+    /// <param name="row">the row index.</param>
+    /// <param name="column">the column index.</param>
+    /// <param name="drawable">The drawable element.</param>
+    /// <param name="verticalAlign">the vertical alignment.</param>
+    /// <param name="horizontalAlign">The horizontal alignment.</param>
+    public class TableCell(
         int row,
         int column,
-        IDrawable<TDrawingContext> visualElement,
+        IDrawable<TDrawingContext> drawable,
         Align? verticalAlign = null,
         Align? horizontalAlign = null)
     {
@@ -230,6 +252,6 @@ public abstract class CoreTableLayout<TDrawingContext>
         /// <summary>
         /// Gets the visual element.
         /// </summary>
-        public IDrawable<TDrawingContext> Drawable { get; } = visualElement;
+        public IDrawable<TDrawingContext> Drawable { get; } = drawable;
     }
 }
