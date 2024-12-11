@@ -27,7 +27,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="BaseDoughnutGeometry" />
-public class DoughnutGeometry : BaseDoughnutGeometry, IDrawnElement
+public class DoughnutGeometry : BaseDoughnutGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public virtual void Draw(SkiaSharpDrawingContext context)
