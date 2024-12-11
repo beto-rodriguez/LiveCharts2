@@ -33,7 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 public class LineVisual<TGeometry> : BaseGeometryVisual
-    where TGeometry : CoreLineGeometry, new()
+    where TGeometry : BaseLineGeometry, new()
 {
     internal TGeometry? _geometry;
 
@@ -81,11 +81,11 @@ public class LineVisual<TGeometry> : BaseGeometryVisual
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
-    protected internal override void SetParent(CoreGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
-        ((IDrawable)_geometry).Parent = parent;
+        ((IDrawnElement)_geometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>

@@ -21,24 +21,34 @@
 // SOFTWARE.
 
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a geometry with width and height dimensions.
+/// Defines a needle geometry.
 /// </summary>
-public abstract class CoreSizedGeometry : CoreGeometry
+public abstract class BaseNeedleGeometry : DrawnGeometry
 {
-    private readonly FloatMotionProperty _widthProperty;
-    private readonly FloatMotionProperty _heightProperty;
+    private readonly FloatMotionProperty _rProperty;
+    private readonly FloatMotionProperty _wProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreSizedGeometry"/> class.
+    /// Initializes a new instance of the <see cref="BaseNeedleGeometry"/> class.
     /// </summary>
-    protected CoreSizedGeometry()
+    public BaseNeedleGeometry()
     {
-        _widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
-        _heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
+        _rProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Radius), 0f));
+        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 20f));
+    }
+
+    /// <summary>
+    /// Gets or sets the radius.
+    /// </summary>
+    public float Radius
+    {
+        get => _rProperty.GetMovement(this);
+        set => _rProperty.SetMovement(value, this);
     }
 
     /// <summary>
@@ -46,20 +56,12 @@ public abstract class CoreSizedGeometry : CoreGeometry
     /// </summary>
     public float Width
     {
-        get => _widthProperty.GetMovement(this);
-        set => _widthProperty.SetMovement(value, this);
+        get => _wProperty.GetMovement(this);
+        set => _wProperty.SetMovement(value, this);
     }
 
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
-    public float Height
-    {
-        get => _heightProperty.GetMovement(this);
-        set => _heightProperty.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public override LvcSize Measure() =>
-        new(Width, Height);
+        new(Width, Radius);
 }
+

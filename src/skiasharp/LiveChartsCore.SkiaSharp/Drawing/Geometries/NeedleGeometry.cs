@@ -25,10 +25,10 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="CoreNeedleGeometry"/>
-public class NeedleGeometry : CoreNeedleGeometry, ISkiaGeometry
+/// <inheritdoc cref="BaseNeedleGeometry"/>
+public class NeedleGeometry : BaseNeedleGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 
@@ -48,7 +48,7 @@ public class NeedleGeometry : CoreNeedleGeometry, ISkiaGeometry
         context.Canvas.DrawCircle(X, Y, w, paint);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure()"/>
+    /// <inheritdoc cref="DrawnGeometry.Measure()"/>
     public override LvcSize Measure() =>
         new();
 }

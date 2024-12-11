@@ -81,7 +81,7 @@ public class HeatSeries<TModel>
 /// </typeparam>
 public class HeatSeries<TModel, TVisual>
     : HeatSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : CoreSizedGeometry, IColoredGeometry, new()
+        where TVisual : BoundedDrawnGeometry, IColoredGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.
@@ -127,8 +127,8 @@ public class HeatSeries<TModel, TVisual>
 /// </typeparam>
 public class HeatSeries<TModel, TVisual, TLabel>
     : CoreHeatSeries<TModel, TVisual, TLabel>
-        where TVisual : CoreSizedGeometry, IColoredGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
+        where TVisual : BoundedDrawnGeometry, IColoredGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.

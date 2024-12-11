@@ -34,8 +34,8 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
-    where TGeometry : CoreSizedGeometry, new()
-    where TLabelGeometry : CoreLabelGeometry, new()
+    where TGeometry : BoundedDrawnGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
 {
     internal TGeometry? _geometry;
     private string _label = string.Empty;
@@ -157,11 +157,11 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
-    protected internal override void SetParent(CoreGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
-        ((IDrawable)_geometry).Parent = parent;
+        ((IDrawnElement)_geometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>

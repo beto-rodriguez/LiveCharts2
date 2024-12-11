@@ -28,7 +28,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a skia sharp geometry.
 /// </summary>
-public interface ISkiaGeometry : IDrawable<SkiaSharpDrawingContext>
+public interface ISkiaGeometry : IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Draws the geometry.

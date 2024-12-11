@@ -47,8 +47,8 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
         : ChartSeries<TModel, TVisual, TLabel>(properties, values), ICartesianSeries
-            where TVisual : CoreGeometry, new()
-            where TLabel : CoreLabelGeometry, new()
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
 {
     private int _scalesXAt;
     private int _scalesYAt;

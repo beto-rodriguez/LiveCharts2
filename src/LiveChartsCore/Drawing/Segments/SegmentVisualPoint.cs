@@ -28,7 +28,7 @@ namespace LiveChartsCore.Drawing.Segments;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
 public class SegmentVisualPoint<TVisual, TSegment>
-    where TVisual : CoreSizedGeometry, new()
+    where TVisual : BoundedDrawnGeometry, new()
     where TSegment : Segment, new()
 {
     /// <summary>
@@ -53,7 +53,7 @@ public class SegmentVisualPoint<TVisual, TSegment>
     /// <value>
     /// The path.
     /// </value>
-    public CoreVectorGeometry<TSegment>? FillPath { get; set; }
+    public BaseVectorGeometry<TSegment>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -61,7 +61,7 @@ public class SegmentVisualPoint<TVisual, TSegment>
     /// <value>
     /// The stroke path.
     /// </value>
-    public CoreVectorGeometry<TSegment>? StrokePath { get; set; }
+    public BaseVectorGeometry<TSegment>? StrokePath { get; set; }
 }
 
 /// <summary>
@@ -72,9 +72,9 @@ public class SegmentVisualPoint<TVisual, TSegment>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public class SegmentVisualPoint<TVisual, TSegment, TErrorGeometry>
     : SegmentVisualPoint<TVisual, TSegment>
-        where TVisual : CoreSizedGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
         where TSegment : Segment, new()
-        where TErrorGeometry : CoreGeometry
+        where TErrorGeometry : DrawnGeometry
 {
     /// <summary>
     /// Gets or sets the y error geometry.

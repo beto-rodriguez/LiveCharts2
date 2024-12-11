@@ -32,7 +32,7 @@ namespace LiveChartsCore.Painting;
 /// </summary>
 public abstract class Paint : Animatable, IDisposable
 {
-    private readonly Dictionary<object, HashSet<IDrawable>> _geometriesByCanvas = [];
+    private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
     private readonly FloatMotionProperty _strokeMiterTransition;
     private readonly FloatMotionProperty _strokeWidthTransition;
@@ -112,7 +112,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <returns></returns>
     /// <param name="canvas">The canvas.</param>
-    public IEnumerable<IDrawable> GetGeometries(CoreMotionCanvas canvas)
+    public IEnumerable<IDrawnElement> GetGeometries(CoreMotionCanvas canvas)
     {
         var geometries = GetGeometriesByCanvas(canvas) ?? [];
 
@@ -125,7 +125,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometries">The geometries.</param>
-    public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawable> geometries)
+    public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawnElement> geometries)
     {
         _geometriesByCanvas[canvas] = geometries;
         IsValid = false;
@@ -136,7 +136,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawable geometry)
+    public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
         var g = GetGeometriesByCanvas(canvas);
 
@@ -155,7 +155,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawable geometry)
+    public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
 
@@ -227,7 +227,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     public abstract void Dispose();
 
-    private HashSet<IDrawable>? GetGeometriesByCanvas(object canvas)
+    private HashSet<IDrawnElement>? GetGeometriesByCanvas(object canvas)
     {
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
             ? geometries

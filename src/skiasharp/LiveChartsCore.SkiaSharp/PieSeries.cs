@@ -88,7 +88,7 @@ public class PieSeries<TModel>
 /// </typeparam>
 public class PieSeries<TModel, TVisual>
     : PieSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : CoreDoughnutGeometry, new()
+        where TVisual : BaseDoughnutGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
@@ -141,8 +141,8 @@ public class PieSeries<TModel, TVisual>
 /// </typeparam>
 public class PieSeries<TModel, TVisual, TLabel>
     : CorePieSeries<TModel, TVisual, TLabel, CircleGeometry>
-        where TVisual : CoreDoughnutGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
+        where TVisual : BaseDoughnutGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.

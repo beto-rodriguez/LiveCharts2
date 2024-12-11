@@ -61,7 +61,7 @@ public static class PieChartExtensions
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
-            where TVisual : CoreDoughnutGeometry, new() =>
+            where TVisual : BaseDoughnutGeometry, new() =>
                 AsPieSeries<TModel, PieSeries<TModel, TVisual>>(source, builder, gaugeOptions);
 
     /// <summary>
@@ -78,8 +78,8 @@ public static class PieChartExtensions
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual, TLabel>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
-            where TVisual : CoreDoughnutGeometry, new()
-            where TLabel : CoreLabelGeometry, new() =>
+            where TVisual : BaseDoughnutGeometry, new()
+            where TLabel : BaseLabelGeometry, new() =>
                 AsPieSeries<TModel, PieSeries<TModel, TVisual, TLabel>>(source, builder, gaugeOptions);
 
     /// <summary>

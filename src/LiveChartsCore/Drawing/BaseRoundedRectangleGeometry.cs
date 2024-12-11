@@ -21,47 +21,30 @@
 // SOFTWARE.
 
 using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a needle geometry.
+/// Defines a rounded rectangle geometry.
 /// </summary>
-public abstract class CoreNeedleGeometry : CoreGeometry
+public abstract class BaseRoundedRectangleGeometry : BoundedDrawnGeometry
 {
-    private readonly FloatMotionProperty _rProperty;
-    private readonly FloatMotionProperty _wProperty;
+    private readonly PointMotionProperty _borderRadius;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreNeedleGeometry"/> class.
+    /// Initializes a new instance of the <see cref="BaseRoundedRectangleGeometry"/> class.
     /// </summary>
-    public CoreNeedleGeometry()
+    public BaseRoundedRectangleGeometry()
     {
-        _rProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Radius), 0f));
-        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 20f));
+        _borderRadius = RegisterMotionProperty(new PointMotionProperty(nameof(BorderRadius), new LvcPoint(8f, 8f)));
     }
 
     /// <summary>
-    /// Gets or sets the radius.
+    /// Gets or sets the border radius.
     /// </summary>
-    public float Radius
+    public LvcPoint BorderRadius
     {
-        get => _rProperty.GetMovement(this);
-        set => _rProperty.SetMovement(value, this);
+        get => _borderRadius.GetMovement(this);
+        set => _borderRadius.SetMovement(value, this);
     }
-
-    /// <summary>
-    /// Gets or sets the width.
-    /// </summary>
-    public float Width
-    {
-        get => _wProperty.GetMovement(this);
-        set => _wProperty.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="IDrawable.Measure()"/>
-    public override LvcSize Measure() =>
-        new(Width, Radius);
 }
-

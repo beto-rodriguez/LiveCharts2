@@ -79,7 +79,7 @@ public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
 /// </summary>
 /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
 public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
-    where TSizedGeometry : CoreSizedGeometry, new()
+    where TSizedGeometry : BoundedDrawnGeometry, new()
 {
     private TSizedGeometry? _fillSizedGeometry;
     private TSizedGeometry? _strokeSizedGeometry;

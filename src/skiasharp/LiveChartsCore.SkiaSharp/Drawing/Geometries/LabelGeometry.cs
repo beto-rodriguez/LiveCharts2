@@ -31,8 +31,8 @@ using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="CoreLabelGeometry" />
-public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
+/// <inheritdoc cref="BaseLabelGeometry" />
+public class LabelGeometry : BaseLabelGeometry, ISkiaGeometry
 {
     internal float _maxTextHeight = 0f;
     internal int _lines;
@@ -45,7 +45,7 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         TransformOrigin = new LvcPoint(0f, 0f);
     }
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 
@@ -129,7 +129,7 @@ public class LabelGeometry : CoreLabelGeometry, ISkiaGeometry
         shaper?.Dispose();
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure()
     {
         if (Paint is null)

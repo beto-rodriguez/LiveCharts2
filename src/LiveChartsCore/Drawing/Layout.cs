@@ -30,7 +30,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a layout for drawable elements.
 /// </summary>
-public abstract class Layout<TDrawingContext> : Animatable, IDrawable
+public abstract class Layout<TDrawingContext> : Animatable, IDrawnElement
     where TDrawingContext : DrawingContext
 {
     private readonly FloatMotionProperty _xProperty;
@@ -41,10 +41,10 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
     private readonly PointMotionProperty _skewProperty;
     private readonly PointMotionProperty _translateProperty;
     private readonly FloatMotionProperty _opacityProperty;
-    private IDrawable? _parent;
+    private IDrawnElement? _parent;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreGeometry"/> class.
+    /// Initializes a new instance of the <see cref="DrawnGeometry"/> class.
     /// </summary>
     protected Layout()
     {
@@ -63,17 +63,17 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
     }
 
-    /// <inheritdoc cref="IDrawable.Parent"/>
-    IDrawable? IDrawable.Parent { get => _parent; set => _parent = value; }
+    /// <inheritdoc cref="IDrawnElement.Parent"/>
+    IDrawnElement? IDrawnElement.Parent { get => _parent; set => _parent = value; }
 
-    /// <inheritdoc cref="IDrawable.Opacity"/>
+    /// <inheritdoc cref="IDrawnElement.Opacity"/>
     public float Opacity
     {
         get => _opacityProperty.GetMovement(this);
         set => _opacityProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.X"/>
+    /// <inheritdoc cref="IDrawnElement.X"/>
     public float X
     {
         get => _parent is null
@@ -82,7 +82,7 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         set => _xProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.Y"/>
+    /// <inheritdoc cref="IDrawnElement.Y"/>
     public float Y
     {
         get => _parent is null
@@ -91,14 +91,14 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         set => _yProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.TransformOrigin"/>
+    /// <inheritdoc cref="IDrawnElement.TransformOrigin"/>
     public LvcPoint TransformOrigin
     {
         get => _transformOriginProperty.GetMovement(this);
         set => _transformOriginProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.TranslateTransform"/>
+    /// <inheritdoc cref="IDrawnElement.TranslateTransform"/>
     public LvcPoint TranslateTransform
     {
         get => _translateProperty.GetMovement(this);
@@ -109,7 +109,7 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.RotateTransform"/>
+    /// <inheritdoc cref="IDrawnElement.RotateTransform"/>
     public float RotateTransform
     {
         get => _rotationProperty.GetMovement(this);
@@ -120,7 +120,7 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.ScaleTransform"/>
+    /// <inheritdoc cref="IDrawnElement.ScaleTransform"/>
     public LvcPoint ScaleTransform
     {
         get => _scaleProperty.GetMovement(this);
@@ -131,7 +131,7 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.SkewTransform"/>
+    /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
     public LvcPoint SkewTransform
     {
         get => _skewProperty.GetMovement(this);
@@ -142,10 +142,10 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasTransform"/>
+    /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
-    /// <inheritdoc cref="IDrawable.HasTranslate"/>
+    /// <inheritdoc cref="IDrawnElement.HasTranslate"/>
     public bool HasTranslate
     {
         get
@@ -155,7 +155,7 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasScale"/>
+    /// <inheritdoc cref="IDrawnElement.HasScale"/>
     public bool HasScale
     {
         get
@@ -165,7 +165,7 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasSkew"/>
+    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
     public bool HasSkew
     {
         get
@@ -175,29 +175,29 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasSkew"/>
+    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
     public bool HasRotation => Math.Abs(RotateTransform) > 0;
 
-    Paint? IDrawable.Stroke
+    Paint? IDrawnElement.Stroke
     {
         get => MeasureTask.Instance;
         set => throw new NotImplementedException(
             "Layouts can not have a Stroke, instead place the layout as the child of another geometry.");
     }
 
-    Paint? IDrawable.Fill
+    Paint? IDrawnElement.Fill
     {
         get => null;
         set => throw new NotImplementedException(
             "Layouts can not have a Stroke, instead place the layout as the child of another geometry.");
     }
 
-    /// <inheritdoc cref="IDrawable.Measure()"/>
+    /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
 
     /// <summary>
     /// Gets the children.
     /// </summary>
     /// <returns>The children.</returns>
-    protected abstract IEnumerable<IDrawable<TDrawingContext>> GetChildren();
+    protected abstract IEnumerable<IDrawnElement<TDrawingContext>> GetChildren();
 }

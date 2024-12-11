@@ -40,8 +40,8 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     : CartesianSeries<TModel, TVisual, TLabel>, IHeatSeries
-        where TVisual : CoreSizedGeometry, IColoredGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
+        where TVisual : BoundedDrawnGeometry, IColoredGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     private Paint? _paintTaks;
     private Bounds _weightBounds = new();

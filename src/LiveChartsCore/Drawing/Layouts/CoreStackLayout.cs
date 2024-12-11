@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing.Layouts;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class CoreStackLayout<TDrawingContext>
-    : Layout<TDrawingContext>, IDrawable<TDrawingContext>
+    : Layout<TDrawingContext>, IDrawnElement<TDrawingContext>
         where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -41,7 +41,7 @@ public abstract class CoreStackLayout<TDrawingContext>
     /// <summary>
     /// Gets or sets the children.
     /// </summary>
-    public IDrawable<TDrawingContext>[] Children { get; set; } = [];
+    public IDrawnElement<TDrawingContext>[] Children { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the panel orientation.
@@ -73,7 +73,7 @@ public abstract class CoreStackLayout<TDrawingContext>
     /// </summary>
     public double MaxHeight { get; set; } = double.MaxValue;
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)"/>
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)"/>
     public void Draw(TDrawingContext context)
     {
         _ = Measure();
@@ -89,7 +89,7 @@ public abstract class CoreStackLayout<TDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IDrawable.Measure"/>
+    /// <inheritdoc cref="IDrawnElement.Measure"/>
     public override LvcSize Measure()
     {
         var xl = Padding.Left;
@@ -200,11 +200,11 @@ public abstract class CoreStackLayout<TDrawingContext>
     }
 
     /// <inheritdoc cref="Layout{TDrawingContext}.GetChildren"/>
-    protected override IEnumerable<IDrawable<TDrawingContext>> GetChildren() => Children;
+    protected override IEnumerable<IDrawnElement<TDrawingContext>> GetChildren() => Children;
 
-    private class MeasureResult(IDrawable<TDrawingContext> visual, LvcSize size)
+    private class MeasureResult(IDrawnElement<TDrawingContext> visual, LvcSize size)
     {
-        public IDrawable<TDrawingContext> Drawable { get; set; } = visual;
+        public IDrawnElement<TDrawingContext> Drawable { get; set; } = visual;
         public LvcSize Size { get; set; } = size;
     }
 }

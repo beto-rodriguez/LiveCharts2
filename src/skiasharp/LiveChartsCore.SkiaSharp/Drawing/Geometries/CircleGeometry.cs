@@ -29,9 +29,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a circle geometry.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class CircleGeometry : CoreSizedGeometry, ISkiaGeometry
+public class CircleGeometry : BoundedDrawnGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 

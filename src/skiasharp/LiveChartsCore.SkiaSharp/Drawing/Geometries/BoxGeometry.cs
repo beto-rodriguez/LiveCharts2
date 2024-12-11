@@ -29,9 +29,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a box geometry.
 /// </summary>
-public class BoxGeometry : CoreBoxGeometry, ISkiaGeometry
+public class BoxGeometry : BaseBoxGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 
@@ -74,7 +74,7 @@ public class BoxGeometry : CoreBoxGeometry, ISkiaGeometry
         context.Canvas.DrawRect(x, yi, w, Math.Abs(o - c), paint);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>
         new(Width, Math.Abs(Min - Y));
 }

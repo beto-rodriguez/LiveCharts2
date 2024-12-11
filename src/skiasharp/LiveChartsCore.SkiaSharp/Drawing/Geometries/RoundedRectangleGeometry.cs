@@ -29,9 +29,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines a rounded rectangle geometry.
 /// </summary>
 /// <seealso cref="SizedGeometry" />
-public class RoundedRectangleGeometry : CoreRoundedRectangleGeometry, ISkiaGeometry
+public class RoundedRectangleGeometry : BaseRoundedRectangleGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 

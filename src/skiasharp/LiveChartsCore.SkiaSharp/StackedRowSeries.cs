@@ -81,7 +81,7 @@ public class StackedRowSeries<TModel>
 /// </typeparam>
 public class StackedRowSeries<TModel, TVisual>
     : StackedRowSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : CoreSizedGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedRowSeries{TModel, TVisual, TLabel}"/> class.
@@ -127,8 +127,8 @@ public class StackedRowSeries<TModel, TVisual>
 /// </typeparam>
 public class StackedRowSeries<TModel, TVisual, TLabel>
     : CoreStackedRowSeries<TModel, TVisual, TLabel, LineGeometry>
-        where TVisual : CoreSizedGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedRowSeries{TModel, TVisual, TLabel}"/> class.

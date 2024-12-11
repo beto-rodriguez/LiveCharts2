@@ -40,9 +40,9 @@ namespace LiveChartsCore;
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
     : BarSeries<TModel, TVisual, TLabel>
-        where TVisual : CoreSizedGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
-        where TErrorGeometry : CoreLineGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TErrorGeometry : BaseLineGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreColumnSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
@@ -171,7 +171,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     Height = hi
                 };
 
-                if (r is CoreRoundedRectangleGeometry rg)
+                if (r is BaseRoundedRectangleGeometry rg)
                     rg.BorderRadius = new LvcPoint(rx, ry);
 
                 if (ErrorPaint is not null)
@@ -258,7 +258,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 e.XError.RemoveOnCompleted = false;
             }
 
-            if (visual is CoreRoundedRectangleGeometry rrg)
+            if (visual is BaseRoundedRectangleGeometry rrg)
                 rrg.BorderRadius = new LvcPoint(rx, ry);
 
             visual.RemoveOnCompleted = false;

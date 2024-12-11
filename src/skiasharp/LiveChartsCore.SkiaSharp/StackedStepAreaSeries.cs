@@ -81,7 +81,7 @@ public class StackedStepAreaSeries<TModel>
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual>
     : StackedStepAreaSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : CoreSizedGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.
@@ -127,8 +127,8 @@ public class StackedStepAreaSeries<TModel, TVisual>
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual, TLabel>
     : CoreStackedStepAreaSeries<TModel, TVisual, TLabel, StepLineAreaGeometry, LineGeometry>
-        where TVisual : CoreSizedGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.

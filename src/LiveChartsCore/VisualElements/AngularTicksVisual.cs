@@ -37,9 +37,9 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : CoreVisualElement
-    where TArcGeometry : CoreArcGeometry, new()
-    where TLineGeometry : CoreLineGeometry, new()
-    where TLabelGeometry : CoreLabelGeometry, new()
+    where TArcGeometry : BaseArcGeometry, new()
+    where TLineGeometry : BaseLineGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
 {
     private Paint? _stroke;
     private Paint? _labelsPaint;
@@ -254,8 +254,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : C
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart) => new();
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
-    protected internal override void SetParent(CoreGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     { }
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>

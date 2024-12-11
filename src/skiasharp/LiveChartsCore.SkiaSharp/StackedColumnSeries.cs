@@ -81,7 +81,7 @@ public class StackedColumnSeries<TModel>
 /// </typeparam>
 public class StackedColumnSeries<TModel, TVisual>
     : StackedColumnSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : CoreSizedGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedColumnSeries{TModel, TVisual, TLabel}"/> class.
@@ -127,8 +127,8 @@ public class StackedColumnSeries<TModel, TVisual>
 /// </typeparam>
 public class StackedColumnSeries<TModel, TVisual, TLabel>
     : CoreStackedColumnSeries<TModel, TVisual, TLabel, LineGeometry>
-        where TVisual : CoreSizedGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedColumnSeries{TModel, TVisual, TLabel}"/> class.

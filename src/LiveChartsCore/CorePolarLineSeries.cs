@@ -44,10 +44,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : ChartSeries<TModel, TVisual, TLabel>, IPolarLineSeries, IPolarSeries
-        where TPathGeometry : CoreVectorGeometry<CubicBezierSegment>, new()
-        where TVisual : CoreSizedGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
-        where TLineGeometry : CoreLineGeometry, new()
+        where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TLineGeometry : BaseLineGeometry, new()
 {
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];

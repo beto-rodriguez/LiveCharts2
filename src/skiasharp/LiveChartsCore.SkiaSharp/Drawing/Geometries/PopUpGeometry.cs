@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a pop-up geometry.
 /// </summary>
-public class PopUpGeometry : CoreSizedGeometry, ISkiaGeometry
+public class PopUpGeometry : BoundedDrawnGeometry, ISkiaGeometry
 {
     /// <summary>
     /// Gets or sets the wedge size.
@@ -53,10 +53,10 @@ public class PopUpGeometry : CoreSizedGeometry, ISkiaGeometry
     /// </summary>
     public PopUpPlacement Placement { get; set; } = PopUpPlacement.Bottom;
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Children" />
-    public IEnumerable<IDrawable<SkiaSharpDrawingContext>> Children { get; set; } = [];
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Children" />
+    public IEnumerable<IDrawnElement<SkiaSharpDrawingContext>> Children { get; set; } = [];
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 

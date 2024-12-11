@@ -34,8 +34,8 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
 public class NeedleVisual<TGeometry, TLabelGeometry> : CoreVisualElement
-    where TGeometry : CoreNeedleGeometry, new()
-    where TLabelGeometry : CoreLabelGeometry, new()
+    where TGeometry : BaseNeedleGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
 {
     private Paint? _fill;
     private double _value;
@@ -115,11 +115,11 @@ public class NeedleVisual<TGeometry, TLabelGeometry> : CoreVisualElement
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart) => new();
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
-    protected internal override void SetParent(CoreGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
-        ((IDrawable)_geometry).Parent = parent;
+        ((IDrawnElement)_geometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>

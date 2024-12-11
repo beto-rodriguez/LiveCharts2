@@ -20,53 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using LiveChartsCore.Motion;
-
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a line geometry.
+/// Defines an arc geometry.
 /// </summary>
-public abstract class CoreLineGeometry : CoreGeometry
+public abstract class BaseArcGeometry : BoundedDrawnGeometry
 {
-    private readonly FloatMotionProperty _x1;
-    private readonly FloatMotionProperty _y1;
+    /// <summary>
+    /// Gets or sets the center in the x axis.
+    /// </summary>
+    public float CenterX { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreLineGeometry"/> class.
+    /// Gets or sets the center in the y axis.
     /// </summary>
-    public CoreLineGeometry()
-    {
-        _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-        _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-    }
-
-    private IDrawable? Parent => ((IDrawable)this).Parent;
+    public float CenterY { get; set; }
 
     /// <summary>
-    /// Gets or sets the x1.
+    /// Gets or sets the start angle in degrees.
     /// </summary>
-    public float X1
-    {
-        get => Parent is null
-            ? _x1.GetMovement(this)
-            : _x1.GetMovement(this) + Parent.X;
-        set => _x1.SetMovement(value, this);
-    }
+    public float StartAngle { get; set; }
 
     /// <summary>
-    /// Gets or sets the y1.
+    /// Gets or sets the sweep angle in degrees.
     /// </summary>
-    public float Y1
-    {
-        get => Parent is null
-            ? _y1.GetMovement(this)
-            : _y1.GetMovement(this) + Parent.Y;
-        set => _y1.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
-    public override LvcSize Measure() =>
-        new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
+    public float SweepAngle { get; set; }
 }

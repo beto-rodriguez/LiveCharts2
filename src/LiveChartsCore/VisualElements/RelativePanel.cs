@@ -32,7 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the relative panel class.
 /// </summary>
 public class RelativePanel<TBackgroundGeometry> : CoreVisualElement
-    where TBackgroundGeometry : CoreSizedGeometry, new()
+    where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry}"/> class.
@@ -105,11 +105,11 @@ public class RelativePanel<TBackgroundGeometry> : CoreVisualElement
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
-    protected internal override void SetParent(CoreGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (BackgroundGeometry is null) return;
-        ((IDrawable)BackgroundGeometry).Parent = parent;
+        ((IDrawnElement)BackgroundGeometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.IsHitBy(Chart, LvcPoint)"/>

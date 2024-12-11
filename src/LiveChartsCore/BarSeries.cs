@@ -49,8 +49,8 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
         : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(properties, values), IBarSeries
-            where TVisual : CoreSizedGeometry, new()
-            where TLabel : CoreLabelGeometry, new()
+            where TVisual : BoundedDrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
 {
     private double _pading = 2;
     private double _maxBarWidth = 50;

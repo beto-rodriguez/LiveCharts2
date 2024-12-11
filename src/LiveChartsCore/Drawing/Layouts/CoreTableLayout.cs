@@ -31,7 +31,7 @@ namespace LiveChartsCore.Drawing.Layouts;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 public abstract class CoreTableLayout<TDrawingContext>
-    : Layout<TDrawingContext>, IDrawable<TDrawingContext>
+    : Layout<TDrawingContext>, IDrawnElement<TDrawingContext>
         where TDrawingContext : DrawingContext
 {
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
@@ -83,7 +83,7 @@ public abstract class CoreTableLayout<TDrawingContext>
     /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
     /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
     public CoreTableLayout<TDrawingContext> AddChild(
-        IDrawable<TDrawingContext> child,
+        IDrawnElement<TDrawingContext> child,
         int row,
         int column,
         Align? horizontalAlign = null,
@@ -112,7 +112,7 @@ public abstract class CoreTableLayout<TDrawingContext>
         if (r.Count == 0) _ = _positions.Remove(row);
     }
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)"/>
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)"/>
     public void Draw(TDrawingContext context)
     {
         _ = Measure();
@@ -167,7 +167,7 @@ public abstract class CoreTableLayout<TDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IDrawable.Measure"/>
+    /// <inheritdoc cref="IDrawnElement.Measure"/>
     public override LvcSize Measure()
     {
         var maxH = Padding.Top;
@@ -211,7 +211,7 @@ public abstract class CoreTableLayout<TDrawingContext>
     }
 
     /// <inheritdoc cref="Layout{TDrawingContext}.GetChildren"/>
-    protected override IEnumerable<IDrawable<TDrawingContext>> GetChildren() =>
+    protected override IEnumerable<IDrawnElement<TDrawingContext>> GetChildren() =>
         _positions.Values.SelectMany(x => x.Values.Select(y => y.Drawable));
 
     /// <summary>
@@ -225,7 +225,7 @@ public abstract class CoreTableLayout<TDrawingContext>
     public class TableCell(
         int row,
         int column,
-        IDrawable<TDrawingContext> drawable,
+        IDrawnElement<TDrawingContext> drawable,
         Align? verticalAlign = null,
         Align? horizontalAlign = null)
     {
@@ -252,6 +252,6 @@ public abstract class CoreTableLayout<TDrawingContext>
         /// <summary>
         /// Gets the visual element.
         /// </summary>
-        public IDrawable<TDrawingContext> Drawable { get; } = drawable;
+        public IDrawnElement<TDrawingContext> Drawable { get; } = drawable;
     }
 }

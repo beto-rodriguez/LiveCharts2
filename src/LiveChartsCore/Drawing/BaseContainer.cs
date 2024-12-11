@@ -29,8 +29,8 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TShape">The type of the container shape.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class CoreContainer<TShape, TDrawingContext> : CoreSizedGeometry, IDrawable<TDrawingContext>
-    where TShape : CoreSizedGeometry, IDrawable<TDrawingContext>, new()
+public class BaseContainer<TShape, TDrawingContext> : BoundedDrawnGeometry, IDrawnElement<TDrawingContext>
+    where TShape : BoundedDrawnGeometry, IDrawnElement<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
     private readonly TShape _containerGeometry = new();
@@ -38,9 +38,9 @@ public class CoreContainer<TShape, TDrawingContext> : CoreSizedGeometry, IDrawab
     /// <summary>
     /// Gets or sets the content.
     /// </summary>
-    public IDrawable<TDrawingContext>? Content { get; set; }
+    public IDrawnElement<TDrawingContext>? Content { get; set; }
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(TDrawingContext context)
     {
         var content = Content ?? throw new InvalidOperationException("Content not found");

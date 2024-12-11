@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a candlestick geometry.
 /// </summary>
-public abstract class CoreCandlestickGeometry : CoreGeometry
+public abstract class BaseCandlestickGeometry : DrawnGeometry
 {
     private readonly FloatMotionProperty _wProperty;
     private readonly FloatMotionProperty _oProperty;
@@ -37,9 +37,9 @@ public abstract class CoreCandlestickGeometry : CoreGeometry
     private readonly FloatMotionProperty _lProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreCandlestickGeometry"/> class.
+    /// Initializes a new instance of the <see cref="BaseCandlestickGeometry"/> class.
     /// </summary>
-    public CoreCandlestickGeometry()
+    public BaseCandlestickGeometry()
     {
         _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0f));
         _oProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Open), 0f));
@@ -83,7 +83,7 @@ public abstract class CoreCandlestickGeometry : CoreGeometry
         set => _lProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>
         new(Width, Math.Abs(Low - Y));
 }

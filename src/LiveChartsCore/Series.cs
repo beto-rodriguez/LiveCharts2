@@ -49,8 +49,8 @@ namespace LiveChartsCore;
 /// <seealso cref="INotifyPropertyChanged" />
 public abstract class Series<TModel, TVisual, TLabel>
     : ChartElement, ISeries, ISeries<TModel>, IInternalSeries, INotifyPropertyChanged
-        where TVisual : CoreGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
+        where TVisual : DrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// The subscribed to
@@ -399,7 +399,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="geometry"></param>
     /// <returns></returns>
     protected PaintSchedule BuildMiniatureSchedule(
-        Paint paint, CoreSizedGeometry geometry)
+        Paint paint, BoundedDrawnGeometry geometry)
     {
         var paintClone = paint.CloneTask();
         var st = paint.PaintStyle.HasFlag(PaintStyle.Stroke) ? paint.StrokeThickness : 0;

@@ -33,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// Defines an area geometry.
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, ISkiaGeometry
+public abstract class VectorGeometry<TSegment> : BaseVectorGeometry<TSegment>, ISkiaGeometry
     where TSegment : Segment
 {
     /// <summary>
@@ -63,7 +63,7 @@ public abstract class VectorGeometry<TSegment> : CoreVectorGeometry<TSegment>, I
     protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
     { }
 
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext context) => OnDraw(context, context.ActiveSkiaPaint);
 
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />

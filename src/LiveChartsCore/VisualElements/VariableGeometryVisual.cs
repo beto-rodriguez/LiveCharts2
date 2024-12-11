@@ -34,14 +34,14 @@ namespace LiveChartsCore.VisualElements;
 /// Initializes a new instance of the <see cref="VariableGeometryVisual"/> class.
 /// </remarks>
 /// <param name="geometry"></param>
-public class VariableGeometryVisual(CoreSizedGeometry geometry) : BaseGeometryVisual
+public class VariableGeometryVisual(BoundedDrawnGeometry geometry) : BaseGeometryVisual
 {
     private bool _isInitialized;
 
     /// <summary>
     /// Gets or sets the geometry.
     /// </summary>
-    public CoreSizedGeometry Geometry
+    public BoundedDrawnGeometry Geometry
     {
         get => geometry;
         set
@@ -56,7 +56,7 @@ public class VariableGeometryVisual(CoreSizedGeometry geometry) : BaseGeometryVi
     /// <summary>
     /// Occurs when the geometry is initialized.
     /// </summary>
-    public event Action<CoreSizedGeometry>? GeometryInitialized;
+    public event Action<BoundedDrawnGeometry>? GeometryInitialized;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>
@@ -115,11 +115,11 @@ public class VariableGeometryVisual(CoreSizedGeometry geometry) : BaseGeometryVi
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(CoreGeometry)"/>
-    protected internal override void SetParent(CoreGeometry parent)
+    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (geometry is null) return;
-        ((IDrawable)geometry).Parent = parent;
+        ((IDrawnElement)geometry).Parent = parent;
     }
 
     /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>

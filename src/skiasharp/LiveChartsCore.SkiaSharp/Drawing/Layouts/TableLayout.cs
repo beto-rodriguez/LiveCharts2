@@ -34,9 +34,9 @@ public class TableLayout : CoreTableLayout<SkiaSharpDrawingContext>
     public TableLayout()
     { }
 
-    /// <inheritdoc cref="CoreTableLayout{TDrawingContext}.AddChild(IDrawable{TDrawingContext}, int, int, Align?, Align?)"/>
+    /// <inheritdoc cref="CoreTableLayout{TDrawingContext}.AddChild(IDrawnElement{TDrawingContext}, int, int, Align?, Align?)"/>
     public new TableLayout AddChild(
-        IDrawable<SkiaSharpDrawingContext> drawable, int row,
+        IDrawnElement<SkiaSharpDrawingContext> drawable, int row,
         int column,
         Align? horizontalAlign = null,
         Align? verticalAlign = null)

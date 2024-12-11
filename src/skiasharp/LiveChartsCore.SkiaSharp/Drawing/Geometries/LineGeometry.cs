@@ -26,10 +26,10 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="CoreLineGeometry" />
-public class LineGeometry : CoreLineGeometry, ISkiaGeometry
+/// <inheritdoc cref="BaseLineGeometry" />
+public class LineGeometry : BaseLineGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 
@@ -37,7 +37,7 @@ public class LineGeometry : CoreLineGeometry, ISkiaGeometry
     public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint) =>
         context.Canvas.DrawLine(X, Y, X1, Y1, paint);
 
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>
         new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
 }

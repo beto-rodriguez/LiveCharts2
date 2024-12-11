@@ -85,7 +85,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     /// Gets the required space by the labels to the outer side of the pie chart.
     /// </summary>
     public float GetPieOuterLabelsSpace<TLabel>()
-        where TLabel : CoreLabelGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
     {
         if (_arePieLabeleMeasured) return _pieLabelsSize;
         CalculatePieLabelsOuterSpace<TLabel>();
@@ -284,7 +284,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     #region Pie
 
     private void CalculatePieLabelsOuterSpace<TLabel>()
-        where TLabel : CoreLabelGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
     {
         foreach (var series in series)
         {

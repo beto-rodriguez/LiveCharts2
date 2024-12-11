@@ -156,7 +156,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// <summary>
     /// Sets the parent to all the geometries in the visual.
     /// </summary>
-    protected internal abstract void SetParent(CoreGeometry parent);
+    protected internal abstract void SetParent(DrawnGeometry parent);
 
     /// <summary>
     /// Gets the acdtual coordinate of the visual.

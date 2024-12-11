@@ -29,9 +29,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a candlestick geometry.
 /// </summary>
-public class CandlestickGeometry : CoreCandlestickGeometry, ISkiaGeometry
+public class CandlestickGeometry : BaseCandlestickGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 
@@ -63,7 +63,7 @@ public class CandlestickGeometry : CoreCandlestickGeometry, ISkiaGeometry
         context.Canvas.DrawLine(cx, yj, cx, l, paint);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>
         new(Width, Math.Abs(Low - Y));
 }

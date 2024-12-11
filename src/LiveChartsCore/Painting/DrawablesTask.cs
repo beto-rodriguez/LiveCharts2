@@ -36,7 +36,7 @@ public class DrawablesTask : Paint
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="drawables">The drawables.</param>
-    public DrawablesTask(CoreMotionCanvas canvas, params IDrawable[] drawables)
+    public DrawablesTask(CoreMotionCanvas canvas, params IDrawnElement[] drawables)
     {
         foreach (var drawable in drawables)
             AddGeometryToPaintTask(canvas, drawable);

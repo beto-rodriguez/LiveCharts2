@@ -30,8 +30,8 @@ public class GeneralSeriesTests
 
     private void RunCartesianTestFor<TVisual, TLabel>(
         Series<int, TVisual, TLabel> series)
-            where TVisual : CoreGeometry, new()
-            where TLabel : CoreLabelGeometry, new()
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;
@@ -66,8 +66,8 @@ public class GeneralSeriesTests
 
     private void RunPolarTestFor<TVisual, TLabel>(
         Series<int, TVisual, TLabel> series)
-            where TVisual : CoreGeometry, new()
-            where TLabel : CoreLabelGeometry, new()
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;
@@ -102,8 +102,8 @@ public class GeneralSeriesTests
 
     private void RunCartesianHorzontalTestFor<TVisual, TLabel>(
         Series<int, TVisual, TLabel> series)
-            where TVisual : CoreGeometry, new()
-            where TLabel : CoreLabelGeometry, new()
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;

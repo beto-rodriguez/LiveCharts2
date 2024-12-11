@@ -70,5 +70,5 @@ public abstract class ChartEngine
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <returns>The created geometry.</returns>
-    public abstract CoreSizedGeometry InitializeZoommingSection(CoreMotionCanvas canvas);
+    public abstract BoundedDrawnGeometry InitializeZoommingSection(CoreMotionCanvas canvas);
 }

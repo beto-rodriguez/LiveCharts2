@@ -44,9 +44,9 @@ namespace LiveChartsCore;
 /// <seealso cref="ICartesianSeries" />
 public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     : CartesianSeries<TModel, TVisual, TLabel>, IFinancialSeries
-        where TVisual : CoreCandlestickGeometry, new()
-        where TLabel : CoreLabelGeometry, new()
-        where TMiniatureGeometry : CoreSizedGeometry, new()
+        where TVisual : BaseCandlestickGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
     private Paint? _upStroke = null;
     private Paint? _upFill = null;

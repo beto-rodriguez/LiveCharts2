@@ -25,8 +25,8 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="CoreSizedGeometry" />
-public abstract class SizedGeometry : CoreSizedGeometry, ISkiaGeometry
+/// <inheritdoc cref="BoundedDrawnGeometry" />
+public abstract class SizedGeometry : BoundedDrawnGeometry, ISkiaGeometry
 {
     /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>

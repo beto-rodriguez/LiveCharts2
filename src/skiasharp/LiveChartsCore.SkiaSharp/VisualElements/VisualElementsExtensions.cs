@@ -49,7 +49,7 @@ public static class VisualElementsExtensions
         {
             foreach (var g in schedule.Geometries)
             {
-                var sizedGeometry = (CoreSizedGeometry)g;
+                var sizedGeometry = (BoundedDrawnGeometry)g;
                 var vgv = new VariableGeometryVisual(sizedGeometry)
                 {
                     Width = sizedGeometry.Width,

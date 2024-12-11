@@ -86,5 +86,5 @@ public class LandData
     /// <summary>
     /// Gets or sets the shape.
     /// </summary>
-    public CoreVectorGeometry<Segment>? Shape { get; set; }
+    public BaseVectorGeometry<Segment>? Shape { get; set; }
 }

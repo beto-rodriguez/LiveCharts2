@@ -27,7 +27,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a doughnut geometry.
 /// </summary>
-public abstract class CoreDoughnutGeometry : CoreSizedGeometry
+public abstract class BaseDoughnutGeometry : BoundedDrawnGeometry
 {
     private readonly FloatMotionProperty _cxProperty;
     private readonly FloatMotionProperty _cyProperty;
@@ -38,9 +38,9 @@ public abstract class CoreDoughnutGeometry : CoreSizedGeometry
     private readonly FloatMotionProperty _cornerRadiusProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreDoughnutGeometry"/> class.
+    /// Initializes a new instance of the <see cref="BaseDoughnutGeometry"/> class.
     /// </summary>
-    public CoreDoughnutGeometry()
+    public BaseDoughnutGeometry()
     {
         _cxProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterX)));
         _cyProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterY)));

@@ -22,14 +22,13 @@
 
 using System;
 using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a box geometry.
 /// </summary>
-public abstract class CoreBoxGeometry : CoreGeometry
+public abstract class BaseBoxGeometry : DrawnGeometry
 {
     private readonly FloatMotionProperty _wProperty;
     private readonly FloatMotionProperty _tProperty;
@@ -38,9 +37,9 @@ public abstract class CoreBoxGeometry : CoreGeometry
     private readonly FloatMotionProperty _medProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreBoxGeometry"/> class.
+    /// Initializes a new instance of the <see cref="BaseBoxGeometry"/> class.
     /// </summary>
-    public CoreBoxGeometry()
+    public BaseBoxGeometry()
     {
         _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0f));
         _tProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Third), 0f));
@@ -94,7 +93,7 @@ public abstract class CoreBoxGeometry : CoreGeometry
         set => _medProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="CoreGeometry.Measure()" />
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>
         new(Width, Math.Abs(Min - Y));
 }

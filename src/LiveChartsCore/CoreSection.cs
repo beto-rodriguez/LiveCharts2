@@ -166,8 +166,8 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 /// <typeparam name="TLabelGeometry">The type of the label geometry.</typeparam>
 /// <seealso cref="ChartElement" />
 public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
-    where TSizedGeometry : CoreSizedGeometry, new()
-    where TLabelGeometry : CoreLabelGeometry, new()
+    where TSizedGeometry : BoundedDrawnGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
 {
     private string _label = string.Empty;
     private float _labelSize = 12;

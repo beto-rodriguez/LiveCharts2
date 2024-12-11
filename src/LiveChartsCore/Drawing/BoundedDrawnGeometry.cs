@@ -14,7 +14,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE-
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -25,26 +25,41 @@ using LiveChartsCore.Motion;
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a rounded rectangle geometry.
+/// Defines a geometry with width and height dimensions.
 /// </summary>
-public abstract class CoreRoundedRectangleGeometry : CoreSizedGeometry
+public abstract class BoundedDrawnGeometry : DrawnGeometry
 {
-    private readonly PointMotionProperty _borderRadius;
+    private readonly FloatMotionProperty _widthProperty;
+    private readonly FloatMotionProperty _heightProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreRoundedRectangleGeometry"/> class.
+    /// Initializes a new instance of the <see cref="BoundedDrawnGeometry"/> class.
     /// </summary>
-    public CoreRoundedRectangleGeometry()
+    protected BoundedDrawnGeometry()
     {
-        _borderRadius = RegisterMotionProperty(new PointMotionProperty(nameof(BorderRadius), new LvcPoint(8f, 8f)));
+        _widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
+        _heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
     }
 
     /// <summary>
-    /// Gets or sets the border radius.
+    /// Gets or sets the width.
     /// </summary>
-    public LvcPoint BorderRadius
+    public float Width
     {
-        get => _borderRadius.GetMovement(this);
-        set => _borderRadius.SetMovement(value, this);
+        get => _widthProperty.GetMovement(this);
+        set => _widthProperty.SetMovement(value, this);
     }
+
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
+    public float Height
+    {
+        get => _heightProperty.GetMovement(this);
+        set => _heightProperty.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
+    public override LvcSize Measure() =>
+        new(Width, Height);
 }

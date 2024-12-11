@@ -26,10 +26,10 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="CoreDoughnutGeometry" />
-public class DoughnutGeometry : CoreDoughnutGeometry, ISkiaGeometry
+/// <inheritdoc cref="BaseDoughnutGeometry" />
+public class DoughnutGeometry : BaseDoughnutGeometry, ISkiaGeometry
 {
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext ctx) =>
         OnDraw(ctx, ctx.ActiveSkiaPaint);
 

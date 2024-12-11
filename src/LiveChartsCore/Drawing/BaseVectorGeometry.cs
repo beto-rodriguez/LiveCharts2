@@ -21,15 +21,19 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a label geometry in the user interface.
+/// Defines an area geometry.
 /// </summary>
-public abstract class CoreLabelGeometry : Animatable, IDrawable
+/// <typeparam name="TSegment">The type of the segment.</typeparam>
+public abstract class BaseVectorGeometry<TSegment> : Animatable, IDrawnElement
+    where TSegment : Segment
 {
     private readonly FloatMotionProperty _xProperty;
     private readonly FloatMotionProperty _yProperty;
@@ -39,18 +43,16 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
     private readonly PointMotionProperty _skewProperty;
     private readonly PointMotionProperty _translateProperty;
     private readonly FloatMotionProperty _opacityProperty;
-    private readonly FloatMotionProperty _textSizeProperty;
-    private readonly ColorMotionProperty _backgroundProperty;
-    private IDrawable? _parent;
+    private readonly FloatMotionProperty _pivotProperty;
+    private Paint? _stroke;
+    private Paint? _fill;
+    private IDrawnElement? _parent;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreLabelGeometry"/> class.
+    /// Initializes a new instance of the <see cref="BaseVectorGeometry{TSegment}"/> class.
     /// </summary>
-    public CoreLabelGeometry()
+    public BaseVectorGeometry()
     {
-        HasTransform = true;
-        _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
-        _backgroundProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Background), LvcColor.Empty));
         _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
         _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
         _transformOriginProperty = RegisterMotionProperty(
@@ -64,20 +66,20 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         _skewProperty = RegisterMotionProperty(
             new PointMotionProperty(nameof(SkewTransform), new LvcPoint(1, 1)));
         _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
-        TransformOrigin = new LvcPoint(0f, 0f);
+        _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
     }
 
-    /// <inheritdoc cref="IDrawable.Parent"/>
-    IDrawable? IDrawable.Parent { get => _parent; set => _parent = value; }
+    /// <inheritdoc cref="IDrawnElement.Parent"/>
+    IDrawnElement? IDrawnElement.Parent { get => _parent; set => _parent = value; }
 
-    /// <inheritdoc cref="IDrawable.Opacity"/>
+    /// <inheritdoc cref="IDrawnElement.Opacity"/>
     public float Opacity
     {
         get => _opacityProperty.GetMovement(this);
         set => _opacityProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.X"/>
+    /// <inheritdoc cref="IDrawnElement.X"/>
     public float X
     {
         get => _parent is null
@@ -86,7 +88,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         set => _xProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.Y"/>
+    /// <inheritdoc cref="IDrawnElement.Y"/>
     public float Y
     {
         get => _parent is null
@@ -95,14 +97,14 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         set => _yProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.TransformOrigin"/>
+    /// <inheritdoc cref="IDrawnElement.TransformOrigin"/>
     public LvcPoint TransformOrigin
     {
         get => _transformOriginProperty.GetMovement(this);
         set => _transformOriginProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="IDrawable.TranslateTransform"/>
+    /// <inheritdoc cref="IDrawnElement.TranslateTransform"/>
     public LvcPoint TranslateTransform
     {
         get => _translateProperty.GetMovement(this);
@@ -113,7 +115,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.RotateTransform"/>
+    /// <inheritdoc cref="IDrawnElement.RotateTransform"/>
     public float RotateTransform
     {
         get => _rotationProperty.GetMovement(this);
@@ -124,7 +126,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.ScaleTransform"/>
+    /// <inheritdoc cref="IDrawnElement.ScaleTransform"/>
     public LvcPoint ScaleTransform
     {
         get => _scaleProperty.GetMovement(this);
@@ -135,7 +137,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.SkewTransform"/>
+    /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
     public LvcPoint SkewTransform
     {
         get => _skewProperty.GetMovement(this);
@@ -146,10 +148,10 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasTransform"/>
+    /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
-    /// <inheritdoc cref="IDrawable.HasTranslate"/>
+    /// <inheritdoc cref="IDrawnElement.HasTranslate"/>
     public bool HasTranslate
     {
         get
@@ -159,7 +161,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasScale"/>
+    /// <inheritdoc cref="IDrawnElement.HasScale"/>
     public bool HasScale
     {
         get
@@ -169,7 +171,7 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasSkew"/>
+    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
     public bool HasSkew
     {
         get
@@ -179,78 +181,61 @@ public abstract class CoreLabelGeometry : Animatable, IDrawable
         }
     }
 
-    /// <inheritdoc cref="IDrawable.HasSkew"/>
+    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
     public bool HasRotation => Math.Abs(RotateTransform) > 0;
 
-    /// <summary>
-    /// Gets or sets the vertical align.
-    /// </summary>
-    /// <value>
-    /// The vertical align.
-    /// </value>
-    public Align VerticalAlign { get; set; } = Align.Middle;
-
-    /// <summary>
-    /// Gets or sets the horizontal align.
-    /// </summary>
-    /// <value>
-    /// The horizontal align.
-    /// </value>
-    public Align HorizontalAlign { get; set; } = Align.Middle;
-
-    /// <summary>
-    /// Gets or sets the text.
-    /// </summary>
-    public string Text { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the size of the text.
-    /// </summary>
-    public float TextSize
+    /// <inheritdoc cref="IDrawnElement.Stroke"/>
+    public Paint? Stroke
     {
-        get => _textSizeProperty.GetMovement(this);
-        set => _textSizeProperty.SetMovement(value, this);
+        get => _stroke;
+        set
+        {
+            _stroke = value;
+            if (_stroke is not null) _stroke.PaintStyle = PaintStyle.Stroke;
+        }
+    }
+
+    /// <inheritdoc cref="IDrawnElement.Fill"/>
+    public Paint? Fill
+    {
+        get => _fill;
+        set
+        {
+            _fill = value;
+            if (_fill is not null) _fill.PaintStyle = PaintStyle.Fill;
+        }
     }
 
     /// <summary>
-    /// Gets or sets the background color.
+    /// Gets the commands in the vector.
     /// </summary>
-    public LvcColor Background
+    public LinkedList<TSegment> Commands { get; } = new();
+
+    /// <summary>
+    /// Gets or sets the closing method.
+    /// </summary>
+    public VectorClosingMethod ClosingMethod { get; set; }
+
+    /// <summary>
+    /// Gets or sets the pivot.
+    /// </summary>
+    public float Pivot
     {
-        get => _backgroundProperty.GetMovement(this);
-        set => _backgroundProperty.SetMovement(value, this);
+        get => _pivotProperty.GetMovement(this);
+        set => _pivotProperty.SetMovement(value, this);
     }
 
-    /// <summary>
-    /// Gets or sets the padding.
-    /// </summary>
-    public Padding Padding { get; set; } = new();
+    /// <inheritdoc cref="Animatable.CompleteTransition(string[])" />
+    public override void CompleteTransition(params string[]? propertyName)
+    {
+        foreach (var segment in Commands)
+        {
+            segment.CompleteTransition(propertyName);
+        }
 
-    /// <summary>
-    /// Gets or sets the line height [in times the text height].
-    /// </summary>
-    public float LineHeight { get; set; } = 1.45f;
+        base.CompleteTransition(propertyName);
+    }
 
-    /// <summary>
-    /// Gets or sets the maximum width, when the text exceeds this width, it will be wrapped.
-    /// </summary>
-    public float MaxWidth { get; set; } = float.MaxValue;
-
-#if DEBUG
-    /// <summary>
-    /// This property is only available on debug mode, it indicates if the debug lines should be shown.
-    /// </summary>
-    public static bool ShowDebugLines { get; set; }
-#endif
-
-    /// <summary>
-    /// Gets or sets the paint.
-    /// </summary>
-    public Paint? Paint { get; set; }
-
-    Paint? IDrawable.Stroke { get; set; }
-    Paint? IDrawable.Fill { get; set; }
-
-    /// <inheritdoc cref="IDrawable.Measure()"/>
-    public abstract LvcSize Measure();
+    /// <inheritdoc cref="IDrawnElement.Measure()" />
+    public LvcSize Measure() => new();
 }

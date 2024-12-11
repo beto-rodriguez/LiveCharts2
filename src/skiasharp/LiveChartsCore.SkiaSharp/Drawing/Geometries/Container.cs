@@ -24,11 +24,11 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-///<inheritdoc cref="CoreContainer{TShape, TDrawingContext}"/>
+///<inheritdoc cref="BaseContainer{TShape, TDrawingContext}"/>
 public class Container : Container<RectangleGeometry>
 { }
 
-///<inheritdoc cref="CoreContainer{TShape, TDrawingContext}"/>
-public class Container<TShape> : CoreContainer<TShape, SkiaSharpDrawingContext>
-    where TShape : CoreSizedGeometry, IDrawable<SkiaSharpDrawingContext>, new()
+///<inheritdoc cref="BaseContainer{TShape, TDrawingContext}"/>
+public class Container<TShape> : BaseContainer<TShape, SkiaSharpDrawingContext>
+    where TShape : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>, new()
 { }

@@ -27,13 +27,13 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a drawable object, an object that can be represented in the user interface.
 /// </summary>
-public interface IDrawable
+public interface IDrawnElement
 {
     /// <summary>
     /// Gets the parent shape, if any, the <see cref="X"/> and <see cref="Y"/>
     /// coordinates will be relative to the parent.
     /// </summary>
-    public IDrawable? Parent { get; set; }
+    public IDrawnElement? Parent { get; set; }
 
     /// <summary>
     /// Gets or sets the x coordinate, if the parent is not null the x coordinate will be relative to the parent.
@@ -142,7 +142,7 @@ public interface IDrawable
 /// Defines a drawable object, an object that can be represented in the user interface.
 /// </summary>
 /// <typeparam name="TDrawingContext"></typeparam>
-public interface IDrawable<TDrawingContext> : IDrawable
+public interface IDrawnElement<TDrawingContext> : IDrawnElement
     where TDrawingContext : DrawingContext
 {
     /// <summary>

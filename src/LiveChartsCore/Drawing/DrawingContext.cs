@@ -64,7 +64,7 @@ public abstract class DrawingContext
     /// Draws the given element.
     /// </summary>
     /// <param name="drawable">The drawable element.</param>
-    public abstract void Draw(IDrawable drawable);
+    public abstract void Draw(IDrawnElement drawable);
 
     /// <summary>
     /// Initializes the task.

@@ -109,7 +109,7 @@ public class CoreMotionCanvas : IDisposable
             var isValid = true;
             var frameTime = _stopwatch.ElapsedMilliseconds;
 
-            var toRemoveGeometries = new List<Tuple<Paint, IDrawable>>();
+            var toRemoveGeometries = new List<Tuple<Paint, IDrawnElement>>();
 
             foreach (var task in _paintTasks.Where(x => x is not null).OrderBy(x => x.ZIndex))
             {
@@ -137,7 +137,7 @@ public class CoreMotionCanvas : IDisposable
 
                     if (geometry.IsValid && geometry.RemoveOnCompleted)
                         toRemoveGeometries.Add(
-                            new Tuple<Paint, IDrawable>(task, geometry));
+                            new Tuple<Paint, IDrawnElement>(task, geometry));
                 }
 
                 isValid = isValid && task.IsValid;
@@ -217,7 +217,7 @@ public class CoreMotionCanvas : IDisposable
     /// <summary>
     /// Adds a geometry (or geometries) to the canvas.
     /// </summary>
-    public void AddGeometry(params IDrawable[] geometries)
+    public void AddGeometry(params IDrawnElement[] geometries)
     {
         var task = new DrawablesTask(this, geometries);
         _ = _paintTasks.Add(task);

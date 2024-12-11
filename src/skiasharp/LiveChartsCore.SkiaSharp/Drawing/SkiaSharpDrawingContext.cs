@@ -139,12 +139,12 @@ public class SkiaSharpDrawingContext(
             p);
     }
 
-    /// <inheritdoc cref="DrawingContext.Draw(IDrawable)"/>
-    public override void Draw(IDrawable drawable)
+    /// <inheritdoc cref="DrawingContext.Draw(IDrawnElement)"/>
+    public override void Draw(IDrawnElement drawable)
     {
         var opacity = ActiveOpacity;
 
-        var element = (IDrawable<SkiaSharpDrawingContext>)drawable;
+        var element = (IDrawnElement<SkiaSharpDrawingContext>)drawable;
 
         if (element.HasTransform)
         {
@@ -246,7 +246,7 @@ public class SkiaSharpDrawingContext(
         ActiveSkiaPaint = null!;
     }
 
-    private void DrawByActivePaint(IDrawable<SkiaSharpDrawingContext> element, float opacity)
+    private void DrawByActivePaint(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
     {
         var hasGeometryOpacity = opacity < 1;
 
@@ -255,7 +255,7 @@ public class SkiaSharpDrawingContext(
         if (hasGeometryOpacity) ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
     }
 
-    private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element, float opacity)
+    private void DrawByPaint(Paint paint, IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
     {
         var hasGeometryOpacity = opacity < 1;
 

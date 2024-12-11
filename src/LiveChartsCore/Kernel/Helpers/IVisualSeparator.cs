@@ -43,7 +43,7 @@ public interface IVisualSeparator
     /// <value>
     /// The text.
     /// </value>
-    public CoreLabelGeometry? Label { get; set; }
+    public BaseLabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets the geometry.
@@ -51,5 +51,5 @@ public interface IVisualSeparator
     /// <value>
     /// The line.
     /// </value>
-    public CoreGeometry? Geometry { get; }
+    public DrawnGeometry? Geometry { get; }
 }
