@@ -185,14 +185,14 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
 
     Paint? IDrawable.Stroke
     {
-        get => null;
+        get => MeasureTask.Instance;
         set => throw new NotImplementedException(
             "Layouts can not have a Stroke, instead place the layout as the child of another geometry.");
     }
 
     Paint? IDrawable.Fill
     {
-        get => MeasureTask.Instance;
+        get => null;
         set => throw new NotImplementedException(
             "Layouts can not have a Stroke, instead place the layout as the child of another geometry.");
     }
