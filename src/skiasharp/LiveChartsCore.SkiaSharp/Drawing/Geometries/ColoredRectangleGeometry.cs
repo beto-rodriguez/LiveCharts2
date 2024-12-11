@@ -29,8 +29,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a rectangle geometry with a specified color.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
-public class ColoredRectangleGeometry : SizedGeometry, IColoredGeometry
+public class ColoredRectangleGeometry : BoundedDrawnGeometry, IColoredGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     private readonly ColorMotionProperty _colorProperty;
 
@@ -49,13 +48,19 @@ public class ColoredRectangleGeometry : SizedGeometry, IColoredGeometry
         set => _colorProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
+        // THIS CLASS IS EXTRANGE...
+        // WHY IS IT MODIFYING THE ACTIVE PAINT?
+        // THIS MIGHT BE CHANGED IN THE FUTURE
+
         var c = Color;
-        paint.Color = new SKColor(c.R, c.G, c.B, c.A);
+        var activePaint = context.ActiveSkiaPaint;
+
+        activePaint.Color = new SKColor(c.R, c.G, c.B, c.A);
 
         context.Canvas.DrawRect(
-            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
+            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, activePaint);
     }
 }

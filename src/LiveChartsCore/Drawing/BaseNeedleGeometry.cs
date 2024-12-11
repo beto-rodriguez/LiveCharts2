@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Motion;
-using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
 

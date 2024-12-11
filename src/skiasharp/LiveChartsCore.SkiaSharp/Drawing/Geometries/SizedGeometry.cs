@@ -20,18 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="BoundedDrawnGeometry" />
-public abstract class SizedGeometry : BoundedDrawnGeometry, ISkiaGeometry
+/// <summary>
+/// Defines a geometry with a size.
+/// </summary>
+[Obsolete($"Renamed to {nameof(BoundedDrawnGeometry)}")]
+public abstract class SizedGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)"/>
+    public abstract void Draw(SkiaSharpDrawingContext context);
 }

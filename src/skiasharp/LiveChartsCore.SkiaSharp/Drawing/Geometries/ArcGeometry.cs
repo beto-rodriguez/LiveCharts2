@@ -27,14 +27,10 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="BaseArcGeometry" />
-public class ArcGeometry : BaseArcGeometry, ISkiaGeometry
+public class ArcGeometry : BaseArcGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         using var path = new SKPath();
 
@@ -56,8 +52,4 @@ public class ArcGeometry : BaseArcGeometry, ISkiaGeometry
 
         context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
     }
-
-    /// <inheritdoc cref="DrawnGeometry.Measure()"/>
-    public override LvcSize Measure() =>
-        new();
 }

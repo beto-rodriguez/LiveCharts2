@@ -28,19 +28,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a rounded rectangle geometry.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
-public class RoundedRectangleGeometry : BaseRoundedRectangleGeometry, ISkiaGeometry
+public class RoundedRectangleGeometry : BaseRoundedRectangleGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public void Draw(SkiaSharpDrawingContext context)
     {
         var br = BorderRadius;
 
         context.Canvas.DrawRoundRect(
-            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, br.X, br.Y, paint);
+            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } },
+            br.X,
+            br.Y,
+            context.ActiveSkiaPaint);
     }
 }

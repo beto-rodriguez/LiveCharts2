@@ -22,22 +22,17 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <summary>
-/// Defines a candlestick geometry.
-/// </summary>
-public class CandlestickGeometry : BaseCandlestickGeometry, ISkiaGeometry
+/// <inheritdoc cref="BaseCandlestickGeometry" />
+public class CandlestickGeometry : BaseCandlestickGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
+        var paint = context.ActiveSkiaPaint;
+
         var w = Width;
         var cx = X + w * 0.5f;
         var h = Y;
@@ -62,8 +57,4 @@ public class CandlestickGeometry : BaseCandlestickGeometry, ISkiaGeometry
         context.Canvas.DrawRect(X, yi, w, Math.Abs(o - c), paint);
         context.Canvas.DrawLine(cx, yj, cx, l, paint);
     }
-
-    /// <inheritdoc cref="DrawnGeometry.Measure()" />
-    public override LvcSize Measure() =>
-        new(Width, Math.Abs(Low - Y));
 }

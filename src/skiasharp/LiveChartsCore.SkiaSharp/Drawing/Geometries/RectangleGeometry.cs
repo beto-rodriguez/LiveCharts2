@@ -28,17 +28,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a rectangle geometry.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
-public class RectangleGeometry : BoundedDrawnGeometry, ISkiaGeometry
+public class RectangleGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         context.Canvas.DrawRect(
-            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
+            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } },
+            context.ActiveSkiaPaint);
     }
 }

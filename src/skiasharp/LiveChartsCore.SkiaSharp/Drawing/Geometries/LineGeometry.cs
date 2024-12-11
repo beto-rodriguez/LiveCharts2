@@ -20,24 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="BaseLineGeometry" />
-public class LineGeometry : BaseLineGeometry, ISkiaGeometry
+public class LineGeometry : BaseLineGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint) =>
-        context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-
-    /// <inheritdoc cref="DrawnGeometry.Measure()" />
-    public override LvcSize Measure() =>
-        new(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
+    public virtual void Draw(SkiaSharpDrawingContext context) =>
+        context.Canvas.DrawLine(X, Y, X1, Y1, context.ActiveSkiaPaint);
 }

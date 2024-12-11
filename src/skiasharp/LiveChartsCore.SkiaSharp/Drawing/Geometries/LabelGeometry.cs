@@ -32,7 +32,7 @@ using SkiaSharp.HarfBuzz;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="BaseLabelGeometry" />
-public class LabelGeometry : BaseLabelGeometry, ISkiaGeometry
+public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     internal float _maxTextHeight = 0f;
     internal int _lines;
@@ -46,13 +46,10 @@ public class LabelGeometry : BaseLabelGeometry, ISkiaGeometry
     }
 
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        context.ActiveSkiaPaint.TextSize = TextSize;
+        var paint = context.ActiveSkiaPaint;
+        paint.TextSize = TextSize;
 
         var p = Padding;
         var bg = Background;
@@ -76,7 +73,7 @@ public class LabelGeometry : BaseLabelGeometry, ISkiaGeometry
 
         foreach (var line in GetLines(context.ActiveSkiaPaint))
         {
-            _ = context.ActiveSkiaPaint.MeasureText(line, ref textBounds);
+            _ = paint.MeasureText(line, ref textBounds);
 
             var lhd = (textBounds.Height * LineHeight - _maxTextHeight) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);

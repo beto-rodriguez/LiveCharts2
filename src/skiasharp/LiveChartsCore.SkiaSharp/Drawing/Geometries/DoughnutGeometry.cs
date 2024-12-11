@@ -27,25 +27,17 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <inheritdoc cref="BaseDoughnutGeometry" />
-public class DoughnutGeometry : BaseDoughnutGeometry, ISkiaGeometry
+public class DoughnutGeometry : BaseDoughnutGeometry, IDrawnElement
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         if (CornerRadius == 0)
-        {
             ClassicDraw(context);
-        }
         else
-        {
             // this method should be able to draw the doughnut with rounded corners
             // but this is probably not working as expected, so we will use the classic draw method
             RoundedDraw(context);
-        }
     }
 
     private void ClassicDraw(SkiaSharpDrawingContext context)

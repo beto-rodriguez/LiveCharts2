@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -27,11 +28,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a geometry that is built from a svg path.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="BaseSVGPathGeometry"/> class.
 /// </remarks>
-public class BaseSVGPathGeometry : SizedGeometry, ISkiaGeometry
+public class BaseSVGPathGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseSVGPathGeometry"/> class.
@@ -58,11 +58,12 @@ public class BaseSVGPathGeometry : SizedGeometry, ISkiaGeometry
     /// </summary>
     public bool FitToSize { get; set; } = false;
 
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         if (Path is null) return;
-        DrawPath(context, paint, Path);
+
+        DrawPath(context, context.ActiveSkiaPaint, Path);
     }
 
     /// <summary>
@@ -80,7 +81,7 @@ public class BaseSVGPathGeometry : SizedGeometry, ISkiaGeometry
 
         if (FitToSize)
         {
-            // fit to both axis
+            // fit to both axes
             canvas.Translate(X + Width / 2f, Y + Height / 2f);
             canvas.Scale(
                 Width / (bounds.Width + paint.StrokeWidth),

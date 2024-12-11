@@ -22,22 +22,17 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <summary>
-/// Defines a box geometry.
-/// </summary>
-public class BoxGeometry : BaseBoxGeometry, ISkiaGeometry
+/// <inheritdoc cref="BaseBoxGeometry" />
+public class BoxGeometry : BaseBoxGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
+        var paint = context.ActiveSkiaPaint;
+
         var w = Width;
         var cx = X + w * 0.5f;
         var h = Y;
@@ -73,8 +68,4 @@ public class BoxGeometry : BaseBoxGeometry, ISkiaGeometry
 
         context.Canvas.DrawRect(x, yi, w, Math.Abs(o - c), paint);
     }
-
-    /// <inheritdoc cref="DrawnGeometry.Measure()" />
-    public override LvcSize Measure() =>
-        new(Width, Math.Abs(Min - Y));
 }

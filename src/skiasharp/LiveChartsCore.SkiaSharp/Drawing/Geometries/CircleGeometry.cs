@@ -21,24 +21,18 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
 /// Defines a circle geometry.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
-public class CircleGeometry : BoundedDrawnGeometry, ISkiaGeometry
+public class CircleGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext ctx) =>
-        OnDraw(ctx, ctx.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public virtual void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         var rx = Width / 2f;
-        context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);
+        context.Canvas.DrawCircle(X + rx, Y + rx, rx, context.ActiveSkiaPaint);
     }
 }

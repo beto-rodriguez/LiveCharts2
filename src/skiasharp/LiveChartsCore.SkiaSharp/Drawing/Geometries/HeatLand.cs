@@ -26,6 +26,8 @@ using LiveChartsCore.Geo;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
+// NOTE: this should be in the core? there is no reference to SkiaSharp
+
 /// <summary>
 /// Defines a heat lane.
 /// </summary>
