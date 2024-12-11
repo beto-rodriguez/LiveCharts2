@@ -73,11 +73,13 @@ public abstract class CoreStackLayout<TDrawingContext>
     {
         _ = Measure();
 
+        var activeOpacity = context.ActiveOpacity;
+
         foreach (var child in Children)
         {
             child.Parent = this;
 
-            context.ActiveOpacity *= Opacity;
+            context.ActiveOpacity = activeOpacity * child.Opacity;
             context.Draw(child);
         }
     }

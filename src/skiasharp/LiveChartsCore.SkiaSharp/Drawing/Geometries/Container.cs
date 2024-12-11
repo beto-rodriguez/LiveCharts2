@@ -56,7 +56,7 @@ public class Container<T> : CoreSizedGeometry, ISkiaGeometry
         _containerGeometry.Width = contentSize.Width;
         _containerGeometry.Height = contentSize.Height;
 
-        _containerGeometry.OnDraw(context, paint);
+        context.Draw(_containerGeometry);
 
         content.Parent = this;
         context.Draw(content);
