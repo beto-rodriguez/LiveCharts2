@@ -20,11 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
-using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -103,35 +101,7 @@ public abstract class VectorGeometry<TSegment> : BaseVectorGeometry<TSegment>, I
 
         if (last is not null) OnClose(context, path, last);
 
-        var hasGeometryOpacity = Opacity < 1;
-
-        if (Fill is null && Stroke is null)
-        {
-            if (hasGeometryOpacity) context.ActiveLvcPaint.ApplyOpacityMask(context, Opacity);
-            context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
-            if (hasGeometryOpacity) context.ActiveLvcPaint.RestoreOpacityMask(context, Opacity);
-        }
-        else if (Fill is not null)
-        {
-            var originalPaint = context.ActiveSkiaPaint;
-            var originalTask = context.ActiveLvcPaint;
-
-            Fill.PaintStyle = PaintStyle.Fill;
-            Fill.InitializeTask(context);
-
-            if (hasGeometryOpacity) Fill.ApplyOpacityMask(context, Opacity);
-            context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
-            if (hasGeometryOpacity) Fill.RestoreOpacityMask(context, Opacity);
-
-            Fill.Dispose();
-
-            context.ActiveSkiaPaint = originalPaint;
-            context.ActiveLvcPaint = originalTask;
-        }
-        else
-        {
-            throw new NotImplementedException("Fill and Stroke per vector is experiental.");
-        }
+        context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
 
         if (!isValid) IsValid = false;
     }
