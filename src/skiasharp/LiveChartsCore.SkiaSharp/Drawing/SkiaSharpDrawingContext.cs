@@ -194,15 +194,34 @@ public class SkiaSharpDrawingContext(
             //}
         }
 
-        if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
+        if (ActiveLvcPaint is null)
         {
-            if (element.Stroke is null) DrawByActivePaint(element, opacity);
-            else DrawByPaint(element.Stroke, element, opacity);
+            // if the active paint is null, we need to draw by the element paint
+
+            if (element.Stroke is not null)
+                DrawByPaint(element.Stroke, element, opacity);
+            else if (element.Fill is not null)
+                DrawByPaint(element.Fill, element, opacity);
         }
         else
         {
-            if (element.Fill is null) DrawByActivePaint(element, opacity);
-            else DrawByPaint(element.Fill, element, opacity);
+            // we will draw using the active paint while the element paint is null
+
+            if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
+            {
+                if (element.Stroke is null)
+                    DrawByActivePaint(element, opacity);
+                else
+                    DrawByPaint(element.Stroke, element, opacity);
+            }
+
+            if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
+            {
+                if (element.Fill is null)
+                    DrawByActivePaint(element, opacity);
+                else
+                    DrawByPaint(element.Fill, element, opacity);
+            }
         }
 
         if (element.HasTransform) Canvas.Restore();
@@ -211,10 +230,10 @@ public class SkiaSharpDrawingContext(
     /// <inheritdoc cref="DrawingContext.InitializePaintTask(Paint)"/>
     public override void InitializePaintTask(Paint paint)
     {
-        paint.InitializeTask(this);
-
         ActiveLvcPaint = paint;
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
+
+        paint.InitializeTask(this);
     }
 
     /// <inheritdoc cref="DrawingContext.DisposePaintTask(Paint)"/>
@@ -230,9 +249,9 @@ public class SkiaSharpDrawingContext(
     {
         var hasGeometryOpacity = opacity < 1;
 
-        if (hasGeometryOpacity) ActiveLvcPaint.ApplyOpacityMask(this, opacity);
+        if (hasGeometryOpacity) ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
         element.Draw(this);
-        if (hasGeometryOpacity) ActiveLvcPaint.RestoreOpacityMask(this, opacity);
+        if (hasGeometryOpacity) ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
     }
 
     private void DrawByPaint(Paint paint, IDrawable<SkiaSharpDrawingContext> element, float opacity)

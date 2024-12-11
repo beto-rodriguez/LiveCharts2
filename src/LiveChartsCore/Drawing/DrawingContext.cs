@@ -40,7 +40,7 @@ public abstract class DrawingContext
     /// <value>
     /// The paint task.
     /// </value>
-    public Paint ActiveLvcPaint { get; internal set; } = null!;
+    public Paint? ActiveLvcPaint { get; internal set; }
 
     /// <summary>
     /// Called when the frame starts.

@@ -48,14 +48,15 @@ public class DrawablesTask : Paint
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask() => throw new NotImplementedException();
 
-    /// <inheritdoc cref="Paint.CloneTask" />
+    /// <inheritdoc cref="Paint.Dispose" />
     public override void Dispose() { }
 
-    /// <inheritdoc cref="Paint.CloneTask" />
+    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
     public override void InitializeTask(DrawingContext drawingContext) =>
-        drawingContext.ActiveLvcPaint = this;
+        // lets clear the active paint task, this will force the drawables to use their own paint tasks.
+        drawingContext.ActiveLvcPaint = null;
 
-    /// <inheritdoc cref="Paint.CloneTask" />
+    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
     public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
 }
 
