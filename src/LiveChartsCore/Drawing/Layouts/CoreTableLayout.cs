@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore.Drawing.Layouts;
 
@@ -29,33 +30,20 @@ namespace LiveChartsCore.Drawing.Layouts;
 /// Defines a the stack panel geometry.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
-    : CoreGeometry, IDrawable<TDrawingContext>
+public abstract class CoreTableLayout<TDrawingContext>
+    : Layout<TDrawingContext>, IDrawable<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TBackgroundGeometry : CoreSizedGeometry, IDrawable<TDrawingContext>, new()
 {
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = [];
     private int _maxRow = 0;
     private int _maxColumn = 0;
-    private readonly TBackgroundGeometry _backgroundGeometry = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreStackLayout{TDrawingContext}"/> class.
     /// </summary>
     protected CoreTableLayout()
     { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackLayout{TBackgroundGeometry, TDrawingContext}"/> class,
-    /// and uses the specified geometry as background.
-    /// </summary>
-    /// <param name="backgroundGeometry">The background gemetry.</param>
-    protected CoreTableLayout(TBackgroundGeometry backgroundGeometry)
-    {
-        _backgroundGeometry = backgroundGeometry;
-    }
 
     /// <summary>
     /// Gets or sets the padding.
@@ -80,7 +68,7 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
     /// <param name="child">The visual to add.</param>
     /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
     /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
-    public CoreTableLayout<TBackgroundGeometry, TDrawingContext> AddChild(
+    public CoreTableLayout<TDrawingContext> AddChild(
         IDrawable<TDrawingContext> child,
         int row,
         int column,
@@ -113,7 +101,7 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
     /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)"/>
     public void Draw(TDrawingContext context)
     {
-        var controlSize = Measure();
+        _ = Measure();
 
         float w, h = Padding.Top;
 
@@ -155,14 +143,14 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
             h += rowHeight;
         }
 
-        _backgroundGeometry.X = X;
-        _backgroundGeometry.Y = Y;
-        _backgroundGeometry.Height = controlSize.Height;
-        _backgroundGeometry.Width = controlSize.Width;
-        _backgroundGeometry.Fill = Fill;
-        _backgroundGeometry.Stroke = Stroke;
+        var activeOpacity = context.ActiveOpacity;
+        foreach (var child in GetChildren())
+        {
+            child.Parent = this;
 
-        _backgroundGeometry.Draw(context);
+            context.ActiveOpacity = activeOpacity * child.Opacity;
+            context.Draw(child);
+        }
     }
 
     /// <inheritdoc cref="IDrawable.Measure"/>
@@ -207,6 +195,10 @@ public abstract class CoreTableLayout<TBackgroundGeometry, TDrawingContext>
 
         return new(maxW + Padding.Right, maxH + Padding.Bottom);
     }
+
+    /// <inheritdoc cref="Layout{TDrawingContext}.GetChildren"/>
+    protected override IEnumerable<IDrawable<TDrawingContext>> GetChildren() =>
+        _positions.Values.SelectMany(x => x.Values.Select(y => y.Drawable));
 
     private class TableCell(
         int row,

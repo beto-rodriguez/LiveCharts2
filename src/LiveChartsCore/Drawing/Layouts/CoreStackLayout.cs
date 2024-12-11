@@ -39,6 +39,11 @@ public abstract class CoreStackLayout<TDrawingContext>
     { }
 
     /// <summary>
+    /// Gets or sets the children.
+    /// </summary>
+    public IDrawable<TDrawingContext>[] Children { get; set; } = [];
+
+    /// <summary>
     /// Gets or sets the panel orientation.
     /// </summary>
     public ContainerOrientation Orientation { get; set; }
@@ -193,6 +198,9 @@ public abstract class CoreStackLayout<TDrawingContext>
 
         return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
+
+    /// <inheritdoc cref="Layout{TDrawingContext}.GetChildren"/>
+    protected override IEnumerable<IDrawable<TDrawingContext>> GetChildren() => Children;
 
     private class MeasureResult(IDrawable<TDrawingContext> visual, LvcSize size)
     {

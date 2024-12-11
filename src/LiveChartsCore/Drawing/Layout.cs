@@ -66,11 +66,6 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
     /// <inheritdoc cref="IDrawable.Parent"/>
     IDrawable? IDrawable.Parent { get => _parent; set => _parent = value; }
 
-    /// <summary>
-    /// Gets or sets the children.
-    /// </summary>
-    public IEnumerable<IDrawable<TDrawingContext>> Children { get; set; } = [];
-
     /// <inheritdoc cref="IDrawable.Opacity"/>
     public float Opacity
     {
@@ -199,4 +194,10 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawable
 
     /// <inheritdoc cref="IDrawable.Measure()"/>
     public abstract LvcSize Measure();
+
+    /// <summary>
+    /// Gets the children.
+    /// </summary>
+    /// <returns>The children.</returns>
+    protected abstract IEnumerable<IDrawable<TDrawingContext>> GetChildren();
 }
