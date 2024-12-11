@@ -51,6 +51,8 @@ public class CoreContainer<TShape, TDrawingContext> : CoreSizedGeometry, IDrawab
         _containerGeometry.Y = Y;
         _containerGeometry.Width = contentSize.Width;
         _containerGeometry.Height = contentSize.Height;
+        _containerGeometry.Fill = Fill?.CloneTask();
+        _containerGeometry.Stroke = Stroke?.CloneTask();
 
         context.Draw(_containerGeometry);
 
