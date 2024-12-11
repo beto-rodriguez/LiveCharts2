@@ -20,45 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <summary>
-/// Defines a container geometry.
-/// </summary>
-/// <typeparam name="T">The type of the background geometry.</typeparam>
-public class Container<T> : CoreSizedGeometry, ISkiaGeometry
-    where T : CoreSizedGeometry, ISkiaGeometry, new()
-{
-    private readonly T _containerGeometry = new();
+///<inheritdoc cref="CoreContainer{TShape, TDrawingContext}"/>
+public class Container : Container<RectangleGeometry>
+{ }
 
-    /// <summary>
-    /// Gets or sets the content.
-    /// </summary>
-    public IDrawable<SkiaSharpDrawingContext>? Content { get; set; }
-
-    /// <inheritdoc cref="IDrawable{TDrawingContext}.Draw(TDrawingContext)" />
-    public void Draw(SkiaSharpDrawingContext context) =>
-        OnDraw(context, context.ActiveSkiaPaint);
-
-    /// <inheritdoc cref="ISkiaGeometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-    {
-        var content = Content ?? throw new InvalidOperationException("Content not found");
-
-        var contentSize = content.Measure();
-
-        _containerGeometry.X = X;
-        _containerGeometry.Y = Y;
-        _containerGeometry.Width = contentSize.Width;
-        _containerGeometry.Height = contentSize.Height;
-
-        context.Draw(_containerGeometry);
-
-        content.Parent = this;
-        context.Draw(content);
-    }
-}
+///<inheritdoc cref="CoreContainer{TShape, TDrawingContext}"/>
+public class Container<TShape> : CoreContainer<TShape, SkiaSharpDrawingContext>
+    where TShape : CoreSizedGeometry, IDrawable<SkiaSharpDrawingContext>, new()
+{ }
