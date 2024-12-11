@@ -22,25 +22,15 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Painting;
 
 /// <summary>
-/// Defines a task that will draw a set of geometries.
+/// Just an empty paint task, this is used to measure layouts... just a hack.
 /// </summary>
-public class DrawablesTask : Paint
+internal class MeasureTask : Paint
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DrawablesTask"/> class.
-    /// </summary>
-    /// <param name="canvas">The canvas.</param>
-    /// <param name="drawables">The drawables.</param>
-    public DrawablesTask(CoreMotionCanvas canvas, params IDrawable[] drawables)
-    {
-        foreach (var drawable in drawables)
-            AddGeometryToPaintTask(canvas, drawable);
-    }
+    public static MeasureTask Instance { get; } = new MeasureTask();
 
     /// <inheritdoc cref="Paint.CloneTask" />
     public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
@@ -52,9 +42,7 @@ public class DrawablesTask : Paint
     public override void Dispose() { }
 
     /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext) =>
-        // lets clear the active paint task, this will force the drawables to use their own paint tasks.
-        drawingContext.ActiveLvcPaint = null;
+    public override void InitializeTask(DrawingContext drawingContext) { }
 
     /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
     public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
