@@ -22,12 +22,11 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Layouts;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 
-/// <inheritdoc cref="CoreTableLayout{TBackgroundGeometry, TDrawingContext}"/>
-public class TableLayout : CoreTableLayout<RectangleGeometry, SkiaSharpDrawingContext>
+/// <inheritdoc cref="CoreTableLayout{TDrawingContext}"/>
+public class TableLayout : CoreTableLayout<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="TableLayout"/> class.
@@ -35,38 +34,8 @@ public class TableLayout : CoreTableLayout<RectangleGeometry, SkiaSharpDrawingCo
     public TableLayout()
     { }
 
-    /// <inheritdoc cref="TableLayout{TBackgroundGeometry}.AddChild(IDrawable{SkiaSharpDrawingContext}, int, int, Align?, Align?)"/>
+    /// <inheritdoc cref="CoreTableLayout{TDrawingContext}.AddChild(IDrawable{TDrawingContext}, int, int, Align?, Align?)"/>
     public new TableLayout AddChild(
-        IDrawable<SkiaSharpDrawingContext> drawable, int row,
-        int column,
-        Align? horizontalAlign = null,
-        Align? verticalAlign = null)
-    {
-        _ = base.AddChild(drawable, row, column, horizontalAlign, verticalAlign);
-        return this;
-    }
-}
-
-/// <inheritdoc cref="CoreTableLayout{TBackgroundGeometry, TDrawingContext}"/>
-public class TableLayout<TBackgroundGeometry> : CoreTableLayout<TBackgroundGeometry, SkiaSharpDrawingContext>
-    where TBackgroundGeometry : CoreSizedGeometry, IDrawable<SkiaSharpDrawingContext>, new()
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class.
-    /// </summary>
-    public TableLayout()
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class,
-    /// </summary>
-    /// <param name="backgroundGeometry">The background geometry.</param>
-    public TableLayout(TBackgroundGeometry backgroundGeometry)
-        : base(backgroundGeometry)
-    { }
-
-    /// <inheritdoc cref="TableLayout{TBackgroundGeometry}.AddChild(IDrawable{SkiaSharpDrawingContext}, int, int, Align?, Align?)"/>
-    public new TableLayout<TBackgroundGeometry> AddChild(
         IDrawable<SkiaSharpDrawingContext> drawable, int row,
         int column,
         Align? horizontalAlign = null,
