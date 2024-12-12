@@ -203,6 +203,9 @@ public class SkiaSharpDrawingContext(
 
             if (element.Stroke is not null)
                 DrawByPaint(element.Stroke, element, opacity);
+
+            if (element.Paint is not null)
+                DrawByPaint(element.Paint, element, opacity);
         }
         else
         {
