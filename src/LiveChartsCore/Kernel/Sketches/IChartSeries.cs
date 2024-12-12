@@ -87,12 +87,18 @@ public interface IChartSeries : ISeries, IChartElement
     Sketch GetMiniaturesSketch();
 
     /// <summary>
-    /// Return the visual element shown in tooltips and legends.
+    /// Return the visual element shown in tooltips and legends, this is an old method and will be replaced by
+    /// <see cref="GetMiniatureGeometry(ChartPoint?)"/>.
     /// </summary>
     /// <param name="point">The point.</param>
     /// <param name="zindex">The zindex.</param>
-    /// <returns></returns>
     IChartElement GetMiniature(ChartPoint? point, int zindex);
+
+    /// <summary>
+    /// Returns a geometry that represents the series in a tooltip or legend.
+    /// </summary>
+    /// <param name="point">The target point.</param>
+    IDrawnElement GetMiniatureGeometry(ChartPoint? point);
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.

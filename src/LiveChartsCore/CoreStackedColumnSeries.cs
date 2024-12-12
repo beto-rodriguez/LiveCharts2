@@ -38,7 +38,7 @@ namespace LiveChartsCore;
 /// Initializes a new instance of the <see cref="CoreStackedColumnSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
 /// </remarks>
 /// <param name="values">The values.</param>
-public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
+public abstract class CoreStackedColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
     : CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>(values, true), IStackedBarSeries
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()

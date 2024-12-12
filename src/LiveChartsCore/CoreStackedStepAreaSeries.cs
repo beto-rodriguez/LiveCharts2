@@ -35,7 +35,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 /// <seealso cref="CoreStepLineSeries{TModel, TVisual, TLabel, TPathGeometry, TLineGeometry}" />
-public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
+public abstract class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
         where TPathGeometry : BaseVectorGeometry<Segment>, new()
         where TVisual : BoundedDrawnGeometry, new()

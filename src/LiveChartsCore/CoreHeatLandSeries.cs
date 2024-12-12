@@ -37,7 +37,7 @@ namespace LiveChartsCore;
 /// Defines the heat land series class.
 /// </summary>
 /// <typeparam name="TModel">The type fo the model.</typeparam>
-public class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyChanged
+public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyChanged
     where TModel : IWeigthedMapLand
 {
     private Paint? _heatPaint;

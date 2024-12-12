@@ -43,7 +43,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
-public class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
+public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IStepLineSeries
         where TPathGeometry : BaseVectorGeometry<Segment>, new()
         where TVisual : BoundedDrawnGeometry, new()

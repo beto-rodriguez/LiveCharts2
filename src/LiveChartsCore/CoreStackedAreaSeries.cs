@@ -35,7 +35,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 /// <seealso cref="CoreLineSeries{TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry}" />
-public class CoreStackedAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
+public abstract class CoreStackedAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
     : CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
         where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
         where TVisual : BoundedDrawnGeometry, new()

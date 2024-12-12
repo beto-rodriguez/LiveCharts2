@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel}" />
 /// <seealso cref="IScatterSeries" />
-public class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
+public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IScatterSeries
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()

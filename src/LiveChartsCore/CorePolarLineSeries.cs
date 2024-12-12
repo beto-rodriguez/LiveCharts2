@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
-public class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
+public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : ChartSeries<TModel, TVisual, TLabel>, IPolarLineSeries, IPolarSeries
         where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
         where TVisual : BoundedDrawnGeometry, new()

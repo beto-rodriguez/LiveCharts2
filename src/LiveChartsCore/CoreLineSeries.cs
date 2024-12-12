@@ -42,7 +42,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
+public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, ILineSeries
         where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
         where TVisual : BoundedDrawnGeometry, new()

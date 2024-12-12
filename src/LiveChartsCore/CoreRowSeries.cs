@@ -39,7 +39,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <seealso cref="BarSeries{TModel, TVisual, TLabel}" />
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
+public abstract class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
     : BarSeries<TModel, TVisual, TLabel>
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()

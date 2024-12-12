@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Hoverable Tooltip
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,6 +33,7 @@ using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
+
 namespace LiveChartsCore;
 
 /// <summary>
@@ -390,7 +389,11 @@ public abstract class Series<TModel, TVisual, TLabel>
     public abstract Sketch GetMiniaturesSketch();
 
     /// <inheritdoc cref="IChartSeries.GetMiniature"/>
+    [Obsolete($"You must instead use drawn elements, see  {nameof(GetMiniatureGeometry)}")]
     public abstract IChartElement GetMiniature(ChartPoint? point, int zindex);
+
+    /// <inheritdoc cref="IChartSeries.GetMiniatureGeometry"/>
+    public abstract IDrawnElement GetMiniatureGeometry(ChartPoint? point);
 
     /// <summary>
     /// Builds a paint schedule.
@@ -475,7 +478,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="paint">the base paint.</param>
     /// <param name="zIndex">the z index.</param>
     /// <returns></returns>
-    protected virtual Paint? GetMiniaturePaint(Paint? paint, int zIndex)
+    protected virtual Paint? GetMiniaturePaint(Paint? paint, int zIndex = 0)
     {
         if (paint is null) return null;
 
