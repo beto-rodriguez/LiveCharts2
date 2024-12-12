@@ -653,7 +653,9 @@ public abstract class Chart
 
         var removed = CleanHoveredPoints(hovered);
 
-        if (added.Count > 0 || removed.Count > 0)
+        var tooltipDataChanged = added.Count > 0 || removed.Count > 0;
+
+        if (tooltipDataChanged)
             View.OnHoveredPointsChanged(added, removed);
 
         if (hovered.Count == 0 || TooltipPosition == TooltipPosition.Hidden)
@@ -663,8 +665,11 @@ public abstract class Chart
             return false;
         }
 
-        Tooltip?.Show(hovered, this);
-        _isToolTipOpen = true;
+        if (tooltipDataChanged)
+        {
+            Tooltip?.Show(hovered, this);
+            _isToolTipOpen = true;
+        }
 
         return true;
     }
