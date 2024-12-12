@@ -959,7 +959,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryFill;
+        var paint = p?.Visual?.Fill ?? GeometryFill ?? Fill;
 
         return GetMiniaturePaint(paint, zIndex);
     }
@@ -973,7 +973,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? GeometryStroke;
+        var paint = p?.Visual?.Stroke ?? GeometryStroke ?? Stroke;
 
         return GetMiniaturePaint(paint, zIndex);
     }

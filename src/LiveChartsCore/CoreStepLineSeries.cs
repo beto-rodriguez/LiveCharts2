@@ -553,7 +553,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     protected override Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryFill;
+        var paint = p?.Visual?.Fill ?? GeometryFill ?? Fill;
 
         return GetMiniaturePaint(paint, zIndex);
     }
@@ -562,7 +562,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     protected override Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryStroke;
+        var paint = p?.Visual?.Stroke ?? GeometryStroke ?? Stroke;
 
         return GetMiniaturePaint(paint, zIndex);
     }
