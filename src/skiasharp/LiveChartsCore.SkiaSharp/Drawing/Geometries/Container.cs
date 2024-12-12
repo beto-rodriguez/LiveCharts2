@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -29,6 +30,11 @@ public class Container : Container<RectangleGeometry>
 { }
 
 ///<inheritdoc cref="BaseContainer{TShape, TDrawingContext}"/>
-public class Container<TShape> : BaseContainer<TShape, SkiaSharpDrawingContext>
-    where TShape : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>, new()
+/// <summary>
+/// Initializes a new instance of the <see cref="Container{TShape}"/> class.
+/// </summary>
+/// <param name="shapeConfig">The shape settings.</param>
+public class Container<TShape>(Action<TShape>? shapeConfig = null)
+    : BaseContainer<TShape, SkiaSharpDrawingContext>(shapeConfig)
+        where TShape : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>, new()
 { }
