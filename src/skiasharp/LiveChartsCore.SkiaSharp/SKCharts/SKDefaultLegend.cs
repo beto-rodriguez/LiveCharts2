@@ -25,10 +25,10 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.VisualElements;
-using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -38,22 +38,29 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// </summary>
 public class SKDefaultLegend : IChartLegend
 {
-    private static readonly int s_zIndex = 10050;
     private Paint? _backgroundPaint = null;
+    private bool _isInCanvas = false;
+    private DrawablesTask? _drawableTask;
 
     // marked as internal only for testing purposes
-    internal readonly StackPanel<RoundedRectangleGeometry> _stackPanel = new()
-    {
-        Padding = new Padding(15, 4),
-        HorizontalAlignment = Align.Start,
-        VerticalAlignment = Align.Middle
-    };
+    internal readonly Container _container;
+    internal readonly StackLayout _stackLayout;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKDefaultLegend"/> class.
     /// </summary>
     public SKDefaultLegend()
     {
+        _container = new Container
+        {
+            Content = _stackLayout = new()
+            {
+                Padding = new Padding(15, 4),
+                HorizontalAlignment = Align.Start,
+                VerticalAlignment = Align.Middle
+            }
+        };
+
         FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
     }
 
@@ -88,18 +95,29 @@ public class SKDefaultLegend : IChartLegend
     {
         var legendPosition = chart.GetLegendPosition();
 
-        _stackPanel.X = legendPosition.X;
-        _stackPanel.Y = legendPosition.Y;
+        _container.X = legendPosition.X;
+        _container.Y = legendPosition.Y;
 
-        chart.AddVisual(_stackPanel);
-        if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
+        if (!_isInCanvas)
+        {
+            _drawableTask = chart.Canvas.AddGeometry(_container);
+            _isInCanvas = true;
+        }
+
+        if (chart.LegendPosition == LegendPosition.Hidden && _drawableTask is not null)
+        {
+            chart.Canvas.RemovePaintTask(_drawableTask);
+            _isInCanvas = false;
+            _drawableTask = null;
+        }
     }
 
     /// <inheritdoc cref="IChartLegend.Measure(Chart)"/>
     public LvcSize Measure(Chart chart)
     {
         BuildLayout(chart);
-        return _stackPanel.Measure(chart);
+
+        return _container.Measure();
     }
 
     private void BuildLayout(Chart chart)
@@ -108,52 +126,45 @@ public class SKDefaultLegend : IChartLegend
         if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
         if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
 
-        if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
-
-        _stackPanel.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
+        _stackLayout.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
             ? ContainerOrientation.Vertical
             : ContainerOrientation.Horizontal;
 
-        if (_stackPanel.Orientation == ContainerOrientation.Horizontal)
+        if (_stackLayout.Orientation == ContainerOrientation.Horizontal)
         {
-            _stackPanel.MaxWidth = chart.ControlSize.Width;
-            _stackPanel.MaxHeight = double.MaxValue;
+            _stackLayout.MaxWidth = chart.ControlSize.Width;
+            _stackLayout.MaxHeight = double.MaxValue;
         }
         else
         {
-            _stackPanel.MaxWidth = double.MaxValue;
-            _stackPanel.MaxHeight = chart.ControlSize.Height;
+            _stackLayout.MaxWidth = double.MaxValue;
+            _stackLayout.MaxHeight = chart.ControlSize.Height;
         }
 
-        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
-        _stackPanel.BackgroundPaint = BackgroundPaint;
+        _container.Geometry.Fill = BackgroundPaint;
 
-        foreach (var visual in _stackPanel.Children.ToArray())
-        {
-            _ = _stackPanel.Children.Remove(visual);
-            chart.RemoveVisual(visual);
-        }
+        foreach (var visual in _stackLayout.Children.ToArray())
+            _ = _stackLayout.Children.Remove(visual);
 
         foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
-            _stackPanel.Children.Add(new StackPanel<RectangleGeometry>
+            _stackLayout.Children.Add(new StackLayout
             {
                 Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    (CoreVisualElement)series.GetMiniature(null, s_zIndex),
-                    new LabelVisual
+                    (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(null),
+                    new LabelGeometry
                     {
                         Text = series.Name ?? string.Empty,
                         Paint = FontPaint,
-                        TextSize = TextSize,
+                        TextSize = (float)TextSize,
                         Padding = new Padding(8, 2, 0, 2),
                         MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
-                        VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start,
-                        ClippingMode = ClipMode.None
+                        VerticalAlign = Align.Start,
+                        HorizontalAlign = Align.Start
                     }
                 }
             });
