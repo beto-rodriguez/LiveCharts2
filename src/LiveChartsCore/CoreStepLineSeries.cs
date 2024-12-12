@@ -526,6 +526,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         {
             return new TLineGeometry
             {
+                IsRelativeToLocation = true,
                 Stroke = GetMiniaturePaint(Stroke, 0),
                 X = 0,
                 Y = 0,

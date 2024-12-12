@@ -617,6 +617,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         {
             return new TErrorGeometry
             {
+                IsRelativeToLocation = true,
                 Stroke = GetMiniaturePaint(Stroke, 0),
                 X = 0,
                 Y = 0,

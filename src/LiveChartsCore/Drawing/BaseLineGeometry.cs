@@ -42,16 +42,20 @@ public abstract class BaseLineGeometry : DrawnGeometry
         _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
     }
 
-    private IDrawnElement? Parent => ((IDrawnElement)this).Parent;
+    /// <summary>
+    /// Gets or sets a value indicating whether the <see cref="X1"/> and <see cref="Y1"/> properties are relative to the location
+    /// (<see cref="DrawnGeometry.X"/>, <see cref="DrawnGeometry.Y"/>).
+    /// </summary>
+    public bool IsRelativeToLocation { get; set; }
 
     /// <summary>
     /// Gets or sets the x1.
     /// </summary>
     public float X1
     {
-        get => Parent is null
-            ? _x1.GetMovement(this)
-            : _x1.GetMovement(this) + Parent.X;
+        get => IsRelativeToLocation
+            ? _x1.GetMovement(this) + X
+            : _x1.GetMovement(this);
         set => _x1.SetMovement(value, this);
     }
 
@@ -60,9 +64,9 @@ public abstract class BaseLineGeometry : DrawnGeometry
     /// </summary>
     public float Y1
     {
-        get => Parent is null
-            ? _y1.GetMovement(this)
-            : _y1.GetMovement(this) + Parent.Y;
+        get => IsRelativeToLocation
+            ? _y1.GetMovement(this) + Y
+            : _y1.GetMovement(this);
         set => _y1.SetMovement(value, this);
     }
 
