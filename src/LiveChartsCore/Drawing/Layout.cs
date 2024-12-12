@@ -182,14 +182,21 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawnElement
     {
         get => MeasureTask.Instance;
         set => throw new NotImplementedException(
-            "Layouts can not have a Stroke, instead place the layout as the child of another geometry.");
+            $"Layouts can not have a {nameof(IDrawnElement.Stroke)}, instead place the layout as the child of another geometry.");
     }
 
     Paint? IDrawnElement.Fill
     {
         get => null;
         set => throw new NotImplementedException(
-            "Layouts can not have a Stroke, instead place the layout as the child of another geometry.");
+            $"Layouts can not have a {nameof(IDrawnElement.Fill)}, instead place the layout as the child of another geometry.");
+    }
+
+    Paint? IDrawnElement.Paint
+    {
+        get => null;
+        set => throw new NotImplementedException(
+            $"Layouts can not have a {nameof(IDrawnElement.Paint)}, instead place the layout as the child of another geometry.");
     }
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>

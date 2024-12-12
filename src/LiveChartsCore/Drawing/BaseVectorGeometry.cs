@@ -206,6 +206,8 @@ public abstract class BaseVectorGeometry<TSegment> : Animatable, IDrawnElement
         }
     }
 
+    Paint? IDrawnElement.Paint { get; set; }
+
     /// <summary>
     /// Gets the commands in the vector.
     /// </summary>

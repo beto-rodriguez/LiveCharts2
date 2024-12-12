@@ -111,6 +111,12 @@ public interface IDrawnElement
     Paint? Fill { get; set; }
 
     /// <summary>
+    /// Gets or sets the paint, this property is different from <see cref="Fill"/> and <see cref="Stroke"/>
+    /// because it does not set a <see cref="PaintStyle"/>, it is normally used to draw labels.
+    /// </summary>
+    Paint? Paint { get; set; }
+
+    /// <summary>
     /// Gets a value indicating whether the instance is valid.
     /// </summary>
     bool IsValid { get; set; }

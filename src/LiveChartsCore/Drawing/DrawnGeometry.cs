@@ -201,6 +201,8 @@ public abstract class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
+    Paint? IDrawnElement.Paint { get; set; }
+
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
 }
