@@ -33,40 +33,40 @@ public class BaseContainer<TShape, TDrawingContext> : BoundedDrawnGeometry, IDra
     where TShape : BoundedDrawnGeometry, IDrawnElement<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
-    private readonly TShape _containerGeometry = new();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BaseContainer{TShape, TDrawingContext}"/> class.
-    /// </summary>
-    /// <param name="shapeConfig">The shape settings.</param>
-    public BaseContainer(Action<TShape>? shapeConfig = null)
-    {
-        if (shapeConfig is null) return;
-        shapeConfig(_containerGeometry);
-    }
-
     /// <summary>
     /// Gets or sets the content.
     /// </summary>
     public IDrawnElement<TDrawingContext>? Content { get; set; }
 
+    /// <summary>
+    /// Gets the container drawn geometry.
+    /// </summary>
+    public TShape Geometry { get; } = new();
+
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(TDrawingContext context)
     {
-        var content = Content ?? throw new InvalidOperationException("Content not found");
+        var content = GetContent();
 
         var contentSize = content.Measure();
 
-        _containerGeometry.X = X;
-        _containerGeometry.Y = Y;
-        _containerGeometry.Width = contentSize.Width;
-        _containerGeometry.Height = contentSize.Height;
-        _containerGeometry.Fill = Fill?.CloneTask();
-        _containerGeometry.Stroke = Stroke?.CloneTask();
+        Geometry.X = X;
+        Geometry.Y = Y;
+        Geometry.Width = contentSize.Width;
+        Geometry.Height = contentSize.Height;
+        Geometry.Fill = Fill?.CloneTask();
+        Geometry.Stroke = Stroke?.CloneTask();
 
-        context.Draw(_containerGeometry);
+        context.Draw(Geometry);
 
         content.Parent = this;
         context.Draw(content);
     }
+
+    /// <inheritdoc cref="IDrawnElement.Measure" />
+    public override LvcSize Measure() =>
+        GetContent().Measure();
+
+    private IDrawnElement<TDrawingContext> GetContent() =>
+        Content ?? throw new InvalidOperationException("Content not found");
 }
