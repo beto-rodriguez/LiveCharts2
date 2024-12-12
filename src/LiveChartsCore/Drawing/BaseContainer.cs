@@ -36,6 +36,16 @@ public class BaseContainer<TShape, TDrawingContext> : BoundedDrawnGeometry, IDra
     private readonly TShape _containerGeometry = new();
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="BaseContainer{TShape, TDrawingContext}"/> class.
+    /// </summary>
+    /// <param name="shapeConfig">The shape settings.</param>
+    public BaseContainer(Action<TShape>? shapeConfig = null)
+    {
+        if (shapeConfig is null) return;
+        shapeConfig(_containerGeometry);
+    }
+
+    /// <summary>
     /// Gets or sets the content.
     /// </summary>
     public IDrawnElement<TDrawingContext>? Content { get; set; }

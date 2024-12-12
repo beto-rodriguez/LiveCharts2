@@ -41,7 +41,7 @@ public abstract class CoreStackLayout<TDrawingContext>
     /// <summary>
     /// Gets or sets the children.
     /// </summary>
-    public IDrawnElement<TDrawingContext>[] Children { get; set; } = [];
+    public List<IDrawnElement<TDrawingContext>> Children { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the panel orientation.
