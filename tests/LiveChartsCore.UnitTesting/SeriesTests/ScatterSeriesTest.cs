@@ -131,7 +131,7 @@ public class ScatterSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
-        var tp = tooltip._panel.BackgroundGeometry;
+        var tp = tooltip._container.Geometry;
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1,

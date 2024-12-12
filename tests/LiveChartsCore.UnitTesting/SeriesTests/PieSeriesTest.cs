@@ -88,7 +88,7 @@ public class PieSeriesTest
         chart.Core._pointerPosition = new(150 + 10, 150 + 10);
 
         _ = chart.GetImage();
-        var tp = tooltip._panel.BackgroundGeometry;
+        var tp = tooltip._container.    Geometry;
         Assert.IsTrue(
             tp.X - 150 > 0 &&
             tp.Y + tp.Height - 150 > 0,

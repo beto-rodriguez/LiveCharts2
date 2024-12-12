@@ -144,7 +144,7 @@ public class FinancialSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
-        var tp = tooltip._panel.BackgroundGeometry;
+        var tp = tooltip._container.Geometry;
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height - 1 / 5d * 300 * 0.5d)) < 0.1,
