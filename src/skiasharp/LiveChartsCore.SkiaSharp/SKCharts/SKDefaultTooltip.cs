@@ -162,8 +162,8 @@ public class SKDefaultTooltip : IChartTooltip
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                var skiaMminiature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
-                _ = tableLayout.AddChild(skiaMminiature, i, ltr ? 3 : 0);
+                var skiaMiniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
+                _ = tableLayout.AddChild(skiaMiniature, i, ltr ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
                     _ = tableLayout.AddChild(new LabelGeometry
