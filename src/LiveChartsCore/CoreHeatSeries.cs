@@ -323,7 +323,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete]
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override Sketch GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule>();
@@ -354,12 +354,26 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         // ToDo <- draw the gradient?
         // what to show in the legend?
         return new GeometryVisual<TVisual, TLabel>
+        {
+            Width = 0,
+            Height = 0,
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+    {
+        // ToDo <- draw the gradient?
+        // what to show in the legend?
+
+        return new TVisual
         {
             Width = 0,
             Height = 0,

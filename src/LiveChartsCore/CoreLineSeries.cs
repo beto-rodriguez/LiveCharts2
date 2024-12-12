@@ -559,7 +559,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete]
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override Sketch GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule>();
@@ -576,7 +576,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
@@ -602,6 +603,40 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                 Svg = GeometrySvg,
                 ClippingMode = ClipMode.None
             };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+    {
+        var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
+        var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
+
+        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+
+        if (usesLine)
+        {
+            return new TErrorGeometry
+            {
+                Stroke = GetMiniaturePaint(Stroke, 0),
+                X = 0,
+                Y = 0,
+                X1 = (float)MiniatureShapeSize,
+                Y1 = 0
+            };
+        }
+
+        var m = new TVisual
+        {
+            Fill = GetMiniatureFill(point, 0),
+            Stroke = GetMiniatureStroke(point, 0),
+            Width = (float)MiniatureShapeSize,
+            Height = (float)MiniatureShapeSize,
+            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0
+        };
+
+        if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
+
+        return m;
     }
 
     /// <inheritdoc cref="GetMiniatureFill(ChartPoint?, int)"/>

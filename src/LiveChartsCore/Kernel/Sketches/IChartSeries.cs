@@ -83,7 +83,7 @@ public interface IChartSeries : ISeries, IChartElement
     /// <summary>
     /// </summary>
     /// <returns></returns>
-    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     Sketch GetMiniaturesSketch();
 
     /// <summary>
@@ -92,6 +92,7 @@ public interface IChartSeries : ISeries, IChartElement
     /// </summary>
     /// <param name="point">The point.</param>
     /// <param name="zindex">The zindex.</param>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     IChartElement GetMiniature(ChartPoint? point, int zindex);
 
     /// <summary>

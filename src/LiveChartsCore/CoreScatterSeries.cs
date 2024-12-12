@@ -320,7 +320,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete]
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override Sketch GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule>();
@@ -335,6 +335,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
@@ -349,6 +350,25 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
             Svg = GeometrySvg,
             ClippingMode = ClipMode.None
         };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint)"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+    {
+        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+
+        var m = new TVisual
+        {
+            Fill = GetMiniatureFill(point, 0),
+            Stroke = GetMiniatureStroke(point, 0),
+            Width = (float)MiniatureShapeSize,
+            Height = (float)MiniatureShapeSize,
+            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0,
+        };
+
+        if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
+
+        return m;
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>

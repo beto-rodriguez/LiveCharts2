@@ -470,7 +470,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete]
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override Sketch GetMiniaturesSketch()
     {
         var schedules = new List<PaintSchedule>();
@@ -483,7 +483,8 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         // No miniature.
@@ -493,6 +494,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             Height = 0
         };
     }
+
+    /// <inheritdoc cref="IChartSeries.GetMiniatureGeometry"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+        => new TMiniatureGeometry { Width = 0, Height = 0 };
 
     private static SeriesProperties GetProperties()
     {

@@ -385,11 +385,11 @@ public abstract class Series<TModel, TVisual, TLabel>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
     /// <inheritdoc cref="IChartSeries.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public abstract Sketch GetMiniaturesSketch();
 
     /// <inheritdoc cref="IChartSeries.GetMiniature"/>
-    [Obsolete($"You must instead use drawn elements, see  {nameof(GetMiniatureGeometry)}")]
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public abstract IChartElement GetMiniature(ChartPoint? point, int zindex);
 
     /// <inheritdoc cref="IChartSeries.GetMiniatureGeometry"/>
