@@ -40,12 +40,6 @@ public abstract class CoreTableLayout<TDrawingContext>
     private int _maxColumn = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackLayout{TDrawingContext}"/> class.
-    /// </summary>
-    protected CoreTableLayout()
-    { }
-
-    /// <summary>
     /// Gets or sets the padding.
     /// </summary>
     public Padding Padding { get; set; } = new();

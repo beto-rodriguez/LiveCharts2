@@ -33,12 +33,6 @@ public abstract class CoreStackLayout<TDrawingContext>
         where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackLayout{TDrawingContext}"/> class.
-    /// </summary>
-    protected CoreStackLayout()
-    { }
-
-    /// <summary>
     /// Gets or sets the children.
     /// </summary>
     public List<IDrawnElement<TDrawingContext>> Children { get; set; } = [];
