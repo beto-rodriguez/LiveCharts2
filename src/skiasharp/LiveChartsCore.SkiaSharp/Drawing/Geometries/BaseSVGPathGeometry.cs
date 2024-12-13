@@ -72,37 +72,6 @@ public class BaseSVGPathGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharp
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="paint">The paint</param>
-    protected void DrawPath(SkiaSharpDrawingContext context, SKPaint paint, SKPath path)
-    {
-        _ = context.Canvas.Save();
-
-        var canvas = context.Canvas;
-        _ = path.GetTightBounds(out var bounds);
-
-        if (FitToSize)
-        {
-            // fit to both axes
-            canvas.Translate(X + Width / 2f, Y + Height / 2f);
-            canvas.Scale(
-                Width / (bounds.Width + paint.StrokeWidth),
-                Height / (bounds.Height + paint.StrokeWidth));
-            canvas.Translate(-bounds.MidX, -bounds.MidY);
-        }
-        else
-        {
-            // fit to the max dimension
-            // preserve the corresponding scale in the min axis.
-            var maxB = bounds.Width < bounds.Height ? bounds.Height : bounds.Width;
-
-            canvas.Translate(X + Width / 2f, Y + Height / 2f);
-            canvas.Scale(
-                Width / (maxB + paint.StrokeWidth),
-                Height / (maxB + paint.StrokeWidth));
-            canvas.Translate(-bounds.MidX, -bounds.MidY);
-        }
-
-        canvas.DrawPath(path, paint);
-
-        context.Canvas.Restore();
-    }
+    protected void DrawPath(SkiaSharpDrawingContext context, SKPaint paint, SKPath path) =>
+        Svg.Draw(context, paint, path, X, Y, Width, Height, FitToSize);
 }
