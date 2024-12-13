@@ -80,6 +80,16 @@ public class SKDefaultTooltip : IChartTooltip
     /// </summary>
     public double TextSize { get; set; } = 16;
 
+    /// <summary>
+    /// Gets or sets the easing function.
+    /// </summary>
+    public Func<float, float> Easing { get; set; } = EasingFunctions.EaseOut;
+
+    /// <summary>
+    /// Gets or sets the animations speed.
+    /// </summary>
+    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(150);
+
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
@@ -103,11 +113,11 @@ public class SKDefaultTooltip : IChartTooltip
 
             _container.Geometry.Fill = BackgroundPaint;
             _container.Geometry.Wedge = wedge;
-            _container.Geometry.WedgeThickness = 2;
+            _container.Geometry.WedgeThickness = 3;
 
             _container
                 .Animate(
-                    new Animation(EasingFunctions.EaseOut, TimeSpan.FromMilliseconds(150)),
+                    new Animation(Easing, AnimationsSpeed),
                     nameof(IDrawnElement.Opacity),
                     nameof(IDrawnElement.ScaleTransform),
                     nameof(IDrawnElement.X),
