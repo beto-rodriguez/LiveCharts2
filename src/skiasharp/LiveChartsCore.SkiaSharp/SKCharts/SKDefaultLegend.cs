@@ -101,6 +101,7 @@ public class SKDefaultLegend : IChartLegend
         if (!_isInCanvas)
         {
             _drawableTask = chart.Canvas.AddGeometry(_container);
+            _drawableTask.ZIndex = 10099;
             _isInCanvas = true;
         }
 
