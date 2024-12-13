@@ -209,9 +209,7 @@ public abstract class CoreTableLayout<TDrawingContext>
 
         return new(maxW + Padding.Right, maxH + Padding.Bottom);
     }
-
-    /// <inheritdoc cref="Layout{TDrawingContext}.GetChildren"/>
-    protected override IEnumerable<IDrawnElement<TDrawingContext>> GetChildren() =>
+    private IEnumerable<IDrawnElement<TDrawingContext>> GetChildren() =>
         _positions.Values.SelectMany(x => x.Values.Select(y => y.Drawable));
 
     /// <summary>

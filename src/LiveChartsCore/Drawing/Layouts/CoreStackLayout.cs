@@ -199,9 +199,6 @@ public abstract class CoreStackLayout<TDrawingContext>
         return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="Layout{TDrawingContext}.GetChildren"/>
-    protected override IEnumerable<IDrawnElement<TDrawingContext>> GetChildren() => Children;
-
     private class MeasureResult(IDrawnElement<TDrawingContext> visual, LvcSize size)
     {
         public IDrawnElement<TDrawingContext> Drawable { get; set; } = visual;

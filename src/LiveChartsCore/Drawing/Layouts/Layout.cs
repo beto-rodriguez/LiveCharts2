@@ -21,11 +21,10 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Drawing.Layouts;
 
 /// <summary>
 /// Defines a layout for drawable elements.
@@ -201,10 +200,4 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawnElement
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
-
-    /// <summary>
-    /// Gets the children.
-    /// </summary>
-    /// <returns>The children.</returns>
-    protected abstract IEnumerable<IDrawnElement<TDrawingContext>> GetChildren();
 }

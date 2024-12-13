@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using LiveChartsCore.Drawing.Layouts;
 
 namespace LiveChartsCore.Drawing;
 
@@ -29,7 +30,7 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TShape">The type of the container shape.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class BaseContainer<TShape, TDrawingContext> : BoundedDrawnGeometry, IDrawnElement<TDrawingContext>
+public class BaseContainer<TShape, TDrawingContext> : Layout<TDrawingContext>, IDrawnElement<TDrawingContext>
     where TShape : BoundedDrawnGeometry, IDrawnElement<TDrawingContext>, new()
     where TDrawingContext : DrawingContext
 {
@@ -54,8 +55,6 @@ public class BaseContainer<TShape, TDrawingContext> : BoundedDrawnGeometry, IDra
         Geometry.Y = Y;
         Geometry.Width = contentSize.Width;
         Geometry.Height = contentSize.Height;
-        Geometry.Fill = Fill?.CloneTask();
-        Geometry.Stroke = Stroke?.CloneTask();
 
         context.Draw(Geometry);
 
