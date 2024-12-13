@@ -50,8 +50,7 @@ public class BaseContainer<TShape, TDrawingContext> : Layout<TDrawingContext>, I
 
         var contentSize = content.Measure();
 
-        Geometry.X = X;
-        Geometry.Y = Y;
+        Geometry.Parent = this;
         Geometry.Width = contentSize.Width;
         Geometry.Height = contentSize.Height;
 
