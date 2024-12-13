@@ -301,6 +301,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
             _labelGeometry.Y = yi;
             _labelGeometry.Text = _label;
             _labelGeometry.TextSize = _labelSize;
+            _labelGeometry.Paint = LabelPaint;
 
             LabelPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
