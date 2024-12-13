@@ -51,9 +51,8 @@ public class ColoredRectangleGeometry : BoundedDrawnGeometry, IColoredGeometry, 
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        // THIS CLASS IS EXTRANGE...
-        // WHY IS IT MODIFYING THE ACTIVE PAINT?
-        // THIS MIGHT BE CHANGED IN THE FUTURE
+        // it seems strange that this geometry modifies the paint of the context
+        // but this geometry is normally used in heat maps, i guess we can live with it.
 
         var c = Color;
         var activePaint = context.ActiveSkiaPaint;

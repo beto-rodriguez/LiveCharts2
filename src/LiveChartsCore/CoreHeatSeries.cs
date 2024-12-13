@@ -104,7 +104,11 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
-        _paintTaks ??= LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
+        if (_paintTaks is null)
+        {
+            _paintTaks = LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
+            _paintTaks.PaintStyle = PaintStyle.Fill;
+        }
 
         var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
