@@ -154,7 +154,7 @@ public class HeatSeriesTest
             },
         };
 
-        var tooltip = new SKDefaultTooltip();
+        var tooltip = new SKDefaultTooltip { Easing = null }; ;
 
         var chart = new SKCartesianChart
         {
@@ -173,7 +173,15 @@ public class HeatSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
-        var tp = tooltip._container.Geometry;
+
+        LvcRectangle tp;
+        void UpdateTooltipRect()
+        {
+            var g = tooltip._container;
+            tp = new LvcRectangle(new(g.X, g.Y), tooltip._container.Measure());
+        }
+
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1,
@@ -181,6 +189,7 @@ public class HeatSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Bottom;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - 150) < 0.1,
@@ -188,6 +197,7 @@ public class HeatSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Left;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (150 - tp.Width)) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -195,6 +205,7 @@ public class HeatSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Right;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - 150) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -202,6 +213,7 @@ public class HeatSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Center;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -209,6 +221,7 @@ public class HeatSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Auto;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1 &&
@@ -217,6 +230,7 @@ public class HeatSeriesTest
 
         chart.Core._pointerPosition = new(150, 10);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (150 - tp.Width * 0.5f)) < 0.1 &&
             Math.Abs(tp.Y - 300 * 1 / 5d * 0.5f) < 0.1 &&
@@ -225,6 +239,7 @@ public class HeatSeriesTest
 
         chart.Core._pointerPosition = new(295, 5);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (300 - 300 * 1 / 5d * 0.5 - tp.Width)) < 0.1 &&
             Math.Abs(tp.Y - -(tp.Height * 0.5f - 300 * 1 / 5d * 0.5)) < 0.1 &&
@@ -233,6 +248,7 @@ public class HeatSeriesTest
 
         chart.Core._pointerPosition = new(5, 295);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - 300 * 1 / 5d * 0.5) < 0.1 &&
             Math.Abs(tp.Y - (300 - tp.Height * 0.5f - 300 * 1 / 5d * 0.5)) < 0.1 &&

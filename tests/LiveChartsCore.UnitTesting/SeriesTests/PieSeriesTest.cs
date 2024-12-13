@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -72,7 +73,7 @@ public class PieSeriesTest
     [TestMethod]
     public void ShouldPlaceToolTips()
     {
-        var tooltip = new SKDefaultTooltip();
+        var tooltip = new SKDefaultTooltip { Easing = null };
 
         var chart = new SKPieChart
         {
@@ -88,7 +89,15 @@ public class PieSeriesTest
         chart.Core._pointerPosition = new(150 + 10, 150 + 10);
 
         _ = chart.GetImage();
-        var tp = tooltip._container.    Geometry;
+
+        LvcRectangle tp;
+        void UpdateTooltipRect()
+        {
+            var g = tooltip._container;
+            tp = new LvcRectangle(new(g.X, g.Y), tooltip._container.Measure());
+        }
+
+        UpdateTooltipRect();
         Assert.IsTrue(
             tp.X - 150 > 0 &&
             tp.Y + tp.Height - 150 > 0,
@@ -96,6 +105,7 @@ public class PieSeriesTest
 
         chart.Core._pointerPosition = new(150 - 10, 150 + 10);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             tp.X - 150 < 0 &&
             tp.Y + tp.Height - 150 > 0,
@@ -103,6 +113,7 @@ public class PieSeriesTest
 
         chart.Core._pointerPosition = new(150 - 10, 150 - 10);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             tp.X - 150 < 0 &&
             tp.Y + tp.Height - 150 < 0,
@@ -110,6 +121,7 @@ public class PieSeriesTest
 
         chart.Core._pointerPosition = new(150 + 10, 150 - 10);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             tp.X - 150 > 0 &&
             tp.Y + tp.Height - 150 < 0,
