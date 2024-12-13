@@ -93,7 +93,6 @@ public class SKDefaultTooltip : IChartTooltip
         {
             _container = new Container<PopUpGeometry>
             {
-                Fill = BackgroundPaint,
                 Content = _layout = new StackLayout
                 {
                     Orientation = ContainerOrientation.Vertical,
@@ -102,6 +101,7 @@ public class SKDefaultTooltip : IChartTooltip
                 }
             };
 
+            _container.Geometry.Fill = BackgroundPaint;
             _container.Geometry.Wedge = wedge;
             _container.Geometry.WedgeThickness = 2;
 
