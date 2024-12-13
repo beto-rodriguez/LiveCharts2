@@ -150,6 +150,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
             _labelGeometry.TextSize = _labelSize;
             _labelGeometry.RotateTransform = (float)Rotation;
             _labelGeometry.TranslateTransform = Translate;
+            _labelGeometry.Paint = LabelPaint;
 
             chart.Canvas.AddDrawableTask(LabelPaint);
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
