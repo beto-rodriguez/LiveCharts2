@@ -28,6 +28,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <inheritdoc cref="BaseNeedleGeometry"/>
 public class NeedleGeometry : BaseNeedleGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NeedleGeometry"/> class.
+    /// </summary>
+    public NeedleGeometry()
+    {
+        TransformOrigin = new LvcPoint(0F, 0F);
+    }
+
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public virtual void Draw(SkiaSharpDrawingContext context)
     {
