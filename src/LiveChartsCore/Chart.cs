@@ -409,7 +409,7 @@ public abstract class Chart
     protected internal virtual void InvokePointerLeft()
     {
         View.OnHoveredPointsChanged(null, _activePoints);
-        _activePoints.Clear();
+        _ = CleanHoveredPoints([]);
 
         View.InvokeOnUIThread(CloseTooltip);
         _isPointerIn = false;
