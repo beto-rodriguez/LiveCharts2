@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Layouts;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 

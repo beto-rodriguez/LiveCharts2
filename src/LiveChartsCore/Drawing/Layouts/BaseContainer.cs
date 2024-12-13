@@ -21,9 +21,8 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Drawing.Layouts;
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Drawing.Layouts;
 
 /// <summary>
 /// Defines a container geometry.
