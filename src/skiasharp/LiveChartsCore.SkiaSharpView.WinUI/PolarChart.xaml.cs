@@ -34,7 +34,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;
@@ -847,7 +846,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     }
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 

@@ -35,7 +35,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -725,7 +724,7 @@ public abstract class Chart : UserControl, IChartView
     }
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 

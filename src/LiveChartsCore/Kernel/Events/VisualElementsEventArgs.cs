@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Events;
@@ -40,10 +39,10 @@ namespace LiveChartsCore.Kernel.Events;
 /// <param name="visualElements">The visual elements.</param>
 public class VisualElementsEventArgs(
     Chart chart,
-    IEnumerable<CoreVisualElement> visualElements,
+    IEnumerable<IInteractable> visualElements,
     LvcPoint pointerLocation)
 {
-    private CoreVisualElement? _closer;
+    private IInteractable? _closer;
 
     /// <summary>
     /// Gets the chart.
@@ -58,24 +57,24 @@ public class VisualElementsEventArgs(
     /// <summary>
     /// Gets the closest visual element to the pointer position.
     /// </summary>
-    public CoreVisualElement? ClosestToPointerVisualElement => _closer ??= FindClosest();
+    public IInteractable? ClosestToPointerVisualElement => _closer ??= FindClosest();
 
     /// <summary>
     /// Gets all the visual elements that were found.
     /// </summary>
-    public IEnumerable<CoreVisualElement> VisualElements { get; } = visualElements;
+    public IEnumerable<IInteractable> VisualElements { get; } = visualElements;
 
-    private CoreVisualElement? FindClosest()
+    private IInteractable? FindClosest()
     {
         return VisualElements.Select(visual =>
         {
-            var size = visual.Measure(Chart);
+            var hitbox = visual.GetHitBox();
 
             return new
             {
                 distance = Math.Sqrt(
-                    Math.Pow(PointerLocation.X - (visual.X + size.Width * 0.5), 2) +
-                    Math.Pow(PointerLocation.Y - (visual.Y + size.Height * 0.5), 2)),
+                    Math.Pow(PointerLocation.X - (hitbox.X + hitbox.Width * 0.5), 2) +
+                    Math.Pow(PointerLocation.Y - (hitbox.Y + hitbox.Height * 0.5), 2)),
                 visual
             };
         })

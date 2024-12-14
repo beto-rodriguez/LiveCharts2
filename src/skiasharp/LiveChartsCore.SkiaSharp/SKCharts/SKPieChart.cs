@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
@@ -222,7 +221,8 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(Core, visualElements, pointer));
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer) =>
+            VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(Core, visualElements, pointer));
 
     void IChartView.Invalidate() => throw new NotImplementedException();
 }

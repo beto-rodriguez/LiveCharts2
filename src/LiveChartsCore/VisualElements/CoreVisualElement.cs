@@ -34,7 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the base visual element class, inheriting from this class makes it easy to implement a visual element.
 /// </summary>
-public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
+public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged, IInternalInteractable
 {
     internal double _x;
     internal double _y;
@@ -44,6 +44,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     private int _scalesYAt;
     private MeasureUnit _locationUnit = MeasureUnit.Pixels;
     private ClipMode _clippingMode = ClipMode.XY;
+    private Chart? _chart;
 
     /// <summary>
     /// Gets the primary scaler.
@@ -104,14 +105,14 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
     /// </summary>
     public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
 
-    /// <summary>
-    /// Called when the pointer goes down on the visual.
-    /// </summary>
+    /// <inheritdoc cref="IInteractable.PointerDown"/>
     public event VisualElementHandler? PointerDown;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
+        _chart = chart;
+
         if (chart is CartesianChartEngine cc)
         {
             var primaryAxis = cc.YAxes[ScalesYAt];
@@ -207,12 +208,17 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
         }
     }
 
-    /// <summary>
-    /// Called when the pointer goes down on the visual.
-    /// </summary>
-    /// <param name="args">The event arguments.</param>
-    protected internal void InvokePointerDown(VisualElementEventArgs args) =>
-        PointerDown?.Invoke(this, args);
+    /// <inheritdoc cref="IInteractable.GetHitBox"/>
+    public LvcRectangle GetHitBox()
+    {
+        if (_chart is null) return new();
+
+        var location = GetActualCoordinate();
+        var translatedLocation = new LvcPoint(location.X + _translate.X, location.Y + Translate.Y);
+        var size = Measure(_chart);
+
+        return new(translatedLocation, size);
+    }
 
     /// <summary>
     /// Gets the geometries to draw.
@@ -236,8 +242,18 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged
         _isInternalSet = false;
     }
 
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
+    {
+        base.RemoveFromUI(chart);
+        _chart = null;
+    }
+
     internal virtual void AlignToTopLeftCorner()
     {
         // just a workaround to align labels as the rest of the geometries.
     }
+
+    void IInternalInteractable.InvokePointerDown(VisualElementEventArgs args) =>
+        PointerDown?.Invoke(this, args);
 }

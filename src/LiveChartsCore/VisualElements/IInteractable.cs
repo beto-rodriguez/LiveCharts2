@@ -21,36 +21,23 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.VisualElements;
+using LiveChartsCore.Kernel.Events;
 
-namespace LiveChartsCore.Kernel.Events;
+namespace LiveChartsCore.VisualElements;
 
 /// <summary>
-/// Defines the visual elements event arguments.
+/// Defines an object that the user can interact with.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="VisualElementsEventArgs"/> class.
-/// </remarks>
-/// <param name="chart">The chart.</param>
-/// <param name="pointerLocation">The pointer location.</param>
-/// <param name="visualElement">The visual element.</param>
-public class VisualElementEventArgs(
-    Chart chart,
-    IInteractable visualElement,
-    LvcPoint pointerLocation)
+public interface IInteractable
 {
     /// <summary>
-    /// Gets the chart.
+    /// Called when the pointer goes down on the visual.
     /// </summary>
-    public Chart Chart { get; } = chart;
+    event VisualElementHandler? PointerDown;
 
     /// <summary>
-    /// Gets or sets the pointer location.
+    /// Gets the hit box, an area where the user can interact with the object.
     /// </summary>
-    public LvcPoint PointerLocation { get; } = pointerLocation;
-
-    /// <summary>
-    /// Gets the visual elements found.
-    /// </summary>
-    public IInteractable VisualElement { get; } = visualElement;
+    /// <returns>The hitbox rectangle.</returns>
+    LvcRectangle GetHitBox();
 }

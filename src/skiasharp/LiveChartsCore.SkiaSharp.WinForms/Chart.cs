@@ -33,7 +33,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
@@ -375,7 +374,7 @@ public abstract class Chart : UserControl, IChartView
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) =>
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer) =>
         VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(CoreChart, visualElements, pointer));
 
     void IChartView.Invalidate() =>

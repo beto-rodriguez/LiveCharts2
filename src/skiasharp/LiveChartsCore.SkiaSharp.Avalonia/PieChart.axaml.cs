@@ -724,7 +724,7 @@ public class PieChart : UserControl, IPieChartView
     }
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 

@@ -352,9 +352,9 @@ public abstract class Chart
 
             // fire the visual elements event.
             var hitElements =
-                _everMeasuredElements.OfType<CoreVisualElement>()
-                    .Cast<CoreVisualElement>()
-                    .SelectMany(x => x.IsHitBy(this, point));
+                _everMeasuredElements
+                    .OfType<IInternalInteractable>()
+                    .Where(x => x.GetHitBox().Contains(point));
 
             foreach (var ve in hitElements)
                 ve.InvokePointerDown(new VisualElementEventArgs(this, ve, point));

@@ -34,7 +34,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -904,7 +903,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 

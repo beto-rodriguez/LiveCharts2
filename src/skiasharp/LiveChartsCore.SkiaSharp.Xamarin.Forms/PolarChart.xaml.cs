@@ -35,7 +35,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 using SkiaSharp.Views.Forms;
@@ -779,11 +778,13 @@ public partial class PolarChart : ContentView, IPolarChartView
         ChartPointPointerDown?.Invoke(this, closest);
         if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
     }
+
+    /// <inheritdoc cref="IChartView.OnHoveredPointsChanged"/>
     public void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems)
     { }
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 

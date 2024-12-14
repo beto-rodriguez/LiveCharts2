@@ -35,7 +35,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 using SkiaSharp.Views.Forms;
@@ -871,7 +870,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView
     }
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer)
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
     {
         var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 
@@ -882,6 +881,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
 
+    /// <inheritdoc cref="IChartView.OnHoveredPointsChanged"/>
     public void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems)
     { }
 }

@@ -20,37 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.VisualElements;
+using LiveChartsCore.Kernel.Events;
 
-namespace LiveChartsCore.Kernel.Events;
+namespace LiveChartsCore.VisualElements;
 
-/// <summary>
-/// Defines the visual elements event arguments.
-/// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="VisualElementsEventArgs"/> class.
-/// </remarks>
-/// <param name="chart">The chart.</param>
-/// <param name="pointerLocation">The pointer location.</param>
-/// <param name="visualElement">The visual element.</param>
-public class VisualElementEventArgs(
-    Chart chart,
-    IInteractable visualElement,
-    LvcPoint pointerLocation)
+internal interface IInternalInteractable : IInteractable
 {
-    /// <summary>
-    /// Gets the chart.
-    /// </summary>
-    public Chart Chart { get; } = chart;
-
-    /// <summary>
-    /// Gets or sets the pointer location.
-    /// </summary>
-    public LvcPoint PointerLocation { get; } = pointerLocation;
-
-    /// <summary>
-    /// Gets the visual elements found.
-    /// </summary>
-    public IInteractable VisualElement { get; } = visualElement;
+    void InvokePointerDown(VisualElementEventArgs args);
 }

@@ -275,5 +275,5 @@ public interface IChartView
     /// </summary>
     /// <param name="visualElements">The visual elements.</param>
     /// <param name="pointer">The pointer location.</param>
-    void OnVisualElementPointerDown(IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer);
+    void OnVisualElementPointerDown(IEnumerable<IInteractable> visualElements, LvcPoint pointer);
 }

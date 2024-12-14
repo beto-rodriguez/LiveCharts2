@@ -30,4 +30,4 @@ namespace LiveChartsCore.Kernel.Events;
 /// <param name="visual">The sender visual.</param>
 /// <param name="visualElementsArgs">The visual elements arguments.</param>
 public delegate void VisualElementHandler(
-    CoreVisualElement visual, VisualElementEventArgs visualElementsArgs);
+    IInteractable visual, VisualElementEventArgs visualElementsArgs);

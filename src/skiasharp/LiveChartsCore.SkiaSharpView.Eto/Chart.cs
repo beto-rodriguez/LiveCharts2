@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.VisualElements;
 using System.Collections.Specialized;
@@ -354,7 +353,8 @@ public abstract class Chart : Panel, IChartView
         HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
 
     void IChartView.OnVisualElementPointerDown(
-        IEnumerable<CoreVisualElement> visualElements, LvcPoint pointer) => VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(CoreChart, visualElements, pointer));
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer) =>
+            VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(CoreChart, visualElements, pointer));
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
 }
