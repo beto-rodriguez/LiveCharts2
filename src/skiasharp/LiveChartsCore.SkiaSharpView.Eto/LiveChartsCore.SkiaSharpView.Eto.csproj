@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Eto</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Eto</RootNamespace>
     <Version>2.0.0-rc4.5</Version>
