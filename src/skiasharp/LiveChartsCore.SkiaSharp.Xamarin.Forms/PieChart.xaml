@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView  xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms"
-              xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart">
-
-    <lvc:MotionCanvas x:Name="canvas"/>
-
-</ContentView>
