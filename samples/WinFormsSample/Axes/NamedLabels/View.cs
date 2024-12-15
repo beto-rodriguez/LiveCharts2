@@ -1,7 +1,5 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using SkiaSharp;
 using ViewModelsSamples.Axes.NamedLabels;
 
 namespace WinFormsSample.Axes.NamedLabels;

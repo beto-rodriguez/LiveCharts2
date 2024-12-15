@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using LiveChartsCore; // mark
-using LiveChartsCore.SkiaSharpView; // mark
-using SkiaSharp; // mark
 
 namespace WinFormsSample;
 

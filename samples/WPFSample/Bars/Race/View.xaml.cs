@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using ViewModelsSamples.Bars.Race;
+﻿using System.Windows.Controls;
 
 namespace WPFSample.Bars.Race;
 

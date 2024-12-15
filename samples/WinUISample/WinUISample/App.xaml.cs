@@ -1,7 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using LiveChartsCore; // mark
-using LiveChartsCore.SkiaSharpView; // mark
-using SkiaSharp; // mark
 
 namespace WinUISample;
 

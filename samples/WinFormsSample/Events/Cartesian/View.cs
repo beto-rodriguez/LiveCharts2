@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows.Forms;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
+﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Events.Cartesian;
 
