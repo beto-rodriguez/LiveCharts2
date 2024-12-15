@@ -34,7 +34,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;

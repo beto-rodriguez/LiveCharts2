@@ -33,7 +33,6 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.VisualElements;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;

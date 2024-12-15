@@ -30,7 +30,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;

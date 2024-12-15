@@ -23,7 +23,6 @@
 using System;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Extensions;
 

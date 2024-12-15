@@ -1,11 +1,8 @@
 ﻿using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
-using LiveChartsCore.SkiaSharpView.VisualElements;
-using LiveChartsCore.VisualElements;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 

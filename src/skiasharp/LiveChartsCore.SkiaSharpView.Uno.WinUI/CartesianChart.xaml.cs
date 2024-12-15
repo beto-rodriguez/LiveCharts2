@@ -40,7 +40,6 @@ using Microsoft.UI.Xaml.Media;
 using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
 using LiveChartsCore.VisualElements;
 using System.Linq;
-using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Painting;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236

@@ -31,7 +31,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
