@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.VisualElements;
@@ -294,6 +293,30 @@ public static class LiveChartsStylerExtensions
     public static Theme HasRuleForPolarLineSeries(this Theme styler, Action<IPolarLineSeries> predicate)
     {
         styler.PolarLineSeriesBuilder.Add(predicate);
+        return styler;
+    }
+
+    /// <summary>
+    /// Defines the default tooltip.
+    /// </summary>
+    /// <param name="styler"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public static Theme HasDefaultTooltip(this Theme styler, Func<IChartTooltip> predicate)
+    {
+        styler.DefaultTooltip = predicate;
+        return styler;
+    }
+
+    /// <summary>
+    /// Defines the default legend.
+    /// </summary>
+    /// <param name="styler"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public static Theme HasDefaultLegend(this Theme styler, Func<IChartLegend> predicate)
+    {
+        styler.DefaultLegend = predicate;
         return styler;
     }
 

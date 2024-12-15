@@ -80,8 +80,8 @@ public class CartesianChart : Chart, ICartesianChartView
         ManipulationDelta += OnManipulationDelta;
         ManipulationStarting += OnManipulationStarting;
 
-        tooltip = new SKDefaultTooltip();
-        legend = new SKDefaultLegend();
+        tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+        legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
     }
 
     #region dependency properties

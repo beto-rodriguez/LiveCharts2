@@ -58,8 +58,8 @@ public class PieChart : Chart, IPieChartView
         SetCurrentValue(SyncContextProperty, new object());
         MouseDown += OnMouseDown;
 
-        tooltip = new SKDefaultTooltip();
-        legend = new SKDefaultLegend();
+        tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+        legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
     }
 
     /// <summary>

@@ -605,8 +605,8 @@ public class PieChart : UserControl, IPieChartView
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        legend = new SKDefaultLegend();
-        tooltip = new SKDefaultTooltip();
+        legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+        tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
 
         _core.Update();
     }

@@ -239,6 +239,16 @@ public class Theme
     public Dictionary<Type, object> ChartElementElementBuilder { get; set; } = [];
 
     /// <summary>
+    /// Gets or sets the default tooltip.
+    /// </summary>
+    public Func<IChartTooltip> DefaultTooltip { get; set; } = () => throw new NotImplementedException();
+
+    /// <summary>
+    /// Gets or sets the default legend.
+    /// </summary>
+    public Func<IChartLegend> DefaultLegend { get; set; } = () => throw new NotImplementedException();
+
+    /// <summary>
     /// Applies the theme to an axis.
     /// </summary>
     /// <param name="axis">The axis.</param>

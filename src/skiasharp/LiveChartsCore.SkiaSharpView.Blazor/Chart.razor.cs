@@ -191,7 +191,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Legend" />
     [Parameter]
-    public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
+    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
     [Parameter]
@@ -213,7 +213,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Tooltip" />
     [Parameter]
-    public IChartTooltip? Tooltip { get; set; } = new SKDefaultTooltip();
+    public IChartTooltip? Tooltip { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
     [Parameter]

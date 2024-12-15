@@ -116,7 +116,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
     /// <inheritdoc cref="IChartView.Legend"/>
-    public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
+    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
 
     /// <inheritdoc cref="IChartView.Tooltip"/>
     public IChartTooltip? Tooltip { get; set; }

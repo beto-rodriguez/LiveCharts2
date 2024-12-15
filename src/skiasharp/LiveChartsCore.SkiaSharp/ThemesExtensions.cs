@@ -25,9 +25,9 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -64,6 +64,8 @@ public static class ThemesExtensions
                 theme.Colors = ColorPalletes.MaterialDesign500;
 
                 _ = theme
+                    .HasDefaultTooltip(() => new SKDefaultTooltip())
+                    .HasDefaultLegend(() => new SKDefaultLegend())
                     .HasRuleForAxes(axis =>
                     {
                         axis.TextSize = 16;
@@ -249,6 +251,8 @@ public static class ThemesExtensions
                 theme.Colors = ColorPalletes.MaterialDesign200;
 
                 _ = theme
+                    .HasDefaultTooltip(() => new SKDefaultTooltip())
+                    .HasDefaultLegend(() => new SKDefaultLegend())
                     .HasRuleForAxes(axis =>
                     {
                         axis.TextSize = 16;

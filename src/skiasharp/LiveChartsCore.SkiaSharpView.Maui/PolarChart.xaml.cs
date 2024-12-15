@@ -54,8 +54,8 @@ public partial class PolarChart : ContentView, IPolarChartView
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
-    private IChartLegend? _legend = new SKDefaultLegend();
-    private IChartTooltip? _tooltip = new SKDefaultTooltip();
+    private IChartLegend? _legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    private IChartTooltip? _tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
 
     #endregion
 
