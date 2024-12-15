@@ -83,6 +83,7 @@ public enum TooltipFindingStrategy
 
 internal static class ObsoleteMapper
 {
+#pragma warning disable CS0618 // Type or member is obsolete
     public static FindingStrategy AsNew(this TooltipFindingStrategy oldName)
         => oldName switch
         {
@@ -112,4 +113,5 @@ internal static class ObsoleteMapper
             FindingStrategy.ExactMatchTakeClosest => TooltipFindingStrategy.ExactMatchTakeClosest,
             _ => throw new NotImplementedException()
         };
+#pragma warning restore CS0618 // Type or member is obsolete
 }
