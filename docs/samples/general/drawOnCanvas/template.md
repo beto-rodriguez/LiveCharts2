@@ -1,3 +1,9 @@
+:::tip
+This article adds geometries directly to the canvas, this is intended to explain how geometries and animations
+are handled in the library, but in general the recommended way to draw a custom element in the chart is to use the 
+`Visual` class, for more info please see the [visual elements article](https://livecharts.dev/docs/{{ platform }}/{{ version }}/samples.general.visualElements).
+::
+
 {{ render this "~/shared/genericSampleJustGifHeader.md" }}
 
 We can directly draw on the canvas to create custom shapes or effects, by default LiveCharts uses SkiaSharp
@@ -5,7 +11,7 @@ to render the controls, this means that you can use all the SkiaSharp API to dra
 more information about SkiaSharp [here](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/basics/).
 
 In the next example we use the `UpdateStarted` command/event in the `CartesianChart`, this command/event is raised every time
-the control is measured, a LiveCharts control is measured when the data changes or the control size change.
+the control is measured, a LiveCharts control is measured when the data or the control size change.
 
 ## View model
 
