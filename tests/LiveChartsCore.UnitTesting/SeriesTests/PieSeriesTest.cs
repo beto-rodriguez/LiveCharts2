@@ -81,7 +81,8 @@ public class PieSeriesTest
             Height = 300,
             Tooltip = tooltip,
             TooltipPosition = TooltipPosition.Auto,
-            Series = new double[] { 1, 1, 1, 1 }.AsPieSeries()
+            Series = new double[] { 1, 1, 1, 1 }.AsPieSeries(),
+            ExplicitDisposing = true
         };
 
         chart.Core._isPointerIn = true;

@@ -104,7 +104,8 @@ public class LineSeriesTest
             TooltipPosition = TooltipPosition.Top,
             Series = [sutSeries],
             XAxes = [new Axis { IsVisible = false }],
-            YAxes = [new Axis { IsVisible = false }]
+            YAxes = [new Axis { IsVisible = false }],
+            ExplicitDisposing = true
         };
 
         chart.Core._isPointerIn = true;

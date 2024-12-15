@@ -99,7 +99,8 @@ public class ColumnSeriesTest
             TooltipPosition = TooltipPosition.Top,
             Series = new[] { sutSeries },
             XAxes = new[] { new Axis { IsVisible = false } },
-            YAxes = new[] { new Axis { IsVisible = false } }
+            YAxes = new[] { new Axis { IsVisible = false } },
+            ExplicitDisposing = true
         };
 
         chart.Core._isPointerIn = true;

@@ -141,6 +141,8 @@ public abstract class InMemorySkiaSharpChart
 
         skiaChart.IsLoaded = true;
         skiaChart._isFirstDraw = true;
+        if (ExplicitDisposing) skiaChart.DisableTooltipCache = true;
+
         skiaChart.Measure();
 
         skiaChart.Canvas.DrawFrame(

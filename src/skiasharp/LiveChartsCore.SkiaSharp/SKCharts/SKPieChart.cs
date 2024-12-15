@@ -104,7 +104,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public bool AutoUpdateEnabled { get; set; }
 
     /// <inheritdoc cref="IChartView.Legend"/>
-    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
 
     /// <inheritdoc cref="IChartView.Tooltip"/>
     public IChartTooltip? Tooltip { get; set; }

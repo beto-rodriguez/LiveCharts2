@@ -85,7 +85,8 @@ public class PolarLineSeriesTest
             TooltipPosition = TooltipPosition.Top,
             Series = new[] { sutSeries },
             AngleAxes = new[] { new PolarAxis { IsVisible = false } },
-            RadiusAxes = new[] { new PolarAxis { IsVisible = true, MinLimit = 1, MaxLimit = 5 } }
+            RadiusAxes = new[] { new PolarAxis { IsVisible = true, MinLimit = 1, MaxLimit = 5 } },
+            ExplicitDisposing = true
         };
 
         chart.Core._isPointerIn = true;

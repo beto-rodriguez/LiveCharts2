@@ -264,6 +264,8 @@ public abstract class Chart
     public IEnumerable<ChartElement> VisualElements { get; protected set; } =
         [];
 
+    internal bool DisableTooltipCache { get; set; }
+
     #endregion region
 
     /// <inheritdoc cref="Update(ChartUpdateParams?)" />
@@ -657,7 +659,8 @@ public abstract class Chart
 
         var removed = CleanHoveredPoints(hovered);
 
-        var tooltipDataChanged = added.Count > 0 || removed.Count > 0;
+        var tooltipDataChanged =
+            added.Count > 0 || removed.Count > 0 || DisableTooltipCache;
 
         if (tooltipDataChanged)
             View.OnHoveredPointsChanged(added, removed);
@@ -682,7 +685,14 @@ public abstract class Chart
     {
         var removed = new List<ChartPoint>();
 
-        foreach (var point in _activePoints)
+        IEnumerable<ChartPoint> active = _activePoints;
+
+#if NET5_0_OR_GREATER
+#else
+        active = active.ToArray();
+#endif
+
+        foreach (var point in active)
         {
             if (hovered.Contains(point)) continue;
 

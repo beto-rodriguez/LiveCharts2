@@ -28,7 +28,8 @@ public class DrawMarginAndLegendsTests
             YAxes = new[] { new Axis { IsVisible = false, } },
             DrawMarginFrame = new DrawMarginFrame() { Stroke = new SolidColorPaint(SKColors.Yellow, 5) },
             LegendPosition = LegendPosition.Top,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -145,7 +146,8 @@ public class DrawMarginAndLegendsTests
             DrawMarginFrame = new DrawMarginFrame() { Stroke = new SolidColorPaint(SKColors.Yellow, 5) },
             LegendPosition = LegendPosition.Top,
             Title = title,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -249,7 +251,8 @@ public class DrawMarginAndLegendsTests
             Height = 500,
             Series = new[] { 1, 2, 3 }.AsPieSeries(),
             LegendPosition = LegendPosition.Top,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -363,7 +366,8 @@ public class DrawMarginAndLegendsTests
             Series = new[] { 1, 2, 3 }.AsPieSeries(),
             LegendPosition = LegendPosition.Top,
             Title = title,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -468,6 +472,7 @@ public class DrawMarginAndLegendsTests
             Series = new[] { new PolarLineSeries<double> { Values = new double[] { 1, 2, 3 } } },
             LegendPosition = LegendPosition.Top,
             Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -589,7 +594,8 @@ public class DrawMarginAndLegendsTests
             Series = new[] { new PolarLineSeries<double> { Values = new double[] { 1, 2, 3 } } },
             LegendPosition = LegendPosition.Top,
             Title = title,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
