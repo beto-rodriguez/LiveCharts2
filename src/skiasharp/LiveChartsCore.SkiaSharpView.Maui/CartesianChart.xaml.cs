@@ -55,8 +55,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
-    private IChartLegend? _legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
-    private IChartTooltip? _tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+    private IChartLegend? _legend;
+    private IChartTooltip? _tooltip;
 
     #endregion
 

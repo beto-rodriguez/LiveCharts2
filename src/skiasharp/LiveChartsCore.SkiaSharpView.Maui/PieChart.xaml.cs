@@ -51,8 +51,8 @@ public partial class PieChart : ContentView, IPieChartView
     private Chart? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
-    private IChartLegend? _legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
-    private IChartTooltip? _tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+    private IChartLegend? _legend;
+    private IChartTooltip? _tooltip;
 
     #endregion
 
