@@ -182,15 +182,18 @@ public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyCh
     {
         foreach (var mapLand in toRemove)
         {
-            var shapesQuery = mapLand.Data
-                .Select(x => x.Shape)
-                .Where(x => x is not null)
-                .Cast<IHeatPathShape>();
+            // THIS SEEEMS UNECESARY,
+            // I KEEP THIS CODE AS COMMENT BECAUSE IN GENERAL
+            // HEATMAPS REQUIRE A DEEPER REVIEW.
 
-            foreach (var pathShape in shapesQuery)
-            {
-                pathShape.FillColor = LvcColor.Empty;
-            }
+            //var shapesQuery = mapLand.Data
+            //    .Select(x => x.Shape)
+            //    .Where(x => x is not null);
+
+            //foreach (var pathShape in shapesQuery)
+            //{
+            //    pathShape!.Fill = null;
+            //}
 
             _ = _everUsed.Remove(mapLand);
         }
