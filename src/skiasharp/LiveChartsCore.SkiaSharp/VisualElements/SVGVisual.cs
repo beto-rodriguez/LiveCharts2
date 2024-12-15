@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: SVG
-
-using LiveChartsCore.Kernel.Sketches;
+using System;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -32,6 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// <summary>
 /// Defines a visual element in a chart that draws a svg geometry in the user interface.
 /// </summary>
+[Obsolete($"Replaced by {nameof(Visual)}.")]
 public class SVGVisual : GeometryVisual<VariableSVGPathGeometry>
 {
     private SKPath? _path;
