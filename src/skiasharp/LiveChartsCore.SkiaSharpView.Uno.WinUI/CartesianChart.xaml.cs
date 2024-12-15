@@ -891,7 +891,9 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+#pragma warning disable CS0618 // Type or member is obsolete
         ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)

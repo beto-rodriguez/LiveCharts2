@@ -113,6 +113,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public FindingStrategy FindingStrategy { get; set; }
 
     /// <inheritdoc cref="ICartesianChartView.FindingStrategy"/>
+    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
     public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
     /// <inheritdoc cref="IChartView.Legend"/>

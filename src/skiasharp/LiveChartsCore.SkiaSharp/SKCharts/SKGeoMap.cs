@@ -31,7 +31,7 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
-/// <inheritdoc cref="IGeoMapView{SkiaSharpDrawingContext}"/>
+/// <inheritdoc cref="IGeoMapView"/>
 public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
 {
     private readonly GeoMapChart _core;

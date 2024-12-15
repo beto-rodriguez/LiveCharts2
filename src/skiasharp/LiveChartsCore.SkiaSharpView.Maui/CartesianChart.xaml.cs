@@ -858,7 +858,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
+#pragma warning disable CS0618 // Type or member is obsolete
         ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     void IChartView.OnVisualElementPointerDown(
