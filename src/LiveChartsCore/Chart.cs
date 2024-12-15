@@ -298,6 +298,8 @@ public abstract class Chart
     {
         IsLoaded = true;
         _isFirstDraw = true;
+        View.Tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+        View.Legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
         Update();
     }
 
@@ -307,6 +309,8 @@ public abstract class Chart
     public virtual void Unload()
     {
         IsLoaded = false;
+        View.Tooltip = null;
+        View.Legend = null;
         _everMeasuredElements.Clear();
         _toDeleteElements.Clear();
         _activePoints.Clear();
