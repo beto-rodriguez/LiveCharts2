@@ -14,14 +14,14 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.TemplatedTooltips;
 
-public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
+public class CustomTooltip : IChartTooltip
 {
     private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
     private static readonly int s_zIndex = 10100;
     private readonly SolidColorPaint _backgroundPaint = new(new SKColor(28, 49, 58)) { ZIndex = s_zIndex };
     private readonly SolidColorPaint _fontPaint = new(new SKColor(230, 230, 230)) { ZIndex = s_zIndex + 1 };
 
-    public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
+    public void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
         if (_stackPanel is null)
         {
@@ -50,7 +50,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
         foreach (var point in foundPoints)
         {
-            var skiaSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
+            var skiaSeries = (IChartSeries)point.Context.Series;
 
             var label = new LabelVisual
             {
@@ -70,7 +70,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    skiaSeries.GetMiniature(point, s_zIndex),
+                    (CoreVisualElement)skiaSeries.GetMiniature(point, s_zIndex),
                     label
                 }
             };
@@ -88,7 +88,7 @@ public class CustomTooltip : IChartTooltip<SkiaSharpDrawingContext>
         chart.AddVisual(_stackPanel);
     }
 
-    public void Hide(Chart<SkiaSharpDrawingContext> chart)
+    public void Hide(Chart chart)
     {
         if (chart is null || _stackPanel is null) return;
         chart.RemoveVisual(_stackPanel);
