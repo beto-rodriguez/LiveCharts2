@@ -23,7 +23,7 @@ public partial class ViewModel
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
     {
-        var chartView = (ICartesianChartView<SkiaSharpDrawingContext>)args.Chart;
+        var chartView = (ICartesianChartView)args.Chart;
 
         if (_geometry is null)
         {

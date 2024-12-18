@@ -36,7 +36,7 @@ public partial class ViewModel
     [RelayCommand]
     public void PointerDown(PointerCommandArgs args)
     {
-        var chart = (ICartesianChartView<SkiaSharpDrawingContext>)args.Chart;
+        var chart = (ICartesianChartView)args.Chart;
 
         // scales the UI coordinates to the corresponding data in the chart.
         var scaledPoint = chart.ScalePixelsToData(args.PointerPosition);

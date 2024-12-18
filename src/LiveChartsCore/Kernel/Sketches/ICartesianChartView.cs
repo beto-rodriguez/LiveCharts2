@@ -123,8 +123,3 @@ public interface ICartesianChartView : IChartView
     /// <returns></returns>
     LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0);
 }
-
-[Obsolete("This interface will be removed in a future version, use ICartesianChartView instead.")]
-public interface ICartesianChartView<T> : ICartesianChartView
-    where T : DrawingContext
-{ }
