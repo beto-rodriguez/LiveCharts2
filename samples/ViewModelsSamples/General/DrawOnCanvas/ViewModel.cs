@@ -29,7 +29,7 @@ public partial class ViewModel
         {
             _geometry = new MotionGeometry();
             _geometry.Animate(
-                new(EasingFunctions.BounceOut, TimeSpan.FromMilliseconds(800)));
+                new Animation(EasingFunctions.BounceOut, TimeSpan.FromMilliseconds(800)));
         }
 
         if (_paint is null)

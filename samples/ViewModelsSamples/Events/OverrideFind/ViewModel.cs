@@ -4,7 +4,6 @@ using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 
@@ -20,7 +19,7 @@ public class ViewModel
     public class CustomColumnSeries<T> : ColumnSeries<T>
     {
         protected override IEnumerable<ChartPoint> FindPointsInPosition(
-            IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+            Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
         {
             return Fetch(chart).Where(point =>
             {
@@ -30,14 +29,9 @@ public class ViewModel
                 var isInsideX = ha.X <= pointerPosition.X && pointerPosition.X <= ha.X + ha.Width;
                 var isInsideY = ha.Y <= pointerPosition.Y && pointerPosition.Y <= ha.Y + ha.Height;
 
-                if (findPointFor == FindPointFor.HoverEvent)
-                {
-                    return isInsideX;
-                }
-                else
-                {
-                    return isInsideY;
-                }
+                return findPointFor == FindPointFor.HoverEvent
+                    ? isInsideX
+                    : isInsideY;
             });
         }
     }
