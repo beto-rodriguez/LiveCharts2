@@ -1,7 +1,5 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.ConditionalDraw;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Extensions;
@@ -26,7 +24,7 @@ public class ViewModel
         // lets create a pie series collection that plots the BrowserShare class,
         // it will use the DoughnutGeometry to draw each point (the default geometry),
         // and uses the SvgIconLabel to draw the label, in this case a SVG icon.
-        Series = data.AsPieSeries<BrowserShare, DoughnutGeometry, SvgIconLabel>(
+        Series = data.AsPieSeries<BrowserShare, DoughnutGeometry, SvgLabel>(
             (dataItem, series) =>
             {
                 // define the data labels paint.
@@ -34,16 +32,15 @@ public class ViewModel
 
                 // now, when the point is measured,
                 // we will set up the svg label based on the BrowserShare class.
-                series
+                _ = series
                     .OnPointMeasured(point =>
                     {
-                        var svgLabel = point.Label!;
+                        var label = point.Label!;
 
-                        svgLabel.Path = dataItem.Svg;
-                        svgLabel.Name = dataItem.Name;
-                        svgLabel.Width = 30;
-                        svgLabel.Height = 30;
-                        svgLabel.TranslateTransform = new(-15, -15);
+                        label.Path = dataItem.Svg;
+                        label.Name = dataItem.Name;
+                        label.Size = 50;
+                        label.TranslateTransform = new(-25, -25);
                     });
             });
 
@@ -62,20 +59,22 @@ public class BrowserShare
     public double Value { get; set; }
 }
 
-// this is the geometry that will be used to draw the labels on each point.
-// we inherit from VariableSVGPathGeometry to handle the svg path,
-// the VariableSVGPathGeometry class scales the svg path to fit the Width and Height properties.
-// we also implement ILabelGeometry to satisfy the series requirements.
-public class SvgIconLabel : VariableSVGPathGeometry, ILabelGeometry<SkiaSharpDrawingContext>
+public class SvgLabel : LabelGeometry
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
+    public SKPath Path { get; set; }
+    public float Size { get; set; }
 
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public override void Draw(SkiaSharpDrawingContext context)
     {
-        // lets draw the icon using the VariableSVGPathGeometry base class.
-        base.OnDraw(context, paint);
+        using var iconPaint = new SKPaint
+        {
+            Color = SKColors.WhiteSmoke,
+            Style = SKPaintStyle.Fill,
+            IsAntialias = true
+        };
 
-        // and after that, lets draw the name of the browser using the SkiaSharp API.
+        Svg.Draw(context, iconPaint, Path, X, Y, Size, Size);
 
         using var textPaint = new SKPaint
         {
@@ -88,24 +87,6 @@ public class SvgIconLabel : VariableSVGPathGeometry, ILabelGeometry<SkiaSharpDra
 
         context.Canvas.DrawText(Name, X, Y - 10, textPaint);
     }
-
-    // All the folowing properties and ctor are required by the ILabelGeometry interface
-    // in this case we will ignore them.
-
-    public SvgIconLabel()
-    {
-        // just a workaround... probably will be imprived in a future version.
-        _ = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
-    }
-
-    public Padding Padding { get; set; } = new();
-    public float LineHeight { get; set; }
-    public Align VerticalAlign { get; set; }
-    public Align HorizontalAlign { get; set; }
-    public string Text { get; set; } = string.Empty;
-    public float TextSize { get; set; }
-    public float MaxWidth { get; set; }
-    public LvcColor Background { get; set; }
 }
 
 public static class Icons
