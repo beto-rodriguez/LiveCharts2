@@ -16,7 +16,7 @@ public class VisualElementsTests
     [TestMethod]
     public void Dispose()
     {
-        var suts = new List<CoreVisualElement>
+        var suts = new List<VisualElement>
         {
             new StackPanel<RectangleGeometry>(),
             new RelativePanel<RectangleGeometry>(),
@@ -77,7 +77,7 @@ public class VisualElementsTests
             chart.CoreCanvas._paintTasks.Count > p);
 
         // clear the visuals and ensure that all the geometries and paints were removed
-        chart.VisualElements = new List<CoreVisualElement>();
+        chart.VisualElements = new List<VisualElement>();
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() == g &&
