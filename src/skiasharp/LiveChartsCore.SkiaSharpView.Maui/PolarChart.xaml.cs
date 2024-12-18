@@ -155,7 +155,7 @@ public partial class PolarChart : ContentView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(CoreVisualElement), typeof(PolarChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement), typeof(PolarChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -465,9 +465,9 @@ public partial class PolarChart : ContentView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public CoreVisualElement? Title
+    public LiveChartsCore.VisualElements.VisualElement? Title
     {
-        get => (CoreVisualElement?)GetValue(TitleProperty);
+        get => (LiveChartsCore.VisualElements.VisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -698,7 +698,7 @@ public partial class PolarChart : ContentView, IPolarChartView
     {
         return _core is not PolarChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(_core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((LiveChartsCore.VisualElements.VisualElement)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>

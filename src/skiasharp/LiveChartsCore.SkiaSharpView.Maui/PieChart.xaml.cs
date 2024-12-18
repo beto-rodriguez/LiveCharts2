@@ -116,7 +116,7 @@ public partial class PieChart : ContentView, IPieChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(CoreVisualElement), typeof(PieChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement), typeof(PieChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property
@@ -396,9 +396,9 @@ public partial class PieChart : ContentView, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public CoreVisualElement? Title
+    public LiveChartsCore.VisualElements.VisualElement? Title
     {
-        get => (CoreVisualElement?)GetValue(TitleProperty);
+        get => (LiveChartsCore.VisualElements.VisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -624,7 +624,7 @@ public partial class PieChart : ContentView, IPieChartView
     {
         return _core is not PieChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(_core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((LiveChartsCore.VisualElements.VisualElement)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>

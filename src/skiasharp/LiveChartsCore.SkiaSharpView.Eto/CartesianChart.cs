@@ -226,7 +226,7 @@ public class CartesianChart : Chart, ICartesianChartView
     {
         return core is not CartesianChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>

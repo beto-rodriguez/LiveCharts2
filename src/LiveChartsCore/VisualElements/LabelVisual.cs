@@ -32,7 +32,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a label visual element.
 /// </summary>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-public class LabelVisual<TLabelGeometry> : CoreVisualElement
+public class LabelVisual<TLabelGeometry> : VisualElement
     where TLabelGeometry : BaseLabelGeometry, new()
 {
     internal TLabelGeometry? _labelGeometry;
@@ -100,7 +100,7 @@ public class LabelVisual<TLabelGeometry> : CoreVisualElement
     protected internal override Paint?[] GetPaintTasks() =>
         [_paint];
 
-    /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>
         [_labelGeometry];
 
@@ -110,7 +110,7 @@ public class LabelVisual<TLabelGeometry> : CoreVisualElement
         HorizontalAlignment = Align.Start;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
         var x = (float)X;
@@ -150,14 +150,14 @@ public class LabelVisual<TLabelGeometry> : CoreVisualElement
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
     protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_labelGeometry is null) return;
         ((IDrawnElement)_labelGeometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
         ApplyTheme<LabelVisual<TLabelGeometry>>();

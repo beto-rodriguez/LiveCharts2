@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 
@@ -182,3 +183,8 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     private void TouchProperty([CallerMemberName] string? propertyName = null) =>
         _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
 }
+
+[Obsolete("The generic argument was removed.")]
+public abstract class ChartElement<TDrawingContext> : ChartElement
+    where TDrawingContext : DrawingContext
+{ }

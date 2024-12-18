@@ -321,7 +321,7 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    /// Defines a style builder for <see cref= "CoreVisualElement" /> objects.
+    /// Defines a style builder for <see cref= "VisualElement" /> objects.
     /// </summary>
     /// <typeparam name="TChartElement">The type of the chart element.</typeparam>
     /// <param name="styler">the styler.</param>

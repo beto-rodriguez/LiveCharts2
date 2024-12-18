@@ -63,7 +63,7 @@ public abstract class Chart : Panel, IChartView
     private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
-    private CoreVisualElement? _title;
+    private VisualElement? _title;
     private CollectionDeepObserver<ChartElement> _visualsObserver;
     private IEnumerable<ChartElement> _visuals = [];
     private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
@@ -253,7 +253,7 @@ public abstract class Chart : Panel, IChartView
     }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public CoreVisualElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
+    public VisualElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
 
     #endregion
 

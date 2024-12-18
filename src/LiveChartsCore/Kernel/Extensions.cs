@@ -325,12 +325,12 @@ public static class Extensions
 
     /// <summary>
     /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart
-    /// for all the geometries in a <see cref="CoreVisualElement"/>.
+    /// for all the geometries in a <see cref="VisualElement"/>.
     /// </summary>
     /// <param name="visual">The visual.</param>
     /// <param name="animation">The animation.</param>
     /// <param name="properties">The properties.</param>
-    public static void Animate(this CoreVisualElement visual, Animation animation, params string[]? properties)
+    public static void Animate(this VisualElement visual, Animation animation, params string[]? properties)
     {
         foreach (var animatable in visual.GetDrawnGeometries())
         {

@@ -30,7 +30,7 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a visual element that has stroke and fill, it can also be scaled in
 /// <see cref="MeasureUnit.Pixels"/> or <see cref="MeasureUnit.ChartValues"/>.
 /// </summary>
-public abstract class BaseGeometryVisual : CoreVisualElement
+public abstract class BaseGeometryVisual : VisualElement
 {
     private double _width;
     private double _height;

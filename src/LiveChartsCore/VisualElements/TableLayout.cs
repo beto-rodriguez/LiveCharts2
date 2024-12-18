@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -32,7 +33,8 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the table panel class.
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-public class TableLayout<TBackgroundGeometry> : CoreVisualElement
+[Obsolete("Replaced by the not generic TableLayout class.")]
+public class TableLayout<TBackgroundGeometry> : VisualElement
     where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
     private Paint? _backgroundPaint;
@@ -81,7 +83,7 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
         var maxH = Padding.Top;
@@ -142,7 +144,7 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
     /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
     /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
     public void AddChild(
-        CoreVisualElement child,
+        VisualElement child,
         int row, int column,
         Align? horizontalAlign = null,
         Align? verticalAlign = null)
@@ -177,7 +179,7 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
                 yield return _positions[r][c];
     }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
         var controlSize = Measure(chart);
@@ -244,14 +246,14 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
     protected internal override void SetParent(DrawnGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         ((IDrawnElement)BackgroundGeometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
@@ -259,8 +261,8 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
     protected internal override Paint?[] GetPaintTasks() =>
         [_backgroundPaint];
 
-    /// <inheritdoc cref="CoreVisualElement.IsHitBy(Chart, LvcPoint)"/>
-    protected internal override IEnumerable<CoreVisualElement> IsHitBy(Chart chart, LvcPoint point)
+    /// <inheritdoc cref="VisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -301,7 +303,7 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
     public class TableCell(
         int row,
         int column,
-        CoreVisualElement visualElement,
+        VisualElement visualElement,
         Align? verticalAlign = null,
         Align? horizontalAlign = null)
     {
@@ -328,7 +330,7 @@ public class TableLayout<TBackgroundGeometry> : CoreVisualElement
         /// <summary>
         /// Gets the visual element.
         /// </summary>
-        public CoreVisualElement VisualElement { get; } = visualElement;
+        public VisualElement VisualElement { get; } = visualElement;
     }
 }
 

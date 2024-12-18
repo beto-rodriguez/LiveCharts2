@@ -119,7 +119,7 @@ public class PieChart : Chart, IPieChartView
     {
         return core is not PieChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
     }
 
     /// <summary>

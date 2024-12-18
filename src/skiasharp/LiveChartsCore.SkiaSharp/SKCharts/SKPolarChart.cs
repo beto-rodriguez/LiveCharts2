@@ -166,7 +166,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public double? TooltipTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public CoreVisualElement? Title { get; set; }
+    public VisualElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.Measuring" />
     public event ChartEventHandler? Measuring;
@@ -223,7 +223,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
 
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
-        Core.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(Core, new(point)));
+        Core.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(Core, new(point)));
 
     void IChartView.InvokeOnUIThread(Action action) => action();
 

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
@@ -122,3 +123,8 @@ public interface ICartesianChartView : IChartView
     /// <returns></returns>
     LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0);
 }
+
+[Obsolete("This interface will be removed in a future version, use ICartesianChartView instead.")]
+public interface ICartesianChartView<T> : ICartesianChartView
+    where T : DrawingContext
+{ }

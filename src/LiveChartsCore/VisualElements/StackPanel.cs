@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -32,7 +33,8 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the stack panel class.
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-public class StackPanel<TBackgroundGeometry> : CoreVisualElement
+[Obsolete($"Replaced by StackLayout")]
+public class StackPanel<TBackgroundGeometry> : VisualElement
     where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
     private Paint? _backgroundPaint;
@@ -54,7 +56,7 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public List<CoreVisualElement> Children { get; } = [];
+    public List<VisualElement> Children { get; } = [];
 
     /// <summary>
     /// Gets or sets the panel orientation.
@@ -104,12 +106,12 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
     protected internal override Paint?[] GetPaintTasks() =>
         [_backgroundPaint];
 
-    /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>
         [BackgroundGeometry];
 
-    /// <inheritdoc cref="CoreVisualElement.IsHitBy(Chart, LvcPoint)"/>
-    protected internal override IEnumerable<CoreVisualElement> IsHitBy(Chart chart, LvcPoint point)
+    /// <inheritdoc cref="VisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -136,7 +138,7 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
         var controlSize = Measure(chart);
@@ -162,14 +164,14 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
     protected internal override void SetParent(DrawnGeometry parent)
     {
         if (BackgroundGeometry is null) return;
         ((IDrawnElement)BackgroundGeometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
         var xl = Padding.Left;
@@ -290,9 +292,15 @@ public class StackPanel<TBackgroundGeometry> : CoreVisualElement
         base.RemoveFromUI(chart);
     }
 
-    private class MeasureResult(CoreVisualElement visual, LvcSize size)
+    private class MeasureResult(VisualElement visual, LvcSize size)
     {
-        public CoreVisualElement Visual { get; set; } = visual;
+        public VisualElement Visual { get; set; } = visual;
         public LvcSize Size { get; set; } = size;
     }
 }
+
+[Obsolete($"Replaced by StackLayout")]
+public class StackPanel<TBackgroundGeometry, TDrawingContext> : StackPanel<TBackgroundGeometry>
+    where TBackgroundGeometry : BoundedDrawnGeometry, new()
+    where TDrawingContext : DrawingContext
+{ }

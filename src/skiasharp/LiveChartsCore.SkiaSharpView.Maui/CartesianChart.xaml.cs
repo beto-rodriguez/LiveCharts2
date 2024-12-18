@@ -133,7 +133,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(CoreVisualElement), typeof(CartesianChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement), typeof(CartesianChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -458,9 +458,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public CoreVisualElement? Title
+    public LiveChartsCore.VisualElements.VisualElement? Title
     {
-        get => (CoreVisualElement?)GetValue(TitleProperty);
+        get => (LiveChartsCore.VisualElements.VisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -729,7 +729,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView
     {
         return _core is not CartesianChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(_core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((LiveChartsCore.VisualElements.VisualElement)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>

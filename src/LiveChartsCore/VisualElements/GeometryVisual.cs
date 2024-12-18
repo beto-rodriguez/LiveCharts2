@@ -74,7 +74,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     protected internal override Animatable?[] GetDrawnGeometries() =>
         [_geometry, _labelGeometry];
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
         var l = GetActualCoordinate();
@@ -158,14 +158,14 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
     protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
         ((IDrawnElement)_geometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
         var w = (float)Width;

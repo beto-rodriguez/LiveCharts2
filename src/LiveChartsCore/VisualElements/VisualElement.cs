@@ -34,7 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the base visual element class, inheriting from this class makes it easy to implement a visual element.
 /// </summary>
-public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged, IInternalInteractable
+public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInternalInteractable
 {
     internal double _x;
     internal double _y;
@@ -186,7 +186,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged, 
     /// <param name="chart">The chart.</param>
     /// <param name="point">The point in the UI.</param>
     /// <returns>The visual or visuals touched by the point.</returns>
-    protected internal virtual IEnumerable<CoreVisualElement> IsHitBy(Chart chart, LvcPoint point)
+    protected internal virtual IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
 
@@ -230,7 +230,7 @@ public abstract class CoreVisualElement : ChartElement, INotifyPropertyChanged, 
     /// Applies the theme to the visual.
     /// </summary>
     protected virtual void ApplyTheme<T>()
-        where T : CoreVisualElement
+        where T : VisualElement
     {
         _isInternalSet = true;
         if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)

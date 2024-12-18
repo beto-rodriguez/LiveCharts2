@@ -34,6 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// Initializes a new instance of the <see cref="VariableGeometryVisual"/> class.
 /// </remarks>
 /// <param name="geometry"></param>
+[Obsolete($"Replaced, please check the new website docs for visual elements.")]
 public class VariableGeometryVisual(BoundedDrawnGeometry geometry) : BaseGeometryVisual
 {
     private bool _isInitialized;
@@ -62,7 +63,7 @@ public class VariableGeometryVisual(BoundedDrawnGeometry geometry) : BaseGeometr
     protected internal override Animatable?[] GetDrawnGeometries() =>
         [geometry];
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
         var x = (float)X;
@@ -115,14 +116,14 @@ public class VariableGeometryVisual(BoundedDrawnGeometry geometry) : BaseGeometr
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
     protected internal override void SetParent(DrawnGeometry parent)
     {
         if (geometry is null) return;
         ((IDrawnElement)geometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
         var w = (float)Width;

@@ -22,8 +22,12 @@
 
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+// LEGACY OBJECTS, WILL BE REMOVED IN FUTURE VERSIONS
 
 /// <summary>
 /// Defines a geometry with a size.
@@ -32,5 +36,31 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public abstract class SizedGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)"/>
-    public abstract void Draw(SkiaSharpDrawingContext context);
+    public virtual void Draw(SkiaSharpDrawingContext context) =>
+        OnDraw(context, context.ActiveSkiaPaint);
+
+    /// <summary>
+    /// Legacy method, will be removed in future versions.
+    /// </summary>
+    [Obsolete($"Use the {nameof(Draw)} method instead.")]
+    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
+}
+
+[Obsolete($"Renamed to {nameof(DrawnGeometry)}")]
+public abstract class Geometry : DrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
+{
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)"/>
+    public virtual void Draw(SkiaSharpDrawingContext context) =>
+        OnDraw(context, context.ActiveSkiaPaint);
+
+    /// <summary>
+    /// Legacy method, will be removed in future versions.
+    /// </summary>
+    [Obsolete($"Use the {nameof(Draw)} method instead.")]
+    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
+
+    public override LvcSize Measure() =>
+        new LvcSize(0, 0);
+
+    protected virtual LvcSize OnMeasure(Paint paintTasks) => Measure();
 }

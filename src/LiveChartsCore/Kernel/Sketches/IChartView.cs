@@ -164,7 +164,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the chart title.
     /// </summary>
-    CoreVisualElement? Title { get; set; }
+    VisualElement? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the legend.
@@ -236,7 +236,7 @@ public interface IChartView
     /// Gets all the <see cref="IChartElement"/> that contain the given point.
     /// </summary>
     /// <param name="point">The given point.</param>
-    /// <returns>An enumerable of <see cref="CoreVisualElement"/>.</returns>
+    /// <returns>An enumerable of <see cref="VisualElement"/>.</returns>
     IEnumerable<IChartElement> GetVisualsAt(LvcPointD point);
 
     /// <summary>

@@ -118,8 +118,8 @@ public class PieChart : UserControl, IPieChartView
     /// <summary>
     /// The title property.
     /// </summary>
-    public static readonly AvaloniaProperty<CoreVisualElement?> TitleProperty =
-       AvaloniaProperty.Register<PieChart, CoreVisualElement?>(nameof(Title), null, inherits: true);
+    public static readonly AvaloniaProperty<VisualElement?> TitleProperty =
+       AvaloniaProperty.Register<PieChart, VisualElement?>(nameof(Title), null, inherits: true);
 
     /// <summary>
     /// The series property
@@ -278,7 +278,7 @@ public class PieChart : UserControl, IPieChartView
         AvaloniaProperty.Register<PieChart, ICommand?>(nameof(ChartPointPointerDownCommand), null, inherits: true);
 
     /// <summary>
-    /// The <see cref="CoreVisualElement"/> pointer down command property
+    /// The <see cref="VisualElement"/> pointer down command property
     /// </summary>
     public static readonly AvaloniaProperty<ICommand?> VisualElementsPointerDownCommandProperty =
         AvaloniaProperty.Register<PieChart, ICommand?>(nameof(VisualElementsPointerDownCommand), null, inherits: true);
@@ -355,9 +355,9 @@ public class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public CoreVisualElement? Title
+    public VisualElement? Title
     {
-        get => (CoreVisualElement?)GetValue(TitleProperty);
+        get => (VisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -583,7 +583,7 @@ public class PieChart : UserControl, IPieChartView
     {
         return _core is not CartesianChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(cc, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(cc, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>

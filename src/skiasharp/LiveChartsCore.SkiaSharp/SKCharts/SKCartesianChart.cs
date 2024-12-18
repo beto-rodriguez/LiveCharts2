@@ -153,7 +153,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public CoreVisualElement? Title { get; set; }
+    public VisualElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint"/>
     public Paint? LegendTextPaint { get; set; }
@@ -224,7 +224,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
 
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
-        Core.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(Core, new(point)));
+        Core.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(Core, new(point)));
 
     void IChartView.InvokeOnUIThread(Action action) => action();
 

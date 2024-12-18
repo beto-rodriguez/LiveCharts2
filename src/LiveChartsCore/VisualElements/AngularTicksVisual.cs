@@ -36,7 +36,7 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TArcGeometry">The type of the arc geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : CoreVisualElement
+public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : VisualElement
     where TArcGeometry : BaseArcGeometry, new()
     where TLineGeometry : BaseLineGeometry, new()
     where TLabelGeometry : BaseLabelGeometry, new()
@@ -95,7 +95,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : C
     /// </summary>
     public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
         if (chart is not PieChartEngine pieChart)
@@ -251,14 +251,14 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : C
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart) => new();
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
     protected internal override void SetParent(DrawnGeometry parent)
     { }
 
-    /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
     protected internal override Animatable?[] GetDrawnGeometries()
     {
         var count =

@@ -33,7 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-public class NeedleVisual<TGeometry, TLabelGeometry> : CoreVisualElement
+public class NeedleVisual<TGeometry, TLabelGeometry> : VisualElement
     where TGeometry : BaseNeedleGeometry, new()
     where TLabelGeometry : BaseLabelGeometry, new()
 {
@@ -55,7 +55,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry> : CoreVisualElement
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="CoreVisualElement.OnInvalidated(Chart)"/>
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
         ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry>>();
@@ -112,17 +112,17 @@ public class NeedleVisual<TGeometry, TLabelGeometry> : CoreVisualElement
         }
     }
 
-    /// <inheritdoc cref="CoreVisualElement.Measure(Chart)"/>
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart) => new();
 
-    /// <inheritdoc cref="CoreVisualElement.SetParent(DrawnGeometry)"/>
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
     protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
         ((IDrawnElement)_geometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="CoreVisualElement.GetDrawnGeometries"/>
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>
         [_geometry];
 

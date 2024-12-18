@@ -140,7 +140,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public CoreVisualElement? Title { get; set; }
+    public VisualElement? Title { get; set; }
 
     /// <inheritdoc cref="IPieChartView.IsClockwise"/>
     public bool IsClockwise { get; set; } = true;
@@ -196,7 +196,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
 
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
-        Core.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(Core, new(point)));
+        Core.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(Core, new(point)));
 
     void IChartView.InvokeOnUIThread(Action action) => action();
 

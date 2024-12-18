@@ -276,7 +276,7 @@ public class PolarChart : Chart, IPolarChartView
     {
         return core is not PolarChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
     }
 
     /// <summary>

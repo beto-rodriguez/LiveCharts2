@@ -125,7 +125,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
-            nameof(Title), typeof(CoreVisualElement), typeof(PolarChart), new PropertyMetadata(null));
+            nameof(Title), typeof(VisualElement), typeof(PolarChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property.
@@ -449,9 +449,9 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public CoreVisualElement? Title
+    public VisualElement? Title
     {
-        get => (CoreVisualElement?)GetValue(TitleProperty);
+        get => (VisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
@@ -701,7 +701,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     {
         return _core is not PolarChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((CoreVisualElement)visual).IsHitBy(_core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action)

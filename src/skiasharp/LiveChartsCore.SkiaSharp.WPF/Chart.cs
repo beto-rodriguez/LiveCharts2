@@ -98,7 +98,7 @@ public abstract class Chart : UserControl, IChartView
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
        DependencyProperty.Register(
-           nameof(Title), typeof(CoreVisualElement), typeof(Chart), new PropertyMetadata(null));
+           nameof(Title), typeof(VisualElement), typeof(Chart), new PropertyMetadata(null));
 
     /// <summary>
     /// The sync context property.
@@ -340,9 +340,9 @@ public abstract class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public CoreVisualElement? Title
+    public VisualElement? Title
     {
-        get => (CoreVisualElement?)GetValue(TitleProperty);
+        get => (VisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

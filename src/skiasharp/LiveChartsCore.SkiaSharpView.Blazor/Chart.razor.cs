@@ -166,7 +166,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Title"/>
     [Parameter]
-    public CoreVisualElement? Title { get; set; }
+    public VisualElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     [Parameter]

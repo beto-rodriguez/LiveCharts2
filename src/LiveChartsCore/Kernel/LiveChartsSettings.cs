@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
@@ -367,6 +368,11 @@ public class LiveChartsSettings
     /// <returns></returns>
     public Theme GetTheme() =>
         (Theme?)_theme ?? throw new Exception("A theme is required.");
+
+    [Obsolete("Replaced by the non generic GetThememe method.")]
+    public Theme GetTheme<TDrawingContext>()
+        where TDrawingContext : DrawingContext
+            => (Theme?)_theme ?? throw new Exception("A theme is required.");
 
     /// <summary>
     /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?.

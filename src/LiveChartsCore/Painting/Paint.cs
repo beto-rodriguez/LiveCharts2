@@ -63,6 +63,16 @@ public abstract class Paint : Animatable, IDisposable
     internal PaintStyle PaintStyle { get; set; }
 
     /// <summary>
+    /// Obsolete.
+    /// </summary>
+    [Obsolete("This is not accesible now at this point, instead set the Fill or Stroke properties of the desired geomemtry.")]
+    public bool IsStroke
+    {
+        get => PaintStyle.HasFlag(PaintStyle.Stroke);
+        set => PaintStyle = value ? PaintStyle.Stroke : PaintStyle.Fill;
+    }
+
+    /// <summary>
     /// Gets or sets the font family.
     /// </summary>
     public string? FontFamily { get; set; }
