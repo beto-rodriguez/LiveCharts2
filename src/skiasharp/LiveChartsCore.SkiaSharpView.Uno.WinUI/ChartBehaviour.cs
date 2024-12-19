@@ -55,11 +55,11 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
 
         element.UserInteractionEnabled = true;
 #if MACCATALYST
-        element.AddGestureRecognizer(GetMacCatalystHover(element));
+        element.AddGestureRecognizer(MacCatalystHoverGestureRecognizer);
 #endif
-        element.AddGestureRecognizer(GetMacCatalystLongPress(element));
-        element.AddGestureRecognizer(GetMacCatalystPinch(element));
-        element.AddGestureRecognizer(GetMacCatalystOnPan(element));
+        element.AddGestureRecognizer(MacCatalystLongPressGestureRecognizer);
+        element.AddGestureRecognizer(MacCatalystPinchGestureRecognizer);
+        element.AddGestureRecognizer(MacCatsalystPanGestureRecognizer);
 
 #elif WINDOWS
 

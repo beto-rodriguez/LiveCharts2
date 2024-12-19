@@ -39,11 +39,10 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <DebugType>embedded</DebugType>
 	</PropertyGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 	  <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.9-preview.2.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>

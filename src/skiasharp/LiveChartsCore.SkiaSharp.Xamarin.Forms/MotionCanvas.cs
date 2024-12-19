@@ -34,7 +34,7 @@ using Xamarin.Forms;
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 
 /// <summary>
-/// The motion canvas control fro Xamarin, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// Defines the motion cavnas class for Maui.
 /// </summary>
 public partial class MotionCanvas : ContentView
 {
