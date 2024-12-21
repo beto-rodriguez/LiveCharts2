@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows.Forms;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;

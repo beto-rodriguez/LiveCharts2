@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -36,31 +37,26 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">the type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
-    : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
+    : BarSeries<TModel, TVisual, TLabel>
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TErrorGeometry : BaseLineGeometry, new()
 {
-    private readonly bool _isRounded = false;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CoreColumnSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
     /// </summary>
     protected CoreColumnSeries(IReadOnlyCollection<TModel>? values, bool isStacked = false)
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0, 1);
-        _isRounded = typeof(IRoundedGeometry<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -121,7 +117,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
         var stacker = isStacked ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup()) : null;
         var hasSvg = this.HasVariableSvgGeometry();
 
-        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+        var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -175,11 +171,8 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
                     Height = hi
                 };
 
-                if (_isRounded)
-                {
-                    var rounded = (IRoundedGeometry<TDrawingContext>)r;
-                    rounded.BorderRadius = new LvcPoint(rx, ry);
-                }
+                if (r is BaseRoundedRectangleGeometry rg)
+                    rg.BorderRadius = new LvcPoint(rx, ry);
 
                 if (ErrorPaint is not null)
                 {
@@ -207,7 +200,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
 
             if (hasSvg)
             {
-                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
@@ -265,11 +258,9 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
                 e.XError.RemoveOnCompleted = false;
             }
 
-            if (_isRounded)
-            {
-                var rounded = (IRoundedGeometry<TDrawingContext>)visual;
-                rounded.BorderRadius = new LvcPoint(rx, ry);
-            }
+            if (visual is BaseRoundedRectangleGeometry rrg)
+                rrg.BorderRadius = new LvcPoint(rx, ry);
+
             visual.RemoveOnCompleted = false;
 
             if (point.Context.HoverArea is not RectangleHoverArea ha)
@@ -305,12 +296,13 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                label.Paint = DataLabelsPaint;
 
                 if (isFirstDraw)
                     label.CompleteTransition(
                         nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 
-                var m = label.Measure(DataLabelsPaint);
+                var m = label.Measure();
                 var labelPosition = GetLabelPosition(
                     x, cy, helper.uw, b, m,
                     DataLabelsPosition, SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
@@ -329,13 +321,10 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.GetRequestedSecondaryOffset"/>
-    protected override double GetRequestedSecondaryOffset()
-    {
-        return 0.5f;
-    }
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.GetRequestedSecondaryOffset"/>
+    protected override double GetRequestedSecondaryOffset() => 0.5f;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
@@ -354,14 +343,14 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext,
         }
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
+        var chartView = (ICartesianChartView)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
             visual.CompleteTransition(null);

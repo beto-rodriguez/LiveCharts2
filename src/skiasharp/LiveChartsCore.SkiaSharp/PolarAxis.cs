@@ -21,11 +21,10 @@
 // SOFTWARE.
 
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
 
 /// <inheritdoc cref="ICartesianAxis" />
-public class PolarAxis : CorePolarAxis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry, CircleGeometry>
+public class PolarAxis : CorePolarAxis<LabelGeometry, LineGeometry, CircleGeometry>
 { }

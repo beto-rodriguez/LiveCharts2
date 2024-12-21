@@ -23,18 +23,17 @@
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
 /// <summary>
 /// Defines a draw margin frame visual in a chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
-    where TDrawingContext : DrawingContext
+public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
 {
-    private IPaint<TDrawingContext>? _stroke = null;
-    private IPaint<TDrawingContext>? _fill = null;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -42,10 +41,10 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint<TDrawingContext>? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
     /// <summary>
@@ -54,17 +53,15 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _stroke, _fill };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_stroke, _fill];
 
     /// <summary>
     /// Called when the fill changes.
@@ -81,10 +78,8 @@ public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingCo
 /// Defines a draw margin frame visual in a chart.
 /// </summary>
 /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMarginFrame<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TSizedGeometry : ISizedGeometry<TDrawingContext>, new()
+public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
+    where TSizedGeometry : BoundedDrawnGeometry, new()
 {
     private TSizedGeometry? _fillSizedGeometry;
     private TSizedGeometry? _strokeSizedGeometry;
@@ -94,7 +89,7 @@ public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMar
     /// Measures the specified chart.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    public override void Invalidate(Chart chart)
     {
         var drawLocation = chart.DrawMarginLocation;
         var drawMarginSize = chart.DrawMarginSize;

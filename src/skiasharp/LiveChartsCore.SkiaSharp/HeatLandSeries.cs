@@ -23,18 +23,17 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
 
-/// <inheritdoc cref="CoreHeatLandSeries{TModel, TDrawingContext}"/>
+/// <inheritdoc cref="CoreHeatLandSeries{TModel}"/>
 public class HeatLandSeries : HeatLandSeries<HeatLand>
 { }
 
-/// <inheritdoc cref="CoreHeatLandSeries{TModel, TDrawingContext}"/>
+/// <inheritdoc cref="CoreHeatLandSeries{TModel}"/>
 public class HeatLandSeries<TModel>
-    : CoreHeatLandSeries<TModel, SkiaSharpDrawingContext>
+    : CoreHeatLandSeries<TModel>
         where TModel : IWeigthedMapLand
 {
     /// <summary>
@@ -71,6 +70,6 @@ public class HeatLandSeries<TModel>
         HeatMap = heatMap;
 
         LiveCharts.Configure(config => config.UseDefaults());
-        IntitializeSeries(LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
+        IntitializeSeries(LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint());
     }
 }

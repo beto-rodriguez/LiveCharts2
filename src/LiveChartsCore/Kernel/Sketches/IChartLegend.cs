@@ -27,19 +27,17 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a chart legend.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IChartLegend<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IChartLegend
 {
     /// <summary>
     /// Draws the legend for the specified chart.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void Draw(Chart<TDrawingContext> chart);
+    void Draw(Chart chart);
 
     /// <summary>
     /// Measures the control.
     /// </summary>
     /// <param name="chart">The chart that holds the control.</param>
-    LvcSize Measure(Chart<TDrawingContext> chart);
+    LvcSize Measure(Chart chart);
 }

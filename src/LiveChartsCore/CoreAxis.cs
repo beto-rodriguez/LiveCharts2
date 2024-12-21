@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Crosshair Subticks Subseparators
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,27 +30,26 @@ using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
 /// <summary>
 /// Defines an Axis in a Cartesian chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
-    : ChartElement<TDrawingContext>, ICartesianAxis<TDrawingContext>, IPlane<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
-        where TLineGeometry : class, ILineGeometry<TDrawingContext>, new()
+public abstract class CoreAxis<TTextGeometry, TLineGeometry>
+    : ChartElement, ICartesianAxis, IPlane
+        where TTextGeometry : BaseLabelGeometry, new()
+        where TLineGeometry : BaseLineGeometry, new()
 {
     #region fields
 
     /// <summary>
     /// The active separators
     /// </summary>
-    protected internal readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = [];
+    protected internal readonly Dictionary<Chart, Dictionary<string, AxisVisualSeprator>> activeSeparators = [];
 
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
@@ -71,24 +68,24 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     private Padding _padding = new();
     private double? _minLimit = null;
     private double? _maxLimit = null;
-    private IPaint<TDrawingContext>? _namePaint;
+    private Paint? _namePaint;
     private double _nameTextSize = 20;
     private Padding _namePadding = new(5);
-    private IPaint<TDrawingContext>? _labelsPaint;
+    private Paint? _labelsPaint;
     private double _unitWidth = 1;
     private double _textSize = 16;
-    private IPaint<TDrawingContext>? _separatorsPaint;
-    private IPaint<TDrawingContext>? _subseparatorsPaint;
+    private Paint? _separatorsPaint;
+    private Paint? _subseparatorsPaint;
     private bool _drawTicksPath;
-    private ILineGeometry<TDrawingContext>? _ticksPath;
-    private IPaint<TDrawingContext>? _ticksPaint;
-    private IPaint<TDrawingContext>? _subticksPaint;
-    private IPaint<TDrawingContext>? _zeroPaint;
-    private ILineGeometry<TDrawingContext>? _zeroLine;
-    private ILineGeometry<TDrawingContext>? _crosshairLine;
-    private ILabelGeometry<TDrawingContext>? _crosshairLabel;
-    private IPaint<TDrawingContext>? _crosshairPaint;
-    private IPaint<TDrawingContext>? _crosshairLabelsPaint;
+    private BaseLineGeometry? _ticksPath;
+    private Paint? _ticksPaint;
+    private Paint? _subticksPaint;
+    private Paint? _zeroPaint;
+    private BaseLineGeometry? _zeroLine;
+    private BaseLineGeometry? _crosshairLine;
+    private BaseLabelGeometry? _crosshairLabel;
+    private Paint? _crosshairPaint;
+    private Paint? _crosshairLabelsPaint;
     private LvcColor? _crosshairLabelsBackground;
     private bool _showSeparatorLines = true;
     private bool _isInverted;
@@ -189,61 +186,61 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.TicksAtCenter"/>
     public bool TicksAtCenter { get => _ticksAtCenter; set => SetProperty(ref _ticksAtCenter, value); }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
-    public IPaint<TDrawingContext>? NamePaint
+    /// <inheritdoc cref="IPlane.NamePaint"/>
+    public Paint? NamePaint
     {
         get => _namePaint;
         set => SetPaintProperty(ref _namePaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
-    public IPaint<TDrawingContext>? LabelsPaint
+    /// <inheritdoc cref="IPlane.LabelsPaint"/>
+    public Paint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
-    public IPaint<TDrawingContext>? SeparatorsPaint
+    /// <inheritdoc cref="IPlane.SeparatorsPaint"/>
+    public Paint? SeparatorsPaint
     {
         get => _separatorsPaint;
-        set => SetPaintProperty(ref _separatorsPaint, value, true);
+        set => SetPaintProperty(ref _separatorsPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsPaint"/>
-    public IPaint<TDrawingContext>? SubseparatorsPaint
+    /// <inheritdoc cref="ICartesianAxis.SubseparatorsPaint"/>
+    public Paint? SubseparatorsPaint
     {
         get => _subseparatorsPaint;
-        set => SetPaintProperty(ref _subseparatorsPaint, value, true);
+        set => SetPaintProperty(ref _subseparatorsPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubseparatorsCount"/>
+    /// <inheritdoc cref="ICartesianAxis.SubseparatorsCount"/>
     public int SubseparatorsCount { get => _subseparatorsCount; set => SetProperty(ref _subseparatorsCount, value); }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.DrawTicksPath"/>
+    /// <inheritdoc cref="ICartesianAxis.DrawTicksPath"/>
     public bool DrawTicksPath { get => _drawTicksPath; set => SetProperty(ref _drawTicksPath, value); }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.TicksPaint"/>
-    public IPaint<TDrawingContext>? TicksPaint
+    /// <inheritdoc cref="ICartesianAxis.TicksPaint"/>
+    public Paint? TicksPaint
     {
         get => _ticksPaint;
-        set => SetPaintProperty(ref _ticksPaint, value, true);
+        set => SetPaintProperty(ref _ticksPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.SubticksPaint"/>
-    public IPaint<TDrawingContext>? SubticksPaint
+    /// <inheritdoc cref="ICartesianAxis.SubticksPaint"/>
+    public Paint? SubticksPaint
     {
         get => _subticksPaint;
-        set => SetPaintProperty(ref _subticksPaint, value, true);
+        set => SetPaintProperty(ref _subticksPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ZeroPaint"/>
-    public IPaint<TDrawingContext>? ZeroPaint
+    /// <inheritdoc cref="ICartesianAxis.ZeroPaint"/>
+    public Paint? ZeroPaint
     {
         get => _zeroPaint;
         set
         {
-            SetPaintProperty(ref _zeroPaint, value, true);
+            SetPaintProperty(ref _zeroPaint, value, PaintStyle.Stroke);
 
             // clear the reference to thre previous line.
             // so a new instance will be created for the new paint task.
@@ -251,31 +248,31 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPaint"/>
-    public IPaint<TDrawingContext>? CrosshairPaint
+    /// <inheritdoc cref="ICartesianAxis.CrosshairPaint"/>
+    public Paint? CrosshairPaint
     {
         get => _crosshairPaint;
-        set => SetPaintProperty(ref _crosshairPaint, value, true);
+        set => SetPaintProperty(ref _crosshairPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsPaint"/>
-    public IPaint<TDrawingContext>? CrosshairLabelsPaint
+    /// <inheritdoc cref="ICartesianAxis.CrosshairLabelsPaint"/>
+    public Paint? CrosshairLabelsPaint
     {
         get => _crosshairLabelsPaint;
         set => SetPaintProperty(ref _crosshairLabelsPaint, value);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairLabelsBackground"/>
+    /// <inheritdoc cref="ICartesianAxis.CrosshairLabelsBackground"/>
     public LvcColor? CrosshairLabelsBackground
     {
         get => _crosshairLabelsBackground;
         set => SetProperty(ref _crosshairLabelsBackground, value);
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairPadding"/>
+    /// <inheritdoc cref="ICartesianAxis.CrosshairPadding"/>
     public Padding? CrosshairPadding { get; set; }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.CrosshairSnapEnabled" />
+    /// <inheritdoc cref="ICartesianAxis.CrosshairSnapEnabled" />
     public bool CrosshairSnapEnabled { get => _crosshairSnapEnabled; set => SetProperty(ref _crosshairSnapEnabled, value); }
 
     /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
@@ -296,12 +293,12 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     #endregion
 
     /// <inheritdoc cref="ICartesianAxis.MeasureStarted"/>
-    public event Action<IChart, ICartesianAxis>? MeasureStarted;
+    public event Action<Chart, ICartesianAxis>? MeasureStarted;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
 
         var controlSize = cartesianChart.ControlSize;
         var drawLocation = cartesianChart.DrawMarginLocation;
@@ -411,7 +408,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
             NamePadding is not null || SeparatorsPaint is not null || LabelsPaint is not null ||
             TicksPaint is not null || SubticksPaint is not null || SubseparatorsPaint is not null;
 
-        var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
+        var measured = new HashSet<AxisVisualSeprator>();
 
         if (ZeroPaint is not null)
         {
@@ -521,7 +518,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
             if (!separators.TryGetValue(separatorKey, out var visualSeparator))
             {
-                visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
+                visualSeparator = new AxisVisualSeprator() { Value = i };
                 separators.Add(separatorKey, visualSeparator);
             }
 
@@ -636,10 +633,10 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.InvalidateCrosshair(Chart{TDrawingContext}, LvcPoint)"/>
-    public void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition)
+    /// <inheritdoc cref="ICartesianAxis.InvalidateCrosshair(Chart, LvcPoint)"/>
+    public void InvalidateCrosshair(Chart chart, LvcPoint pointerPosition)
     {
-        if (CrosshairPaint is null || chart is not CartesianChart<TDrawingContext> cartesianChart) return;
+        if (CrosshairPaint is null || chart is not CartesianChartEngine cartesianChart) return;
 
         var location = chart.DrawMarginLocation;
         var size = chart.DrawMarginSize;
@@ -686,7 +683,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart,
                     cartesianChart.VisibleSeries
-                        .Cast<ICartesianSeries<TDrawingContext>>()
+                        .Cast<ICartesianSeries>()
                         .Where(s => s.ScalesXAt == axisIndex));
 
                 var c = closestPoint?.Coordinate;
@@ -712,7 +709,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 var closestPoint = FindClosestPoint(
                     pointerPosition, cartesianChart,
                     cartesianChart.VisibleSeries
-                        .Cast<ICartesianSeries<TDrawingContext>>()
+                        .Cast<ICartesianSeries>()
                         .Where(s => s.ScalesYAt == axisIndex));
 
                 var c = closestPoint?.Coordinate;
@@ -769,6 +766,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
             _crosshairLabel.Padding = CrosshairPadding ?? _padding;
             _crosshairLabel.X = x;
             _crosshairLabel.Y = y;
+            _crosshairLabel.Paint = CrosshairLabelsPaint;
 
             var r = (float)_labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
@@ -781,8 +779,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         chart.Canvas.Invalidate();
     }
 
-    /// <inheritdoc cref="ICartesianAxis{TDrawingContext}.ClearCrosshair(Chart{TDrawingContext})"/>
-    public void ClearCrosshair(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ICartesianAxis.ClearCrosshair(Chart)"/>
+    public void ClearCrosshair(Chart chart)
     {
         if (_crosshairLine is not null)
             CrosshairPaint?.RemoveGeometryFromPainTask(chart.Canvas, _crosshairLine);
@@ -815,8 +813,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
 
     private static ChartPoint? FindClosestPoint(
         LvcPoint pointerPosition,
-        CartesianChart<TDrawingContext> cartesianChart,
-        IEnumerable<ICartesianSeries<TDrawingContext>> allSeries)
+        CartesianChartEngine cartesianChart,
+        IEnumerable<ICartesianSeries> allSeries)
     {
         ChartPoint? closestPoint = null;
         foreach (var series in allSeries)
@@ -835,8 +833,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         return closestPoint;
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
-    public LvcSize GetNameLabelSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetNameLabelSize(Chart)"/>
+    public LvcSize GetNameLabelSize(Chart chart)
     {
         if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new LvcSize(0, 0);
 
@@ -847,14 +845,15 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
             RotateTransform = Orientation == AxisOrientation.X
                 ? 0
                 : InLineNamePlacement ? 0 : -90,
-            Padding = NamePadding
+            Padding = NamePadding,
+            Paint = NamePaint
         };
 
-        return textGeometry.Measure(NamePaint);
+        return textGeometry.Measure();
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
-    public virtual LvcSize GetPossibleSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetPossibleSize(Chart)"/>
+    public virtual LvcSize GetPossibleSize(Chart chart)
     {
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
@@ -886,9 +885,10 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 Text = TryGetLabelOrLogError(labeler, i),
                 TextSize = ts,
                 RotateTransform = r,
-                Padding = _padding
+                Padding = _padding,
+                Paint = LabelsPaint
             };
-            var m = textGeometry.Measure(LabelsPaint);
+            var m = textGeometry.Measure();
             if (m.Width > w) w = m.Width;
             if (m.Height > h) h = m.Height;
         }
@@ -908,7 +908,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         var mind = DataBounds.Min;
         var minZoomDelta = MinZoomDelta ?? DataBounds.MinDelta * 3;
 
-        foreach (var axis in SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        foreach (var axis in SharedWith ?? [])
         {
             var maxI = axis.MaxLimit is null ? axis.DataBounds.Max : axis.MaxLimit.Value;
             var minI = axis.MinLimit is null ? axis.DataBounds.Min : axis.MinLimit.Value;
@@ -928,7 +928,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.SetLimits(double, double)"/>
     public void SetLimits(double min, double max)
     {
-        foreach (var axis in SharedWith ?? Enumerable.Empty<ICartesianAxis>())
+        foreach (var axis in SharedWith ?? [])
         {
             axis.MinLimit = min;
             axis.MaxLimit = max;
@@ -938,8 +938,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         MaxLimit = max;
     }
 
-    /// <inheritdoc cref="ICartesianAxis.OnMeasureStarted(IChart, AxisOrientation)"/>
-    void ICartesianAxis.OnMeasureStarted(IChart chart, AxisOrientation orientation)
+    /// <inheritdoc cref="ICartesianAxis.OnMeasureStarted(Chart, AxisOrientation)"/>
+    void ICartesianAxis.OnMeasureStarted(Chart chart, AxisOrientation orientation)
     {
         _orientation = orientation;
         _dataBounds = new Bounds();
@@ -954,7 +954,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    public virtual void Delete(Chart<TDrawingContext> chart)
+    public virtual void Delete(Chart chart)
     {
         foreach (var paint in GetPaintTasks())
         {
@@ -967,8 +967,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         _ = activeSeparators.Remove(chart);
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
         _animatableBounds = new();
@@ -986,11 +986,9 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         OnPropertyChanged(propertyName);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_separatorsPaint, _labelsPaint, _namePaint, _zeroPaint, _ticksPaint, _subticksPaint, _subseparatorsPaint];
 
     private Func<double, string> GetActualLabeler()
     {
@@ -1033,10 +1031,11 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 Text = labeler(i),
                 TextSize = (float)_textSize,
                 RotateTransform = (float)LabelsRotation,
-                Padding = _padding
+                Padding = _padding,
+                Paint = LabelsPaint
             };
 
-            var m = textGeometry.Measure(LabelsPaint);
+            var m = textGeometry.Measure();
 
             maxLabelSize = new LvcSize(
                 maxLabelSize.Width > m.Width ? maxLabelSize.Width : m.Width,
@@ -1047,7 +1046,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void DrawName(
-        CartesianChart<TDrawingContext> cartesianChart,
+        CartesianChartEngine cartesianChart,
         float size,
         float lxi,
         float lxj,
@@ -1072,6 +1071,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         _nameGeometry.Padding = NamePadding;
         _nameGeometry.Text = Name ?? string.Empty;
         _nameGeometry.TextSize = (float)_nameTextSize;
+        _nameGeometry.Paint = NamePaint;
 
         if (_orientation == AxisOrientation.X)
         {
@@ -1105,7 +1105,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSeparator(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart, TLineGeometry? separatorGeometry = null)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? separatorGeometry = null)
     {
         TLineGeometry lineGeometry;
 
@@ -1124,7 +1124,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSubseparators(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart)
     {
         visualSeparator.Subseparators = new TLineGeometry[_subseparatorsCount];
 
@@ -1136,13 +1136,11 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         }
     }
 
-    private void InitializeLine(ILineGeometry<TDrawingContext> lineGeometry, CartesianChart<TDrawingContext> cartesianChart)
-    {
+    private void InitializeLine(BaseLineGeometry lineGeometry, CartesianChartEngine cartesianChart) =>
         lineGeometry.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
-    }
 
     private void InitializeTick(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart, TLineGeometry? subTickGeometry = null)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? subTickGeometry = null)
     {
         TLineGeometry tickGeometry;
 
@@ -1160,7 +1158,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void InitializeSubticks(
-        AxisVisualSeprator<TDrawingContext> visualSeparator, CartesianChart<TDrawingContext> cartesianChart)
+        AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart)
     {
         visualSeparator.Subticks = new TLineGeometry[_subseparatorsCount];
 
@@ -1173,8 +1171,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void IntializeLabel(
-        AxisVisualSeprator<TDrawingContext> visualSeparator,
-        CartesianChart<TDrawingContext> cartesianChart,
+        AxisVisualSeprator visualSeparator,
+        CartesianChartEngine cartesianChart,
         float size,
         bool hasRotation,
         float r)
@@ -1187,7 +1185,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSeparator(
-        ILineGeometry<TDrawingContext> line,
+        BaseLineGeometry line,
         float x,
         float y,
         float lxi,
@@ -1215,7 +1213,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateTick(
-        ILineGeometry<TDrawingContext> tick, float length, float x, float y, UpdateMode mode)
+        BaseLineGeometry tick, float length, float x, float y, UpdateMode mode)
     {
         if (_orientation == AxisOrientation.X)
         {
@@ -1240,7 +1238,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSubseparators(
-        ILineGeometry<TDrawingContext>[] subseparators, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
+        BaseLineGeometry[] subseparators, Scaler scale, double s, float x, float y, float lxi, float lxj, float lyi, float lyj, UpdateMode mode)
     {
         for (var j = 0; j < subseparators.Length; j++)
         {
@@ -1264,7 +1262,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateSubticks(
-        ILineGeometry<TDrawingContext>[] subticks, Scaler scale, double s, float x, float y, UpdateMode mode)
+        BaseLineGeometry[] subticks, Scaler scale, double s, float x, float y, UpdateMode mode)
     {
         for (var j = 0; j < subticks.Length; j++)
         {
@@ -1289,7 +1287,7 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
     }
 
     private void UpdateLabel(
-        ILabelGeometry<TDrawingContext> label,
+        BaseLabelGeometry label,
         float x,
         float y,
         string text,
@@ -1316,8 +1314,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     x += (float)Math.Abs(rhx * 0.5f);
@@ -1331,8 +1329,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Cos((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     x -= (float)Math.Abs(rhx * 0.5f);
@@ -1358,8 +1356,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     y += (float)Math.Abs(rhx * 0.5f);
@@ -1382,8 +1380,8 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
                 if (hasRotation && _labelsPaint is not null)
                 {
                     var notRotatedSize =
-                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text }
-                        .Measure(_labelsPaint);
+                        new TTextGeometry { TextSize = (float)_textSize, Padding = _padding, Text = text, Paint = _labelsPaint }
+                        .Measure();
 
                     var rhx = Math.Sin((90 - actualRotatation) * toRadians) * notRotatedSize.Height;
                     y -= (float)Math.Abs(rhx * 0.5f);
@@ -1408,25 +1406,26 @@ public abstract class CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>
         label.Padding = _padding;
         label.X = x;
         label.Y = y;
+        label.Paint = _labelsPaint;
 
         if (hasRotation) label.RotateTransform = actualRotatation;
 
         SetUpdateMode(label, mode);
     }
 
-    private void SetUpdateMode(IGeometry<TDrawingContext> geometry, UpdateMode mode)
+    private void SetUpdateMode(IDrawnElement geometry, UpdateMode mode)
     {
         switch (mode)
         {
-            case CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndComplete:
+            case UpdateMode.UpdateAndComplete:
                 if (_animatableBounds.HasPreviousState) geometry.Opacity = 0;
                 geometry.CompleteTransition(null);
                 break;
-            case CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.UpdateAndRemove:
+            case UpdateMode.UpdateAndRemove:
                 geometry.Opacity = 0;
                 geometry.RemoveOnCompleted = true;
                 break;
-            case CoreAxis<TDrawingContext, TTextGeometry, TLineGeometry>.UpdateMode.Update:
+            case UpdateMode.Update:
             default:
                 geometry.Opacity = 1;
                 break;

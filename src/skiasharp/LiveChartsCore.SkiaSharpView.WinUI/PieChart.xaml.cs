@@ -33,8 +33,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -42,13 +41,13 @@ using Microsoft.UI.Xaml.Media;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
-/// <inheritdoc cref="IChartView{TDrawingContext}" />
-public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IChartView" />
+public sealed partial class PieChart : UserControl, IPieChartView
 {
-    private Chart<SkiaSharpDrawingContext>? _core;
+    private Chart? _core;
     private MotionCanvas? _canvas;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>> _visualsObserver;
+    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
@@ -62,7 +61,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         _seriesObserver = new CollectionDeepObserver<ISeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update());
-        _visualsObserver = new CollectionDeepObserver<ChartElement<SkiaSharpDrawingContext>>(
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(
            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
@@ -70,7 +69,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         Unloaded += OnUnloaded;
 
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetValue(SyncContextProperty, new object());
     }
 
@@ -81,7 +80,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
-            nameof(Title), typeof(VisualElement<SkiaSharpDrawingContext>), typeof(PieChart), new PropertyMetadata(null));
+            nameof(Title), typeof(VisualElement), typeof(PieChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property
@@ -104,13 +103,13 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty VisualElementsProperty =
         DependencyProperty.Register(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement<SkiaSharpDrawingContext>>), typeof(PieChart), new PropertyMetadata(null,
+            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(PieChart), new PropertyMetadata(null,
                 (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (PieChart)o;
                     var observer = chart._visualsObserver;
-                    observer?.Dispose((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ChartElement<SkiaSharpDrawingContext>>)args.NewValue);
+                    observer?.Dispose((IEnumerable<ChartElement>)args.OldValue);
+                    observer?.Initialize((IEnumerable<ChartElement>)args.NewValue);
                     if (chart._core == null) return;
                     chart._core.Update();
                 }));
@@ -200,7 +199,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty LegendBackgroundPaintProperty =
         DependencyProperty.Register(
-            nameof(LegendBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(LegendBackgroundPaint), typeof(Paint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -208,7 +207,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty LegendTextPaintProperty =
         DependencyProperty.Register(
-            nameof(LegendTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(LegendTextPaint), typeof(Paint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -232,7 +231,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty TooltipBackgroundPaintProperty =
         DependencyProperty.Register(
-            nameof(TooltipBackgroundPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(TooltipBackgroundPaint), typeof(Paint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipBackgroundPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -240,7 +239,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// </summary>
     public static readonly DependencyProperty TooltipTextPaintProperty =
         DependencyProperty.Register(
-            nameof(TooltipTextPaint), typeof(IPaint<SkiaSharpDrawingContext>), typeof(PieChart),
+            nameof(TooltipTextPaint), typeof(Paint), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextPaint, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -316,14 +315,14 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
     #region events
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
@@ -335,8 +334,8 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     public event ChartPointHandler? ChartPointPointerDown;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElementsPointerDown"/>
-    public event VisualElementsHandler<SkiaSharpDrawingContext>? VisualElementsPointerDown;
+    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
+    public event VisualElementsHandler? VisualElementsPointerDown;
 
     #endregion
 
@@ -346,10 +345,10 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
-    PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
-        => _core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)_core;
+    PieChartEngine IPieChartView.Core
+        => _core == null ? throw new Exception("core not found") : (PieChartEngine)_core;
 
     LvcColor IChartView.BackColor
     {
@@ -366,56 +365,56 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         set => SetValue(SyncContextProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Title" />
-    public VisualElement<SkiaSharpDrawingContext>? Title
+    /// <inheritdoc cref="IChartView.Title" />
+    public VisualElement? Title
     {
-        get => (VisualElement<SkiaSharpDrawingContext>?)GetValue(TitleProperty);
+        get => (VisualElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="IPieChartView.Series" />
     public IEnumerable<ISeries> Series
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.VisualElements" />
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements
+    /// <inheritdoc cref="IChartView.VisualElements" />
+    public IEnumerable<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement<SkiaSharpDrawingContext>>)GetValue(VisualElementsProperty);
+        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    /// <inheritdoc cref="IPieChartView.IsClockwise" />
     public bool IsClockwise
     {
         get => (bool)GetValue(IsClockwiseProperty);
         set => SetValue(IsClockwiseProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+    /// <inheritdoc cref="IPieChartView.InitialRotation" />
     public double InitialRotation
     {
         get => (double)GetValue(InitialRotationProperty);
         set => SetValue(InitialRotationProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+    /// <inheritdoc cref="IPieChartView.MaxAngle" />
     public double MaxAngle
     {
         get => (double)GetValue(MaxAngleProperty);
         set => SetValue(MaxAngleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    /// <inheritdoc cref="IPieChartView.MaxValue" />
     public double? MaxValue
     {
         get => (double?)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    /// <inheritdoc cref="IPieChartView.MinValue" />
     public double MinValue
     {
         get => (double)GetValue(MinValueProperty);
@@ -439,8 +438,8 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
                 ? throw new Exception("Canvas not found")
                 : new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight };
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
+    /// <inheritdoc cref="IChartView.CoreCanvas" />
+    public CoreMotionCanvas CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
     public TimeSpan AnimationsSpeed
@@ -494,55 +493,55 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         set => SetValue(TooltipPositionProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipBackgroundPaint
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
+    public Paint? TooltipBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipBackgroundPaintProperty);
+        get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
         set => SetValue(TooltipBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? TooltipTextPaint
+    /// <inheritdoc cref="IChartView.TooltipTextPaint" />
+    public Paint? TooltipTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(TooltipTextPaintProperty);
+        get => (Paint?)GetValue(TooltipTextPaintProperty);
         set => SetValue(TooltipTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.TooltipTextSize" />
+    /// <inheritdoc cref="IChartView.TooltipTextSize" />
     public double? TooltipTextSize
     {
         get => (double?)GetValue(TooltipTextSizeProperty);
         set => SetValue(TooltipTextSizeProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; set; } = new SKDefaultTooltip();
+    /// <inheritdoc cref="IChartView.Tooltip" />
+    public IChartTooltip? Tooltip { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendBackgroundPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendBackgroundPaint
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
+    public Paint? LegendBackgroundPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendBackgroundPaintProperty);
+        get => (Paint?)GetValue(LegendBackgroundPaintProperty);
         set => SetValue(LegendBackgroundPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextPaint" />
-    public IPaint<SkiaSharpDrawingContext>? LegendTextPaint
+    /// <inheritdoc cref="IChartView.LegendTextPaint" />
+    public Paint? LegendTextPaint
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(LegendTextPaintProperty);
+        get => (Paint?)GetValue(LegendTextPaintProperty);
         set => SetValue(LegendTextPaintProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.LegendTextSize" />
+    /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double? LegendTextSize
     {
         get => (double?)GetValue(LegendTextSizeProperty);
         set => SetValue(LegendTextSizeProperty, value);
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; } = new SKDefaultLegend();
+    /// <inheritdoc cref="IChartView.Legend" />
+    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
@@ -626,7 +625,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (_core is not PieChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (_core is not PieChartEngine cc) throw new Exception("core not found");
 
         if (strategy == FindingStrategy.Automatic)
             strategy = cc.Series.GetFindingStrategy();
@@ -637,9 +636,9 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
-        return _core is not PieChart<SkiaSharpDrawingContext> cc
+        return _core is not PieChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(_core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(_core, new(point)));
     }
 
     void IChartView.InvokeOnUIThread(Action action)
@@ -658,7 +657,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
         if (_core is null)
         {
-            _core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
+            _core = new PieChartEngine(this, config => config.UseDefaults(), canvas.CanvasCore);
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;
@@ -727,24 +726,20 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     {
         if (_core is null) return;
 
-        var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+        var c = (CartesianChartEngine)_core;
         var p = args.PinchStart;
         var s = c.ControlSize;
         var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
     }
 
-    private void OnExited(object? sender, Behaviours.Events.EventArgs args)
-    {
+    private void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
-    }
 
-    private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
-    {
+    private void OnCoreUpdateFinished(IChartView chart) =>
         UpdateFinished?.Invoke(this);
-    }
 
-    private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
+    private void OnCoreUpdateStarted(IChartView chart)
     {
         if (UpdateStartedCommand is not null)
         {
@@ -755,15 +750,10 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         UpdateStarted?.Invoke(this);
     }
 
-    private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
-    {
-        Measuring?.Invoke(this);
-    }
+    private void OnCoreMeasuring(IChartView chart) => Measuring?.Invoke(this);
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
+    private void OnUnloaded(object sender, RoutedEventArgs e) =>
         _core?.Unload();
-    }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
@@ -779,7 +769,9 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
 
         ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
-        if (ChartPointPointerDownCommand is not null) ChartPointPointerDownCommand.Execute(points.FindClosestTo(pointer));
+#pragma warning disable CS0618 // Type or member is obsolete
+        ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
@@ -790,18 +782,16 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
         if (HoveredPointsChangedCommand is not null && HoveredPointsChangedCommand.CanExecute(args)) HoveredPointsChangedCommand.Execute(args);
     }
 
-    void IChartView<SkiaSharpDrawingContext>.OnVisualElementPointerDown(
-        IEnumerable<VisualElement<SkiaSharpDrawingContext>> visualElements, LvcPoint pointer)
+    void IChartView.OnVisualElementPointerDown(
+        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
     {
-        var args = new VisualElementsEventArgs<SkiaSharpDrawingContext>(CoreChart, visualElements, pointer);
+        var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
 
         VisualElementsPointerDown?.Invoke(this, args);
         if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))
             VisualElementsPointerDownCommand.Execute(args);
     }
 
-    void IChartView.Invalidate()
-    {
+    void IChartView.Invalidate() =>
         CoreCanvas.Invalidate();
-    }
 }

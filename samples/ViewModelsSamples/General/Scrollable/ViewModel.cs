@@ -76,7 +76,7 @@ public partial class ViewModel
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
     {
-        var cartesianChart = (ICartesianChartView<SkiaSharpDrawingContext>)args.Chart;
+        var cartesianChart = (ICartesianChartView)args.Chart;
 
         var x = cartesianChart.XAxes.First();
 
@@ -99,7 +99,7 @@ public partial class ViewModel
     {
         if (!_isDown) return;
 
-        var chart = (ICartesianChartView<SkiaSharpDrawingContext>)args.Chart;
+        var chart = (ICartesianChartView)args.Chart;
         var positionInData = chart.ScalePixelsToData(args.PointerPosition);
 
         var thumb = Thumbs[0];

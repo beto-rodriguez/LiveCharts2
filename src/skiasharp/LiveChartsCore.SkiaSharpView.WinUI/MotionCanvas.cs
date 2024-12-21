@@ -58,7 +58,7 @@ public class MotionCanvas : UserControl
     /// <value>
     /// The canvas core.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     private void OnLoaded(object sender, RoutedEventArgs e) =>
         CanvasCore.Invalidated += OnCanvasCoreInvalidated;
@@ -67,7 +67,8 @@ public class MotionCanvas : UserControl
     {
         var scaleFactor = XamlRoot.RasterizationScale;
         args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
     private async void RunDrawingLoop()
@@ -86,7 +87,7 @@ public class MotionCanvas : UserControl
         _isDrawingLoopRunning = false;
     }
 
-    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
+    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

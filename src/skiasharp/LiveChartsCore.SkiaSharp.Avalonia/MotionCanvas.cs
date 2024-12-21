@@ -35,7 +35,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <summary>
-/// The motion canvas control for avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// The motion canvas control for avalonia, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 public class MotionCanvas : UserControl
 {
@@ -56,7 +56,7 @@ public class MotionCanvas : UserControl
     /// <value>
     /// The canvas core.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <summary>
     /// Renders the control.
@@ -73,7 +73,7 @@ public class MotionCanvas : UserControl
         _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
     }
 
-    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
+    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
         InvalidateVisual();
 
     private void OnAttached(object? sender, VisualTreeAttachmentEventArgs e)
@@ -92,7 +92,7 @@ public class MotionCanvas : UserControl
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs
     private class ChartFrameOperation(
-        MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+        CoreMotionCanvas motionCanvas,
         Rect bounds)
             : ICustomDrawOperation
     {
@@ -106,7 +106,7 @@ public class MotionCanvas : UserControl
             using var lease = leaseFeature.Lease();
 
             motionCanvas.DrawFrame(
-                new(motionCanvas,
+                new SkiaSharpDrawingContext(motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
                     lease.SkSurface,
                     lease.SkCanvas,

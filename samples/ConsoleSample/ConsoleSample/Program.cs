@@ -1,8 +1,5 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Geo;
+﻿using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.SkiaSharpView.VisualElements;

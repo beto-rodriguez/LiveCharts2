@@ -23,12 +23,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -36,23 +36,21 @@ namespace LiveChartsCore;
 /// Defines the heat land series class.
 /// </summary>
 /// <typeparam name="TModel">The type fo the model.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
+public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyChanged
     where TModel : IWeigthedMapLand
-    where TDrawingContext : DrawingContext
 {
-    private IPaint<TDrawingContext>? _heatPaint;
+    private Paint? _heatPaint;
     private bool _isHeatInCanvas = false;
     private LvcColor[] _heatMap = [];
     private double[]? _colorStops;
     private ICollection<TModel>? _lands;
     private bool _isVisible;
-    private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = [];
+    private readonly HashSet<GeoMapChart> _subscribedTo = [];
     private readonly CollectionDeepObserver<TModel> _observer;
     private readonly HashSet<LandDefinition> _everUsed = [];
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TModel, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="CoreHeatLandSeries{TModel}"/> class.
     /// </summary>
     /// <param name="lands">The lands.</param>
     public CoreHeatLandSeries(ICollection<TModel>? lands)
@@ -102,8 +100,8 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     /// <inheritdoc cref="IGeoSeries.IsVisible"/>
     public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Measure(MapContext{TDrawingContext})"/>
-    public void Measure(MapContext<TDrawingContext> context)
+    /// <inheritdoc cref="IGeoSeries.Measure(MapContext)"/>
+    public void Measure(MapContext context)
     {
         _ = _subscribedTo.Add(context.CoreMap);
 
@@ -125,12 +123,14 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
         }
 
         var heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
-        var shapeContext = new MapShapeContext<TDrawingContext>(context.View, _heatPaint, heatStops, bounds);
+        _ = new MapShapeContext(context.View, _heatPaint, heatStops, bounds);
         var toRemove = new HashSet<LandDefinition>(_everUsed);
+
+        var provider = LiveCharts.DefaultSettings.GetProvider();
 
         foreach (var land in Lands ?? [])
         {
-            var projector = Maps.BuildProjector(
+            _ = Maps.BuildProjector(
                 context.View.MapProjection, [context.View.Width, context.View.Height]);
 
             var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
@@ -138,14 +138,12 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
             var mapLand = context.View.ActiveMap.FindLand(land.Name);
             if (mapLand is null) continue;
 
-            var shapesQuery = mapLand.Data
-                .Select(x => x.Shape)
-                .Where(x => x is not null)
-                .Cast<IHeatPathShape>();
-
-            foreach (var pathShape in shapesQuery)
+            foreach (var data in mapLand.Data)
             {
-                pathShape.FillColor = heat;
+                var shape = data.Shape;
+                if (shape is null) continue;
+
+                shape.Fill = provider.GetSolidColorPaint(heat);
             }
 
             _ = _everUsed.Add(mapLand);
@@ -155,8 +153,8 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
         ClearHeat(toRemove);
     }
 
-    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Delete(MapContext{TDrawingContext})"/>
-    public void Delete(MapContext<TDrawingContext> context)
+    /// <inheritdoc cref="IGeoSeries.Delete(MapContext)"/>
+    public void Delete(MapContext context)
     {
         ClearHeat(_everUsed);
         _ = _subscribedTo.Remove(context.CoreMap);
@@ -165,18 +163,14 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     /// <summary>
     /// Initializes the series.
     /// </summary>
-    protected void IntitializeSeries(IPaint<TDrawingContext> heatPaint)
-    {
+    protected void IntitializeSeries(Paint heatPaint) =>
         _heatPaint = heatPaint;
-    }
 
     /// <summary>
     /// Called to invoke the property changed event.
     /// </summary>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 
     private void NotifySubscribers()
     {
@@ -187,15 +181,18 @@ public class CoreHeatLandSeries<TModel, TDrawingContext> : IGeoSeries<TDrawingCo
     {
         foreach (var mapLand in toRemove)
         {
-            var shapesQuery = mapLand.Data
-                .Select(x => x.Shape)
-                .Where(x => x is not null)
-                .Cast<IHeatPathShape>();
+            // THIS SEEEMS UNECESARY,
+            // I KEEP THIS CODE AS COMMENT BECAUSE IN GENERAL
+            // HEATMAPS REQUIRE A DEEPER REVIEW.
 
-            foreach (var pathShape in shapesQuery)
-            {
-                pathShape.FillColor = LvcColor.Empty;
-            }
+            //var shapesQuery = mapLand.Data
+            //    .Select(x => x.Shape)
+            //    .Where(x => x is not null);
+
+            //foreach (var pathShape in shapesQuery)
+            //{
+            //    pathShape!.Fill = null;
+            //}
 
             _ = _everUsed.Remove(mapLand);
         }

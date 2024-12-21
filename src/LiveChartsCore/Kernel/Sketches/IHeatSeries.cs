@@ -27,10 +27,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a heat series plot.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IHeatSeries<TDrawingContext> : ICartesianSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="IChartSeries" />
+public interface IHeatSeries : ICartesianSeries
 {
     /// <summary>
     /// Gets or sets the heat map.

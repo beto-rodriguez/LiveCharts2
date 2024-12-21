@@ -42,11 +42,11 @@ public abstract class InMemorySkiaSharpChart
         LiveCharts.Configure(config => config.UseDefaults());
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
+    /// <inheritdoc cref="IChartView.CoreCanvas"/>
+    public CoreMotionCanvas CoreCanvas { get; } = new();
 
     /// <inheritdoc cref="IChartView.CoreChart"/>
-    public IChart CoreChart { get; protected set; } = null!;
+    public Chart CoreChart { get; protected set; } = null!;
 
     internal bool ExplicitDisposing { get; set; }
 
@@ -134,13 +134,15 @@ public abstract class InMemorySkiaSharpChart
     /// <exception cref="Exception"></exception>
     public virtual void DrawOnCanvas(SKCanvas canvas, SKSurface? surface = null, bool clearCanvasOnBeginDraw = false)
     {
-        if (CoreChart is null || CoreChart is not Chart<SkiaSharpDrawingContext> skiaChart)
+        if (CoreChart is null || CoreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
 
         skiaChart.Canvas.DisableAnimations = true;
 
         skiaChart.IsLoaded = true;
         skiaChart._isFirstDraw = true;
+        if (ExplicitDisposing) skiaChart.DisableTooltipCache = true;
+
         skiaChart.Measure();
 
         skiaChart.Canvas.DrawFrame(

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -162,7 +163,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
+    /// <see cref="Chart.AnimationsSpeed"/> property will be used.
     /// </summary>
     /// <value>
     /// The animations speed.
@@ -171,7 +172,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the easing function to animate the series, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.EasingFunction"/> property will be used.
+    /// <see cref="Chart.EasingFunction"/> property will be used.
     /// </summary>
     /// <value>
     /// The easing function.
@@ -189,23 +190,14 @@ public interface IPlane : IChartElement
     /// Defalut is null.
     /// </summary>
     IEnumerable<double>? CustomSeparators { get; set; }
-}
 
-/// <summary>
-/// Defines an Axis in a Cartesian chart.
-/// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IDisposable" />
-public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
-{
     /// <summary>
     /// Gets or sets the name paint.
     /// </summary>
     /// <value>
     /// The text paint.
     /// </value>
-    IPaint<TDrawingContext>? NamePaint { get; set; }
+    Paint? NamePaint { get; set; }
 
     /// <summary>
     /// Gets or sets the text paint.
@@ -213,7 +205,7 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The text paint.
     /// </value>
-    IPaint<TDrawingContext>? LabelsPaint { get; set; }
+    Paint? LabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the separators paint.
@@ -221,19 +213,19 @@ public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? SeparatorsPaint { get; set; }
+    Paint? SeparatorsPaint { get; set; }
 
     /// <summary>
     /// Gets the size of the possible.
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    LvcSize GetPossibleSize(Chart<TDrawingContext> chart);
+    LvcSize GetPossibleSize(Chart chart);
 
     /// <summary>
     /// Gets the size of the axis name label.
     /// </summary>
     /// <param name="chart">the chart.</param>
     /// <returns></returns>
-    LvcSize GetNameLabelSize(Chart<TDrawingContext> chart);
+    LvcSize GetNameLabelSize(Chart chart);
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Eto.Forms;
+﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Bars.Race;
 

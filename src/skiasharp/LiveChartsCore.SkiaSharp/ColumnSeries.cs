@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -36,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 public class ColumnSeries<TModel>
     : ColumnSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
@@ -75,14 +74,14 @@ public class ColumnSeries<TModel>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class ColumnSeries<TModel, TVisual>
     : ColumnSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : BoundedDrawnGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.
@@ -118,7 +117,7 @@ public class ColumnSeries<TModel, TVisual>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
@@ -127,9 +126,9 @@ public class ColumnSeries<TModel, TVisual>
 /// The type of the data label of every point.
 /// </typeparam>
 public class ColumnSeries<TModel, TVisual, TLabel>
-    : CoreColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, LineGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+    : CoreColumnSeries<TModel, TVisual, TLabel, LineGeometry>
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.

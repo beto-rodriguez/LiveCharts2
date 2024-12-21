@@ -6,7 +6,6 @@
 
 using System.Linq;
 using Eto.Forms;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.Scrollable;

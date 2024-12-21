@@ -6,7 +6,6 @@
 
 using System.Linq;
 using System.Windows.Forms;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.General.Scrollable;

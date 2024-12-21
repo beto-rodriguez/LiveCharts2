@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -39,22 +40,20 @@ namespace LiveChartsCore;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
 /// <typeparam name="TMiniatureGeometry">The type of the miniature geometry, used in tool tips and legends.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="CorePieSeries{TModel, TVisual, TLabel, TMiniatureGeometry}"/> class.
 /// </remarks>
-public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry, TDrawingContext>(
+public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>(
     IReadOnlyCollection<TModel>? values,
     bool isGauge = false,
     bool isGaugeFill = false)
-        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(GetProperties(isGauge, isGaugeFill), values), IPieSeries<TDrawingContext>
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IDoughnutGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-            where TMiniatureGeometry : ISizedGeometry<TDrawingContext>, new()
+        : ChartSeries<TModel, TVisual, TLabel>(GetProperties(isGauge, isGaugeFill), values), IPieSeries
+            where TVisual : BaseDoughnutGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
+            where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private IPaint<TDrawingContext>? _stroke = null;
-    private IPaint<TDrawingContext>? _fill = null;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
     private double _pushout = 0;
     private double _innerRadius = 0;
     private double _outerRadiusOffset = 0;
@@ -76,10 +75,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint<TDrawingContext>? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
     /// <summary>
@@ -88,49 +87,49 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.Pushout"/>
+    /// <inheritdoc cref="IPieSeries.Pushout"/>
     public double Pushout { get => _pushout; set => SetProperty(ref _pushout, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.InnerRadius"/>
+    /// <inheritdoc cref="IPieSeries.InnerRadius"/>
     public double InnerRadius { get => _innerRadius; set => SetProperty(ref _innerRadius, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.OuterRadiusOffset"/>
+    /// <inheritdoc cref="IPieSeries.OuterRadiusOffset"/>
     public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
+    /// <inheritdoc cref="IPieSeries.HoverPushout"/>
     public double HoverPushout { get => _hoverPushout; set => SetProperty(ref _hoverPushout, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeInnerRadius"/>
+    /// <inheritdoc cref="IPieSeries.RelativeInnerRadius"/>
     public double RelativeInnerRadius { get => _innerPadding; set => SetProperty(ref _innerPadding, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeOuterRadius"/>
+    /// <inheritdoc cref="IPieSeries.RelativeOuterRadius"/>
     public double RelativeOuterRadius { get => _outerPadding; set => SetProperty(ref _outerPadding, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxRadialColumnWidth"/>
+    /// <inheritdoc cref="IPieSeries.MaxRadialColumnWidth"/>
     public double MaxRadialColumnWidth { get => _maxRadialColW; set => SetProperty(ref _maxRadialColW, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.RadialAlign"/>
+    /// <inheritdoc cref="IPieSeries.RadialAlign"/>
     public RadialAlignment RadialAlign { get => _radialAlign; set => SetProperty(ref _radialAlign, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.CornerRadius"/>
+    /// <inheritdoc cref="IPieSeries.CornerRadius"/>
     public double CornerRadius { get => _cornerRadius; set => SetProperty(ref _cornerRadius, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.InvertedCornerRadius"/>
+    /// <inheritdoc cref="IPieSeries.InvertedCornerRadius"/>
     public bool InvertedCornerRadius { get => _invertedCornerRadius; set => SetProperty(ref _invertedCornerRadius, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
+    /// <inheritdoc cref="IPieSeries.IsFillSeries"/>
     public bool IsFillSeries { get => _isFillSeries; set => SetProperty(ref _isFillSeries, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsRelativeToMinValue"/>
+    /// <inheritdoc cref="IPieSeries.IsRelativeToMinValue"/>
     public bool IsRelativeToMinValue { get => _isRelativeToMin; set => SetProperty(ref _isRelativeToMin, value); }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.DataLabelsPosition"/>
+    /// <inheritdoc cref="IPieSeries.DataLabelsPosition"/>
     public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
     /// <summary>
@@ -146,10 +145,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
-        var pieChart = (PieChart<TDrawingContext>)chart;
+        var pieChart = (PieChartEngine)chart;
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
@@ -167,7 +166,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         var outerRadiusOffset = (float)OuterRadiusOffset;
         minDimension -= outerRadiusOffset;
 
-        var view = (IPieChartView<TDrawingContext>)pieChart.View;
+        var view = (IPieChartView)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
@@ -256,7 +255,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         var i = 1f;
         var isClockWise = view.IsClockwise;
 
-        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+        var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
 
         foreach (var point in fetched)
         {
@@ -416,6 +415,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
                 label.RotateTransform = actualRotation;
+                label.Paint = DataLabelsPaint;
 
                 AlignLabel(label, (float)start, initialRotation, sweep);
 
@@ -430,7 +430,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
                     (stackedOuterRadius + relativeOuterRadius * 2) * 0.5f,
                     (float)(start + initialRotation),
                     (float)sweep,
-                    label.Measure(DataLabelsPaint),
+                    label.Measure(),
                     DataLabelsPosition);
 
                 label.X = labelPosition.X;
@@ -447,31 +447,30 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         pointsCleanup.CollectPoints(everFetched, pieChart.View, u, u, SoftDeleteOrDisposePoint);
     }
 
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
-    public virtual DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
-    {
-        return DataFactory.GetPieBounds(chart, this).Bounds;
-    }
+    /// <inheritdoc cref="IPieSeries.GetBounds(Chart)"/>
+    public virtual DimensionalBounds GetBounds(Chart chart) =>
+        DataFactory.GetPieBounds(chart, this).Bounds;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
-    [Obsolete]
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override Sketch GetMiniaturesSketch()
     {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
+        var schedules = new List<PaintSchedule>();
 
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TMiniatureGeometry()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TMiniatureGeometry()));
 
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
-        return new GeometryVisual<TMiniatureGeometry, TLabel, TDrawingContext>
+        return new GeometryVisual<TMiniatureGeometry, TLabel>
         {
             Fill = GetMiniatureFill(point, zindex + 1),
             Stroke = GetMiniatureStroke(point, zindex + 2),
@@ -480,6 +479,22 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
             Svg = GeometrySvg,
             ClippingMode = ClipMode.None
         };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+    {
+        var m = new TMiniatureGeometry
+        {
+            Fill = GetMiniatureFill(point, 0),
+            Stroke = GetMiniatureStroke(point, 0),
+            Width = (float)MiniatureShapeSize,
+            Height = (float)MiniatureShapeSize
+        };
+
+        if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
+
+        return m;
     }
 
     /// <inheritdoc cref="ISeries.GetPrimaryToolTipText(ChartPoint)"/>
@@ -491,28 +506,22 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     }
 
     /// <inheritdoc cref="ISeries.GetSecondaryToolTipText(ChartPoint)"/>
-    public override string? GetSecondaryToolTipText(ChartPoint point)
-    {
-        return LiveCharts.IgnoreToolTipLabel;
-    }
+    public override string? GetSecondaryToolTipText(ChartPoint point) =>
+        LiveCharts.IgnoreToolTipLabel;
 
     /// <summary>
     /// GEts the stack group
     /// </summary>
     /// <returns></returns>
     /// <inheritdoc />
-    public override int GetStackGroup()
-    {
-        return 0;
-    }
+    public override int GetStackGroup() =>
+        0;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return [_fill, _stroke, DataLabelsPaint];
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_fill, _stroke, DataLabelsPaint];
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -523,7 +532,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -645,7 +654,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose" />
     public override void SoftDeleteOrDispose(IChartView chart)
     {
-        var core = ((IPieChartView<TDrawingContext>)chart).Core;
+        var core = ((IPieChartView)chart).Core;
         var u = new Scaler();
 
         var toDelete = new List<ChartPoint>();
@@ -670,7 +679,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? Fill;
@@ -684,7 +693,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry,
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Stroke ?? Stroke;

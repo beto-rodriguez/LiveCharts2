@@ -28,26 +28,25 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a map factory.
 /// </summary>
-public interface IMapFactory<TDrawingContext> : IDisposable
-    where TDrawingContext : DrawingContext
+public interface IMapFactory : IDisposable
 {
     /// <summary>
     /// Updates the lands.
     /// </summary>
     /// <param name="context"></param>
-    void GenerateLands(MapContext<TDrawingContext> context);
+    void GenerateLands(MapContext context);
 
     /// <summary>
     /// Move the map to the specified view.
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="command">The command.</param>
-    void ViewTo(GeoMap<TDrawingContext> sender, object? command);
+    void ViewTo(GeoMapChart sender, object? command);
 
     /// <summary>
     /// Pans the map.
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="delta">The delta.</param>
-    void Pan(GeoMap<TDrawingContext> sender, LvcPoint delta);
+    void Pan(GeoMapChart sender, LvcPoint delta);
 }

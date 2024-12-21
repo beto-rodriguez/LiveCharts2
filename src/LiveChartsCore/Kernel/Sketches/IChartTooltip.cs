@@ -21,27 +21,24 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a tool tip.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IChartTooltip<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IChartTooltip
 {
     /// <summary>
     /// Shows the tool tip in the specified chart.
     /// </summary>
     /// <param name="foundPoints">The found points.</param>
     /// <param name="chart">The chart.</param>
-    void Show(IEnumerable<ChartPoint> foundPoints, Chart<TDrawingContext> chart);
+    void Show(IEnumerable<ChartPoint> foundPoints, Chart chart);
 
     /// <summary>
     /// Hides this tool tip instance.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void Hide(Chart<TDrawingContext> chart);
+    void Hide(Chart chart);
 }

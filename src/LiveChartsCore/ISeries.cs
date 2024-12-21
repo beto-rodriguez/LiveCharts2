@@ -51,8 +51,8 @@ public interface ISeries : IChartElement
     bool RequiresFindClosestOnPointerDown { get; }
 
     /// <summary>
-    /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip{TDrawingContext}"/> or 
-    /// <see cref="IChartLegend{TDrawingContext}"/>, the default value is set automatically by the library.
+    /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip"/> or 
+    /// <see cref="IChartLegend"/>, the default value is set automatically by the library.
     /// </summary>
     string? Name { get; set; }
 
@@ -114,13 +114,13 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the series geometry svg, this property requires the series visual to be
-    /// an <see cref="IVariableSvgPath{TDrawingContext}"/> instance.
+    /// an <see cref="IVariableSvgPath"/> instance.
     /// </summary>
     string? GeometrySvg { get; set; }
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
+    /// <see cref="Chart.AnimationsSpeed"/> property will be used.
     /// </summary>
     /// <value>
     /// The animations speed.
@@ -129,7 +129,7 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the easing function to animate the series, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.EasingFunction"/> property will be used.
+    /// <see cref="Chart.EasingFunction"/> property will be used.
     /// </summary>
     /// <value>
     /// The easing function.
@@ -162,7 +162,7 @@ public interface ISeries : IChartElement
     /// </summary>
     /// <param name="chart">the chart</param>
     /// <returns>The IEnumerable of <see cref="ChartPoint"/>.</returns>
-    IEnumerable<ChartPoint> Fetch(IChart chart);
+    IEnumerable<ChartPoint> Fetch(Chart chart);
 
     /// <summary>
     /// Gets the <see cref="ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
@@ -173,7 +173,7 @@ public interface ISeries : IChartElement
     /// <param name="strategy">the strategy.</param>
     /// <param name="findPointFor">the trigger that fired the search.</param>
     /// <returns></returns>
-    IEnumerable<ChartPoint> FindHitPoints(IChart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor);
+    IEnumerable<ChartPoint> FindHitPoints(Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor);
 
     /// <summary>
     /// Called when the pointer enters a chart point.

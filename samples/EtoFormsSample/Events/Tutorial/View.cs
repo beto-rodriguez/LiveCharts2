@@ -27,7 +27,7 @@ public class View : Panel
         };
 
         _cartesianChart.MouseDown += CartesianChart_MouseDown;
-        _cartesianChart.HoveredPointsChanged += _cartesianChart_HoveredPointsChanged;
+        _cartesianChart.HoveredPointsChanged += CartesianChart_HoveredPointsChanged;
 
         Content = _cartesianChart;
     }

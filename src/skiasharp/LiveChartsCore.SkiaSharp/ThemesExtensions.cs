@@ -25,9 +25,9 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -49,13 +49,13 @@ public static class ThemesExtensions
     /// <param name="additionalStyles">the additional styles.</param>
     /// <returns>The current LiveCharts settings.</returns>
     public static LiveChartsSettings AddLightTheme(
-        this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
+        this LiveChartsSettings settings, Action<Theme>? additionalStyles = null)
     {
         LiveCharts.HasTheme = true;
         settings.CurrentThemeId = s_lightThemeKey;
 
         return settings
-            .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
+            .HasTheme((Theme theme) =>
             {
                 _ = LiveCharts.DefaultSettings
                     .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
@@ -64,6 +64,8 @@ public static class ThemesExtensions
                 theme.Colors = ColorPalletes.MaterialDesign500;
 
                 _ = theme
+                    .HasDefaultTooltip(() => new SKDefaultTooltip())
+                    .HasDefaultLegend(() => new SKDefaultLegend())
                     .HasRuleForAxes(axis =>
                     {
                         axis.TextSize = 16;
@@ -206,15 +208,15 @@ public static class ThemesExtensions
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(30, 30, 30, 10));
                     })
-                    .HasRuleFor<LabelVisual<LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(label =>
+                    .HasRuleFor<LabelVisual<LabelGeometry>>(label =>
                     {
                         label.Paint = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
-                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(needle =>
+                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry>>(needle =>
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
-                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(ticks =>
+                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>>(ticks =>
                     {
                         ticks.Stroke = new SolidColorPaint(new SKColor(30, 30, 30));
                         ticks.LabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30));
@@ -231,13 +233,13 @@ public static class ThemesExtensions
     /// <param name="additionalStyles">The additional styles.</param>
     /// <returns></returns>
     public static LiveChartsSettings AddDarkTheme(
-        this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
+        this LiveChartsSettings settings, Action<Theme>? additionalStyles = null)
     {
         LiveCharts.HasTheme = true;
         settings.CurrentThemeId = s_darkThemeKey;
 
         return settings
-            .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
+            .HasTheme((Theme theme) =>
             {
                 _ = LiveCharts.DefaultSettings
                     .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
@@ -249,6 +251,8 @@ public static class ThemesExtensions
                 theme.Colors = ColorPalletes.MaterialDesign200;
 
                 _ = theme
+                    .HasDefaultTooltip(() => new SKDefaultTooltip())
+                    .HasDefaultLegend(() => new SKDefaultLegend())
                     .HasRuleForAxes(axis =>
                     {
                         axis.TextSize = 16;
@@ -392,15 +396,15 @@ public static class ThemesExtensions
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(255, 255, 255, 30));
                     })
-                    .HasRuleFor<LabelVisual<LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(label =>
+                    .HasRuleFor<LabelVisual<LabelGeometry>>(label =>
                     {
                         label.Paint = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
-                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(needle =>
+                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry>>(needle =>
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
-                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>, SkiaSharpDrawingContext>(ticks =>
+                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>>(ticks =>
                     {
                         ticks.Stroke = new SolidColorPaint(new SKColor(200, 200, 200));
                         ticks.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));

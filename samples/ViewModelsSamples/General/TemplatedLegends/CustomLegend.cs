@@ -14,7 +14,7 @@ using SkiaSharp;
 
 namespace ViewModelsSamples.General.TemplatedLegends;
 
-public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
+public class CustomLegend : IChartLegend
 {
     private static readonly int s_zIndex = 10050;
     private readonly StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext> _stackPanel = new();
@@ -24,7 +24,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
         ZIndex = s_zIndex + 1
     };
 
-    public void Draw(Chart<SkiaSharpDrawingContext> chart)
+    public void Draw(Chart chart)
     {
         var legendPosition = chart.GetLegendPosition();
 
@@ -35,7 +35,7 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
         if (chart.LegendPosition == LegendPosition.Hidden) chart.RemoveVisual(_stackPanel);
     }
 
-    public LvcSize Measure(Chart<SkiaSharpDrawingContext> chart)
+    public LvcSize Measure(Chart chart)
     {
         _stackPanel.Orientation = ContainerOrientation.Vertical;
         _stackPanel.MaxWidth = double.MaxValue;
@@ -91,8 +91,8 @@ public class CustomLegend : IChartLegend<SkiaSharpDrawingContext>
         return _stackPanel.Measure(chart);
     }
 
-    private static VisualElementHandler<SkiaSharpDrawingContext> GetPointerDownHandler(
-        IChartSeries<SkiaSharpDrawingContext> series)
+    private static VisualElementHandler GetPointerDownHandler(
+        IChartSeries series)
     {
         return (visual, args) =>
         {

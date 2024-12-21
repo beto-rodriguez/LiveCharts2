@@ -32,23 +32,21 @@ public static class EventExtensions
 {
     /// <summary>
     /// Executes the given action when a point is measured, this metod just subscribes to the
-    /// <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event, but with a simpler syntax.
+    /// <see cref="Series{TModel, TVisual, TLabel}.PointMeasured"/> event, but with a simpler syntax.
     /// </summary>
     /// <typeparam name="TModel">TThe type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="series">The target series.</param>
     /// <param name="predicate">The action to execute.</param>
     /// <returns>The series.</returns>
     /// <remarks>
-    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointMeasured"/> event.
+    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel}.PointMeasured"/> event.
     /// </remarks>
-    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointMeasured<TModel, TVisual, TLabel, TDrawingContext>(
-        this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public static Series<TModel, TVisual, TLabel> OnPointMeasured<TModel, TVisual, TLabel>(
+        this Series<TModel, TVisual, TLabel> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         series.PointMeasured += predicate;
         return series;
@@ -56,23 +54,21 @@ public static class EventExtensions
 
     /// <summary>
     /// Executes the given action when a point is measured, this metod just subscribes to the
-    /// <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointCreated"/> event, but with a simpler syntax.
+    /// <see cref="Series{TModel, TVisual, TLabel}.PointCreated"/> event, but with a simpler syntax.
     /// </summary>
     /// <typeparam name="TModel">TThe type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="series">The target series.</param>
     /// <param name="predicate">The action to execute.</param>
     /// <returns>The series.</returns>
     /// <remarks>
-    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.PointCreated"/> event.
+    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel}.PointCreated"/> event.
     /// </remarks>
-    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointCreated<TModel, TVisual, TLabel, TDrawingContext>(
-        this Series<TModel, TVisual, TLabel, TDrawingContext> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public static Series<TModel, TVisual, TLabel> OnPointCreated<TModel, TVisual, TLabel>(
+        this Series<TModel, TVisual, TLabel> series, Action<ChartPoint<TModel, TVisual, TLabel>> predicate)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         series.PointCreated += predicate;
         return series;
@@ -80,23 +76,21 @@ public static class EventExtensions
 
     /// <summary>
     /// Executes the given action when a point is measured, this metod just subscribes to the
-    /// <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.ChartPointPointerDown"/> event, but with a simpler syntax.
+    /// <see cref="Series{TModel, TVisual, TLabel}.ChartPointPointerDown"/> event, but with a simpler syntax.
     /// </summary>
     /// <typeparam name="TModel">TThe type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="series">The target series.</param>
     /// <param name="predicate">The action to execute.</param>
     /// <returns>The series.</returns>
     /// <remarks>
-    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.ChartPointPointerDown"/> event.
+    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel}.ChartPointPointerDown"/> event.
     /// </remarks>
-    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointDown<TModel, TVisual, TLabel, TDrawingContext>(
-        this Series<TModel, TVisual, TLabel, TDrawingContext> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public static Series<TModel, TVisual, TLabel> OnPointDown<TModel, TVisual, TLabel>(
+        this Series<TModel, TVisual, TLabel> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         series.ChartPointPointerDown += predicate;
         return series;
@@ -104,23 +98,21 @@ public static class EventExtensions
 
     /// <summary>
     /// Executes the given action when a point is measured, this metod just subscribes to the
-    /// <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.ChartPointPointerHover"/> event, but with a simpler syntax.
+    /// <see cref="Series{TModel, TVisual, TLabel}.ChartPointPointerHover"/> event, but with a simpler syntax.
     /// </summary>
     /// <typeparam name="TModel">TThe type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="series">The target series.</param>
     /// <param name="predicate">The action to execute.</param>
     /// <returns>The series.</returns>
     /// <remarks>
-    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.ChartPointPointerHover"/> event.
+    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel}.ChartPointPointerHover"/> event.
     /// </remarks>
-    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointHover<TModel, TVisual, TLabel, TDrawingContext>(
-        this Series<TModel, TVisual, TLabel, TDrawingContext> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public static Series<TModel, TVisual, TLabel> OnPointHover<TModel, TVisual, TLabel>(
+        this Series<TModel, TVisual, TLabel> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         series.ChartPointPointerHover += predicate;
         return series;
@@ -128,23 +120,21 @@ public static class EventExtensions
 
     /// <summary>
     /// Executes the given action when a point is measured, this metod just subscribes to the
-    /// <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.ChartPointPointerHoverLost"/> event, but with a simpler syntax.
+    /// <see cref="Series{TModel, TVisual, TLabel}.ChartPointPointerHoverLost"/> event, but with a simpler syntax.
     /// </summary>
     /// <typeparam name="TModel">TThe type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="series">The target series.</param>
     /// <param name="predicate">The action to execute.</param>
     /// <returns>The series.</returns>
     /// <remarks>
-    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.ChartPointPointerHoverLost"/> event.
+    /// The action is subscribed to the <see cref="Series{TModel, TVisual, TLabel}.ChartPointPointerHoverLost"/> event.
     /// </remarks>
-    public static Series<TModel, TVisual, TLabel, TDrawingContext> OnPointHoverLost<TModel, TVisual, TLabel, TDrawingContext>(
-        this Series<TModel, TVisual, TLabel, TDrawingContext> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public static Series<TModel, TVisual, TLabel> OnPointHoverLost<TModel, TVisual, TLabel>(
+        this Series<TModel, TVisual, TLabel> series, ChartPointHandler<TModel, TVisual, TLabel> predicate)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         series.ChartPointPointerHoverLost += predicate;
         return series;

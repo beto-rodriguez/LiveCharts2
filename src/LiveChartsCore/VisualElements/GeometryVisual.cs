@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -32,17 +33,15 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TGeometry : ISizedGeometry<TDrawingContext>, new()
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
+    where TGeometry : BoundedDrawnGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
 {
     internal TGeometry? _geometry;
     private string _label = string.Empty;
     private float _labelSize = 12;
     internal TLabelGeometry? _labelGeometry;
-    private IPaint<TDrawingContext>? _labelPaint = null;
+    private Paint? _labelPaint = null;
 
     /// <summary>
     /// Gets or sets the label, a string to be displayed within the section.
@@ -65,20 +64,18 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? LabelPaint
+    public Paint? LabelPaint
     {
         get => _labelPaint;
         set => SetPaintProperty(ref _labelPaint, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { _geometry, _labelGeometry };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
+        [_geometry, _labelGeometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var l = GetActualCoordinate();
         var size = Measure(chart);
@@ -97,8 +94,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
 
             if (Svg is not null)
             {
-                var svgGeometry = _geometry as IVariableSvgPath<TDrawingContext>
-                    ?? throw new Exception($"The geometry must be of type {nameof(IVariableSvgPath<TDrawingContext>)}.");
+                var svgGeometry = _geometry as IVariableSvgPath
+                    ?? throw new Exception($"The geometry must be of type {nameof(IVariableSvgPath)}.");
 
                 svgGeometry.SVGPath = Svg;
             }
@@ -153,6 +150,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
             _labelGeometry.TextSize = _labelSize;
             _labelGeometry.RotateTransform = (float)Rotation;
             _labelGeometry.TranslateTransform = Translate;
+            _labelGeometry.Paint = LabelPaint;
 
             chart.Canvas.AddDrawableTask(LabelPaint);
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
@@ -160,15 +158,15 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
-        _geometry.Parent = parent;
+        ((IDrawnElement)_geometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var w = (float)Width;
         var h = (float)Height;
@@ -185,9 +183,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry, TDrawingContext> : BaseGe
         return new LvcSize(w, h);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { Fill, Stroke, _labelPaint };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Fill, Stroke, _labelPaint];
 }

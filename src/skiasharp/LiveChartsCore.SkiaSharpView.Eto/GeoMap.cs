@@ -24,14 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -40,16 +39,16 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 /// <summary>
 /// The geo map control.
 /// </summary>
-public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
+public class GeoMap : Panel, IGeoMapView
 {
     private readonly MotionCanvas _motionCanvas = new();
-    private readonly GeoMap<SkiaSharpDrawingContext> _core;
+    private readonly GeoMapChart _core;
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
-    private CoreMap<SkiaSharpDrawingContext> _activeMap;
+    private IEnumerable<IGeoSeries> _series = [];
+    private DrawnMap _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
     private object? _viewCommand = null;
 
     /// <summary>
@@ -58,9 +57,9 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     public GeoMap()
     {
         LiveCharts.Configure(config => config.UseDefaults());
-        _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        _activeMap = Maps.GetWorldMap();
 
-        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        _core = new GeoMapChart(this);
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
@@ -81,19 +80,19 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         Content = _motionCanvas;
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas => _motionCanvas.CanvasCore;
+    /// <inheritdoc cref="IGeoMapView.Canvas"/>
+    public CoreMotionCanvas Canvas => _motionCanvas.CanvasCore;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IGeoMapView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => false;
+    /// <inheritdoc cref="IGeoMapView.DesignerMode" />
+    bool IGeoMapView.DesignerMode => false;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    /// <inheritdoc cref="IGeoMapView.SyncContext" />
     public object SyncContext { get; set; } = new();
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    /// <inheritdoc cref="IGeoMapView.ViewCommand" />
     public object? ViewCommand
     {
         get => _viewCommand;
@@ -103,43 +102,43 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
             if (value is not null) _core.ViewTo(value);
         }
     }
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
+    public DrawnMap ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => ClientSize.Width;
+    /// <inheritdoc cref="IGeoMapView.Width"/>
+    float IGeoMapView.Width => ClientSize.Width;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => ClientSize.Height;
+    /// <inheritdoc cref="IGeoMapView.Height"/>
+    float IGeoMapView.Height => ClientSize.Height;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    /// <inheritdoc cref="IGeoMapView.Stroke"/>
+    public Paint? Stroke
     {
         get => _stroke;
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             _stroke = value;
             OnPropertyChanged();
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    /// <inheritdoc cref="IGeoMapView.Fill"/>
+    public Paint? Fill
     {
         get => _fill;
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             _fill = value;
             OnPropertyChanged();
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IGeoMapView.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
         get => _series;
@@ -152,18 +151,13 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView.InvokeOnUIThread(Action action) =>
         Application.Instance.InvokeAsync(action).Wait();
-    }
 
     /// <summary>
     /// Called when a property changes.
     /// </summary>
-    protected void OnPropertyChanged()
-    {
-        _core?.Update();
-    }
+    protected void OnPropertyChanged() => _core?.Update();
 
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
     protected override void OnUnLoad(EventArgs e)
@@ -172,35 +166,20 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 
         _core?.Unload();
 
-        Series = Array.Empty<IGeoSeries>();
+        Series = [];
         _seriesObserver = null!;
 
         Canvas.Dispose();
     }
 
-    private void GeoMap_Resize(object? sender, EventArgs e)
-    {
-        _core?.Update();
-    }
+    private void GeoMap_Resize(object? sender, EventArgs e) => _core?.Update();
 
-    private void OnMouseDown(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
-    }
-    private void OnMouseMove(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
-    }
+    private void OnMouseDown(object? sender, MouseEventArgs e) => _core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+    private void OnMouseMove(object? sender, MouseEventArgs e) => _core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
 
-    private void OnMouseUp(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
-    }
+    private void OnMouseUp(object? sender, MouseEventArgs e) => _core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
 
-    private void OnMouseLeave(object? sender, EventArgs e)
-    {
-        _core?.InvokePointerLeft();
-    }
+    private void OnMouseLeave(object? sender, EventArgs e) => _core?.InvokePointerLeft();
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {

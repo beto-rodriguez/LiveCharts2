@@ -8,16 +8,14 @@
     xmlns:vms="using:ViewModelsSamples.General.VisualElements"
     mc:Ignorable="d">
 
-    <UserControl.DataContext>
-        <vms:ViewModel/>
-    </UserControl.DataContext>
+  <UserControl.DataContext>
+      <vms:ViewModel/>
+  </UserControl.DataContext>
 
-    <Grid>
-        <lvc:CartesianChart
-            Series="{Binding Series}"
-            VisualElements="{Binding VisualElements}"
-            ZoomMode="X">
-        </lvc:CartesianChart>
-    </Grid>
+  <lvc:CartesianChart
+      Series="{Binding Series}"
+      VisualElements="{Binding VisualElements}"
+      ZoomMode="X">
+  </lvc:CartesianChart>
 
 </UserControl>

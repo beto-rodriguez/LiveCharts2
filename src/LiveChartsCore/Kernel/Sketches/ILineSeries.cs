@@ -20,19 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a line series plot.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface ILineSeries<TDrawingContext>
-    : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>,
-        ICartesianSeries<TDrawingContext>, IErrorSeries<TDrawingContext>
-            where TDrawingContext : DrawingContext
+public interface ILineSeries : ICartesianSeries, IStrokedAndFilled, IErrorSeries
 {
     /// <summary>
     /// Gets or sets the size of the geometry.
@@ -62,7 +57,7 @@ public interface ILineSeries<TDrawingContext>
     /// <value>
     /// The shapes fill.
     /// </value>
-    IPaint<TDrawingContext>? GeometryFill { get; set; }
+    Paint? GeometryFill { get; set; }
 
     /// <summary>
     /// Gets or sets the geometry stroke.
@@ -70,5 +65,5 @@ public interface ILineSeries<TDrawingContext>
     /// <value>
     /// The shapes stroke.
     /// </value>
-    IPaint<TDrawingContext>? GeometryStroke { get; set; }
+    Paint? GeometryStroke { get; set; }
 }

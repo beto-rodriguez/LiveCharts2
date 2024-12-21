@@ -31,23 +31,22 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
-/// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
-public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="ICartesianChartView" />
+public class CartesianChart : Chart, ICartesianChartView
 {
     private CollectionDeepObserver<ISeries> _seriesObserver;
     private CollectionDeepObserver<ICartesianAxis> _xObserver;
     private CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
-    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private CollectionDeepObserver<CoreSection> _sectionsObserver;
+    private IEnumerable<ISeries> _series = [];
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
-    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
-    private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
+    private IEnumerable<CoreSection> _sections = [];
+    private CoreDrawMarginFrame? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
 
     /// <summary>
@@ -60,23 +59,23 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     /// <param name="tooltip">The default tool tip control.</param>
     /// <param name="legend">The default legend control.</param>
-    public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
+    public CartesianChart(IChartTooltip? tooltip = null, IChartLegend? legend = null)
         : base(tooltip, legend)
     {
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        XAxes = new List<ICartesianAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
-        YAxes = new List<ICartesianAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-            };
+        XAxes =
+            [
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
+            ];
+        YAxes =
+            [
+                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
+            ];
         Series = new ObservableCollection<ISeries>();
 
         var c = motionCanvas;
@@ -86,10 +85,10 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         c.MouseUp += OnMouseUp;
     }
 
-    CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
-        core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+    CartesianChartEngine ICartesianChartView.Core =>
+        core is null ? throw new Exception("core not found") : (CartesianChartEngine)core;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="ICartesianChartView.Series" />
     public IEnumerable<ISeries> Series
     {
         get => _series;
@@ -102,7 +101,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
+    /// <inheritdoc cref="ICartesianChartView.XAxes" />
     public IEnumerable<ICartesianAxis> XAxes
     {
         get => _xAxes;
@@ -115,7 +114,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
+    /// <inheritdoc cref="ICartesianChartView.YAxes" />
     public IEnumerable<ICartesianAxis> YAxes
     {
         get => _yAxes;
@@ -128,8 +127,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-    public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+    /// <inheritdoc cref="ICartesianChartView.Sections" />
+    public IEnumerable<CoreSection> Sections
     {
         get => _sections;
         set
@@ -141,8 +140,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-    public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+    /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
+    public CoreDrawMarginFrame? DrawMarginFrame
     {
         get => _drawMarginFrame;
         set
@@ -152,17 +151,17 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         }
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
+    /// <inheritdoc cref="ICartesianChartView.ZoomMode" />
     public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.DefaultSettings.ZoomMode;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
+    /// <inheritdoc cref="ICartesianChartView.ZoomingSpeed" />
     public double ZoomingSpeed { get; set; } = LiveCharts.DefaultSettings.ZoomSpeed;
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
     [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
     public TooltipFindingStrategy TooltipFindingStrategy { get => FindingStrategy.AsOld(); set => FindingStrategy = value.AsNew(); }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.FindingStrategy" />
+    /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
     public FindingStrategy FindingStrategy { get => _findingStrategy; set { _findingStrategy = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -170,7 +169,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     protected override void InitializeCore()
     {
-        core = new CartesianChart<SkiaSharpDrawingContext>(
+        core = new CartesianChartEngine(
             this, config => config.UseDefaults(), motionCanvas.CanvasCore);
 
         core.Update();
@@ -179,31 +178,31 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// <inheritdoc cref="Chart.OnUnloading"/>
     protected override void OnUnloading()
     {
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-        VisualElements = Array.Empty<ChartElement<SkiaSharpDrawingContext>>();
+        Series = [];
+        XAxes = [];
+        YAxes = [];
+        Sections = [];
+        VisualElements = [];
         _seriesObserver = null!;
         _xObserver = null!;
         _yObserver = null!;
         _sectionsObserver = null!;
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScalePixelsToData(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
-        if (core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not CartesianChartEngine cc) throw new Exception("core not found");
         var xScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.XAxes[xAxisIndex]);
         var yScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.YAxes[yAxisIndex]);
 
         return new LvcPointD { X = xScaler.ToChartValues(point.X), Y = yScaler.ToChartValues(point.Y) };
     }
 
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleDataToPixels(LvcPointD, int, int)"/>
+    /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
-        if (core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not CartesianChartEngine cc) throw new Exception("core not found");
 
         var xScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.XAxes[xAxisIndex]);
         var yScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.YAxes[yAxisIndex]);
@@ -214,7 +213,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (core is not CartesianChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not CartesianChartEngine cc) throw new Exception("core not found");
 
         if (strategy == FindingStrategy.Automatic)
             strategy = cc.Series.GetFindingStrategy();
@@ -225,25 +224,21 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public override IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
-        return core is not CartesianChart<SkiaSharpDrawingContext> cc
+        return core is not CartesianChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         OnPropertyChanged();
-    }
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {
         if (core is null) throw new Exception("core not found");
-        var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+        var c = (CartesianChartEngine)core;
         var p = e.Location;
         c.Zoom(new LvcPoint(p.X, p.Y), e.Delta.Height > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         e.Handled = true;
@@ -255,8 +250,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y), e.Buttons == MouseButtons.Alternate);
     }
 
-    private void OnMouseUp(object? sender, MouseEventArgs e)
-    {
-        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y), e.Buttons == MouseButtons.Alternate);
-    }
+    private void OnMouseUp(object? sender, MouseEventArgs e) =>
+        core?.InvokePointerUp(new(e.Location.X, e.Location.Y), e.Buttons == MouseButtons.Alternate);
 }

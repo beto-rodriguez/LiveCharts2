@@ -369,7 +369,7 @@ public class ChangingPaintTasks
 
     public static int DrawChart(InMemorySkiaSharpChart chart, bool animated = false)
     {
-        var coreChart = (Chart<SkiaSharpDrawingContext>)chart.CoreChart;
+        var coreChart = (Chart)chart.CoreChart;
 
         coreChart.IsLoaded = true;
         coreChart._isFirstDraw = true;

@@ -35,22 +35,20 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+/// <seealso cref="ChartSeries{TModel, TVisual, TLabel}" />
 /// <seealso cref="IDisposable" />
-/// <seealso cref="ICartesianSeries{TDrawingContext}" />
+/// <seealso cref="ICartesianSeries" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel}"/> class.
 /// </remarks>
 /// <param name="properties">The series properties.</param>
 /// <param name="values">The values.</param>
-public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
+public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
-        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), ICartesianSeries<TDrawingContext>
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        : ChartSeries<TModel, TVisual, TLabel>(properties, values), ICartesianSeries
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
 {
     private int _scalesXAt;
     private int _scalesYAt;
@@ -60,16 +58,16 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
     private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _yTooltipLabelFormatter;
     private ClipMode _clippingMode = ClipMode.XY;
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
+    /// <inheritdoc cref="ICartesianSeries.ScalesXAt"/>
     public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesYAt"/>
+    /// <inheritdoc cref="ICartesianSeries.ScalesYAt"/>
     public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsPosition"/>
+    /// <inheritdoc cref="ICartesianSeries.DataLabelsPosition"/>
     public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsTranslate"/>
+    /// <inheritdoc cref="ICartesianSeries.DataLabelsTranslate"/>
     public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set => SetProperty(ref _labelsTranslate, value); }
 
     /// <summary>
@@ -98,12 +96,12 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
         set => SetProperty(ref _yTooltipLabelFormatter, value);
     }
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ClippingMode"/>
+    /// <inheritdoc cref="ICartesianSeries.ClippingMode"/>
     public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
 
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
+    /// <inheritdoc cref="ICartesianSeries.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(
-        CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+        Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var rawBounds = DataFactory.GetCartesianBounds(chart, this, secondaryAxis, primaryAxis);
         if (rawBounds.HasData) return rawBounds;
@@ -175,8 +173,8 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
 
         if (label is null)
         {
-            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
-            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+            var cc = (CartesianChartEngine)point.Context.Chart.CoreChart;
+            var cs = (ICartesianSeries)point.Context.Series;
 
             var ax = cc.YAxes[cs.ScalesYAt];
 
@@ -200,8 +198,8 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
 
         if (label is null)
         {
-            var cc = (CartesianChart<TDrawingContext>)point.Context.Chart.CoreChart;
-            var cs = (ICartesianSeries<TDrawingContext>)point.Context.Series;
+            var cc = (CartesianChartEngine)point.Context.Chart.CoreChart;
+            var cs = (ICartesianSeries)point.Context.Series;
 
             var ax = cc.XAxes[cs.ScalesXAt];
 
@@ -222,37 +220,26 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// </summary>
     /// <param name="cartesianChart">The cartesian chart.</param>
     /// <returns></returns>
-    protected virtual LvcRectangle GetClipRectangle(CartesianChart<TDrawingContext> cartesianChart)
-    {
-        return Clipping.GetClipRectangle(ClippingMode, cartesianChart);
-    }
+    protected virtual LvcRectangle GetClipRectangle(CartesianChartEngine cartesianChart) =>
+        Clipping.GetClipRectangle(ClippingMode, cartesianChart);
 
     /// <summary>
     /// Gets the geometry size to calculate the series bounds.
     /// </summary>
     /// <returns>The geometry requested size.</returns>
-    protected virtual double GetRequestedGeometrySize()
-    {
-        return 0;
-    }
+    protected virtual double GetRequestedGeometrySize() => 0;
 
     /// <summary>
     /// Gets the requested secondary offset [normalized as proportion of the axis' unit width].
     /// </summary>
     /// <returns>The offset.</returns>
-    protected virtual double GetRequestedSecondaryOffset()
-    {
-        return 0;
-    }
+    protected virtual double GetRequestedSecondaryOffset() => 0;
 
     /// <summary>
     /// Gets the requested secondary offset [normalized as proportion of the axis' unit width].
     /// </summary>
     /// <returns>The offset</returns>
-    protected virtual double GetRequestedPrimaryOffset()
-    {
-        return 0;
-    }
+    protected virtual double GetRequestedPrimaryOffset() => 0;
 
     /// <summary>
     /// Deletes the series from the user interface.
@@ -261,7 +248,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose(IChartView)" />
     public override void SoftDeleteOrDispose(IChartView chart)
     {
-        var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
+        var core = ((ICartesianChartView)chart).Core;
 
         var secondaryAxis = core.XAxes.Length > ScalesXAt ? core.XAxes[ScalesXAt] : null;
         var primaryAxis = core.YAxes.Length > ScalesYAt ? core.YAxes[ScalesYAt] : null;

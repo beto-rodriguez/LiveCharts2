@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -31,7 +31,7 @@ public partial class ViewModel
 
         foreach (var point in foundPoints)
         {
-            var geometry = (Geometry)point.Context.Visual!;
+            var geometry = (DrawnGeometry)point.Context.Visual!;
 
             if (!_activePoints.Contains(point))
             {
@@ -56,7 +56,7 @@ public partial class ViewModel
         foreach (var hovered in args.NewPoints ?? [])
         {
             // in this case, we will set a black stroke on the drawn gemetry. // mark
-            var geometry = (Geometry)hovered.Context.Visual!;
+            var geometry = (DrawnGeometry)hovered.Context.Visual!;
             geometry.Stroke = new SolidColorPaint(SKColors.Black, 3);
         }
 
@@ -64,7 +64,7 @@ public partial class ViewModel
         foreach (var hovered in args.OldPoints ?? [])
         {
             // now, we will clear the stroke. // mark
-            var geometry = (Geometry)hovered.Context.Visual!;
+            var geometry = (DrawnGeometry)hovered.Context.Visual!;
             geometry.Stroke = null;
         }
 

@@ -25,8 +25,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a geometry that is built using from a svg path.
 /// </summary>
-public interface IVariableSvgPath<TDrawingContext> : ISizedGeometry<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IVariableSvgPath
 {
     /// <summary>
     /// Gets or sets the svg path.

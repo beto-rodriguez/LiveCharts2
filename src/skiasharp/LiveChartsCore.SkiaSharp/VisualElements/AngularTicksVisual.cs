@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
@@ -29,5 +28,5 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// <summary>
 /// Defines the angulaar ticks visual.
 /// </summary>
-public class AngularTicksVisual : AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry, SkiaSharpDrawingContext>
+public class AngularTicksVisual : AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>
 { }

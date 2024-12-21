@@ -26,31 +26,14 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="IArcGeometry{TDrawingContext}" />
-public class ArcGeometry : Geometry, IArcGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="BaseArcGeometry" />
+public class ArcGeometry : BaseArcGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.CenterX"/>
-    public float CenterX { get; set; }
-
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.CenterY"/>
-    public float CenterY { get; set; }
-
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.Width"/>
-    public float Width { get; set; }
-
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.Height"/>
-    public float Height { get; set; }
-
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.StartAngle"/>
-    public float StartAngle { get; set; }
-
-    /// <inheritdoc cref="IArcGeometry{TDrawingContext}.SweepAngle"/>
-    public float SweepAngle { get; set; }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)"/>
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         using var path = new SKPath();
+
         var cx = CenterX;
         var cy = CenterY;
         var r = Width * 0.5f;
@@ -67,12 +50,6 @@ public class ArcGeometry : Geometry, IArcGeometry<SkiaSharpDrawingContext>
             sweepAngle,
             false);
 
-        context.Canvas.DrawPath(path, context.Paint);
-    }
-
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})"/>
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks)
-    {
-        return new();
+        context.Canvas.DrawPath(path, context.ActiveSkiaPaint);
     }
 }

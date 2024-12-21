@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -37,17 +36,17 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
-/// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
-public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IGeoMapView"/>
+public partial class GeoMap : UserControl, IGeoMapView
 {
     private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private readonly GeoMap<SkiaSharpDrawingContext> _core;
+    private readonly GeoMapChart _core;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -56,7 +55,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         InitializeComponent();
         LiveCharts.Configure(config => config.UseDefaults());
-        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        _core = new GeoMapChart(this);
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
@@ -70,7 +69,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         PointerExited += OnPointerLeave;
 
         //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
-        ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        ActiveMap = Maps.GetWorldMap();
         SyncContext = new object();
 
         DetachedFromVisualTree += GeoMap_DetachedFromVisualTree;
@@ -81,8 +80,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// <summary>
     /// The active map property.
     /// </summary>
-    public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>?> ActiveMapProperty =
-       AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>?>(nameof(ActiveMap), null, inherits: true);
+    public static readonly AvaloniaProperty<DrawnMap?> ActiveMapProperty =
+       AvaloniaProperty.Register<CartesianChart, DrawnMap?>(nameof(ActiveMap), null, inherits: true);
 
     /// <summary>
     /// The active map property.
@@ -107,48 +106,48 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly AvaloniaProperty<IEnumerable<IGeoSeries>> SeriesProperty =
       AvaloniaProperty.Register<CartesianChart, IEnumerable<IGeoSeries>>(nameof(Series),
-          Enumerable.Empty<IGeoSeries>(), inherits: true);
+          [], inherits: true);
 
     /// <summary>
     /// The stroke property.
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
-      AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
-          new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
+    public static readonly AvaloniaProperty<Paint> StrokeProperty =
+      AvaloniaProperty.Register<CartesianChart, Paint>(nameof(Stroke),
+          new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { PaintStyle = PaintStyle.Stroke }, inherits: true);
 
     /// <summary>
     /// The fill color property.
     /// </summary>
-    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
-      AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
-           new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
+    public static readonly AvaloniaProperty<Paint> FillProperty =
+      AvaloniaProperty.Register<CartesianChart, Paint>(nameof(Fill),
+           new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill }, inherits: true);
 
     #endregion
 
     #region props
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IGeoMapView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => Design.IsDesignMode;
+    /// <inheritdoc cref="IGeoMapView.DesignerMode" />
+    bool IGeoMapView.DesignerMode => Design.IsDesignMode;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    /// <inheritdoc cref="IGeoMapView.SyncContext" />
     public object SyncContext
     {
         get => GetValue(SyncContextProperty)!;
         set => SetValue(SyncContextProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    /// <inheritdoc cref="IGeoMapView.ViewCommand" />
     public object? ViewCommand
     {
         get => GetValue(ViewCommandProperty);
         set => SetValue(ViewCommandProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas
+    /// <inheritdoc cref="IGeoMapView.Canvas"/>
+    public CoreMotionCanvas Canvas
     {
         get
         {
@@ -157,49 +156,49 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap
+    /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
+    public DrawnMap ActiveMap
     {
-        get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty)!;
+        get => (DrawnMap)GetValue(ActiveMapProperty)!;
         set => SetValue(ActiveMapProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)Bounds.Width;
+    /// <inheritdoc cref="IGeoMapView.Width"/>
+    float IGeoMapView.Width => (float)Bounds.Width;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)Bounds.Height;
+    /// <inheritdoc cref="IGeoMapView.Height"/>
+    float IGeoMapView.Height => (float)Bounds.Height;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     public MapProjection MapProjection
     {
         get => (MapProjection)GetValue(MapProjectionProperty)!;
         set => SetValue(MapProjectionProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    /// <inheritdoc cref="IGeoMapView.Stroke"/>
+    public Paint? Stroke
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(StrokeProperty);
+        get => (Paint?)GetValue(StrokeProperty);
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             _ = SetValue(StrokeProperty, value);
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    /// <inheritdoc cref="IGeoMapView.Fill"/>
+    public Paint? Fill
     {
-        get => (IPaint<SkiaSharpDrawingContext>?)GetValue(FillProperty);
+        get => (Paint?)GetValue(FillProperty);
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             _ = SetValue(FillProperty, value);
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IGeoMapView.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
         get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty)!;
@@ -208,10 +207,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     #endregion
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView.InvokeOnUIThread(Action action) =>
         Dispatcher.UIThread.Post(action);
-    }
 
     /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -269,10 +266,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
     }
 
-    private void OnPointerLeave(object? sender, PointerEventArgs e)
-    {
+    private void OnPointerLeave(object? sender, PointerEventArgs e) =>
         _core?.InvokePointerLeft();
-    }
 
     private void GeoMap_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
@@ -280,8 +275,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core.Unload();
     }
 
-    private void InitializeComponent()
-    {
+    private void InitializeComponent() =>
         AvaloniaXamlLoader.Load(this);
-    }
 }

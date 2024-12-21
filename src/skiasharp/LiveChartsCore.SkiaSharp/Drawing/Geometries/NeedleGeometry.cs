@@ -25,16 +25,23 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="INeedleGeometry{TDrawingContext}"/>
-public class NeedleGeometry : Geometry, INeedleGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="BaseNeedleGeometry"/>
+public class NeedleGeometry : BaseNeedleGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="INeedleGeometry{TDrawingContext}.Radius"/>
-    public float Radius { get; set; }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)"/>
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NeedleGeometry"/> class.
+    /// </summary>
+    public NeedleGeometry()
     {
-        var w = 10;
+        TransformOrigin = new LvcPoint(0F, 0F);
+    }
+
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
+    {
+        var paint = context.ActiveSkiaPaint;
+
+        var w = Width / 2f;
 
         using var path = new SKPath();
 
@@ -45,11 +52,5 @@ public class NeedleGeometry : Geometry, INeedleGeometry<SkiaSharpDrawingContext>
 
         context.Canvas.DrawPath(path, paint);
         context.Canvas.DrawCircle(X, Y, w, paint);
-    }
-
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})"/>
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks)
-    {
-        return new();
     }
 }

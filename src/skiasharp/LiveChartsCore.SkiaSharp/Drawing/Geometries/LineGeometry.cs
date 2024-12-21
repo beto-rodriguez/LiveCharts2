@@ -20,55 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ILineGeometry{TDrawingContext}" />
-public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="BaseLineGeometry" />
+public class LineGeometry : BaseLineGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    private readonly FloatMotionProperty _x1;
-    private readonly FloatMotionProperty _y1;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LineGeometry"/> class.
-    /// </summary>
-    public LineGeometry()
-    {
-        _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-        _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-    }
-
-    /// <inheritdoc cref="ILineGeometry{TDrawingContext}.X1" />
-    public float X1
-    {
-        get => Parent is null
-            ? _x1.GetMovement(this)
-            : _x1.GetMovement(this) + Parent.X;
-        set => _x1.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="ILineGeometry{TDrawingContext}.Y1" />
-    public float Y1
-    {
-        get => Parent is null
-            ? _y1.GetMovement(this)
-            : _y1.GetMovement(this) + Parent.Y;
-        set => _y1.SetMovement(value, this);
-    }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-    {
-        context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-    }
-
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> drawable)
-    {
-        return new LvcSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
-    }
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context) =>
+        context.Canvas.DrawLine(X, Y, X1, Y1, context.ActiveSkiaPaint);
 }

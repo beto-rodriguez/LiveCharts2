@@ -16,13 +16,13 @@ namespace ViewModelsSamples.General.VisualElements;
 
 public class ViewModel
 {
-    public IEnumerable<ChartElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
+    public IEnumerable<ChartElement> VisualElements { get; set; }
 
     public ISeries[] Series { get; set; }
 
     public ViewModel()
     {
-        var visuals = new List<ChartElement<SkiaSharpDrawingContext>>();
+        var visuals = new List<ChartElement>();
 
         var rectangleVisual = new GeometryVisual<RectangleGeometry>
         {
@@ -84,9 +84,7 @@ public class ViewModel
         ];
     }
 
-    private void RectanglePointerDown(
-        VisualElement<SkiaSharpDrawingContext> visual,
-        VisualElementEventArgs<SkiaSharpDrawingContext> visualElementsArgs)
+    private void RectanglePointerDown(IInteractable visual, VisualElementEventArgs visualElementsArgs)
     {
         var rectangleVisual = (GeometryVisual<RectangleGeometry>)visual;
 

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.VisualElements;
@@ -34,370 +33,302 @@ namespace LiveChartsCore.Themes;
 public static class LiveChartsStylerExtensions
 {
     /// <summary>
-    ///  Defines a style builder for <see cref="IChartView{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IChartView"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForAxes<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IPlane<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForAxes(this Theme styler, Action<IPlane> predicate)
     {
         styler.AxisBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    /// Defines a style builder for <see cref="DrawMarginFrame{TDrawingContext}"/> objects.
+    /// Defines a style builder for <see cref="CoreDrawMarginFrame"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForDrawMargin<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<DrawMarginFrame<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForDrawMargin(this Theme styler, Action<CoreDrawMarginFrame> predicate)
     {
         styler.DrawMarginFrameBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IChartSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IChartSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForAnySeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IChartSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForAnySeries(this Theme styler, Action<IChartSeries> predicate)
     {
         styler.SeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IPieSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForPieSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IPieSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForPieSeries(this Theme styler, Action<IPieSeries> predicate)
     {
         styler.PieSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects when used as gauges.
+    ///  Defines a style builder for <see cref="IPieSeries"/> objects when used as gauges.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForGaugeSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IPieSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForGaugeSeries(this Theme styler, Action<IPieSeries> predicate)
     {
         styler.GaugeSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects when used as gauges fills.
+    ///  Defines a style builder for <see cref="IPieSeries"/> objects when used as gauges fills.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForGaugeFillSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IPieSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForGaugeFillSeries(this Theme styler, Action<IPieSeries> predicate)
     {
         styler.GaugeFillSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="ILineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="ILineSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForLineSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<ILineSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForLineSeries(this Theme styler, Action<ILineSeries> predicate)
     {
         styler.LineSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IStepLineSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForStepLineSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IStepLineSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForStepLineSeries(this Theme styler, Action<IStepLineSeries> predicate)
     {
         styler.StepLineSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked <see cref="IStepLineSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForStackedStepLineSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IStepLineSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForStackedStepLineSeries(this Theme styler, Action<IStepLineSeries> predicate)
     {
         styler.StackedStepLineSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked <see cref="IStepLineSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForBoxSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IBoxSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForBoxSeries(this Theme styler, Action<IBoxSeries> predicate)
     {
         styler.BoxSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for tacked <see cref="ILineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for tacked <see cref="ILineSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForStackedLineSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<ILineSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForStackedLineSeries(this Theme styler, Action<ILineSeries> predicate)
     {
         styler.StackedLineSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForBarSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IBarSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForBarSeries(this Theme styler, Action<IBarSeries> predicate)
     {
         styler.BarSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for vertical <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for vertical <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForColumnSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IBarSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForColumnSeries(this Theme styler, Action<IBarSeries> predicate)
     {
         styler.ColumnSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for horizontal <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for horizontal <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForRowSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IBarSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForRowSeries(this Theme styler, Action<IBarSeries> predicate)
     {
         styler.ColumnSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForStackedBarSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IStackedBarSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForStackedBarSeries(this Theme styler, Action<IStackedBarSeries> predicate)
     {
         styler.StackedBarSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked vertical <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked vertical <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForStackedColumnSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IStackedBarSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForStackedColumnSeries(this Theme styler, Action<IStackedBarSeries> predicate)
     {
         styler.StackedColumnSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for stacked horizontal <see cref="IBarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for stacked horizontal <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForStackedRowSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IStackedBarSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForStackedRowSeries(this Theme styler, Action<IStackedBarSeries> predicate)
     {
         styler.StackedRowSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IScatterSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IScatterSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForScatterSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IScatterSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForScatterSeries(this Theme styler, Action<IScatterSeries> predicate)
     {
         styler.ScatterSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IHeatSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IHeatSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForHeatSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IHeatSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForHeatSeries(this Theme styler, Action<IHeatSeries> predicate)
     {
         styler.HeatSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IFinancialSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IFinancialSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForFinancialSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IFinancialSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForFinancialSeries(this Theme styler, Action<IFinancialSeries> predicate)
     {
         styler.FinancialSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPolarSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IPolarSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForPolaSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IPolarSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForPolaSeries(this Theme styler, Action<IPolarSeries> predicate)
     {
         styler.PolarSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IPolarLineSeries{TDrawingContext}"/> objects.
+    ///  Defines a style builder for <see cref="IPolarLineSeries"/> objects.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleForPolarLineSeries<TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<IPolarLineSeries<TDrawingContext>> predicate)
-        where TDrawingContext : DrawingContext
+    public static Theme HasRuleForPolarLineSeries(this Theme styler, Action<IPolarLineSeries> predicate)
     {
         styler.PolarLineSeriesBuilder.Add(predicate);
         return styler;
     }
 
     /// <summary>
-    /// Defines a style builder for <see cref= "VisualElement{TDrawingContext}" /> objects.
+    /// Defines the default tooltip.
+    /// </summary>
+    /// <param name="styler"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public static Theme HasDefaultTooltip(this Theme styler, Func<IChartTooltip> predicate)
+    {
+        styler.DefaultTooltip = predicate;
+        return styler;
+    }
+
+    /// <summary>
+    /// Defines the default legend.
+    /// </summary>
+    /// <param name="styler"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public static Theme HasDefaultLegend(this Theme styler, Func<IChartLegend> predicate)
+    {
+        styler.DefaultLegend = predicate;
+        return styler;
+    }
+
+    /// <summary>
+    /// Defines a style builder for <see cref= "VisualElement" /> objects.
     /// </summary>
     /// <typeparam name="TChartElement">The type of the chart element.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="styler">the styler.</param>
     /// <param name="predicate">the predicate.</param>
     /// <returns></returns>
-    public static Theme<TDrawingContext> HasRuleFor<TChartElement, TDrawingContext>(
-        this Theme<TDrawingContext> styler,
-        Action<TChartElement> predicate)
-            where TDrawingContext : DrawingContext
-            where TChartElement : ChartElement<TDrawingContext>
+    public static Theme HasRuleFor<TChartElement>(this Theme styler, Action<TChartElement> predicate)
+        where TChartElement : ChartElement
     {
         styler.ChartElementElementBuilder.Add(typeof(TChartElement), predicate);
         return styler;

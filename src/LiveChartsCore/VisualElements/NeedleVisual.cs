@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -32,13 +33,11 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TGeometry : INeedleGeometry<TDrawingContext>, new()
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+public class NeedleVisual<TGeometry, TLabelGeometry> : VisualElement
+    where TGeometry : BaseNeedleGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
 {
-    private IPaint<TDrawingContext>? _fill;
+    private Paint? _fill;
     private double _value;
     private TGeometry? _geometry;
 
@@ -50,18 +49,18 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
-        ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext>>();
+        ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry>>();
 
-        if (chart is not PieChart<TDrawingContext> pieChart)
+        if (chart is not PieChartEngine pieChart)
             throw new Exception("The needle visual can only be added to a pie chart");
 
         var drawLocation = pieChart.DrawMarginLocation;
@@ -76,7 +75,7 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
 
         var h = minDimension * 0.45f;
 
-        var view = (IPieChartView<TDrawingContext>)pieChart.View;
+        var view = (IPieChartView)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
@@ -113,28 +112,21 @@ public class NeedleVisual<TGeometry, TLabelGeometry, TDrawingContext> : VisualEl
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
-    {
-        return new();
-    }
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart) => new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
-        _geometry.Parent = parent;
+        ((IDrawnElement)_geometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { _geometry };
-    }
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
+        [_geometry];
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _fill };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_fill];
 }

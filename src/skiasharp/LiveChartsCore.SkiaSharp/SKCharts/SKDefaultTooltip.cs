@@ -25,12 +25,12 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
-using LiveChartsCore.SkiaSharpView.VisualElements;
-using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
@@ -38,11 +38,11 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// Defines the default tooltip.
 /// </summary>
-public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
+public class SKDefaultTooltip : IChartTooltip
 {
-    internal StackPanel<PopUpGeometry, SkiaSharpDrawingContext>? _panel;
-    private static readonly int s_zIndex = 10100;
-    private IPaint<SkiaSharpDrawingContext>? _backgroundPaint;
+    internal Container<PopUpGeometry>? _container;
+    private StackLayout? _layout;
+    private Paint? _backgroundPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
@@ -59,21 +59,19 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// <summary>
     /// Gets or sets the legend font paint.
     /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? FontPaint { get; set; }
+    public Paint? FontPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<SkiaSharpDrawingContext>? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set
         {
             _backgroundPaint = value;
             if (value is not null)
-            {
-                value.IsFill = true;
-            }
+                value.PaintStyle = PaintStyle.Fill;
         }
     }
 
@@ -82,8 +80,18 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
     /// </summary>
     public double TextSize { get; set; } = 16;
 
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Show(IEnumerable{ChartPoint}, Chart{TDrawingContext})" />
-    public void Show(IEnumerable<ChartPoint> foundPoints, Chart<SkiaSharpDrawingContext> chart)
+    /// <summary>
+    /// Gets or sets the easing function.
+    /// </summary>
+    public Func<float, float> Easing { get; set; } = EasingFunctions.EaseOut;
+
+    /// <summary>
+    /// Gets or sets the animations speed.
+    /// </summary>
+    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(150);
+
+    /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
+    public void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
         const int wedge = 10;
 
@@ -91,36 +99,41 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
         if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
 
-        if (_panel is null)
+        if (_container is null || _layout is null)
         {
-            _panel = new StackPanel<PopUpGeometry, SkiaSharpDrawingContext>
+            _container = new Container<PopUpGeometry>
             {
-                Orientation = ContainerOrientation.Vertical,
-                HorizontalAlignment = Align.Middle,
-                VerticalAlignment = Align.Middle,
-                BackgroundPaint = BackgroundPaint
+                Content = _layout = new StackLayout
+                {
+                    Orientation = ContainerOrientation.Vertical,
+                    HorizontalAlignment = Align.Middle,
+                    VerticalAlignment = Align.Middle
+                }
             };
 
-            _panel.BackgroundGeometry.Wedge = wedge;
-            _panel.BackgroundGeometry.WedgeThickness = 3;
+            _container.Geometry.Fill = BackgroundPaint;
+            _container.Geometry.Wedge = wedge;
+            _container.Geometry.WedgeThickness = 3;
 
-            _panel
+            _container
                 .Animate(
-                    new Animation(EasingFunctions.EaseOut, TimeSpan.FromMilliseconds(150)),
-                    nameof(RoundedRectangleGeometry.X),
-                    nameof(RoundedRectangleGeometry.Y));
+                    new Animation(Easing, AnimationsSpeed),
+                    nameof(IDrawnElement.Opacity),
+                    nameof(IDrawnElement.ScaleTransform),
+                    nameof(IDrawnElement.X),
+                    nameof(IDrawnElement.Y));
+
+            var drawTask = chart.Canvas.AddGeometry(_container);
+            drawTask.ZIndex = 10100;
         }
 
-        if (BackgroundPaint is not null) BackgroundPaint.ZIndex = s_zIndex;
-        if (FontPaint is not null) FontPaint.ZIndex = s_zIndex + 1;
+        _container.Opacity = 1;
+        _container.ScaleTransform = new LvcPoint(1, 1);
 
-        foreach (var child in _panel.Children.ToArray())
-        {
-            _ = _panel.Children.Remove(child);
-            chart.RemoveVisual(child);
-        }
+        foreach (var child in _layout.Children.ToArray())
+            _ = _layout.Children.Remove(child);
 
-        var tableLayout = new TableLayout<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+        var tableLayout = new TableLayout
         {
             HorizontalAlignment = Align.Middle,
             VerticalAlignment = Align.Middle
@@ -131,7 +144,7 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
         var i = 0;
         foreach (var point in foundPoints)
         {
-            var series = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
+            var series = (IChartSeries)point.Context.Series;
 
             if (i == 0)
             {
@@ -139,21 +152,17 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
                 if (title != LiveCharts.IgnoreToolTipLabel)
                 {
-                    _panel.Children.Add(
-                        new LabelVisual
+                    _layout.Children.Add(
+                        new LabelGeometry
                         {
                             Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
                             Paint = FontPaint,
-                            TextSize = TextSize,
-                            Padding = new Padding(0, 0, 0, 0),
+                            TextSize = (float)TextSize,
+                            Padding = new Padding(0, 0, 0, 8),
                             MaxWidth = lw,
-                            VerticalAlignment = Align.Start,
-                            HorizontalAlignment = Align.Start,
-                            ClippingMode = Measure.ClipMode.None
+                            VerticalAlign = Align.Start,
+                            HorizontalAlign = Align.Start
                         });
-
-                    _panel.Children.Add(
-                        new StackPanel<RectangleGeometry, SkiaSharpDrawingContext> { Padding = new(0, 8) });
                 }
             }
 
@@ -163,72 +172,75 @@ public class SKDefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
-                tableLayout.AddChild(series.GetMiniature(point, s_zIndex), i, ltr ? 3 : 0);
+                var skiaMiniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
+                _ = tableLayout.AddChild(skiaMiniature, i, ltr ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
-                    tableLayout.AddChild(
-                        new LabelVisual
-                        {
-                            Text = point.Context.Series.Name ?? string.Empty,
-                            Paint = FontPaint,
-                            TextSize = TextSize,
-                            Padding = new Padding(10, 0, 0, 0),
-                            MaxWidth = lw,
-                            VerticalAlignment = Align.Start,
-                            HorizontalAlignment = Align.Start,
-                            ClippingMode = Measure.ClipMode.None
-                        }, i, 1, horizontalAlign: Align.Start);
-
-                tableLayout.AddChild(
-                    new LabelVisual
+                    _ = tableLayout.AddChild(new LabelGeometry
                     {
-                        Text = content,
+                        Text = point.Context.Series.Name ?? string.Empty,
                         Paint = FontPaint,
-                        TextSize = TextSize,
-                        Padding = new Padding(10, 2, 0, 2),
+                        TextSize = (float)TextSize,
+                        Padding = new Padding(10, 0, 0, 0),
                         MaxWidth = lw,
-                        VerticalAlignment = Align.Start,
-                        HorizontalAlignment = Align.Start,
-                        ClippingMode = Measure.ClipMode.None
-                    }, i, ltr ? 0 : 2, horizontalAlign: Align.End);
+                        VerticalAlign = Align.Start,
+                        HorizontalAlign = Align.Start
+                    }, i, 1, horizontalAlign: Align.Start);
+
+                _ = tableLayout.AddChild(new LabelGeometry
+                {
+                    Text = content,
+                    Paint = FontPaint,
+                    TextSize = (float)TextSize,
+                    Padding = new Padding(10, 2, 0, 2),
+                    MaxWidth = lw,
+                    VerticalAlign = Align.Start,
+                    HorizontalAlign = Align.Start
+                }, i, ltr ? 0 : 2, horizontalAlign: Align.End);
 
                 i++;
             }
         }
 
-        _panel.Children.Add(tableLayout);
+        _layout.Children.Add(tableLayout);
 
-        var size = _panel.Measure(chart);
+        var size = _layout.Measure();
         _ = foundPoints.GetTooltipLocation(size, chart);
-        _panel.BackgroundGeometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
+        _container.Geometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
+
+        const int px = 8;
+        const int py = 12;
 
         switch (chart.AutoToolTipsInfo.ToolTipPlacement)
         {
             case Measure.PopUpPlacement.Top:
-                _panel.Padding = new Padding(12, 8, 12, 8 + wedge); break;
+                _layout.Padding = new Padding(py, px, py, px + wedge); break;
             case Measure.PopUpPlacement.Bottom:
-                _panel.Padding = new Padding(12, 8 + wedge, 12, 8); break;
+                _layout.Padding = new Padding(py, px + wedge, py, px); break;
             case Measure.PopUpPlacement.Left:
-                _panel.Padding = new Padding(12, 8, 12 + wedge, 8); break;
+                _layout.Padding = new Padding(py, px, py + wedge, px); break;
             case Measure.PopUpPlacement.Right:
-                _panel.Padding = new Padding(12 + wedge, 8, 12, 8); break;
+                _layout.Padding = new Padding(py + wedge, px, py, px); break;
             default: break;
         }
 
         // the size changed... we need to do the math again
-        size = _panel.Measure(chart);
+        size = _container.Measure();
         var location = foundPoints.GetTooltipLocation(size, chart);
 
-        _panel.X = location.X;
-        _panel.Y = location.Y;
+        _container.X = location.X;
+        _container.Y = location.Y;
 
-        chart.AddVisual(_panel);
+        chart.Canvas.Invalidate();
     }
 
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}.Hide"/>
-    public void Hide(Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="IChartTooltip.Hide"/>
+    public void Hide(Chart chart)
     {
-        if (chart is null || _panel is null) return;
-        chart.RemoveVisual(_panel);
+        if (chart is null || _container is null) return;
+        _container.Opacity = 0f;
+        _container.ScaleTransform = new LvcPoint(0.85f, 0.85f);
+
+        chart.Canvas.Invalidate();
     }
 }

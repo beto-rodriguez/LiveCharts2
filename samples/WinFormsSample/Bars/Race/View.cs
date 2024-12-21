@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Bars.Race;
 

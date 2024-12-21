@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -30,14 +30,12 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a visual element that has stroke and fill, it can also be scaled in
 /// <see cref="MeasureUnit.Pixels"/> or <see cref="MeasureUnit.ChartValues"/>.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context,</typeparam>
-public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public abstract class BaseGeometryVisual : VisualElement
 {
     private double _width;
     private double _height;
-    private IPaint<TDrawingContext>? _fill;
-    private IPaint<TDrawingContext>? _stroke;
+    private Paint? _fill;
+    private Paint? _stroke;
     private MeasureUnit _sizeUnit = MeasureUnit.Pixels;
 
     /// <summary>
@@ -58,7 +56,7 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
@@ -67,17 +65,15 @@ public abstract class BaseGeometryVisual<TDrawingContext> : VisualElement<TDrawi
     /// <summary>
     /// Gets or sets the stroke paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _fill, _stroke };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_fill, _stroke];
 
     /// <summary>
     /// Called when [paint changed].

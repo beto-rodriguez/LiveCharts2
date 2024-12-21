@@ -30,29 +30,28 @@ using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
 /// <summary>
 /// Defines an Axis in a Cartesian chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
 /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
 /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry>
-    : ChartElement<TDrawingContext>, IPolarAxis, IPlane<TDrawingContext>, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
-        where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
-        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
-        where TCircleGeometry : ISizedGeometry<TDrawingContext>, new()
+public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometry>
+    : ChartElement, IPolarAxis, IPlane, INotifyPropertyChanged
+        where TTextGeometry : BaseLabelGeometry, new()
+        where TLineGeometry : BaseLineGeometry, new()
+        where TCircleGeometry : BoundedDrawnGeometry, new()
 {
     #region fields
 
     /// <summary>
     /// The active separators
     /// </summary>
-    protected readonly Dictionary<IChart, Dictionary<double, IVisualSeparator<TDrawingContext>>> activeSeparators = [];
+    protected readonly Dictionary<Chart, Dictionary<double, IVisualSeparator>> activeSeparators = [];
 
     internal PolarAxisOrientation _orientation;
     private double _minStep = 0;
@@ -63,13 +62,13 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     private Func<double, string> _labeler = Labelers.Default;
     private double? _minLimit = null;
     private double? _maxLimit = null;
-    private IPaint<TDrawingContext>? _namePaint;
+    private Paint? _namePaint;
     private double _nameTextSize = 20;
     private Padding _namePadding = new(5);
-    private IPaint<TDrawingContext>? _labelsPaint;
+    private Paint? _labelsPaint;
     private double _unitWidth = 1;
     private double _textSize = 16;
-    private IPaint<TDrawingContext>? _separatorsPaint;
+    private Paint? _separatorsPaint;
     private bool _showSeparatorLines = true;
     private bool _isInverted;
     private bool _forceStepToMin;
@@ -156,25 +155,25 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <inheritdoc cref="IPlane.IsInverted"/>
     public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
-    public IPaint<TDrawingContext>? NamePaint
+    /// <inheritdoc cref="IPlane.NamePaint"/>
+    public Paint? NamePaint
     {
         get => _namePaint;
         set => SetPaintProperty(ref _namePaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
-    public IPaint<TDrawingContext>? LabelsPaint
+    /// <inheritdoc cref="IPlane.LabelsPaint"/>
+    public Paint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
-    public IPaint<TDrawingContext>? SeparatorsPaint
+    /// <inheritdoc cref="IPlane.SeparatorsPaint"/>
+    public Paint? SeparatorsPaint
     {
         get => _separatorsPaint;
-        set => SetPaintProperty(ref _separatorsPaint, value, true);
+        set => SetPaintProperty(ref _separatorsPaint, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
@@ -188,10 +187,10 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <inheritdoc cref="IPolarAxis.Initialized"/>
     public event Action<IPolarAxis>? Initialized;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
-        var polarChart = (PolarChart<TDrawingContext>)chart;
+        var polarChart = (PolarChartEngine)chart;
 
         if (_dataBounds is null) throw new Exception("DataBounds not found");
 
@@ -279,7 +278,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             activeSeparators[polarChart] = separators;
         }
 
-        var measured = new HashSet<IVisualSeparator<TDrawingContext>>();
+        var measured = new HashSet<IVisualSeparator>();
 
         var separatorsSource = CustomSeparators ?? EnumerateSeparators(start, s, max);
 
@@ -291,8 +290,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             if (!separators.TryGetValue(i, out var visualSeparator))
             {
                 visualSeparator = _orientation == PolarAxisOrientation.Angle
-                    ? new AxisVisualSeprator<TDrawingContext>() { Value = i }
-                    : new RadialAxisVisualSeparator<TDrawingContext>() { Value = i };
+                    ? new AxisVisualSeprator() { Value = i }
+                    : new RadialAxisVisualSeparator() { Value = i };
 
                 var l = _orientation == PolarAxisOrientation.Angle
                     ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
@@ -309,12 +308,13 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
                     textGeometry.X = l.X;
                     textGeometry.Y = l.Y;
                     textGeometry.Opacity = 0;
+                    textGeometry.Paint = LabelsPaint;
                     textGeometry.CompleteTransition(null);
                 }
 
                 if (SeparatorsPaint is not null && ShowSeparatorLines)
                 {
-                    if (visualSeparator is AxisVisualSeprator<TDrawingContext> linearSeparator)
+                    if (visualSeparator is AxisVisualSeprator linearSeparator)
                     {
                         var lineGeometry = new TLineGeometry();
 
@@ -326,7 +326,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
                         lineGeometry.CompleteTransition(null);
                     }
 
-                    if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
+                    if (visualSeparator is RadialAxisVisualSeparator polarSeparator)
                     {
                         var circleGeometry = new TCircleGeometry();
 
@@ -385,7 +385,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
 
             if (visualSeparator.Geometry is not null)
             {
-                if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSeparator && lineSeparator.Separator is not null)
+                if (visualSeparator is AxisVisualSeprator lineSeparator && lineSeparator.Separator is not null)
                 {
                     var innerPos = scaler.ToPixels(visualSeparator.Value, scaler.MinRadius);
 
@@ -397,7 +397,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
                     if (!_animatableBounds.HasPreviousState) lineSeparator.Separator.CompleteTransition(null);
                 }
 
-                if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
+                if (visualSeparator is RadialAxisVisualSeparator polarSeparator && polarSeparator.Circle is not null)
                 {
                     var h = Math.Sqrt(Math.Pow(location.X - scaler.CenterX, 2) + Math.Pow(location.Y - scaler.CenterY, 2));
                     var radius = (float)h;
@@ -424,8 +424,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         }
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
-    public LvcSize GetNameLabelSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetNameLabelSize(Chart)"/>
+    public LvcSize GetNameLabelSize(Chart chart)
     {
         if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new LvcSize(0, 0);
 
@@ -433,21 +433,22 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         {
             Text = Name ?? string.Empty,
             TextSize = (float)NameTextSize,
-            Padding = _labelsPadding
+            Padding = _labelsPadding,
+            Paint = NamePaint
         };
 
-        return textGeometry.Measure(NamePaint);
+        return textGeometry.Measure();
     }
 
-    /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
-    public virtual LvcSize GetPossibleSize(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IPlane.GetPossibleSize(Chart)"/>
+    public virtual LvcSize GetPossibleSize(Chart chart)
     {
         if (_dataBounds is null) throw new Exception("DataBounds not found");
         if (LabelsPaint is null) return new LvcSize(0f, 0f);
 
         var ts = (float)TextSize;
         var labeler = GetActualLabeler();
-        var polarChart = (PolarChart<TDrawingContext>)chart;
+        var polarChart = (PolarChartEngine)chart;
         IPolarAxis a, b;
 
         if (_orientation == PolarAxisOrientation.Angle)
@@ -490,9 +491,10 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
                 Text = labeler(i),
                 TextSize = ts,
                 RotateTransform = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0),
-                Padding = _labelsPadding
+                Padding = _labelsPadding,
+                Paint = LabelsPaint
             };
-            var m = textGeometry.Measure(LabelsPaint);
+            var m = textGeometry.Measure();
 
             var h = (float)Math.Sqrt(Math.Pow(m.Width * 0.5, 2) + Math.Pow(m.Height * 0.5, 2));
             if (h > totalH) totalH = h;
@@ -516,7 +518,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    public virtual void Delete(Chart<TDrawingContext> chart)
+    public virtual void Delete(Chart chart)
     {
         if (_labelsPaint is not null)
         {
@@ -532,8 +534,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         _ = activeSeparators.Remove(chart);
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
         _animatableBounds = null!;
@@ -548,8 +550,8 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
     /// <param name="scaler">The scale.</param>
     /// <returns></returns>
     protected virtual void SoftDeleteSeparator(
-        Chart<TDrawingContext> chart,
-        IVisualSeparator<TDrawingContext> separator,
+        Chart chart,
+        IVisualSeparator separator,
         PolarScaler scaler)
     {
         if (separator.Geometry is null) return;
@@ -558,7 +560,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             ? scaler.ToPixels(separator.Value, scaler.MaxRadius)
             : scaler.ToPixels(0, separator.Value);
 
-        if (separator is AxisVisualSeprator<TDrawingContext> lineSeparator)
+        if (separator is AxisVisualSeprator lineSeparator)
         {
             lineSeparator.Separator!.X = scaler.CenterX;
             lineSeparator.Separator.Y = scaler.CenterY;
@@ -566,7 +568,7 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
             lineSeparator.Separator.Y1 = location.Y;
         }
 
-        if (separator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
+        if (separator is RadialAxisVisualSeparator polarSeparator)
         {
             polarSeparator.Circle!.X = scaler.CenterX;
             polarSeparator.Circle.Y = scaler.CenterY;
@@ -597,11 +599,9 @@ public abstract class CorePolarAxis<TDrawingContext, TTextGeometry, TLineGeometr
         OnPropertyChanged(propertyName);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _separatorsPaint, _labelsPaint, _namePaint };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_separatorsPaint, _labelsPaint, _namePaint];
 
     private IEnumerable<double> EnumerateSeparators(double start, double s, double max)
     {

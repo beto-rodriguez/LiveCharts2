@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -36,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 public class StackedStepAreaSeries<TModel>
     : StackedStepAreaSeries<TModel, CircleGeometry, LabelGeometry>
@@ -75,14 +74,14 @@ public class StackedStepAreaSeries<TModel>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual>
     : StackedStepAreaSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : BoundedDrawnGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.
@@ -118,7 +117,7 @@ public class StackedStepAreaSeries<TModel, TVisual>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
@@ -127,9 +126,9 @@ public class StackedStepAreaSeries<TModel, TVisual>
 /// The type of the data label of every point.
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual, TLabel>
-    : CoreStackedStepAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, StepLineAreaGeometry, LineGeometry>
-        where TVisual : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+    : CoreStackedStepAreaSeries<TModel, TVisual, TLabel, StepLineAreaGeometry, LineGeometry>
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.

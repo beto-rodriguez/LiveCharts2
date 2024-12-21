@@ -32,7 +32,7 @@ using SkiaSharp.Views.Desktop;
 namespace LiveChartsCore.SkiaSharpView.WinForms;
 
 /// <summary>
-/// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// The motion canvas control for windows forms, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="UserControl" />
 public partial class MotionCanvas : UserControl
@@ -54,7 +54,7 @@ public partial class MotionCanvas : UserControl
     /// The canvas core.
     /// </value>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <inheritdoc cref="Control.CreateHandle()"/>
     protected override void CreateHandle()
@@ -74,16 +74,16 @@ public partial class MotionCanvas : UserControl
 
     private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 
     private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
             {
                 Background = new SKColor(Parent.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
             });
 
-    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
+    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
 
     private async void RunDrawingLoop()

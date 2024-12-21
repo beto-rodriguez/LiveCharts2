@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -32,14 +31,12 @@ namespace LiveChartsCore.Kernel;
 /// <summary>
 /// Defines a series context.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="SeriesContext"/> class.
 /// </remarks>
 /// <param name="series">The series.</param>
 /// <param name="chart">The chart</param>
-public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingContext>> series, IChart chart)
-    where TDrawingContext : DrawingContext
+public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
 {
     private int _columnsCount = 0;
     private int _rowsCount = 0;
@@ -50,14 +47,14 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     private bool _arePieLabeleMeasured = false;
     private float _pieLabelsSize = 0f;
 
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _columnPositions = [];
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _rowPositions = [];
-    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _boxPositions = [];
+    private readonly Dictionary<IChartSeries, int> _columnPositions = [];
+    private readonly Dictionary<IChartSeries, int> _rowPositions = [];
+    private readonly Dictionary<IChartSeries, int> _boxPositions = [];
     private readonly Dictionary<int, int> _stackColumnPositions = [];
     private readonly Dictionary<int, int> _stackRowsPositions = [];
     private readonly Dictionary<int, Bounds> _weightBounds = [];
 
-    private readonly Dictionary<string, Stacker<TDrawingContext>> _stackers = [];
+    private readonly Dictionary<string, Stacker> _stackers = [];
 
     #region columns and rows
 
@@ -65,7 +62,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// Gets the column position.
     /// </summary>
     /// <param name="series">The series.</param>
-    public int GetColumnPostion(IChartSeries<TDrawingContext> series)
+    public int GetColumnPostion(IChartSeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -88,7 +85,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// Gets the required space by the labels to the outer side of the pie chart.
     /// </summary>
     public float GetPieOuterLabelsSpace<TLabel>()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : BaseLabelGeometry, new()
     {
         if (_arePieLabeleMeasured) return _pieLabelsSize;
         CalculatePieLabelsOuterSpace<TLabel>();
@@ -100,7 +97,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetRowPosition(IChartSeries<TDrawingContext> series)
+    public int GetRowPosition(IChartSeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -125,7 +122,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetBoxPosition(IChartSeries<TDrawingContext> series)
+    public int GetBoxPosition(IChartSeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -150,7 +147,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetStackedColumnPostion(IChartSeries<TDrawingContext> series)
+    public int GetStackedColumnPostion(IChartSeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -175,7 +172,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetStackedRowPostion(IChartSeries<TDrawingContext> series)
+    public int GetStackedRowPostion(IChartSeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -254,7 +251,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     /// <param name="series">The series.</param>
     /// <param name="stackGroup">The stack group.</param>
     /// <returns></returns>
-    public StackPosition<TDrawingContext>? GetStackPosition(IChartSeries<TDrawingContext> series, int stackGroup)
+    public StackPosition? GetStackPosition(IChartSeries series, int stackGroup)
     {
         if (!series.IsStackedSeries()) return null;
 
@@ -262,20 +259,20 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
 
         return s is null
             ? null
-            : new StackPosition<TDrawingContext>
+            : new StackPosition
             {
                 Stacker = s,
                 Position = s.GetSeriesStackPosition(series)
             };
     }
 
-    private Stacker<TDrawingContext> GetStacker(IChartSeries<TDrawingContext> series, int stackGroup)
+    private Stacker GetStacker(IChartSeries series, int stackGroup)
     {
         var key = $"{series.SeriesProperties}.{stackGroup}";
 
         if (!_stackers.TryGetValue(key, out var stacker))
         {
-            stacker = new Stacker<TDrawingContext>();
+            stacker = new Stacker();
             _stackers.Add(key, stacker);
         }
 
@@ -287,12 +284,12 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
     #region Pie
 
     private void CalculatePieLabelsOuterSpace<TLabel>()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TLabel : BaseLabelGeometry, new()
     {
         foreach (var series in series)
         {
             if (!series.IsPieSeries()) continue;
-            var pieSeries = (IPieSeries<TDrawingContext>)series;
+            var pieSeries = (IPieSeries)series;
             if (pieSeries.DataLabelsPosition != PolarLabelsPosition.Outer) continue;
             if (series.DataLabelsPaint is null) continue;
 
@@ -311,7 +308,8 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
                 label.TextSize = (float)series.DataLabelsSize;
                 label.Padding = series.DataLabelsPadding;
                 label.RotateTransform = r;
-                var labelSize = label.Measure(series.DataLabelsPaint);
+                label.Paint = series.DataLabelsPaint;
+                var labelSize = label.Measure();
 
                 var h = 1.5f * (float)Math.Sqrt(Math.Pow(labelSize.Width, 2) + Math.Pow(labelSize.Height, 2));
                 if (h > _pieLabelsSize) _pieLabelsSize = h;
@@ -355,7 +353,7 @@ public class SeriesContext<TDrawingContext>(IEnumerable<IChartSeries<TDrawingCon
 
     #endregion
 
-    private int ReturnDefault()
+    private static int ReturnDefault()
         // This return 0 for now, but maybe we should cache the last positon and return it.
         // this method is normally called when the series visibility changed.
         // because the series is ignored in the UI, so no position is assigned.

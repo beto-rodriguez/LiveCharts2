@@ -6,6 +6,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -22,13 +23,13 @@ public partial class ViewModel
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
     {
-        var chartView = (ICartesianChartView<SkiaSharpDrawingContext>)args.Chart;
+        var chartView = (ICartesianChartView)args.Chart;
 
         if (_geometry is null)
         {
             _geometry = new MotionGeometry();
             _geometry.Animate(
-                new(EasingFunctions.BounceOut, TimeSpan.FromMilliseconds(800)));
+                new Animation(EasingFunctions.BounceOut, TimeSpan.FromMilliseconds(800)));
         }
 
         if (_paint is null)
@@ -80,7 +81,7 @@ public class MotionGeometry : Geometry
         context.Canvas.DrawCircle(X, Y, Diameter, paint);
     }
 
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks)
+    protected override LvcSize OnMeasure(Paint paintTasks)
     {
         // you can measure the geometry here, this method is used when the geometry
         // is used inside a layout, in this case it is not necessary.

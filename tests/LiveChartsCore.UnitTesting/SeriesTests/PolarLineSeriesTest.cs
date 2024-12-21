@@ -75,7 +75,7 @@ public class PolarLineSeriesTest
             DataPadding = new LvcPoint(0, 0)
         };
 
-        var tooltip = new SKDefaultTooltip();
+        var tooltip = new SKDefaultTooltip { Easing = null };
 
         var chart = new SKPolarChart
         {
@@ -85,7 +85,8 @@ public class PolarLineSeriesTest
             TooltipPosition = TooltipPosition.Top,
             Series = new[] { sutSeries },
             AngleAxes = new[] { new PolarAxis { IsVisible = false } },
-            RadiusAxes = new[] { new PolarAxis { IsVisible = true, MinLimit = 1, MaxLimit = 5 } }
+            RadiusAxes = new[] { new PolarAxis { IsVisible = true, MinLimit = 1, MaxLimit = 5 } },
+            ExplicitDisposing = true
         };
 
         chart.Core._isPointerIn = true;
@@ -94,7 +95,15 @@ public class PolarLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
-        var tp = tooltip._panel.BackgroundGeometry;
+
+        LvcRectangle tp;
+        void UpdateTooltipRect()
+        {
+            var g = tooltip._container;
+            tp = new LvcRectangle(new(g.X, g.Y), tooltip._container.Measure());
+        }
+
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1,
@@ -102,6 +111,7 @@ public class PolarLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Bottom;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - 150) < 0.1,
@@ -109,6 +119,7 @@ public class PolarLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Left;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (150 - tp.Width)) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -116,6 +127,7 @@ public class PolarLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Right;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - 150) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -123,6 +135,7 @@ public class PolarLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Center;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,

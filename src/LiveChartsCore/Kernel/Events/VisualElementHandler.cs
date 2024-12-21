@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Events;
@@ -28,10 +27,7 @@ namespace LiveChartsCore.Kernel.Events;
 /// <summary>
 /// Defines a method to handle chart visual elements events.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <param name="visual">The sender visual.</param>
 /// <param name="visualElementsArgs">The visual elements arguments.</param>
-public delegate void VisualElementHandler<TDrawingContext>(
-    VisualElement<TDrawingContext> visual,
-    VisualElementEventArgs<TDrawingContext> visualElementsArgs)
-        where TDrawingContext : DrawingContext;
+public delegate void VisualElementHandler(
+    IInteractable visual, VisualElementEventArgs visualElementsArgs);

@@ -20,19 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a pie chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartView{TDrawingContext}" />
-public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="IChartView" />
+public interface IPieChartView : IChartView
 {
     /// <summary>
     /// Gets the core.
@@ -40,7 +36,7 @@ public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
     /// <value>
     /// The core.
     /// </value>
-    PieChart<TDrawingContext> Core { get; }
+    PieChartEngine Core { get; }
 
     /// <summary>
     /// Gets or sets the series.

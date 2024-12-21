@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.Themes;
 
 namespace LiveChartsCore.Kernel;
@@ -201,20 +202,18 @@ public class LiveChartsSettings
             : (Func<TModel, int, Coordinate>)mapper;
     }
 
-    internal LiveChartsSettings HasProvider<TDrawingContext>(ChartEngine<TDrawingContext> factory)
-        where TDrawingContext : DrawingContext
+    internal LiveChartsSettings HasProvider(ChartEngine factory)
     {
         _currentProvider = factory;
         return this;
     }
 
-    internal ChartEngine<TDrawingContext> GetProvider<TDrawingContext>()
-        where TDrawingContext : DrawingContext
+    internal ChartEngine GetProvider()
     {
         return _currentProvider is null
             ? throw new NotImplementedException(
-                $"There is no a {nameof(ChartEngine<TDrawingContext>)} registered.")
-            : (ChartEngine<TDrawingContext>)_currentProvider;
+                $"There is no a {nameof(ChartEngine)} registered.")
+            : (ChartEngine)_currentProvider;
     }
 
     /// <summary>
@@ -275,11 +274,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default legend background paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendBackgroundPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithLegendBackgroundPaint(Paint paint)
     {
         LegendBackgroundPaint = paint;
         return this;
@@ -288,11 +285,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default legend text paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendTextPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithLegendTextPaint(Paint paint)
     {
         LegendTextPaint = paint;
         return this;
@@ -303,7 +298,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="size">The size.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithLegendTextSize<TDrawingContext>(double? size)
+    public LiveChartsSettings WithLegendTextSize(double? size)
     {
         LegendTextSize = size;
         return this;
@@ -312,11 +307,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default tooltip background paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipBackgroundPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithTooltipBackgroundPaint(Paint paint)
     {
         TooltipBackgroundPaint = paint;
         return this;
@@ -325,11 +318,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Sets the default tooltip text paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="paint">The paint.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipTextPaint<TDrawingContext>(IPaint<TDrawingContext> paint)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings WithTooltipTextPaint(Paint paint)
     {
         TooltipTextPaint = paint;
         return this;
@@ -340,7 +331,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="size">The size.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings WithTooltipTextSize<TDrawingContext>(double? size)
+    public LiveChartsSettings WithTooltipTextSize(double? size)
     {
         TooltipTextSize = size;
         return this;
@@ -360,14 +351,12 @@ public class LiveChartsSettings
     /// <summary>
     /// Adds the default styles.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="builder">The builder.</param>
     /// <returns></returns>
-    public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
-        where TDrawingContext : DrawingContext
+    public LiveChartsSettings HasTheme(Action<Theme> builder)
     {
-        Theme<TDrawingContext> t;
-        _theme = t = new Theme<TDrawingContext>();
+        Theme t;
+        _theme = t = new Theme();
         builder(t);
 
         return this;
@@ -376,14 +365,14 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets the styles builder.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <returns></returns>
-    /// <exception cref="Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
-    public Theme<TDrawingContext> GetTheme<TDrawingContext>()
+    public Theme GetTheme() =>
+        (Theme?)_theme ?? throw new Exception("A theme is required.");
+
+    [Obsolete("Replaced by the non generic GetThememe method.")]
+    public Theme GetTheme<TDrawingContext>()
         where TDrawingContext : DrawingContext
-    {
-        return (Theme<TDrawingContext>?)_theme ?? throw new Exception("A theme is required.");
-    }
+            => (Theme?)_theme ?? throw new Exception("A theme is required.");
 
     /// <summary>
     /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?.

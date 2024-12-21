@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.Measure;
@@ -28,9 +27,7 @@ namespace LiveChartsCore.Measure;
 /// <summary>
 /// Defines the stack position.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class StackPosition<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class StackPosition
 {
     /// <summary>
     /// Gets or sets the stacker.
@@ -38,7 +35,7 @@ public class StackPosition<TDrawingContext>
     /// <value>
     /// The stacker.
     /// </value>
-    public Stacker<TDrawingContext> Stacker { get; set; } = new();
+    public Stacker Stacker { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the position.
@@ -53,10 +50,8 @@ public class StackPosition<TDrawingContext>
     /// </summary>
     /// <param name="point">The point.</param>
     /// <returns></returns>
-    public double StackPoint(ChartPoint point)
-    {
-        return Stacker.StackPoint(point, Position);
-    }
+    public double StackPoint(ChartPoint point) =>
+        Stacker.StackPoint(point, Position);
 
     /// <summary>
     /// Gets the stack.

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -137,45 +138,12 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     public IEnumerable<ICartesianAxis>? SharedWith { get; set; }
 
     /// <summary>
-    /// Called when the axis measure starts.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    /// <param name="orientation">The orientation.</param>
-    void OnMeasureStarted(IChart chart, AxisOrientation orientation);
-
-    /// <summary>
-    /// Occurs when the axis measure starts.
-    /// </summary>
-    event Action<IChart, ICartesianAxis>? MeasureStarted;
-
-    /// <summary>
-    /// Gets the axis limits considering its own and the <see cref="SharedWith"/> axes.
-    /// </summary>
-    /// <returns>The limits.</returns>
-    AxisLimit GetLimits();
-
-    /// <summary>
-    /// Sets the axis limits (own and shared).
-    /// </summary>
-    /// <param name="min">The min limit.</param>
-    /// <param name="max">The max limit.</param>
-    void SetLimits(double min, double max);
-}
-
-/// <summary>
-/// Defines an Axis in a Cartesian chart.
-/// </summary>
-/// <typeparam name="TDrawingContext"></typeparam>
-public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
-    where TDrawingContext : DrawingContext
-{
-    /// <summary>
     /// Gets or sets the sub-separators paint.
     /// </summary>
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? SubseparatorsPaint { get; set; }
+    Paint? SubseparatorsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the number of subseparators to draw.
@@ -193,7 +161,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? TicksPaint { get; set; }
+    Paint? TicksPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the separators paint.
@@ -201,7 +169,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? SubticksPaint { get; set; }
+    Paint? SubticksPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the zero paint.
@@ -209,7 +177,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? ZeroPaint { get; set; }
+    Paint? ZeroPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair paint.
@@ -217,7 +185,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? CrosshairPaint { get; set; }
+    Paint? CrosshairPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair labels paint.
@@ -225,7 +193,7 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     /// <value>
     /// The separators paint.
     /// </value>
-    IPaint<TDrawingContext>? CrosshairLabelsPaint { get; set; }
+    Paint? CrosshairLabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the crosshair background.
@@ -246,15 +214,40 @@ public interface ICartesianAxis<TDrawingContext> : ICartesianAxis
     bool CrosshairSnapEnabled { get; set; }
 
     /// <summary>
+    /// Called when the axis measure starts.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="orientation">The orientation.</param>
+    void OnMeasureStarted(Chart chart, AxisOrientation orientation);
+
+    /// <summary>
+    /// Occurs when the axis measure starts.
+    /// </summary>
+    event Action<Chart, ICartesianAxis>? MeasureStarted;
+
+    /// <summary>
+    /// Gets the axis limits considering its own and the <see cref="SharedWith"/> axes.
+    /// </summary>
+    /// <returns>The limits.</returns>
+    AxisLimit GetLimits();
+
+    /// <summary>
+    /// Sets the axis limits (own and shared).
+    /// </summary>
+    /// <param name="min">The min limit.</param>
+    /// <param name="max">The max limit.</param>
+    void SetLimits(double min, double max);
+
+    /// <summary>
     /// Invalidates the crosshair visual.
     /// </summary>
     /// <param name="chart">The chart.</param>
     /// <param name="pointerPosition">The pointer position</param>
-    void InvalidateCrosshair(Chart<TDrawingContext> chart, LvcPoint pointerPosition);
+    void InvalidateCrosshair(Chart chart, LvcPoint pointerPosition);
 
     /// <summary>
     /// Clears the crosshair visual.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    void ClearCrosshair(Chart<TDrawingContext> chart);
+    void ClearCrosshair(Chart chart);
 }

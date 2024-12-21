@@ -20,17 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a stepline series plot.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IStepLineSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, ICartesianSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="IChartSeries" />
+public interface IStepLineSeries : ICartesianSeries, IStrokedAndFilled
 {
     /// <summary>
     /// Gets or sets a value indicating whether the line should split every null point, 
@@ -52,7 +50,7 @@ public interface IStepLineSeries<TDrawingContext> : IChartSeries<TDrawingContext
     /// <value>
     /// The shapes fill.
     /// </value>
-    IPaint<TDrawingContext>? GeometryFill { get; set; }
+    Paint? GeometryFill { get; set; }
 
     /// <summary>
     /// Gets or sets the geometry stroke.
@@ -60,5 +58,5 @@ public interface IStepLineSeries<TDrawingContext> : IChartSeries<TDrawingContext
     /// <value>
     /// The shapes stroke.
     /// </value>
-    IPaint<TDrawingContext>? GeometryStroke { get; set; }
+    Paint? GeometryStroke { get; set; }
 }

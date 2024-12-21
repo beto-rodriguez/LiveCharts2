@@ -25,10 +25,7 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a colored geometry in the user interface, a geometry with a Color property.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IGeometry{TDrawingContext}" />
-public interface IColoredGeometry<TDrawingContext> : IGeometry<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IColoredGeometry
 {
     /// <summary>
     /// Gets or sets the color.

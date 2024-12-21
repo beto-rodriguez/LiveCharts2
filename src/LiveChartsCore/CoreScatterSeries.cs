@@ -23,10 +23,12 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -37,24 +39,22 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-/// <seealso cref="IScatterSeries{TDrawingContext}" />
-public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
+/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel}" />
+/// <seealso cref="IScatterSeries" />
+public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IScatterSeries
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TErrorGeometry : BaseLineGeometry, new()
 {
-    private IPaint<TDrawingContext>? _errorPaint;
+    private Paint? _errorPaint;
     private int? _stackGroup;
     private double _minGeometrySize = 6d;
     private double _geometrySize = 24d;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+    /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
     public CoreScatterSeries(IReadOnlyCollection<TModel>? values)
@@ -65,7 +65,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         DataLabelsFormatter = (point) => $"{point.Coordinate.PrimaryValue}";
         YToolTipLabelFormatter = point =>
         {
-            var series = (CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>)point.Context.Series;
+            var series = (CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>)point.Context.Series;
             var c = point.Coordinate;
             return series.IsWeighted
                 ? $"X = {c.SecondaryValue}{Environment.NewLine}" +
@@ -89,27 +89,27 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
     /// <value>
     /// The size of the geometry.
     /// </value>
-    public double GeometrySize { get => _geometrySize; set =>SetProperty(ref _geometrySize, value); }
+    public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, value); }
 
     /// <summary>
     /// Gets a value indicating whether the points in this series use weight.
     /// </summary>
     public bool IsWeighted { get; private set; }
 
-    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint<TDrawingContext>? ErrorPaint
+    /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
+    public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, true);
+        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="IScatterSeries{TDrawingContext}.StackGroup"/>
+    /// <inheritdoc cref="IScatterSeries.StackGroup"/>
     public int? StackGroup { get => _stackGroup; set => SetProperty(ref _stackGroup, value); }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -161,7 +161,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         var hy = chart.ControlSize.Height * .5f;
         var hasSvg = this.HasVariableSvgGeometry();
 
-        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+        var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
 
         foreach (var point in Fetch(cartesianChart))
         {
@@ -229,7 +229,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
 
             if (hasSvg)
             {
-                var svgVisual = (IVariableSvgPath<TDrawingContext>)visual;
+                var svgVisual = (IVariableSvgPath)visual;
                 if (_geometrySvgChanged || svgVisual.SVGPath is null)
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
@@ -285,12 +285,13 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
                 label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                 label.TextSize = dls;
                 label.Padding = DataLabelsPadding;
+                label.Paint = DataLabelsPaint;
 
                 if (isFirstDraw)
                     label.CompleteTransition(
                         nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 
-                var m = label.Measure(DataLabelsPaint);
+                var m = label.Measure();
                 var labelPosition = GetLabelPosition(
                     x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
                     SeriesProperties, coordinate.PrimaryValue > 0, drawLocation, drawMarginSize);
@@ -307,8 +308,8 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
+    public override SeriesBounds GetBounds(Chart chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 
@@ -318,27 +319,28 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         return seriesBounds;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
-    [Obsolete]
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override Sketch GetMiniaturesSketch()
     {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
+        var schedules = new List<PaintSchedule>();
 
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
 
-        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        return new GeometryVisual<TVisual, TLabel>
         {
             Fill = GetMiniatureFill(point, zindex + 1),
             Stroke = GetMiniatureStroke(point, zindex + 2),
@@ -350,7 +352,26 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint)"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+    {
+        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+
+        var m = new TVisual
+        {
+            Fill = GetMiniatureFill(point, 0),
+            Stroke = GetMiniatureStroke(point, 0),
+            Width = (float)MiniatureShapeSize,
+            Height = (float)MiniatureShapeSize,
+            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0,
+        };
+
+        if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
+
+        return m;
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -361,7 +382,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -400,7 +421,7 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
+        var chartView = (ICartesianChartView)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
             visual.CompleteTransition(null);
@@ -442,8 +463,6 @@ public class CoreScatterSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorG
         label.RemoveOnCompleted = true;
     }
 
-    private static SeriesProperties GetProperties()
-    {
-        return SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips;
-    }
+    private static SeriesProperties GetProperties() =>
+        SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips;
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -21,13 +21,13 @@ public class StackedStepAreaSeriesTest
     {
         var sutSeries = new StackedStepAreaSeries<double>
         {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 },
+            Values = [1, 2, 4, 8, 16, 32, 64, 128, 256],
             GeometrySize = 10
         };
 
         var sutSeries2 = new StackedStepAreaSeries<double>
         {
-            Values = new double[] { 1, 2, 4, 8, 16, 32, 64, 128, 256 },
+            Values = [1, 2, 4, 8, 16, 32, 64, 128, 256],
             GeometrySize = 10
         };
 
@@ -35,9 +35,9 @@ public class StackedStepAreaSeriesTest
         {
             Width = 1000,
             Height = 1000,
-            Series = new[] { sutSeries, sutSeries2 },
-            XAxes = new[] { new Axis { MinLimit = -1, MaxLimit = 10 } },
-            YAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 512 } }
+            Series = [sutSeries, sutSeries2],
+            XAxes = [new Axis { MinLimit = -1, MaxLimit = 10 }],
+            YAxes = [new Axis { MinLimit = 0, MaxLimit = 512 }]
         };
 
         _ = chart.GetImage();
@@ -66,8 +66,8 @@ public class StackedStepAreaSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var previousSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>?)previous.Context.AdditionalVisuals)?.StepSegment;
-            var sutSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
+            var previousSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)previous.Context.AdditionalVisuals)?.Segment;
+            var sutSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previousSegment.Xj - sutSegment.Xj;
@@ -97,8 +97,8 @@ public class StackedStepAreaSeriesTest
         previousXArea = null;
         foreach (var sutPoint in toCompareGuys2)
         {
-            var previousSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)previous.Context.AdditionalVisuals).StepSegment;
-            var sutSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
+            var previousSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)previous.Context.AdditionalVisuals).Segment;
+            var sutSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
@@ -131,7 +131,7 @@ public class StackedStepAreaSeriesTest
         var gs = 5f;
         var sutSeries = new StackedStepAreaSeries<double, RectangleGeometry, TestLabel>
         {
-            Values = new double[] { -10, -5, -1, 0, 1, 5, 10 },
+            Values = [-10, -5, -1, 0, 1, 5, 10],
             DataPadding = new LvcPoint(0, 0),
             GeometrySize = gs * 2,
         };
@@ -143,9 +143,9 @@ public class StackedStepAreaSeriesTest
             DrawMargin = new Margin(100),
             DrawMarginFrame = new DrawMarginFrame { Stroke = new SolidColorPaint(SKColors.Yellow, 2) },
             TooltipPosition = TooltipPosition.Top,
-            Series = new[] { sutSeries },
-            XAxes = new[] { new Axis { IsVisible = false } },
-            YAxes = new[] { new Axis { IsVisible = false } }
+            Series = [sutSeries],
+            XAxes = [new Axis { IsVisible = false }],
+            YAxes = [new Axis { IsVisible = false }]
         };
 
         var datafactory = sutSeries.DataFactory;
@@ -179,7 +179,8 @@ public class StackedStepAreaSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
@@ -200,7 +201,8 @@ public class StackedStepAreaSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
@@ -221,7 +223,8 @@ public class StackedStepAreaSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5 + gs)) < 0.01 &&  // x is right
@@ -242,7 +245,8 @@ public class StackedStepAreaSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X - (l.X + ls.Width * 0.5f + gs)) < 0.01 &&   // x is left
@@ -263,7 +267,8 @@ public class StackedStepAreaSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&      // x is centered
@@ -284,7 +289,8 @@ public class StackedStepAreaSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model <= 0)
             {
@@ -316,7 +322,8 @@ public class StackedStepAreaSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model <= 0)
             {

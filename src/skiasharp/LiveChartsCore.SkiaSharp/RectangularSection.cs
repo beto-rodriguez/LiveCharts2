@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -28,5 +27,5 @@ namespace LiveChartsCore.SkiaSharpView;
 /// <summary>
 /// Defines a rectangular section in a Cartesian chart.
 /// </summary>
-public class RectangularSection : Section<RectangleGeometry, LabelGeometry, SkiaSharpDrawingContext>
+public class RectangularSection : CoreSection<RectangleGeometry, LabelGeometry>
 { }

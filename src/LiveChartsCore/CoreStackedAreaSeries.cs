@@ -32,20 +32,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model to plot.</typeparam>
 /// <typeparam name="TVisual">The type of the visual point.</typeparam>
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <seealso cref="CoreLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry}" />
-public class CoreStackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
-    : CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
-        where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+/// <seealso cref="CoreLineSeries{TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry}" />
+public abstract class CoreStackedAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
+    : CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
+        where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TErrorGeometry : BaseLineGeometry, new()
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TBezierVisual}"/> class.
+    /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TPathGeometry, TBezierVisual}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
     public CoreStackedAreaSeries(IReadOnlyCollection<TModel>? values)

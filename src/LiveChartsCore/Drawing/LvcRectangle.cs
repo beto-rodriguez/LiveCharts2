@@ -59,12 +59,12 @@ public struct LvcRectangle
     /// <summary>
     /// Gets the X location coordinate.
     /// </summary>
-    public float X => Location.X;
+    public readonly float X => Location.X;
 
     /// <summary>
     /// Gets the Y location coordinate.
     /// </summary>
-    public float Y => Location.Y;
+    public readonly float Y => Location.Y;
 
     /// <summary>
     /// Gets or sets the size.
@@ -74,17 +74,29 @@ public struct LvcRectangle
     /// <summary>
     /// Gets the width.
     /// </summary>
-    public float Width => Size.Width;
+    public readonly float Width => Size.Width;
 
     /// <summary>
     /// Gets the height.
     /// </summary>
-    public float Height => Size.Height;
+    public readonly float Height => Size.Height;
 
     /// <summary>
     /// Gets or sets whether the instance is empty.
     /// </summary>
     private bool IsEmpty { get; set; }
+
+    /// <summary>
+    /// Determines whether the given point is contained in the rectangle.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <returns>True if contained, otherwise false.</returns>
+    public readonly bool Contains(LvcPoint point)
+    {
+        return
+            point.X >= Location.X && point.X <= Location.X + Size.Width &&
+            point.Y >= Location.Y && point.Y <= Location.Y + Size.Height;
+    }
 
     /// <summary>
     /// Determines whether the instance is equals to the given instance.

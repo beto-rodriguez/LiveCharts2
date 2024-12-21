@@ -32,20 +32,18 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model to plot.</typeparam>
 /// <typeparam name="TVisual">The type of the visual point.</typeparam>
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-/// <seealso cref="CoreStepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry}" />
-public class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
-    : CoreStepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineGeometry>
-        where TPathGeometry : IVectorGeometry<StepLineSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+/// <seealso cref="CoreStepLineSeries{TModel, TVisual, TLabel, TPathGeometry, TLineGeometry}" />
+public abstract class CoreStackedStepAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
+    : CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
+        where TPathGeometry : BaseVectorGeometry<Segment>, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TLineGeometry : BaseLineGeometry, new()
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
+    /// Initializes a new instance of the <see cref="CoreStackedAreaSeries{TModel, TVisual, TLabel, TPathGeometry, TVisualPoint}"/> class.
     /// </summary>
     /// <param name="values">The values.</param>
     public CoreStackedStepAreaSeries(IReadOnlyCollection<TModel>? values)

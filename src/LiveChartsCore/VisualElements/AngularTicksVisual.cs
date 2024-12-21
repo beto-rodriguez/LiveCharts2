@@ -26,6 +26,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -35,15 +36,13 @@ namespace LiveChartsCore.VisualElements;
 /// <typeparam name="TArcGeometry">The type of the arc geometry.</typeparam>
 /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
 /// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext> : VisualElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TArcGeometry : IArcGeometry<TDrawingContext>, new()
-    where TLineGeometry : ILineGeometry<TDrawingContext>, new()
-    where TLabelGeometry : ILabelGeometry<TDrawingContext>, new()
+public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : VisualElement
+    where TArcGeometry : BaseArcGeometry, new()
+    where TLineGeometry : BaseLineGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
 {
-    private IPaint<TDrawingContext>? _stroke;
-    private IPaint<TDrawingContext>? _labelsPaint;
+    private Paint? _stroke;
+    private Paint? _labelsPaint;
     private TArcGeometry? _arc;
     private double _labelsOuterOffset;
     private double _outerOffset;
@@ -56,7 +55,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <summary>
     /// Gets or sets the labels paint.
     /// </summary>
-    public IPaint<TDrawingContext>? LabelsPaint
+    public Paint? LabelsPaint
     {
         get => _labelsPaint;
         set => SetPaintProperty(ref _labelsPaint, value);
@@ -65,10 +64,10 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
-    public IPaint<TDrawingContext>? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
     /// <summary>
@@ -96,13 +95,13 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
     /// </summary>
     public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
-        if (chart is not PieChart<TDrawingContext> pieChart)
+        if (chart is not PieChartEngine pieChart)
             throw new Exception("The AngularThicksVisual can only be added to a pie chart");
 
-        ApplyTheme<AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDrawingContext>>();
+        ApplyTheme<AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry>>();
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
@@ -111,7 +110,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
             ? drawMarginSize.Width
             : drawMarginSize.Height;
 
-        var view = (IPieChartView<TDrawingContext>)pieChart.View;
+        var view = (IPieChartView)pieChart.View;
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
@@ -195,6 +194,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
             visual.Label.X = cx + (float)Math.Cos(beta) * labelsRadius;
             visual.Label.Y = cy + (float)Math.Sin(beta) * labelsRadius;
             visual.Label.TextSize = labelsSize;
+            visual.Label.Paint = LabelsPaint;
 
             if (i + tick <= max)
             {
@@ -251,18 +251,15 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
-    {
-        return new();
-    }
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart) => new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     { }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
+    protected internal override Animatable?[] GetDrawnGeometries()
     {
         var count =
             _visuals.Count +                    // the ticks
@@ -270,7 +267,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
             _subSections * _visuals.Count +     // the subticks
             1;                                  // the arc
 
-        var l = new IAnimatable?[count];
+        var l = new Animatable?[count];
 
         var i = 0;
         foreach (var visual in _visuals.Values)
@@ -286,11 +283,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry, TDr
         return l;
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _stroke, _labelsPaint };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() => [_stroke, _labelsPaint];
 
     private class TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)
     {

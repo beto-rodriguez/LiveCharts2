@@ -24,14 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -41,15 +40,15 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// The geo map control.
 /// </summary>
 /// <seealso cref="UserControl" />
-public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
+public partial class GeoMap : UserControl, IGeoMapView
 {
-    private readonly GeoMap<SkiaSharpDrawingContext> _core;
-    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
-    private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
-    private CoreMap<SkiaSharpDrawingContext> _activeMap;
+    private readonly GeoMapChart _core;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private IEnumerable<IGeoSeries> _series = [];
+    private DrawnMap _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
     private object? _viewCommand = null;
 
     /// <summary>
@@ -59,9 +58,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         InitializeComponent();
         LiveCharts.Configure(config => config.UseDefaults());
-        _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        _activeMap = Maps.GetWorldMap();
 
-        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        _core = new GeoMapChart(this);
 
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
@@ -79,21 +78,21 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         Resize += GeoMap_Resize;
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas => motionCanvas1.CanvasCore;
+    /// <inheritdoc cref="IGeoMapView.Canvas"/>
+    public CoreMotionCanvas Canvas => motionCanvas1.CanvasCore;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IGeoMapView.AutoUpdateEnabled" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool AutoUpdateEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+    /// <inheritdoc cref="IGeoMapView.DesignerMode" />
+    bool IGeoMapView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    /// <inheritdoc cref="IGeoMapView.SyncContext" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object SyncContext { get; set; } = new();
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    /// <inheritdoc cref="IGeoMapView.ViewCommand" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object? ViewCommand
     {
@@ -104,47 +103,47 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
             if (value is not null) _core.ViewTo(value);
         }
     }
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
+    /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
+    public DrawnMap ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => ClientSize.Width;
+    /// <inheritdoc cref="IGeoMapView.Width"/>
+    float IGeoMapView.Width => ClientSize.Width;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => ClientSize.Height;
+    /// <inheritdoc cref="IGeoMapView.Height"/>
+    float IGeoMapView.Height => ClientSize.Height;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+    /// <inheritdoc cref="IGeoMapView.Stroke"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             _stroke = value;
             OnPropertyChanged();
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+    /// <inheritdoc cref="IGeoMapView.Fill"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    public Paint? Fill
     {
         get => _fill;
         set
         {
-            if (value is not null) value.IsFill = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             _fill = value;
             OnPropertyChanged();
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+    /// <inheritdoc cref="IGeoMapView.Series"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<IGeoSeries> Series
     {
@@ -158,7 +157,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
+    void IGeoMapView.InvokeOnUIThread(Action action)
     {
         if (!IsHandleCreated) return;
         _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
@@ -167,10 +166,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// <summary>
     /// Called when a property changes.
     /// </summary>
-    protected void OnPropertyChanged()
-    {
+    protected void OnPropertyChanged() =>
         _core?.Update();
-    }
 
     /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
     protected override void OnHandleDestroyed(EventArgs e)
@@ -179,29 +176,19 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core?.Unload();
     }
 
-    private void GeoMap_Resize(object? sender, EventArgs e)
-    {
+    private void GeoMap_Resize(object? sender, EventArgs e) =>
         _core?.Update();
-    }
 
-    private void OnMouseDown(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
-    }
-    private void OnMouseMove(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
-    }
+    private void OnMouseDown(object? sender, MouseEventArgs e) =>
+        _core?.InvokePointerDown(new(e.Location.X, e.Location.Y));
+    private void OnMouseMove(object? sender, MouseEventArgs e) =>
+        _core?.InvokePointerMove(new(e.Location.X, e.Location.Y));
 
-    private void OnMouseUp(object? sender, MouseEventArgs e)
-    {
-        _core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
-    }
+    private void OnMouseUp(object? sender, MouseEventArgs e) =>
+        _core?.InvokePointerUp(new(e.Location.X, e.Location.Y));
 
-    private void OnMouseLeave(object? sender, EventArgs e)
-    {
+    private void OnMouseLeave(object? sender, EventArgs e) =>
         _core?.InvokePointerLeft();
-    }
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {

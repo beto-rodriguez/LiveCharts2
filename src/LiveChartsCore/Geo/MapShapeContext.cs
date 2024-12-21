@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
 
@@ -31,29 +32,27 @@ namespace LiveChartsCore.Geo;
 /// Defines the map shape context class.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="MapShapeContext{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="MapShapeContext"/> class.
 /// </remarks>
 /// <param name="chart">The chart.</param>
 /// <param name="heatPaint">The heat paint.</param>
 /// <param name="heatStops">The heat stops.</param>
 /// <param name="bounds">The bounds.</param>
-public class MapShapeContext<TDrawingContext>(
-    IGeoMapView<TDrawingContext> chart,
-    IPaint<TDrawingContext> heatPaint,
+public class MapShapeContext(
+    IGeoMapView chart,
+    Paint heatPaint,
     List<Tuple<double, LvcColor>> heatStops,
     Bounds bounds)
-    where TDrawingContext : DrawingContext
 {
-
     /// <summary>
     /// Gets the chart.
     /// </summary>
-    public IGeoMapView<TDrawingContext> Chart { get; } = chart;
+    public IGeoMapView Chart { get; } = chart;
 
     /// <summary>
     /// Gets the heat paint.
     /// </summary>
-    public IPaint<TDrawingContext> HeatPaint { get; } = heatPaint;
+    public Paint HeatPaint { get; } = heatPaint;
 
     /// <summary>
     /// Gets the heat stops.

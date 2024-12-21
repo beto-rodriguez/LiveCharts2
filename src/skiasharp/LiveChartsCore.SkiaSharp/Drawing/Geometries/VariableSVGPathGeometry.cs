@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// if the geometry is static use any other geometry defined in the library, or inherit from
 /// <see cref="BaseSVGPathGeometry"/> class instead, and set the path in the constructor.
 /// </summary>
-public class VariableSVGPathGeometry : BaseSVGPathGeometry, IVariableSvgPath<SkiaSharpDrawingContext>
+public class VariableSVGPathGeometry : BaseSVGPathGeometry, IVariableSvgPath
 {
     private string? _svgPath;
 
@@ -44,7 +44,7 @@ public class VariableSVGPathGeometry : BaseSVGPathGeometry, IVariableSvgPath<Ski
     /// </summary>
     public static readonly Dictionary<string, SKPath> Cache = [];
 
-    /// <inheritdoc cref="IVariableSvgPath{TDrawingContext}.SVGPath"/>
+    /// <inheritdoc cref="IVariableSvgPath.SVGPath"/>
     public string? SVGPath
     {
         get => _svgPath;

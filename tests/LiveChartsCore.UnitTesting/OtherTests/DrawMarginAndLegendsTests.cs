@@ -28,7 +28,8 @@ public class DrawMarginAndLegendsTests
             YAxes = new[] { new Axis { IsVisible = false, } },
             DrawMarginFrame = new DrawMarginFrame() { Stroke = new SolidColorPaint(SKColors.Yellow, 5) },
             LegendPosition = LegendPosition.Top,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -38,8 +39,8 @@ public class DrawMarginAndLegendsTests
         var legendSize = legend.Measure(chart.Core);
         var dml = chart.Core.DrawMarginLocation;
         var dms = chart.Core.DrawMarginSize;
-        var x = legend._stackPanel.X;
-        var y = legend._stackPanel.Y;
+        var x = legend._container.X;
+        var y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -60,8 +61,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -82,8 +83,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -104,8 +105,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -124,7 +125,7 @@ public class DrawMarginAndLegendsTests
     public void CartesianWithTitleCase()
     {
         var legend = new SKDefaultLegend();
-        legend._stackPanel.BackgroundPaint = new SolidColorPaint(SKColors.LightGray);
+        legend._container.Geometry.Fill = new SolidColorPaint(SKColors.LightGray);
 
         var title = new LabelVisual
         {
@@ -145,7 +146,8 @@ public class DrawMarginAndLegendsTests
             DrawMarginFrame = new DrawMarginFrame() { Stroke = new SolidColorPaint(SKColors.Yellow, 5) },
             LegendPosition = LegendPosition.Top,
             Title = title,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -156,8 +158,8 @@ public class DrawMarginAndLegendsTests
         var titleSize = title.Measure(chart.Core);
         var dml = chart.Core.DrawMarginLocation;
         var dms = chart.Core.DrawMarginSize;
-        var x = legend._stackPanel.X;
-        var y = legend._stackPanel.Y;
+        var x = legend._container.X;
+        var y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -178,8 +180,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -200,8 +202,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -222,8 +224,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -249,7 +251,8 @@ public class DrawMarginAndLegendsTests
             Height = 500,
             Series = new[] { 1, 2, 3 }.AsPieSeries(),
             LegendPosition = LegendPosition.Top,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -259,8 +262,8 @@ public class DrawMarginAndLegendsTests
         var legendSize = legend.Measure(chart.Core);
         var dml = chart.Core.DrawMarginLocation;
         var dms = chart.Core.DrawMarginSize;
-        var x = legend._stackPanel.X;
-        var y = legend._stackPanel.Y;
+        var x = legend._container.X;
+        var y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -281,8 +284,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -303,8 +306,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -325,8 +328,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -345,7 +348,7 @@ public class DrawMarginAndLegendsTests
     public void PieWithTitleCase()
     {
         var legend = new SKDefaultLegend();
-        legend._stackPanel.BackgroundPaint = new SolidColorPaint(SKColors.LightGray);
+        legend._container.Geometry.Fill = new SolidColorPaint(SKColors.LightGray);
 
         var title = new LabelVisual
         {
@@ -363,7 +366,8 @@ public class DrawMarginAndLegendsTests
             Series = new[] { 1, 2, 3 }.AsPieSeries(),
             LegendPosition = LegendPosition.Top,
             Title = title,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -374,8 +378,8 @@ public class DrawMarginAndLegendsTests
         var titleSize = title.Measure(chart.Core);
         var dml = chart.Core.DrawMarginLocation;
         var dms = chart.Core.DrawMarginSize;
-        var x = legend._stackPanel.X;
-        var y = legend._stackPanel.Y;
+        var x = legend._container.X;
+        var y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -396,8 +400,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width) < 0.01);
@@ -418,8 +422,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -440,8 +444,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         // all the width should be used
         Assert.IsTrue(Math.Abs(500 - dms.Width - legendSize.Width) < 0.01);
@@ -468,6 +472,7 @@ public class DrawMarginAndLegendsTests
             Series = new[] { new PolarLineSeries<double> { Values = new double[] { 1, 2, 3 } } },
             LegendPosition = LegendPosition.Top,
             Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -477,8 +482,8 @@ public class DrawMarginAndLegendsTests
         var legendSize = legend.Measure(chart.Core);
         var dml = chart.Core.DrawMarginLocation;
         var dms = chart.Core.DrawMarginSize;
-        var x = legend._stackPanel.X;
-        var y = legend._stackPanel.Y;
+        var x = legend._container.X;
+        var y = legend._container.Y;
 
         var m = Math.Min(dml.X, dml.Y) * 2;
 
@@ -501,8 +506,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         m = Math.Min(dml.X, dml.Y) * 2;
 
@@ -525,8 +530,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         m = Math.Min(dml.X, dml.Y) * 2;
 
@@ -549,8 +554,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         m = Math.Min(dml.X, dml.Y) * 2;
 
@@ -571,7 +576,7 @@ public class DrawMarginAndLegendsTests
     public void PolarWithTitleCase()
     {
         var legend = new SKDefaultLegend();
-        legend._stackPanel.BackgroundPaint = new SolidColorPaint(SKColors.LightGray);
+        legend._container.Geometry.Fill = new SolidColorPaint(SKColors.LightGray);
 
         var title = new LabelVisual
         {
@@ -589,7 +594,8 @@ public class DrawMarginAndLegendsTests
             Series = new[] { new PolarLineSeries<double> { Values = new double[] { 1, 2, 3 } } },
             LegendPosition = LegendPosition.Top,
             Title = title,
-            Legend = legend
+            Legend = legend,
+            ExplicitDisposing = true
         };
 
         // TEST TOP LEGEND ================================================
@@ -600,8 +606,8 @@ public class DrawMarginAndLegendsTests
         var titleSize = title.Measure(chart.Core);
         var dml = chart.Core.DrawMarginLocation;
         var dms = chart.Core.DrawMarginSize;
-        var x = legend._stackPanel.X;
-        var y = legend._stackPanel.Y;
+        var x = legend._container.X;
+        var y = legend._container.Y;
 
         var m = Math.Min(dml.X, dml.Y) * 2;
 
@@ -624,8 +630,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         m = Math.Min(dml.X, dml.Y) * 2;
 
@@ -648,8 +654,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         m = Math.Min(dml.X, dml.Y) * 2;
         var dx = dml.X - legendSize.Width; // <- why this distance?
@@ -674,8 +680,8 @@ public class DrawMarginAndLegendsTests
         legendSize = legend.Measure(chart.Core);
         dml = chart.Core.DrawMarginLocation;
         dms = chart.Core.DrawMarginSize;
-        x = legend._stackPanel.X;
-        y = legend._stackPanel.Y;
+        x = legend._container.X;
+        y = legend._container.Y;
 
         m = Math.Min(dml.X, dml.Y) * 2;
         dx = dml.X + legendSize.Width; // <- why this distance?

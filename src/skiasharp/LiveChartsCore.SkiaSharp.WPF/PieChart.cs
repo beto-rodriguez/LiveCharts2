@@ -32,14 +32,12 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
-/// <inheritdoc cref="IPieChartView{TDrawingContext}" />
-public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IPieChartView" />
+public class PieChart : Chart, IPieChartView
 {
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
 
@@ -54,12 +52,12 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             true);
 
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement<SkiaSharpDrawingContext>>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
         MouseDown += OnMouseDown;
 
-        tooltip = new SKDefaultTooltip();
-        legend = new SKDefaultLegend();
+        tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+        legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
     }
 
     /// <summary>
@@ -117,44 +115,44 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         DependencyProperty.Register(
             nameof(MinValue), typeof(double), typeof(PieChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
 
-    PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+    PieChartEngine IPieChartView.Core => core is null ? throw new Exception("core not found") : (PieChartEngine)core;
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
+    /// <inheritdoc cref="IPieChartView.Series" />
     public IEnumerable<ISeries> Series
     {
         get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.IsClockwise" />
+    /// <inheritdoc cref="IPieChartView.IsClockwise" />
     public bool IsClockwise
     {
         get => (bool)GetValue(IsClockwiseProperty);
         set => SetValue(IsClockwiseProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+    /// <inheritdoc cref="IPieChartView.InitialRotation" />
     public double InitialRotation
     {
         get => (double)GetValue(InitialRotationProperty);
         set => SetValue(InitialRotationProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+    /// <inheritdoc cref="IPieChartView.MaxAngle" />
     public double MaxAngle
     {
         get => (double)GetValue(MaxAngleProperty);
         set => SetValue(MaxAngleProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxValue" />
+    /// <inheritdoc cref="IPieChartView.MaxValue" />
     public double? MaxValue
     {
         get => (double?)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MinValue" />
+    /// <inheritdoc cref="IPieChartView.MinValue" />
     public double MinValue
     {
         get => (double)GetValue(MinValueProperty);
@@ -164,7 +162,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public override IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
     {
-        if (core is not PieChart<SkiaSharpDrawingContext> cc) throw new Exception("core not found");
+        if (core is not PieChartEngine cc) throw new Exception("core not found");
 
         if (strategy == FindingStrategy.Automatic)
             strategy = cc.Series.GetFindingStrategy();
@@ -175,9 +173,9 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
     public override IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
     {
-        return core is not PieChart<SkiaSharpDrawingContext> cc
+        return core is not PieChartEngine cc
             ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement<SkiaSharpDrawingContext>)visual).IsHitBy(core, new(point)));
+            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
     }
 
     /// <summary>
@@ -187,15 +185,13 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     protected override void InitializeCore()
     {
         if (canvas is null) throw new Exception("canvas not found");
-        core = new PieChart<SkiaSharpDrawingContext>(this, config => config.UseDefaults(), canvas.CanvasCore);
+        core = new PieChartEngine(this, config => config.UseDefaults(), canvas.CanvasCore);
         core.Update();
     }
 
     /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded()
-    {
+    protected override void OnUnloaded() =>
         core?.Unload();
-    }
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {

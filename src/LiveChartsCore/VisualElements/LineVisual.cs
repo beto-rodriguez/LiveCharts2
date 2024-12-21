@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -31,18 +32,16 @@ namespace LiveChartsCore.VisualElements;
 /// Defines a visual element in a chart that draws a sized geometry in the user interface.
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TGeometry : ILineGeometry<TDrawingContext>, new()
+public class LineVisual<TGeometry> : BaseGeometryVisual
+    where TGeometry : BaseLineGeometry, new()
 {
     internal TGeometry? _geometry;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries() => [_geometry];
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Animatable?[] GetDrawnGeometries() => [_geometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var l = GetActualCoordinate();
         var size = Measure(chart);
@@ -82,15 +81,15 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (_geometry is null) return;
-        _geometry.Parent = parent;
+        ((IDrawnElement)_geometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var w = (float)Width;
         var h = (float)Height;
@@ -107,6 +106,6 @@ public class LineVisual<TGeometry, TDrawingContext> : BaseGeometryVisual<TDrawin
         return new LvcSize(w, h);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks() => [Fill, Stroke];
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() => [Fill, Stroke];
 }

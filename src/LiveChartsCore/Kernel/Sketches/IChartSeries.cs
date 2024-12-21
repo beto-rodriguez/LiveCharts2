@@ -24,17 +24,15 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
-using LiveChartsCore.VisualElements;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a series a chart series that has a visual representation in the user interface.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <seealso cref="ISeries" />
-public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
-     where TDrawingContext : DrawingContext
+public interface IChartSeries : ISeries, IChartElement
 {
     /// <summary>
     /// Gets or sets the data labels paint.
@@ -42,7 +40,7 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <value>
     /// The data labels paint.
     /// </value>
-    IPaint<TDrawingContext>? DataLabelsPaint { get; set; }
+    Paint? DataLabelsPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the size of the data labels.
@@ -85,16 +83,23 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <summary>
     /// </summary>
     /// <returns></returns>
-    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    Sketch<TDrawingContext> GetMiniaturesSketch();
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    Sketch GetMiniaturesSketch();
 
     /// <summary>
-    /// Return the visual element shown in tooltips and legends.
+    /// Return the visual element shown in tooltips and legends, this is an old method and will be replaced by
+    /// <see cref="GetMiniatureGeometry(ChartPoint?)"/>.
     /// </summary>
     /// <param name="point">The point.</param>
     /// <param name="zindex">The zindex.</param>
-    /// <returns></returns>
-    VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex);
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    IChartElement GetMiniature(ChartPoint? point, int zindex);
+
+    /// <summary>
+    /// Returns a geometry that represents the series in a tooltip or legend.
+    /// </summary>
+    /// <param name="point">The target point.</param>
+    IDrawnElement GetMiniatureGeometry(ChartPoint? point);
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.

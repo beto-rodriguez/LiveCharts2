@@ -34,7 +34,7 @@ using SkiaSharp.Views.WPF;
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
 /// <summary>
-/// Defines the motion canvas control for WPF, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// Defines the motion canvas control for WPF, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="Control" />
 public class MotionCanvas : UserControl
@@ -58,14 +58,15 @@ public class MotionCanvas : UserControl
     /// <value>
     /// The canvas core.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
     protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
         var density = GetPixelDensity();
         args.Surface.Canvas.Scale(density.dpix, density.dpiy);
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
     /// <inheritdoc cref="OnPaintGlSurface(object?, SKPaintGLSurfaceEventArgs)" />
@@ -78,10 +79,11 @@ public class MotionCanvas : UserControl
             ? Colors.White
             : bg.Color;
 
-        CanvasCore.DrawFrame(new(CanvasCore, args.Info, args.Surface, args.Surface.Canvas)
-        {
-            Background = new SKColor(c.R, c.G, c.B)
-        });
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas)
+            {
+                Background = new SKColor(c.R, c.G, c.B)
+            });
     }
 
     private void InitializeElement()
@@ -109,7 +111,7 @@ public class MotionCanvas : UserControl
         return new((float)matrix.M11, (float)matrix.M22);
     }
 
-    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender) =>
+    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
 
     private void OnLoaded(object sender, RoutedEventArgs e)

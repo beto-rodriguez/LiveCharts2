@@ -22,7 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
@@ -30,7 +30,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// <summary>
 /// Defines a skia sharp drawing context.
 /// </summary>
-/// <seealso cref="DrawingContext" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
 /// </remarks>
@@ -40,13 +39,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// <param name="canvas">The canvas.</param>
 /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
 public class SkiaSharpDrawingContext(
-    MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+    CoreMotionCanvas motionCanvas,
     SKImageInfo info,
     SKSurface? surface,
     SKCanvas canvas,
-    bool clearOnBeginDraw = true) : DrawingContext
+    bool clearOnBeginDraw = true)
+        : DrawingContext
 {
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
     /// </summary>
@@ -57,7 +56,7 @@ public class SkiaSharpDrawingContext(
     /// <param name="background">The background.</param>
     /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
     public SkiaSharpDrawingContext(
-        MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+        CoreMotionCanvas motionCanvas,
         SKImageInfo info,
         SKSurface? surface,
         SKCanvas canvas,
@@ -74,7 +73,7 @@ public class SkiaSharpDrawingContext(
     /// <value>
     /// The motion canvas.
     /// </value>
-    public MotionCanvas<SkiaSharpDrawingContext> MotionCanvas { get; set; } = motionCanvas;
+    public CoreMotionCanvas MotionCanvas { get; set; } = motionCanvas;
 
     /// <summary>
     /// Gets or sets the information.
@@ -101,20 +100,12 @@ public class SkiaSharpDrawingContext(
     public SKCanvas Canvas { get; set; } = canvas;
 
     /// <summary>
-    /// Gets or sets the paint task.
-    /// </summary>
-    /// <value>
-    /// The paint task.
-    /// </value>
-    public Paint PaintTask { get; set; } = null!;
-
-    /// <summary>
     /// Gets or sets the paint.
     /// </summary>
     /// <value>
     /// The paint.
     /// </value>
-    public SKPaint Paint { get; set; } = null!;
+    public SKPaint ActiveSkiaPaint { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the background.
@@ -146,5 +137,143 @@ public class SkiaSharpDrawingContext(
             log,
             new SKPoint(50, 10 + p.TextSize),
             p);
+    }
+
+    /// <inheritdoc cref="DrawingContext.Draw(IDrawnElement)"/>
+    public override void Draw(IDrawnElement drawable)
+    {
+        var opacity = ActiveOpacity;
+
+        var element = (IDrawnElement<SkiaSharpDrawingContext>)drawable;
+
+        if (element.HasTransform)
+        {
+            _ = Canvas.Save();
+
+            var m = element.Measure();
+            var o = element.TransformOrigin;
+            var p = new SKPoint(element.X, element.Y);
+
+            var xo = m.Width * o.X;
+            var yo = m.Height * o.Y;
+
+            if (element.HasRotation)
+            {
+                Canvas.Translate(p.X + xo, p.Y + yo);
+                Canvas.RotateDegrees(element.RotateTransform);
+                Canvas.Translate(-p.X - xo, -p.Y - yo);
+            }
+
+            if (element.HasTranslate)
+            {
+                var translate = element.TranslateTransform;
+                Canvas.Translate(translate.X, translate.Y);
+            }
+
+            if (element.HasScale)
+            {
+                var scale = element.ScaleTransform;
+                Canvas.Translate(p.X + xo, p.Y + yo);
+                Canvas.Scale(scale.X, scale.Y);
+                Canvas.Translate(-p.X - xo, -p.Y - yo);
+            }
+
+            if (element.HasSkew)
+            {
+                var skew = element.SkewTransform;
+                Canvas.Translate(p.X + xo, p.Y + yo);
+                Canvas.Skew(skew.X, skew.Y);
+                Canvas.Translate(-p.X - xo, -p.Y - yo);
+            }
+
+            // DISABLED FOR NOW.
+            //if (_hasTransform)
+            //{
+            //    var transform = Transform;
+            //    context.Canvas.Concat(ref transform);
+            //}
+        }
+
+        if (ActiveLvcPaint is null)
+        {
+            // if the active paint is null, we need to draw by the element paint
+
+            if (element.Fill is not null)
+                DrawByPaint(element.Fill, element, opacity);
+
+            if (element.Stroke is not null)
+                DrawByPaint(element.Stroke, element, opacity);
+
+            if (element.Paint is not null)
+                DrawByPaint(element.Paint, element, opacity);
+        }
+        else
+        {
+            // we will draw using the active paint while the element paint is null
+
+            if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
+            {
+                if (element.Fill is null)
+                    DrawByActivePaint(element, opacity);
+                else
+                    DrawByPaint(element.Fill, element, opacity);
+            }
+
+            if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
+            {
+                if (element.Stroke is null)
+                    DrawByActivePaint(element, opacity);
+                else
+                    DrawByPaint(element.Stroke, element, opacity);
+            }
+        }
+
+        if (element.HasTransform) Canvas.Restore();
+    }
+
+    /// <inheritdoc cref="DrawingContext.InitializePaintTask(Paint)"/>
+    public override void InitializePaintTask(Paint paint)
+    {
+        ActiveLvcPaint = paint;
+        //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
+
+        paint.InitializeTask(this);
+    }
+
+    /// <inheritdoc cref="DrawingContext.DisposePaintTask(Paint)"/>
+    public override void DisposePaintTask(Paint paint)
+    {
+        paint.Dispose();
+
+        ActiveLvcPaint = null!;
+        ActiveSkiaPaint = null!;
+    }
+
+    private void DrawByActivePaint(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
+    {
+        var hasGeometryOpacity = opacity < 1;
+
+        if (hasGeometryOpacity) ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
+        element.Draw(this);
+        if (hasGeometryOpacity) ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+    }
+
+    private void DrawByPaint(Paint paint, IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
+    {
+        var hasGeometryOpacity = opacity < 1;
+
+        var originalPaint = ActiveSkiaPaint;
+        var originalTask = ActiveLvcPaint;
+
+        paint.InitializeTask(this);
+
+        if (hasGeometryOpacity) paint.ApplyOpacityMask(this, opacity);
+        element.Draw(this);
+        if (hasGeometryOpacity) paint.RestoreOpacityMask(this, opacity);
+
+        paint.Dispose();
+
+        ActiveSkiaPaint = originalPaint;
+        ActiveLvcPaint = originalTask;
     }
 }

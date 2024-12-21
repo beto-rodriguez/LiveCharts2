@@ -138,10 +138,8 @@ public struct LvcColor
     /// <param name="green">The green component from 0 to 255.</param>
     /// <param name="blue">The blue component from 0 to 255.</param>
     /// <returns></returns>
-    public static LvcColor FromRGB(byte red, byte green, byte blue)
-    {
-        return new LvcColor(red, green, blue);
-    }
+    public static LvcColor FromRGB(byte red, byte green, byte blue) =>
+        new(red, green, blue);
 
     /// <summary>
     /// Creates a new instance of the <see cref="LvcColor"/> class with the given components.
@@ -151,10 +149,8 @@ public struct LvcColor
     /// <param name="green">The green component from 0 to 255.</param>
     /// <param name="blue">The blue component from 0 to 255.</param>
     /// <returns></returns>
-    public static LvcColor FromArgb(byte alpha, byte red, byte green, byte blue)
-    {
-        return new LvcColor(red, green, blue, alpha);
-    }
+    public static LvcColor FromArgb(byte alpha, byte red, byte green, byte blue) =>
+        new(red, green, blue, alpha);
 
     /// <summary>
     /// Creates a new instance of the <see cref="LvcColor"/> class with the given components.
@@ -162,8 +158,6 @@ public struct LvcColor
     /// <param name="alpha">The alpha channel component from 0 to 255.</param>
     /// <param name="color">The red color.</param>
     /// <returns></returns>
-    public static LvcColor FromArgb(byte alpha, LvcColor color)
-    {
-        return new LvcColor(color.R, color.G, color.B, alpha);
-    }
+    public static LvcColor FromArgb(byte alpha, LvcColor color) =>
+        new(color.R, color.G, color.B, alpha);
 }

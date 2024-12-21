@@ -37,15 +37,12 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a chart,
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChart" />
-public abstract class Chart<TDrawingContext> : IChart
-    where TDrawingContext : DrawingContext
+public abstract class Chart
 {
     #region fields
 
-    internal readonly HashSet<ChartElement<TDrawingContext>> _everMeasuredElements = [];
-    internal HashSet<ChartElement<TDrawingContext>> _toDeleteElements = [];
+    internal readonly HashSet<IChartElement> _everMeasuredElements = [];
+    internal HashSet<IChartElement> _toDeleteElements = [];
     internal bool _isToolTipOpen = false;
     internal bool _isPointerIn;
     internal LvcPoint _pointerPosition = new(-10, -10);
@@ -71,16 +68,19 @@ public abstract class Chart<TDrawingContext> : IChart
     #endregion
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Chart{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="Chart"/> class.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="view">The chart view.</param>
+    /// <param name="kind">The chart kind.</param>
     protected Chart(
-        MotionCanvas<TDrawingContext> canvas,
+        CoreMotionCanvas canvas,
         Action<LiveChartsSettings> defaultPlatformConfig,
-        IChartView view)
+        IChartView view,
+        ChartKind kind)
     {
+        Kind = kind;
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
         EasingFunction = EasingFunctions.QuadraticOut;
@@ -101,14 +101,14 @@ public abstract class Chart<TDrawingContext> : IChart
 #endif
     }
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-    public event ChartEventHandler<TDrawingContext>? Measuring;
+    /// <inheritdoc cref="IChartView.Measuring" />
+    public event ChartEventHandler? Measuring;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-    public event ChartEventHandler<TDrawingContext>? UpdateStarted;
+    /// <inheritdoc cref="IChartView.UpdateStarted" />
+    public event ChartEventHandler? UpdateStarted;
 
-    /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-    public event ChartEventHandler<TDrawingContext>? UpdateFinished;
+    /// <inheritdoc cref="IChartView.UpdateFinished" />
+    public event ChartEventHandler? UpdateFinished;
 
     #region properties
 
@@ -130,6 +130,9 @@ public abstract class Chart<TDrawingContext> : IChart
     /// </value>
     public object MeasureWork { get; protected set; } = new();
 
+    /// <inheritdoc cref="Kind" />
+    public ChartKind Kind { get; protected set; }
+
     /// <summary>
     /// Gets whether the control is loaded.
     /// </summary>
@@ -141,7 +144,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The canvas.
     /// </value>
-    public MotionCanvas<TDrawingContext> Canvas { get; private set; }
+    public CoreMotionCanvas Canvas { get; private set; }
 
     /// <summary>
     /// Gets the visible series.
@@ -149,7 +152,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The drawable series.
     /// </value>
-    public abstract IEnumerable<IChartSeries<TDrawingContext>> VisibleSeries { get; }
+    public abstract IEnumerable<IChartSeries> VisibleSeries { get; }
 
     /// <summary>
     /// Gets the series.
@@ -157,7 +160,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The drawable series.
     /// </value>
-    public abstract IEnumerable<IChartSeries<TDrawingContext>> Series { get; }
+    public abstract IEnumerable<IChartSeries> Series { get; }
 
     /// <summary>
     /// Gets the view.
@@ -165,14 +168,12 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The view.
     /// </value>
-    public abstract IChartView<TDrawingContext> View { get; }
-
-    IChartView IChart.View => View;
+    public abstract IChartView View { get; }
 
     /// <summary>
     /// The series context
     /// </summary>
-    public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>(), null!);
+    public SeriesContext SeriesContext { get; protected set; } = new([], null!);
 
     /// <summary>
     /// Gets the size of the control.
@@ -212,7 +213,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The legend.
     /// </value>
-    public IChartLegend<TDrawingContext>? Legend { get; protected set; }
+    public IChartLegend? Legend { get; protected set; }
 
     /// <summary>
     /// Gets the tooltip position.
@@ -236,7 +237,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The tooltip.
     /// </value>
-    public IChartTooltip<TDrawingContext>? Tooltip { get; protected set; }
+    public IChartTooltip? Tooltip { get; protected set; }
 
     /// <summary>
     /// Gets the animations speed.
@@ -260,14 +261,14 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The visual elements.
     /// </value>
-    public IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; protected set; } =
-        Array.Empty<ChartElement<TDrawingContext>>();
+    public IEnumerable<ChartElement> VisualElements { get; protected set; } =
+        [];
 
-    object IChart.Canvas => Canvas;
+    internal bool DisableTooltipCache { get; set; }
 
     #endregion region
 
-    /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
+    /// <inheritdoc cref="Update(ChartUpdateParams?)" />
     public virtual void Update(ChartUpdateParams? chartUpdateParams = null)
     {
         chartUpdateParams ??= new ChartUpdateParams();
@@ -299,6 +300,8 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         IsLoaded = true;
         _isFirstDraw = true;
+        View.Tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+        View.Legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
         Update();
     }
 
@@ -308,6 +311,8 @@ public abstract class Chart<TDrawingContext> : IChart
     public virtual void Unload()
     {
         IsLoaded = false;
+        View.Tooltip = null;
+        View.Legend = null;
         _everMeasuredElements.Clear();
         _toDeleteElements.Clear();
         _activePoints.Clear();
@@ -353,12 +358,12 @@ public abstract class Chart<TDrawingContext> : IChart
 
             // fire the visual elements event.
             var hitElements =
-                _everMeasuredElements.OfType<VisualElement<TDrawingContext>>()
-                    .Cast<VisualElement<TDrawingContext>>()
-                    .SelectMany(x => x.IsHitBy(this, point));
+                _everMeasuredElements
+                    .OfType<IInternalInteractable>()
+                    .Where(x => x.GetHitBox().Contains(point));
 
             foreach (var ve in hitElements)
-                ve.InvokePointerDown(new VisualElementEventArgs<TDrawingContext>(this, ve, point));
+                ve.InvokePointerDown(new VisualElementEventArgs(this, ve, point));
 
             View.OnVisualElementPointerDown(hitElements, point);
         }
@@ -410,7 +415,7 @@ public abstract class Chart<TDrawingContext> : IChart
     protected internal virtual void InvokePointerLeft()
     {
         View.OnHoveredPointsChanged(null, _activePoints);
-        _activePoints.Clear();
+        _ = CleanHoveredPoints([]);
 
         View.InvokeOnUIThread(CloseTooltip);
         _isPointerIn = false;
@@ -442,19 +447,13 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Saves the previous size of the chart.
     /// </summary>
-    protected void SetPreviousSize()
-    {
-        _previousSize = ControlSize;
-    }
+    protected void SetPreviousSize() => _previousSize = ControlSize;
 
     /// <summary>
     /// Invokes the <see cref="Measuring"/> event.
     /// </summary>
     /// <returns></returns>
-    protected void InvokeOnMeasuring()
-    {
-        Measuring?.Invoke(View);
-    }
+    protected void InvokeOnMeasuring() => Measuring?.Invoke(View);
 
     /// <summary>
     /// Invokes the on update started.
@@ -470,19 +469,13 @@ public abstract class Chart<TDrawingContext> : IChart
     /// Invokes the on update finished.
     /// </summary>
     /// <returns></returns>
-    protected void InvokeOnUpdateFinished()
-    {
-        UpdateFinished?.Invoke(View);
-    }
+    protected void InvokeOnUpdateFinished() => UpdateFinished?.Invoke(View);
 
     /// <summary>
     /// Returns a value indicating if the control size changed.
     /// </summary>
     /// <returns></returns>
-    protected bool SizeChanged()
-    {
-        return _previousSize.Width != ControlSize.Width || _previousSize.Height != ControlSize.Height;
-    }
+    protected bool SizeChanged() => _previousSize.Width != ControlSize.Width || _previousSize.Height != ControlSize.Height;
 
     /// <summary>
     /// Called when the updated the throttler is unlocked.
@@ -520,15 +513,13 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Initializes the visuals collector.
     /// </summary>
-    protected void InitializeVisualsCollector()
-    {
-        _toDeleteElements = new HashSet<ChartElement<TDrawingContext>>(_everMeasuredElements);
-    }
+    protected void InitializeVisualsCollector() =>
+        _toDeleteElements = new HashSet<IChartElement>(_everMeasuredElements);
 
     /// <summary>
     /// Adds a visual element to the chart.
     /// </summary>
-    public void AddVisual(ChartElement<TDrawingContext> element)
+    public void AddVisual(IChartElement element)
     {
         element.Invalidate(this);
         element.RemoveOldPaints(View);
@@ -539,17 +530,14 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <summary>
     /// Removes a visual element from the chart.
     /// </summary>
-    public void RemoveVisual(ChartElement<TDrawingContext> element)
+    public void RemoveVisual(IChartElement element)
     {
         element.RemoveFromUI(this);
         _ = _everMeasuredElements.Remove(element);
         _ = _toDeleteElements.Remove(element);
     }
 
-    /// <summary>
-    /// Gets the legend position.
-    /// </summary>
-    /// <returns>The position of the legend.</returns>
+    /// <inheritdoc cref="GetLegendPosition"/>
     public LvcPoint GetLegendPosition()
     {
         var actualChartSize = ControlSize;
@@ -578,6 +566,13 @@ public abstract class Chart<TDrawingContext> : IChart
 
         return new(x, y);
     }
+
+    /// <summary>
+    /// Determines whether the specified series is drawn in the UI already for the given chart.
+    /// </summary>
+    /// <param name="seriesId">The series id.</param>
+    /// <returns>A boolean indicating whether the series is drawn.</returns>
+    public bool IsDrawn(int seriesId) => _drawnSeries.Contains(seriesId);
 
     /// <summary>
     /// Collects and deletes from the UI the unused visuals.
@@ -664,7 +659,10 @@ public abstract class Chart<TDrawingContext> : IChart
 
         var removed = CleanHoveredPoints(hovered);
 
-        if (added.Count > 0 || removed.Count > 0)
+        var tooltipDataChanged =
+            added.Count > 0 || removed.Count > 0 || DisableTooltipCache;
+
+        if (tooltipDataChanged)
             View.OnHoveredPointsChanged(added, removed);
 
         if (hovered.Count == 0 || TooltipPosition == TooltipPosition.Hidden)
@@ -674,8 +672,11 @@ public abstract class Chart<TDrawingContext> : IChart
             return false;
         }
 
-        Tooltip?.Show(hovered, this);
-        _isToolTipOpen = true;
+        if (tooltipDataChanged)
+        {
+            Tooltip?.Show(hovered, this);
+            _isToolTipOpen = true;
+        }
 
         return true;
     }
@@ -684,7 +685,14 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         var removed = new List<ChartPoint>();
 
-        foreach (var point in _activePoints)
+        IEnumerable<ChartPoint> active = _activePoints;
+
+#if NET5_0_OR_GREATER
+#else
+        active = active.ToArray();
+#endif
+
+        foreach (var point in active)
         {
             if (hovered.Contains(point)) continue;
 
@@ -719,7 +727,7 @@ public abstract class Chart<TDrawingContext> : IChart
         return Task.Run(() =>
             View.InvokeOnUIThread(() =>
             {
-                if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
+                if (this is not CartesianChartEngine cartesianChart) return;
 
                 lock (Canvas.Sync)
                 {
@@ -736,17 +744,14 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         _isToolTipOpen = false;
         Tooltip?.Hide(this);
-        CleanHoveredPoints(new());
+        _ = CleanHoveredPoints([]);
 
-        if (this is CartesianChart<TDrawingContext> cartesianChart)
+        if (this is CartesianChartEngine cartesianChart)
         {
             foreach (var ax in cartesianChart.XAxes) ax.ClearCrosshair(cartesianChart);
             foreach (var ay in cartesianChart.YAxes) ay.ClearCrosshair(cartesianChart);
         }
     }
 
-    private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
-    {
-        InvokeOnUpdateFinished();
-    }
+    private void OnCanvasValidated(CoreMotionCanvas chart) => InvokeOnUpdateFinished();
 }

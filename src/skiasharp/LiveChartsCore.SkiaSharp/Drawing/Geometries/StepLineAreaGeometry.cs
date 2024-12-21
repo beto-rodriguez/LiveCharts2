@@ -28,12 +28,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines an area drawin using bezier segments.
 /// </summary>
-public class StepLineAreaGeometry : VectorGeometry<StepLineSegment>
+public class StepLineAreaGeometry : VectorGeometry<Segment>
 {
     private bool _isFirst = true;
 
     /// <inheritdoc cref="VectorGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
+    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, Segment segment)
     {
         if (_isFirst)
         {
@@ -46,7 +46,7 @@ public class StepLineAreaGeometry : VectorGeometry<StepLineSegment>
     }
 
     /// <inheritdoc cref="VectorGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
+    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, Segment segment)
     {
         if (ClosingMethod == LiveChartsCore.Drawing.VectorClosingMethod.NotClosed)
         {
@@ -63,7 +63,7 @@ public class StepLineAreaGeometry : VectorGeometry<StepLineSegment>
     }
 
     /// <inheritdoc cref="VectorGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
+    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, Segment segment)
     {
         _isFirst = true;
 

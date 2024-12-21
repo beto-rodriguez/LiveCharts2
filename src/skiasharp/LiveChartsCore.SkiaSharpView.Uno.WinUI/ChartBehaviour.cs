@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using Microsoft.UI.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
@@ -29,21 +30,32 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// </summary>
 public partial class ChartBehaviour : Behaviours.ChartBehaviour
 {
+    private static double s_density;
+    private static LvcSize s_screenSize;
+
+    /// <inheritdoc />
+    public override LvcSize ScreenSize => s_screenSize;
+
+    /// <inheritdoc />
+    public override double Density => s_density;
+
     /// <summary>
     /// Attaches the native events on the specified element.
     /// </summary>
     /// <param name="element">The element.</param>
     public void On(FrameworkElement element)
     {
+        // TODO: Detect the DPI and screen size changes.
+
 #if HAS_UNO_WINUI
         var currentView = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
 
-        Density = currentView.LogicalDpi / 96.0f;
-        ScreenSize = new(
+        s_density = currentView.LogicalDpi / 96.0f;
+        s_screenSize = new(
             currentView.ScreenWidthInRawPixels,
             currentView.ScreenHeightInRawPixels);
 #else
-        Density = element.XamlRoot.RasterizationScale;
+        s_density = element.XamlRoot.RasterizationScale;
 #endif
 
 #if ANDROID
@@ -59,7 +71,7 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
 #endif
         element.AddGestureRecognizer(MacCatalystLongPressGestureRecognizer);
         element.AddGestureRecognizer(MacCatalystPinchGestureRecognizer);
-        element.AddGestureRecognizer(MacCatsalystPanGestureRecognizer);
+        element.AddGestureRecognizer(MacCatalystPanGestureRecognizer);
 
 #elif WINDOWS
 
