@@ -55,7 +55,7 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
         UpdateScreenInfo(deviceDisplay.MainDisplayInfo);
         return;
 
-        void UpdateScreenInfo(DisplayInfo displayInfo)
+        static void UpdateScreenInfo(DisplayInfo displayInfo)
         {
             s_density = displayInfo.Density;
             s_screenSize = new LvcSize((float)displayInfo.Width, (float)displayInfo.Height);
@@ -75,26 +75,26 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
     public void On(PlatformView platformView)
     {
 #if ANDROID
-            platformView.Touch += OnAndroidTouched;
-            platformView.Hover += OnAndroidHover;
+        platformView.Touch += OnAndroidTouched;
+        platformView.Hover += OnAndroidHover;
 #endif
 
 #if MACCATALYST || IOS
-            platformView.UserInteractionEnabled = true;
+        platformView.UserInteractionEnabled = true;
 #if MACCATALYST
-            platformView.AddGestureRecognizer(MacCatalystHoverGestureRecognizer);
+        platformView.AddGestureRecognizer(MacCatalystHoverGestureRecognizer);
 #endif
-            platformView.AddGestureRecognizer(MacCatalystLongPressGestureRecognizer);
-            platformView.AddGestureRecognizer(MacCatalystPinchGestureRecognizer);
-            platformView.AddGestureRecognizer(MacCatalystPanGestureRecognizer);
+        platformView.AddGestureRecognizer(MacCatalystLongPressGestureRecognizer);
+        platformView.AddGestureRecognizer(MacCatalystPinchGestureRecognizer);
+        platformView.AddGestureRecognizer(MacCatalystPanGestureRecognizer);
 #endif
 
 #if WINDOWS
-            platformView.PointerPressed += OnWindowsPointerPressed;
-            platformView.PointerMoved += OnWindowsPointerMoved;
-            platformView.PointerReleased += OnWindowsPointerReleased;
-            platformView.PointerWheelChanged += OnWindowsPointerWheelChanged;
-            platformView.PointerExited += OnWindowsPointerExited;
+        platformView.PointerPressed += OnWindowsPointerPressed;
+        platformView.PointerMoved += OnWindowsPointerMoved;
+        platformView.PointerReleased += OnWindowsPointerReleased;
+        platformView.PointerWheelChanged += OnWindowsPointerWheelChanged;
+        platformView.PointerExited += OnWindowsPointerExited;
 #endif
     }
 

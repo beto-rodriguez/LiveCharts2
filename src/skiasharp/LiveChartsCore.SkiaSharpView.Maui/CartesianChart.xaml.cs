@@ -45,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <inheritdoc cref="ICartesianChartView"/>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class CartesianChart : ChartView, ICartesianChartView<SkiaSharpDrawingContext>
+public partial class CartesianChart : ChartView, ICartesianChartView
 {
     #region fields
 
@@ -812,8 +812,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView<SkiaSharpDr
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
     }
 
-    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args)
-    {
+    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>

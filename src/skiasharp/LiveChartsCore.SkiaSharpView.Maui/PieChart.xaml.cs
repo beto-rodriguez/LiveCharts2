@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <inheritdoc cref="IPieChartView"/>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PieChart : ChartView, IPieChartView<SkiaSharpDrawingContext>
+public partial class PieChart : ChartView, IPieChartView
 {
     #region fields
 
@@ -680,12 +680,10 @@ public partial class PieChart : ChartView, IPieChartView<SkiaSharpDrawingContext
         _core?.InvokePointerMove(location);
     }
 
-    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
-    {
+    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) =>
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
 
-    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args)
-    {
+    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
 
     private void OnSizeChanged(object? sender, EventArgs e)

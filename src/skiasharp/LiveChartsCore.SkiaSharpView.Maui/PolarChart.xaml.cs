@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <inheritdoc cref="IPolarChartView"/>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PolarChart : ChartView, IPolarChartView<SkiaSharpDrawingContext>
+public partial class PolarChart : ChartView, IPolarChartView
 {
     #region fields
 
@@ -760,12 +760,10 @@ public partial class PolarChart : ChartView, IPolarChartView<SkiaSharpDrawingCon
         _core?.InvokePointerMove(location);
     }
 
-    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
-    {
+    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) =>
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
 
-    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args)
-    {
+    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
 
     private void OnSizeChanged(object? sender, EventArgs e)
