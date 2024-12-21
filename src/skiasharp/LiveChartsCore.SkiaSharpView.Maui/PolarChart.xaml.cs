@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <inheritdoc cref="IPolarChartView"/>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PolarChart : ContentView, IPolarChartView
+public partial class PolarChart : ChartView, IPolarChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -95,18 +95,9 @@ public partial class PolarChart : ContentView, IPolarChartView
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
-
-        var chartBehaviour = new ChartBehaviour();
-
-        chartBehaviour.Pressed += OnPressed;
-        chartBehaviour.Moved += OnMoved;
-        chartBehaviour.Released += OnReleased;
-        chartBehaviour.Exited += OnExited;
-
-        chartBehaviour.On(this);
     }
 
-    #region bindable properties 
+    #region bindable properties
 
     /// <summary>
     /// The sync context property.
@@ -747,7 +738,7 @@ public partial class PolarChart : ContentView, IPolarChartView
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         _core?.Update();
 
-    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    internal override void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
     {
         // not implemented yet?
         // https://github.com/dotnet/maui/issues/16202
@@ -759,7 +750,7 @@ public partial class PolarChart : ContentView, IPolarChartView
         _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
     }
 
-    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    internal override void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
     {
         var location = args.Location;
 
@@ -769,10 +760,12 @@ public partial class PolarChart : ContentView, IPolarChartView
         _core?.InvokePointerMove(location);
     }
 
-    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) =>
+    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
 
-    private void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
+    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
         _core?.InvokePointerLeft();
 
     private void OnSizeChanged(object? sender, EventArgs e)

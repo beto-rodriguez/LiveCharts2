@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <inheritdoc cref="IPieChartView"/>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PieChart : ContentView, IPieChartView
+public partial class PieChart : ChartView, IPieChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -84,15 +84,6 @@ public partial class PieChart : ContentView, IPieChartView
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
-
-        var chartBehaviour = new ChartBehaviour();
-
-        chartBehaviour.Pressed += OnPressed;
-        chartBehaviour.Moved += OnMoved;
-        chartBehaviour.Released += OnReleased;
-        chartBehaviour.Exited += OnExited;
-
-        chartBehaviour.On(this);
     }
 
     #region bindable properties
@@ -667,7 +658,7 @@ public partial class PieChart : ContentView, IPieChartView
         _core?.Load();
     }
 
-    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    internal override void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
     {
         // not implemented yet?
         // https://github.com/dotnet/maui/issues/16202
@@ -679,7 +670,7 @@ public partial class PieChart : ContentView, IPieChartView
         _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
     }
 
-    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    internal override void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
     {
         var location = args.Location;
 
@@ -689,10 +680,12 @@ public partial class PieChart : ContentView, IPieChartView
         _core?.InvokePointerMove(location);
     }
 
-    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) =>
+    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    {
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
 
-    private void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
+    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
         _core?.InvokePointerLeft();
 
     private void OnSizeChanged(object? sender, EventArgs e)

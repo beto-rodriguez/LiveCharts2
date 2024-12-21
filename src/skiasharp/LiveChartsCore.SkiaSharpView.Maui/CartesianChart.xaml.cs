@@ -45,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <inheritdoc cref="ICartesianChartView"/>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class CartesianChart : ContentView, ICartesianChartView
+public partial class CartesianChart : ChartView, ICartesianChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
@@ -99,20 +99,9 @@ public partial class CartesianChart : ContentView, ICartesianChartView
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
-
-        var chartBehaviour = new ChartBehaviour();
-
-        chartBehaviour.Pressed += OnPressed;
-        chartBehaviour.Moved += OnMoved;
-        chartBehaviour.Released += OnReleased;
-        chartBehaviour.Scrolled += OnScrolled;
-        chartBehaviour.Pinched += OnPinched;
-        chartBehaviour.Exited += OnExited;
-
-        chartBehaviour.On(this);
     }
 
-    #region bindable properties 
+    #region bindable properties
 
     /// <summary>
     /// The sync context property.
@@ -775,7 +764,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView
         _core?.Load();
     }
 
-    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    internal override void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
     {
         // not implemented yet?
         // https://github.com/dotnet/maui/issues/16202
@@ -787,7 +776,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView
         _core?.InvokePointerDown(args.Location, args.IsSecondaryPress);
     }
 
-    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    internal override void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
     {
         var location = args.Location;
 
@@ -797,7 +786,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView
         _core?.InvokePointerMove(location);
     }
 
-    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
     {
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (ReleasedCommand?.CanExecute(cArgs) == true) ReleasedCommand.Execute(cArgs);
@@ -805,14 +794,14 @@ public partial class CartesianChart : ContentView, ICartesianChartView
         _core?.InvokePointerUp(args.Location, args.IsSecondaryPress);
     }
 
-    private void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    internal override void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
     {
         if (_core is null) throw new Exception("core not found");
         var c = (CartesianChartEngine)_core;
         c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
-    private void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args)
+    internal override void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args)
     {
         if (_core is null) return;
 
@@ -823,7 +812,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
     }
 
-    private void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
+    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args)
+    {
         _core?.InvokePointerLeft();
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>

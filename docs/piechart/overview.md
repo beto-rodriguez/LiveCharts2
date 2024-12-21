@@ -43,7 +43,7 @@ namespace ViewModelsSamples.Pies.Basic
     Series="series">
 &lt;/PieChart></code></pre>
 
-<pre><code>private ISeries[] series = = new ISeries[]
+<pre><code>private ISeries[] series = new ISeries[]
 {
     new PieSeries&lt;double> { Values = new double[] { 2 } },
     new PieSeries&lt;double> { Values = new double[] { 4 } },
