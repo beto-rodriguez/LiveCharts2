@@ -1,4 +1,5 @@
-﻿using SkiaSharp.Views.Maui.Controls.Hosting;
+﻿using LiveChartsCore.SkiaSharpView.Maui;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace MauiSample;
 

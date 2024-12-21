@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Maui;
+using Microsoft.Maui.Hosting;
 
-namespace Microsoft.Maui.Hosting;
+namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <summary>
 /// LiveCharts extensions for the <see cref="MauiAppBuilder"/> class.
