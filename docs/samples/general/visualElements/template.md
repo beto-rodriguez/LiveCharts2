@@ -88,6 +88,8 @@ A container is just a shape that can host other drawn elements as the content of
 set the `Fill` and `Stroke` properties of this shape. an example in the library is the default tooltip, it is of type `Container<PopUpGeometry>`
 then it sets the `Geometry.Fill` to define the background of the tooltip.
 
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/ContainerVisual.cs" ~}}
+
 ### Absolute Layout
 
 Used to place children on its own coordinate system, all the children X and Y coordinates are relative to the Layout position, the layout takes
