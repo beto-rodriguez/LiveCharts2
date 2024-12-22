@@ -300,8 +300,8 @@ public abstract class Chart
     {
         IsLoaded = true;
         _isFirstDraw = true;
-        View.Tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
-        View.Legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+        View.Tooltip ??= LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+        View.Legend ??= LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
         Update();
     }
 
