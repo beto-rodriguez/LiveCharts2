@@ -20,13 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <inheritdoc cref="LabelVisual{TLabelGeometry}"/>
-[Obsolete($"Replaced by {nameof(Visual)}.")]
 public class LabelVisual : LabelVisual<LabelGeometry>
 { }
