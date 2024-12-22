@@ -4,93 +4,93 @@ using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.VisualElements;
-using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
 namespace ViewModelsSamples.General.TemplatedTooltips;
 
 public class CustomTooltip : IChartTooltip
 {
-    private StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>? _stackPanel;
-    private static readonly int s_zIndex = 10100;
-    private readonly SolidColorPaint _backgroundPaint = new(new SKColor(28, 49, 58)) { ZIndex = s_zIndex };
-    private readonly SolidColorPaint _fontPaint = new(new SKColor(230, 230, 230)) { ZIndex = s_zIndex + 1 };
+    private Container<RoundedRectangleGeometry>? _container;
+    private StackLayout? _layout;
 
     public void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        if (_stackPanel is null)
+        if (_container is null || _layout is null)
         {
-            _stackPanel = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+            _container = new Container<RoundedRectangleGeometry>
             {
-                Padding = new Padding(25),
-                Orientation = ContainerOrientation.Vertical,
-                HorizontalAlignment = Align.Start,
-                VerticalAlignment = Align.Middle,
-                BackgroundPaint = _backgroundPaint
+                Content = _layout = new StackLayout
+                {
+                    Padding = new(10),
+                    Orientation = ContainerOrientation.Vertical,
+                    HorizontalAlignment = Align.Middle,
+                    VerticalAlignment = Align.Middle
+                }
             };
 
-            _stackPanel
-                .Animate(
-                    new Animation(EasingFunctions.BounceOut, TimeSpan.FromSeconds(1)),
-                    nameof(_stackPanel.X),
-                    nameof(_stackPanel.Y));
+            _container.Geometry.Fill = new SolidColorPaint(new SKColor(28, 49, 58));
+            _container.Animate(new Animation(EasingFunctions.BounceOut, TimeSpan.FromMilliseconds(500)));
+
+            var drawTask = chart.Canvas.AddGeometry(_container);
+            drawTask.ZIndex = 10100;
         }
 
-        // clear the previous elements.
-        foreach (var child in _stackPanel.Children.ToArray())
-        {
-            _ = _stackPanel.Children.Remove(child);
-            chart.RemoveVisual(child);
-        }
+        _container.Opacity = 1;
+        _container.ScaleTransform = new LvcPoint(1, 1);
+
+        foreach (var child in _layout.Children.ToArray())
+            _ = _layout.Children.Remove(child);
 
         foreach (var point in foundPoints)
         {
-            var skiaSeries = (IChartSeries)point.Context.Series;
+            var series = (IChartSeries)point.Context.Series;
+            var miniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
 
-            var label = new LabelVisual
+            var label = new LabelGeometry
             {
                 Text = point.Coordinate.PrimaryValue.ToString("C2"),
-                Paint = _fontPaint,
+                Paint = new SolidColorPaint(new SKColor(230, 230, 230)),
                 TextSize = 15,
                 Padding = new Padding(8, 0, 0, 0),
-                ClippingMode = ClipMode.None, // required on tooltips // mark
-                VerticalAlignment = Align.Start,
-                HorizontalAlignment = Align.Start
+                VerticalAlign = Align.Start,
+                HorizontalAlign = Align.Start
             };
 
-            var sp = new StackPanel<RoundedRectangleGeometry, SkiaSharpDrawingContext>
+            var sp = new StackLayout
             {
                 Padding = new Padding(0, 4),
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
-                    (VisualElement)skiaSeries.GetMiniature(point, s_zIndex),
+                    miniature,
                     label
                 }
             };
 
-            _stackPanel.Children.Add(sp);
+            _layout.Children.Add(sp);
         }
 
-        var size = _stackPanel.Measure(chart);
-
+        var size = _container.Measure();
         var location = foundPoints.GetTooltipLocation(size, chart);
 
-        _stackPanel.X = location.X;
-        _stackPanel.Y = location.Y;
+        _container.X = location.X;
+        _container.Y = location.Y;
 
-        chart.AddVisual(_stackPanel);
+        chart.Canvas.Invalidate();
     }
 
     public void Hide(Chart chart)
     {
-        if (chart is null || _stackPanel is null) return;
-        chart.RemoveVisual(_stackPanel);
+        if (chart is null || _container is null) return;
+
+        _container.Opacity = 0f;
+        _container.ScaleTransform = new LvcPoint(0f, 0f);
+
+        chart.Canvas.Invalidate();
     }
 }
