@@ -1,13 +1,13 @@
-﻿using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using SkiaSharp;
+﻿using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace ViewModelsSamples.StepLines.Custom;
 
-public class MyGeometry : SizedGeometry
+public class MyGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    public void Draw(SkiaSharpDrawingContext context)
     {
+        var paint = context.ActiveSkiaPaint;
         var canvas = context.Canvas;
 
         canvas.DrawRect(X, Y, Width, Height, paint);

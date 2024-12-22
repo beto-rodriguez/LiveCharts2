@@ -7,7 +7,7 @@ using LiveChartsCore.Measure;
 
 namespace ViewModelsSamples.Pies.Gauge3;
 
-public class ViewModel 
+public class ViewModel
 {
     public IEnumerable<ISeries> Series { get; set; } =
         GaugeGenerator.BuildSolidGauge(
