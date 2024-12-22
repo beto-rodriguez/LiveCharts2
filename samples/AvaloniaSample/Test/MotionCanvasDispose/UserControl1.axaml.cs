@@ -19,7 +19,7 @@ public partial class UserControl1 : UserControl
         var canvas = this.Find<MotionCanvas>("canvas")
             ?? throw new Exception();
 
-        ViewModelsSamples.Test.MotionCanvasDispose.ViewModel.Generate2(canvas.CanvasCore);
+        ViewModelsSamples.Test.MotionCanvasDispose.ViewModel.Generate(canvas.CanvasCore);
     }
 
     private void InitializeComponent()

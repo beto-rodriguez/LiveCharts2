@@ -7,7 +7,6 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -89,10 +88,8 @@ public partial class ViewModel
     }
 
     [RelayCommand]
-    public void PointerDown(PointerCommandArgs args)
-    {
+    public void PointerDown(PointerCommandArgs args) =>
         _isDown = true;
-    }
 
     [RelayCommand]
     public void PointerMove(PointerCommandArgs args)
@@ -115,8 +112,6 @@ public partial class ViewModel
     }
 
     [RelayCommand]
-    public void PointerUp(PointerCommandArgs args)
-    {
+    public void PointerUp(PointerCommandArgs args) =>
         _isDown = false;
-    }
 }

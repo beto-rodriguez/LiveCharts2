@@ -5,7 +5,6 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace ViewModelsSamples.Events.AddPointOnClick;
 
