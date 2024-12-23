@@ -50,8 +50,8 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.9-preview.2.2" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.9-preview.2.2" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(SkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>

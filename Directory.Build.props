@@ -4,6 +4,7 @@
     <GlobalLangVersion>12.0</GlobalLangVersion>
     <LiveChartsVersion>2.0.0-rc4.5</LiveChartsVersion>
     <LiveChartsAuthors>BetoRodriguez</LiveChartsAuthors>
+    <SkiaSharpVersion>2.88.8</SkiaSharpVersion>
     
     <!-- TODO: Move here other global properties like Version, Author -->
   </PropertyGroup>

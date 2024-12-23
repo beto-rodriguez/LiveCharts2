@@ -56,7 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.9-preview.2.2" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" Version="$(SkiaSharpVersion)" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="7.3.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 

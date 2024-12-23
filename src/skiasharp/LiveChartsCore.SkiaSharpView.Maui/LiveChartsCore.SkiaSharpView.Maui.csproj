@@ -43,7 +43,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-	  <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.9-preview.2.2" />
+	  <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="$(SkiaSharpVersion)" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
 
