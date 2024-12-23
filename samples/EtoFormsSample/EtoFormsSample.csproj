@@ -13,7 +13,7 @@
     <BuildPlatform>Windows</BuildPlatform>
     <BuildPlatform>Gtk</BuildPlatform>
     -->
-    <LangVersion>12.0</LangVersion>
+    <LangVersion>$(GlobalLangVersion)</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
