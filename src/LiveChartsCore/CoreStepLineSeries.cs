@@ -606,15 +606,6 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView)point.Context.Chart;
-        if (chartView.Core.IsZoomingOrPanning)
-        {
-            visual.Geometry.CompleteTransition(null);
-            visual.Geometry.RemoveOnCompleted = true;
-            DataFactory.DisposePoint(point);
-            return;
-        }
-
         var coordinate = point.Coordinate;
 
         var x = secondaryScale.ToPixels(coordinate.SecondaryValue);

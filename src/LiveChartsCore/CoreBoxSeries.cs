@@ -427,15 +427,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView)point.Context.Chart;
-        if (chartView.Core.IsZoomingOrPanning)
-        {
-            visual.CompleteTransition(null);
-            visual.RemoveOnCompleted = true;
-            DataFactory.DisposePoint(point);
-            return;
-        }
-
         var p = primaryScale.ToPixels(pivot);
         var secondary = secondaryScale.ToPixels(point.Coordinate.SecondaryValue);
 

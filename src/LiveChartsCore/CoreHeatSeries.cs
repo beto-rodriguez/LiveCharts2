@@ -307,15 +307,6 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
-        var chartView = (ICartesianChartView)point.Context.Chart;
-        if (chartView.Core.IsZoomingOrPanning)
-        {
-            visual.CompleteTransition(null);
-            visual.RemoveOnCompleted = true;
-            DataFactory.DisposePoint(point);
-            return;
-        }
-
         visual.Color = LvcColor.FromArgb(255, visual.Color);
         visual.RemoveOnCompleted = true;
 
