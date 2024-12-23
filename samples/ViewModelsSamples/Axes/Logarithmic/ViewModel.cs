@@ -39,7 +39,7 @@ public class ViewModel
     ];
 
     public ICartesianAxis[] YAxes { get; set; } = [
-        new LogaritmicAxis(s_logBase)
+        new LogarithmicAxis(s_logBase)
         {
             SeparatorsPaint = new SolidColorPaint
             {

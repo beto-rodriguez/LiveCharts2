@@ -27,16 +27,21 @@ namespace LiveChartsCore.SkiaSharpView;
 /// <summary>
 /// Defines a logarithmic axis.
 /// </summary>
-public class LogaritmicAxis : Axis
+public class LogarithmicAxis : Axis
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LogaritmicAxis"/> class.
     /// </summary>
     /// <param name="base">The log base.</param>
-    public LogaritmicAxis(double @base)
+    public LogarithmicAxis(double @base)
     {
         MinStep = 1;
         Labeler = value => Math.Pow(@base, value).ToString("N2");
         _logBase = @base;
     }
 }
+
+/// <inheritdoc cref="LogarithmicAxis"/>
+[Obsolete("Renamed to LogarithmicAxis")]
+public class LogaritmicAxis(double @base) : LogarithmicAxis(@base)
+{ }
