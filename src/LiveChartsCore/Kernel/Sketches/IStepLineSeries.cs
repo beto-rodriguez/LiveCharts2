@@ -27,7 +27,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a stepline series plot.
 /// </summary>
-/// <seealso cref="IChartSeries" />
+/// <seealso cref="ISeries" />
 public interface IStepLineSeries : ICartesianSeries, IStrokedAndFilled
 {
     /// <summary>

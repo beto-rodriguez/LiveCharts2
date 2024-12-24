@@ -105,6 +105,11 @@ public abstract class Series<TModel, TVisual, TLabel>
     private Func<float, float>? _easingFunction;
     private TimeSpan? _animationsSpeed;
     private string? _geometrySvg;
+    private Paint? _dataLabelsPaint;
+    private double _dataLabelsSize = 16;
+    private double _dataLabelsRotation = 0;
+    private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
+    private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel}"/> class.
@@ -186,36 +191,6 @@ public abstract class Series<TModel, TVisual, TLabel>
 
     bool ISeries.RequiresFindClosestOnPointerDown => DataPointerDown is not null || ChartPointPointerDown is not null;
 
-    /// <summary>
-    /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
-    /// </summary>
-    public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointMeasured;
-
-    /// <summary>
-    /// Occurs when an instance of <see cref="ChartPoint"/> is created.
-    /// </summary>
-    public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointCreated;
-
-    /// <summary>
-    /// Occurs when the pointer goes down over a chart point(s).
-    /// </summary>
-    public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
-
-    /// <summary>
-    /// Occurs when the pointer is over a chart point.
-    /// </summary>
-    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerHover;
-
-    /// <summary>
-    /// Occurs when the pointer left a chart point.
-    /// </summary>
-    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerHoverLost;
-
-    /// <summary>
-    /// Occurs when the pointer goes down over a chart point, if there are multiple points, the closest one will be selected.
-    /// </summary>
-    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerDown;
-
     /// <inheritdoc cref="ISeries.ZIndex" />
     public int ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
 
@@ -290,8 +265,57 @@ public abstract class Series<TModel, TVisual, TLabel>
         protected set => SetProperty(ref _miniatureSketch, value);
     }
 
-    /// <inheritdoc cref="IChartSeries.GetStackGroup"/>
+    /// <inheritdoc cref="ISeries.DataLabelsPaint"/>
+    public Paint? DataLabelsPaint
+    {
+        get => _dataLabelsPaint;
+        set => SetPaintProperty(ref _dataLabelsPaint, value);
+    }
+
+    /// <inheritdoc cref="ISeries.DataLabelsSize"/>
+    public double DataLabelsSize { get => _dataLabelsSize; set => SetProperty(ref _dataLabelsSize, value); }
+
+    /// <inheritdoc cref="ISeries.DataLabelsRotation"/>
+    public double DataLabelsRotation { get => _dataLabelsRotation; set => SetProperty(ref _dataLabelsRotation, value); }
+
+    /// <inheritdoc cref="ISeries.DataLabelsPadding"/>
+    public Padding DataLabelsPadding { get => _dataLabelsPadding; set => SetProperty(ref _dataLabelsPadding, value); }
+
+    /// <inheritdoc cref="ISeries.DataLabelsMaxWidth"/>
+    public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
+
+    /// <inheritdoc cref="ISeries.GetStackGroup"/>
     public virtual int GetStackGroup() => 0;
+
+    /// <summary>
+    /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
+    /// </summary>
+    public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointMeasured;
+
+    /// <summary>
+    /// Occurs when an instance of <see cref="ChartPoint"/> is created.
+    /// </summary>
+    public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointCreated;
+
+    /// <summary>
+    /// Occurs when the pointer goes down over a chart point(s).
+    /// </summary>
+    public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
+
+    /// <summary>
+    /// Occurs when the pointer is over a chart point.
+    /// </summary>
+    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerHover;
+
+    /// <summary>
+    /// Occurs when the pointer left a chart point.
+    /// </summary>
+    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerHoverLost;
+
+    /// <summary>
+    /// Occurs when the pointer goes down over a chart point, if there are multiple points, the closest one will be selected.
+    /// </summary>
+    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerDown;
 
     /// <inheritdoc cref="ISeries.Fetch(Chart)"/>
     protected IEnumerable<ChartPoint> Fetch(Chart chart)
@@ -300,7 +324,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         return DataFactory.Fetch(this, chart);
     }
 
-    /// <inheritdoc cref="IChartSeries.OnDataPointerDown(IChartView, IEnumerable{ChartPoint}, LvcPoint)"/>
+    /// <inheritdoc cref="ISeries.OnDataPointerDown(IChartView, IEnumerable{ChartPoint}, LvcPoint)"/>
     protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         DataPointerDown?.Invoke(chart, points.Select(point => new ChartPoint<TModel, TVisual, TLabel>(point)));
@@ -384,16 +408,19 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
-    /// <inheritdoc cref="IChartSeries.GetMiniaturesSketch"/>
+    /// <inheritdoc cref="ISeries.GetMiniaturesSketch"/>
     [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public abstract Sketch GetMiniaturesSketch();
 
-    /// <inheritdoc cref="IChartSeries.GetMiniature"/>
+    /// <inheritdoc cref="ISeries.GetMiniature"/>
     [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
     public abstract IChartElement GetMiniature(ChartPoint? point, int zindex);
 
-    /// <inheritdoc cref="IChartSeries.GetMiniatureGeometry"/>
+    /// <inheritdoc cref="ISeries.GetMiniatureGeometry"/>
     public abstract IDrawnElement GetMiniatureGeometry(ChartPoint? point);
+
+    void ISeries.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer) =>
+        OnDataPointerDown(chart, points, pointer);
 
     /// <summary>
     /// Builds a paint schedule.

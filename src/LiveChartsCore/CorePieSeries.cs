@@ -47,7 +47,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     IReadOnlyCollection<TModel>? values,
     bool isGauge = false,
     bool isGaugeFill = false)
-        : ChartSeries<TModel, TVisual, TLabel>(GetProperties(isGauge, isGaugeFill), values), IPieSeries
+        : Series<TModel, TVisual, TLabel>(GetProperties(isGauge, isGaugeFill), values), IPieSeries
             where TVisual : BaseDoughnutGeometry, new()
             where TLabel : BaseLabelGeometry, new()
             where TMiniatureGeometry : BoundedDrawnGeometry, new()

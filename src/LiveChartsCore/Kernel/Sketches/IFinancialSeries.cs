@@ -27,7 +27,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a financial series.
 /// </summary>
-/// <seealso cref="IChartSeries" />
+/// <seealso cref="ISeries" />
 public interface IFinancialSeries : ICartesianSeries
 {
     /// <summary>

@@ -25,7 +25,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines an error series series.
 /// </summary>
-/// <seealso cref="IChartSeries" />
+/// <seealso cref="ISeries" />
 public interface IBoxSeries : ICartesianSeries, IStrokedAndFilled
 {
     /// <summary>

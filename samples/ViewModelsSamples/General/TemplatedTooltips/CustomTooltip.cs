@@ -47,7 +47,7 @@ public class CustomTooltip : IChartTooltip
 
         foreach (var point in foundPoints)
         {
-            var series = (IChartSeries)point.Context.Series;
+            var series = point.Context.Series;
             var miniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
 
             var label = new LabelGeometry

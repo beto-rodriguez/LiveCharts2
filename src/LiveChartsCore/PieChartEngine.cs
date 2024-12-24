@@ -51,11 +51,11 @@ public class PieChartEngine(
     private int _nextSeries = 0;
 
     ///<inheritdoc cref="Chart.Series"/>
-    public override IEnumerable<IChartSeries> Series =>
-        view.Series?.Cast<IChartSeries>() ?? [];
+    public override IEnumerable<ISeries> Series =>
+        view.Series?.Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
-    public override IEnumerable<IChartSeries> VisibleSeries =>
+    public override IEnumerable<ISeries> VisibleSeries =>
         Series.Where(x => x.IsVisible);
 
     /// <summary>

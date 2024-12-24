@@ -35,7 +35,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <seealso cref="ChartSeries{TModel, TVisual, TLabel}" />
+/// <seealso cref="Series{TModel, TVisual, TLabel}" />
 /// <seealso cref="IDisposable" />
 /// <seealso cref="ICartesianSeries" />
 /// <remarks>
@@ -46,7 +46,7 @@ namespace LiveChartsCore;
 public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
     IReadOnlyCollection<TModel>? values)
-        : ChartSeries<TModel, TVisual, TLabel>(properties, values), ICartesianSeries
+        : Series<TModel, TVisual, TLabel>(properties, values), ICartesianSeries
             where TVisual : DrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {

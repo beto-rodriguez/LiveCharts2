@@ -25,7 +25,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a bar series point.
 /// </summary>
-/// <seealso cref="IChartSeries" />
+/// <seealso cref="ISeries" />
 public interface IBarSeries : ICartesianSeries, IStrokedAndFilled, IErrorSeries
 {
     /// <summary>

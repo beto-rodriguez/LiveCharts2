@@ -152,7 +152,7 @@ public abstract class Chart
     /// <value>
     /// The drawable series.
     /// </value>
-    public abstract IEnumerable<IChartSeries> VisibleSeries { get; }
+    public abstract IEnumerable<ISeries> VisibleSeries { get; }
 
     /// <summary>
     /// Gets the series.
@@ -160,7 +160,7 @@ public abstract class Chart
     /// <value>
     /// The drawable series.
     /// </value>
-    public abstract IEnumerable<IChartSeries> Series { get; }
+    public abstract IEnumerable<ISeries> Series { get; }
 
     /// <summary>
     /// Gets the view.

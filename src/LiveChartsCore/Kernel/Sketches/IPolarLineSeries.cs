@@ -27,7 +27,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a polar line series plot.
 /// </summary>
-/// <seealso cref="IChartSeries" />
+/// <seealso cref="ISeries" />
 public interface IPolarLineSeries : IPolarSeries, IStrokedAndFilled
 {
     /// <summary>
