@@ -144,7 +144,7 @@ public class SKDefaultTooltip : IChartTooltip
         var i = 0;
         foreach (var point in foundPoints)
         {
-            var series = (IChartSeries)point.Context.Series;
+            var series = point.Context.Series;
 
             if (i == 0)
             {

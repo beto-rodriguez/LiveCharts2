@@ -30,7 +30,7 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public class Stacker
 {
-    private readonly Dictionary<IChartSeries, int> _stackPositions = [];
+    private readonly Dictionary<ISeries, int> _stackPositions = [];
     private readonly List<Dictionary<double, StackedValue>> _stack = [];
     private readonly Dictionary<double, StackedTotal> _totals = [];
     private int _stackCount = 0;
@@ -56,7 +56,7 @@ public class Stacker
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetSeriesStackPosition(IChartSeries series)
+    public int GetSeriesStackPosition(ISeries series)
     {
         if (!_stackPositions.TryGetValue(series, out var i))
         {

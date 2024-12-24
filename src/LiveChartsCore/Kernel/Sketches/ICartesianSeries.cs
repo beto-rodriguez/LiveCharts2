@@ -28,8 +28,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a Cartesian series.
 /// </summary>
-/// <seealso cref="IChartSeries" />
-public interface ICartesianSeries : IChartSeries
+/// <seealso cref="ISeries" />
+public interface ICartesianSeries : ISeries
 {
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 

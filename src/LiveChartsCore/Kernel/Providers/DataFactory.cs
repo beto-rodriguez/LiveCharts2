@@ -117,7 +117,7 @@ public class DataFactory<TModel>
     /// <returns></returns>
     public virtual SeriesBounds GetCartesianBounds(
         Chart chart,
-        IChartSeries series,
+        ISeries series,
         IPlane plane1,
         IPlane plane2)
     {
@@ -199,7 +199,7 @@ public class DataFactory<TModel>
     /// <returns></returns>
     public virtual SeriesBounds GetFinancialBounds(
         Chart chart,
-        IChartSeries series,
+        ISeries series,
         ICartesianAxis x,
         ICartesianAxis y)
     {

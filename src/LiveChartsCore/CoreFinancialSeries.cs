@@ -486,7 +486,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         };
     }
 
-    /// <inheritdoc cref="IChartSeries.GetMiniatureGeometry"/>
+    /// <inheritdoc cref="ISeries.GetMiniatureGeometry"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
         => new TMiniatureGeometry { Width = 0, Height = 0 };
 

@@ -57,12 +57,12 @@ public static class LiveChartsStylerExtensions
     }
 
     /// <summary>
-    ///  Defines a style builder for <see cref="IChartSeries"/> objects.
+    ///  Defines a style builder for <see cref="ISeries"/> objects.
     /// </summary>
     /// <param name="styler">The styler.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForAnySeries(this Theme styler, Action<IChartSeries> predicate)
+    public static Theme HasRuleForAnySeries(this Theme styler, Action<ISeries> predicate)
     {
         styler.SeriesBuilder.Add(predicate);
         return styler;

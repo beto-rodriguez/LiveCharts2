@@ -63,7 +63,7 @@ public class Theme
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IChartSeries>> SeriesBuilder { get; set; } = [];
+    public List<Action<ISeries>> SeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the pie series builder.
@@ -261,7 +261,7 @@ public class Theme
     /// Applies the theme to a series.
     /// </summary>
     /// <param name="series">The series.</param>
-    public virtual void ApplyStyleToSeries(IChartSeries series)
+    public virtual void ApplyStyleToSeries(ISeries series)
     {
         foreach (var rule in SeriesBuilder) rule(series);
 

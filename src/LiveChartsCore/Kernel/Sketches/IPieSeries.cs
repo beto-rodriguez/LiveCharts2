@@ -27,8 +27,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a pie series.
 /// </summary>
-/// <seealso cref="IChartSeries" />
-public interface IPieSeries : IChartSeries, IStrokedAndFilled
+/// <seealso cref="ISeries" />
+public interface IPieSeries : ISeries, IStrokedAndFilled
 {
     /// <summary>
     /// Gets or sets the push out, it is the distance in pixels between the center of the control and the pie slice.

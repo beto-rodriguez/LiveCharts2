@@ -87,11 +87,11 @@ public class CartesianChartEngine(
         [];
 
     ///<inheritdoc cref="Chart.Series"/>
-    public override IEnumerable<IChartSeries> Series =>
-        _chartView.Series?.Cast<IChartSeries>() ?? [];
+    public override IEnumerable<ISeries> Series =>
+        _chartView.Series?.Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
-    public override IEnumerable<IChartSeries> VisibleSeries =>
+    public override IEnumerable<ISeries> VisibleSeries =>
         Series.Where(static x => x.IsVisible);
 
     /// <summary>

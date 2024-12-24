@@ -36,7 +36,7 @@ namespace LiveChartsCore.Kernel;
 /// </remarks>
 /// <param name="series">The series.</param>
 /// <param name="chart">The chart</param>
-public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
+public class SeriesContext(IEnumerable<ISeries> series, Chart chart)
 {
     private int _columnsCount = 0;
     private int _rowsCount = 0;
@@ -47,9 +47,9 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     private bool _arePieLabeleMeasured = false;
     private float _pieLabelsSize = 0f;
 
-    private readonly Dictionary<IChartSeries, int> _columnPositions = [];
-    private readonly Dictionary<IChartSeries, int> _rowPositions = [];
-    private readonly Dictionary<IChartSeries, int> _boxPositions = [];
+    private readonly Dictionary<ISeries, int> _columnPositions = [];
+    private readonly Dictionary<ISeries, int> _rowPositions = [];
+    private readonly Dictionary<ISeries, int> _boxPositions = [];
     private readonly Dictionary<int, int> _stackColumnPositions = [];
     private readonly Dictionary<int, int> _stackRowsPositions = [];
     private readonly Dictionary<int, Bounds> _weightBounds = [];
@@ -62,7 +62,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     /// Gets the column position.
     /// </summary>
     /// <param name="series">The series.</param>
-    public int GetColumnPostion(IChartSeries series)
+    public int GetColumnPostion(ISeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -97,7 +97,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetRowPosition(IChartSeries series)
+    public int GetRowPosition(ISeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -122,7 +122,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetBoxPosition(IChartSeries series)
+    public int GetBoxPosition(ISeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -147,7 +147,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetStackedColumnPostion(IChartSeries series)
+    public int GetStackedColumnPostion(ISeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -172,7 +172,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     /// </summary>
     /// <param name="series">The series.</param>
     /// <returns></returns>
-    public int GetStackedRowPostion(IChartSeries series)
+    public int GetStackedRowPostion(ISeries series)
     {
         if (!series.IsVisible) return ReturnDefault();
 
@@ -251,7 +251,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
     /// <param name="series">The series.</param>
     /// <param name="stackGroup">The stack group.</param>
     /// <returns></returns>
-    public StackPosition? GetStackPosition(IChartSeries series, int stackGroup)
+    public StackPosition? GetStackPosition(ISeries series, int stackGroup)
     {
         if (!series.IsStackedSeries()) return null;
 
@@ -266,7 +266,7 @@ public class SeriesContext(IEnumerable<IChartSeries> series, Chart chart)
             };
     }
 
-    private Stacker GetStacker(IChartSeries series, int stackGroup)
+    private Stacker GetStacker(ISeries series, int stackGroup)
     {
         var key = $"{series.SeriesProperties}.{stackGroup}";
 

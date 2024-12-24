@@ -25,7 +25,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a stacked bar series.
 /// </summary>
-/// <seealso cref="IChartSeries" />
+/// <seealso cref="ISeries" />
 public interface IStackedBarSeries : ICartesianSeries, IStrokedAndFilled
 {
     /// <summary>

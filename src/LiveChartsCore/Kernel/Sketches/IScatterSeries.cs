@@ -25,7 +25,7 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a scatter series.
 /// </summary>
-/// <seealso cref="IChartSeries" />
+/// <seealso cref="ISeries" />
 public interface IScatterSeries : ICartesianSeries, IStrokedAndFilled, IErrorSeries
 {
     /// <summary>

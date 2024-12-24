@@ -27,8 +27,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a polar series.
 /// </summary>
-/// <seealso cref="IChartSeries" />
-public interface IPolarSeries : IChartSeries
+/// <seealso cref="ISeries" />
+public interface IPolarSeries : ISeries
 {
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the angle plane, the index must exist 
