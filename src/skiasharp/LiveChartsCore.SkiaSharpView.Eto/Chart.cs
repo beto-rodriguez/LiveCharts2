@@ -87,7 +87,9 @@ public abstract class Chart : Panel, IChartView
         motionCanvas = new MotionCanvas();
         motionCanvas.SizeChanged += OnResized;
 
-        UpdateLegendLayout();
+        var layout = new DynamicLayout();
+        _ = layout.Add(motionCanvas, xscale: true, yscale: true);
+        Content = layout;
 
         BackgroundColor = Colors.White;
 
@@ -108,37 +110,6 @@ public abstract class Chart : Panel, IChartView
 
         _visualsObserver = new CollectionDeepObserver<ChartElement>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-    }
-
-    private void UpdateLegendLayout()
-    {
-        var layout = new DynamicLayout();
-
-        if (this.legend is Control legend)
-        {
-            if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
-                _ = layout.BeginHorizontal();
-            else
-                _ = layout.BeginVertical();
-
-            if (LegendPosition is LegendPosition.Top)
-                layout.AddCentered(legend, horizontalCenter: true);
-            if (LegendPosition is LegendPosition.Left)
-                layout.AddCentered(legend, verticalCenter: true);
-
-            _ = layout.Add(motionCanvas, xscale: true, yscale: true);
-
-            if (LegendPosition is LegendPosition.Bottom)
-                layout.AddCentered(legend, horizontalCenter: true);
-            if (LegendPosition is LegendPosition.Right)
-                layout.AddCentered(legend, verticalCenter: true);
-        }
-        else
-        {
-            _ = layout.Add(motionCanvas, xscale: true, yscale: true);
-        }
-
-        Content = layout;
     }
 
     #region events
@@ -204,7 +175,7 @@ public abstract class Chart : Panel, IChartView
     public Func<float, float>? EasingFunction { get; set; } = LiveCharts.DefaultSettings.EasingFunction;
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
-    public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; UpdateLegendLayout(); OnPropertyChanged(); } }
+    public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
     public Paint? LegendTextPaint { get => _legendTextPaint; set { _legendTextPaint = value; OnPropertyChanged(); } }
@@ -216,7 +187,7 @@ public abstract class Chart : Panel, IChartView
     public double? LegendTextSize { get => _legendTextSize; set { _legendTextSize = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.Legend" />
-    public IChartLegend? Legend { get => legend; set { legend = value; UpdateLegendLayout(); OnPropertyChanged(); } }
+    public IChartLegend? Legend { get => legend; set { legend = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
