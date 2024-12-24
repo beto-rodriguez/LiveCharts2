@@ -165,6 +165,21 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                     visual.RemoveOnCompleted = true;
                     point.Context.Visual = null;
                 }
+
+                if (point.Context.Label is not null)
+                {
+                    var label = (TLabel)point.Context.Label;
+
+                    label.X = secondary - helper.uwm + helper.cp;
+                    label.Y = median;
+                    label.Opacity = 0;
+                    label.RemoveOnCompleted = true;
+
+                    point.Context.Label = null;
+                }
+
+                pointsCleanup.Clean(point);
+
                 continue;
             }
 

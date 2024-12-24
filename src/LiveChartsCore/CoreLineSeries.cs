@@ -280,6 +280,18 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                         data.TargetPoint.Context.Visual = null;
                     }
 
+                    if (data.TargetPoint.Context.Label is not null)
+                    {
+                        var label = (TLabel)data.TargetPoint.Context.Label;
+
+                        label.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        label.Y = p;
+                        label.Opacity = 0;
+                        label.RemoveOnCompleted = true;
+
+                        data.TargetPoint.Context.Label = null;
+                    }
+
                     pointsCleanup.Clean(data.TargetPoint);
 
                     continue;

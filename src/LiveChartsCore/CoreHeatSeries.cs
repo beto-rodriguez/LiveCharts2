@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -179,6 +180,21 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
                     visual.Color = LvcColor.FromArgb(0, visual.Color);
                     point.Context.Visual = null;
                 }
+
+                if (point.Context.Label is not null)
+                {
+                    var label = (TLabel)point.Context.Label;
+
+                    label.X = secondary - uws * 0.5f;
+                    label.Y = primary - uwp * 0.5f;
+                    label.Opacity = 0;
+                    label.RemoveOnCompleted = true;
+
+                    point.Context.Label = null;
+                }
+
+                pointsCleanup.Clean(point);
+
                 continue;
             }
 

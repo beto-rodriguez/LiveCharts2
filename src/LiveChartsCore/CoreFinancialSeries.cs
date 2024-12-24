@@ -199,6 +199,21 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
                     visual.RemoveOnCompleted = true;
                     point.Context.Visual = null;
                 }
+
+                if (point.Context.Label is not null)
+                {
+                    var label = (TLabel)point.Context.Label;
+
+                    label.X = secondary - uwm;
+                    label.Y = middle;
+                    label.Opacity = 0;
+                    label.RemoveOnCompleted = true;
+
+                    point.Context.Label = null;
+                }
+
+                pointsCleanup.Clean(point);
+
                 continue;
             }
 

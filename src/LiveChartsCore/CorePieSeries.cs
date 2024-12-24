@@ -281,6 +281,20 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                     point.Context.Visual = null;
                 }
 
+                if (point.Context.Label is not null)
+                {
+                    var label = (TLabel)point.Context.Label;
+
+                    label.X = cx;
+                    label.Y = cy;
+                    label.Opacity = 0;
+                    label.RemoveOnCompleted = true;
+
+                    point.Context.Label = null;
+                }
+
+                pointsCleanup.Clean(point);
+
                 var md2 = minDimension;
                 var w2 = md2 - (md2 - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
                 stackedInnerRadius = (w2 + relativeOuterRadius * 2) * 0.5f;

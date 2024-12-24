@@ -184,6 +184,21 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     visual.RemoveOnCompleted = true;
                     point.Context.Visual = null;
                 }
+
+                if (point.Context.Label is not null)
+                {
+                    var label = (TLabel)point.Context.Label;
+
+                    label.X = x - hgs;
+                    label.Y = x - hgs;
+                    label.Opacity = 0;
+                    label.RemoveOnCompleted = true;
+
+                    point.Context.Label = null;
+                }
+
+                pointsCleanup.Clean(point);
+
                 continue;
             }
 
