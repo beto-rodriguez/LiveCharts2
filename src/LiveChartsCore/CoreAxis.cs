@@ -922,6 +922,16 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             if (minDI < mind) mind = minDI;
         }
 
+        if (double.IsInfinity(minZoomDelta))
+        {
+            // at this point the chart data is empty...
+            // force the limits to the known bounds
+
+            minZoomDelta = max - min;
+            mind = min;
+            maxd = max;
+        }
+
         return new(min, max, minZoomDelta, mind, maxd);
     }
 
