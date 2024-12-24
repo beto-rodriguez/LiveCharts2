@@ -212,7 +212,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Tooltip" />
     [Parameter]
-    public IChartTooltip? Tooltip { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+    public IChartTooltip? Tooltip { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
     [Parameter]

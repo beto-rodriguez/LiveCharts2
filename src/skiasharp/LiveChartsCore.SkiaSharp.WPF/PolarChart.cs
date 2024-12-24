@@ -71,9 +71,6 @@ public class PolarChart : Chart, IPolarChartView
         MouseWheel += OnMouseWheel;
         MouseDown += OnMouseDown;
         MouseUp += OnMouseUp;
-
-        tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
-        legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
     }
 
     #region dependency properties

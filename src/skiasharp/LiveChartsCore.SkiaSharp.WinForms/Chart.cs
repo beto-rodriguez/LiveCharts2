@@ -48,12 +48,12 @@ public abstract class Chart : UserControl, IChartView
     /// <summary>
     /// The legend
     /// </summary>
-    protected IChartLegend? legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    protected IChartLegend? legend;
 
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip? tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+    protected IChartTooltip? tooltip;
 
     /// <summary>
     /// The motion canvas

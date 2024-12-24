@@ -688,9 +688,6 @@ public class CartesianChart : UserControl, ICartesianChartView
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
 
-        legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
-        tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
-
         _core.Update();
     }
 

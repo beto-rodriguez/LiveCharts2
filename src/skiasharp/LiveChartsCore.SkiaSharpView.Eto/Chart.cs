@@ -48,12 +48,12 @@ public abstract class Chart : Panel, IChartView
     /// <summary>
     /// The legend
     /// </summary>
-    protected IChartLegend? legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    protected IChartLegend? legend;
 
     /// <summary>
     /// The tool tip
     /// </summary>
-    protected IChartTooltip? tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+    protected IChartTooltip? tooltip;
 
     /// <summary>
     /// The motion canvas
@@ -355,5 +355,6 @@ public abstract class Chart : Panel, IChartView
         IEnumerable<IInteractable> visualElements, LvcPoint pointer) =>
             VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(CoreChart, visualElements, pointer));
 
-    void IChartView.Invalidate() => CoreCanvas.Invalidate();
+    void IChartView.Invalidate() =>
+        CoreCanvas.Invalidate();
 }

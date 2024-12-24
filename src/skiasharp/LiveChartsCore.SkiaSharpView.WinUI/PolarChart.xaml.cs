@@ -551,7 +551,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.Tooltip" />
-    public IChartTooltip? Tooltip { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+    public IChartTooltip? Tooltip { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
     public Paint? LegendBackgroundPaint

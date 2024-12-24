@@ -55,9 +55,6 @@ public class PieChart : Chart, IPieChartView
         SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
         MouseDown += OnMouseDown;
-
-        tooltip = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
-        legend = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
     }
 
     /// <summary>

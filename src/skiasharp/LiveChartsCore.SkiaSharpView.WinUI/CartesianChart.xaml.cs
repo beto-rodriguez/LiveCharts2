@@ -591,7 +591,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.Legend" />
-    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    public IChartLegend? Legend { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     public TooltipPosition TooltipPosition
@@ -622,7 +622,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.Tooltip" />
-    public IChartTooltip? Tooltip { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
+    public IChartTooltip? Tooltip { get; set; }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

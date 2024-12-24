@@ -6,6 +6,7 @@
 
 using System.Linq;
 using System.Windows.Forms;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.General.Scrollable;
@@ -74,7 +75,7 @@ public partial class View : UserControl
         Controls.Add(splitContainer);
     }
 
-    private void OnChart_Updated(IChartView<SkiaSharpDrawingContext> chart)
+    private void OnChart_Updated(IChartView chart)
     {
         var vm = _viewModel;
         var cartesianChart = (CartesianChart)chart;
