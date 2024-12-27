@@ -204,7 +204,8 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.LegendTextSize" />
     [Parameter]
-    public double LegendTextSize { get; set; } = LiveCharts.DefaultSettings.LegendTextSize;
+    public double LegendTextSize { get; set; }
+        = LiveCharts.DefaultSettings.LegendTextSize;
 
     /// <inheritdoc cref="IChartView.TooltipPosition" />
     [Parameter]
