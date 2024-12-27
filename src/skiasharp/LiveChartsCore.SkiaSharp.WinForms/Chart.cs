@@ -68,10 +68,10 @@ public abstract class Chart : UserControl, IChartView
     private IEnumerable<ChartElement> _visuals = [];
     private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
     private Paint? _legendBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
-    private double? _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
+    private double _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
     private Paint? _tooltipTextPaint = (Paint?)LiveCharts.DefaultSettings.TooltipTextPaint;
     private Paint? _tooltipBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
-    private double? _tooltipTextSize = LiveCharts.DefaultSettings.TooltipTextSize;
+    private double _tooltipTextSize = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -210,7 +210,7 @@ public abstract class Chart : UserControl, IChartView
 
     /// <inheritdoc cref="IChartView.LegendTextSize" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public double? LegendTextSize { get => _legendTextSize; set { _legendTextSize = value; OnPropertyChanged(); } }
+    public double LegendTextSize { get => _legendTextSize; set { _legendTextSize = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.Legend" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -230,7 +230,7 @@ public abstract class Chart : UserControl, IChartView
 
     /// <inheritdoc cref="IChartView.TooltipTextSize" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public double? TooltipTextSize { get => _tooltipTextSize; set { _tooltipTextSize = value; OnPropertyChanged(); } }
+    public double TooltipTextSize { get => _tooltipTextSize; set { _tooltipTextSize = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.Tooltip" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
