@@ -152,7 +152,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public Paint? LegendBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextSize"/>
-    public double? LegendTextSize { get; set; }
+    public double LegendTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
     public Paint? TooltipTextPaint { get; set; }
@@ -161,7 +161,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public Paint? TooltipBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize"/>
-    public double? TooltipTextSize { get; set; }
+    public double TooltipTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView.Measuring" />
     public event ChartEventHandler? Measuring;

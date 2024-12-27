@@ -166,7 +166,7 @@ public abstract class Chart : UserControl, IChartView
     /// </summary>
     public static readonly DependencyProperty LegendTextSizeProperty =
        DependencyProperty.Register(
-           nameof(LegendTextSize), typeof(double?), typeof(Chart),
+           nameof(LegendTextSize), typeof(double), typeof(Chart),
            new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -198,7 +198,7 @@ public abstract class Chart : UserControl, IChartView
     /// </summary>
     public static readonly DependencyProperty TooltipTextSizeProperty =
        DependencyProperty.Register(
-           nameof(TooltipTextSize), typeof(double?), typeof(Chart),
+           nameof(TooltipTextSize), typeof(double), typeof(Chart),
            new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -430,9 +430,9 @@ public abstract class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize" />
-    public double? TooltipTextSize
+    public double TooltipTextSize
     {
-        get => (double?)GetValue(TooltipTextSizeProperty);
+        get => (double)GetValue(TooltipTextSizeProperty);
         set => SetValue(TooltipTextSizeProperty, value);
     }
 
@@ -454,9 +454,9 @@ public abstract class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextSize" />
-    public double? LegendTextSize
+    public double LegendTextSize
     {
-        get => (double?)GetValue(LegendTextSizeProperty);
+        get => (double)GetValue(LegendTextSizeProperty);
         set => SetValue(LegendTextSizeProperty, value);
     }
 

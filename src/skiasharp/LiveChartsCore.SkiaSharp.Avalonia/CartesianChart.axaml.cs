@@ -239,8 +239,8 @@ public class CartesianChart : UserControl, ICartesianChartView
     /// <summary>
     /// The tooltip text size property
     /// </summary>
-    public static readonly AvaloniaProperty<double?> TooltipTextSizeProperty =
-        AvaloniaProperty.Register<CartesianChart, double?>(
+    public static readonly AvaloniaProperty<double> TooltipTextSizeProperty =
+        AvaloniaProperty.Register<CartesianChart, double>(
             nameof(TooltipTextSize), LiveCharts.DefaultSettings.TooltipTextSize, inherits: true);
 
     /// <summary>
@@ -269,8 +269,8 @@ public class CartesianChart : UserControl, ICartesianChartView
     /// <summary>
     /// The legend text size property
     /// </summary>
-    public static readonly AvaloniaProperty<double?> LegendTextSizeProperty =
-        AvaloniaProperty.Register<CartesianChart, double?>(
+    public static readonly AvaloniaProperty<double> LegendTextSizeProperty =
+        AvaloniaProperty.Register<CartesianChart, double>(
             nameof(LegendTextSize), LiveCharts.DefaultSettings.LegendTextSize, inherits: true);
 
     /// <summary>
@@ -511,9 +511,9 @@ public class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize" />
-    public double? TooltipTextSize
+    public double TooltipTextSize
     {
-        get => (double?)GetValue(TooltipTextSizeProperty);
+        get => (double?)GetValue(TooltipTextSizeProperty) ?? LiveCharts.DefaultSettings.TooltipTextSize;
         set => SetValue(TooltipTextSizeProperty, value);
     }
 
@@ -539,9 +539,9 @@ public class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextSize" />
-    public double? LegendTextSize
+    public double LegendTextSize
     {
-        get => (double?)GetValue(LegendTextSizeProperty);
+        get => (double?)GetValue(LegendTextSizeProperty) ?? LiveCharts.DefaultSettings.LegendTextSize;
         set => SetValue(LegendTextSizeProperty, value);
     }
 

@@ -125,7 +125,7 @@ public class SKDefaultLegend : IChartLegend
     {
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
         if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
-        if (chart.View.LegendTextSize is not null) TextSize = chart.View.LegendTextSize.Value;
+        TextSize = chart.View.LegendTextSize;
 
         _stackLayout.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
             ? ContainerOrientation.Vertical

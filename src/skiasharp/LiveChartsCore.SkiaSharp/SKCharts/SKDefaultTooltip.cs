@@ -78,7 +78,7 @@ public class SKDefaultTooltip : IChartTooltip
     /// <summary>
     /// Gets or sets the fonts size.
     /// </summary>
-    public double TextSize { get; set; } = 16;
+    public double TextSize { get; set; }
 
     /// <summary>
     /// Gets or sets the easing function.
@@ -95,7 +95,7 @@ public class SKDefaultTooltip : IChartTooltip
     {
         const int wedge = 10;
 
-        if (chart.View.TooltipTextSize is not null) TextSize = chart.View.TooltipTextSize.Value;
+        TextSize = chart.View.TooltipTextSize;
         if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
         if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
 

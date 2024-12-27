@@ -215,7 +215,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     /// </summary>
     public static readonly DependencyProperty LegendTextSizeProperty =
         DependencyProperty.Register(
-            nameof(LegendTextSize), typeof(object), typeof(PieChart),
+            nameof(LegendTextSize), typeof(double), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.LegendTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -247,7 +247,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     /// </summary>
     public static readonly DependencyProperty TooltipTextSizeProperty =
         DependencyProperty.Register(
-            nameof(TooltipTextSize), typeof(object), typeof(PieChart),
+            nameof(TooltipTextSize), typeof(double), typeof(PieChart),
             new PropertyMetadata(LiveCharts.DefaultSettings.TooltipTextSize, OnDependencyPropertyChanged));
 
     /// <summary>
@@ -508,9 +508,9 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize" />
-    public double? TooltipTextSize
+    public double TooltipTextSize
     {
-        get => (double?)GetValue(TooltipTextSizeProperty);
+        get => (double?)GetValue(TooltipTextSizeProperty) ?? LiveCharts.DefaultSettings.TooltipTextSize;
         set => SetValue(TooltipTextSizeProperty, value);
     }
 
@@ -532,9 +532,9 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextSize" />
-    public double? LegendTextSize
+    public double LegendTextSize
     {
-        get => (double?)GetValue(LegendTextSizeProperty);
+        get => (double?)GetValue(LegendTextSizeProperty) ?? LiveCharts.DefaultSettings.LegendTextSize;
         set => SetValue(LegendTextSizeProperty, value);
     }
 
