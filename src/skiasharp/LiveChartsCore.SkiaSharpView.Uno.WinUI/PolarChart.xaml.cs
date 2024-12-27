@@ -578,7 +578,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     /// <inheritdoc cref="IChartView.LegendTextSize" />
     public double LegendTextSize
     {
-        get => (double?)GetValue(LegendTextSizeProperty) ?? LiveCharts.DefaultSettings.TooltipTextSize;
+        get => (double?)GetValue(LegendTextSizeProperty) ?? LiveCharts.DefaultSettings.LegendTextSize;
         set => SetValue(LegendTextSizeProperty, value);
     }
 
