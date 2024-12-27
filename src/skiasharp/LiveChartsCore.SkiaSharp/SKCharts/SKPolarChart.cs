@@ -154,7 +154,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public Paint? LegendBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextSize"/>
-    public double? LegendTextSize { get; set; }
+    public double LegendTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
     public Paint? TooltipTextPaint { get; set; }
@@ -163,7 +163,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public Paint? TooltipBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize"/>
-    public double? TooltipTextSize { get; set; }
+    public double TooltipTextSize { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
     public VisualElement? Title { get; set; }
