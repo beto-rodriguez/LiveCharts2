@@ -258,7 +258,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendTextSize), typeof(object), typeof(PolarChart),
+            nameof(LegendTextSize), typeof(double), typeof(PolarChart),
             LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -300,7 +300,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipTextSize), typeof(object), typeof(PolarChart),
+            nameof(TooltipTextSize), typeof(double), typeof(PolarChart),
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -526,9 +526,9 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextSize" />
-    public double? LegendTextSize
+    public double LegendTextSize
     {
-        get => (double?)GetValue(LegendTextSizeProperty);
+        get => (double?)GetValue(LegendTextSizeProperty) ?? LiveCharts.DefaultSettings.LegendTextSize;
         set => SetValue(LegendTextSizeProperty, value);
     }
 
@@ -557,9 +557,9 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize" />
-    public double? TooltipTextSize
+    public double TooltipTextSize
     {
-        get => (double?)GetValue(TooltipTextSizeProperty);
+        get => (double?)GetValue(TooltipTextSizeProperty) ?? LiveCharts.DefaultSettings.TooltipTextSize;
         set => SetValue(TooltipTextSizeProperty, value);
     }
 

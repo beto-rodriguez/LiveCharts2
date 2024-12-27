@@ -279,7 +279,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
-            nameof(LegendTextSize), typeof(object), typeof(CartesianChart),
+            nameof(LegendTextSize), typeof(double), typeof(CartesianChart),
             LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -319,7 +319,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
-            nameof(TooltipTextSize), typeof(object), typeof(CartesianChart),
+            nameof(TooltipTextSize), typeof(double), typeof(CartesianChart),
             LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
@@ -545,9 +545,9 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextSize" />
-    public double? LegendTextSize
+    public double LegendTextSize
     {
-        get => (double?)GetValue(LegendTextSizeProperty);
+        get => (double?)GetValue(LegendTextSizeProperty) ?? LiveCharts.DefaultSettings.LegendTextSize;
         set => SetValue(LegendTextSizeProperty, value);
     }
 
@@ -591,9 +591,9 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize" />
-    public double? TooltipTextSize
+    public double TooltipTextSize
     {
-        get => (double?)GetValue(TooltipTextSizeProperty);
+        get => (double?)GetValue(TooltipTextSizeProperty) ?? LiveCharts.DefaultSettings.TooltipTextSize;
         set => SetValue(TooltipTextSizeProperty, value);
     }
 
