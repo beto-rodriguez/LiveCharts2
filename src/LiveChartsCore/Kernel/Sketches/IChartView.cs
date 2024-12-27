@@ -128,7 +128,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the legend text size, when null the library will use the default text size.
     /// </summary>
-    double? LegendTextSize { get; set; }
+    double LegendTextSize { get; set; }
 
     /// <summary>
     /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
@@ -143,7 +143,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the tooltip text size, when null the library will use the default text size.
     /// </summary>
-    double? TooltipTextSize { get; set; }
+    double TooltipTextSize { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the automatic updates are enabled.
