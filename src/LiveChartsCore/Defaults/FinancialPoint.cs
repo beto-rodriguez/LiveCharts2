@@ -32,10 +32,10 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class FinancialPoint : IChartEntity, INotifyPropertyChanged
 {
-    private double? _high;
-    private double? _open;
-    private double? _close;
-    private double? _low;
+    private double _high;
+    private double _open;
+    private double _close;
+    private double _low;
     private DateTime _date;
 
     /// <summary>
@@ -52,13 +52,15 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="open">The open.</param>
     /// <param name="close">The close.</param>
     /// <param name="low">The low.</param>
-    public FinancialPoint(DateTime date, double? high, double? open, double? close, double? low)
+    public FinancialPoint(DateTime date, double high, double open, double close, double low)
     {
-        Date = date;
-        High = high;
-        Open = open;
-        Close = close;
-        Low = low;
+        _date = date;
+        _high = high;
+        _open = open;
+        _close = close;
+        _low = low;
+
+        OnCoordinateChanged();
     }
 
     /// <summary>
@@ -75,7 +77,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The high.
     /// </value>
-    public double? High { get => _high; set { _high = value; OnPropertyChanged(); } }
+    public double High { get => _high; set { _high = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the open.
@@ -83,7 +85,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The open.
     /// </value>
-    public double? Open { get => _open; set { _open = value; OnPropertyChanged(); } }
+    public double Open { get => _open; set { _open = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the close.
@@ -91,7 +93,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The close.
     /// </value>
-    public double? Close { get => _close; set { _close = value; OnPropertyChanged(); } }
+    public double Close { get => _close; set { _close = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the low.
@@ -99,7 +101,7 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The low.
     /// </value>
-    public double? Low { get => _low; set { _low = value; OnPropertyChanged(); } }
+    public double Low { get => _low; set { _low = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -121,9 +123,13 @@ public class FinancialPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        Coordinate = _open is null || _high is null || _low is null || _close is null
-            ? Coordinate.Empty
-            : new(_date.Ticks, _high.Value, _open.Value, _close.Value, _low.Value);
+        OnCoordinateChanged();
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    /// <summary>
+    /// Called when the coordinate changed.
+    /// </summary>
+    protected virtual void OnCoordinateChanged() =>
+        Coordinate = new(_date.Ticks, _high, _open, _close, _low);
 }
