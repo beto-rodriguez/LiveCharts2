@@ -414,14 +414,6 @@ public abstract class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
         var ts = tickSecondary.Value * DataPadding.X;
         var tp = tickPrimary.Value * DataPadding.Y;
 
-        // using different methods for both primary and secondary axis seems to be the best solution
-        // if this the following 2 lines needs to be changed again, please ensure that the following test passes:
-        // https://github.com/beto-rodriguez/LiveCharts2/issues/522
-        // https://github.com/beto-rodriguez/LiveCharts2/issues/642
-
-        if (rawBaseBounds.VisibleSecondaryBounds.Delta == 0) tp = secondaryAxis.UnitWidth * DataPadding.X;
-        if (rawBaseBounds.VisiblePrimaryBounds.Delta == 0) ts = rawBaseBounds.VisiblePrimaryBounds.Max * 0.25f;
-
         var rgs = GetRequestedGeometrySize();
         var rso = GetRequestedSecondaryOffset();
         var rpo = GetRequestedPrimaryOffset();
