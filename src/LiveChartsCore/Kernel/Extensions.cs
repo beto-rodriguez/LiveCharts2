@@ -234,7 +234,7 @@ public static class Extensions
         min /= unit;
 
         var range = max - min;
-        if (range == 0) range = min;
+        if (range == 0) range = min / unit;
 
         var separations = axis.Orientation == AxisOrientation.Y
             ? Math.Round(controlSize.Height / h, 0)
