@@ -76,11 +76,6 @@ public class SKDefaultTooltip : IChartTooltip
     }
 
     /// <summary>
-    /// Gets or sets the fonts size.
-    /// </summary>
-    public double TextSize { get; set; }
-
-    /// <summary>
     /// Gets or sets the easing function.
     /// </summary>
     public Func<float, float> Easing { get; set; } = EasingFunctions.EaseOut;
@@ -95,7 +90,7 @@ public class SKDefaultTooltip : IChartTooltip
     {
         const int wedge = 10;
 
-        TextSize = chart.View.TooltipTextSize;
+        var textSize = (float)chart.View.TooltipTextSize;
         if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
         if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
 
@@ -157,7 +152,7 @@ public class SKDefaultTooltip : IChartTooltip
                         {
                             Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
                             Paint = FontPaint,
-                            TextSize = (float)TextSize,
+                            TextSize = textSize,
                             Padding = new Padding(0, 0, 0, 8),
                             MaxWidth = lw,
                             VerticalAlign = Align.Start,
@@ -180,7 +175,7 @@ public class SKDefaultTooltip : IChartTooltip
                     {
                         Text = point.Context.Series.Name ?? string.Empty,
                         Paint = FontPaint,
-                        TextSize = (float)TextSize,
+                        TextSize = textSize,
                         Padding = new Padding(10, 0, 0, 0),
                         MaxWidth = lw,
                         VerticalAlign = Align.Start,
@@ -191,7 +186,7 @@ public class SKDefaultTooltip : IChartTooltip
                 {
                     Text = content,
                     Paint = FontPaint,
-                    TextSize = (float)TextSize,
+                    TextSize = textSize,
                     Padding = new Padding(10, 2, 0, 2),
                     MaxWidth = lw,
                     VerticalAlign = Align.Start,

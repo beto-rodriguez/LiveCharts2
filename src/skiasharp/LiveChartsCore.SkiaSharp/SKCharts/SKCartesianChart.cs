@@ -162,7 +162,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public Paint? LegendBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextSize"/>
-    public double LegendTextSize { get; set; }
+    public double LegendTextSize { get; set; } = LiveCharts.DefaultSettings.LegendTextSize;
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
     public Paint? TooltipTextPaint { get; set; }
@@ -171,7 +171,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public Paint? TooltipBackgroundPaint { get; set; }
 
     /// <inheritdoc cref="IChartView.TooltipTextSize"/>
-    public double TooltipTextSize { get; set; }
+    public double TooltipTextSize { get; set; } = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <inheritdoc cref="IChartView.Measuring" />
     public event ChartEventHandler? Measuring;

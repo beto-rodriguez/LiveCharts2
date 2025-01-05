@@ -85,11 +85,6 @@ public class SKDefaultLegend : IChartLegend
         }
     }
 
-    /// <summary>
-    /// Gets or sets the fonts size.
-    /// </summary>
-    public double TextSize { get; set; } = 15;
-
     /// <inheritdoc cref="IChartLegend.Draw(Chart)"/>
     public void Draw(Chart chart)
     {
@@ -125,7 +120,7 @@ public class SKDefaultLegend : IChartLegend
     {
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
         if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
-        TextSize = chart.View.LegendTextSize;
+        var textSize = (float)chart.View.LegendTextSize;
 
         _stackLayout.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
             ? ContainerOrientation.Vertical
@@ -161,7 +156,7 @@ public class SKDefaultLegend : IChartLegend
                     {
                         Text = series.Name ?? string.Empty,
                         Paint = FontPaint,
-                        TextSize = (float)TextSize,
+                        TextSize = textSize,
                         Padding = new Padding(8, 2, 0, 2),
                         MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
                         VerticalAlign = Align.Start,
