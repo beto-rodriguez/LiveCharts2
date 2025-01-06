@@ -37,6 +37,7 @@ public static class VisualElementsExtensions
     /// <summary>
     /// Creates a relative panel control from a given sketch.
     /// </summary>
+    [Obsolete("Visual elements changed, please check docs.")]
     public static RelativePanel<RectangleGeometry> AsDrawnControl(
         this Sketch sketch, int baseZIndex = 10050)
     {

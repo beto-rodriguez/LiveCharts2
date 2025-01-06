@@ -46,6 +46,9 @@ public abstract class SizedGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSh
     public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 }
 
+/// <summary>
+/// Obsolete.
+/// </summary>
 [Obsolete($"Renamed to {nameof(DrawnGeometry)}")]
 public abstract class Geometry : DrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
@@ -59,8 +62,14 @@ public abstract class Geometry : DrawnGeometry, IDrawnElement<SkiaSharpDrawingCo
     [Obsolete($"Use the {nameof(Draw)} method instead.")]
     public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>
-        new LvcSize(0, 0);
+        new(0, 0);
 
+    /// <summary>
+    /// Legacy method, will be removed in future versions.
+    /// </summary>
+    /// <param name="paintTasks"></param>
+    /// <returns></returns>
     protected virtual LvcSize OnMeasure(Paint paintTasks) => Measure();
 }
