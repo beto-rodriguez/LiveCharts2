@@ -124,6 +124,10 @@ public interface ICartesianChartView : IChartView
     LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0);
 }
 
+/// <summary>
+/// Obsolete.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 [Obsolete("Replaced by the non generic ICartesianChartView interface.")]
 public interface ICartesianChartView<T> : ICartesianChartView
     where T : DrawingContext

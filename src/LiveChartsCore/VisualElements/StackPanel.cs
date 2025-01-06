@@ -299,6 +299,11 @@ public class StackPanel<TBackgroundGeometry> : VisualElement
     }
 }
 
+/// <summary>
+/// Obsolete.
+/// </summary>
+/// <typeparam name="TBackgroundGeometry"></typeparam>
+/// <typeparam name="TDrawingContext"></typeparam>
 [Obsolete($"Replaced by StackLayout")]
 public class StackPanel<TBackgroundGeometry, TDrawingContext> : StackPanel<TBackgroundGeometry>
     where TBackgroundGeometry : BoundedDrawnGeometry, new()

@@ -184,6 +184,10 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
 }
 
+/// <summary>
+/// Obsolete.
+/// </summary>
+/// <typeparam name="TDrawingContext"></typeparam>
 [Obsolete("The generic argument was removed.")]
 public abstract class ChartElement<TDrawingContext> : ChartElement
     where TDrawingContext : DrawingContext

@@ -369,6 +369,12 @@ public class LiveChartsSettings
     public Theme GetTheme() =>
         (Theme?)_theme ?? throw new Exception("A theme is required.");
 
+    /// <summary>
+    /// Obsolete.
+    /// </summary>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     [Obsolete("Replaced by the non generic GetThememe method.")]
     public Theme GetTheme<TDrawingContext>()
         where TDrawingContext : DrawingContext
