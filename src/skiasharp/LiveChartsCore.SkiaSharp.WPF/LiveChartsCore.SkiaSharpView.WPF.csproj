@@ -4,11 +4,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
     <UseWPF>true</UseWPF>
-    <!--
-    netcore app is out of support, but the latest stable release of SkiaSharp requires it.
-    SkiaSharp 3.x removes this target, should we upgrade this view to 3.x?
-    -->
-    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
+
+    <TargetFrameworks>net462;net6.0-windows10.0.19041;net8.0-windows10.0.19041</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WPF</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WPF</RootNamespace>
     <Version>$(LiveChartsVersion)</Version>
@@ -33,8 +30,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="SkiaSharp.Views.WPF" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="$(LatestSkiaSharpVersion)" />
+  <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
