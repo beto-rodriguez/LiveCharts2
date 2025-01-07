@@ -72,6 +72,13 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
     {
         base.OnInitialized();
 
+        // on blazor by default we use the GPU
+        // just because it looks MUCH better
+        // the user can disable this feature by calling
+        // LiveCharts.UseGPU = false;
+        // or by setting the UseGPU property to false in the chart
+        LiveCharts.SetUseGPUIfNotSetByUser(true);
+
         LiveCharts.Configure(config => config.UseDefaults());
 
         _visualsObserver = new CollectionDeepObserver<ChartElement>(
@@ -190,7 +197,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Legend" />
     [Parameter]
-    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    public IChartLegend? Legend { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
     [Parameter]

@@ -30,6 +30,9 @@ namespace LiveChartsCore;
 /// </summary>
 public static class LiveCharts
 {
+    private static bool s_useGPU = false;
+    private static bool s_gpuSetByUser = false;
+
     /// <summary>
     /// A constant that indicates that the tool tip should not add the current label.
     /// </summary>
@@ -60,7 +63,11 @@ public static class LiveCharts
     /// Gets or sets a value indicating whether LiveCharts should use a hardware graphics API
     /// to render the charts.
     /// </summary>
-    public static bool UseGPU { get; set; } = false;
+    public static bool UseGPU
+    {
+        get => s_useGPU;
+        set { s_useGPU = value; s_gpuSetByUser = true; }
+    }
 
     /// <summary>
     /// Gets a value indicating whether LiveCharts has a backend registered.
@@ -140,5 +147,11 @@ public static class LiveCharts
     {
         if (ticks < 0) ticks = 0;
         return TimeSpan.FromTicks((long)ticks);
+    }
+
+    internal static void SetUseGPUIfNotSetByUser(bool value)
+    {
+        if (s_gpuSetByUser) return;
+        s_useGPU = value;
     }
 }

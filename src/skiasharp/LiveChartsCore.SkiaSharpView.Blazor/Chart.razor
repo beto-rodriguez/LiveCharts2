@@ -25,23 +25,23 @@
 @*Ideally this component should be abstract, is it posible in Blazor?*@
 
 <div class="lvc-content">
-	@*
+    @*
         This is an old tooltip that uses HTML and css, instead we now handle also this and draw it.
         <DefaultTooltip @ref="Tooltip" Class="@TooltipClass" />
     *@
 
-	<JsFlexibleContainer @ref="_jsFlexibleContainer" Class="@ContainerActualClass">
-		<Content>
-			<div class="lvc-canvas-container" @ref="CanvasContainerElement">
-				<MotionCanvas
-					@ref="motionCanvas"
-					OnPointerDownCallback="OnPointerDown"
-					OnPointerMoveCallback="OnPointerMove"
-					OnPointerUpCallback="OnPointerUp"
+    <JsFlexibleContainer @ref="_jsFlexibleContainer" Class="@ContainerActualClass">
+        <Content>
+            <div class="lvc-canvas-container" @ref="CanvasContainerElement">
+                <MotionCanvas
+                    @ref="motionCanvas"
+                    OnPointerDownCallback="OnPointerDown"
+                    OnPointerMoveCallback="OnPointerMove"
+                    OnPointerUpCallback="OnPointerUp"
                     OnPointerOutCallback="OnPointerOut"
-					OnWheelCallback="OnWheel">
-				</MotionCanvas>
-			</div>
-		</Content>
-	</JsFlexibleContainer>
+                    OnWheelCallback="OnWheel">
+                </MotionCanvas>
+            </div>
+        </Content>
+    </JsFlexibleContainer>
 </div>
