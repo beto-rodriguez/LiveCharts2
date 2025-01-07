@@ -190,7 +190,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Legend" />
     [Parameter]
-    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    public IChartLegend? Legend { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
     [Parameter]
