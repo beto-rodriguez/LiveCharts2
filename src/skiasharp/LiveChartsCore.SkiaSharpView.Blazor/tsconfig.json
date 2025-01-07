@@ -5,7 +5,7 @@
         "removeComments": false,
         "sourceMap": true,
         "target": "ES6",
-        "outDir": ""
+        "outDir": "wwwroot/"
     },
     "include": [
         "wwwroot/domInterop.ts"
