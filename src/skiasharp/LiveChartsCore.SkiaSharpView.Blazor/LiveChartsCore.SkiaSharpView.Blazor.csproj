@@ -35,24 +35,8 @@
     <NoWarn>$(NoWarn);BL0007</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile></TypeScriptOutFile>
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile></TypeScriptOutFile>
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-  </PropertyGroup>
-
   <ItemGroup>
     <SupportedPlatform Include="browser" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="wwwroot/*.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,7 +47,7 @@
     <PackageReference Condition="$(TargetFramework) == 'net6.0'" Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
     <PackageReference Condition="$(TargetFramework) == 'net8.0'" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
 
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.1.5">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.7.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -73,8 +57,6 @@
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
-
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
 
   <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "noEmitOnError": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "target": "ES6",
+        "outDir": ""
+    },
+    "include": [
+        "wwwroot/domInterop.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
