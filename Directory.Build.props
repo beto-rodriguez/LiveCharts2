@@ -1,15 +1,14 @@
 <Project>
   <PropertyGroup>
-    <MauiVersion>8.0.82</MauiVersion>
-    <GlobalLangVersion>12.0</GlobalLangVersion>
+
     <LiveChartsVersion>2.0.0-rc4.5</LiveChartsVersion>
     <LiveChartsAuthors>BetoRodriguez</LiveChartsAuthors>
 
+    <GlobalLangVersion>12.0</GlobalLangVersion>
+
+    <MauiVersion>8.0.82</MauiVersion>
     <SkiaSharpVersion>2.88.9</SkiaSharpVersion>
+    <LatestSkiaSharpVersion>3.116.1</LatestSkiaSharpVersion> <!-- used for views that use the SkiaSharp 3 as default -->
 
-    <!-- used for views that use the SkiaSharp 3 as default -->
-    <LatestSkiaSharpVersion>3.116.1</LatestSkiaSharpVersion>
-
-    <!-- TODO: Move here other global properties like Version, Author -->
   </PropertyGroup>
 </Project>
