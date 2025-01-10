@@ -50,8 +50,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="SkiaSharp" Version="3.0.0-preview.5.3" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.0.0-preview.5.3" />
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.116.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
