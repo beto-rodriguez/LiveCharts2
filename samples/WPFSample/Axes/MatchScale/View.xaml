@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="WPFSample.Axes.MatchScale.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.MatchScale;assembly=ViewModelsSamples">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <lvc:CartesianChart
+        Margin="20"
+        Series="{Binding Series}"
+        XAxes="{Binding XAxes}"
+        YAxes="{Binding YAxes}"
+        DrawMarginFrame="{Binding Frame}"
+        MatchAxesScreenDataRatio="True"
+        ZoomMode="Both"
+        TooltipPosition="Hidden">
+    </lvc:CartesianChart>
+</UserControl>
