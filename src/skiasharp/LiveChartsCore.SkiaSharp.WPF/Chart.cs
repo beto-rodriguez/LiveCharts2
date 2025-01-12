@@ -695,8 +695,12 @@ public abstract class Chart : UserControl, IChartView
     private void OnMouseLeave(object sender, MouseEventArgs e) =>
         core?.InvokePointerLeft();
 
-    private void Chart_Loaded(object sender, RoutedEventArgs e) =>
+    private void Chart_Loaded(object sender, RoutedEventArgs e)
+    {
+        // related to hack #251201
+        if (core is null || core.IsLoaded) return;
         core?.Load();
+    }
 
     private void Chart_Unloaded(object sender, RoutedEventArgs e)
     {
@@ -707,12 +711,8 @@ public abstract class Chart : UserControl, IChartView
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         core?.Update();
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        // related to hack #251201
-        if (core is null || core.IsLoaded) return;
-        core.Update();
-    }
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
+        core?.Update();
 
     /// <summary>
     /// Called before the chart is unloaded.
