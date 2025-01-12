@@ -58,6 +58,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private bool _matchAxesScreenDataRatio;
 
     #endregion
 
@@ -633,7 +634,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.Legend" />
-    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    public IChartLegend? Legend { get; set; }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -714,6 +715,17 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
     }
 
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+            OnMatchAxesScreenDataRatioChanged();
+        }
+    }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
@@ -769,6 +781,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         {
             _core = new CartesianChartEngine(
                 this, config => config.UseDefaults(), canvas.CanvasCore);
+
+            OnMatchAxesScreenDataRatioChanged();
 
             if (SyncContext != null)
                 _motionCanvas.CanvasCore.Sync = SyncContext;
@@ -893,6 +907,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
 #pragma warning disable CS0618 // Type or member is obsolete
         ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
 #pragma warning restore CS0618 // Type or member is obsolete
+    }
+
+    private void OnMatchAxesScreenDataRatioChanged()
+    {
+        if (_core is null) return;
+        if (_matchAxesScreenDataRatio) SharedAxes.MatchAxesScreenDataRatio(this);
+        else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
     }
 
     void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)

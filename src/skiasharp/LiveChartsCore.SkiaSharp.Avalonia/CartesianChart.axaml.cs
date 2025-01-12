@@ -627,6 +627,19 @@ public class CartesianChart : UserControl, ICartesianChartView
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
     }
 
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+
+            if (value) SharedAxes.MatchAxesScreenDataRatio(this);
+            else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
+        }
+    }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
@@ -805,6 +818,8 @@ public class CartesianChart : UserControl, ICartesianChartView
     }
 
     private float _previousScale = 1;
+    private bool _matchAxesScreenDataRatio;
+
     private void CartesianChart_Pinched(object? sender, PinchEventArgs e)
     {
         if (_core is null) return;

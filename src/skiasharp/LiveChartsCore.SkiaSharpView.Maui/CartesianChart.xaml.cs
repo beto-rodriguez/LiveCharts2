@@ -57,6 +57,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private IChartLegend? _legend;
     private IChartTooltip? _tooltip;
+    private bool _matchAxesScreenDataRatio; 
 
     #endregion
 
@@ -677,6 +678,19 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     {
         get => (ICommand?)GetValue(VisualElementsPointerDownCommandProperty);
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
+    }
+
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+
+            if (value) SharedAxes.MatchAxesScreenDataRatio(this);
+            else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
+        }
     }
 
     #endregion

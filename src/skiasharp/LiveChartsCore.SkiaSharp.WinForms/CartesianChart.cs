@@ -48,6 +48,7 @@ public class CartesianChart : Chart, ICartesianChartView
     private IEnumerable<CoreSection> _sections = [];
     private CoreDrawMarginFrame? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
+    private bool _matchAxesScreenDataRatio;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart"/> class.
@@ -173,6 +174,19 @@ public class CartesianChart : Chart, ICartesianChartView
     /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public FindingStrategy FindingStrategy { get => _findingStrategy; set { _findingStrategy = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+
+            if (value) SharedAxes.MatchAxesScreenDataRatio(this);
+            else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
+        }
+    }
 
     /// <summary>
     /// Initializes the core.
