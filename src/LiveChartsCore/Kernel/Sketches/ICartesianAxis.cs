@@ -236,7 +236,9 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// </summary>
     /// <param name="min">The min limit.</param>
     /// <param name="max">The max limit.</param>
-    void SetLimits(double min, double max);
+    /// <param name="notify">if set to <c>true</c> notify the changes.</param>
+    /// <param name="propagateShared">if set to <c>true</c> propagate the changes to the shared axes.</param>
+    void SetLimits(double min, double max, bool propagateShared = true, bool notify = true);
 
     /// <summary>
     /// Invalidates the crosshair visual.
