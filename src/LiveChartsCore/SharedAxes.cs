@@ -105,14 +105,16 @@ public static class SharedAxes
         var minSourceData = source.MinLimit ?? source.DataBounds.Min;
         var maxSourceData = source.MaxLimit ?? source.DataBounds.Max;
 
-        source.MinLimit = minSourceData;
-        source.MaxLimit = maxSourceData;
+        source.SetLimits(
+            minSourceData,
+            maxSourceData,
+            notify: false);
 
         var sourceDimension = source.Orientation == AxisOrientation.X
             ? drawMarginSize.Width
             : drawMarginSize.Height;
 
-        var sourceScreenDataRatio = sourceDimension / (source.MaxLimit.Value - source.MinLimit.Value);
+        var sourceScreenDataRatio = sourceDimension / (maxSourceData - minSourceData);
 
         var targetDimension = target.Orientation == AxisOrientation.X
             ? drawMarginSize.Width
