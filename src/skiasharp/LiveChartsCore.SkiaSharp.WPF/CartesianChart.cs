@@ -45,6 +45,7 @@ public class CartesianChart : Chart, ICartesianChartView
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
+    private bool _matchAxesScreenDataRatio;
 
     #endregion
 
@@ -287,6 +288,17 @@ public class CartesianChart : Chart, ICartesianChartView
         set => SetValue(FindingStrategyProperty, value);
     }
 
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+            OnMatchAxesScaleChanged();
+        }
+    }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
@@ -340,6 +352,8 @@ public class CartesianChart : Chart, ICartesianChartView
 
         core = new CartesianChartEngine(
             this, config => config.UseDefaults(), canvas.CanvasCore);
+
+        OnMatchAxesScaleChanged();
 
         core.Update();
     }
@@ -400,5 +414,12 @@ public class CartesianChart : Chart, ICartesianChartView
     {
         e.ManipulationContainer = this;
         e.Handled = true;
+    }
+
+    private void OnMatchAxesScaleChanged()
+    {
+        if (core is null) return;
+        if (MatchAxesScreenDataRatio) SharedAxes.MatchAxesScreenDataRatio(this);
+        else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
     }
 }

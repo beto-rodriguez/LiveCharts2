@@ -40,6 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
 {
     private LvcColor _backColor;
+    private bool _matchAxesScreenDataRatio;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
@@ -194,6 +195,19 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
 
     /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
     public event VisualElementsHandler? VisualElementsPointerDown;
+
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+
+            if (value) SharedAxes.MatchAxesScreenDataRatio(this);
+            else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
+        }
+    }
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)

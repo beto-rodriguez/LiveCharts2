@@ -106,6 +106,12 @@ public interface ICartesianChartView : IChartView
     double ZoomingSpeed { get; set; }
 
     /// <summary>
+    /// Matches the axes screen data ratio, this method forces the x and y axes to use the same scale,
+    /// this means that both axes will have the same number of pixels per data unit.
+    /// </summary>
+    bool MatchAxesScreenDataRatio { get; set; }
+
+    /// <summary>
     /// Scales a point in pixels to the chart data scale.
     /// </summary>
     /// <param name="point">The point.</param>

@@ -53,6 +53,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private bool _matchAxesScreenDataRatio;
 
     #endregion
 
@@ -703,6 +704,17 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         set => SetValue(VisualElementsPointerDownCommandProperty, value);
     }
 
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+            OnMatchAxesScreenDataRatioChanged();
+        }
+    }
+
     #endregion
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
@@ -762,6 +774,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         {
             _core = new CartesianChartEngine(
                 this, config => config.UseDefaults(), canvas.CanvasCore);
+
+            OnMatchAxesScreenDataRatioChanged();
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;
@@ -871,6 +885,13 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
 
     private void OnUnloaded(object sender, RoutedEventArgs e) =>
         _core?.Unload();
+
+    private void OnMatchAxesScreenDataRatioChanged()
+    {
+        if (_core is null) return;
+        if (MatchAxesScreenDataRatio) SharedAxes.MatchAxesScreenDataRatio(this);
+        else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
+    }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {

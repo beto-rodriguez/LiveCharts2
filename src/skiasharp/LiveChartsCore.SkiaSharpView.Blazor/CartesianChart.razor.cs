@@ -47,6 +47,7 @@ public partial class CartesianChart : Chart, ICartesianChartView
     private IEnumerable<CoreSection> _sections = [];
     private CoreDrawMarginFrame? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
+    private bool _matchAxesScreenDataRatio;
 
     /// <inheritdoc cref="Chart.OnInitialized"/>
     protected override void OnInitialized()
@@ -179,6 +180,18 @@ public partial class CartesianChart : Chart, ICartesianChartView
         }
     }
 
+    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
+    [Parameter]
+    public bool MatchAxesScreenDataRatio
+    {
+        get => _matchAxesScreenDataRatio;
+        set
+        {
+            _matchAxesScreenDataRatio = value;
+            MatchAxesScreenDataRatioChanged();
+        }
+    }
+
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
@@ -227,6 +240,8 @@ public partial class CartesianChart : Chart, ICartesianChartView
         core = new CartesianChartEngine(
             this, config => config.UseDefaults(), motionCanvas.CanvasCore);
 
+        MatchAxesScreenDataRatioChanged();
+
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }
@@ -237,8 +252,6 @@ public partial class CartesianChart : Chart, ICartesianChartView
         if (core is null) throw new Exception("core not found");
         var c = (CartesianChartEngine)core;
         var p = new LvcPoint((float)e.OffsetX, (float)e.OffsetY);
-
-        Console.WriteLine($"dx {e.DeltaX}, dy {e.DeltaY}, dz {e.DeltaZ}, dm {e.DeltaMode}");
 
         c.Zoom(p, e.DeltaY < 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
 
@@ -268,4 +281,11 @@ public partial class CartesianChart : Chart, ICartesianChartView
 
     private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         OnPropertyChanged();
+
+    private void MatchAxesScreenDataRatioChanged()
+    {
+        if (core is null) return;
+        if (MatchAxesScreenDataRatio) SharedAxes.MatchAxesScreenDataRatio(this);
+        else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
+    }
 }
