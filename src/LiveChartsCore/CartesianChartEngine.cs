@@ -111,6 +111,12 @@ public class CartesianChartEngine(
     public override IChartView View => _chartView;
 
     /// <summary>
+    /// Called when the draw margin is already known. The draw margin is the Cartesian grid
+    /// where the series are drawn, ignoring the axes labels, legends, titles etc.
+    /// </summary>
+    public event Action<CartesianChartEngine>? DrawMarginDefined;
+
+    /// <summary>
     /// Finds the points near to the specified location.
     /// </summary>
     /// <param name="pointerPosition">The pointer position.</param>
@@ -726,6 +732,7 @@ public class CartesianChartEngine(
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
         UpdateBounds();
+        DrawMarginDefined?.Invoke(this);
 
         if (title is not null)
         {
