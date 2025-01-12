@@ -572,6 +572,15 @@ public abstract class Chart : UserControl, IChartView
 
         InitializeCore();
 
+        // hack hack #251201 for:
+        // https://github.com/beto-rodriguez/LiveCharts2/issues/1383
+        // when the chart starts with Visibility.Collapsed
+        // the OnApplyTemplate() is not called, BUT the Loaded event is called...
+        // this result in the core not being loaded, and the chart not updating.
+        // so in this case, we load the core here.
+        if (core is not null && !core.IsLoaded)
+            core.Load();
+
         if (core is null) throw new Exception("Core not found!");
         core.Measuring += OnCoreMeasuring;
         core.UpdateStarted += OnCoreUpdateStarted;
@@ -698,8 +707,12 @@ public abstract class Chart : UserControl, IChartView
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         core?.Update();
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        core?.Update();
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        // related to hack #251201
+        if (core is null || core.IsLoaded) return;
+        core.Update();
+    }
 
     /// <summary>
     /// Called before the chart is unloaded.
