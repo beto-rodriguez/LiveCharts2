@@ -90,8 +90,8 @@ public class SemicircleHoverArea : HoverArea
         return this;
     }
 
-    /// <inheritdoc cref="HoverArea.DistanceTo(LvcPoint)"/>
-    public override double DistanceTo(LvcPoint point)
+    /// <inheritdoc cref="HoverArea.DistanceTo(LvcPoint, FindingStrategy)"/>
+    public override double DistanceTo(LvcPoint point, FindingStrategy strategy)
     {
         var a = (StartAngle + EndAngle) * 0.5;
         var r = Radius * 0.5f;

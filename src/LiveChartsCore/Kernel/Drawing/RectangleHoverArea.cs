@@ -181,13 +181,25 @@ public class RectangleHoverArea : HoverArea
         return this;
     }
 
-    /// <inheritdoc cref="HoverArea.DistanceTo(LvcPoint)"/>
-    public override double DistanceTo(LvcPoint point)
+    /// <inheritdoc cref="HoverArea.DistanceTo(LvcPoint, FindingStrategy)"/>
+    public override double DistanceTo(LvcPoint point, FindingStrategy strategy)
     {
-        var cx = X + Width * 0.5;
-        var cy = Y + Height * 0.5;
+        var midX = X + Width * 0.5;
+        var midY = Y + Height * 0.5;
 
-        return Math.Sqrt(Math.Pow(point.X - cx, 2) + Math.Pow(point.Y - cy, 2));
+        return strategy switch
+        {
+            FindingStrategy.CompareOnlyX or FindingStrategy.CompareOnlyXTakeClosest
+                => Math.Abs(point.X - midX),
+            FindingStrategy.CompareOnlyY or FindingStrategy.CompareOnlyYTakeClosest
+                => Math.Abs(point.Y - midY),
+            FindingStrategy.CompareAll or FindingStrategy.CompareAllTakeClosest or
+            FindingStrategy.ExactMatch or FindingStrategy.ExactMatchTakeClosest
+                => Math.Sqrt(Math.Pow(point.X - midX, 2) + Math.Pow(point.Y - midY, 2)),
+            FindingStrategy.Automatic
+                => throw new Exception($"The strategy {strategy} is not supported."),
+            _ => throw new NotImplementedException()
+        };
     }
 
     /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, FindingStrategy)"/>
@@ -202,11 +214,15 @@ public class RectangleHoverArea : HoverArea
 
         return strategy switch
         {
-            FindingStrategy.CompareOnlyX or FindingStrategy.CompareOnlyXTakeClosest => isInX,
-            FindingStrategy.CompareOnlyY or FindingStrategy.CompareOnlyYTakeClosest => isInY,
-            FindingStrategy.CompareAll or FindingStrategy.CompareAllTakeClosest => isInX && isInY,
-            FindingStrategy.ExactMatch => isInX && isInY,
-            FindingStrategy.Automatic => throw new Exception($"The strategy {strategy} is not supported."),
+            FindingStrategy.CompareOnlyX or FindingStrategy.CompareOnlyXTakeClosest
+                => isInX,
+            FindingStrategy.CompareOnlyY or FindingStrategy.CompareOnlyYTakeClosest
+                => isInY,
+            FindingStrategy.CompareAll or FindingStrategy.CompareAllTakeClosest or
+            FindingStrategy.ExactMatch or FindingStrategy.ExactMatchTakeClosest
+                => isInX && isInY,
+            FindingStrategy.Automatic
+                => throw new Exception($"The strategy {strategy} is not supported."),
             _ => throw new NotImplementedException()
         };
     }
