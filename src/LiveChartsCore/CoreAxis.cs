@@ -817,14 +817,16 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         IEnumerable<ICartesianSeries> allSeries)
     {
         ChartPoint? closestPoint = null;
+        var strategy = allSeries.GetFindingStrategy();
+
         foreach (var series in allSeries)
         {
-            var hitpoints = series.FindHitPoints(cartesianChart, pointerPosition, allSeries.GetFindingStrategy(), FindPointFor.PointerDownEvent);
+            var hitpoints = series.FindHitPoints(cartesianChart, pointerPosition, strategy, FindPointFor.PointerDownEvent);
             var hitpoint = hitpoints.FirstOrDefault();
             if (hitpoint == null) continue;
 
             if (closestPoint is null ||
-                hitpoint.DistanceTo(pointerPosition) < closestPoint.DistanceTo(pointerPosition))
+                hitpoint.DistanceTo(pointerPosition, strategy) < closestPoint.DistanceTo(pointerPosition, strategy))
             {
                 closestPoint = hitpoint;
             }

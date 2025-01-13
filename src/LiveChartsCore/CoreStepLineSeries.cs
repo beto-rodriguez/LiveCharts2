@@ -460,7 +460,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                         pointerPosition.Y > y && pointerPosition.Y < y + v.Height;
                 }),
             FindingStrategy.ExactMatchTakeClosest => Fetch(chart)
-                .Select(x => new { distance = x.DistanceTo(pointerPosition), point = x })
+                .Select(x => new { distance = x.DistanceTo(pointerPosition, strategy), point = x })
                 .OrderBy(x => x.distance)
                 .SelectFirst(x => x.point),
             FindingStrategy.Automatic or
