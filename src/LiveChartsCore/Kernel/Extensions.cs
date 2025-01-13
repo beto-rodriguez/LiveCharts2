@@ -486,7 +486,7 @@ public static class Extensions
         return points
             .Select(p => new
             {
-                distance = p.DistanceTo(fp),
+                distance = p.DistanceTo(fp, FindingStrategy.CompareAll),
                 point = p
             })
             .OrderBy(p => p.distance)

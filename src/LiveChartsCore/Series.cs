@@ -346,7 +346,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         {
             // if select closest...
             query = query
-                .Select(x => new { distance = x.DistanceTo(pointerPosition), point = x })
+                .Select(x => new { distance = x.DistanceTo(pointerPosition, strategy), point = x })
                 .OrderBy(x => x.distance)
                 .SelectFirst(x => x.point);
         }
