@@ -351,10 +351,16 @@ public class DataFactory<TModel>
 
             if (!entity.MetaData.ChartPoints.TryGetValue(chart.View, out var point))
             {
-                point = new ChartPoint(chart.View, series, entity);
-                entity.MetaData.ChartPoints[chart.View] = point;
+                point = new(chart.View, series, entity);
                 point.Context.DataSource = entity;
+                entity.MetaData.ChartPoints[chart.View] = point;
             }
+
+            // IChartEntity holds its own MetaData property, when the same entity
+            // is used in multiple series, we update the context.
+            // Should this be improved?
+            if (point.Context.Series != series)
+                point.Context = new(chart.View, series, entity) { DataSource = entity };
 
             entity.MetaData.EntityIndex = index++;
 

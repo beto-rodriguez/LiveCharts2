@@ -100,7 +100,7 @@ public class ChartPoint
     /// <value>
     /// The context.
     /// </value>
-    public ChartPointContext Context { get; }
+    public ChartPointContext Context { get; internal set; }
 
     internal bool IsPointerOver { get; set; }
 
