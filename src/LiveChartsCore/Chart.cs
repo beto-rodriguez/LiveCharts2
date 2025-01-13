@@ -609,7 +609,11 @@ public abstract class Chart
     /// <param name="rs">The right margin.</param>
     protected void DrawLegend(ref float ts, ref float bs, ref float ls, ref float rs)
     {
-        if (Legend is null || LegendPosition == LegendPosition.Hidden) return;
+        if (Legend is null || LegendPosition == LegendPosition.Hidden)
+        {
+            Legend?.Hide(this);
+            return;
+        }
 
         _legendSize = Legend.Measure(this);
 

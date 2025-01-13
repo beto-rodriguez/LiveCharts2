@@ -116,6 +116,17 @@ public class SKDefaultLegend : IChartLegend
         return _container.Measure();
     }
 
+    /// <inheritdoc cref="IChartLegend.Hide(Chart)"/>
+    public void Hide(Chart chart)
+    {
+        if (_drawableTask is not null)
+        {
+            chart.Canvas.RemovePaintTask(_drawableTask);
+            _isInCanvas = false;
+            _drawableTask = null;
+        }
+    }
+
     private void BuildLayout(Chart chart)
     {
         if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;

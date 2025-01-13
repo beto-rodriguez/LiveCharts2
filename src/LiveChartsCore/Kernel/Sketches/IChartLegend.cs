@@ -40,4 +40,10 @@ public interface IChartLegend
     /// </summary>
     /// <param name="chart">The chart that holds the control.</param>
     LvcSize Measure(Chart chart);
+
+    /// <summary>
+    /// Hides this legend instance.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    void Hide(Chart chart);
 }

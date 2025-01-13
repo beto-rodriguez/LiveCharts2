@@ -60,6 +60,16 @@ public class CustomLegend : IChartLegend
         return _container.Measure();
     }
 
+    public void Hide(Chart chart)
+    {
+        if (_drawableTask is not null)
+        {
+            chart.Canvas.RemovePaintTask(_drawableTask);
+            _isInCanvas = false;
+            _drawableTask = null;
+        }
+    }
+
     private void BuildLayout(Chart chart)
     {
         _stackLayout.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
