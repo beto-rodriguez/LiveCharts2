@@ -16,13 +16,13 @@ public class VisualElementsTests
     [TestMethod]
     public void Dispose()
     {
-        var suts = new List<VisualElement<SkiaSharpDrawingContext>>
+        var suts = new List<VisualElement>
         {
-            new StackPanel<RectangleGeometry, SkiaSharpDrawingContext>(),
-            new RelativePanel<RectangleGeometry, SkiaSharpDrawingContext>(),
-            new TableLayout<RectangleGeometry, SkiaSharpDrawingContext>(),
+            new StackPanel<RectangleGeometry>(),
+            new RelativePanel<RectangleGeometry>(),
+            new TableLayout<RectangleGeometry>(),
             new GeometryVisual<RectangleGeometry>(),
-            new VariableGeometryVisual<SkiaSharpDrawingContext>(new RectangleGeometry()),
+            new VariableGeometryVisual(new RectangleGeometry()),
             new NeedleVisual
             {
                 Fill = new SolidColorPaint(SKColors.Red)
@@ -77,7 +77,7 @@ public class VisualElementsTests
             chart.CoreCanvas._paintTasks.Count > p);
 
         // clear the visuals and ensure that all the geometries and paints were removed
-        chart.VisualElements = new List<VisualElement<SkiaSharpDrawingContext>>();
+        chart.VisualElements = new List<VisualElement>();
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() == g &&

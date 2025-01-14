@@ -24,32 +24,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Segments;
 
 namespace LiveChartsCore.SkiaSharpView;
 
 /// <summary>
 /// Defines a map builder.
 /// </summary>
-public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
+public class MapFactory : IMapFactory
 {
-    private readonly HashSet<HeatPathShape> _usedPathShapes = [];
-    private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _usedPaints = [];
+    private readonly HashSet<LandAreaGeometry> _usedPathShapes = [];
+    private readonly HashSet<Paint> _usedPaints = [];
     private readonly HashSet<string> _usedLayers = [];
-    private IGeoMapView<SkiaSharpDrawingContext>? _mapView;
+    private IGeoMapView? _mapView;
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.GenerateLands(MapContext{TDrawingContext})"/>
-    public void GenerateLands(MapContext<SkiaSharpDrawingContext> context)
+    /// <inheritdoc cref="IMapFactory.GenerateLands(MapContext)"/>
+    public void GenerateLands(MapContext context)
     {
         var projector = context.Projector;
 
         var toRemoveLayers = new HashSet<string>(_usedLayers);
-        var toRemovePathShapes = new HashSet<HeatPathShape>(_usedPathShapes);
-        var toRemovePaints = new HashSet<IPaint<SkiaSharpDrawingContext>>(_usedPaints);
+        var toRemovePathShapes = new HashSet<LandAreaGeometry>(_usedPathShapes);
+        var toRemovePaints = new HashSet<Paint>(_usedPaints);
 
         var layersQuery = context.View.ActiveMap.Layers.Values
             .Where(x => x.IsVisible)
@@ -82,16 +82,16 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
             {
                 foreach (var landData in landDefinition.Data)
                 {
-                    HeatPathShape shape;
+                    LandAreaGeometry shape;
 
                     if (landData.Shape is null)
                     {
-                        landData.Shape = shape = new HeatPathShape { IsClosed = true };
+                        landData.Shape = shape = new LandAreaGeometry();
                         shape.Animate(EasingFunctions.ExponentialOut, TimeSpan.FromMilliseconds(800));
                     }
                     else
                     {
-                        shape = (HeatPathShape)landData.Shape;
+                        shape = (LandAreaGeometry)landData.Shape;
                     }
 
                     _ = _usedPathShapes.Add(shape);
@@ -100,25 +100,31 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                     stroke?.AddGeometryToPaintTask(context.View.Canvas, shape);
                     fill?.AddGeometryToPaintTask(context.View.Canvas, shape);
 
-                    shape.ClearCommands();
+                    shape.Commands.Clear();
 
                     var isFirst = true;
+                    float xp = 0, yp = 0;
 
                     foreach (var point in landData.Coordinates)
                     {
-                        var p = projector.ToMap(new double[] { point.X, point.Y });
+                        var p = projector.ToMap([point.X, point.Y]);
 
                         var x = p[0];
                         var y = p[1];
 
                         if (isFirst)
                         {
-                            _ = shape.AddLast(new MoveToPathCommand { X = x, Y = y });
-                            isFirst = false;
-                            continue;
+                            xp = x;
+                            yp = y;
                         }
 
-                        _ = shape.AddLast(new LineSegment { X = x, Y = y });
+                        _ = shape.Commands.AddLast(new Segment
+                        {
+                            Xi = xp,
+                            Yi = yp,
+                            Xj = x,
+                            Yj = y,
+                        });
                     }
                 }
             }
@@ -128,7 +134,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                 stroke?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
                 fill?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
 
-                shape.ClearCommands();
+                shape.Commands.Clear();
 
                 _ = _usedPathShapes.Remove(shape);
             }
@@ -147,11 +153,11 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
         }
     }
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
-    public void ViewTo(GeoMap<SkiaSharpDrawingContext> sender, object? command) { }
+    /// <inheritdoc cref="IMapFactory.ViewTo(GeoMapChart, object)"/>
+    public void ViewTo(GeoMapChart sender, object? command) { }
 
-    /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
-    public void Pan(GeoMap<SkiaSharpDrawingContext> sender, LvcPoint delta) { }
+    /// <inheritdoc cref="IMapFactory.Pan(GeoMapChart, LvcPoint)"/>
+    public void Pan(GeoMapChart sender, LvcPoint delta) { }
 
     /// <summary>
     /// Disposes the map factory.
@@ -173,7 +179,7 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
                 {
                     foreach (var landData in landDefinition.Data)
                     {
-                        var shape = (IDrawable<SkiaSharpDrawingContext>?)landData.Shape;
+                        var shape = landData.Shape;
                         if (shape is null) continue;
 
                         stroke?.RemoveGeometryFromPainTask(_mapView.Canvas, shape);

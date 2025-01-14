@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -28,14 +27,12 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a polar series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IPolarSeries<TDrawingContext> : IChartSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="ISeries" />
+public interface IPolarSeries : ISeries
 {
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the angle plane, the index must exist 
-    /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesAngleAt"/> collection.
+    /// in the <see cref="IPolarChartView.AngleAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -44,7 +41,7 @@ public interface IPolarSeries<TDrawingContext> : IChartSeries<TDrawingContext>
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the radius plane, the index must exist 
-    /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesRadiusAt"/> collection.
+    /// in the <see cref="IPolarChartView.RadiusAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -66,5 +63,5 @@ public interface IPolarSeries<TDrawingContext> : IChartSeries<TDrawingContext>
     /// <param name="angleAxis">The angle axis.</param>
     /// <param name="radiusAxis">The radius axis.</param>
     /// <returns>the series bounds</returns>
-    SeriesBounds GetBounds(PolarChart<TDrawingContext> chart, IPolarAxis angleAxis, IPolarAxis radiusAxis);
+    SeriesBounds GetBounds(Chart chart, IPolarAxis angleAxis, IPolarAxis radiusAxis);
 }

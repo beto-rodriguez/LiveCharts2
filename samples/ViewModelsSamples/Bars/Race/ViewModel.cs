@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
-using LiveChartsCore.ConditionalDraw;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
@@ -106,5 +105,5 @@ public partial class ViewModel : ObservableObject
         }
     }
 
-    private ICollection<PilotInfo> SortData() => [.. _data.OrderBy(x => x.Value)];
+    private PilotInfo[] SortData() => [.. _data.OrderBy(x => x.Value)];
 }

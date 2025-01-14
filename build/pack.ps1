@@ -2,6 +2,7 @@ param([string]$configuration = "Debug", [string]$nupkgOutputPath = "./nupkg")
 
 [Project[]]$projects = @(
     [Project]::new("./src/LiveChartsCore/LiveChartsCore.csproj")
+    [Project]::new("./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp/LiveChartsCore.SkiaSharpView.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/LiveChartsCore.SkiaSharpView.Avalonia.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms/LiveChartsCore.SkiaSharpView.WinForms.csproj")
@@ -11,7 +12,6 @@ param([string]$configuration = "Debug", [string]$nupkgOutputPath = "./nupkg")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Eto/LiveChartsCore.SkiaSharpView.Eto.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/LiveChartsCore.SkiaSharpView.Maui.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj")
-    [Project]::new("./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharpView.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj")
 )
 
@@ -41,6 +41,6 @@ foreach ($p in $projects) {
     if (Test-Path $($folder + "/bin")) {
         Remove-Item $($folder + "/bin") -Force -Recurse
     }
-    
+
     dotnet pack $p.src -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 }

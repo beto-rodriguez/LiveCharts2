@@ -25,8 +25,10 @@ using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -51,8 +53,8 @@ public interface ISeries : IChartElement
     bool RequiresFindClosestOnPointerDown { get; }
 
     /// <summary>
-    /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip{TDrawingContext}"/> or 
-    /// <see cref="IChartLegend{TDrawingContext}"/>, the default value is set automatically by the library.
+    /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip"/> or 
+    /// <see cref="IChartLegend"/>, the default value is set automatically by the library.
     /// </summary>
     string? Name { get; set; }
 
@@ -114,13 +116,13 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the series geometry svg, this property requires the series visual to be
-    /// an <see cref="IVariableSvgPath{TDrawingContext}"/> instance.
+    /// an <see cref="IVariableSvgPath"/> instance.
     /// </summary>
     string? GeometrySvg { get; set; }
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
+    /// <see cref="Chart.AnimationsSpeed"/> property will be used.
     /// </summary>
     /// <value>
     /// The animations speed.
@@ -129,12 +131,52 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the easing function to animate the series, if this property is null, the
-    /// <see cref="Chart{TDrawingContext}.EasingFunction"/> property will be used.
+    /// <see cref="Chart.EasingFunction"/> property will be used.
     /// </summary>
     /// <value>
     /// The easing function.
     /// </value>
     Func<float, float>? EasingFunction { get; set; }
+
+    /// <summary>
+    /// Gets or sets the data labels paint.
+    /// </summary>
+    /// <value>
+    /// The data labels paint.
+    /// </value>
+    Paint? DataLabelsPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size of the data labels.
+    /// </summary>
+    /// <value>
+    /// The size of the data labels.
+    /// </value>
+    double DataLabelsSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the data labels rotation in degrees.
+    /// </summary>
+    /// <value>
+    /// The rotation of the data labels in degrees.
+    /// </value>
+    double DataLabelsRotation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the data labels padding.
+    /// </summary>
+    /// <value>
+    /// The data labels padding.
+    /// </value>
+    Padding DataLabelsPadding { get; set; }
+
+    /// <summary>
+    /// Gets or sets the max width of the data labels.
+    /// </summary>
+    /// <value>
+    /// The max with of the data labels.
+    /// </value>
+    double DataLabelsMaxWidth { get; set; }
 
     /// <summary>
     /// Gets the tool tip text for a give chart point.
@@ -158,21 +200,22 @@ public interface ISeries : IChartElement
     string? GetDataLabelText(ChartPoint point);
 
     /// <summary>
-    /// Gets a <see cref="ChartPoint"/> array with the points used to generate the plot.
+    /// Gets a <see cref="ChartPoint"/> IEnumerable with the points used to generate the plot.
     /// </summary>
     /// <param name="chart">the chart</param>
-    /// <returns></returns>
-    IEnumerable<ChartPoint> Fetch(IChart chart);
+    /// <returns>The IEnumerable of <see cref="ChartPoint"/>.</returns>
+    IEnumerable<ChartPoint> Fetch(Chart chart);
 
     /// <summary>
     /// Gets the <see cref="ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
-    /// to the chart's <see cref="TooltipFindingStrategy"/> property.
+    /// to the chart's <see cref="FindingStrategy"/> property.
     /// </summary>
     /// <param name="chart">the chart.</param>
     /// <param name="pointerPosition">the pointer position.</param>
     /// <param name="strategy">the strategy.</param>
+    /// <param name="findPointFor">the trigger that fired the search.</param>
     /// <returns></returns>
-    IEnumerable<ChartPoint> FindHitPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy);
+    IEnumerable<ChartPoint> FindHitPoints(Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor);
 
     /// <summary>
     /// Called when the pointer enters a chart point.
@@ -195,6 +238,41 @@ public interface ISeries : IChartElement
     /// Deletes the series from the user interface.
     /// </summary>
     void SoftDeleteOrDispose(IChartView chart);
+
+    /// <summary>
+    /// Gets the stack group, normally used internally to handled the stacked series.
+    /// </summary>
+    /// <returns></returns>
+    int GetStackGroup();
+
+    /// <summary>
+    /// </summary>
+    /// <returns></returns>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    Sketch GetMiniaturesSketch();
+
+    /// <summary>
+    /// Return the visual element shown in tooltips and legends, this is an old method and will be replaced by
+    /// <see cref="GetMiniatureGeometry(ChartPoint?)"/>.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <param name="zindex">The zindex.</param>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    IChartElement GetMiniature(ChartPoint? point, int zindex);
+
+    /// <summary>
+    /// Returns a geometry that represents the series in a tooltip or legend.
+    /// </summary>
+    /// <param name="point">The target point.</param>
+    IDrawnElement GetMiniatureGeometry(ChartPoint? point);
+
+    /// <summary>
+    /// Called when the pointer goes down on a data point or points.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="points">The found points.</param>
+    /// <param name="pointerLocation">The pointer location.</param>
+    void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointerLocation);
 }
 
 /// <summary>
@@ -209,7 +287,7 @@ public interface ISeries<TModel> : ISeries
     /// <value>
     /// The values.
     /// </value>
-    new ICollection<TModel>? Values { get; set; }
+    new IReadOnlyCollection<TModel>? Values { get; set; }
 
     /// <summary>
     /// Gets or sets the mapping.

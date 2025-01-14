@@ -52,7 +52,7 @@ public class View : Panel
             new DynamicRow(new DynamicControl() { Control = cartesianChart2, YScale = true }));
     }
 
-    private void OnChart_Updated(IChartView<SkiaSharpDrawingContext> chart)
+    private void OnChart_Updated(IChartView chart)
     {
         var vm = _viewModel;
 

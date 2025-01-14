@@ -27,7 +27,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -69,7 +68,7 @@ public static class LiveChartsSkiaSharp
     }
 
     /// <summary>
-    /// Registers a global SKTypeface instance to use on any <see cref="Paint"/> that does not specify a typeface.
+    /// Registers a global SKTypeface instance to use on any <see cref="SkiaPaint"/> that does not specify a typeface.
     /// </summary>
     /// <param name="settings"></param>
     /// <param name="typeface"></param>
@@ -86,10 +85,8 @@ public static class LiveChartsSkiaSharp
     /// <param name="color">The color.</param>
     /// <param name="alphaOverrides">The alpha overrides.</param>
     /// <returns></returns>
-    public static SKColor AsSKColor(this LvcColor color, byte? alphaOverrides = null)
-    {
-        return new SKColor(color.R, color.G, color.B, alphaOverrides ?? color.A);
-    }
+    public static SKColor AsSKColor(this LvcColor color, byte? alphaOverrides = null) =>
+        new(color.R, color.G, color.B, alphaOverrides ?? color.A);
 
     /// <summary>
     /// Creates a new color based on the 
@@ -97,20 +94,16 @@ public static class LiveChartsSkiaSharp
     /// <param name="color">The color.</param>
     /// <param name="opacity">The opacity from 0 to 255.</param>
     /// <returns></returns>
-    public static LvcColor WithOpacity(this LvcColor color, byte opacity)
-    {
-        return LvcColor.FromArgb(opacity, color);
-    }
+    public static LvcColor WithOpacity(this LvcColor color, byte opacity) =>
+        LvcColor.FromArgb(opacity, color);
 
     /// <summary>
     /// Converts a <see cref="SKColor"/> to a <see cref="LvcColor"/> intance.
     /// </summary>
     /// <param name="color">The color</param>
     /// <returns></returns>
-    public static LvcColor AsLvcColor(this SKColor color)
-    {
-        return new LvcColor(color.Red, color.Green, color.Blue, color.Alpha);
-    }
+    public static LvcColor AsLvcColor(this SKColor color) =>
+        new(color.Red, color.Green, color.Blue, color.Alpha);
 
     /// <summary>
     /// Calculates the distance in pixels from the target <see cref="ChartPoint"/> to the given location in the UI.
@@ -123,11 +116,11 @@ public static class LiveChartsSkiaSharp
         LvcPointD dataCoordinates;
         double x, y;
 
-        if (target.Context is ICartesianChartView<SkiaSharpDrawingContext> cartesianChart)
+        if (target.Context is ICartesianChartView cartesianChart)
         {
             dataCoordinates = cartesianChart.ScalePixelsToData(new LvcPointD(location));
 
-            var cartesianSeries = (ICartesianSeries<SkiaSharpDrawingContext>)target.Context.Series;
+            var cartesianSeries = (ICartesianSeries)target.Context.Series;
 
             if (target.Context.Series.SeriesProperties.HasFlag(SeriesProperties.PrimaryAxisHorizontalOrientation))
             {
@@ -161,11 +154,11 @@ public static class LiveChartsSkiaSharp
                 y = primaryScale.ToPixels(coordinate.PrimaryValue);
             }
         }
-        else if (target.Context is IPolarChartView<SkiaSharpDrawingContext> polarChart)
+        else if (target.Context is IPolarChartView polarChart)
         {
             dataCoordinates = polarChart.ScalePixelsToData(new LvcPointD(location));
 
-            var polarSeries = (IPolarSeries<SkiaSharpDrawingContext>)target.Context.Series;
+            var polarSeries = (IPolarSeries)target.Context.Series;
 
             var angleAxis = polarChart.Core.AngleAxes[polarSeries.ScalesAngleAt];
             var radiusAxis = polarChart.Core.RadiusAxes[polarSeries.ScalesRadiusAt];

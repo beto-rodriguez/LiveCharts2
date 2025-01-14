@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -54,8 +54,8 @@ public class StepLineSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var previousSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>?)previous.Context.AdditionalVisuals)?.StepSegment;
-            var sutSegment = ((StepLineVisualPoint<SkiaSharpDrawingContext, CircleGeometry>)sutPoint.Context.AdditionalVisuals).StepSegment;
+            var previousSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)previous.Context.AdditionalVisuals)?.Segment;
+            var sutSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
@@ -92,7 +92,7 @@ public class StepLineSeriesTest
             DataPadding = new LvcPoint(0, 0)
         };
 
-        var tooltip = new SKDefaultTooltip();
+        var tooltip = new SKDefaultTooltip { Easing = null };
 
         var chart = new SKCartesianChart
         {
@@ -102,7 +102,8 @@ public class StepLineSeriesTest
             TooltipPosition = TooltipPosition.Top,
             Series = new[] { sutSeries },
             XAxes = new[] { new Axis { IsVisible = false } },
-            YAxes = new[] { new Axis { IsVisible = false } }
+            YAxes = new[] { new Axis { IsVisible = false } },
+            ExplicitDisposing = true
         };
 
         chart.Core._isPointerIn = true;
@@ -111,7 +112,15 @@ public class StepLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
-        var tp = tooltip._panel.BackgroundGeometry;
+
+        LvcRectangle tp;
+        void UpdateTooltipRect()
+        {
+            var g = tooltip._container;
+            tp = new LvcRectangle(new(g.X, g.Y), tooltip._container.Measure());
+        }
+
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1,
@@ -119,6 +128,7 @@ public class StepLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Bottom;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - 150) < 0.1,
@@ -126,6 +136,7 @@ public class StepLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Left;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (150 - tp.Width)) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -133,6 +144,7 @@ public class StepLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Right;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - 150) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -140,6 +152,7 @@ public class StepLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Center;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -147,6 +160,7 @@ public class StepLineSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Auto;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1 &&
@@ -155,6 +169,7 @@ public class StepLineSeriesTest
 
         sutSeries.Values = new double[] { -1, -2, -3, -4, -5 };
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - 150) < 0.1 &&
@@ -164,6 +179,7 @@ public class StepLineSeriesTest
         sutSeries.Values = new double[] { 1, 2, 3, 4, 5 };
         chart.Core._pointerPosition = new(299, 150);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             // that 2... it seems that the lineseries.DataPadding takes more space than expected
             Math.Abs(tp.X - (300 - tp.Width)) < 2 &&
@@ -173,6 +189,7 @@ public class StepLineSeriesTest
 
         chart.Core._pointerPosition = new(1, 150);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X) < 2 &&
             //Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 2 &&
@@ -234,7 +251,8 @@ public class StepLineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&    // x is centered
@@ -255,7 +273,8 @@ public class StepLineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&              // x is centered
@@ -276,7 +295,8 @@ public class StepLineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5 + gs)) < 0.01 &&  // x is right
@@ -297,7 +317,8 @@ public class StepLineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X - (l.X + ls.Width * 0.5f + gs)) < 0.01 &&   // x is left
@@ -318,7 +339,8 @@ public class StepLineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X - gs) < 0.01 &&      // x is centered
@@ -339,7 +361,8 @@ public class StepLineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model <= 0)
             {
@@ -371,7 +394,8 @@ public class StepLineSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model <= 0)
             {

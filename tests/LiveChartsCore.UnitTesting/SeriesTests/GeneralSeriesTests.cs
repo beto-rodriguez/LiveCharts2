@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Extensions;
@@ -29,11 +28,10 @@ public class GeneralSeriesTests
         RunCartesianTestFor(new StepLineSeries<int> { Name = "step line" });
     }
 
-    private void RunCartesianTestFor<TVisual, TLabel, TDrawingContext>(
-        Series<int, TVisual, TLabel, TDrawingContext> series)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    private void RunCartesianTestFor<TVisual, TLabel>(
+        Series<int, TVisual, TLabel> series)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;
@@ -66,11 +64,10 @@ public class GeneralSeriesTests
         Assert.IsTrue(series.everFetched.Count == 1, $"Delete case for {series.Name}");
     }
 
-    private void RunPolarTestFor<TVisual, TLabel, TDrawingContext>(
-        Series<int, TVisual, TLabel, TDrawingContext> series)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    private void RunPolarTestFor<TVisual, TLabel>(
+        Series<int, TVisual, TLabel> series)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;
@@ -103,11 +100,10 @@ public class GeneralSeriesTests
         Assert.IsTrue(series.everFetched.Count == 1, $"Delete case for {series.Name}");
     }
 
-    private void RunCartesianHorzontalTestFor<TVisual, TLabel, TDrawingContext>(
-        Series<int, TVisual, TLabel, TDrawingContext> series)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    private void RunCartesianHorzontalTestFor<TVisual, TLabel>(
+        Series<int, TVisual, TLabel> series)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
     {
         var values = new List<int> { 1 };
         series.Values = values;

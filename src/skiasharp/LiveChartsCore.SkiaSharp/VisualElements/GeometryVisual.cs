@@ -20,14 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <inheritdoc cref="GeometryVisual{TGeometry, TLabelGeometry, TDrawingContext}"/>
-public class GeometryVisual<TGeometry> : GeometryVisual<TGeometry, LabelGeometry, SkiaSharpDrawingContext>
-    where TGeometry : ISizedGeometry<SkiaSharpDrawingContext>, new()
+/// <inheritdoc cref="GeometryVisual{TGeometry, TLabelGeometry}"/>
+[Obsolete($"Replaced by {nameof(Visual)}.")]
+public class GeometryVisual<TGeometry> : GeometryVisual<TGeometry, LabelGeometry>
+    where TGeometry : BoundedDrawnGeometry, new()
 { }

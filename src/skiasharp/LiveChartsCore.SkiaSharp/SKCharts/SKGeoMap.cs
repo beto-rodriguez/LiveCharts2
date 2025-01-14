@@ -22,22 +22,22 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
-/// <inheritdoc cref="IGeoMapView{SkiaSharpDrawingContext}"/>
-public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingContext>
+/// <inheritdoc cref="IGeoMapView"/>
+public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
 {
-    private readonly GeoMap<SkiaSharpDrawingContext> _core;
+    private readonly GeoMapChart _core;
     private object? _viewCommand;
-    private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
-    private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
+    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
@@ -46,15 +46,15 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        _core = new GeoMap<SkiaSharpDrawingContext>(this);
-        ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        _core = new GeoMapChart(this);
+        ActiveMap = Maps.GetWorldMap();
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
     /// </summary>
     /// <param name="mapView">The map view.</param>
-    public SKGeoMap(IGeoMapView<SkiaSharpDrawingContext> mapView) : this()
+    public SKGeoMap(IGeoMapView mapView) : this()
     {
         MapProjection = mapView.MapProjection;
         Stroke = mapView.Stroke;
@@ -62,54 +62,54 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
         Series = mapView.Series;
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    /// <inheritdoc cref="IGeoMapView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    /// <inheritdoc cref="IGeoMapView.SyncContext" />
     public object SyncContext { get; set; } = new();
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
+    /// <inheritdoc cref="IGeoMapView.DesignerMode" />
     public bool DesignerMode { get; set; } = false;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-    public CoreMap<SkiaSharpDrawingContext> ActiveMap { get; set; }
+    /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
+    public DrawnMap ActiveMap { get; set; }
 
-    float IGeoMapView<SkiaSharpDrawingContext>.Width => Width;
+    float IGeoMapView.Width => Width;
 
-    float IGeoMapView<SkiaSharpDrawingContext>.Height => Height;
+    float IGeoMapView.Height => Height;
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-    public MotionCanvas<SkiaSharpDrawingContext> Canvas { get; } = new();
+    /// <inheritdoc cref="IGeoMapView.Canvas"/>
+    public CoreMotionCanvas Canvas { get; } = new();
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     public MapProjection MapProjection { get; set; }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    public IPaint<SkiaSharpDrawingContext>? Stroke
+    /// <inheritdoc cref="IGeoMapView.Stroke"/>
+    public Paint? Stroke
     {
         get => _stroke;
         set
         {
-            if (value is not null) value.IsStroke = true;
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
             _stroke = value;
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    public IPaint<SkiaSharpDrawingContext>? Fill
+    /// <inheritdoc cref="IGeoMapView.Fill"/>
+    public Paint? Fill
     {
         get => _fill;
         set
         {
-            if (value is not null) value.IsStroke = false;
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
             _fill = value;
         }
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
-    public IEnumerable<IGeoSeries> Series { get; set; } = Array.Empty<IGeoSeries>();
+    /// <inheritdoc cref="IGeoMapView.Series"/>
+    public IEnumerable<IGeoSeries> Series { get; set; } = [];
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand"/>
+    /// <inheritdoc cref="IGeoMapView.ViewCommand"/>
     public object? ViewCommand
     {
         get => _viewCommand;
@@ -139,8 +139,6 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView<SkiaSharpDrawingCont
         _core.Unload();
     }
 
-    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-    {
+    void IGeoMapView.InvokeOnUIThread(Action action) =>
         action();
-    }
 }

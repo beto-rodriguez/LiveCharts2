@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -12,10 +11,10 @@ namespace ViewModelsSamples.Test.MotionCanvasDispose;
 
 public partial class ViewModel : ObservableObject
 {
-    public static void Generate(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    public static void Generate(CoreMotionCanvas canvas)
     {
         var r = new Random();
-        var p = new SolidColorPaint(SKColors.Blue, 3) { IsFill = true };
+        var p = new SolidColorPaint(SKColors.Blue, 3) { IsStroke = false };
 
         canvas.AddDrawableTask(p);
 

@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <inheritdoc cref="NeedleVisual{TGeometry, TLabelGeometry, TDrawingContext}"/>
-public class NeedleVisual : NeedleVisual<NeedleGeometry, LabelGeometry, SkiaSharpDrawingContext>
+/// <inheritdoc cref="NeedleVisual{TGeometry, TLabelGeometry}"/>
+public class NeedleVisual : NeedleVisual<NeedleGeometry, LabelGeometry>
 { }

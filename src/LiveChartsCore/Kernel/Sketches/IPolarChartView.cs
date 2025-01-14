@@ -28,10 +28,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a polar chart view, this view is able to host one or many series in a polar coordinate system.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IPolarChartView{TDrawingContext}" />
-public interface IPolarChartView<TDrawingContext> : IChartView<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="IPolarChartView" />
+public interface IPolarChartView : IChartView
 {
     /// <summary>
     /// Gets the core.
@@ -39,7 +37,7 @@ public interface IPolarChartView<TDrawingContext> : IChartView<TDrawingContext>
     /// <value>
     /// The core.
     /// </value>
-    PolarChart<TDrawingContext> Core { get; }
+    PolarChartEngine Core { get; }
 
     /// <summary>
     /// Gets whether the chart scales to try to fit the plot to the series bounds, it calculates a new center of the radial chart,

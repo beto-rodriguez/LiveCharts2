@@ -89,12 +89,15 @@ public static class Index
         "Axes/TimeSpanScaled",
         "Axes/Logarithmic",
         "Axes/Style",
+        "Axes/MatchScale",
         "Axes/Paging",
 
+        "Events/Tutorial",
         "Events/AddPointOnClick",
         "Events/Cartesian",
         "Events/Pie",
         "Events/Polar",
+        //"Events/OverrideFind",
 
         "General/MapPoints",
         "General/RealTime",
@@ -105,6 +108,7 @@ public static class Index
         "General/VisualElements",
         "General/ChartToImage",
         "General/Tooltips",
+        //"General/TooltipHoverArea",
         "General/Legends",
         "General/Animations",
         "General/Visibility",

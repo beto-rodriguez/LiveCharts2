@@ -25,40 +25,40 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
 
-/// <inheritdoc cref="ChartEngine{TDrawingContext}"/>
-public class SkiaSharpProvider : ChartEngine<SkiaSharpDrawingContext>
+/// <inheritdoc cref="ChartEngine"/>
+public class SkiaSharpProvider : ChartEngine
 {
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultMapFactory"/>
-    public override IMapFactory<SkiaSharpDrawingContext> GetDefaultMapFactory()
+    /// <inheritdoc cref="ChartEngine.GetDefaultMapFactory"/>
+    public override IMapFactory GetDefaultMapFactory()
         => new MapFactory();
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultCartesianAxis"/>
+    /// <inheritdoc cref="ChartEngine.GetDefaultCartesianAxis"/>
     public override ICartesianAxis GetDefaultCartesianAxis()
         => new Axis();
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetDefaultPolarAxis"/>
+    /// <inheritdoc cref="ChartEngine.GetDefaultPolarAxis"/>
     public override IPolarAxis GetDefaultPolarAxis()
         => new PolarAxis();
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
-    public override IPaint<SkiaSharpDrawingContext> GetSolidColorPaint(LvcColor color)
+    /// <inheritdoc cref="ChartEngine.GetSolidColorPaint(LvcColor)"/>
+    public override Paint GetSolidColorPaint(LvcColor color)
         => new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
 
-    /// <inheritdoc cref="ChartEngine{TDrawingContext}.InitializeZoommingSection(MotionCanvas{TDrawingContext})"/>
-    public override ISizedGeometry<SkiaSharpDrawingContext> InitializeZoommingSection(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    /// <inheritdoc cref="ChartEngine.InitializeZoommingSection(CoreMotionCanvas)"/>
+    public override BoundedDrawnGeometry InitializeZoommingSection(CoreMotionCanvas canvas)
     {
         var rectangle = new RectangleGeometry();
 
         var zoomingSectionPaint = new SolidColorPaint
         {
-            IsFill = true,
+            PaintStyle = PaintStyle.Fill,
             Color = new SKColor(33, 150, 243, 50),
             ZIndex = int.MaxValue
         };

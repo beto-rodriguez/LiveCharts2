@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -27,19 +28,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a rectangle geometry.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
-public class RectangleGeometry : SizedGeometry
+public class RectangleGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RectangleGeometry"/> class.
-    /// </summary>
-    public RectangleGeometry() : base()
-    { }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         context.Canvas.DrawRect(
-            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
+            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } },
+            context.ActiveSkiaPaint);
     }
 }

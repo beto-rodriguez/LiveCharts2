@@ -20,13 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -37,70 +39,69 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-/// <seealso cref="IBarSeries{TDrawingContext}" />
+/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel}" />
+/// <seealso cref="IBarSeries" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel}"/> class.
 /// </remarks>
 /// <param name="properties">The properties.</param>
 /// <param name="values">The values.</param>
-public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
+public abstract class BarSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
-    ICollection<TModel>? values)
-        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values), IBarSeries<TDrawingContext>
-            where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-            where TDrawingContext : DrawingContext
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    IReadOnlyCollection<TModel>? values)
+        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(properties, values), IBarSeries
+            where TVisual : BoundedDrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
 {
     private double _pading = 2;
     private double _maxBarWidth = 50;
     private bool _ignoresBarPosition = false;
     private double _rx;
     private double _ry;
-    private IPaint<TDrawingContext>? _errorPaint;
+    private Paint? _errorPaint;
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.Padding"/>
+    /// <inheritdoc cref="IBarSeries.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
+    /// <inheritdoc cref="IBarSeries.MaxBarWidth"/>
     public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
+    /// <inheritdoc cref="IBarSeries.IgnoresBarPosition"/>
     public bool IgnoresBarPosition { get => _ignoresBarPosition; set => SetProperty(ref _ignoresBarPosition, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.Rx"/>
+    /// <inheritdoc cref="IBarSeries.Rx"/>
     public double Rx { get => _rx; set => SetProperty(ref _rx, value); }
 
-    /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
+    /// <inheritdoc cref="IBarSeries.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
-    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint<TDrawingContext>? ErrorPaint
+    /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
+    public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, true);
+        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
-    [System.Obsolete]
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override Sketch GetMiniaturesSketch()
     {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
+        var schedules = new List<PaintSchedule>();
 
         if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
         if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
-        return new GeometryVisual<TVisual, TLabel, TDrawingContext>
+        return new GeometryVisual<TVisual, TLabel>
         {
             Fill = GetMiniatureFill(point, zindex + 1),
             Stroke = GetMiniatureStroke(point, zindex + 2),
@@ -109,6 +110,22 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
             Svg = GeometrySvg,
             ClippingMode = ClipMode.None
         };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+    {
+        var m = new TVisual
+        {
+            Fill = GetMiniatureFill(point, 0),
+            Stroke = GetMiniatureStroke(point, 0),
+            Width = (float)MiniatureShapeSize,
+            Height = (float)MiniatureShapeSize
+        };
+
+        if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
+
+        return m;
     }
 
     /// <summary>
@@ -130,8 +147,8 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         /// <param name="isRow">Indicates whether the serie is row or not.</param>
         public MeasureHelper(
             Scaler scaler,
-            CartesianChart<TDrawingContext> cartesianChart,
-            IBarSeries<TDrawingContext> barSeries,
+            CartesianChartEngine cartesianChart,
+            IBarSeries barSeries,
             ICartesianAxis axis,
             float p,
             float minP,
@@ -204,7 +221,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         public float uw, uwm, cp, p, actualUw;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -214,7 +231,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -224,9 +241,25 @@ public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>(
         base.OnPointerLeft(point);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Stroke, Fill, DataLabelsPaint, _errorPaint];
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    protected override IEnumerable<ChartPoint> FindPointsInPosition(
+        Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
     {
-        return [Stroke, Fill, DataLabelsPaint, _errorPaint];
+        return strategy == FindingStrategy.ExactMatch
+            ? Fetch(chart)
+                .Where(point =>
+                {
+                    var v = (TVisual?)point.Context.Visual;
+
+                    return
+                        v is not null &&
+                        pointerPosition.X > v.X && pointerPosition.X < v.X + v.Width &&
+                        pointerPosition.Y > v.Y && pointerPosition.Y < v.Y + v.Height;
+                })
+            : base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor);
     }
 }

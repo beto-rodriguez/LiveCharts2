@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Controls;
-using ViewModelsSamples.Bars.Race;
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace WinUISample.Bars.Race;
 

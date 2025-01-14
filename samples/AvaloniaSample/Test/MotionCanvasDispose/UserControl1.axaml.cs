@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore.SkiaSharpView.Avalonia;
@@ -17,8 +16,9 @@ public partial class UserControl1 : UserControl
 
     private async void UserControl1_Initialized(object? sender, EventArgs e)
     {
-        var canvas = this.Find<MotionCanvas>("canvas");
-        await Task.Delay(TimeSpan.FromMilliseconds(10)); // workaround to wait for the canvas to be ready...
+        var canvas = this.Find<MotionCanvas>("canvas")
+            ?? throw new Exception();
+
         ViewModelsSamples.Test.MotionCanvasDispose.ViewModel.Generate(canvas.CanvasCore);
     }
 

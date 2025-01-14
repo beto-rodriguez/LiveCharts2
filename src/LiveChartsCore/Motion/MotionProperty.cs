@@ -92,9 +92,11 @@ public abstract class MotionProperty<T> : IMotionProperty
     /// Moves to the specified value.
     /// </summary>
     /// <param name="value">The value to move to.</param>
-    /// <param name="animatable">The <see cref="IAnimatable"/> instance that is moving.</param>
+    /// <param name="animatable">The <see cref="Animatable"/> instance that is moving.</param>
     public void SetMovement(T value, Animatable animatable)
     {
+        if (value is not null && value.Equals(toValue)) return;
+
         fromValue = GetMovement(animatable);
         toValue = value;
         if (Animation is not null)

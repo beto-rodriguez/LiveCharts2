@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
@@ -125,7 +126,7 @@ public class FinancialSeriesTest
             DataPadding = new Drawing.LvcPoint(0, 0)
         };
 
-        var tooltip = new SKDefaultTooltip();
+        var tooltip = new SKDefaultTooltip { Easing = null };
 
         var chart = new SKCartesianChart
         {
@@ -135,7 +136,8 @@ public class FinancialSeriesTest
             TooltipPosition = TooltipPosition.Top,
             Series = new[] { sutSeries },
             XAxes = new[] { new Axis { IsVisible = false } },
-            YAxes = new[] { new Axis { IsVisible = false } }
+            YAxes = new[] { new Axis { IsVisible = false } },
+            ExplicitDisposing = true
         };
 
         chart.Core._isPointerIn = true;
@@ -144,7 +146,15 @@ public class FinancialSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
-        var tp = tooltip._panel.BackgroundGeometry;
+
+        LvcRectangle tp;
+        void UpdateTooltipRect()
+        {
+            var g = tooltip._container;
+            tp = new LvcRectangle(new(g.X, g.Y), tooltip._container.Measure());
+        }
+
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height - 1 / 5d * 300 * 0.5d)) < 0.1,
@@ -152,6 +162,7 @@ public class FinancialSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Bottom;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 + 1 / 5d * 300 * 0.5d)) < 0.1,
@@ -159,6 +170,7 @@ public class FinancialSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Left;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (150 - tp.Width - 1 / 5d * 300 * 0.5d)) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -166,6 +178,7 @@ public class FinancialSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Right;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - 150 - 1 / 5d * 300 * 0.5d) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -173,6 +186,7 @@ public class FinancialSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Center;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y + tp.Height * 0.5f - 150) < 0.1,
@@ -180,6 +194,7 @@ public class FinancialSeriesTest
 
         chart.TooltipPosition = TooltipPosition.Auto;
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height - 1 / 5d * 300 * 0.5d)) < 0.1 &&
@@ -188,6 +203,7 @@ public class FinancialSeriesTest
 
         chart.Core._pointerPosition = new(300 * 4 / 5d - 10, 300 * 1 / 5d + 10);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 1 / 5d * 300 - 150) < 0.1 &&
             Math.Abs(tp.Y - 300 * 1 / 5d) < 0.1 &&
@@ -196,6 +212,7 @@ public class FinancialSeriesTest
 
         chart.Core._pointerPosition = new(299, 150);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (300 - 300 * (1 / 5d) * 0.5 - tp.Width)) < 0.0001 &&
             //Math.Abs(tp.Y - -tp.Height * 0.5f) < 0.1 &&
@@ -204,6 +221,7 @@ public class FinancialSeriesTest
 
         chart.Core._pointerPosition = new(1, 150);
         _ = chart.GetImage();
+        UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - 300 * (1 / 5d) * 0.5) < 0.0001 &&
             //Math.Abs(tp.Y - (300 - tp.Height * 0.5f - 300 * (1 / 5d))) < 0.1 &&
@@ -268,7 +286,8 @@ public class FinancialSeriesTest
             var v = p.Visual;
             var l = p.Label;
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&    // x is centered
@@ -290,7 +309,8 @@ public class FinancialSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Low);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&       // x is centered
@@ -312,7 +332,8 @@ public class FinancialSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Low);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width - (l.X - ls.Width * 0.5)) < 0.01 &&  // x is right
@@ -334,7 +355,8 @@ public class FinancialSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Low);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X - (l.X + ls.Width * 0.5f)) < 0.01 &&   // x is left
@@ -356,7 +378,8 @@ public class FinancialSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Low);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             Assert.IsTrue(
                 Math.Abs(v.X + v.Width * 0.5f - l.X) < 0.01 &&      // x is centered
@@ -378,7 +401,8 @@ public class FinancialSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Low);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model.High <= 0)
             {
@@ -411,7 +435,8 @@ public class FinancialSeriesTest
             var l = p.Label;
             var h = Math.Abs(p.Visual.Y - p.Visual.Low);
 
-            var ls = l.Measure(sutSeries.DataLabelsPaint);
+            l.Paint = sutSeries.DataLabelsPaint;
+            var ls = l.Measure();
 
             if (p.Model.High <= 0)
             {

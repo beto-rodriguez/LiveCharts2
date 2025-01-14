@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Buffers.Text;
+using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -32,23 +32,24 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// Defines a set of geometries that will be painted using a solid color.
 /// </summary>
 /// <seealso cref="Paint" />
-public class SolidColorPaint : Paint
+public class SolidColorPaint : SkiaPaint
 {
     private SkiaSharpDrawingContext? _drawingContext;
+    internal SKPaint? _skiaPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
     /// </summary>
     public SolidColorPaint()
-    {
-    }
+        : base()
+    { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
     /// </summary>
     /// <param name="color">The color.</param>
     public SolidColorPaint(SKColor color)
-        : base(color)
+        : base()
     {
         Color = color;
     }
@@ -59,20 +60,25 @@ public class SolidColorPaint : Paint
     /// <param name="color">The color.</param>
     /// <param name="strokeWidth">Width of the stroke.</param>
     public SolidColorPaint(SKColor color, float strokeWidth)
-        : base(color)
+        : base(strokeWidth)
     {
-        _strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeWidth));
         Color = color;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
-    public override IPaint<SkiaSharpDrawingContext> CloneTask()
+    /// <summary>
+    /// Gets or sets the color.
+    /// </summary>
+    /// <value>
+    /// The color.
+    /// </value>
+    public SKColor Color { get; set; }
+
+    /// <inheritdoc cref="Paint.CloneTask" />
+    public override Paint CloneTask()
     {
         var clone = new SolidColorPaint
         {
-            Style = Style,
-            IsStroke = IsStroke,
-            IsFill = IsFill,
+            PaintStyle = PaintStyle,
             Color = Color,
             IsAntialias = IsAntialias,
             StrokeThickness = StrokeThickness,
@@ -89,67 +95,64 @@ public class SolidColorPaint : Paint
         return clone;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
-    public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
+    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
+
+    public override void InitializeTask(DrawingContext drawingContext)
     {
+        var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
 
         _skiaPaint.Color = Color;
         _skiaPaint.IsAntialias = IsAntialias;
-        _skiaPaint.IsStroke = IsStroke;
         _skiaPaint.StrokeCap = StrokeCap;
         _skiaPaint.StrokeJoin = StrokeJoin;
         _skiaPaint.StrokeMiter = StrokeMiter;
         _skiaPaint.StrokeWidth = StrokeThickness;
-        _skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
+        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
         if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
 
         if (PathEffect is not null)
         {
-            PathEffect.CreateEffect(drawingContext);
+            PathEffect.CreateEffect(skiaContext);
             _skiaPaint.PathEffect = PathEffect.SKPathEffect;
         }
 
         if (ImageFilter is not null)
         {
-            ImageFilter.CreateFilter(drawingContext);
+            ImageFilter.CreateFilter(skiaContext);
             _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
         }
 
-        var clip = GetClipRectangle(drawingContext.MotionCanvas);
+        var clip = GetClipRectangle(skiaContext.MotionCanvas);
         if (clip != LvcRectangle.Empty)
         {
-            _ = drawingContext.Canvas.Save();
-            drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = drawingContext;
+            _ = skiaContext.Canvas.Save();
+            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+            _drawingContext = skiaContext;
         }
 
-        drawingContext.Paint = _skiaPaint;
-        drawingContext.PaintTask = this;
+        skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
+    public override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
-        if (context.PaintTask is null || context.Paint is null) return;
-
-        var baseColor = context.PaintTask.Color;
-        context.Paint.Color =
+        var skiaContext = (SkiaSharpDrawingContext)context;
+        var baseColor = Color;
+        skiaContext.ActiveSkiaPaint.Color =
             new SKColor(
                 baseColor.Red,
                 baseColor.Green,
                 baseColor.Blue,
-                (byte)(baseColor.Alpha * geometry.Opacity));
+                (byte)(baseColor.Alpha * opacity));
     }
 
-    /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-    public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
+    public override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
-        if (context.PaintTask is null || context.Paint is null) return;
-
-        var baseColor = context.PaintTask.Color;
-        context.Paint.Color = baseColor;
+        var skiaContext = (SkiaSharpDrawingContext)context;
+        skiaContext.ActiveSkiaPaint.Color = Color;
     }
 
     /// <summary>
@@ -171,6 +174,9 @@ public class SolidColorPaint : Paint
             _drawingContext = null;
         }
 
-        base.Dispose();
+        _skiaPaint?.Dispose();
+        _skiaPaint = null;
+
+        GC.SuppressFinalize(this);
     }
 }

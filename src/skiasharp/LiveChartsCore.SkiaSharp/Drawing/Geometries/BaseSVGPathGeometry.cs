@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -27,11 +28,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a geometry that is built from a svg path.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="BaseSVGPathGeometry"/> class.
 /// </remarks>
-public class BaseSVGPathGeometry : SizedGeometry
+public class BaseSVGPathGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseSVGPathGeometry"/> class.
@@ -58,12 +58,12 @@ public class BaseSVGPathGeometry : SizedGeometry
     /// </summary>
     public bool FitToSize { get; set; } = false;
 
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
         if (Path is null) return;
 
-        DrawPath(context, paint, Path);
+        DrawPath(context, context.ActiveSkiaPaint, Path);
     }
 
     /// <summary>
@@ -72,37 +72,6 @@ public class BaseSVGPathGeometry : SizedGeometry
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="paint">The paint</param>
-    protected void DrawPath(SkiaSharpDrawingContext context, SKPaint paint, SKPath path)
-    {
-        _ = context.Canvas.Save();
-
-        var canvas = context.Canvas;
-        _ = path.GetTightBounds(out var bounds);
-
-        if (FitToSize)
-        {
-            // fit to both axis
-            canvas.Translate(X + Width / 2f, Y + Height / 2f);
-            canvas.Scale(
-                Width / (bounds.Width + paint.StrokeWidth),
-                Height / (bounds.Height + paint.StrokeWidth));
-            canvas.Translate(-bounds.MidX, -bounds.MidY);
-        }
-        else
-        {
-            // fit to the max dimension
-            // preserve the corresponding scale in the min axis.
-            var maxB = bounds.Width < bounds.Height ? bounds.Height : bounds.Width;
-
-            canvas.Translate(X + Width / 2f, Y + Height / 2f);
-            canvas.Scale(
-                Width / (maxB + paint.StrokeWidth),
-                Height / (maxB + paint.StrokeWidth));
-            canvas.Translate(-bounds.MidX, -bounds.MidY);
-        }
-
-        canvas.DrawPath(path, paint);
-
-        context.Canvas.Restore();
-    }
+    protected void DrawPath(SkiaSharpDrawingContext context, SKPaint paint, SKPath path) =>
+        Svg.Draw(context, paint, path, X, Y, Width, Height, FitToSize);
 }

@@ -34,12 +34,12 @@ public abstract partial class ChartBehaviour
     /// Gets or sets the screen size, only used internally by the Android handler, to implement a
     /// workaround for https://github.com/dotnet/maui/issues/18547.
     /// </summary>
-    public LvcSize ScreenSize { get; set; }
+    public virtual LvcSize ScreenSize { get; } = new(320, 480);
 
     /// <summary>
     /// Gets or sets the screen density.
     /// </summary>
-    public double Density { get; set; }
+    public virtual double Density { get; } = 1.0;
 
     /// <summary>
     /// Called when the pointer/tap is pressed.

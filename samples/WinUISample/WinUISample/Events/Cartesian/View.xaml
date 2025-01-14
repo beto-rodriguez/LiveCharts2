@@ -13,8 +13,8 @@
     </UserControl.DataContext>
     <Grid>
         <lvc:CartesianChart
-                Series="{Binding Series}"
-                TooltipFindingStrategy="CompareOnlyX">
+            Series="{Binding Series}"
+            FindingStrategy="CompareOnlyX">
         </lvc:CartesianChart>
     </Grid>
     

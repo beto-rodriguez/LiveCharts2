@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -36,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 public class CandlesticksSeries<TModel>
     : CandlesticksSeries<TModel, CandlestickGeometry, LabelGeometry>
@@ -53,7 +52,7 @@ public class CandlesticksSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection<TModel>? values)
+    public CandlesticksSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -75,14 +74,14 @@ public class CandlesticksSeries<TModel>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class CandlesticksSeries<TModel, TVisual>
     : CandlesticksSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : BaseCandlestickGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.
@@ -96,7 +95,7 @@ public class CandlesticksSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection<TModel>? values)
+    public CandlesticksSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -118,7 +117,7 @@ public class CandlesticksSeries<TModel, TVisual>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
@@ -127,9 +126,9 @@ public class CandlesticksSeries<TModel, TVisual>
 /// The type of the data label of every point.
 /// </typeparam>
 public class CandlesticksSeries<TModel, TVisual, TLabel>
-    : CoreFinancialSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-        where TVisual : class, IFinancialGeometry<SkiaSharpDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+    : CoreFinancialSeries<TModel, TVisual, TLabel, CircleGeometry>
+        where TVisual : BaseCandlestickGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.
@@ -143,7 +142,7 @@ public class CandlesticksSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public CandlesticksSeries(ICollection<TModel>? values)
+    public CandlesticksSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 

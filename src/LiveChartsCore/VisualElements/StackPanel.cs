@@ -20,10 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -31,12 +33,11 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the stack panel class.
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
+[Obsolete($"Replaced by StackLayout")]
+public class StackPanel<TBackgroundGeometry> : VisualElement
+    where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
-    private IPaint<TDrawingContext>? _backgroundPaint;
+    private Paint? _backgroundPaint;
     private Align _verticalAlignment = Align.Middle;
     private Align _horizontalAlignment = Align.Middle;
     private Padding _padding = new();
@@ -45,7 +46,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     private ContainerOrientation _orientation;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StackPanel{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="StackPanel{TBackgroundGeometry}"/> class.
     /// </summary>
     public StackPanel()
     {
@@ -55,7 +56,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public List<VisualElement<TDrawingContext>> Children { get; } = [];
+    public List<VisualElement> Children { get; } = [];
 
     /// <summary>
     /// Gets or sets the panel orientation.
@@ -80,7 +81,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<TDrawingContext>? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -101,22 +102,23 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
     /// </summary>
     public double MaxHeight { get => _maxHeight; set => SetProperty(ref _maxHeight, value); }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _backgroundPaint };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_backgroundPaint];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { BackgroundGeometry };
-    }
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
+        [BackgroundGeometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
-    protected internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <inheritdoc cref="VisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
+
+        // see note #241104
+        location.X += _translate.X;
+        location.Y += _translate.Y;
+
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element
@@ -136,8 +138,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var controlSize = Measure(chart);
 
@@ -146,7 +148,7 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         // we use this geometry in the motion canvas to track the position
         // of the stack panel as the time and animations elapse.
         BackgroundPaint ??= LiveCharts.DefaultSettings
-                .GetProvider<TDrawingContext>()
+                .GetProvider()
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
@@ -162,15 +164,15 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (BackgroundGeometry is null) return;
-        BackgroundGeometry.Parent = parent;
+        ((IDrawnElement)BackgroundGeometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var xl = Padding.Left;
         var yl = Padding.Top;
@@ -279,8 +281,8 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         return new LvcSize(mx + Padding.Right, my + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         foreach (var child in Children)
         {
@@ -290,9 +292,20 @@ public class StackPanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TD
         base.RemoveFromUI(chart);
     }
 
-    private class MeasureResult(VisualElement<TDrawingContext> visual, LvcSize size)
+    private class MeasureResult(VisualElement visual, LvcSize size)
     {
-        public VisualElement<TDrawingContext> Visual { get; set; } = visual;
+        public VisualElement Visual { get; set; } = visual;
         public LvcSize Size { get; set; } = size;
     }
 }
+
+/// <summary>
+/// Obsolete.
+/// </summary>
+/// <typeparam name="TBackgroundGeometry"></typeparam>
+/// <typeparam name="TDrawingContext"></typeparam>
+[Obsolete($"Replaced by StackLayout")]
+public class StackPanel<TBackgroundGeometry, TDrawingContext> : StackPanel<TBackgroundGeometry>
+    where TBackgroundGeometry : BoundedDrawnGeometry, new()
+    where TDrawingContext : DrawingContext
+{ }

@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Kernel.Events;
@@ -28,7 +27,5 @@ namespace LiveChartsCore.Kernel.Events;
 /// <summary>
 /// Defines a method that will handle an event in a chart.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <param name="chart">The chart.</param>
-public delegate void ChartEventHandler<TDrawingContext>(IChartView<TDrawingContext> chart)
-    where TDrawingContext : DrawingContext;
+public delegate void ChartEventHandler(IChartView chart);

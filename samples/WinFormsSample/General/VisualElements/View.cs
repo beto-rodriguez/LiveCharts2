@@ -34,10 +34,10 @@ public partial class View : UserControl
     }
 
     private void CartesianChart_VisualElementsPointerDown(
-        IChartView chart, VisualElementsEventArgs<SkiaSharpDrawingContext> visualElementsArgs)
+        IChartView chart, VisualElementsEventArgs visualElementsArgs)
     {
         if (visualElementsArgs.ClosestToPointerVisualElement is null) return;
-        visualElementsArgs.ClosestToPointerVisualElement.X++;
+        //visualElementsArgs.ClosestToPointerVisualElement.X++;
 
         // alternatively you can use the visual elements collection.
         //foreach (var visualElement in visualElementsArgs.VisualElements)

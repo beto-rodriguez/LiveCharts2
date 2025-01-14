@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <LangVersion>12.0</LangVersion>
+    <LangVersion>$(GlobalLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
 
     <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
 
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>2.0.0-rc4.5</Version>
+    <Version>$(LiveChartsVersion)</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Blazor.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>BetoRodriguez</Authors>
+    <Authors>$(LiveChartsAuthors)</Authors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
@@ -35,35 +35,14 @@
     <NoWarn>$(NoWarn);BL0007</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile></TypeScriptOutFile>
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-    <TypeScriptOutFile></TypeScriptOutFile>
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-  </PropertyGroup>
-
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="wwwroot/*.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.9-preview.2.2" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="7.3.0" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" Version="$(LatestSkiaSharpVersion)" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-
-    <PackageReference Condition="$(TargetFramework) == 'net6.0'" Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-    <PackageReference Condition="$(TargetFramework) == 'net8.0'" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
-
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.1.5">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.7.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -73,8 +52,6 @@
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
-
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
 
   <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />

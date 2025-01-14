@@ -22,36 +22,35 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
-/// Defines a schedule to be drawn by an <see cref="IPaint{TDrawingContext}"/> instance.
+/// Defines a schedule to be drawn by an <see cref="Paint"/> instance.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class PaintSchedule<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class PaintSchedule
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PaintSchedule{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="PaintSchedule"/> class.
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="geometries">The geometries.</param>
-    public PaintSchedule(IPaint<TDrawingContext> task, HashSet<IDrawable<TDrawingContext>> geometries)
+    public PaintSchedule(Paint task, HashSet<Animatable> geometries)
     {
         PaintTask = task;
         Geometries = geometries;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PaintSchedule{TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="PaintSchedule"/> class.
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="geometries">The geometries.</param>
-    public PaintSchedule(IPaint<TDrawingContext> task, params IDrawable<TDrawingContext>[] geometries)
+    public PaintSchedule(Paint task, params Animatable[] geometries)
     {
         PaintTask = task;
-        Geometries = new HashSet<IDrawable<TDrawingContext>>(geometries);
+        Geometries = new HashSet<Animatable>(geometries);
     }
 
     /// <summary>
@@ -60,7 +59,7 @@ public class PaintSchedule<TDrawingContext>
     /// <value>
     /// The drawable task.
     /// </value>
-    public IPaint<TDrawingContext> PaintTask { get; set; }
+    public Paint PaintTask { get; set; }
 
     /// <summary>
     /// Gets or sets the geometries.
@@ -68,5 +67,5 @@ public class PaintSchedule<TDrawingContext>
     /// <value>
     /// The geometries.
     /// </value>
-    public HashSet<IDrawable<TDrawingContext>> Geometries { get; set; }
+    public HashSet<Animatable> Geometries { get; set; }
 }

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
@@ -29,10 +30,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartView{TDrawingContext}" />
-public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="IChartView" />
+public interface ICartesianChartView : IChartView
 {
     /// <summary>
     /// Gets the core.
@@ -40,7 +39,7 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// <value>
     /// The core.
     /// </value>
-    CartesianChart<TDrawingContext> Core { get; }
+    CartesianChartEngine Core { get; }
 
     /// <summary>
     /// Gets or sets the x axes.
@@ -64,7 +63,7 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// <value>
     /// The sections.
     /// </value>
-    IEnumerable<Section<TDrawingContext>> Sections { get; set; }
+    IEnumerable<CoreSection> Sections { get; set; }
 
     /// <summary>
     /// Gets or sets the series to plot in the user interface.
@@ -80,7 +79,7 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// <value>
     /// The draw margin frame.
     /// </value>
-    DrawMarginFrame<TDrawingContext>? DrawMarginFrame { get; set; }
+    CoreDrawMarginFrame? DrawMarginFrame { get; set; }
 
     /// <summary>
     /// Gets or sets the zoom mode.
@@ -91,12 +90,12 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     ZoomAndPanMode ZoomMode { get; set; }
 
     /// <summary>
-    /// Gets or sets the tool tip finding strategy.
+    /// Gets or sets the finding strategy.
     /// </summary>
     /// <value>
-    /// The tool tip finding strategy.
+    /// The finding strategy.
     /// </value>
-    TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+    FindingStrategy FindingStrategy { get; set; }
 
     /// <summary>
     /// Gets or sets the zooming speed from 0 to 1, where 0 is the slowest and 1 the fastest.
@@ -105,6 +104,12 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// The zooming speed.
     /// </value>
     double ZoomingSpeed { get; set; }
+
+    /// <summary>
+    /// Matches the axes screen data ratio, this method forces the x and y axes to use the same scale,
+    /// this means that both axes will have the same number of pixels per data unit.
+    /// </summary>
+    bool MatchAxesScreenDataRatio { get; set; }
 
     /// <summary>
     /// Scales a point in pixels to the chart data scale.
@@ -124,3 +129,12 @@ public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingConte
     /// <returns></returns>
     LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0);
 }
+
+/// <summary>
+/// Obsolete.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+[Obsolete("Replaced by the non generic ICartesianChartView interface.")]
+public interface ICartesianChartView<T> : ICartesianChartView
+    where T : DrawingContext
+{ }

@@ -2,9 +2,6 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore; // mark
-using LiveChartsCore.Kernel; // mark
-using LiveChartsCore.SkiaSharpView; // mark
-using SkiaSharp;
 
 namespace AvaloniaSample;
 

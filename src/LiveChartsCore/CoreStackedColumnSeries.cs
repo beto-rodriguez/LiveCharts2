@@ -32,23 +32,21 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-/// <seealso cref="CoreColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}" />
+/// <seealso cref="CoreColumnSeries{TModel, TVisual, TLabel, TErrorGeometry}" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="CoreStackedColumnSeries{TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry}"/> class.
+/// Initializes a new instance of the <see cref="CoreStackedColumnSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
 /// </remarks>
 /// <param name="values">The values.</param>
-public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(ICollection<TModel>? values)
-    : CoreColumnSeries<TModel, TVisual, TLabel, TDrawingContext, TErrorGeometry>(values, true), IStackedBarSeries<TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+public abstract class CoreStackedColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>(IReadOnlyCollection<TModel>? values)
+    : CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>(values, true), IStackedBarSeries
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TErrorGeometry : BaseLineGeometry, new()
 {
     private int _stackGroup = 0;
 
-    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
+    /// <inheritdoc cref="IStackedBarSeries.StackGroup"/>
     public int StackGroup { get => _stackGroup; set { _stackGroup = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -56,8 +54,5 @@ public class CoreStackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext, T
     /// </summary>
     /// <returns></returns>
     /// <inheritdoc />
-    public override int GetStackGroup()
-    {
-        return _stackGroup;
-    }
+    public override int GetStackGroup() => _stackGroup;
 }

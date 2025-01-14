@@ -24,29 +24,28 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Providers;
 
 /// <summary>
-/// Defines the <see cref="ChartEngine{TDrawingContext}"/> class.
+/// Defines the <see cref="ChartEngine"/> class.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public abstract class ChartEngine<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public abstract class ChartEngine
 {
     /// <summary>
     /// Gets a new instance of the default data factory.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <returns></returns>
-    public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
+    public virtual DataFactory<TModel> GetDefaultDataFactory<TModel>()
         => new();
 
     /// <summary>
     /// Gets a new instance of the default map factory.
     /// </summary>
     /// <returns></returns>
-    public abstract IMapFactory<TDrawingContext> GetDefaultMapFactory();
+    public abstract IMapFactory GetDefaultMapFactory();
 
     /// <summary>
     /// Gets a new instance of the default Cartesian axis.
@@ -64,12 +63,12 @@ public abstract class ChartEngine<TDrawingContext>
     /// Gets a new paint of the given color.
     /// </summary>
     /// <returns></returns>
-    public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new());
+    public abstract Paint GetSolidColorPaint(LvcColor color = new());
 
     /// <summary>
     /// Initializes the zooming section for a cartesian chart in a given canvas.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <returns>The created geometry.</returns>
-    public abstract ISizedGeometry<TDrawingContext> InitializeZoommingSection(MotionCanvas<TDrawingContext> canvas);
+    public abstract BoundedDrawnGeometry InitializeZoommingSection(CoreMotionCanvas canvas);
 }

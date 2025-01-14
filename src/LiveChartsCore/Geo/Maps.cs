@@ -23,7 +23,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Geo;
 
@@ -37,14 +36,13 @@ public static class Maps
     /// </summary>
     /// <returns>The map.</returns>
     /// <exception cref="Exception">Map not found</exception>
-    public static CoreMap<TDrawingContext> GetWorldMap<TDrawingContext>()
-        where TDrawingContext : DrawingContext
+    public static DrawnMap GetWorldMap()
     {
         var a = Assembly.GetExecutingAssembly();
         var map = "LiveChartsCore.Geo.world.geojson";
         using var reader = new StreamReader(a.GetManifestResourceStream(map) ?? throw new Exception("file not found"));
 
-        return GetMapFromStreamReader<TDrawingContext>(reader);
+        return GetMapFromStreamReader(reader);
     }
 
     /// <summary>
@@ -52,12 +50,10 @@ public static class Maps
     /// </summary>
     /// <param name="path">The path.</param>
     /// <returns>The map.</returns>
-    public static CoreMap<TDrawingContext> GetMapFromDirectory<TDrawingContext>(string path)
-        where TDrawingContext : DrawingContext
+    public static DrawnMap GetMapFromDirectory(string path)
     {
         using var sr = new StreamReader(path);
-
-        return GetMapFromStreamReader<TDrawingContext>(sr);
+        return GetMapFromStreamReader(sr);
     }
 
     /// <summary>
@@ -65,11 +61,8 @@ public static class Maps
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <returns>The map.</returns>
-    public static CoreMap<TDrawingContext> GetMapFromStreamReader<TDrawingContext>(StreamReader stream)
-        where TDrawingContext : DrawingContext
-    {
-        return new CoreMap<TDrawingContext>(stream, "default");
-    }
+    public static DrawnMap GetMapFromStreamReader(StreamReader stream) =>
+        new(stream, "default");
 
     /// <summary>
     /// Builds a projector with the given parameters.

@@ -21,26 +21,23 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
 
 /// <summary>
-/// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// The motion canvas control for windows forms, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="UserControl" />
 public partial class MotionCanvas : UserControl
 {
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -51,44 +48,13 @@ public partial class MotionCanvas : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the paint tasks.
-    /// </summary>
-    /// <value>
-    /// The paint tasks.
-    /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
-    {
-        get => _paintTasksSchedule;
-        set
-        {
-            _paintTasksSchedule = value;
-            OnPaintTasksChanged();
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the frames per second.
-    /// </summary>
-    /// <value>
-    /// The frames per second.
-    /// </value>
-    public double MaxFps { get; set; } = 60;
-
-    /// <summary>
     /// Gets the canvas core.
     /// </summary>
     /// <value>
     /// The canvas core.
     /// </value>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
-
-    /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
-    protected override void OnParentChanged(EventArgs e)
-    {
-        base.OnParentChanged(e);
-    }
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <inheritdoc cref="Control.CreateHandle()"/>
     protected override void CreateHandle()
@@ -106,41 +72,35 @@ public partial class MotionCanvas : UserControl
         CanvasCore.Dispose();
     }
 
-    private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
-    {
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-    }
+    private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e) =>
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 
-    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-    {
+    private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
+            {
+                Background = new SKColor(Parent.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
+            });
+
+    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
-    }
 
     private async void RunDrawingLoop()
     {
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+
         while (!CanvasCore.IsValid)
         {
-            skControl2.Invalidate();
+            _skControl?.Invalidate();
+            _skglControl?.Invalidate();
+
             await Task.Delay(ts);
         }
 
         _isDrawingLoopRunning = false;
-    }
-
-    private void OnPaintTasksChanged()
-    {
-        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-        foreach (var item in _paintTasksSchedule)
-        {
-            item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
-            _ = tasks.Add(item.PaintTask);
-        }
-
-        CanvasCore.SetPaintTasks(tasks);
     }
 }

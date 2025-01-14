@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -32,7 +34,6 @@ namespace LiveChartsCore.Drawing;
 /// <param name="height">The height.</param>
 public struct LvcSize(float width, float height)
 {
-
     /// <summary>
     /// Gets or sets the width.
     /// </summary>
@@ -44,11 +45,36 @@ public struct LvcSize(float width, float height)
     public float Height { get; set; } = height;
 
     /// <summary>
+    /// Gets a new size that considers the given rotation [degrees].
+    /// </summary>
+    /// <param name="degrees">The rotation in degrees..</param>
+    /// <returns>The rotated size.</returns>
+    public readonly LvcSize GetRotatedSize(float degrees)
+    {
+        if (Math.Abs(degrees) < 0.001) return this;
+
+        const double toRadians = Math.PI / 180;
+
+        degrees %= 360;
+        if (degrees < 0) degrees += 360;
+
+        if (degrees > 180) degrees = 360 - degrees;
+        if (degrees is > 90 and <= 180) degrees = 180 - degrees;
+
+        var rRadians = degrees * toRadians;
+
+        var w = (float)(Math.Cos(rRadians) * Width + Math.Sin(rRadians) * Height);
+        var h = (float)(Math.Sin(rRadians) * Width + Math.Cos(rRadians) * Height);
+
+        return new(w, h);
+    }
+
+    /// <summary>
     /// Determines whether the instance is equals to the given instance.
     /// </summary>
     /// <param name="obj">The instance to compare to.</param>
     /// <returns>The comparision result.</returns>
-    public override bool Equals(object? obj)
+    public override readonly bool Equals(object? obj)
     {
         return obj is LvcSize size &&
             Width == size.Width &&
@@ -59,7 +85,7 @@ public struct LvcSize(float width, float height)
     /// Gets the object hash code.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         var hashCode = 859600377;
         hashCode = hashCode * -1521134295 + Width.GetHashCode();

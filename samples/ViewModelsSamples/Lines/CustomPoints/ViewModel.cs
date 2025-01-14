@@ -1,5 +1,5 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.ConditionalDraw;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;

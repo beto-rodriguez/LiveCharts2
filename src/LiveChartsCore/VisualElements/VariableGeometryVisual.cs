@@ -30,20 +30,19 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines a visual element that is useful to create series miniatures in the tool tips and legends.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="VariableGeometryVisual{TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="VariableGeometryVisual"/> class.
 /// </remarks>
 /// <param name="geometry"></param>
-public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingContext> geometry) : BaseGeometryVisual<TDrawingContext>
-    where TDrawingContext : DrawingContext
+[Obsolete($"Replaced, please check the new website docs for visual elements.")]
+public class VariableGeometryVisual(BoundedDrawnGeometry geometry) : BaseGeometryVisual
 {
     private bool _isInitialized;
 
     /// <summary>
     /// Gets or sets the geometry.
     /// </summary>
-    public ISizedGeometry<TDrawingContext> Geometry
+    public BoundedDrawnGeometry Geometry
     {
         get => geometry;
         set
@@ -58,16 +57,14 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
     /// <summary>
     /// Occurs when the geometry is initialized.
     /// </summary>
-    public event Action<ISizedGeometry<TDrawingContext>>? GeometryInitialized;
+    public event Action<BoundedDrawnGeometry>? GeometryInitialized;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { geometry };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
+        [geometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var x = (float)X;
         var y = (float)Y;
@@ -119,15 +116,15 @@ public class VariableGeometryVisual<TDrawingContext>(ISizedGeometry<TDrawingCont
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (geometry is null) return;
-        geometry.Parent = parent;
+        ((IDrawnElement)geometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var w = (float)Width;
         var h = (float)Height;

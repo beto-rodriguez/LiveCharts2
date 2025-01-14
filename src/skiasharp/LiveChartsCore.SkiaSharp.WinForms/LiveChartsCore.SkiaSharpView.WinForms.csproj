@@ -1,24 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <LangVersion>12.0</LangVersion>
+    <LangVersion>$(GlobalLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
 
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
-    <!--
-    netcore app is out of support, but the latest stable release of SkiaSharp requires it.
-    SkiaSharp 3.x removes this target, should we upgrade this view to 3.x?
-    -->
-    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net462;net6.0-windows10.0.19041;net8.0-windows10.0.19041</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WinForms</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinForms</RootNamespace>
-    <Version>2.0.0-rc4.5</Version>
+    <Version>$(LiveChartsVersion)</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WindowsForms.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>BetoRodriguez</Authors>
+    <Authors>$(LiveChartsAuthors)</Authors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
@@ -31,18 +27,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- SkiaSharp.WinForms warning, lets disable it at our level -->
-    <NoWarn>$(NoWarn);NU1701</NoWarn>
-  </PropertyGroup>
-  
-  <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.0.0-preview.4.1" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="$(LatestSkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,10 +43,6 @@
 
   <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="PolarChart.cs" />
   </ItemGroup>
 
 </Project>

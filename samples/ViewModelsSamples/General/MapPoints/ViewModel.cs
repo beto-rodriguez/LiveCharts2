@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 using LiveChartsCore;
-using LiveChartsCore.ConditionalDraw;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;

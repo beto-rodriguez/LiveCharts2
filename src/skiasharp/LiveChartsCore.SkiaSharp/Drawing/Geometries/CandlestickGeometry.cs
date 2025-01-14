@@ -22,47 +22,17 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <summary>
-/// Defines a candlestick geometry.
-/// </summary>
-public class CandlestickGeometry : Geometry, IFinancialGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="BaseCandlestickGeometry" />
+public class CandlestickGeometry : BaseCandlestickGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    private readonly FloatMotionProperty _wProperty;
-    private readonly FloatMotionProperty _oProperty;
-    private readonly FloatMotionProperty _cProperty;
-    private readonly FloatMotionProperty _lProperty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CandlestickGeometry"/> class.
-    /// </summary>
-    public CandlestickGeometry()
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0f));
-        _oProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Open), 0f));
-        _cProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Close), 0f));
-        _lProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Low), 0f));
-    }
+        var paint = context.ActiveSkiaPaint;
 
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Width" />
-    public float Width { get => _wProperty.GetMovement(this); set => _wProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Open" />
-    public float Open { get => _oProperty.GetMovement(this); set => _oProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Close" />
-    public float Close { get => _cProperty.GetMovement(this); set => _cProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IFinancialGeometry{TDrawingContext}.Low" />
-    public float Low { get => _lProperty.GetMovement(this); set => _lProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-    {
         var w = Width;
         var cx = X + w * 0.5f;
         var h = Y;
@@ -86,11 +56,5 @@ public class CandlestickGeometry : Geometry, IFinancialGeometry<SkiaSharpDrawing
         context.Canvas.DrawLine(cx, h, cx, yi, paint);
         context.Canvas.DrawRect(X, yi, w, Math.Abs(o - c), paint);
         context.Canvas.DrawLine(cx, yj, cx, l, paint);
-    }
-
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paintTasks)
-    {
-        return new LvcSize(Width, Math.Abs(Low - Y));
     }
 }

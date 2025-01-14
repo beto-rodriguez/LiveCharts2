@@ -1,4 +1,5 @@
-﻿using SkiaSharp.Views.Maui.Controls.Hosting;
+﻿using LiveChartsCore.SkiaSharpView.Maui;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace MauiSample;
 
@@ -9,6 +10,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         _ = builder
             .UseSkiaSharp()
+            .UseLiveCharts()
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {

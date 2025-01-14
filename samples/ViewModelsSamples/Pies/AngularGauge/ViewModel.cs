@@ -3,7 +3,6 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.VisualElements;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.Defaults;
 using CommunityToolkit.Mvvm.Input;
@@ -16,7 +15,7 @@ public partial class ViewModel
     private readonly Random _random = new();
 
     public IEnumerable<ISeries> Series { get; set; }
-    public IEnumerable<VisualElement<SkiaSharpDrawingContext>> VisualElements { get; set; }
+    public IEnumerable<VisualElement> VisualElements { get; set; }
     public NeedleVisual Needle { get; set; }
 
     public ViewModel()
@@ -60,5 +59,6 @@ public partial class ViewModel
     {
         series.OuterRadiusOffset = sectionsOuter;
         series.MaxRadialColumnWidth = sectionsWidth;
+        series.CornerRadius = 0;
     }
 }

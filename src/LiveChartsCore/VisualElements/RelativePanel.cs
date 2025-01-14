@@ -20,29 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
 /// <summary>
 /// Defines the relative panel class.
 /// </summary>
-public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
+[Obsolete($"Replaced by AbsoluteLayout")]
+public class RelativePanel<TBackgroundGeometry> : VisualElement
+    where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry}"/> class.
     /// </summary>
     public RelativePanel()
     {
         ClippingMode = ClipMode.None;
     }
 
-    private IPaint<TDrawingContext>? _backgroundPaint;
+    private Paint? _backgroundPaint;
 
     /// <summary>
     /// Gets or sets the size.
@@ -52,12 +54,12 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// <summary>
     /// Gets the children collection.
     /// </summary>
-    public HashSet<VisualElement<TDrawingContext>> Children { get; } = [];
+    public HashSet<VisualElement> Children { get; } = [];
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<TDrawingContext>? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -68,27 +70,22 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _backgroundPaint };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() => [_backgroundPaint];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { BackgroundGeometry };
-    }
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
+        [BackgroundGeometry];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         // NOTE #20231605
         // force the background to have at least an invisible geometry
         // we use this geometry in the motion canvas to track the position
         // of the stack panel as the time and animations elapse.
         BackgroundPaint ??= LiveCharts.DefaultSettings
-                .GetProvider<TDrawingContext>()
+                .GetProvider()
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
@@ -110,17 +107,22 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (BackgroundGeometry is null) return;
-        BackgroundGeometry.Parent = parent;
+        ((IDrawnElement)BackgroundGeometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
-    protected internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <inheritdoc cref="VisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
+
+        // see note #241104
+        location.X += _translate.X;
+        location.Y += _translate.Y;
+
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element
@@ -140,14 +142,12 @@ public class RelativePanel<TBackgroundGeometry, TDrawingContext> : VisualElement
         }
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
-    {
-        return Size;
-    }
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart) =>
+        Size;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         foreach (var child in Children)
         {

@@ -22,26 +22,25 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
 
 /// <summary>
 /// Defines a geographic map.
 /// </summary>
-public interface IGeoMapView<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IGeoMapView
 {
     /// <summary>
     /// Gets or sets the active map.
     /// </summary>
-    CoreMap<TDrawingContext> ActiveMap { get; set; }
+    DrawnMap ActiveMap { get; set; }
 
     /// <summary>
     /// Gets the motion canvas.
     /// </summary>
-    MotionCanvas<TDrawingContext> Canvas { get; }
+    CoreMotionCanvas Canvas { get; }
 
     /// <summary>
     /// Gets the control width.
@@ -56,12 +55,12 @@ public interface IGeoMapView<TDrawingContext>
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
-    IPaint<TDrawingContext>? Stroke { get; set; }
+    Paint? Stroke { get; set; }
 
     /// <summary>
     /// Gets or sets the fill.
     /// </summary>
-    IPaint<TDrawingContext>? Fill { get; set; }
+    Paint? Fill { get; set; }
 
     /// <summary>
     /// Gets or sets whether the chart auto-updates are enabled.

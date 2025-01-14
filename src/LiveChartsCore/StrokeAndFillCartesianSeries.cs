@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -32,22 +33,20 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TLabel">The type of the label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <remarks>
-/// Initializes a new instance of the <see cref="StrokeAndFillCartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+/// Initializes a new instance of the <see cref="StrokeAndFillCartesianSeries{TModel, TVisual, TLabel}"/> class.
 /// </remarks>
 /// <param name="properties">The properties.</param>
 /// <param name="values">The values.</param>
-public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(
+public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     SeriesProperties properties,
-    ICollection<TModel>? values)
-        : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>(properties, values)
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IGeometry<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    IReadOnlyCollection<TModel>? values)
+        : CartesianSeries<TModel, TVisual, TLabel>(properties, values)
+            where TVisual : DrawnGeometry, new()
+            where TLabel : BaseLabelGeometry, new()
 {
-    private IPaint<TDrawingContext>? _stroke = null;
-    private IPaint<TDrawingContext>? _fill = null;
+    private Paint? _stroke = null;
+    private Paint? _fill = null;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -55,10 +54,10 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <value>
     /// The stroke.
     /// </value>
-    public IPaint<TDrawingContext>? Stroke
+    public Paint? Stroke
     {
         get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, true);
+        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
     }
 
     /// <summary>
@@ -67,17 +66,15 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <value>
     /// The fill.
     /// </value>
-    public IPaint<TDrawingContext>? Fill
+    public Paint? Fill
     {
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return [_stroke, _fill, DataLabelsPaint];
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_stroke, _fill, DataLabelsPaint];
 
     /// <summary>
     /// Gets the fill paint for the miniature.
@@ -85,7 +82,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Fill ?? Fill;
@@ -99,7 +96,7 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDra
     /// <param name="point">the point/</param>
     /// <param name="zIndex">the x index.</param>
     /// <returns></returns>
-    protected virtual IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
         var paint = p?.Visual?.Stroke ?? Stroke;

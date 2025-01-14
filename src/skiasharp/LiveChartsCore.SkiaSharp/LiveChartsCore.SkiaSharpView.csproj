@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <LangVersion>12.0</LangVersion>
+    <LangVersion>$(GlobalLangVersion)</LangVersion>
 
     <TargetFrameworks>
       netstandard2.0;netstandard2.1;
@@ -23,11 +23,11 @@
 
     <AssemblyName>LiveChartsCore.SkiaSharpView</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView</RootNamespace>
-    <Version>2.0.0-rc4.5</Version>
+    <Version>$(LiveChartsVersion)</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for .Net, this package contains the SkiaSharp backend.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>BetoRodriguez</Authors>
+    <Authors>$(LiveChartsAuthors)</Authors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
@@ -50,8 +50,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="SkiaSharp" Version="2.88.8" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(SkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>

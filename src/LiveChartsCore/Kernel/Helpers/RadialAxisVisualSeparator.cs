@@ -27,9 +27,7 @@ namespace LiveChartsCore.Kernel.Helpers;
 /// <summary>
 /// Defines an polar axis visual separator.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class RadialAxisVisualSeparator : IVisualSeparator
 {
     /// <summary>
     /// Gets or sets the value.
@@ -45,7 +43,7 @@ public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDraw
     /// <value>
     /// The text.
     /// </value>
-    public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    public BaseLabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets or sets the circle.
@@ -53,10 +51,10 @@ public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDraw
     /// <value>
     /// The line.
     /// </value>
-    public ISizedGeometry<TDrawingContext>? Circle { get; set; }
+    public BoundedDrawnGeometry? Circle { get; set; }
 
     /// <summary>
     /// Gets the geometry.
     /// </summary>
-    public IGeometry<TDrawingContext>? Geometry => Circle;
+    public DrawnGeometry? Geometry => Circle;
 }

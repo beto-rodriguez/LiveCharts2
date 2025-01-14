@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -36,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 public class PieSeries<TModel>
     : PieSeries<TModel, DoughnutGeometry, LabelGeometry>
@@ -53,7 +52,7 @@ public class PieSeries<TModel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection<TModel>? values)
+    public PieSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -82,14 +81,14 @@ public class PieSeries<TModel>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
 /// </typeparam>
 public class PieSeries<TModel, TVisual>
     : PieSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
+        where TVisual : BaseDoughnutGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
@@ -103,7 +102,7 @@ public class PieSeries<TModel, TVisual>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection<TModel>? values)
+    public PieSeries(IReadOnlyCollection<TModel>? values)
         : base(values)
     { }
 
@@ -132,7 +131,7 @@ public class PieSeries<TModel, TVisual>
 /// to use a custom type, you must register the type globally 
 /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Func{TModel, int, Coordinate})"/>)
 /// or at the series level 
-/// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
+/// (<see cref="Series{TModel, TVisual, TLabel}.Mapping"/>).
 /// </typeparam>
 /// <typeparam name="TVisual">
 /// The type of the geometry of every point of the series.
@@ -141,9 +140,9 @@ public class PieSeries<TModel, TVisual>
 /// The type of the data label of every point.
 /// </typeparam>
 public class PieSeries<TModel, TVisual, TLabel>
-    : CorePieSeries<TModel, TVisual, TLabel, CircleGeometry, SkiaSharpDrawingContext>
-        where TVisual : class, IDoughnutGeometry<SkiaSharpDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+    : CorePieSeries<TModel, TVisual, TLabel, CircleGeometry>
+        where TVisual : BaseDoughnutGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
@@ -157,7 +156,7 @@ public class PieSeries<TModel, TVisual, TLabel>
     /// with a given collection of values.
     /// </summary>
     /// <param name="values">The values to plot.</param>
-    public PieSeries(ICollection<TModel>? values)
+    public PieSeries(IReadOnlyCollection<TModel>? values)
         : base(values, false, false)
     { }
 

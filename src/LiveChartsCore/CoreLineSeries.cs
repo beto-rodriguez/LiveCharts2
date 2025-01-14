@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -39,43 +40,41 @@ namespace LiveChartsCore;
 /// <typeparam name="TModel">The type of the model to plot.</typeparam>
 /// <typeparam name="TVisual">The type of the visual point.</typeparam>
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry>
-    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
-        where TPathGeometry : IVectorGeometry<CubicBezierSegment, TDrawingContext>, new()
-        where TVisual : class, ISizedGeometry<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TErrorGeometry : class, ILineGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, ILineSeries
+        where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
+        where TVisual : BoundedDrawnGeometry, new()
+        where TLabel : BaseLabelGeometry, new()
+        where TErrorGeometry : BaseLineGeometry, new()
 {
     internal readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     internal readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
-    private IPaint<TDrawingContext>? _geometryFill;
-    private IPaint<TDrawingContext>? _geometryStroke;
-    private IPaint<TDrawingContext>? _errorPaint;
+    private Paint? _geometryFill;
+    private Paint? _geometryStroke;
+    private Paint? _errorPaint;
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="CoreLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TErrorGeometry}"/>
+    /// <see cref="CoreLineSeries{TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry}"/>
     /// class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     /// <param name="values">The values.</param>
-    public CoreLineSeries(ICollection<TModel>? values, bool isStacked = false)
+    public CoreLineSeries(IReadOnlyCollection<TModel>? values, bool isStacked = false)
         : base(GetProperties(isStacked), values)
     {
         DataPadding = new LvcPoint(0.5f, 1f);
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
+    /// <inheritdoc cref="ILineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
+    /// <inheritdoc cref="ILineSeries.LineSmoothness"/>
     public double LineSmoothness
     {
         get => _lineSmoothness;
@@ -88,34 +87,34 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         }
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.EnableNullSplitting"/>
+    /// <inheritdoc cref="ILineSeries.EnableNullSplitting"/>
     public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
-    public IPaint<TDrawingContext>? GeometryFill
+    /// <inheritdoc cref="ILineSeries.GeometryFill"/>
+    public Paint? GeometryFill
     {
         get => _geometryFill;
         set => SetPaintProperty(ref _geometryFill, value);
     }
 
-    /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
-    public IPaint<TDrawingContext>? GeometryStroke
+    /// <inheritdoc cref="ILineSeries.GeometryStroke"/>
+    public Paint? GeometryStroke
     {
         get => _geometryStroke;
-        set => SetPaintProperty(ref _geometryStroke, value, true);
+        set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="IErrorSeries{TDrawingContext}.ErrorPaint"/>
-    public IPaint<TDrawingContext>? ErrorPaint
+    /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
+    public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, true);
+        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
-        var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+        var cartesianChart = (CartesianChartEngine)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
@@ -178,13 +177,13 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var segmentI = 0;
         var hasSvg = this.HasVariableSvgGeometry();
 
-        var isFirstDraw = !chart._drawnSeries.Contains(((ISeries)this).SeriesId);
+        var isFirstDraw = !chart.IsDrawn(((ISeries)this).SeriesId);
 
         foreach (var segment in segments)
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<CubicBezierSegment, TDrawingContext>? strokeVector = null, fillVector = null;
+            VectorManager<CubicBezierSegment>? strokeVector = null, fillVector = null;
 
             foreach (var data in GetSpline(segment, stacker))
             {
@@ -217,8 +216,8 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<CubicBezierSegment, TDrawingContext>(strokePath);
-                    fillVector = new VectorManager<CubicBezierSegment, TDrawingContext>(fillPath);
+                    strokeVector = new VectorManager<CubicBezierSegment>(strokePath);
+                    fillVector = new VectorManager<CubicBezierSegment>(fillPath);
 
                     if (Fill is not null)
                     {
@@ -259,7 +258,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
                 var visual =
-                    (BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>?)
+                    (SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>?)
                     data.TargetPoint.Context.AdditionalVisuals;
 
                 if (!IsVisible)
@@ -271,14 +270,26 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         visual.Geometry.Opacity = 0;
                         visual.Geometry.RemoveOnCompleted = true;
 
-                        visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
-                        visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
-                        visual.Bezier.Xj = secondaryScale.ToPixels(data.X2);
-                        visual.Bezier.Yi = p;
-                        visual.Bezier.Ym = p;
-                        visual.Bezier.Yj = p;
+                        visual.Segment.Xi = secondaryScale.ToPixels(data.X0);
+                        visual.Segment.Xm = secondaryScale.ToPixels(data.X1);
+                        visual.Segment.Xj = secondaryScale.ToPixels(data.X2);
+                        visual.Segment.Yi = p;
+                        visual.Segment.Ym = p;
+                        visual.Segment.Yj = p;
 
                         data.TargetPoint.Context.Visual = null;
+                    }
+
+                    if (data.TargetPoint.Context.Label is not null)
+                    {
+                        var label = (TLabel)data.TargetPoint.Context.Label;
+
+                        label.X = secondaryScale.ToPixels(coordinate.SecondaryValue);
+                        label.Y = p;
+                        label.Opacity = 0;
+                        label.RemoveOnCompleted = true;
+
+                        data.TargetPoint.Context.Label = null;
                     }
 
                     pointsCleanup.Clean(data.TargetPoint);
@@ -288,7 +299,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 if (visual is null)
                 {
-                    var v = new BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>();
+                    var v = new SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>();
                     if (ErrorPaint is not null)
                     {
                         v.YError = new TErrorGeometry();
@@ -314,12 +325,12 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                         v.Geometry.Width = 0;
                         v.Geometry.Height = 0;
 
-                        v.Bezier.Xi = secondaryScale.ToPixels(data.X0);
-                        v.Bezier.Xm = secondaryScale.ToPixels(data.X1);
-                        v.Bezier.Xj = secondaryScale.ToPixels(data.X2);
-                        v.Bezier.Yi = p;
-                        v.Bezier.Ym = p;
-                        v.Bezier.Yj = p;
+                        v.Segment.Xi = secondaryScale.ToPixels(data.X0);
+                        v.Segment.Xm = secondaryScale.ToPixels(data.X1);
+                        v.Segment.Xj = secondaryScale.ToPixels(data.X2);
+                        v.Segment.Yi = p;
+                        v.Segment.Ym = p;
+                        v.Segment.Yj = p;
                     }
 
                     data.TargetPoint.Context.Visual = v.Geometry;
@@ -331,7 +342,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 if (hasSvg)
                 {
-                    var svgVisual = (IVariableSvgPath<TDrawingContext>)visual.Geometry;
+                    var svgVisual = (IVariableSvgPath)visual.Geometry;
                     if (_geometrySvgChanged || svgVisual.SVGPath is null)
                         svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
                 }
@@ -343,25 +354,25 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.YError!);
                 ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.XError!);
 
-                visual.Bezier.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
+                visual.Segment.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Bezier, !isFirstDraw);
-                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Bezier, !isFirstDraw);
+                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
+                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
 
-                visual.Bezier.Xi = secondaryScale.ToPixels(data.X0);
-                visual.Bezier.Xm = secondaryScale.ToPixels(data.X1);
-                visual.Bezier.Xj = secondaryScale.ToPixels(data.X2);
-                visual.Bezier.Yi = primaryScale.ToPixels(data.Y0);
-                visual.Bezier.Ym = primaryScale.ToPixels(data.Y1);
-                visual.Bezier.Yj = primaryScale.ToPixels(data.Y2);
+                visual.Segment.Xi = secondaryScale.ToPixels(data.X0);
+                visual.Segment.Xm = secondaryScale.ToPixels(data.X1);
+                visual.Segment.Xj = secondaryScale.ToPixels(data.X2);
+                visual.Segment.Yi = primaryScale.ToPixels(data.Y0);
+                visual.Segment.Ym = primaryScale.ToPixels(data.Y1);
+                visual.Segment.Yj = primaryScale.ToPixels(data.Y2);
 
                 var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
                 var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
-                    .CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Xj)]);
+                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Xj)]);
                 visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)]
-                    .CopyFrom(visual.Bezier.MotionProperties[nameof(visual.Bezier.Yj)]);
+                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Yj)]);
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 
                 visual.Geometry.Width = gs;
@@ -419,12 +430,13 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
+                    label.Paint = DataLabelsPaint;
 
                     if (isFirstDraw)
                         label.CompleteTransition(
                             nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
 
-                    var m = label.Measure(DataLabelsPaint);
+                    var m = label.Measure();
                     var labelPosition = GetLabelPosition(
                         x - hgs, y - hgs, gs, gs, m, DataLabelsPosition,
                         SeriesProperties, coordinate.PrimaryValue > Pivot, drawLocation, drawMarginSize);
@@ -499,7 +511,42 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         _geometrySvgChanged = false;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerEnter(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
+    protected override IEnumerable<ChartPoint> FindPointsInPosition(
+        Chart chart, LvcPoint pointerPosition, FindingStrategy strategy, FindPointFor findPointFor)
+    {
+        return strategy switch
+        {
+            FindingStrategy.ExactMatch => Fetch(chart)
+                .Where(point =>
+                {
+                    var v = (TVisual?)point.Context.Visual;
+                    if (v is null) return false;
+
+                    var x = v.X + v.TranslateTransform.X;
+                    var y = v.Y + v.TranslateTransform.Y;
+
+                    return
+                        pointerPosition.X > x && pointerPosition.X < x + v.Width &&
+                        pointerPosition.Y > y && pointerPosition.Y < y + v.Height;
+                }),
+            FindingStrategy.ExactMatchTakeClosest => Fetch(chart)
+                .Select(x => new { distance = x.DistanceTo(pointerPosition, strategy), point = x })
+                .OrderBy(x => x.distance)
+                .SelectFirst(x => x.point),
+            FindingStrategy.Automatic or
+            FindingStrategy.CompareAll or
+            FindingStrategy.CompareOnlyX or
+            FindingStrategy.CompareOnlyY or
+            FindingStrategy.CompareAllTakeClosest or
+            FindingStrategy.CompareOnlyXTakeClosest or
+            FindingStrategy.CompareOnlyYTakeClosest or
+            FindingStrategy.ExactMatchTakeClosest or
+                _ => base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor)
+        };
+    }
+
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -509,7 +556,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         base.OnPointerEnter(point);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.OnPointerLeft(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {
         var visual = (TVisual?)point.Context.Visual;
@@ -520,16 +567,14 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc cref="GetRequestedGeometrySize"/>
-    protected override double GetRequestedGeometrySize()
-    {
-        return (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
-    }
+    protected override double GetRequestedGeometrySize() =>
+        (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniaturesSketch"/>
-    [Obsolete]
-    public override Sketch<TDrawingContext> GetMiniaturesSketch()
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override Sketch GetMiniaturesSketch()
     {
-        var schedules = new List<PaintSchedule<TDrawingContext>>();
+        var schedules = new List<PaintSchedule>();
 
         if (GeometryFill is not null) schedules.Add(BuildMiniatureSchedule(GeometryFill, new TVisual()));
         else if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
@@ -537,14 +582,15 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
         else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
 
-        return new Sketch<TDrawingContext>(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
         {
             PaintSchedules = schedules
         };
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.GetMiniature"/>"/>
-    public override VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex)
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
+    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
+    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
     {
         var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
         var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
@@ -552,14 +598,14 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
 
         return usesLine
-            ? new LineVisual<TErrorGeometry, TDrawingContext>
+            ? new LineVisual<TErrorGeometry>
             {
                 Stroke = GetMiniaturePaint(Stroke, zindex + 2),
                 Width = MiniatureShapeSize,
                 Height = 0,
                 ClippingMode = ClipMode.None
             }
-            : new GeometryVisual<TVisual, TLabel, TDrawingContext>
+            : new GeometryVisual<TVisual, TLabel>
             {
                 Fill = GetMiniatureFill(point, zindex + 1),
                 Stroke = GetMiniatureStroke(point, zindex + 2),
@@ -571,29 +617,64 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
             };
     }
 
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
+    public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
+    {
+        var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
+        var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
+
+        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+
+        if (usesLine)
+        {
+            return new TErrorGeometry
+            {
+                IsRelativeToLocation = true,
+                Stroke = GetMiniaturePaint(Stroke, 0),
+                X = 0,
+                Y = 0,
+                X1 = (float)MiniatureShapeSize,
+                Y1 = 0
+            };
+        }
+
+        var m = new TVisual
+        {
+            Fill = GetMiniatureFill(point, 0),
+            Stroke = GetMiniatureStroke(point, 0),
+            Width = (float)MiniatureShapeSize,
+            Height = (float)MiniatureShapeSize,
+            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0
+        };
+
+        if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
+
+        return m;
+    }
+
     /// <inheritdoc cref="GetMiniatureFill(ChartPoint?, int)"/>
-    protected override IPaint<TDrawingContext>? GetMiniatureFill(ChartPoint? point, int zIndex)
+    protected override Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryFill;
+        var paint = p?.Visual?.Fill ?? GeometryFill ?? Fill;
 
         return GetMiniaturePaint(paint, zIndex);
     }
 
     /// <inheritdoc cref="GetMiniatureStroke(ChartPoint?, int)"/>
-    protected override IPaint<TDrawingContext>? GetMiniatureStroke(ChartPoint? point, int zIndex)
+    protected override Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
     {
         var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryStroke;
+        var paint = p?.Visual?.Stroke ?? GeometryStroke ?? Stroke;
 
         return GetMiniaturePaint(paint, zIndex);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDispose(IChartView)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SoftDeleteOrDispose(IChartView)"/>
     public override void SoftDeleteOrDispose(IChartView chart)
     {
         base.SoftDeleteOrDispose(chart);
-        var canvas = ((ICartesianChartView<TDrawingContext>)chart).CoreCanvas;
+        var canvas = ((ICartesianChartView)chart).CoreCanvas;
 
         if (Fill is not null)
         {
@@ -614,7 +695,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     }
 
     /// <inheritdoc/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
 
@@ -622,11 +703,9 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint];
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint];
 
     /// <summary>
     /// Builds an spline from the given points.
@@ -636,7 +715,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <returns></returns>
     protected internal IEnumerable<BezierData> GetSpline(
         IEnumerable<ChartPoint> points,
-        StackPosition<TDrawingContext>? stacker)
+        StackPosition? stacker)
     {
         foreach (var item in points.AsSplineData())
         {
@@ -738,27 +817,27 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         }
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
+    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry> visual)
+        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual)
             throw new Exception("Unable to initialize the point instance.");
 
         var easing = EasingFunction ?? chart.EasingFunction;
         var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
 
         visual.Geometry.Animate(easing, speed);
-        visual.Bezier.Animate(easing, speed);
+        visual.Segment.Animate(easing, speed);
         visual.YError?.Animate(easing, speed);
         visual.XError?.Animate(easing, speed);
     }
 
-    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
+    /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry>?)point.Context.AdditionalVisuals;
+        var visual = (SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -798,7 +877,7 @@ public class CoreLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not BezierErrorVisualPoint<TDrawingContext, TVisual, TErrorGeometry> visual) return;
+        if (point.Context.Visual is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual) return;
 
         var c = point.Coordinate;
 

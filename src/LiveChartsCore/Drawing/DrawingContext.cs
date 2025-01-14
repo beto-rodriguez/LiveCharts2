@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Painting;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -28,14 +30,51 @@ namespace LiveChartsCore.Drawing;
 public abstract class DrawingContext
 {
     /// <summary>
+    /// Gets the active opacity.
+    /// </summary>
+    public float ActiveOpacity { get; internal set; }
+
+    /// <summary>
+    /// Gets the active paint task.
+    /// </summary>
+    /// <value>
+    /// The paint task.
+    /// </value>
+    public Paint? ActiveLvcPaint { get; internal set; }
+
+    /// <summary>
     /// Called when the frame starts.
     /// </summary>
     public virtual void OnBeginDraw()
     { }
 
     /// <summary>
+    /// Draws the given string over the canvas.
+    /// </summary>
+    /// <param name="log">the log content.</param>
+    public abstract void LogOnCanvas(string log);
+
+    /// <summary>
     /// Called when the frame ends.
     /// </summary>
     public virtual void OnEndDraw()
     { }
+
+    /// <summary>
+    /// Draws the given element.
+    /// </summary>
+    /// <param name="drawable">The drawable element.</param>
+    public abstract void Draw(IDrawnElement drawable);
+
+    /// <summary>
+    /// Initializes the task.
+    /// </summary>
+    /// <param name="paint"></param>
+    public abstract void InitializePaintTask(Paint paint);
+
+    /// <summary>
+    /// Disposes the task.
+    /// </summary>
+    /// <param name="paint"></param>
+    public abstract void DisposePaintTask(Paint paint);
 }

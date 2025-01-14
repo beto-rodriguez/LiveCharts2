@@ -21,86 +21,12 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Drawing;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a series a chart series that has a visual representation in the user interface.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="ISeries" />
-public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
-     where TDrawingContext : DrawingContext
-{
-    /// <summary>
-    /// Gets or sets the data labels paint.
-    /// </summary>
-    /// <value>
-    /// The data labels paint.
-    /// </value>
-    IPaint<TDrawingContext>? DataLabelsPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the size of the data labels.
-    /// </summary>
-    /// <value>
-    /// The size of the data labels.
-    /// </value>
-    double DataLabelsSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the data labels rotation in degrees.
-    /// </summary>
-    /// <value>
-    /// The rotation of the data labels in degrees.
-    /// </value>
-    double DataLabelsRotation { get; set; }
-
-    /// <summary>
-    /// Gets or sets the data labels padding.
-    /// </summary>
-    /// <value>
-    /// The data labels padding.
-    /// </value>
-    Padding DataLabelsPadding { get; set; }
-
-    /// <summary>
-    /// Gets or sets the max width of the data labels.
-    /// </summary>
-    /// <value>
-    /// The max with of the data labels.
-    /// </value>
-    double DataLabelsMaxWidth { get; set; }
-
-    /// <summary>
-    /// Gets the stack group, normally used internally to handled the stacked series.
-    /// </summary>
-    /// <returns></returns>
-    int GetStackGroup();
-
-    /// <summary>
-    /// </summary>
-    /// <returns></returns>
-    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    Sketch<TDrawingContext> GetMiniaturesSketch();
-
-    /// <summary>
-    /// Return the visual element shown in tooltips and legends.
-    /// </summary>
-    /// <param name="point">The point.</param>
-    /// <param name="zindex">The zindex.</param>
-    /// <returns></returns>
-    VisualElement<TDrawingContext> GetMiniature(ChartPoint? point, int zindex);
-
-    /// <summary>
-    /// Called when the pointer goes down on a data point or points.
-    /// </summary>
-    /// <param name="chart">The chart.</param>
-    /// <param name="points">The found points.</param>
-    /// <param name="pointerLocation">The pointer location.</param>
-    void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointerLocation);
-}
+[Obsolete("This interface will be removed in the next version, use ISeries instead.")]
+public interface IChartSeriesSeries : ISeries
+{ }

@@ -3,10 +3,10 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using SkiaSharp;
 using LiveChartsCore;
-using LiveChartsCore.ConditionalDraw;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace ViewModelsSamples.General.ConditionalDraw;
@@ -29,17 +29,19 @@ public class ViewModel
         {
             Name = "Mary",
             Values = _values
-        }
-        .OnPointMeasured(point =>
-        {
-            if (point.Visual is null) return;
+        };
 
-            var isDanger = point.Model?.Value > 5;
+        series
+            .OnPointMeasured(point =>
+            {
+                if (point.Visual is null) return;
 
-            point.Visual.Fill = isDanger
-                ? dangerPaint
-                : null; // when null, the series fill is used // mark
-        });
+                var isDanger = point.Model?.Value > 5;
+
+                point.Visual.Fill = isDanger
+                    ? dangerPaint
+                    : null; // when null, the series fill is used // mark
+            });
 
         Series = [series];
 

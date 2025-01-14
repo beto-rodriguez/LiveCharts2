@@ -37,7 +37,7 @@ public static class GaugeGenerator
     /// Builds a solid Gauge, it generates a series collectio of
     /// <see cref="PieSeries{ObservableValue, DoughnutGeometry, LabelGeometry}"/>, these series
     /// are ready to be plotted in a pie chart, and will render the gauge, this reuses all the power and
-    /// functionality of the <see cref="PieChart{TDrawingContext}"/> class.
+    /// functionality of the <see cref="PieChartEngine"/> class.
     /// </summary>
     /// <param name="items">The items.</param>
     /// <returns>A series collection of pie seires.</returns>
@@ -54,7 +54,7 @@ public static class GaugeGenerator
     /// Builds an angular Gauge, it generates a series collectio of
     /// <see cref="PieSeries{ObservableValue, DoughnutGeometry, LabelGeometry}"/>, these series
     /// are ready to be plotted in a pie chart, and will render the gauge, this reuses all the power and
-    /// functionality of the <see cref="PieChart{TDrawingContext}"/> class.
+    /// functionality of the <see cref="PieChartEngine"/> class.
     /// </summary>
     /// <param name="items">The items.</param>
     /// <returns>A series collection of pie seires.</returns>

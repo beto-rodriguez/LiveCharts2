@@ -20,59 +20,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ISizedGeometry{TDrawingContext}" />
-public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaSharpDrawingContext>
+// LEGACY OBJECTS, WILL BE REMOVED IN FUTURE VERSIONS
+
+/// <summary>
+/// Defines a geometry with a size.
+/// </summary>
+[Obsolete($"Renamed to {nameof(BoundedDrawnGeometry)}")]
+public abstract class SizedGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    /// <summary>
-    /// The width
-    /// </summary>
-    protected FloatMotionProperty widthProperty;
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)"/>
+    public virtual void Draw(SkiaSharpDrawingContext context) =>
+        OnDraw(context, context.ActiveSkiaPaint);
 
     /// <summary>
-    /// The height
+    /// Legacy method, will be removed in future versions.
     /// </summary>
-    protected FloatMotionProperty heightProperty;
+    [Obsolete($"Use the {nameof(Draw)} method instead.")]
+    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
+}
+
+/// <summary>
+/// Obsolete.
+/// </summary>
+[Obsolete($"Renamed to {nameof(DrawnGeometry)}")]
+public abstract class Geometry : DrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
+{
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)"/>
+    public virtual void Draw(SkiaSharpDrawingContext context) =>
+        OnDraw(context, context.ActiveSkiaPaint);
 
     /// <summary>
-    /// The match dimensions
+    /// Legacy method, will be removed in future versions.
     /// </summary>
-    protected bool matchDimensions = false;
+    [Obsolete($"Use the {nameof(Draw)} method instead.")]
+    public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
+
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
+    public override LvcSize Measure() =>
+        new(0, 0);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SizedGeometry"/> class.
+    /// Legacy method, will be removed in future versions.
     /// </summary>
-    protected SizedGeometry() : base()
-    {
-        widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
-        heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
-    }
-
-    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Width" />
-    public float Width { get => widthProperty.GetMovement(this); set => widthProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
-    public float Height
-    {
-        get => matchDimensions ? widthProperty.GetMovement(this) : heightProperty.GetMovement(this);
-        set
-        {
-            if (matchDimensions)
-            {
-                widthProperty.SetMovement(value, this);
-                return;
-            }
-            heightProperty.SetMovement(value, this);
-        }
-    }
-
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paint)
-    {
-        return new LvcSize(Width, Height);
-    }
+    /// <param name="paintTasks"></param>
+    /// <returns></returns>
+    protected virtual LvcSize OnMeasure(Paint paintTasks) => Measure();
 }

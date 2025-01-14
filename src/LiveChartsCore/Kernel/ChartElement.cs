@@ -26,20 +26,20 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel;
 
 /// <summary>
 /// Defines a visual element in a chart.
 /// </summary>
-public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>, INotifyPropertyChanged
-    where TDrawingContext : DrawingContext
+public abstract class ChartElement : IChartElement, INotifyPropertyChanged
 {
     internal bool _isInternalSet = false;
     internal object _theme = new();
     internal readonly HashSet<string> _userSets = [];
     private bool _isVisible = true;
-    private readonly List<IPaint<TDrawingContext>> _deletingTasks = [];
+    private readonly List<Paint> _deletingTasks = [];
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -57,11 +57,11 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         set => SetProperty(ref _isVisible, value);
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})" />
-    public abstract void Invalidate(Chart<TDrawingContext> chart);
+    /// <inheritdoc cref="IChartElement.Invalidate(Chart)" />
+    public abstract void Invalidate(Chart chart);
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveOldPaints(IChartView{TDrawingContext})" />
-    public void RemoveOldPaints(IChartView<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveOldPaints(IChartView)" />
+    public void RemoveOldPaints(IChartView chart)
     {
         if (_deletingTasks.Count == 0) return;
 
@@ -74,8 +74,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         _deletingTasks.Clear();
     }
 
-    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})" />
-    public virtual void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="IChartElement.RemoveFromUI(Chart)" />
+    public virtual void RemoveFromUI(Chart chart)
     {
         foreach (var item in GetPaintTasks())
         {
@@ -86,30 +86,26 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     }
 
     /// <summary>
-    /// Gets the paint tasks registered by the <see cref="ChartElement{TDrawingContext}"/>.
+    /// Gets the paint tasks registered by the <see cref="ChartElement"/>.
     /// </summary>
     /// <returns>The paint tasks.</returns>
-    protected internal abstract IPaint<TDrawingContext>?[] GetPaintTasks();
+    protected internal abstract Paint?[] GetPaintTasks();
 
     /// <summary>
     /// Sets a property value and handles the paints in the canvas.
     /// </summary>
     /// <param name="reference">The referenced paint task.</param>
     /// <param name="value">The value</param>
-    /// <param name="isStroke">if set to <c>true</c> [is stroke].</param>
+    /// <param name="style">Thed paint style.</param>
     /// <param name="propertyName">Name of the property.</param>
-    /// <returns></returns>
     protected virtual void SetPaintProperty(
-        ref IPaint<TDrawingContext>? reference,
-        IPaint<TDrawingContext>? value,
-        bool isStroke = false,
+        ref Paint? reference,
+        Paint? value,
+        PaintStyle style = PaintStyle.Fill,
         [CallerMemberName] string? propertyName = null)
     {
-        // The null check is intentional.
-        // we need to allow nulls to go further this if
-        // OnPropertyChanged needs to be called
-        // to detect whether the user set the null value.
-        if (value is not null && value == reference) return;
+        if (!_isInternalSet) TouchProperty(propertyName);
+        if (value == reference) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
@@ -118,11 +114,7 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         reference = value;
 
         if (reference is not null)
-        {
-            reference.IsStroke = isStroke;
-            reference.IsFill = !isStroke; // seems unnecessary ????
-            if (!isStroke) reference.StrokeThickness = 0;
-        }
+            reference.PaintStyle = style;
 
         OnPropertyChanged(propertyName);
     }
@@ -139,11 +131,8 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
         T value,
         [CallerMemberName] string? propertyName = null)
     {
-        // The null check is intentional.
-        // we need to allow nulls to go further this if
-        // OnPropertyChanged needs to be called
-        // to detect whether the user set the null value.
-        if (value is not null && value.Equals(reference)) return;
+        if (!_isInternalSet) TouchProperty(propertyName);
+        if (Equals(value, reference)) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
         if (!CanSetProperty(propertyName)) return;
@@ -168,13 +157,11 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     }
 
     /// <summary>
-    /// Schedules the delete for thew given <see cref="IPaint{TDrawingContext}"/> instance.
+    /// Schedules the delete for thew given <see cref="Paint"/> instance.
     /// </summary>
     /// <returns></returns>
-    protected void ScheduleDeleteFor(IPaint<TDrawingContext> paintTask)
-    {
+    protected void ScheduleDeleteFor(Paint paintTask) =>
         _deletingTasks.Add(paintTask);
-    }
 
     /// <summary>
     /// Called when the fill changes.
@@ -189,10 +176,19 @@ public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingCont
     /// <returns></returns>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        // only invoke property change event when the user set the property.
         if (_isInternalSet) return;
-
-        _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    private void TouchProperty([CallerMemberName] string? propertyName = null) =>
+        _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
 }
+
+/// <summary>
+/// Obsolete.
+/// </summary>
+/// <typeparam name="TDrawingContext"></typeparam>
+[Obsolete("The generic argument was removed.")]
+public abstract class ChartElement<TDrawingContext> : ChartElement
+    where TDrawingContext : DrawingContext
+{ }

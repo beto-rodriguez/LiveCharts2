@@ -34,9 +34,7 @@ namespace LiveChartsCore.Themes;
 /// <summary>
 /// Defines a style builder.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class Theme<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class Theme
 {
     /// <summary>
     /// Gets or sets the theme colors.
@@ -49,7 +47,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The axis builder.
     /// </value>
-    public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = [];
+    public List<Action<IPlane>> AxisBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the draw margin frame builder.
@@ -57,7 +55,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The draw margin frame builder.
     /// </value>
-    public List<Action<DrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = [];
+    public List<Action<CoreDrawMarginFrame>> DrawMarginFrameBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the series builder.
@@ -65,7 +63,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IChartSeries<TDrawingContext>>> SeriesBuilder { get; set; } = [];
+    public List<Action<ISeries>> SeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the pie series builder.
@@ -73,7 +71,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = [];
+    public List<Action<IPieSeries>> PieSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the gauge series builder.
@@ -81,7 +79,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = [];
+    public List<Action<IPieSeries>> GaugeSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the gauge fill series builder.
@@ -89,7 +87,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = [];
+    public List<Action<IPieSeries>> GaugeFillSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the Cartesian series builder.
@@ -97,7 +95,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = [];
+    public List<Action<ICartesianSeries>> CartesianSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stepline series builder.
@@ -105,7 +103,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = [];
+    public List<Action<IStepLineSeries>> StepLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the  stacked stepline series builder.
@@ -113,7 +111,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = [];
+    public List<Action<IStepLineSeries>> StackedStepLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -121,7 +119,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = [];
+    public List<Action<ILineSeries>> LineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -129,7 +127,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = [];
+    public List<Action<IPolarSeries>> PolarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -137,7 +135,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarLineSeries<TDrawingContext>>> PolarLineSeriesBuilder { get; set; } = [];
+    public List<Action<IPolarLineSeries>> PolarLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -145,7 +143,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = [];
+    public List<Action<IPolarSeries>> StackedPolarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -153,7 +151,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = [];
+    public List<Action<IHeatSeries>> HeatSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the financial series builder.
@@ -161,7 +159,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = [];
+    public List<Action<IFinancialSeries>> FinancialSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked line series builder.
@@ -169,7 +167,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = [];
+    public List<Action<ILineSeries>> StackedLineSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the bar series builder.
@@ -177,7 +175,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = [];
+    public List<Action<IBarSeries>> BarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the column series builder.
@@ -185,7 +183,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = [];
+    public List<Action<IBarSeries>> ColumnSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the row series builder.
@@ -193,7 +191,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = [];
+    public List<Action<IBarSeries>> RowSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked bar series builder.
@@ -201,7 +199,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = [];
+    public List<Action<IStackedBarSeries>> StackedBarSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked column series builder.
@@ -209,7 +207,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = [];
+    public List<Action<IStackedBarSeries>> StackedColumnSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the stacked row series builder.
@@ -217,7 +215,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = [];
+    public List<Action<IStackedBarSeries>> StackedRowSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the scatter series builder.
@@ -225,7 +223,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = [];
+    public List<Action<IScatterSeries>> ScatterSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the error series builder.
@@ -233,7 +231,7 @@ public class Theme<TDrawingContext>
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBoxSeries<TDrawingContext>>> BoxSeriesBuilder { get; set; } = [];
+    public List<Action<IBoxSeries>> BoxSeriesBuilder { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the visual element builder.
@@ -241,10 +239,20 @@ public class Theme<TDrawingContext>
     public Dictionary<Type, object> ChartElementElementBuilder { get; set; } = [];
 
     /// <summary>
+    /// Gets or sets the default tooltip.
+    /// </summary>
+    public Func<IChartTooltip> DefaultTooltip { get; set; } = () => throw new NotImplementedException();
+
+    /// <summary>
+    /// Gets or sets the default legend.
+    /// </summary>
+    public Func<IChartLegend> DefaultLegend { get; set; } = () => throw new NotImplementedException();
+
+    /// <summary>
     /// Applies the theme to an axis.
     /// </summary>
     /// <param name="axis">The axis.</param>
-    public void ApplyStyleToAxis(IPlane<TDrawingContext> axis)
+    public void ApplyStyleToAxis(IPlane axis)
     {
         foreach (var rule in AxisBuilder) rule(axis);
     }
@@ -253,7 +261,7 @@ public class Theme<TDrawingContext>
     /// Applies the theme to a series.
     /// </summary>
     /// <param name="series">The series.</param>
-    public virtual void ApplyStyleToSeries(IChartSeries<TDrawingContext> series)
+    public virtual void ApplyStyleToSeries(ISeries series)
     {
         foreach (var rule in SeriesBuilder) rule(series);
 
@@ -263,28 +271,28 @@ public class Theme<TDrawingContext>
             {
                 if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
                 {
-                    foreach (var rule in GaugeFillSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                    foreach (var rule in GaugeFillSeriesBuilder) rule((IPieSeries)series);
                 }
                 else
                 {
-                    foreach (var rule in GaugeSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                    foreach (var rule in GaugeSeriesBuilder) rule((IPieSeries)series);
                 }
             }
             else
             {
-                foreach (var rule in PieSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                foreach (var rule in PieSeriesBuilder) rule((IPieSeries)series);
             }
         }
 
         if ((series.SeriesProperties & SeriesProperties.CartesianSeries) == SeriesProperties.CartesianSeries)
         {
-            foreach (var rule in CartesianSeriesBuilder) rule((ICartesianSeries<TDrawingContext>)series);
+            foreach (var rule in CartesianSeriesBuilder) rule((ICartesianSeries)series);
         }
 
         if ((series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar &&
             (series.SeriesProperties & SeriesProperties.Stacked) != SeriesProperties.Stacked)
         {
-            var barSeries = (IBarSeries<TDrawingContext>)series;
+            var barSeries = (IBarSeries)series;
             foreach (var rule in BarSeriesBuilder) rule(barSeries);
 
             if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)
@@ -301,7 +309,7 @@ public class Theme<TDrawingContext>
         var stackedBarMask = SeriesProperties.Bar | SeriesProperties.Stacked;
         if ((series.SeriesProperties & stackedBarMask) == stackedBarMask)
         {
-            var stackedBarSeries = (IStackedBarSeries<TDrawingContext>)series;
+            var stackedBarSeries = (IStackedBarSeries)series;
             foreach (var rule in StackedBarSeriesBuilder) rule(stackedBarSeries);
 
             if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)
@@ -317,12 +325,12 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Scatter) == SeriesProperties.Scatter)
         {
-            foreach (var rule in ScatterSeriesBuilder) rule((IScatterSeries<TDrawingContext>)series);
+            foreach (var rule in ScatterSeriesBuilder) rule((IScatterSeries)series);
         }
 
         if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
         {
-            var stepSeries = (IStepLineSeries<TDrawingContext>)series;
+            var stepSeries = (IStepLineSeries)series;
             foreach (var rule in StepLineSeriesBuilder) rule(stepSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
@@ -333,12 +341,12 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.BoxSeries) == SeriesProperties.BoxSeries)
         {
-            foreach (var rule in BoxSeriesBuilder) rule((IBoxSeries<TDrawingContext>)series);
+            foreach (var rule in BoxSeriesBuilder) rule((IBoxSeries)series);
         }
 
         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
         {
-            var lineSeries = (ILineSeries<TDrawingContext>)series;
+            var lineSeries = (ILineSeries)series;
             foreach (var rule in LineSeriesBuilder) rule(lineSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
@@ -349,7 +357,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Polar) == SeriesProperties.Polar)
         {
-            var polarSeries = (IPolarSeries<TDrawingContext>)series;
+            var polarSeries = (IPolarSeries)series;
             foreach (var rule in PolarSeriesBuilder) rule(polarSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
@@ -360,7 +368,7 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.PolarLine)
         {
-            var polarSeries = (IPolarLineSeries<TDrawingContext>)series;
+            var polarSeries = (IPolarLineSeries)series;
             foreach (var rule in PolarLineSeriesBuilder) rule(polarSeries);
 
             if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
@@ -371,13 +379,13 @@ public class Theme<TDrawingContext>
 
         if ((series.SeriesProperties & SeriesProperties.Heat) == SeriesProperties.Heat)
         {
-            var heatSeries = (IHeatSeries<TDrawingContext>)series;
+            var heatSeries = (IHeatSeries)series;
             foreach (var rule in HeatSeriesBuilder) rule(heatSeries);
         }
 
         if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
         {
-            var financialSeries = (IFinancialSeries<TDrawingContext>)series;
+            var financialSeries = (IFinancialSeries)series;
             foreach (var rule in FinancialSeriesBuilder) rule(financialSeries);
         }
     }
@@ -386,7 +394,7 @@ public class Theme<TDrawingContext>
     /// Applies the theme to  a draw margin.
     /// </summary>
     /// <param name="drawMarginFrame"></param>
-    public void ApplyStyleToDrawMargin(DrawMarginFrame<TDrawingContext> drawMarginFrame)
+    public void ApplyStyleToDrawMargin(CoreDrawMarginFrame drawMarginFrame)
     {
         foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
     }
@@ -397,7 +405,7 @@ public class Theme<TDrawingContext>
     /// <typeparam name="TChartElement">The typoe of the chart element.</typeparam>
     /// <param name="visualElement">The visual element.</param>
     public void ApplyStyleTo<TChartElement>(TChartElement visualElement)
-        where TChartElement : VisualElement<TDrawingContext>
+        where TChartElement : VisualElement
     {
         if (!ChartElementElementBuilder.TryGetValue(typeof(TChartElement), out var builder)) return;
 
@@ -408,8 +416,6 @@ public class Theme<TDrawingContext>
     /// Gets the color of a series according to the theme.
     /// </summary>
     /// <returns></returns>
-    public LvcColor GetSeriesColor(ISeries series)
-    {
-        return Colors[series.SeriesId % Colors.Length];
-    }
+    public LvcColor GetSeriesColor(ISeries series) =>
+        Colors[series.SeriesId % Colors.Length];
 }

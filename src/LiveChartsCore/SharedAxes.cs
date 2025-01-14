@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Crosshair Subticks Subseparators
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore;
 
@@ -37,12 +37,12 @@ public static class SharedAxes
     /// <summary>
     /// Sets the specified axes as shared.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <param name="axes">The axes to share.</param>
-    public static void Set<TDrawingContext>(params ICartesianAxis<TDrawingContext>[] axes)
-        where TDrawingContext : DrawingContext
+    public static void Set(params ICartesianAxis[] axes)
     {
-        var sharedInstance = new HashSet<CartesianChart<TDrawingContext>>();
+        // ToDo: unsubscribe events?
+
+        var sharedInstance = new HashSet<CartesianChartEngine>();
 
         foreach (var axis in axes)
         {
@@ -50,11 +50,85 @@ public static class SharedAxes
                 .Where(x => x != axis)
                 .ToArray();
 
-            axis.MeasureStarted += (IChart chart, ICartesianAxis obj) =>
+            axis.MeasureStarted += (Chart chart, ICartesianAxis obj) =>
             {
-                var cc = (CartesianChart<TDrawingContext>)chart;
+                var cc = (CartesianChartEngine)chart;
                 cc.SubscribeSharedEvents(sharedInstance);
             };
         }
+    }
+
+    /// <summary>
+    /// Matches the axes screen data ratio, it means that the axes will take the same amount of
+    /// space in the screen per unit of data, note that when the view is diposed, <see cref="DisposeMatchAxesScreenDataRatio(ICartesianChartView)"/>
+    /// will ensure the resources are released.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    public static void MatchAxesScreenDataRatio(this ICartesianChartView chart) =>
+        ((CartesianChartEngine)chart.CoreChart).DrawMarginDefined += MatchAxesScreenDataRatioDelegate;
+
+    /// <summary>
+    /// Disposes the match axes screen data ratio functionality.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    public static void DisposeMatchAxesScreenDataRatio(this ICartesianChartView chart) =>
+        ((CartesianChartEngine)chart.CoreChart).DrawMarginDefined -= MatchAxesScreenDataRatioDelegate;
+
+    private static void MatchAxesScreenDataRatioDelegate(CartesianChartEngine chart)
+    {
+        var drawMarginSize = chart.DrawMarginSize;
+        ICartesianAxis source, target;
+
+        if (chart.XAxes.Length > 1 || chart.YAxes.Length > 1)
+        {
+            throw new NotImplementedException(
+                $"{nameof(MatchAxesScreenDataRatio)} only supports one axis for both X and Y. " +
+                $"Why is this required? please open an issue at github explaining the need of this feature.");
+        }
+
+        if (drawMarginSize.Height > drawMarginSize.Width)
+        {
+            source = chart.XAxes[0];
+            target = chart.YAxes[0];
+        }
+        else
+        {
+            source = chart.YAxes[0];
+            target = chart.XAxes[0];
+        }
+
+        MatchSlopes(drawMarginSize, source, target);
+    }
+
+    private static void MatchSlopes(LvcSize drawMarginSize, ICartesianAxis source, ICartesianAxis target)
+    {
+        var minSourceData = source.MinLimit ?? source.DataBounds.Min;
+        var maxSourceData = source.MaxLimit ?? source.DataBounds.Max;
+
+        source.SetLimits(
+            minSourceData,
+            maxSourceData,
+            notify: false);
+
+        var sourceDimension = source.Orientation == AxisOrientation.X
+            ? drawMarginSize.Width
+            : drawMarginSize.Height;
+
+        var sourceScreenDataRatio = sourceDimension / (maxSourceData - minSourceData);
+
+        var targetDimension = target.Orientation == AxisOrientation.X
+            ? drawMarginSize.Width
+            : drawMarginSize.Height;
+
+        var desiredTargetDelta = targetDimension / sourceScreenDataRatio;
+
+        var minTargetData = target.MinLimit ?? target.DataBounds.Min;
+        var maxTargetData = target.MaxLimit ?? target.DataBounds.Max;
+        var midTargetData = (minTargetData + maxTargetData) * 0.5f;
+
+        target.SetLimits(
+            midTargetData - 0.5f * desiredTargetDelta,
+            midTargetData + 0.5f * desiredTargetDelta,
+            notify: false);
     }
 }

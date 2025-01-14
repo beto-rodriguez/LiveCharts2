@@ -20,17 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a financial series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContext>, ICartesianSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="ISeries" />
+public interface IFinancialSeries : ICartesianSeries
 {
     /// <summary>
     /// Gets or sets the maximum width of the bar.
@@ -46,7 +44,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint<TDrawingContext>? UpStroke { get; set; }
+    Paint? UpStroke { get; set; }
 
     /// <summary>
     /// Gets or sets the up stroke, the stroke when the trend goes down.
@@ -54,7 +52,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The stroke.
     /// </value>
-    IPaint<TDrawingContext>? DownStroke { get; set; }
+    Paint? DownStroke { get; set; }
 
     /// <summary>
     /// Gets or sets the up fill, the fill when the trend goes up.
@@ -62,7 +60,7 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The fill.
     /// </value>
-    IPaint<TDrawingContext>? UpFill { get; set; }
+    Paint? UpFill { get; set; }
 
     /// <summary>
     /// Gets or sets the up fill, the fill when the trend goes down.
@@ -70,5 +68,5 @@ public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <value>
     /// The fill.
     /// </value>
-    IPaint<TDrawingContext>? DownFill { get; set; }
+    Paint? DownFill { get; set; }
 }

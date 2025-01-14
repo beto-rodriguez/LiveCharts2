@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: SVG
-
-using LiveChartsCore.SkiaSharpView.Drawing;
+using System;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
@@ -32,6 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// <summary>
 /// Defines a visual element in a chart that draws a svg geometry in the user interface.
 /// </summary>
+[Obsolete($"Replaced by {nameof(Visual)}.")]
 public class SVGVisual : GeometryVisual<VariableSVGPathGeometry>
 {
     private SKPath? _path;
@@ -41,8 +40,8 @@ public class SVGVisual : GeometryVisual<VariableSVGPathGeometry>
     /// </summary>
     public SKPath? Path { get => _path; set => SetProperty(ref _path, value); }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<SkiaSharpDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         base.OnInvalidated(chart);
         if (_geometry is not null) _geometry.Path = Path;

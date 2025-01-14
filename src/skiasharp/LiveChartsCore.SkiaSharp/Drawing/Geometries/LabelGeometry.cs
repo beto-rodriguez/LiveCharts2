@@ -25,18 +25,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="ILabelGeometry{TDrawingContext}" />
-public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
+/// <inheritdoc cref="BaseLabelGeometry" />
+public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    private readonly FloatMotionProperty _textSizeProperty;
-    private readonly ColorMotionProperty _backgroundProperty;
     internal float _maxTextHeight = 0f;
     internal int _lines;
 
@@ -44,63 +41,20 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
     /// </summary>
     public LabelGeometry()
-        : base(true)
     {
-        _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
-        _backgroundProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Background), LvcColor.Empty));
         TransformOrigin = new LvcPoint(0f, 0f);
     }
 
-    /// <summary>
-    /// Gets or sets the vertical align.
-    /// </summary>
-    /// <value>
-    /// The vertical align.
-    /// </value>
-    public Align VerticalAlign { get; set; } = Align.Middle;
-
-    /// <summary>
-    /// Gets or sets the horizontal align.
-    /// </summary>
-    /// <value>
-    /// The horizontal align.
-    /// </value>
-    public Align HorizontalAlign { get; set; } = Align.Middle;
-
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Text" />
-    public string Text { get; set; } = string.Empty;
-
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.TextSize" />
-    public float TextSize { get => _textSizeProperty.GetMovement(this); set => _textSizeProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Background" />
-    public LvcColor Background { get => _backgroundProperty.GetMovement(this); set => _backgroundProperty.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Padding" />
-    public Padding Padding { get; set; } = new();
-
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.LineHeight" />
-    public float LineHeight { get; set; } = 1.45f;
-
-    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.MaxWidth" />
-    public float MaxWidth { get; set; } = float.MaxValue;
-
-#if DEBUG
-    /// <summary>
-    /// This property is only available on debug mode, it indicates if the debug lines should be shown.
-    /// </summary>
-    public static bool ShowDebugLines { get; set; }
-#endif
-
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        context.Paint.TextSize = TextSize;
+        var paint = context.ActiveSkiaPaint;
+        paint.TextSize = TextSize;
 
         var p = Padding;
         var bg = Background;
 
-        var size = OnMeasure(context.PaintTask);
+        var size = Measure();
 
         var isFirstLine = true;
         var verticalPos =
@@ -117,9 +71,9 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         var textBounds = new SKRect();
         var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
 
-        foreach (var line in GetLines(context.Paint))
+        foreach (var line in GetLines(context.ActiveSkiaPaint))
         {
-            _ = context.Paint.MeasureText(line, ref textBounds);
+            _ = paint.MeasureText(line, ref textBounds);
 
             var lhd = (textBounds.Height * LineHeight - _maxTextHeight) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);
@@ -146,10 +100,8 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 #if DEBUG
             if (ShowDebugLines)
             {
-                using var r = new SKPaint { Color = new SKColor(255, 0, 0), IsStroke = true };
-                using var b = new SKPaint { Color = new SKColor(0, 0, 255), IsStroke = true };
-
-                context.Canvas.DrawRect(X - 2.5f, Y - 2.5f, 5, 5, b);
+                using var r = new SKPaint { Color = new SKColor(255, 0, 0), Style = SKPaintStyle.Stroke };
+                using var b = new SKPaint { Color = new SKColor(0, 0, 255), Style = SKPaintStyle.Stroke };
 
                 context.Canvas.DrawRect(
                     X + ao.X,
@@ -174,17 +126,20 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         shaper?.Dispose();
     }
 
-    /// <inheritdoc cref="Geometry.OnMeasure(IPaint{SkiaSharpDrawingContext})" />
-    protected override LvcSize OnMeasure(IPaint<SkiaSharpDrawingContext> paint)
+    /// <inheritdoc cref="DrawnGeometry.Measure()" />
+    public override LvcSize Measure()
     {
-        var skiaPaint = (Paint)paint;
+        if (Paint is null)
+            throw new Exception(
+                $"A paint is required to measure a label, please set the {nameof(Paint)} " +
+                $"property with the paint that is drawing the label.");
+
+        var skiaPaint = (SkiaPaint)Paint;
         var typeface = skiaPaint.GetSKTypeface();
 
         using var p = new SKPaint
         {
-            Color = skiaPaint.Color,
             IsAntialias = skiaPaint.IsAntialias,
-            IsStroke = skiaPaint.IsStroke,
             StrokeWidth = skiaPaint.StrokeThickness,
             TextSize = TextSize,
             Typeface = typeface
@@ -212,14 +167,16 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         // Should the user dispose typefaces manually?
         // typeface.Dispose();
 
-        return new LvcSize(
+        var size = new LvcSize(
             w + Padding.Left + Padding.Right,
             h + Padding.Top + Padding.Bottom);
+
+        return size.GetRotatedSize(RotateTransform);
     }
 
     internal IEnumerable<string> GetLines(SKPaint paint)
     {
-        IEnumerable<string> lines = Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+        IEnumerable<string> lines = Text.Split([Environment.NewLine], StringSplitOptions.None);
 
         if (MaxWidth != float.MaxValue)
             lines = lines.SelectMany(x => GetLinesByMaxWidth(x, paint));
@@ -251,7 +208,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
 
         var sb = new StringBuilder();
         var sb2 = new StringBuilder();
-        var words = source.Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None);
+        var words = source.Split([" ", Environment.NewLine], StringSplitOptions.None);
         var bounds = new SKRect();
         var mw = MaxWidth - Padding.Left - Padding.Right;
 

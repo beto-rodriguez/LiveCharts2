@@ -27,9 +27,7 @@ namespace LiveChartsCore.Kernel.Helpers;
 /// <summary>
 /// Defines an axis visual separator.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public class AxisVisualSeprator : IVisualSeparator
 {
     /// <summary>
     /// Gets or sets the value.
@@ -45,7 +43,7 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     /// <value>
     /// The text.
     /// </value>
-    public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    public BaseLabelGeometry? Label { get; set; }
 
     /// <summary>
     /// Gets or sets the line.
@@ -53,7 +51,7 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     /// <value>
     /// The line.
     /// </value>
-    public ILineGeometry<TDrawingContext>? Separator { get; set; }
+    public BaseLineGeometry? Separator { get; set; }
 
     /// <summary>
     /// Gets or sets the line.
@@ -61,20 +59,20 @@ public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingCont
     /// <value>
     /// The line.
     /// </value>
-    public ILineGeometry<TDrawingContext>? Tick { get; set; }
+    public BaseLineGeometry? Tick { get; set; }
 
     /// <summary>
     /// Gets or sets the sub separators.
     /// </summary>
-    public ILineGeometry<TDrawingContext>[]? Subseparators { get; set; }
+    public BaseLineGeometry[]? Subseparators { get; set; }
 
     /// <summary>
     /// Gets or sets the sub ticks.
     /// </summary>
-    public ILineGeometry<TDrawingContext>[]? Subticks { get; set; }
+    public BaseLineGeometry[]? Subticks { get; set; }
 
     /// <summary>
     /// Gets the geometry.
     /// </summary>
-    public IGeometry<TDrawingContext>? Geometry => Separator;
+    public DrawnGeometry? Geometry => Separator;
 }

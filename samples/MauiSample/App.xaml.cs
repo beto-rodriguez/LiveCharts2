@@ -1,6 +1,4 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView; // mark
-using SkiaSharp; // mark
 
 namespace MauiSample;
 

@@ -33,7 +33,6 @@ namespace LiveChartsCore.Kernel;
 /// <param name="position"></param>
 public class TooltipPlacementContext(TooltipPosition position)
 {
-
     /// <summary>
     /// Gets the tool tip position.
     /// </summary>

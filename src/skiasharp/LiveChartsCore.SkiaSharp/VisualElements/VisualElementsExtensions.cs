@@ -23,7 +23,7 @@
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
@@ -37,10 +37,11 @@ public static class VisualElementsExtensions
     /// <summary>
     /// Creates a relative panel control from a given sketch.
     /// </summary>
-    public static RelativePanel<RectangleGeometry, SkiaSharpDrawingContext> AsDrawnControl(
-        this Sketch<SkiaSharpDrawingContext> sketch, int baseZIndex = 10050)
+    [Obsolete("Visual elements changed, please check docs.")]
+    public static RelativePanel<RectangleGeometry> AsDrawnControl(
+        this Sketch sketch, int baseZIndex = 10050)
     {
-        var relativePanel = new RelativePanel<RectangleGeometry, SkiaSharpDrawingContext>
+        var relativePanel = new RelativePanel<RectangleGeometry>
         {
             Size = new LvcSize((float)sketch.Width, (float)sketch.Height)
         };
@@ -49,7 +50,7 @@ public static class VisualElementsExtensions
         {
             foreach (var g in schedule.Geometries)
             {
-                var sizedGeometry = (ISizedGeometry<SkiaSharpDrawingContext>)g;
+                var sizedGeometry = (BoundedDrawnGeometry)g;
                 var vgv = new VariableGeometryVisual(sizedGeometry)
                 {
                     Width = sizedGeometry.Width,
@@ -57,7 +58,7 @@ public static class VisualElementsExtensions
                     ClippingMode = Measure.ClipMode.None
                 };
 
-                if (g is IVariableSvgPath<SkiaSharpDrawingContext> svgGeometry)
+                if (g is IVariableSvgPath svgGeometry)
                 {
                     svgGeometry.SVGPath =
                         sketch.Svg ?? throw new NullReferenceException("sketch.Svg can not be null at this point.");
@@ -65,8 +66,7 @@ public static class VisualElementsExtensions
 
                 schedule.PaintTask.ZIndex = schedule.PaintTask.ZIndex + 1 + baseZIndex;
 
-                if (schedule.PaintTask.IsFill) vgv.Fill = schedule.PaintTask;
-                if (schedule.PaintTask.IsStroke) vgv.Stroke = schedule.PaintTask;
+                if (schedule.PaintTask.PaintStyle.HasFlag(PaintStyle.Stroke)) vgv.Stroke = schedule.PaintTask;
                 _ = relativePanel.Children.Add(vgv);
             }
         }

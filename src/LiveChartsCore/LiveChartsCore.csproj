@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <LangVersion>12.0</LangVersion>
+    <LangVersion>$(GlobalLangVersion)</LangVersion>
 
     <TargetFrameworks>
       netstandard2.0;netstandard2.1;
@@ -23,11 +23,11 @@
 
     <AssemblyName>LiveChartsCore</AssemblyName>
     <RootNamespace>LiveChartsCore</RootNamespace>
-    <Version>2.0.0-rc4.5</Version>
+    <Version>$(LiveChartsVersion)</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for .Net, this is the core package probably you need another package also unless you are building your own backed.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>BetoRodriguez</Authors>
+    <Authors>$(LiveChartsAuthors)</Authors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
@@ -64,10 +64,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference
-      Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'"
-      Include="System.Text.Json" Version="8.0.5" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'" Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

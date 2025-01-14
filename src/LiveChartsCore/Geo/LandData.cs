@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 
 namespace LiveChartsCore.Geo;
 
@@ -52,7 +53,7 @@ public class LandData
             c.Add(new LvcPointD(x, y));
         }
 
-        Coordinates = c.ToArray();
+        Coordinates = [.. c];
         BoundsHypotenuse = Math.Sqrt(Math.Pow(MaxBounds[0] - MinBounds[0], 2) + Math.Pow(MaxBounds[1] - MinBounds[1], 2));
     }
 
@@ -62,7 +63,7 @@ public class LandData
     /// <value>
     /// The maximum bounds.
     /// </value>
-    public double[] MaxBounds { get; set; } = { double.MinValue, double.MinValue };
+    public double[] MaxBounds { get; set; } = [double.MinValue, double.MinValue];
 
     /// <summary>
     /// Gets or sets the minimum bounds.
@@ -70,7 +71,7 @@ public class LandData
     /// <value>
     /// The minimum bounds.
     /// </value>
-    public double[] MinBounds { get; set; } = { double.MaxValue, double.MaxValue };
+    public double[] MinBounds { get; set; } = [double.MaxValue, double.MaxValue];
 
     /// <summary>
     /// Gets the bounds hypotenuse.
@@ -85,5 +86,5 @@ public class LandData
     /// <summary>
     /// Gets or sets the shape.
     /// </summary>
-    public object? Shape { get; set; }
+    public BaseVectorGeometry<Segment>? Shape { get; set; }
 }

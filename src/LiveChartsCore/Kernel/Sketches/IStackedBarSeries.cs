@@ -20,17 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a stacked bar series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IStackedBarSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, ICartesianSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="ISeries" />
+public interface IStackedBarSeries : ICartesianSeries, IStrokedAndFilled
 {
     /// <summary>
     /// Gets or sets the rx, the radius used in the x axis to round the corners of each column, it goes from 0 to 1.

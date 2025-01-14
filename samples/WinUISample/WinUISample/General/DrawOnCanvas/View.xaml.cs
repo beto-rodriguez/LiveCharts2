@@ -1,10 +1,4 @@
-﻿using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.WinUI;
-using Microsoft.UI.Xaml.Controls;
-using SkiaSharp;
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace WinUISample.General.DrawOnCanvas;
 

@@ -11,7 +11,17 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Content="ToggleFirst" Command="{Binding ToggleFirstCommand}"></Button>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" Sections="{Binding Sections}"></lvc:CartesianChart>
+
+        <Button
+            Grid.Row="0"
+            Content="ToggleFirst"
+            Command="{Binding ToggleFirstCommand}">
+        </Button>
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Series="{Binding Series}"
+            Sections="{Binding Sections}">
+        </lvc:CartesianChart>
     </Grid>
 </UserControl>

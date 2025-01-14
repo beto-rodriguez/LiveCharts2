@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -33,7 +33,7 @@ public class EventsTests
             },
             XAxes = new[] { new Axis { IsVisible = false, } },
             YAxes = new[] { new Axis { IsVisible = false, } },
-            VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
+            VisualElements = new VisualElement[]
             {
                 new LabelVisual
                 {
@@ -61,16 +61,16 @@ public class EventsTests
 
         // Test points.
         // Charts use the Series.FindHitPoints method to check if the mouse is over a point.
-        var strategy = chart.Series.GetTooltipFindingStrategy();
+        var strategy = chart.Series.GetFindingStrategy();
         var s = chart.Series
-            .SelectMany(x => x.FindHitPoints(chart.Core, new LvcPoint(251, 251), strategy))
+            .SelectMany(x => x.FindHitPoints(chart.Core, new LvcPoint(251, 251), strategy, FindPointFor.HoverEvent))
             .ToArray();
         Assert.IsTrue(s.Length == 1);
 
         // Test visual elements.
         // Charts use the VisualElement.IsHitBy method to check if the mouse is over a visual element.
         var v = chart.VisualElements
-            .Cast<VisualElement<SkiaSharpDrawingContext>>()
+            .Cast<VisualElement>()
             .SelectMany(x => x.IsHitBy(chart.Core, new LvcPoint(251, 251)))
             .ToArray();
         Assert.IsTrue(v.Length == 2);

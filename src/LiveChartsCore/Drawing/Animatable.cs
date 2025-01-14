@@ -22,47 +22,55 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Drawing;
 
-/// <inheritdoc cref="IAnimatable" />
-public abstract class Animatable : IAnimatable
+/// <inheritdoc cref="Animatable" />
+public abstract class Animatable
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Animatable"/> class.
+    /// Gets or sets a value indicating whether this instance is valid, the instance is valid when all the
+    /// motion properties in the object finished their animations.
     /// </summary>
-    protected Animatable() { }
-
-    /// <inheritdoc cref="IAnimatable.IsValid" />
     public bool IsValid { get; set; } = true;
 
-    /// <inheritdoc cref="IAnimatable.CurrentTime" />
+    /// <summary>
+    /// Gets or sets the current time, this property is used by the motion engine to calculate the progress of the animations.
+    /// </summary>
     public long CurrentTime { get; set; } = long.MinValue;
 
-    /// <inheritdoc cref="IAnimatable.RemoveOnCompleted" />
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance should be removed from the canvas when all the animations are completed.
+    /// </summary>
     public bool RemoveOnCompleted { get; set; }
 
-    /// <inheritdoc cref="IAnimatable.MotionProperties" />
+    /// <summary>
+    /// Gets the motion properties.
+    /// </summary>
     public Dictionary<string, IMotionProperty> MotionProperties { get; } = [];
 
-    /// <inheritdoc cref="IAnimatable.SetTransition(Animation?, string[])" />
+    /// <summary>
+    /// Sets the transition for the specified properties.
+    /// </summary>
+    /// <param name="animation">The animation.</param>
+    /// <param name="propertyName">The property name, null to select all properties.</param>
     public void SetTransition(Animation? animation, params string[]? propertyName)
     {
         var a = animation?.Duration == 0 ? null : animation;
-        if (propertyName is null || propertyName.Length == 0) propertyName = MotionProperties.Keys.ToArray();
+        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
 
         foreach (var name in propertyName)
-        {
             MotionProperties[name].Animation = a;
-        }
     }
 
-    /// <inheritdoc cref="IAnimatable.RemoveTransition(string[])" />
+    /// <summary>
+    /// Removes the transition for the specified properties.
+    /// </summary>
+    /// <param name="propertyName">The properties to remove, null to select all properties.</param>
     public void RemoveTransition(params string[]? propertyName)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = MotionProperties.Keys.ToArray();
+        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
 
         foreach (var name in propertyName)
         {
@@ -70,10 +78,13 @@ public abstract class Animatable : IAnimatable
         }
     }
 
-    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
+    /// <summary>
+    /// Completes the transition for the specified properties.
+    /// </summary>
+    /// <param name="propertyName">The property name, null to select all properties.</param>
     public virtual void CompleteTransition(params string[]? propertyName)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = MotionProperties.Keys.ToArray();
+        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
 
         foreach (var property in propertyName)
         {

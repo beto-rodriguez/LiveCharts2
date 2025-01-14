@@ -6,11 +6,10 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            Series="{Binding Series}"
-            VisualElements="{Binding VisualElements}"
-            ZoomMode="X">
-        </lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart
+        Series="{Binding Series}"
+        VisualElements="{Binding VisualElements}"
+        ZoomMode="X">
+    </lvc:CartesianChart>
 </UserControl>

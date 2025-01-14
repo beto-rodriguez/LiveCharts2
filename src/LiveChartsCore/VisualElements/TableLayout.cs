@@ -20,10 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -31,12 +33,11 @@ namespace LiveChartsCore.VisualElements;
 /// Defines the table panel class.
 /// </summary>
 /// <typeparam name="TBackgroundGeometry">The type of the background geometry.</typeparam>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<TDrawingContext>
-    where TDrawingContext : DrawingContext
-    where TBackgroundGeometry : ISizedGeometry<TDrawingContext>, new()
+[Obsolete("Replaced by the not generic TableLayout class.")]
+public class TableLayout<TBackgroundGeometry> : VisualElement
+    where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
-    private IPaint<TDrawingContext>? _backgroundPaint;
+    private Paint? _backgroundPaint;
     private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = [];
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
@@ -46,7 +47,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     private Align _verticalAlignment = Align.Middle;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/> class.
+    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class.
     /// </summary>
     public TableLayout()
     {
@@ -71,7 +72,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
-    public IPaint<TDrawingContext>? BackgroundPaint
+    public Paint? BackgroundPaint
     {
         get => _backgroundPaint;
         set => SetPaintProperty(ref _backgroundPaint, value);
@@ -82,8 +83,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// </summary>
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
-    public override LvcSize Measure(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
+    public override LvcSize Measure(Chart chart)
     {
         var maxH = Padding.Top;
         _measuredSizes = new LvcSize[_maxRow + 2, _maxColumn + 2];
@@ -125,8 +126,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         return new(maxW + Padding.Right, maxH + Padding.Bottom);
     }
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
     {
         foreach (var child in EnumerateChildren())
             chart.RemoveVisual(child.VisualElement);
@@ -143,7 +144,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     /// <param name="horizontalAlign">The cell horizontal alignment, if null the alignment will be defined by the layout.</param>
     /// <param name="verticalAlign">The cell vertical alignment, if null the alignment will be defined by the layout.</param>
     public void AddChild(
-        VisualElement<TDrawingContext> child,
+        VisualElement child,
         int row, int column,
         Align? horizontalAlign = null,
         Align? verticalAlign = null)
@@ -178,8 +179,8 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
                 yield return _positions[r][c];
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.OnInvalidated(Chart{TDrawingContext})"/>
-    protected internal override void OnInvalidated(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
+    protected internal override void OnInvalidated(Chart chart)
     {
         var controlSize = Measure(chart);
         var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
@@ -230,7 +231,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         // we use this geometry in the motion canvas to track the position
         // of the stack panel as the time and animations elapse.
         BackgroundPaint ??= LiveCharts.DefaultSettings
-            .GetProvider<TDrawingContext>()
+            .GetProvider()
             .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
         chart.Canvas.AddDrawableTask(BackgroundPaint);
@@ -245,29 +246,30 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.SetParent(IGeometry{TDrawingContext})"/>
-    protected internal override void SetParent(IGeometry<TDrawingContext> parent)
+    /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
+    protected internal override void SetParent(DrawnGeometry parent)
     {
         if (BackgroundGeometry is null) return;
-        BackgroundGeometry.Parent = parent;
+        ((IDrawnElement)BackgroundGeometry).Parent = parent;
     }
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.GetDrawnGeometries"/>
-    protected internal override IAnimatable?[] GetDrawnGeometries()
-    {
-        return new IAnimatable?[] { BackgroundGeometry };
-    }
+    /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
+    protected internal override Animatable?[] GetDrawnGeometries() =>
+        [BackgroundGeometry];
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-    protected internal override IPaint<TDrawingContext>?[] GetPaintTasks()
-    {
-        return new[] { _backgroundPaint };
-    }
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [_backgroundPaint];
 
-    /// <inheritdoc cref="VisualElement{TDrawingContext}.IsHitBy(Chart{TDrawingContext}, LvcPoint)"/>
-    protected internal override IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    /// <inheritdoc cref="VisualElement.IsHitBy(Chart, LvcPoint)"/>
+    protected internal override IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
+
+        // see note #241104
+        location.X += _translate.X;
+        location.Y += _translate.Y;
+
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element
@@ -288,7 +290,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     }
 
     /// <summary>
-    /// Defines a cell in the <see cref="TableLayout{TBackgroundGeometry, TDrawingContext}"/>.
+    /// Defines a cell in the <see cref="TableLayout{TBackgroundGeometry}"/>.
     /// </summary>
     /// <remarks>
     /// Initializes a new instance of the <see cref="TableCell"/> class.
@@ -301,11 +303,10 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
     public class TableCell(
         int row,
         int column,
-        VisualElement<TDrawingContext> visualElement,
+        VisualElement visualElement,
         Align? verticalAlign = null,
         Align? horizontalAlign = null)
     {
-
         /// <summary>
         /// Gets the row.
         /// </summary>
@@ -329,7 +330,7 @@ public class TableLayout<TBackgroundGeometry, TDrawingContext> : VisualElement<T
         /// <summary>
         /// Gets the visual element.
         /// </summary>
-        public VisualElement<TDrawingContext> VisualElement { get; } = visualElement;
+        public VisualElement VisualElement { get; } = visualElement;
     }
 }
 

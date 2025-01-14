@@ -34,8 +34,7 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines the base visual element class, inheriting from this class makes it easy to implement a visual element.
 /// </summary>
-public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
-    where TDrawingContext : DrawingContext
+public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInternalInteractable
 {
     internal double _x;
     internal double _y;
@@ -45,6 +44,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     private int _scalesYAt;
     private MeasureUnit _locationUnit = MeasureUnit.Pixels;
     private ClipMode _clippingMode = ClipMode.XY;
+    private Chart? _chart;
 
     /// <summary>
     /// Gets the primary scaler.
@@ -83,7 +83,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.YAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -92,7 +92,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.YAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -105,15 +105,15 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// </summary>
     public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
 
-    /// <summary>
-    /// Called when the pointer goes down on the visual.
-    /// </summary>
-    public event VisualElementHandler<TDrawingContext>? PointerDown;
+    /// <inheritdoc cref="IInteractable.PointerDown"/>
+    public event VisualElementHandler? PointerDown;
 
-    /// <inheritdoc cref="ChartElement{TDrawingContext}.Invalidate(Chart{TDrawingContext})"/>
-    public override void Invalidate(Chart<TDrawingContext> chart)
+    /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
+    public override void Invalidate(Chart chart)
     {
-        if (chart is CartesianChart<TDrawingContext> cc)
+        _chart = chart;
+
+        if (chart is CartesianChartEngine cc)
         {
             var primaryAxis = cc.YAxes[ScalesYAt];
             var secondaryAxis = cc.XAxes[ScalesXAt];
@@ -135,7 +135,7 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Measures the element and returns the size.
     /// </summary>
     /// <param name = "chart" > The chart.</param>
-    public abstract LvcSize Measure(Chart<TDrawingContext> chart);
+    public abstract LvcSize Measure(Chart chart);
 
     /// <summary>
     /// Called when [paint changed].
@@ -152,12 +152,12 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// Called when the visual is drawn.
     /// </summary>
     /// <param name="chart">The chart.</param>
-    protected internal abstract void OnInvalidated(Chart<TDrawingContext> chart);
+    protected internal abstract void OnInvalidated(Chart chart);
 
     /// <summary>
     /// Sets the parent to all the geometries in the visual.
     /// </summary>
-    protected internal abstract void SetParent(IGeometry<TDrawingContext> parent);
+    protected internal abstract void SetParent(DrawnGeometry parent);
 
     /// <summary>
     /// Gets the acdtual coordinate of the visual.
@@ -186,9 +186,18 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
     /// <param name="chart">The chart.</param>
     /// <param name="point">The point in the UI.</param>
     /// <returns>The visual or visuals touched by the point.</returns>
-    protected internal virtual IEnumerable<VisualElement<TDrawingContext>> IsHitBy(Chart<TDrawingContext> chart, LvcPoint point)
+    protected internal virtual IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)
     {
         var location = GetActualCoordinate();
+
+        // Note #241104
+        // we only translate the location for now, scale and rotation are not supported yet.
+        // do visual elements need to be that complex?
+        // actually rotation is not working properly when labels are used.
+        // this for sure needs a review.
+        location.X += _translate.X;
+        location.Y += _translate.Y;
+
         var size = Measure(chart);
 
         // it returns an enumerable because there are more complex types where a visual can contain more than one element
@@ -199,39 +208,52 @@ public abstract class VisualElement<TDrawingContext> : ChartElement<TDrawingCont
         }
     }
 
-    /// <summary>
-    /// Called when the pointer goes down on the visual.
-    /// </summary>
-    /// <param name="args">The event arguments.</param>
-    protected internal void InvokePointerDown(VisualElementEventArgs<TDrawingContext> args)
+    /// <inheritdoc cref="IInteractable.GetHitBox"/>
+    public LvcRectangle GetHitBox()
     {
-        PointerDown?.Invoke(this, args);
+        if (_chart is null) return new();
+
+        var location = GetActualCoordinate();
+        var translatedLocation = new LvcPoint(location.X + _translate.X, location.Y + Translate.Y);
+        var size = Measure(_chart);
+
+        return new(translatedLocation, size);
     }
 
     /// <summary>
     /// Gets the geometries to draw.
     /// </summary>
     /// <returns>The geometries.</returns>
-    protected internal abstract IAnimatable?[] GetDrawnGeometries();
+    protected internal abstract Animatable?[] GetDrawnGeometries();
 
     /// <summary>
     /// Applies the theme to the visual.
     /// </summary>
     protected virtual void ApplyTheme<T>()
-        where T : VisualElement<TDrawingContext>
+        where T : VisualElement
     {
         _isInternalSet = true;
         if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
         {
-            var theme = LiveCharts.DefaultSettings.GetTheme<TDrawingContext>();
+            var theme = LiveCharts.DefaultSettings.GetTheme();
             theme.ApplyStyleTo((T)this);
             _theme = LiveCharts.DefaultSettings.CurrentThemeId;
         }
         _isInternalSet = false;
     }
 
+    /// <inheritdoc cref="ChartElement.RemoveFromUI(Chart)"/>
+    public override void RemoveFromUI(Chart chart)
+    {
+        base.RemoveFromUI(chart);
+        _chart = null;
+    }
+
     internal virtual void AlignToTopLeftCorner()
     {
         // just a workaround to align labels as the rest of the geometries.
     }
+
+    void IInternalInteractable.InvokePointerDown(VisualElementEventArgs args) =>
+        PointerDown?.Invoke(this, args);
 }

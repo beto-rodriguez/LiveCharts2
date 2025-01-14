@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel;
 
@@ -99,7 +100,9 @@ public class ChartPoint
     /// <value>
     /// The context.
     /// </value>
-    public ChartPointContext Context { get; }
+    public ChartPointContext Context { get; internal set; }
+
+    internal bool IsPointerOver { get; set; }
 
     internal bool RemoveOnCompleted { get; set; }
 
@@ -107,11 +110,10 @@ public class ChartPoint
     /// Gets the distance to a given point.
     /// </summary>
     /// <param name="point">The point to calculate the distance to.</param>
+    /// <param name="strategy">The strategy to use to calculate the distance.</param>
     /// <returns>The distance in pixels.</returns>
-    public double DistanceTo(LvcPoint point)
-    {
-        return Context.HoverArea?.DistanceTo(point) ?? double.NaN;
-    }
+    public double DistanceTo(LvcPoint point, FindingStrategy strategy) =>
+        Context.HoverArea?.DistanceTo(point, strategy) ?? double.NaN;
 
     private void SetCoordinate(
         double primary = double.NaN, double secondary = double.NaN, double tertiary = double.NaN,

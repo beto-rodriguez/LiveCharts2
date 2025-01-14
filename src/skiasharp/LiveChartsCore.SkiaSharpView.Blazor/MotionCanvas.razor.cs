@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
@@ -30,53 +28,24 @@ using SkiaSharp.Views.Blazor;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
 
-/// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
+/// <inheritdoc cref="CoreMotionCanvas"/>
 public partial class MotionCanvas : IDisposable
 {
     private SKGLView? _glView;
     private SKCanvasView? _canvas;
     private bool _disposing = false;
     private bool _isDrawingLoopRunning = false;
-    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = [];
 
     /// <summary>
     /// Called when the control is initialized.
     /// </summary>
-    protected override void OnInitialized()
-    {
+    protected override void OnInitialized() =>
         CanvasCore.Invalidated += CanvasCore_Invalidated;
-    }
 
     /// <summary>
-    /// Gets the <see cref="MotionCanvas{TDrawingContext}"/> (core).
+    /// Gets the <see cref="CoreMotionCanvas"/> (core).
     /// </summary>
-    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
-
-    /// <summary>
-    /// Gets or sets whether the web GL view should be used.
-    /// </summary>
-    [Parameter]
-    public bool UseGLView { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets the FPS.
-    /// </summary>
-    [Parameter]
-    public double MaxFps { get; set; } = 60;
-
-    /// <summary>
-    /// Gets or sets the paint tasks.
-    /// </summary>
-    [Parameter]
-    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
-    {
-        get => _paintTasksSchedule;
-        set
-        {
-            _paintTasksSchedule = value;
-            OnPaintTasksChanged();
-        }
-    }
+    public CoreMotionCanvas CanvasCore { get; } = new();
 
     /// <summary>
     /// Gets or sets the pointer down callback.
@@ -112,70 +81,53 @@ public partial class MotionCanvas : IDisposable
     /// Called when the pointer goes down.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerDown(PointerEventArgs e)
-    {
+    protected virtual void OnPointerDown(PointerEventArgs e) =>
         _ = OnPointerDownCallback.InvokeAsync(e);
-    }
 
     /// <summary>
     /// Called when the pointer moves.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerMove(PointerEventArgs e)
-    {
+    protected virtual void OnPointerMove(PointerEventArgs e) =>
         _ = OnPointerMoveCallback.InvokeAsync(e);
-    }
 
     /// <summary>
     /// Called when the pointer goes up.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerUp(PointerEventArgs e)
-    {
+    protected virtual void OnPointerUp(PointerEventArgs e) =>
         _ = OnPointerUpCallback.InvokeAsync(e);
-    }
 
     /// <summary>
     /// Called when the wheel moves.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnWheel(WheelEventArgs e)
-    {
-        _ = OnWheelCallback.InvokeAsync(e);
-    }
+    protected virtual void OnWheel(WheelEventArgs e) => _ = OnWheelCallback.InvokeAsync(e);
 
     /// <summary>
     /// Called when the pointer leaves the control.
     /// </summary>
     /// <param name="e"></param>
-    protected virtual void OnPointerOut(PointerEventArgs e)
-    {
+    protected virtual void OnPointerOut(PointerEventArgs e) =>
         _ = OnPointerOutCallback.InvokeAsync(e);
-    }
 
-    private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
-    {
+    private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-    }
 
-    private void OnPaintSurface(SKPaintSurfaceEventArgs e)
-    {
+    private void OnPaintSurface(SKPaintSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-    }
 
-    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-    {
+    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
-    }
 
     private async void RunDrawingLoop()
     {
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
 
-        if (UseGLView)
+        if (LiveCharts.UseGPU)
         {
             while (!CanvasCore.IsValid && !_disposing)
             {
@@ -195,21 +147,5 @@ public partial class MotionCanvas : IDisposable
         _isDrawingLoopRunning = false;
     }
 
-    private void OnPaintTasksChanged()
-    {
-        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-        foreach (var item in _paintTasksSchedule)
-        {
-            item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
-            _ = tasks.Add(item.PaintTask);
-        }
-
-        CanvasCore.SetPaintTasks(tasks);
-    }
-
-    void IDisposable.Dispose()
-    {
-        _disposing = true;
-    }
+    void IDisposable.Dispose() => _disposing = true;
 }

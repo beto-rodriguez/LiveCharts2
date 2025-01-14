@@ -26,6 +26,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -41,7 +42,7 @@ public interface IChartView
     /// <value>
     /// The core.
     /// </value>
-    IChart CoreChart { get; }
+    Chart CoreChart { get; }
 
     /// <summary>
     /// Gets whether the control is in designer mode.
@@ -115,14 +116,128 @@ public interface IChartView
     TooltipPosition TooltipPosition { get; set; }
 
     /// <summary>
+    /// Gets or sets the legend default text paint, when null the library will use the default text paint.
+    /// </summary>
+    Paint? LegendTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend background paint, when null the library will use the default background paint.
+    /// </summary>
+    Paint? LegendBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend text size, when null the library will use the default text size.
+    /// </summary>
+    double LegendTextSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
+    /// </summary>
+    Paint? TooltipTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip background paint, when null the library will use the default background paint.
+    /// </summary>
+    Paint? TooltipBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip text size, when null the library will use the default text size.
+    /// </summary>
+    double TooltipTextSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the automatic updates are enabled.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if automatic update are enabled; otherwise, <c>false</c>.
+    /// </value>
+    bool AutoUpdateEnabled { get; set; }
+
+    /// <summary>
+    /// Gets the core canvas.
+    /// </summary>
+    /// <value>
+    /// The core canvas.
+    /// </value>
+    CoreMotionCanvas CoreCanvas { get; }
+
+    /// <summary>
+    /// Gets or sets the chart title.
+    /// </summary>
+    VisualElement? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets the legend.
+    /// </summary>
+    /// <value>
+    /// The legend.
+    /// </value>
+    IChartLegend? Legend { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip.
+    /// </summary>
+    /// <value>
+    /// The tooltip.
+    /// </value>
+    IChartTooltip? Tooltip { get; set; }
+
+    /// <summary>
+    /// Gets or sets the visual elements.
+    /// </summary>
+    IEnumerable<ChartElement> VisualElements { get; set; }
+
+    /// <summary>
     /// Occurs when the pointer goes down over a chart point(s).
     /// </summary>
     event ChartPointsHandler? DataPointerDown;
 
     /// <summary>
+    /// Occurs when the hovered points in the chart change.
+    /// </summary>
+    event ChartPointHoverHandler? HoveredPointsChanged;
+
+    /// <summary>
     /// Occurs when the pointer goes down over a chart point, if there are multiple points, the closest one will be selected.
     /// </summary>
+    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
     event ChartPointHandler? ChartPointPointerDown;
+
+    /// <summary>
+    /// Occurs before the chart is measured, this is the first step before the chart updates.
+    /// </summary>
+    event ChartEventHandler? Measuring;
+
+    /// <summary>
+    /// Occurs when the chart started an update, just when the drawing loop started.
+    /// </summary>
+    event ChartEventHandler? UpdateStarted;
+
+    /// <summary>
+    /// Occurs when a chart update finished, just when the drawing loop finished.
+    /// </summary>
+    event ChartEventHandler? UpdateFinished;
+
+    /// <summary>
+    /// Occurs when the pointer goes down over a visual element.
+    /// </summary>
+    event VisualElementsHandler VisualElementsPointerDown;
+
+    /// <summary>
+    /// Gets all the <see cref="ChartPoint"/> that contain the given point.
+    /// </summary>
+    /// <param name="point">The given point.</param>
+    /// <param name="strategy">The finding strategy, default is <see cref="FindingStrategy.Automatic"/>.</param>
+    /// <param name="findPointFor">The find point for, default is <see cref="FindPointFor.HoverEvent"/>.</param>
+    /// <returns>An enumerable of <see cref="ChartPoint"/>.</returns>
+    IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent);
+
+    /// <summary>
+    /// Gets all the <see cref="IChartElement"/> that contain the given point.
+    /// </summary>
+    /// <param name="point">The given point.</param>
+    /// <returns>An enumerable of <see cref="VisualElement"/>.</returns>
+    IEnumerable<IChartElement> GetVisualsAt(LvcPointD point);
 
     /// <summary>
     /// Called when the pointer goes down on a data point or points.
@@ -130,6 +245,13 @@ public interface IChartView
     /// <param name="points">The found points.</param>
     /// <param name="pointer">The pointer location.</param>
     void OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer);
+
+    /// <summary>
+    /// Called when the hovered points change.
+    /// </summary>
+    /// <param name="newItems">The new points.</param>
+    /// <param name="oldItems">The old points.</param>
+    void OnHoveredPointsChanged(IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems);
 
     /// <summary>
     /// Gets or sets the Synchronization Context, use this property to
@@ -147,126 +269,11 @@ public interface IChartView
     /// Invalidates the control.
     /// </summary>
     void Invalidate();
-}
-
-/// <summary>
-/// Defines a chart view.
-/// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public interface IChartView<TDrawingContext> : IChartView
-    where TDrawingContext : DrawingContext
-{
-    /// <summary>
-    /// Gets or sets the legend default text paint, when null the library will use the default text paint.
-    /// </summary>
-    IPaint<TDrawingContext>? LegendTextPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend background paint, when null the library will use the default background paint.
-    /// </summary>
-    IPaint<TDrawingContext>? LegendBackgroundPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend text size, when null the library will use the default text size.
-    /// </summary>
-    double? LegendTextSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip default text paint, when null the library will use the default text paint.
-    /// </summary>
-    IPaint<TDrawingContext>? TooltipTextPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip background paint, when null the library will use the default background paint.
-    /// </summary>
-    IPaint<TDrawingContext>? TooltipBackgroundPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip text size, when null the library will use the default text size.
-    /// </summary>
-    double? TooltipTextSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets the chart title.
-    /// </summary>
-    VisualElement<TDrawingContext>? Title { get; set; }
-
-    /// <summary>
-    /// Occurs before the chart is measured, this is the first step before the chart updates.
-    /// </summary>
-    event ChartEventHandler<TDrawingContext>? Measuring;
-
-    /// <summary>
-    /// Occurs when the chart started an update, just when the drawing loop started.
-    /// </summary>
-    event ChartEventHandler<TDrawingContext>? UpdateStarted;
-
-    /// <summary>
-    /// Occurs when a chart update finished, just when the drawing loop finished.
-    /// </summary>
-    event ChartEventHandler<TDrawingContext>? UpdateFinished;
-
-    /// <summary>
-    /// Occurs when the pointer goes down over a visual element.
-    /// </summary>
-    event VisualElementsHandler<TDrawingContext> VisualElementsPointerDown;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the automatic updates are enabled.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if automatic update are enabled; otherwise, <c>false</c>.
-    /// </value>
-    bool AutoUpdateEnabled { get; set; }
-
-    /// <summary>
-    /// Gets the core canvas.
-    /// </summary>
-    /// <value>
-    /// The core canvas.
-    /// </value>
-    MotionCanvas<TDrawingContext> CoreCanvas { get; }
-
-    /// <summary>
-    /// Gets or sets the legend.
-    /// </summary>
-    /// <value>
-    /// The legend.
-    /// </value>
-    IChartLegend<TDrawingContext>? Legend { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip.
-    /// </summary>
-    /// <value>
-    /// The tooltip.
-    /// </value>
-    IChartTooltip<TDrawingContext>? Tooltip { get; set; }
-
-    /// <summary>
-    /// Gets or sets the visual elements.
-    /// </summary>
-    IEnumerable<ChartElement<TDrawingContext>> VisualElements { get; set; }
 
     /// <summary>
     /// Called when the pointer goes down on a visual element(s).
     /// </summary>
     /// <param name="visualElements">The visual elements.</param>
     /// <param name="pointer">The pointer location.</param>
-    void OnVisualElementPointerDown(IEnumerable<VisualElement<TDrawingContext>> visualElements, LvcPoint pointer);
-
-    /// <summary>
-    /// Gets all the <see cref="ChartPoint"/> that contain the given point.
-    /// </summary>
-    /// <param name="point">The given point.</param>
-    /// <param name="strategy">The finding strategy, default is <see cref="TooltipFindingStrategy.Automatic"/>.</param>
-    /// <returns>An enumerable of <see cref="ChartPoint"/>.</returns>
-    IEnumerable<ChartPoint> GetPointsAt(LvcPoint point, TooltipFindingStrategy strategy = TooltipFindingStrategy.Automatic);
-
-    /// <summary>
-    /// Gets all the <see cref="VisualElement{TDrawingContext}"/> that contain the given point.
-    /// </summary>
-    /// <param name="point">The given point.</param>
-    /// <returns>An enumerable of <see cref="VisualElement{TDrawingContext}"/>.</returns>
-    IEnumerable<VisualElement<TDrawingContext>> GetVisualsAt(LvcPoint point);
+    void OnVisualElementPointerDown(IEnumerable<IInteractable> visualElements, LvcPoint pointer);
 }

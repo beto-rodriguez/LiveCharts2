@@ -1,8 +1,6 @@
 ﻿using Eto.Forms;
 using System;
 using LiveChartsCore; // mark
-using LiveChartsCore.SkiaSharpView; //mark
-using SkiaSharp; // mark
 
 namespace EtoFormsSample;
 

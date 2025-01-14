@@ -30,7 +30,7 @@ namespace LiveChartsCore.Defaults;
 /// <summary>
 /// Defines a point with financial data, this point does not use <see cref="DateTime"/> in the X axis, instead it uses the position
 /// of the point the array as the X coordinate,the dates must be specified in the
-/// <see cref="CoreAxis{TDrawingContext, TTextGeometry, TLineGeometry}.Labels"/> property.
+/// <see cref="CoreAxis{TextGeometry, TLineGeometry}.Labels"/> property.
 /// </summary>
 public class FinancialPointI : IChartEntity, INotifyPropertyChanged
 {
@@ -57,10 +57,12 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     public FinancialPointI(double high, double open, double close, double low)
         : this()
     {
-        High = high;
-        Open = open;
-        Close = close;
-        Low = low;
+        _high = high;
+        _open = open;
+        _close = close;
+        _low = low;
+
+        if (MetaData is not null) OnCoordinateChanged(MetaData.EntityIndex);
     }
 
     /// <summary>
@@ -122,8 +124,6 @@ public class FinancialPointI : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Called when the coordinate changed.
     /// </summary>
-    protected virtual void OnCoordinateChanged(int index)
-    {
+    protected virtual void OnCoordinateChanged(int index) =>
         Coordinate = new(index, _high, _open, _close, _low);
-    }
 }

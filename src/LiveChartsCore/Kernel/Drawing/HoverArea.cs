@@ -34,8 +34,9 @@ public abstract class HoverArea
     /// Gets the distance to a given point.
     /// </summary>
     /// <param name="point">The point to calculate the distance to.</param>
+    /// <param name="strategy">The strategy.</param>
     /// <returns>The distance in pixels.</returns>
-    public abstract double DistanceTo(LvcPoint point);
+    public abstract double DistanceTo(LvcPoint point, FindingStrategy strategy);
 
     /// <summary>
     /// Determines whether the pointer is over the area.
@@ -43,7 +44,7 @@ public abstract class HoverArea
     /// <param name="pointerLocation">The pointer location.</param>
     /// <param name="strategy">The strategy.</param>
     /// <returns></returns>
-    public abstract bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy);
+    public abstract bool IsPointerOver(LvcPoint pointerLocation, FindingStrategy strategy);
 
     /// <summary>
     /// Suggests the tooltip placement.

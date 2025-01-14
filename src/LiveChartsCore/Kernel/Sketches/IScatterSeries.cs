@@ -20,18 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
 /// Defines a scatter series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface IScatterSeries<TDrawingContext> :
-    IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, ICartesianSeries<TDrawingContext>, IErrorSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
+/// <seealso cref="ISeries" />
+public interface IScatterSeries : ICartesianSeries, IStrokedAndFilled, IErrorSeries
 {
     /// <summary>
     /// Gets or sets the size of the geometry.

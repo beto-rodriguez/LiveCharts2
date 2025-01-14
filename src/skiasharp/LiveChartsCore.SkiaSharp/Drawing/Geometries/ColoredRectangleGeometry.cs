@@ -29,8 +29,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a rectangle geometry with a specified color.
 /// </summary>
-/// <seealso cref="SizedGeometry" />
-public class ColoredRectangleGeometry : SizedGeometry, IColoredGeometry<SkiaSharpDrawingContext>
+public class ColoredRectangleGeometry : BoundedDrawnGeometry, IColoredGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     private readonly ColorMotionProperty _colorProperty;
 
@@ -42,20 +41,25 @@ public class ColoredRectangleGeometry : SizedGeometry, IColoredGeometry<SkiaShar
         _colorProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Color)));
     }
 
-    /// <inheritdoc cref="ISolidColorGeometry{TDrawingContext}.Color" />
+    /// <inheritdoc cref="IColoredGeometry.Color" />
     public LvcColor Color
     {
         get => _colorProperty.GetMovement(this);
         set => _colorProperty.SetMovement(value, this);
     }
 
-    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
+    public virtual void Draw(SkiaSharpDrawingContext context)
     {
+        // it seems strange that this geometry modifies the paint of the context
+        // but this geometry is normally used in heat maps, i guess we can live with it.
+
         var c = Color;
-        paint.Color = new SKColor(c.R, c.G, c.B, c.A);
+        var activePaint = context.ActiveSkiaPaint;
+
+        activePaint.Color = new SKColor(c.R, c.G, c.B, c.A);
 
         context.Canvas.DrawRect(
-            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
+            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, activePaint);
     }
 }

@@ -28,14 +28,12 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a Cartesian series.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <seealso cref="IChartSeries{TDrawingContext}" />
-public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+/// <seealso cref="ISeries" />
+public interface ICartesianSeries : ISeries
 {
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.XAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -44,7 +42,7 @@ public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContex
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
-    /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+    /// in the <see cref="ICartesianChartView.YAxes"/> collection.
     /// </summary>
     /// <value>
     /// The index of the axis.
@@ -82,5 +80,5 @@ public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContex
     /// <param name="x">The x.</param>
     /// <param name="y">The y.</param>
     /// <returns>the series bounds</returns>
-    SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y);
+    SeriesBounds GetBounds(Chart chart, ICartesianAxis x, ICartesianAxis y);
 }

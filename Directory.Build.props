@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+
+    <LiveChartsVersion>2.0.0-rc5</LiveChartsVersion>
+    <LiveChartsAuthors>BetoRodriguez</LiveChartsAuthors>
+
+    <GlobalLangVersion>12.0</GlobalLangVersion>
+
+    <MauiVersion>8.0.82</MauiVersion>
+    <SkiaSharpVersion>2.88.9</SkiaSharpVersion>
+    <LatestSkiaSharpVersion>3.116.1</LatestSkiaSharpVersion> <!-- used for views that use the SkiaSharp 3 as default -->
+
+  </PropertyGroup>
+</Project>

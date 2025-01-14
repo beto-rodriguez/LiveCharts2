@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 using LiveChartsCore; // mark
-using LiveChartsCore.SkiaSharpView; // mark
-using SkiaSharp; // mark
 
 namespace WPFSample;
 

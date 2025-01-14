@@ -11,7 +11,7 @@ article:
 
 You can quickly change the position, the font, the text size or the background color:
 
-## View
+#### View
 
 {{~ if xaml ~}}
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/NamedLabels/$PlatformViewFile" ~}}
@@ -29,7 +29,7 @@ You can quickly change the position, the font, the text size or the background c
 {{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/NamedLabels.razor" ~}}
 {{~ end ~}}
 
-## View model
+#### View model
 
 ```c#
 [ObservableObject]
@@ -85,7 +85,7 @@ Lets take the example of the next series:"
 
 By default the tooltip will be:
 
-![tooltip]({{ assets_url }}/docs/assets/tooltip-format1.png)
+![tooltip]({{ assets_url }}/docs/_assets/tooltip-format1.png)
 
 We can add format to the tooltip:
 
@@ -106,7 +106,7 @@ We can add format to the tooltip:
     }
 ];</code></pre>
 
-![tooltip]({{ assets_url }}/docs/assets/tooltip-format2.png)
+![tooltip]({{ assets_url }}/docs/_assets/tooltip-format2.png)
 
 We used the Model property of the point, the Model property is just the item in the Values
 collection, for example in the next case, the Model property is of type `City`.
@@ -137,7 +137,7 @@ We can also show a label for the `X` coordinate, the default tooltip uses the X 
     YToolTipLabelFormatter = point => point.Model.ToString("C2")
 };</code></pre>
 
-![tooltip]({{ assets_url }}/docs/assets/tooltip-format3.png)
+![tooltip]({{ assets_url }}/docs/_assets/tooltip-format3.png)
 
 When the series is "Stacked" (`PieSeries`, `StackedColumn` or `StackedRow`) we can find information about the stacked data
 in the `StackedValue` property, for example:
@@ -160,7 +160,7 @@ in the `StackedValue` property, for example:
 
 Will result in:
 
-![tooltip]({{ assets_url }}/docs/assets/tooltip-format4.png)
+![tooltip]({{ assets_url }}/docs/_assets/tooltip-format4.png)
 
 :::tip
 The PieSeries class uses the `ToolTipLabelFormatter` property to configure the text inside the tooltip.
@@ -180,12 +180,30 @@ Alternatively, you can build your own Tooltips and use the power of your UI fram
 see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info.
 :::
 
-## CustomTooltip.cs
+#### CustomTooltip.cs
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
 
-## View
+#### View
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)
+
+# Override Series.FindPointsInPosition 
+
+Depending on the series type and [FindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#findingstrategy-property), LiveCharts decides the logic to show points on tooltips and also the points passed
+to any pointer event in the library (like `Hover`, `HoverLeft` or `PointerDown`), lets take as an example the default behavior of the
+`ColumnSeries<T>`, it selects all the points that share the same `X` coordinate:
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha-compare.gif)
+
+But for this example, we want to override this behavior, instead we only need the tooltip to display the exact column where the pointer is in:
+
+![custom tooltip]({{ assets_url }}/docs/_assets/custom-ha.gif)
+
+When the [FindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version }}/CartesianChart.Tooltips#findingstrategy-property), 
+is not enough, we can override the logic to determine whether a given point is inside a drawn `ChartPoint`. This method
+will be used by the library to resolve the points to show in a tooltip, or the points passed in any pointer event:
+
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
