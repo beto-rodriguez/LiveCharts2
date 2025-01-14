@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
 
-    <LiveChartsVersion>2.0.0-rc4.5</LiveChartsVersion>
+    <LiveChartsVersion>2.0.0-rc5</LiveChartsVersion>
     <LiveChartsAuthors>BetoRodriguez</LiveChartsAuthors>
 
     <GlobalLangVersion>12.0</GlobalLangVersion>
