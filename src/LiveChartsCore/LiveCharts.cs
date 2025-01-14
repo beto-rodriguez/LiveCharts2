@@ -52,7 +52,7 @@ public static class LiveCharts
     /// <summary>
     /// Gets or sets a value indicating whether LiveCharts should show the frames per second.
     /// </summary>
-    public static bool ShowFPS { get; set; } = true;
+    public static bool ShowFPS { get; set; } = false;
 
     /// <summary>
     /// Gets or sets the maximum fps requested.
