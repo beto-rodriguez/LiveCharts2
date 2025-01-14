@@ -130,7 +130,9 @@ public abstract class Chart
     /// </value>
     public object MeasureWork { get; protected set; } = new();
 
-    /// <inheritdoc cref="Kind" />
+    /// <summary>
+    /// Gets the kind of the chart.
+    /// </summary>
     public ChartKind Kind { get; protected set; }
 
     /// <summary>
@@ -268,7 +270,10 @@ public abstract class Chart
 
     #endregion region
 
-    /// <inheritdoc cref="Update(ChartUpdateParams?)" />
+    /// <summary>
+    /// Updates the chart.
+    /// </summary>
+    /// <param name="chartUpdateParams">The update params.</param>
     public virtual void Update(ChartUpdateParams? chartUpdateParams = null)
     {
         chartUpdateParams ??= new ChartUpdateParams();
@@ -537,7 +542,10 @@ public abstract class Chart
         _ = _toDeleteElements.Remove(element);
     }
 
-    /// <inheritdoc cref="GetLegendPosition"/>
+    /// <summary>
+    /// Gets the legend position.
+    /// </summary>
+    /// <returns>The position.</returns>
     public LvcPoint GetLegendPosition()
     {
         var actualChartSize = ControlSize;
