@@ -20,8 +20,14 @@ public partial class ViewModel
     public FindingStrategy Strategy { get; } = FindingStrategy.ExactMatch;
 
     public ISeries[] SeriesCollection { get; set; } = [
-        new ColumnSeries<int>([1, 5, 4, 3]),
+        new ColumnSeries<int>([1, 5, 4, 3])
+        {
+            Stroke = new SolidColorPaint { Color = SKColors.Transparent }
+        },
         new ColumnSeries<int>([3, 2, 6, 2])
+        {
+            Stroke = new SolidColorPaint { Color = SKColors.Transparent }
+        }
     ];
 
     [RelayCommand]
