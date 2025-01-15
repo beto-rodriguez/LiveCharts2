@@ -19,7 +19,7 @@ This web site wraps every sample using a `UserControl` instance, but LiveCharts 
 {{~ end ~}}
 
 
-{{~ if xamarin || maui ~}}
+{{~ if  maui ~}}
 
 :::info
 This web site wraps every sample using a `ContentPage` instance, but LiveCharts controls can be used inside any container.

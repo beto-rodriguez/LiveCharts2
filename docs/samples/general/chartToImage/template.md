@@ -9,15 +9,6 @@ this sample also follows a Model-View-* pattern.
 
 {{~ end ~}}
 
-{{~ if xamarin ~}}
-
-:::info
-Notice this web site wraps every sample using the `ContentPage` class, but LiveCharts controls can be used inside any container, 
-this sample also follows a Model-View-* pattern.
-:::
-
-{{~ end ~}}
-
 {{~ if winforms ~}}
 
 :::info
