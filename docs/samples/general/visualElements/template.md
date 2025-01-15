@@ -124,7 +124,4 @@ Uses a grid system to place `IDrawnElement` objects.
 
 ### Update on property change
 
-When we inherit from `Visual`, the object already implements `INotifyPropertyChanged`, this means that we can call
-`OnPropertyChanged()` when a property changes to notify the chart to update:
-
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/ListenForChangesVisual.cs" ~}}
+To do...
