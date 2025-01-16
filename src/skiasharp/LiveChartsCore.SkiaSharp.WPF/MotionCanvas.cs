@@ -40,7 +40,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 public class MotionCanvas : UserControl
 {
     private SKElement? _skiaElement;
+#if NET6_0_OR_GREATER
+    // workaround #250115
     private SKGLElement? _skiaGlElement;
+#endif
     private bool _isDrawingLoopRunning = false;
 
     /// <summary>
@@ -90,8 +93,15 @@ public class MotionCanvas : UserControl
     {
         if (LiveCharts.UseGPU)
         {
+#if NET6_0_OR_GREATER
+            // workaround #250115
             Content = _skiaGlElement = new SKGLElement();
             _skiaGlElement.PaintSurface += OnPaintGlSurface;
+#else
+            throw new PlatformNotSupportedException(
+                "GPU rendering is only supported in .NET 6.0 or greater, " +
+                "because https://github.com/mono/SkiaSharp/issues/3111 needs to be fixed.");
+#endif
         }
         else
         {
@@ -136,7 +146,10 @@ public class MotionCanvas : UserControl
         while (!CanvasCore.IsValid)
         {
             _skiaElement?.InvalidateVisual();
+#if NET6_0_OR_GREATER
+            // workaround #250115
             _skiaGlElement?.InvalidateVisual();
+#endif
             await Task.Delay(ts);
         }
 
