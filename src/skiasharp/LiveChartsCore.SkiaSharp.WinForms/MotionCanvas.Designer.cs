@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Windows.Forms;
 using SkiaSharp.Views.Desktop;
 
@@ -55,12 +56,19 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             if (LiveCharts.UseGPU)
             {
+#if NET6_0_OR_GREATER
+                // workaround #250115
                 this._skglControl = new SKGLControl();
                 this._skglControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                 this._skglControl.Size = new System.Drawing.Size(1000, 1000);
                 this._skglControl.TabIndex = 1;
                 this._skglControl.PaintSurface += new System.EventHandler<SKPaintGLSurfaceEventArgs>(this.SkglControl_PaintSurface);
                 this.Controls.Add(this._skglControl);
+#else
+                throw new PlatformNotSupportedException(
+                    "GPU rendering is only supported in .NET 6.0 or greater, " +
+                    "because https://github.com/mono/SkiaSharp/issues/3111 needs to be fixed.");
+#endif
             }
             else
             {
@@ -78,9 +86,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             this.ResumeLayout(false);
         }
 
-        #endregion
+#endregion
 
         private SKControl _skControl;
+
+#if NET6_0_OR_GREATER
+        // workaround #250115
         private SKGLControl _skglControl;
+#endif
     }
 }

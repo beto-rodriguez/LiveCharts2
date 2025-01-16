@@ -33,8 +33,35 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="$(LatestSkiaSharpVersion)" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(LatestSkiaSharpVersion)" />
+
+    <!--
+    workaround #250115
+    SkiaSharp is not loading natives in net framework
+    https://github.com/mono/SkiaSharp/issues/3111
+
+    the LatestSkiaSharpVersion is required for the new LiveCharts.UseGPU flag,
+    we include the LatestSkiaSharpVersion when net 6 or above is targeted.
+
+    On net 462 the code will throw when LiveCharts.UseGPU is set to true, and will
+    explain the user that the feature is not supported on net 462.
+    -->
+    <PackageReference
+      Condition="'$(TargetFramework)' == 'net462'"
+      Include="SkiaSharp.Views.WindowsForms "
+      Version="$(SkiaSharpVersion)" />
+    <PackageReference
+      Condition="'$(TargetFramework)' == 'net462'"
+      Include="SkiaSharp.HarfBuzz"
+      Version="$(SkiaSharpVersion)" />
+
+    <PackageReference
+      Condition="'$(TargetFramework)' != 'net462'"
+      Include="SkiaSharp.Views.WindowsForms "
+      Version="$(LatestSkiaSharpVersion)" />
+    <PackageReference
+      Condition="'$(TargetFramework)' != 'net462'"
+      Include="SkiaSharp.HarfBuzz"
+      Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
