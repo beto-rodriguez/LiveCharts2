@@ -6,6 +6,12 @@ the creation and destruction of the drawn geometries in the canvas.
 
 In the next example, we create a `CartesianChart`, this chart contains multiple visual elements, each visual element is defined below in this article:
 
+## View Model
+
+```
+{{ full_name | get_vm_from_docs }}
+```
+
 {{~ if xaml ~}}
 ## XAML
 {{~ end ~}}
@@ -59,8 +65,8 @@ Use the `VariableSVGPathGeometry` as the `DrawnElement` to draw svg paths:
 The easiest way is to inherit from `DrawnGeometry`, this class implements `IDrawnElement` and also animates all of its properties;
 In the next example we inherit from `BoundedDrawnGeometry` it only adds the `Width` and `Height` properties to the `DrawnGeometry` class.
 
-<div class="position-relative text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/custom.png" class="static" alt="sample image" />
+<div class="text-center">
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/custom.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/CustomSkiaShape.cs" ~}}
@@ -96,8 +102,8 @@ Used to place children on its own coordinate system, all the children X and Y co
 the size of the largest element in the children collection. For example in the next case, we place the place the RectangleGeometry` in the 0,0
 coordinate [in the layout system] and the `LabelGeometry` in the 10,0 coordinate.
 
-<div class="position-relative text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/absolute.png" class="static" alt="sample image" />
+<div class="text-center">
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/absolute.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/AbsoluteVisual.cs" ~}}
@@ -106,8 +112,8 @@ coordinate [in the layout system] and the `LabelGeometry` in the 10,0 coordinate
 
 Stacks `IDrawnElement` objects in vertical or horizontal order.
 
-<div class="position-relative text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/stack.png" class="static" alt="sample image" />
+<div class="text-center">
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/stack.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/StackedVisual.cs" ~}}
@@ -116,8 +122,8 @@ Stacks `IDrawnElement` objects in vertical or horizontal order.
 
 Uses a grid system to place `IDrawnElement` objects.
 
-<div class="position-relative text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/table.png" class="static" alt="sample image" />
+<div class="text-center">
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/table.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/TableVisual.cs" ~}}

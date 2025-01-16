@@ -29,11 +29,19 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public static class LiveChartsCoreMauiAppBuilderExtensions
 {
+    internal static bool AreHandlersRegistered { get; private set; }
+
     /// <summary>
     /// Adds LiveCharts components to the MAUI app.
     /// </summary>
     /// <param name="mauiAppBuilder"></param>
     /// <returns></returns>
-    public static MauiAppBuilder UseLiveCharts(this MauiAppBuilder mauiAppBuilder) =>
-        mauiAppBuilder.ConfigureMauiHandlers(handlers => handlers.AddHandler<ChartView, ChartViewHandler>());
+    public static MauiAppBuilder UseLiveCharts(this MauiAppBuilder mauiAppBuilder)
+    {
+        AreHandlersRegistered = true;
+
+        return mauiAppBuilder.ConfigureMauiHandlers(
+            handlers =>
+                handlers.AddHandler<ChartView, ChartViewHandler>());
+    }
 }
