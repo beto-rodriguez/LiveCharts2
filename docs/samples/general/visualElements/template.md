@@ -103,7 +103,7 @@ the size of the largest element in the children collection. For example in the n
 coordinate [in the layout system] and the `LabelGeometry` in the 10,0 coordinate.
 
 <div class="text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/absolute.png" class="static" alt="sample image" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/absolute.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/AbsoluteVisual.cs" ~}}
@@ -113,7 +113,7 @@ coordinate [in the layout system] and the `LabelGeometry` in the 10,0 coordinate
 Stacks `IDrawnElement` objects in vertical or horizontal order.
 
 <div class="text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/stack.png" class="static" alt="sample image" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/stack.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/StackedVisual.cs" ~}}
@@ -123,7 +123,7 @@ Stacks `IDrawnElement` objects in vertical or horizontal order.
 Uses a grid system to place `IDrawnElement` objects.
 
 <div class="text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/table.png" class="static" alt="sample image" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/table.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/TableVisual.cs" ~}}
