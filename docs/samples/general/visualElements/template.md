@@ -66,7 +66,7 @@ The easiest way is to inherit from `DrawnGeometry`, this class implements `IDraw
 In the next example we inherit from `BoundedDrawnGeometry` it only adds the `Width` and `Height` properties to the `DrawnGeometry` class.
 
 <div class="text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/custom.png" class="static" alt="sample image" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/custom.png" alt="sample image" />
 </div>
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/CustomSkiaShape.cs" ~}}
