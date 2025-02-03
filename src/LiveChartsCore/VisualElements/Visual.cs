@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -34,7 +35,6 @@ namespace LiveChartsCore.VisualElements;
 public abstract class Visual : ChartElement, IInternalInteractable
 {
     private DrawablesTask? _drawablesTask;
-    private bool _isInitialized = false;
 
     /// <inheritdoc cref="IInteractable.PointerDown"/>
     public event VisualElementHandler? PointerDown;
@@ -62,13 +62,12 @@ public abstract class Visual : ChartElement, IInternalInteractable
 
         Measure(chart);
 
-        if (!_isInitialized)
+        if (_drawablesTask is null || !_drawablesTask.GetGeometries(chart.Canvas).Any())
         {
             if (DrawnElement is Animatable animatable)
                 animatable.Animate(Easing, AnimationSpeed);
 
             _drawablesTask = chart.Canvas.AddGeometry(DrawnElement);
-            _isInitialized = true;
         }
     }
 
