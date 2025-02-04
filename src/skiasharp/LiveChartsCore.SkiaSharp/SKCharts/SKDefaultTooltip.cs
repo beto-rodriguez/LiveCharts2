@@ -86,7 +86,7 @@ public class SKDefaultTooltip : IChartTooltip
     public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(150);
 
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
-    public void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
+    public virtual void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
         const int wedge = 10;
 
@@ -230,7 +230,7 @@ public class SKDefaultTooltip : IChartTooltip
     }
 
     /// <inheritdoc cref="IChartTooltip.Hide"/>
-    public void Hide(Chart chart)
+    public virtual void Hide(Chart chart)
     {
         if (chart is null || _container is null) return;
         _container.Opacity = 0f;
