@@ -42,38 +42,6 @@ public class SKDefaultTooltip : IChartTooltip
 {
     internal Container<PopUpGeometry>? _container;
     private StackLayout? _layout;
-    private Paint? _backgroundPaint;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKDefaultTooltip"/> class.
-    /// </summary>
-    public SKDefaultTooltip()
-    {
-        FontPaint = new SolidColorPaint(new SKColor(28, 49, 58));
-        BackgroundPaint = new SolidColorPaint(new SKColor(235, 235, 235, 230))
-        {
-            ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
-        };
-    }
-
-    /// <summary>
-    /// Gets or sets the legend font paint.
-    /// </summary>
-    public Paint? FontPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the background paint.
-    /// </summary>
-    public Paint? BackgroundPaint
-    {
-        get => _backgroundPaint;
-        set
-        {
-            _backgroundPaint = value;
-            if (value is not null)
-                value.PaintStyle = PaintStyle.Fill;
-        }
-    }
 
     /// <summary>
     /// Gets or sets the easing function.
@@ -91,8 +59,17 @@ public class SKDefaultTooltip : IChartTooltip
         const int wedge = 10;
 
         var textSize = (float)chart.View.TooltipTextSize;
-        if (chart.View.TooltipBackgroundPaint is not null) BackgroundPaint = chart.View.TooltipBackgroundPaint;
-        if (chart.View.TooltipTextPaint is not null) FontPaint = chart.View.TooltipTextPaint;
+
+        var backgroundPaint =
+            chart.View.TooltipBackgroundPaint ??
+            new SolidColorPaint(new SKColor(235, 235, 235, 230))
+            {
+                ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
+            };
+
+        var fontPaint =
+            chart.View.TooltipTextPaint ??
+            new SolidColorPaint(new SKColor(28, 49, 58));
 
         if (_container is null || _layout is null)
         {
@@ -106,7 +83,7 @@ public class SKDefaultTooltip : IChartTooltip
                 }
             };
 
-            _container.Geometry.Fill = BackgroundPaint;
+            _container.Geometry.Fill = backgroundPaint;
             _container.Geometry.Wedge = wedge;
             _container.Geometry.WedgeThickness = 3;
 
@@ -151,7 +128,7 @@ public class SKDefaultTooltip : IChartTooltip
                         new LabelGeometry
                         {
                             Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
-                            Paint = FontPaint,
+                            Paint = fontPaint,
                             TextSize = textSize,
                             Padding = new Padding(0, 0, 0, 8),
                             MaxWidth = lw,
@@ -174,7 +151,7 @@ public class SKDefaultTooltip : IChartTooltip
                     _ = tableLayout.AddChild(new LabelGeometry
                     {
                         Text = point.Context.Series.Name ?? string.Empty,
-                        Paint = FontPaint,
+                        Paint = fontPaint,
                         TextSize = textSize,
                         Padding = new Padding(10, 0, 0, 0),
                         MaxWidth = lw,
@@ -185,7 +162,7 @@ public class SKDefaultTooltip : IChartTooltip
                 _ = tableLayout.AddChild(new LabelGeometry
                 {
                     Text = content,
-                    Paint = FontPaint,
+                    Paint = fontPaint,
                     TextSize = textSize,
                     Padding = new Padding(10, 2, 0, 2),
                     MaxWidth = lw,
