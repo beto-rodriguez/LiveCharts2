@@ -29,14 +29,14 @@ namespace LiveChartsCore.Painting;
 /// <summary>
 /// Defines a task that will draw a set of geometries.
 /// </summary>
-public class DrawablesTask : Paint
+public class DrawnTask : Paint
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="DrawablesTask"/> class.
+    /// Initializes a new instance of the <see cref="DrawnTask"/> class.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="drawables">The drawables.</param>
-    public DrawablesTask(CoreMotionCanvas canvas, params IDrawnElement[] drawables)
+    public DrawnTask(CoreMotionCanvas canvas, params IDrawnElement[] drawables)
     {
         foreach (var drawable in drawables)
             AddGeometryToPaintTask(canvas, drawable);

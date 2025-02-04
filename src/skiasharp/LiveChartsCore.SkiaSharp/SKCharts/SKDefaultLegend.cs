@@ -40,7 +40,7 @@ public class SKDefaultLegend : IChartLegend
 {
     private Paint? _backgroundPaint = null;
     private bool _isInCanvas = false;
-    private DrawablesTask? _drawableTask;
+    private DrawnTask? _drawableTask;
 
     // marked as internal only for testing purposes
     internal readonly Container _container;
