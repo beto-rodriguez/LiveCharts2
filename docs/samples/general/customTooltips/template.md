@@ -184,16 +184,13 @@ in the next example, we draw a geometry in the tooltip based on the point that i
 # Tooltip control from scratch
 
 You can also create your own tooltip, the recommended way is to use the LiveCharts API (example bellow) but you can
-use anything as tooltip as soon as it implements the `IChartTooltip` interface. AT the following example we build
-a custom control to render tooltips in our charts using the LiveCharts API.
+use anything as tooltip as soon as it implements the `IChartTooltip` interface. 
 
-:::tip
-The next tooltip is drawn by the library, LiveCharts can only draw inside the control bounds, in some cases it could 
+The LiveCharts API can only draw inside the control bounds, in some cases it could 
 cause issues like [#912](https://github.com/beto-rodriguez/LiveCharts2/issues/912).
 
 Alternatively, you can build your own Tooltips and use the power of your UI framework, 
 see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info.
-:::
 
 # Override Series.FindPointsInPosition 
 
