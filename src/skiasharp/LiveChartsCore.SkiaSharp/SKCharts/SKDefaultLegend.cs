@@ -129,9 +129,6 @@ public class SKDefaultLegend : Container, IChartLegend
             stackLayout.MaxHeight = chart.ControlSize.Height;
         }
 
-        foreach (var visual in stackLayout.Children.ToArray())
-            _ = stackLayout.Children.Remove(visual);
-
         foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
             stackLayout.Children.Add(new StackLayout

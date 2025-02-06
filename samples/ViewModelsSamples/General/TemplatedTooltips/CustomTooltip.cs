@@ -15,7 +15,7 @@ namespace ViewModelsSamples.General.TemplatedTooltips;
 
 public class CustomTooltip : SKDefaultTooltip
 {
-    // the initialize method is normally used to set up the tooltip animations, colors, etc.
+    // the Initialize method is used to set up the tooltip animations, colors, etc.
     protected override void Initialize(Chart chart)
     {
         // the Wedge property, defines the size of the triangle that points to the target point.
@@ -36,7 +36,7 @@ public class CustomTooltip : SKDefaultTooltip
     // it is called every time the tooltip changes.
     protected override Layout<SkiaSharpDrawingContext> GetLayout(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        var _layout = new StackLayout
+        var layout = new StackLayout
         {
             Padding = new(10),
             Orientation = ContainerOrientation.Vertical,
@@ -75,6 +75,7 @@ public class CustomTooltip : SKDefaultTooltip
 
             var sp = new StackLayout
             {
+                Orientation = ContainerOrientation.Horizontal,
                 Padding = new Padding(0, 4),
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
@@ -86,10 +87,10 @@ public class CustomTooltip : SKDefaultTooltip
                 }
             };
 
-            _layout.Children.Add(sp);
+            layout.Children.Add(sp);
         }
 
-        return _layout;
+        return layout;
     }
 
     public override void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
