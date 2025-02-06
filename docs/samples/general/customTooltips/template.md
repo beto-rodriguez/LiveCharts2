@@ -166,19 +166,12 @@ Will result in:
 The PieSeries class uses the `ToolTipLabelFormatter` property to configure the text inside the tooltip.
 :::
 
-# Tooltip control from scratch
+# Override tooltip template
 
-You can also create your own tooltip, the recommended way is to use the LiveCharts API (example bellow) but you can
-use anything as tooltip as soon as it implements the `IChartTooltip<T>` interface. AT the following example we build
-a custom control to render tooltips in our charts using the LiveCharts API.
+You can also inherit from `SKDefaultTooltip` and override the parts you need to make the tooltip behave as y6our app needs,
+in the next example, we draw a geometry in the tooltip based on the point that is shown in the tooltip.
 
-:::tip
-The next tooltip is drawn by the library, LiveCharts can only draw inside the control bounds, in some cases it could 
-cause issues like [#912](https://github.com/beto-rodriguez/LiveCharts2/issues/912).
-
-Alternatively, you can build your own Tooltips and use the power of your UI framework, 
-see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info.
-:::
+![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)
 
 #### CustomTooltip.cs
 
@@ -188,7 +181,19 @@ see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more 
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
 
-![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)
+# Tooltip control from scratch
+
+You can also create your own tooltip, the recommended way is to use the LiveCharts API (example bellow) but you can
+use anything as tooltip as soon as it implements the `IChartTooltip` interface. AT the following example we build
+a custom control to render tooltips in our charts using the LiveCharts API.
+
+:::tip
+The next tooltip is drawn by the library, LiveCharts can only draw inside the control bounds, in some cases it could 
+cause issues like [#912](https://github.com/beto-rodriguez/LiveCharts2/issues/912).
+
+Alternatively, you can build your own Tooltips and use the power of your UI framework, 
+see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info.
+:::
 
 # Override Series.FindPointsInPosition 
 
