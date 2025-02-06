@@ -316,8 +316,6 @@ public abstract class Chart
     public virtual void Unload()
     {
         IsLoaded = false;
-        View.Tooltip = null;
-        View.Legend = null;
         _everMeasuredElements.Clear();
         _toDeleteElements.Clear();
         _activePoints.Clear();
