@@ -82,16 +82,26 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 
         var layout = GetLayout(foundPoints, chart);
 
-        // just a fake padding, it will be corrected by the AlignWedge method
-        // this is usefull to calculate the position properly.
-        layout.Padding = new(Px, Py);
+        // align the wedge with the default placement
+        var placement = chart.AutoToolTipsInfo.ToolTipPlacement;
+        AlignWedge(placement, layout);
 
         Content = (IDrawnElement<SkiaSharpDrawingContext>)layout;
 
         var size = Measure();
         var location = foundPoints.GetTooltipLocation(size, chart);
 
-        AlignWedge(chart.AutoToolTipsInfo, layout);
+        // if the placement was corrected by the GetTooltipLocation() function
+        // we need to update the wedge
+        // this happens when the tooltip is out of the chart bounds,
+        // this tooltip has a wedge that points to the point, so we need to align it again.
+
+        if (placement != chart.AutoToolTipsInfo.ToolTipPlacement)
+        {
+            AlignWedge(chart.AutoToolTipsInfo.ToolTipPlacement, layout);
+            size = Measure();
+            location = foundPoints.GetTooltipLocation(size, chart);
+        }
 
         X = location.X;
         Y = location.Y;
@@ -231,11 +241,11 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
                 nameof(IDrawnElement.Y));
     }
 
-    private void AlignWedge(ToolTipMetaData tooltipMetadata, Layout<SkiaSharpDrawingContext> layout)
+    private void AlignWedge(PopUpPlacement placement, Layout<SkiaSharpDrawingContext> layout)
     {
-        Geometry.Placement = tooltipMetadata.ToolTipPlacement;
+        Geometry.Placement = placement;
 
-        switch (tooltipMetadata.ToolTipPlacement)
+        switch (placement)
         {
             case PopUpPlacement.Top:
                 layout.Padding = new Padding(Px, Py, Px, Py + Wedge); break;
