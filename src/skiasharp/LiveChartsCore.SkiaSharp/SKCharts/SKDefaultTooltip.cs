@@ -58,7 +58,11 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
     public virtual void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        Initialize(chart);
+        if (!_isInitialized)
+        {
+            Initialize(chart);
+            _isInitialized = true;
+        }
 
         if (_drawnTask is null || _drawnTask.IsEmpty)
         {
@@ -208,9 +212,6 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// </summary>
     protected virtual void Initialize(Chart chart)
     {
-        if (_isInitialized) return;
-        _isInitialized = true;
-
         var backgroundPaint =
             chart.View.TooltipBackgroundPaint ??
             new SolidColorPaint(new SKColor(235, 235, 235, 230))
