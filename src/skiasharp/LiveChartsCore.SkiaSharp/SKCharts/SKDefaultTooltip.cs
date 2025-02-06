@@ -114,7 +114,7 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// </summary>
     /// <param name="foundPoints">The points to show.</param>
     /// <param name="chart">The chart.</param>
-    /// <returns>The element to draw.</returns>
+    /// <returns>The content layout.</returns>
     protected virtual Layout<SkiaSharpDrawingContext> GetLayout(
         IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
