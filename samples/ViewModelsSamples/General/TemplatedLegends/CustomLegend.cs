@@ -16,7 +16,7 @@ public class CustomLegend : IChartLegend
     private readonly Container _container;
     private readonly StackLayout _stackLayout;
     private bool _isInCanvas = false;
-    private DrawablesTask? _drawableTask;
+    private DrawnTask? _drawableTask;
 
     public CustomLegend()
     {

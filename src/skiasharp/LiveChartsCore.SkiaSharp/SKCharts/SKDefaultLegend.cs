@@ -38,7 +38,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// </summary>
 public class SKDefaultLegend : IChartLegend
 {
-    private Paint? _backgroundPaint = null;
     private bool _isInCanvas = false;
     private DrawnTask? _drawableTask;
 
@@ -60,29 +59,6 @@ public class SKDefaultLegend : IChartLegend
                 VerticalAlignment = Align.Middle
             }
         };
-
-        FontPaint = new SolidColorPaint(new SKColor(30, 30, 30, 255));
-    }
-
-    /// <summary>
-    /// Gets or sets the legend font paint.
-    /// </summary>
-    public Paint? FontPaint { get; set; }
-
-    /// <summary>
-    /// Gets or sets the background paint.
-    /// </summary>
-    public Paint? BackgroundPaint
-    {
-        get => _backgroundPaint;
-        set
-        {
-            _backgroundPaint = value;
-            if (value is not null)
-            {
-                value.PaintStyle = PaintStyle.Fill;
-            }
-        }
     }
 
     /// <inheritdoc cref="IChartLegend.Draw(Chart)"/>
@@ -129,9 +105,10 @@ public class SKDefaultLegend : IChartLegend
 
     private void BuildLayout(Chart chart)
     {
-        if (chart.View.LegendTextPaint is not null) FontPaint = chart.View.LegendTextPaint;
-        if (chart.View.LegendBackgroundPaint is not null) BackgroundPaint = chart.View.LegendBackgroundPaint;
         var textSize = (float)chart.View.LegendTextSize;
+
+        var BackgroundPaint = chart.View.LegendBackgroundPaint;
+        var FontPaint = chart.View.LegendTextPaint ?? new SolidColorPaint(new SKColor(30, 30, 30, 255));
 
         _stackLayout.Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
             ? ContainerOrientation.Vertical
