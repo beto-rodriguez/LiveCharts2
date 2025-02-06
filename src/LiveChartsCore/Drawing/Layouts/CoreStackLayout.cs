@@ -53,11 +53,6 @@ public abstract class CoreStackLayout<TDrawingContext>
     public Align HorizontalAlignment { get; set; } = Align.Middle;
 
     /// <summary>
-    /// Gets or sets the padding.
-    /// </summary>
-    public Padding Padding { get; set; } = new();
-
-    /// <summary>
     /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
     /// </summary>
     public double MaxWidth { get; set; } = double.MaxValue;

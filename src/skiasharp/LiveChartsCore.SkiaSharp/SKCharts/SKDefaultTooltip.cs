@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Layouts;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -41,9 +42,10 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// </summary>
 public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 {
-    private const int Wedge = 10;
     private bool _isInitialized;
     private DrawnTask? _drawnTask;
+    private const int Py = 12;
+    private const int Px = 8;
 
     /// <summary>
     /// Gets or sets the easing function.
@@ -54,6 +56,11 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// Gets or sets the animations speed.
     /// </summary>
     public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(150);
+
+    /// <summary>
+    /// Gets or sets the wedge.
+    /// </summary>
+    public int Wedge { get; set; } = 10;
 
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
     public virtual void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
@@ -72,10 +79,19 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 
         Opacity = 1;
         ScaleTransform = new LvcPoint(1, 1);
-        Content = GetContent(foundPoints, chart);
+
+        var layout = GetLayout(foundPoints, chart);
+
+        // just a fake padding, it will be corrected by the AlignWedge method
+        // this is usefull to calculate the position properly.
+        layout.Padding = new(Px, Py);
+
+        Content = (IDrawnElement<SkiaSharpDrawingContext>)layout;
 
         var size = Measure();
         var location = foundPoints.GetTooltipLocation(size, chart);
+
+        AlignWedge(chart.AutoToolTipsInfo, layout);
 
         X = location.X;
         Y = location.Y;
@@ -99,7 +115,7 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// <param name="foundPoints">The points to show.</param>
     /// <param name="chart">The chart.</param>
     /// <returns>The element to draw.</returns>
-    protected virtual IDrawnElement<SkiaSharpDrawingContext> GetContent(
+    protected virtual Layout<SkiaSharpDrawingContext> GetLayout(
         IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
         var textSize = (float)chart.View.TooltipTextSize;
@@ -186,24 +202,6 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 
         stackLayout.Children.Add(tableLayout);
 
-        Geometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
-
-        const int px = 8;
-        const int py = 12;
-
-        switch (chart.AutoToolTipsInfo.ToolTipPlacement)
-        {
-            case PopUpPlacement.Top:
-                stackLayout.Padding = new Padding(py, px, py, px + Wedge); break;
-            case PopUpPlacement.Bottom:
-                stackLayout.Padding = new Padding(py, px + Wedge, py, px); break;
-            case PopUpPlacement.Left:
-                stackLayout.Padding = new Padding(py, px, py + Wedge, px); break;
-            case PopUpPlacement.Right:
-                stackLayout.Padding = new Padding(py + Wedge, px, py, px); break;
-            default: break;
-        }
-
         return stackLayout;
     }
 
@@ -231,5 +229,23 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
                 nameof(IDrawnElement.ScaleTransform),
                 nameof(IDrawnElement.X),
                 nameof(IDrawnElement.Y));
+    }
+
+    private void AlignWedge(ToolTipMetaData tooltipMetadata, Layout<SkiaSharpDrawingContext> layout)
+    {
+        Geometry.Placement = tooltipMetadata.ToolTipPlacement;
+
+        switch (tooltipMetadata.ToolTipPlacement)
+        {
+            case PopUpPlacement.Top:
+                layout.Padding = new Padding(Px, Py, Px, Py + Wedge); break;
+            case PopUpPlacement.Bottom:
+                layout.Padding = new Padding(Px, Py + Wedge, Px, Py); break;
+            case PopUpPlacement.Left:
+                layout.Padding = new Padding(Px, Py, Px + Wedge, Py); break;
+            case PopUpPlacement.Right:
+                layout.Padding = new Padding(Px + Wedge, Py, Px, Py); break;
+            default: break;
+        }
     }
 }
