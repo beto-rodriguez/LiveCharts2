@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -38,10 +39,11 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// Defines the default tooltip.
 /// </summary>
-public class SKDefaultTooltip : IChartTooltip
+public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 {
-    internal Container<PopUpGeometry>? _container;
-    private StackLayout? _layout;
+    private const int Wedge = 10;
+    private bool _isInitialized;
+    private DrawnTask? _drawnTask;
 
     /// <summary>
     /// Gets or sets the easing function.
@@ -56,54 +58,58 @@ public class SKDefaultTooltip : IChartTooltip
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
     public virtual void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        const int wedge = 10;
+        Initialize(chart);
 
+        if (_drawnTask is null || _drawnTask.IsEmpty)
+        {
+            _drawnTask = chart.Canvas.AddGeometry(this);
+            _drawnTask.ZIndex = 10100;
+        }
+
+        Opacity = 1;
+        ScaleTransform = new LvcPoint(1, 1);
+        Content = GetContent(foundPoints, chart);
+
+        var size = Measure();
+        var location = foundPoints.GetTooltipLocation(size, chart);
+
+        X = location.X;
+        Y = location.Y;
+
+        chart.Canvas.Invalidate();
+    }
+
+    /// <inheritdoc cref="IChartTooltip.Hide"/>
+    public virtual void Hide(Chart chart)
+    {
+        if (chart is null) return;
+        Opacity = 0f;
+        ScaleTransform = new LvcPoint(0.85f, 0.85f);
+
+        chart.Canvas.Invalidate();
+    }
+
+    /// <summary>
+    /// Gets the content of the tooltip.
+    /// </summary>
+    /// <param name="foundPoints">The points to show.</param>
+    /// <param name="chart">The chart.</param>
+    /// <returns>The element to draw.</returns>
+    protected virtual IDrawnElement<SkiaSharpDrawingContext> GetContent(
+        IEnumerable<ChartPoint> foundPoints, Chart chart)
+    {
         var textSize = (float)chart.View.TooltipTextSize;
-
-        var backgroundPaint =
-            chart.View.TooltipBackgroundPaint ??
-            new SolidColorPaint(new SKColor(235, 235, 235, 230))
-            {
-                ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
-            };
 
         var fontPaint =
             chart.View.TooltipTextPaint ??
             new SolidColorPaint(new SKColor(28, 49, 58));
 
-        if (_container is null || _layout is null)
+        var stackLayout = new StackLayout
         {
-            _container = new Container<PopUpGeometry>
-            {
-                Content = _layout = new StackLayout
-                {
-                    Orientation = ContainerOrientation.Vertical,
-                    HorizontalAlignment = Align.Middle,
-                    VerticalAlignment = Align.Middle
-                }
-            };
-
-            _container.Geometry.Fill = backgroundPaint;
-            _container.Geometry.Wedge = wedge;
-            _container.Geometry.WedgeThickness = 3;
-
-            _container
-                .Animate(
-                    new Animation(Easing, AnimationsSpeed),
-                    nameof(IDrawnElement.Opacity),
-                    nameof(IDrawnElement.ScaleTransform),
-                    nameof(IDrawnElement.X),
-                    nameof(IDrawnElement.Y));
-
-            var drawTask = chart.Canvas.AddGeometry(_container);
-            drawTask.ZIndex = 10100;
-        }
-
-        _container.Opacity = 1;
-        _container.ScaleTransform = new LvcPoint(1, 1);
-
-        foreach (var child in _layout.Children.ToArray())
-            _ = _layout.Children.Remove(child);
+            Orientation = ContainerOrientation.Vertical,
+            HorizontalAlignment = Align.Middle,
+            VerticalAlignment = Align.Middle
+        };
 
         var tableLayout = new TableLayout
         {
@@ -124,7 +130,7 @@ public class SKDefaultTooltip : IChartTooltip
 
                 if (title != LiveCharts.IgnoreToolTipLabel)
                 {
-                    _layout.Children.Add(
+                    stackLayout.Children.Add(
                         new LabelGeometry
                         {
                             Text = point.Context.Series.GetSecondaryToolTipText(point) ?? string.Empty,
@@ -174,45 +180,55 @@ public class SKDefaultTooltip : IChartTooltip
             }
         }
 
-        _layout.Children.Add(tableLayout);
+        stackLayout.Children.Add(tableLayout);
 
-        var size = _layout.Measure();
-        _ = foundPoints.GetTooltipLocation(size, chart);
-        _container.Geometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
+        Geometry.Placement = chart.AutoToolTipsInfo.ToolTipPlacement;
 
         const int px = 8;
         const int py = 12;
 
         switch (chart.AutoToolTipsInfo.ToolTipPlacement)
         {
-            case Measure.PopUpPlacement.Top:
-                _layout.Padding = new Padding(py, px, py, px + wedge); break;
-            case Measure.PopUpPlacement.Bottom:
-                _layout.Padding = new Padding(py, px + wedge, py, px); break;
-            case Measure.PopUpPlacement.Left:
-                _layout.Padding = new Padding(py, px, py + wedge, px); break;
-            case Measure.PopUpPlacement.Right:
-                _layout.Padding = new Padding(py + wedge, px, py, px); break;
+            case PopUpPlacement.Top:
+                stackLayout.Padding = new Padding(py, px, py, px + Wedge); break;
+            case PopUpPlacement.Bottom:
+                stackLayout.Padding = new Padding(py, px + Wedge, py, px); break;
+            case PopUpPlacement.Left:
+                stackLayout.Padding = new Padding(py, px, py + Wedge, px); break;
+            case PopUpPlacement.Right:
+                stackLayout.Padding = new Padding(py + Wedge, px, py, px); break;
             default: break;
         }
 
-        // the size changed... we need to do the math again
-        size = _container.Measure();
-        var location = foundPoints.GetTooltipLocation(size, chart);
-
-        _container.X = location.X;
-        _container.Y = location.Y;
-
-        chart.Canvas.Invalidate();
+        return stackLayout;
     }
 
-    /// <inheritdoc cref="IChartTooltip.Hide"/>
-    public virtual void Hide(Chart chart)
+    /// <summary>
+    /// Called to initialize the tooltip.
+    /// </summary>
+    protected virtual void Initialize(Chart chart)
     {
-        if (chart is null || _container is null) return;
-        _container.Opacity = 0f;
-        _container.ScaleTransform = new LvcPoint(0.85f, 0.85f);
+        if (_isInitialized) return;
+        _isInitialized = true;
 
-        chart.Canvas.Invalidate();
+        var backgroundPaint =
+            chart.View.TooltipBackgroundPaint ??
+            new SolidColorPaint(new SKColor(235, 235, 235, 230))
+            {
+                ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
+            };
+
+        Geometry.Fill = backgroundPaint;
+        Geometry.Wedge = Wedge;
+        Geometry.WedgeThickness = 3;
+
+        Geometry.Fill = backgroundPaint;
+
+        this.Animate(
+            new Animation(Easing, AnimationsSpeed),
+                nameof(IDrawnElement.Opacity),
+                nameof(IDrawnElement.ScaleTransform),
+                nameof(IDrawnElement.X),
+                nameof(IDrawnElement.Y));
     }
 }
