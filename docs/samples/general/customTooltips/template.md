@@ -166,9 +166,9 @@ Will result in:
 The PieSeries class uses the `ToolTipLabelFormatter` property to configure the text inside the tooltip.
 :::
 
-# Override tooltip template
+# Override the default tooltip
 
-You can also inherit from `SKDefaultTooltip` and override the parts you need to make the tooltip behave as y6our app needs,
+You can also inherit from `SKDefaultTooltip` and override the parts you need to make the tooltip behave as your app needs,
 in the next example, we draw a geometry in the tooltip based on the point that is shown in the tooltip.
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)
@@ -183,7 +183,7 @@ in the next example, we draw a geometry in the tooltip based on the point that i
 
 # Tooltip control from scratch
 
-You can also create your own tooltip, the recommended way is to use the LiveCharts API (example bellow) but you can
+You can also create your own tooltip, the recommended way is to use the LiveCharts API but you can
 use anything as tooltip as soon as it implements the `IChartTooltip` interface. 
 
 The LiveCharts API can only draw inside the control bounds, in some cases it could 
