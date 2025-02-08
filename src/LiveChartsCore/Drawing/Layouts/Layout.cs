@@ -198,6 +198,11 @@ public abstract class Layout<TDrawingContext> : Animatable, IDrawnElement
             $"Layouts can not have a {nameof(IDrawnElement.Paint)}, instead place the layout as the child of another geometry.");
     }
 
+    /// <summary>
+    /// Gets or sets the padding.
+    /// </summary>
+    public Padding Padding { get; set; } = new();
+
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
 }

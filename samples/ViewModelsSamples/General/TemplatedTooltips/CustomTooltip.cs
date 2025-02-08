@@ -2,95 +2,108 @@
 using System.Collections.Generic;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Layouts;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using SkiaSharp;
 
 namespace ViewModelsSamples.General.TemplatedTooltips;
 
-public class CustomTooltip : IChartTooltip
+public class CustomTooltip : SKDefaultTooltip
 {
-    private Container<RoundedRectangleGeometry>? _container;
-    private StackLayout? _layout;
-
-    public void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
+    // the Initialize method is used to set up the tooltip animations, colors, etc.
+    protected override void Initialize(Chart chart)
     {
-        if (_container is null || _layout is null)
+        // the Wedge property, defines the size of the triangle that points to the target point.
+        Wedge = 5;
+
+        Geometry.Fill = new SolidColorPaint(new SKColor(200, 200, 200), 3);
+        Geometry.Stroke = new SolidColorPaint(new SKColor(28, 49, 58), 3);
+        Geometry.Wedge = Wedge;
+        Geometry.WedgeThickness = 2;
+
+        this.Animate(
+            new Animation(
+                EasingFunctions.BounceOut,
+                TimeSpan.FromMilliseconds(500)));
+    }
+
+    // the GetLayout method is used to define the content of the tooltip,
+    // it is called every time the tooltip changes.
+    protected override Layout<SkiaSharpDrawingContext> GetLayout(IEnumerable<ChartPoint> foundPoints, Chart chart)
+    {
+        var layout = new StackLayout
         {
-            _container = new Container<RoundedRectangleGeometry>
-            {
-                Content = _layout = new StackLayout
-                {
-                    Padding = new(10),
-                    Orientation = ContainerOrientation.Vertical,
-                    HorizontalAlignment = Align.Middle,
-                    VerticalAlignment = Align.Middle
-                }
-            };
+            Padding = new(10),
+            Orientation = ContainerOrientation.Vertical,
+            HorizontalAlignment = Align.Middle,
+            VerticalAlignment = Align.Middle
+        };
 
-            _container.Geometry.Fill = new SolidColorPaint(new SKColor(28, 49, 58));
-            _container.Animate(new Animation(EasingFunctions.BounceOut, TimeSpan.FromMilliseconds(500)));
-
-            var drawTask = chart.Canvas.AddGeometry(_container);
-            drawTask.ZIndex = 10100;
-        }
-
-        _container.Opacity = 1;
-        _container.ScaleTransform = new LvcPoint(1, 1);
-
-        foreach (var child in _layout.Children.ToArray())
-            _ = _layout.Children.Remove(child);
-
+        var i = 0;
         foreach (var point in foundPoints)
         {
+            i++;
+
             var series = point.Context.Series;
-            var miniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
+            var geometryPoint = (GeometryPoint)point.Context.DataSource!;
+
+            var miniature =
+                (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
 
             var label = new LabelGeometry
             {
                 Text = point.Coordinate.PrimaryValue.ToString("C2"),
-                Paint = new SolidColorPaint(new SKColor(230, 230, 230)),
+                Paint = new SolidColorPaint(new SKColor(30, 30, 30)),
                 TextSize = 15,
-                Padding = new Padding(8, 0, 0, 0),
+                Padding = new Padding(8, 0),
                 VerticalAlign = Align.Start,
                 HorizontalAlign = Align.Start
             };
 
+            var customContent = new VariableSVGPathGeometry
+            {
+                Fill = new SolidColorPaint(new SKColor(30, 30, 30)),
+                Width = 30,
+                Height = 30,
+                SVGPath = geometryPoint.Geometry
+            };
+
             var sp = new StackLayout
             {
+                Orientation = ContainerOrientation.Horizontal,
                 Padding = new Padding(0, 4),
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
                 Children =
                 {
                     miniature,
-                    label
+                    label,
+                    customContent
                 }
             };
 
-            _layout.Children.Add(sp);
+            layout.Children.Add(sp);
         }
 
-        var size = _container.Measure();
-        var location = foundPoints.GetTooltipLocation(size, chart);
-
-        _container.X = location.X;
-        _container.Y = location.Y;
-
-        chart.Canvas.Invalidate();
+        return layout;
     }
 
-    public void Hide(Chart chart)
+    public override void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        if (chart is null || _container is null) return;
+        base.Show(foundPoints, chart);
 
-        _container.Opacity = 0f;
-        _container.ScaleTransform = new LvcPoint(0f, 0f);
+        // write code here to add custom behavior when the tooltip is shown.
+    }
 
-        chart.Canvas.Invalidate();
+    public override void Hide(Chart chart)
+    {
+        base.Hide(chart);
+
+        // write code here to add custom behavior when the tooltip is hidden.
     }
 }

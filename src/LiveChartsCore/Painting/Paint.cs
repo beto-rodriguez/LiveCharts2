@@ -118,6 +118,11 @@ public abstract class Paint : Animatable, IDisposable
     }
 
     /// <summary>
+    /// Gets a value indicating whether this instance is empty.
+    /// </summary>
+    public bool IsEmpty => _geometriesByCanvas.Count == 0;
+
+    /// <summary>
     /// Gets the geometries.
     /// </summary>
     /// <returns></returns>

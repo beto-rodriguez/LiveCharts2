@@ -266,6 +266,10 @@ public abstract class Chart
     public IEnumerable<ChartElement> VisualElements { get; protected set; } =
         [];
 
+    internal event Action<Chart, LvcPoint>? PointerDown;
+    internal event Action<Chart, LvcPoint>? PointerUp;
+    internal event Action<Chart, LvcPoint>? PointerMove;
+
     internal bool DisableTooltipCache { get; set; }
 
     #endregion region
@@ -316,8 +320,6 @@ public abstract class Chart
     public virtual void Unload()
     {
         IsLoaded = false;
-        View.Tooltip = null;
-        View.Legend = null;
         _everMeasuredElements.Clear();
         _toDeleteElements.Clear();
         _activePoints.Clear();
@@ -372,6 +374,9 @@ public abstract class Chart
 
             View.OnVisualElementPointerDown(hitElements, point);
         }
+
+        // experimental events from the chart engine.
+        PointerDown?.Invoke(this, point);
     }
 
     /// <summary>
@@ -383,6 +388,9 @@ public abstract class Chart
         _pointerPosition = point;
         _isPointerIn = true;
         _tooltipThrottler.Call();
+
+        // experimental events from the chart engine.
+        PointerMove?.Invoke(this, point);
 
         if (!_isPanning) return;
         _pointerPanningPosition = point;
@@ -407,6 +415,9 @@ public abstract class Chart
             View.InvokeOnUIThread(CloseTooltip);
         }
 #endif
+
+        // experimental events from the chart engine.
+        PointerUp?.Invoke(this, point);
 
         if (!_isPanning) return;
         _isPanning = false;

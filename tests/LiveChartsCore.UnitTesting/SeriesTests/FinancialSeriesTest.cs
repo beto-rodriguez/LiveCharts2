@@ -120,7 +120,7 @@ public class FinancialSeriesTest
                 new(4,3.75,3.25,3),
                 new(5,4.75,4.25,4),
             },
-            Name = "A",
+            Name = "Aaaaaa",
             MaxBarWidth = 1000,
             YToolTipLabelFormatter = x => $"{x.Coordinate.PrimaryValue}{Environment.NewLine}{x.Coordinate.PrimaryValue}{Environment.NewLine}{x.Coordinate.PrimaryValue}{Environment.NewLine}",
             DataPadding = new Drawing.LvcPoint(0, 0)
@@ -150,8 +150,8 @@ public class FinancialSeriesTest
         LvcRectangle tp;
         void UpdateTooltipRect()
         {
-            var g = tooltip._container;
-            tp = new LvcRectangle(new(g.X, g.Y), tooltip._container.Measure());
+            var g = tooltip;
+            tp = new LvcRectangle(new(g.X, g.Y), tooltip.Measure());
         }
 
         UpdateTooltipRect();
