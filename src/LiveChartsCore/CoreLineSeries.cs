@@ -278,6 +278,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                         visual.Segment.Yj = p;
 
                         data.TargetPoint.Context.Visual = null;
+                        data.TargetPoint.Context.AdditionalVisuals = null;
                     }
 
                     if (data.TargetPoint.Context.Label is not null)
