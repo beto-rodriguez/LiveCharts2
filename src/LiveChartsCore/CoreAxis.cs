@@ -937,23 +937,35 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         return new(min, max, minZoomDelta, mind, maxd);
     }
 
-    /// <inheritdoc cref="ICartesianAxis.SetLimits(double, double, bool, bool)"/>
-    public void SetLimits(double min, double max, bool propagateShared = true, bool notify = false)
+    /// <inheritdoc cref="ICartesianAxis.SetLimits(double, double, double, bool, bool)"/>
+    public void SetLimits(double min, double max, double step = -1, bool propagateShared = true, bool notify = false)
     {
         var shared = propagateShared ? (SharedWith ?? []) : [];
 
         foreach (var axis in shared)
-            axis.SetLimits(min, max, false, notify);
+            axis.SetLimits(min, max, step, false, notify);
 
         if (notify)
         {
             MinLimit = min;
             MaxLimit = max;
+
+            if (step > 0)
+            {
+                ForceStepToMin = true;
+                MinStep = step;
+            }
         }
         else
         {
             _maxLimit = max;
             _minLimit = min;
+
+            if (step > 0)
+            {
+                _forceStepToMin = true;
+                _minStep = step;
+            }
         }
     }
 

@@ -43,3 +43,29 @@ Once we run our app again, we can see that our scale works as expected:
 </div>
 
 {{ render this "~/shared/relatedTo.md" }}
+
+## Scale separators to 1 inch sample
+
+In the following example, we will force the axis separators to be 1 inch long (2.54 cm).
+
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Axes/MatchScale/CustomScaleExtensions.cs" ~}}
+
+:::tip
+The `GetPixelsPerInch()` function, returns always `96`, this is a standard value, but varies depending on the screen,
+and the OS, in a real app you must get the device DPI/PPI, this differs between UI frameworks, please check the
+docs of your target UI framework.
+:::
+
+Finally we need to use our `InchSeparator()` extension in our chart:
+
+```c#
+// where myChart is a reference to chart in the UI.
+InchScaleExtensions.InchSeparator(myChart);
+```
+
+And that's it, now our separators will be one inch long always, no matter the chart size, the data on it, or the zooming
+and panning level.
+
+<div class="text-center">
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.png" alt="sample image" />
+</div>
