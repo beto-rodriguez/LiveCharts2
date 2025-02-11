@@ -64,16 +64,16 @@ public interface IPieChartView : IChartView
     double MaxAngle { get; set; }
 
     /// <summary>
-    /// Gets or sets the minimum valu, normally used in gauges to set the minimum value a pie slice can represent,
+    /// Gets or sets the minimum value, normally used in gauges to set the minimum value a pie slice can represent,
     /// default is 0.
     /// </summary>
     double MinValue { get; set; }
 
     /// <summary>
     /// Gets or sets the end value, normally used in gauges to set the maximum value a pie slice can represent,
-    /// default is null, and means the pie chart total sum.
+    /// default is double.NaN, and means the pie chart total sum.
     /// </summary>
-    double? MaxValue { get; set; }
+    double MaxValue { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the pie slices will be drawn clockwise, default is true.

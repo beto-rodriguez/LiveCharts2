@@ -155,8 +155,8 @@ public class PieChart : UserControl, IPieChartView
     /// <summary>
     /// The total property
     /// </summary>
-    public static readonly AvaloniaProperty<double?> MaxValueProperty =
-        AvaloniaProperty.Register<PieChart, double?>(nameof(MaxValue), null, inherits: true);
+    public static readonly AvaloniaProperty<double> MaxValueProperty =
+        AvaloniaProperty.Register<PieChart, double>(nameof(MaxValue), double.NaN, inherits: true);
 
     /// <summary>
     /// The start property
@@ -404,9 +404,9 @@ public class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.MaxValue" />
-    public double? MaxValue
+    public double MaxValue
     {
-        get => (double?)GetValue(MaxValueProperty);
+        get => (double)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 
