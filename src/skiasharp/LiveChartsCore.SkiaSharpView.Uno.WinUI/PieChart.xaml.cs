@@ -156,7 +156,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     /// </summary>
     public static readonly DependencyProperty MaxValueProperty =
         DependencyProperty.Register(
-            nameof(MaxValue), typeof(object), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(MaxValue), typeof(double), typeof(PieChart), new PropertyMetadata(-1, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The start property
@@ -410,9 +410,9 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.MaxValue" />
-    public double? MaxValue
+    public double MaxValue
     {
-        get => (double?)GetValue(MaxValueProperty);
+        get => (double)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 

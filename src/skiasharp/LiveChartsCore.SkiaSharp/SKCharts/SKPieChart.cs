@@ -95,7 +95,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public double MaxAngle { get; set; } = 360;
 
     /// <inheritdoc cref="IPieChartView.MaxValue"/>
-    public double? MaxValue { get; set; }
+    public double MaxValue { get; set; } = double.NaN;
 
     /// <inheritdoc cref="IPieChartView.MinValue"/>
     public double MinValue { get; set; }

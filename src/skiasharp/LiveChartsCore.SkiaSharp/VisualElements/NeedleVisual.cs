@@ -26,5 +26,10 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <inheritdoc cref="NeedleVisual{TGeometry, TLabelGeometry}"/>
-public class NeedleVisual : NeedleVisual<NeedleGeometry, LabelGeometry>
+public class NeedleVisual : NeedleVisual<NeedleGeometry>
+{ }
+
+/// <inheritdoc cref="NeedleVisual{TGeometry, TLabelGeometry}"/>
+public class NeedleVisual<TNeedle> : NeedleVisual<TNeedle, LabelGeometry>
+    where TNeedle : NeedleGeometry, new()
 { }

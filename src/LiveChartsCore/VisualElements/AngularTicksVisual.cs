@@ -114,10 +114,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : V
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
-        if (view.MaxValue is null) throw new Exception("The total property is required.");
-
         var startValue = view.MinValue;
-        var endValue = view.MaxValue.Value;
+        var endValue = view.MaxValue;
 
         var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
         var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;

@@ -42,7 +42,7 @@ public class PieChart : Chart, IPieChartView
     private bool _isClockwise = true;
     private double _initialRotation;
     private double _maxAngle = 360;
-    private double? _maxValue;
+    private double _maxValue = double.NaN;
     private double _minValue;
 
     /// <summary>
@@ -92,7 +92,7 @@ public class PieChart : Chart, IPieChartView
     public double MaxAngle { get => _maxAngle; set { _maxAngle = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPieChartView.MaxValue" />
-    public double? MaxValue { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
+    public double MaxValue { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IPieChartView.MinValue" />
     public double MinValue { get => _minValue; set { _minValue = value; OnPropertyChanged(); } }

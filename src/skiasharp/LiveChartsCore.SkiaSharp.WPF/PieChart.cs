@@ -103,7 +103,7 @@ public class PieChart : Chart, IPieChartView
     /// </summary>
     public static readonly DependencyProperty MaxValueProperty =
         DependencyProperty.Register(
-            nameof(MaxValue), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(MaxValue), typeof(double), typeof(PieChart), new PropertyMetadata(double.NaN, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The start property
@@ -143,9 +143,9 @@ public class PieChart : Chart, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.MaxValue" />
-    public double? MaxValue
+    public double MaxValue
     {
-        get => (double?)GetValue(MaxValueProperty);
+        get => (double)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 
