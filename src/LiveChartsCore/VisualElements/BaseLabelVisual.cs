@@ -31,11 +31,8 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines a label visual element.
 /// </summary>
-/// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-public class LabelVisual<TLabelGeometry> : VisualElement
-    where TLabelGeometry : BaseLabelGeometry, new()
+public abstract class BaseLabelVisual : VisualElement
 {
-    internal TLabelGeometry? _labelGeometry;
     internal Paint? _paint;
     internal bool _isVirtual = false;
     internal string _text = string.Empty;
@@ -95,6 +92,16 @@ public class LabelVisual<TLabelGeometry> : VisualElement
     /// Gets or sets the maximum width.
     /// </summary>
     public float MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
+}
+
+/// <summary>
+/// Defines a label visual element.
+/// </summary>
+/// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
+public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
+    where TLabelGeometry : BaseLabelGeometry, new()
+{
+    internal TLabelGeometry? _labelGeometry;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
@@ -160,7 +167,7 @@ public class LabelVisual<TLabelGeometry> : VisualElement
     /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
-        ApplyTheme<LabelVisual<TLabelGeometry>>();
+        ApplyTheme<BaseLabelVisual>();
 
         InitializeLabel();
 

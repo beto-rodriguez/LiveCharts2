@@ -28,5 +28,5 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// <summary>
 /// Defines the angulaar ticks visual.
 /// </summary>
-public class AngularTicksVisual : AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>
+public class AngularTicksVisual : BaseAngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>
 { }

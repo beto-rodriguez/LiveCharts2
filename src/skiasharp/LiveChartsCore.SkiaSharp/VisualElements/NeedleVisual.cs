@@ -25,11 +25,11 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <inheritdoc cref="NeedleVisual{TGeometry, TLabelGeometry}"/>
+/// <inheritdoc cref="BaseNeedleVisual{TGeometry, TLabelGeometry}"/>
 public class NeedleVisual : NeedleVisual<NeedleGeometry>
 { }
 
-/// <inheritdoc cref="NeedleVisual{TGeometry, TLabelGeometry}"/>
-public class NeedleVisual<TNeedle> : NeedleVisual<TNeedle, LabelGeometry>
+/// <inheritdoc cref="BaseNeedleVisual{TGeometry, TLabelGeometry}"/>
+public class NeedleVisual<TNeedle> : BaseNeedleVisual<TNeedle, LabelGeometry>
     where TNeedle : NeedleGeometry, new()
 { }

@@ -229,6 +229,7 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     /// <summary>
     /// Applies the theme to the visual.
     /// </summary>
+    /// <typeparam name="T">The type of the visual.</typeparam>
     protected virtual void ApplyTheme<T>()
         where T : VisualElement
     {
