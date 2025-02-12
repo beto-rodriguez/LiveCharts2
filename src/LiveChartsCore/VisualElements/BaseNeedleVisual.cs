@@ -31,15 +31,10 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines a visual element in a chart that draws a needle.
 /// </summary>
-/// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-/// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-public class NeedleVisual<TGeometry, TLabelGeometry> : VisualElement
-    where TGeometry : BaseNeedleGeometry, new()
-    where TLabelGeometry : BaseLabelGeometry, new()
+public abstract class BaseNeedleVisual : VisualElement
 {
     private Paint? _fill;
     private double _value;
-    private TGeometry? _geometry;
 
     /// <summary>
     /// Gets or sets the value.
@@ -54,11 +49,23 @@ public class NeedleVisual<TGeometry, TLabelGeometry> : VisualElement
         get => _fill;
         set => SetPaintProperty(ref _fill, value);
     }
+}
+
+/// <summary>
+/// Defines a visual element in a chart that draws a needle.
+/// </summary>
+/// <typeparam name="TGeometry">The type of the geometry.</typeparam>
+/// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
+public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVisual
+    where TGeometry : BaseNeedleGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
+{
+    private TGeometry? _geometry;
 
     /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
-        ApplyTheme<NeedleVisual<TGeometry, TLabelGeometry>>();
+        ApplyTheme<BaseNeedleVisual>();
 
         if (chart is not PieChartEngine pieChart)
             throw new Exception("The needle visual can only be added to a pie chart");
@@ -126,5 +133,5 @@ public class NeedleVisual<TGeometry, TLabelGeometry> : VisualElement
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_fill];
+        [Fill];
 }
