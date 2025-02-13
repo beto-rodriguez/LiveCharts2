@@ -476,7 +476,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         if (!_ticksAtCenter && _orientation == AxisOrientation.X) txco = uw * 0.5f;
         if (!_ticksAtCenter && _orientation == AxisOrientation.Y) tyco = uw * 0.5f;
         if (!_separatorsAtCenter && _orientation == AxisOrientation.X) sxco = uw * 0.5f;
-        if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) sxco = uw * 0.5f;
+        if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) syco = uw * 0.5f;
 
         var axisTick = this.GetTick(drawMarginSize, null);
         var s = axisTick.Value;
