@@ -243,10 +243,10 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : V
             var visual = _visuals[key];
             if (visual.UpdateId == updateId) continue;
 
-            LabelsPaint?.RemoveGeometryFromPainTask(chart.Canvas, visual.Label);
-            Stroke?.RemoveGeometryFromPainTask(chart.Canvas, visual.Tick);
+            LabelsPaint?.RemoveGeometryFromPaintTask(chart.Canvas, visual.Label);
+            Stroke?.RemoveGeometryFromPaintTask(chart.Canvas, visual.Tick);
             foreach (var subtick in visual.Subseparator)
-                Stroke?.RemoveGeometryFromPainTask(chart.Canvas, subtick);
+                Stroke?.RemoveGeometryFromPaintTask(chart.Canvas, subtick);
             _ = _visuals.Remove(key);
         }
     }

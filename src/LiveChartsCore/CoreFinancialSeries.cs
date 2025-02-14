@@ -256,15 +256,15 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             {
                 UpFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
                 UpStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                DownFill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
-                DownStroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                DownFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                DownStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
             else
             {
                 DownFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
                 DownStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                UpFill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
-                UpStroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                UpFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                UpStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
 
             var x = secondary - uwm;
