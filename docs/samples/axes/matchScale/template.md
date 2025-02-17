@@ -65,7 +65,7 @@ And that's it, now our separators will be one inch long always, no matter the ch
 and panning level.
 
 <div class="text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.jpg" alt="sample image" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.jpg" alt="sample image" style="max-width: 650px" />
 </div>
 
 {{ render this "~/shared/relatedTo.md" }}
