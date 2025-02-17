@@ -26,6 +26,11 @@ class Project {
     [string]GetFolder() {
         return $this.src.SubString(0, $this.src.LastIndexOf("/"));
     }
+
+    [string]GetName() {
+        $end = $this.src.LastIndexOf("/")
+        return $this.src.SubString($end + 1, $this.src.Length - $end - 1);
+    }
 }
 
 if (Test-Path $nupkgOutputPath) {
@@ -36,10 +41,21 @@ if (Test-Path $nupkgOutputPath) {
 
 foreach ($p in $projects) {
     $folder = $p.GetFolder()
+    $name = $p.GetName()
 
     if (Test-Path $($folder + "/bin")) {
         Remove-Item $($folder + "/bin") -Force -Recurse
     }
 
-    dotnet pack $p.src -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+    $expression = "dotnet pack $($p.src) -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg"
+
+    Write-Progress -Activity "$name" -Status "Packing..."
+    $result = Invoke-Expression $expression
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Output "✖ $name failed to pack."
+        break
+    }else {
+        Write-Output "✓ $name packed successfully."
+    }
 }
