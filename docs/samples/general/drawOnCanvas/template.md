@@ -2,7 +2,7 @@
 This article adds geometries directly to the canvas, this is intended to explain how geometries and animations
 are handled in the library, but in general the recommended way to draw a custom element in the chart is to use the 
 `Visual` class, for more info please see the [visual elements article](https://livecharts.dev/docs/{{ platform }}/{{ version }}/samples.general.visualElements).
-::
+:::
 
 {{ render this "~/shared/genericSampleJustGifHeader.md" }}
 
