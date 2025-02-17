@@ -131,8 +131,8 @@ public class MapFactory : IMapFactory
 
             foreach (var shape in toRemovePathShapes)
             {
-                stroke?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
-                fill?.RemoveGeometryFromPainTask(context.View.Canvas, shape);
+                stroke?.RemoveGeometryFromPaintTask(context.View.Canvas, shape);
+                fill?.RemoveGeometryFromPaintTask(context.View.Canvas, shape);
 
                 shape.Commands.Clear();
 
@@ -182,7 +182,7 @@ public class MapFactory : IMapFactory
                         var shape = landData.Shape;
                         if (shape is null) continue;
 
-                        stroke?.RemoveGeometryFromPainTask(_mapView.Canvas, shape);
+                        stroke?.RemoveGeometryFromPaintTask(_mapView.Canvas, shape);
                         fill?.AddGeometryToPaintTask(_mapView.Canvas, shape);
 
                         landData.Shape = null;
