@@ -42,10 +42,6 @@
   <ItemGroup>
     <PackageReference Include="SkiaSharp.Views.Blazor" Version="$(LatestSkiaSharpVersion)" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.7.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
