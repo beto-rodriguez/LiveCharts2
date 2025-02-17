@@ -170,7 +170,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawnElement geometry)
+    public void RemoveGeometryFromPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
 

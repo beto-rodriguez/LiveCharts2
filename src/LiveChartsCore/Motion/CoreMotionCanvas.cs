@@ -156,7 +156,7 @@ public class CoreMotionCanvas : IDisposable
 
             foreach (var tuple in toRemoveGeometries)
             {
-                tuple.Item1.RemoveGeometryFromPainTask(this, tuple.Item2);
+                tuple.Item1.RemoveGeometryFromPaintTask(this, tuple.Item2);
 
                 // if we removed at least one geometry, we need to redraw the control
                 // to ensure it is not present in the next frame

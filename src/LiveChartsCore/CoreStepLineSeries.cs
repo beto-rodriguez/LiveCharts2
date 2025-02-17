@@ -169,7 +169,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
                     if (fillLookup.Path.Commands.Count == 1)
                     {
-                        Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillLookup.Path);
+                        Fill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, fillLookup.Path);
                         fillLookup.Path.Commands.Clear();
                         fillPathHelperContainer.RemoveAt(segmentI);
 
@@ -178,7 +178,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
                     if (strokeLookup.Path.Commands.Count == 1)
                     {
-                        Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeLookup.Path);
+                        Stroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, strokeLookup.Path);
                         strokeLookup.Path.Commands.Clear();
                         strokePathHelperContainer.RemoveAt(segmentI);
 
@@ -413,7 +413,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
             if (i < fillPathHelperContainer.Count)
             {
                 var segmentFill = fillPathHelperContainer[i];
-                Fill?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentFill);
+                Fill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, segmentFill);
                 segmentFill.Commands.Clear();
                 fillPathHelperContainer.RemoveAt(i);
             }
@@ -421,7 +421,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
             if (i < strokePathHelperContainer.Count)
             {
                 var segmentStroke = strokePathHelperContainer[i];
-                Stroke?.RemoveGeometryFromPainTask(cartesianChart.Canvas, segmentStroke);
+                Stroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, segmentStroke);
                 segmentStroke.Commands.Clear();
                 strokePathHelperContainer.RemoveAt(i);
             }
@@ -648,14 +648,14 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         {
             foreach (var activeChartContainer in _fillPathHelperDictionary.ToArray())
                 foreach (var pathHelper in activeChartContainer.Value.ToArray())
-                    Fill.RemoveGeometryFromPainTask(canvas, pathHelper);
+                    Fill.RemoveGeometryFromPaintTask(canvas, pathHelper);
         }
 
         if (Stroke is not null)
         {
             foreach (var activeChartContainer in _strokePathHelperDictionary.ToArray())
                 foreach (var pathHelper in activeChartContainer.Value.ToArray())
-                    Stroke.RemoveGeometryFromPainTask(canvas, pathHelper);
+                    Stroke.RemoveGeometryFromPaintTask(canvas, pathHelper);
         }
 
         if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);

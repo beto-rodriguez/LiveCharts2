@@ -468,7 +468,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             if (!_animatableBounds.HasPreviousState) _ticksPath.CompleteTransition(null);
         }
         if (TicksPaint is not null && _ticksPath is not null && !_drawTicksPath)
-            TicksPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, _ticksPath);
+            TicksPaint.RemoveGeometryFromPaintTask(cartesianChart.Canvas, _ticksPath);
 
         float txco = 0f, tyco = 0f, sxco = 0f, syco = 0f;
 
@@ -476,7 +476,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         if (!_ticksAtCenter && _orientation == AxisOrientation.X) txco = uw * 0.5f;
         if (!_ticksAtCenter && _orientation == AxisOrientation.Y) tyco = uw * 0.5f;
         if (!_separatorsAtCenter && _orientation == AxisOrientation.X) sxco = uw * 0.5f;
-        if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) sxco = uw * 0.5f;
+        if (!_separatorsAtCenter && _orientation == AxisOrientation.Y) syco = uw * 0.5f;
 
         var axisTick = this.GetTick(drawMarginSize, null);
         var s = axisTick.Value;
@@ -565,7 +565,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 if (ShowSeparatorLines)
                     SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Separator);
                 else
-                    SeparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, visualSeparator.Separator);
+                    SeparatorsPaint.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visualSeparator.Separator);
             }
 
             if (SubseparatorsPaint is not null && visualSeparator.Subseparators is not null)
@@ -574,7 +574,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                         SubseparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, subtick);
                 else
                     foreach (var subtick in visualSeparator.Subseparators)
-                        SubseparatorsPaint.RemoveGeometryFromPainTask(cartesianChart.Canvas, subtick);
+                        SubseparatorsPaint.RemoveGeometryFromPaintTask(cartesianChart.Canvas, subtick);
 
             if (LabelsPaint is not null && visualSeparator.Label is not null)
                 LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Label);
@@ -783,10 +783,10 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     public void ClearCrosshair(Chart chart)
     {
         if (_crosshairLine is not null)
-            CrosshairPaint?.RemoveGeometryFromPainTask(chart.Canvas, _crosshairLine);
+            CrosshairPaint?.RemoveGeometryFromPaintTask(chart.Canvas, _crosshairLine);
 
         if (_crosshairLabel is not null)
-            CrosshairLabelsPaint?.RemoveGeometryFromPainTask(chart.Canvas, _crosshairLabel);
+            CrosshairLabelsPaint?.RemoveGeometryFromPaintTask(chart.Canvas, _crosshairLabel);
     }
 
     private IEnumerable<double> EnumerateSeparators(double start, double end, double step)
