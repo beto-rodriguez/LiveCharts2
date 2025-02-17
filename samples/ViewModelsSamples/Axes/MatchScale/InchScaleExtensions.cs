@@ -19,7 +19,7 @@ public static class InchScaleExtensions
     {
         var dataPerInch = GetDataPerInch((ICartesianChartView)chart.View);
 
-        // knowing the data per inch, we can set an step that will, in this case 0.5 inches
+        // knowing the data per inch, we can set an step that will, in this case 1 inch
         var inches = 1d;
 
         var x = chart.XAxes[0];

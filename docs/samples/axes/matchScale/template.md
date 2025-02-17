@@ -46,7 +46,7 @@ Once we run our app again, we can see that our scale works as expected:
 
 In the following example, we will force the axis separators to be 1 inch long (2.54 cm).
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Axes/MatchScale/CustomScaleExtensions.cs" ~}}
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Axes/MatchScale/InchScaleExtensions.cs" ~}}
 
 :::tip
 The `GetPixelsPerInch()` function, returns always `96`, this is a standard value, but varies depending on the screen,
