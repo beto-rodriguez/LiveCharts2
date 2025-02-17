@@ -166,7 +166,7 @@ Will result in:
 The PieSeries class uses the `ToolTipLabelFormatter` property to configure the text inside the tooltip.
 :::
 
-# Override the default tooltip
+# Override the default tooltip behavior
 
 You can also inherit from `SKDefaultTooltip` and override the parts you need to make the tooltip behave as your app needs,
 in the next example, we draw a geometry in the tooltip based on the point that is shown in the tooltip.
@@ -187,7 +187,7 @@ You can also create your own tooltip, the recommended way is to use the LiveChar
 use anything as tooltip as soon as it implements the `IChartTooltip` interface. 
 
 The LiveCharts API can only draw inside the control bounds, in some cases it could 
-cause issues like [#912](https://github.com/beto-rodriguez/LiveCharts2/issues/912).
+cause issues like [#912](https://github.com/beto-rodriguez/LiveCharts2/issues/912), you can use the [SKDefaultTooltip source code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp/SKCharts/SKDefaultTooltip.cs) as a guide to build your own implementation, this class is the default tooltip used by the library.
 
 Alternatively, you can build your own Tooltips and use the power of your UI framework, 
 see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info.

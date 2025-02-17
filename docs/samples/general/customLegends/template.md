@@ -41,7 +41,7 @@ public partial class ViewModel
 
 ![custom]({{ assets_url }}/docs/_assets/legend-custom-style.png)
 
-# Override the default legend
+# Override the default legend behavior
 
 You can inherit from `SKDefaultLegend` and override the `GetLayout()` method to define your own template,
 in the next example we set a larger miniature compared with the default size.
@@ -63,8 +63,9 @@ in the next example we set a larger miniature compared with the default size.
 # Legend control from scratch
 
 You can also create your own legend, the recommended way is to use the LiveCharts API but you can
-use anything as legend as soon as it implements the `IChartLegend` interface; Instead of using the LiveCharts API
-you can use your UI framework, 
-see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info, it implements the `IChartTooltip`
-interface on a WPF control, then LiveCharts uses this WPF control as the tooltip, you can follow this to implement your own
-legend rendered by your UI framework.
+use anything as legend as soon as it implements the `IChartLegend` interface; You can use the [SKDefaultLegend source code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp/SKCharts/SKDefaultLegend.cs) as a guide to build your own implementation, this class is the default legend used by the library.
+
+Instead of using the LiveCharts API you can use your UI framework, 
+see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more info, in that ticket, there is an example 
+that implements the `IChartTooltip` interface on a WPF control, then LiveCharts uses this WPF control as the tooltip, even
+that example implements `IChartTooltip`, there are no big differences from creating a control that implements `IChartLegend`.
