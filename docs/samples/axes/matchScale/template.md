@@ -42,8 +42,6 @@ Once we run our app again, we can see that our scale works as expected:
     <img src="{{ assets_url }}/docs/{{ unique_name }}/doubley.png" alt="sample image" />
 </div>
 
-{{ render this "~/shared/relatedTo.md" }}
-
 ## Scale separators to 1 inch sample
 
 In the following example, we will force the axis separators to be 1 inch long (2.54 cm).
@@ -67,5 +65,7 @@ And that's it, now our separators will be one inch long always, no matter the ch
 and panning level.
 
 <div class="text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.png" alt="sample image" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.jpg" alt="sample image" />
 </div>
+
+{{ render this "~/shared/relatedTo.md" }}
