@@ -208,15 +208,15 @@ public static class ThemesExtensions
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(30, 30, 30, 10));
                     })
-                    .HasRuleFor<LabelVisual<LabelGeometry>>(label =>
+                    .HasRuleFor<BaseLabelVisual>(label =>
                     {
                         label.Paint = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
-                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry>>(needle =>
+                    .HasRuleFor<BaseNeedleVisual>(needle =>
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(30, 30, 30));
                     })
-                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>>(ticks =>
+                    .HasRuleFor<BaseAngularTicksVisual>(ticks =>
                     {
                         ticks.Stroke = new SolidColorPaint(new SKColor(30, 30, 30));
                         ticks.LabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30));
@@ -396,15 +396,15 @@ public static class ThemesExtensions
                     {
                         gaugeFill.Fill = new SolidColorPaint(new SKColor(255, 255, 255, 30));
                     })
-                    .HasRuleFor<LabelVisual<LabelGeometry>>(label =>
+                    .HasRuleFor<BaseLabelVisual>(label =>
                     {
                         label.Paint = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
-                    .HasRuleFor<NeedleVisual<NeedleGeometry, LabelGeometry>>(needle =>
+                    .HasRuleFor<BaseNeedleVisual>(needle =>
                     {
                         needle.Fill = new SolidColorPaint(new SKColor(200, 200, 200));
                     })
-                    .HasRuleFor<AngularTicksVisual<ArcGeometry, LineGeometry, LabelGeometry>>(ticks =>
+                    .HasRuleFor<BaseAngularTicksVisual>(ticks =>
                     {
                         ticks.Stroke = new SolidColorPaint(new SKColor(200, 200, 200));
                         ticks.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));

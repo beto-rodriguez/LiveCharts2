@@ -40,11 +40,6 @@ public abstract class CoreTableLayout<TDrawingContext>
     private int _maxColumn = 0;
 
     /// <summary>
-    /// Gets or sets the padding.
-    /// </summary>
-    public Padding Padding { get; set; } = new();
-
-    /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
     public Align HorizontalAlignment { get; set; } = Align.Middle;

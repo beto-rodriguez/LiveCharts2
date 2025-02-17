@@ -167,7 +167,7 @@ public partial class PieChart : ChartView, IPieChartView
     /// </summary>
     public static readonly BindableProperty MaxValueProperty =
         BindableProperty.Create(
-            nameof(MaxValue), typeof(object), typeof(PieChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+            nameof(MaxValue), typeof(double), typeof(PieChart), double.NaN, BindingMode.Default, null, OnBindablePropertyChanged);
 
     /// <summary>
     /// The start property
@@ -429,9 +429,9 @@ public partial class PieChart : ChartView, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.MaxValue" />
-    public double? MaxValue
+    public double MaxValue
     {
-        get => (double?)GetValue(MaxValueProperty);
+        get => (double)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 

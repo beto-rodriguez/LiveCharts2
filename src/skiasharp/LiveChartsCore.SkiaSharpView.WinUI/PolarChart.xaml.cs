@@ -575,7 +575,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.Legend" />
-    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    public IChartLegend? Legend { get; set; }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

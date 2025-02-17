@@ -170,8 +170,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
-        var startValue = (float)view.MinValue;
-        var chartTotal = (float?)view.MaxValue;
+        var startValue = view.MinValue;
+        double? chartTotal = double.IsNaN(view.MaxValue) ? null : view.MaxValue;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null)

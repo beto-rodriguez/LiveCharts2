@@ -154,7 +154,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     /// </summary>
     public static readonly DependencyProperty MaxValueProperty =
         DependencyProperty.Register(
-            nameof(MaxValue), typeof(object), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+            nameof(MaxValue), typeof(double), typeof(PieChart), new PropertyMetadata(double.NaN, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The start property
@@ -408,9 +408,9 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.MaxValue" />
-    public double? MaxValue
+    public double MaxValue
     {
-        get => (double?)GetValue(MaxValueProperty);
+        get => (double)GetValue(MaxValueProperty);
         set => SetValue(MaxValueProperty, value);
     }
 
@@ -539,7 +539,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.Legend" />
-    public IChartLegend? Legend { get; set; } = LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+    public IChartLegend? Legend { get; set; }
 
     /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;

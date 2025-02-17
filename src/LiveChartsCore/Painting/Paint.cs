@@ -118,6 +118,11 @@ public abstract class Paint : Animatable, IDisposable
     }
 
     /// <summary>
+    /// Gets a value indicating whether this instance is empty.
+    /// </summary>
+    public bool IsEmpty => _geometriesByCanvas.Count == 0;
+
+    /// <summary>
     /// Gets the geometries.
     /// </summary>
     /// <returns></returns>
@@ -165,7 +170,7 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="geometry">The geometry.</param>
-    public void RemoveGeometryFromPainTask(CoreMotionCanvas canvas, IDrawnElement geometry)
+    public void RemoveGeometryFromPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
 

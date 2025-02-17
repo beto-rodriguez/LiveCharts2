@@ -99,8 +99,8 @@ public class PolarLineSeriesTest
         LvcRectangle tp;
         void UpdateTooltipRect()
         {
-            var g = tooltip._container;
-            tp = new LvcRectangle(new(g.X, g.Y), tooltip._container.Measure());
+            var g = tooltip;
+            tp = new LvcRectangle(new(g.X, g.Y), tooltip.Measure());
         }
 
         UpdateTooltipRect();

@@ -33,23 +33,14 @@ namespace LiveChartsCore.VisualElements;
 /// <summary>
 /// Defines a visual element in a chart that draws a sized geometry in the user interface.
 /// </summary>
-/// <typeparam name="TArcGeometry">The type of the arc geometry.</typeparam>
-/// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-/// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
-public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : VisualElement
-    where TArcGeometry : BaseArcGeometry, new()
-    where TLineGeometry : BaseLineGeometry, new()
-    where TLabelGeometry : BaseLabelGeometry, new()
+public abstract class BaseAngularTicksVisual : VisualElement
 {
     private Paint? _stroke;
     private Paint? _labelsPaint;
-    private TArcGeometry? _arc;
     private double _labelsOuterOffset;
     private double _outerOffset;
     private double _ticksLength;
     private double _labelsSize = 12;
-    private readonly int _subSections = 5;
-    private readonly Dictionary<string, TickVisual> _visuals = [];
     private Func<double, string> _labeler = Labelers.Default;
 
     /// <summary>
@@ -94,6 +85,22 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : V
     /// Gets or sets the labeler, a function that receives a number and return the label content as string.
     /// </summary>
     public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
+}
+
+/// <summary>
+/// Defines a visual element in a chart that draws a sized geometry in the user interface.
+/// </summary>
+/// <typeparam name="TArcGeometry">The type of the arc geometry.</typeparam>
+/// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
+/// <typeparam name="TLabelGeometry">The type of the label.</typeparam>
+public abstract class BaseAngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : BaseAngularTicksVisual
+    where TArcGeometry : BaseArcGeometry, new()
+    where TLineGeometry : BaseLineGeometry, new()
+    where TLabelGeometry : BaseLabelGeometry, new()
+{
+    private readonly int _subSections = 5;
+    private readonly Dictionary<string, TickVisual> _visuals = [];
+    private TArcGeometry? _arc;
 
     /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
@@ -101,7 +108,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : V
         if (chart is not PieChartEngine pieChart)
             throw new Exception("The AngularThicksVisual can only be added to a pie chart");
 
-        ApplyTheme<AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry>>();
+        ApplyTheme<BaseAngularTicksVisual>();
 
         var drawLocation = pieChart.DrawMarginLocation;
         var drawMarginSize = pieChart.DrawMarginSize;
@@ -114,10 +121,8 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : V
         var initialRotation = (float)Math.Truncate(view.InitialRotation);
         var completeAngle = (float)view.MaxAngle;
 
-        if (view.MaxValue is null) throw new Exception("The total property is required.");
-
         var startValue = view.MinValue;
-        var endValue = view.MaxValue.Value;
+        var endValue = view.MaxValue;
 
         var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
         var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
@@ -243,10 +248,10 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : V
             var visual = _visuals[key];
             if (visual.UpdateId == updateId) continue;
 
-            LabelsPaint?.RemoveGeometryFromPainTask(chart.Canvas, visual.Label);
-            Stroke?.RemoveGeometryFromPainTask(chart.Canvas, visual.Tick);
+            LabelsPaint?.RemoveGeometryFromPaintTask(chart.Canvas, visual.Label);
+            Stroke?.RemoveGeometryFromPaintTask(chart.Canvas, visual.Tick);
             foreach (var subtick in visual.Subseparator)
-                Stroke?.RemoveGeometryFromPainTask(chart.Canvas, subtick);
+                Stroke?.RemoveGeometryFromPaintTask(chart.Canvas, subtick);
             _ = _visuals.Remove(key);
         }
     }
@@ -284,7 +289,7 @@ public class AngularTicksVisual<TArcGeometry, TLineGeometry, TLabelGeometry> : V
     }
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
-    protected internal override Paint?[] GetPaintTasks() => [_stroke, _labelsPaint];
+    protected internal override Paint?[] GetPaintTasks() => [Stroke, LabelsPaint];
 
     private class TickVisual(TLabelGeometry label, TLineGeometry line, TLineGeometry[] subseparator)
     {

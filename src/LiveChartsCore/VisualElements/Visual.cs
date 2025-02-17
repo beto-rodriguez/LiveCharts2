@@ -33,8 +33,7 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 public abstract class Visual : ChartElement, IInternalInteractable
 {
-    private DrawablesTask? _drawablesTask;
-    private bool _isInitialized = false;
+    private DrawnTask? _drawnTask;
 
     /// <inheritdoc cref="IInteractable.PointerDown"/>
     public event VisualElementHandler? PointerDown;
@@ -62,13 +61,12 @@ public abstract class Visual : ChartElement, IInternalInteractable
 
         Measure(chart);
 
-        if (!_isInitialized)
+        if (_drawnTask is null || _drawnTask.IsEmpty)
         {
             if (DrawnElement is Animatable animatable)
                 animatable.Animate(Easing, AnimationSpeed);
 
-            _drawablesTask = chart.Canvas.AddGeometry(DrawnElement);
-            _isInitialized = true;
+            _drawnTask = chart.Canvas.AddGeometry(DrawnElement);
         }
     }
 
@@ -90,7 +88,7 @@ public abstract class Visual : ChartElement, IInternalInteractable
         PointerDown?.Invoke(this, args);
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
-    protected internal override Paint?[] GetPaintTasks() => [_drawablesTask];
+    protected internal override Paint?[] GetPaintTasks() => [_drawnTask];
 
     /// <summary>
     /// Called when the visual is invalidated to measure the visual.
