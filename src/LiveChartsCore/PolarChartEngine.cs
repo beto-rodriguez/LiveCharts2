@@ -149,8 +149,6 @@ public class PolarChartEngine(
             _preserveFirstDraw = false;
         }
 
-        MeasureWork = new object();
-
         #region copy the current data in the view
 
         var viewDrawMargin = view.DrawMargin;

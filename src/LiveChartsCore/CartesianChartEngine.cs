@@ -367,8 +367,6 @@ public class CartesianChartEngine(
             _preserveFirstDraw = false;
         }
 
-        MeasureWork = new object();
-
         #region shallow copy the current data in the view
 
         var viewDrawMargin = _chartView.DrawMargin;

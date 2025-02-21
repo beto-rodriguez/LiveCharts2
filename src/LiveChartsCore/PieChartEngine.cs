@@ -130,8 +130,6 @@ public class PieChartEngine(
             _preserveFirstDraw = false;
         }
 
-        MeasureWork = new object();
-
         var viewDrawMargin = view.DrawMargin;
         ControlSize = view.ControlSize;
 

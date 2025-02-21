@@ -123,14 +123,6 @@ public abstract class Chart
     public AnimatableContainer ActualBounds { get; } = new();
 
     /// <summary>
-    /// Gets the measure work.
-    /// </summary>
-    /// <value>
-    /// The measure work.
-    /// </value>
-    public object MeasureWork { get; protected set; } = new();
-
-    /// <summary>
     /// Gets the kind of the chart.
     /// </summary>
     public ChartKind Kind { get; protected set; }
