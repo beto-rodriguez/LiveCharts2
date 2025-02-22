@@ -826,8 +826,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual)
             throw new Exception("Unable to initialize the point instance.");
 
-        var easing = EasingFunction ?? chart.EasingFunction;
-        var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
+        var easing = EasingFunction ?? chart.CoreChart.ActualEasingFunction;
+        var speed = AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed;
 
         visual.Geometry.Animate(easing, speed);
         visual.Segment.Animate(easing, speed);

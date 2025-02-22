@@ -569,11 +569,11 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
         if ((SeriesProperties & SeriesProperties.Gauge) == 0)
-            visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+            visual.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
         else
             visual.Animate(
-                EasingFunction ?? chart.EasingFunction,
-                AnimationsSpeed ?? chart.AnimationsSpeed,
+                EasingFunction ?? chart.CoreChart.ActualEasingFunction,
+                AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed,
                 nameof(visual.StartAngle),
                 nameof(visual.SweepAngle));
     }
