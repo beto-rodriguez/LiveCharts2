@@ -384,8 +384,8 @@ public class CartesianChartEngine(
             y = [provider.GetDefaultCartesianAxis()];
         }
 
-        XAxes = x.Cast<ICartesianAxis>().ToArray();
-        YAxes = y.Cast<ICartesianAxis>().ToArray();
+        XAxes = [.. x.Cast<ICartesianAxis>()];
+        YAxes = [.. y.Cast<ICartesianAxis>()];
 
         if (XAxes.Length == 0 || YAxes.Length == 0)
         {
