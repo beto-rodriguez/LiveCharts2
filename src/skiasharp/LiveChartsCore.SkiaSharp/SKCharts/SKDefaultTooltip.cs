@@ -128,10 +128,14 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     protected virtual Layout<SkiaSharpDrawingContext> GetLayout(
         IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var textSize = (float)chart.View.TooltipTextSize;
+        if (textSize < 0) textSize = theme.TooltipTextSize;
 
         var fontPaint =
             chart.View.TooltipTextPaint ??
+            theme.TooltipTextPaint ??
             new SolidColorPaint(new SKColor(28, 49, 58));
 
         var stackLayout = new StackLayout
@@ -220,8 +224,11 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// </summary>
     protected virtual void Initialize(Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var backgroundPaint =
             chart.View.TooltipBackgroundPaint ??
+            theme.TooltipBackgroundPaint ??
             new SolidColorPaint(new SKColor(235, 235, 235, 230))
             {
                 ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
