@@ -83,7 +83,7 @@ public abstract class Chart
         Kind = kind;
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
-        EasingFunction = EasingFunctions.QuadraticOut;
+        ActualEasingFunction = EasingFunctions.QuadraticOut;
         LiveCharts.Configure(defaultPlatformConfig);
 
         _updateThrottler = view.DesignerMode
@@ -239,7 +239,7 @@ public abstract class Chart
     /// <value>
     /// The animations speed.
     /// </value>
-    public TimeSpan AnimationsSpeed { get; protected set; }
+    public TimeSpan ActualAnimationsSpeed { get; protected set; }
 
     /// <summary>
     /// Gets the easing function.
@@ -247,7 +247,7 @@ public abstract class Chart
     /// <value>
     /// The easing function.
     /// </value>
-    public Func<float, float>? EasingFunction { get; protected set; }
+    public Func<float, float>? ActualEasingFunction { get; protected set; }
 
     /// <summary>
     /// Gets the visual elements.
@@ -513,7 +513,7 @@ public abstract class Chart
 
         if (_isFirstDraw)
         {
-            ActualBounds.Animate(EasingFunction, AnimationsSpeed);
+            ActualBounds.Animate(ActualEasingFunction, ActualAnimationsSpeed);
             _ = Canvas.Trackers.Add(ActualBounds);
         }
     }

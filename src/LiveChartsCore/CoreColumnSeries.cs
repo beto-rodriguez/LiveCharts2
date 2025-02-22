@@ -300,7 +300,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = helper.p, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                    l.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }

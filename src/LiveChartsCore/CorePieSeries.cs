@@ -418,7 +418,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 if (label is null)
                 {
                     var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                    l.Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }

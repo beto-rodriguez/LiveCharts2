@@ -296,7 +296,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                         Fill.ZIndex = actualZIndex + 0.1;
                         if (isNew)
                         {
-                            fillPath.Animate(EasingFunction ?? polarChart.EasingFunction, AnimationsSpeed ?? polarChart.AnimationsSpeed);
+                            fillPath.Animate(EasingFunction ?? polarChart.ActualEasingFunction, AnimationsSpeed ?? polarChart.ActualAnimationsSpeed);
                         }
                     }
                     if (Stroke is not null)
@@ -306,7 +306,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                         Stroke.ZIndex = actualZIndex + 0.2;
                         if (isNew)
                         {
-                            strokePath.Animate(EasingFunction ?? polarChart.EasingFunction, AnimationsSpeed ?? polarChart.AnimationsSpeed);
+                            strokePath.Animate(EasingFunction ?? polarChart.ActualEasingFunction, AnimationsSpeed ?? polarChart.ActualAnimationsSpeed);
                         }
                     }
 
@@ -416,7 +416,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = scaler.CenterY - hgs, RotateTransform = (float)actualRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                        l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                        l.Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }

@@ -141,8 +141,8 @@ public class PieChartEngine(
         TooltipPosition = view.TooltipPosition;
         Tooltip = view.Tooltip;
 
-        AnimationsSpeed = view.AnimationsSpeed;
-        EasingFunction = view.EasingFunction;
+        ActualAnimationsSpeed = view.AnimationsSpeed;
+        ActualEasingFunction = view.EasingFunction;
 
         SeriesContext = new SeriesContext(VisibleSeries, this);
         var themeId = LiveCharts.DefaultSettings.CurrentThemeId;

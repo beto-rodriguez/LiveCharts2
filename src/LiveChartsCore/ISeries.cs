@@ -122,7 +122,7 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
-    /// <see cref="Chart.AnimationsSpeed"/> property will be used.
+    /// <see cref="Chart.ActualAnimationsSpeed"/> property will be used.
     /// </summary>
     /// <value>
     /// The animations speed.
@@ -131,7 +131,7 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the easing function to animate the series, if this property is null, the
-    /// <see cref="Chart.EasingFunction"/> property will be used.
+    /// <see cref="Chart.ActualEasingFunction"/> property will be used.
     /// </summary>
     /// <value>
     /// The easing function.

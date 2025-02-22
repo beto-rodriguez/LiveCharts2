@@ -209,7 +209,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
         if (!_animatableBounds.HasPreviousState)
         {
             _animatableBounds
-                .Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                .Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
             _ = polarChart.Canvas.Trackers.Add(_animatableBounds);
         }
 
@@ -303,7 +303,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                     visualSeparator.Label = textGeometry;
                     if (hasRotation) textGeometry.RotateTransform = r;
 
-                    textGeometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                    textGeometry.Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
 
                     textGeometry.X = l.X;
                     textGeometry.Y = l.Y;
@@ -320,7 +320,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
                         linearSeparator.Separator = lineGeometry;
 
-                        lineGeometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                        lineGeometry.Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
 
                         lineGeometry.Opacity = 0;
                         lineGeometry.CompleteTransition(null);
@@ -332,7 +332,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
                         polarSeparator.Circle = circleGeometry;
 
-                        circleGeometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                        circleGeometry.Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
 
                         var h = Math.Sqrt(Math.Pow(l.X - scaler.CenterX, 2) + Math.Pow(l.Y - scaler.CenterY, 2));
                         var radius = (float)h;

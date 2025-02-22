@@ -407,10 +407,10 @@ public class CartesianChartEngine(
         Sections = _chartView.Sections?.Where(static x => x.IsVisible) ?? [];
         VisualElements = _chartView.VisualElements ?? [];
 
-        AnimationsSpeed = _chartView.AnimationsSpeed == TimeSpan.MaxValue
+        ActualAnimationsSpeed = _chartView.AnimationsSpeed == TimeSpan.MaxValue
             ? theme.AnimationsSpeed
             : _chartView.AnimationsSpeed;
-        EasingFunction = _chartView.EasingFunction == EasingFunctions.Unset
+        ActualEasingFunction = _chartView.EasingFunction == EasingFunctions.Unset
             ? theme.EasingFunction
             : _chartView.EasingFunction;
 
