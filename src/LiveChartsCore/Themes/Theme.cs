@@ -42,6 +42,22 @@ public class Theme
     public LvcColor[] Colors { get; set; } = [];
 
     /// <summary>
+    /// Gets or sets the default easing function.
+    /// </summary>
+    /// <value>
+    /// The default easing function.
+    /// </value>
+    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.ExponentialOut;
+
+    /// <summary>
+    /// Gets or sets the default animations speed.
+    /// </summary>
+    /// <value>
+    /// The default animations speed.
+    /// </value>
+    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(800);
+
+    /// <summary>
     /// Gets or sets the axis builder.
     /// </summary>
     /// <value>

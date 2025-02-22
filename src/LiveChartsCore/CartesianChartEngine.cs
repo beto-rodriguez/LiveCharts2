@@ -404,11 +404,15 @@ public class CartesianChartEngine(
         FindingStrategy = _chartView.FindingStrategy;
         Tooltip = _chartView.Tooltip;
 
-        AnimationsSpeed = _chartView.AnimationsSpeed;
-        EasingFunction = _chartView.EasingFunction;
-
         Sections = _chartView.Sections?.Where(static x => x.IsVisible) ?? [];
         VisualElements = _chartView.VisualElements ?? [];
+
+        AnimationsSpeed = _chartView.AnimationsSpeed == TimeSpan.MaxValue
+            ? theme.AnimationsSpeed
+            : _chartView.AnimationsSpeed;
+        EasingFunction = _chartView.EasingFunction == EasingFunctions.Unset
+            ? theme.EasingFunction
+            : _chartView.EasingFunction;
 
         #endregion
 
