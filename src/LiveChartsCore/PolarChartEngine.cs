@@ -166,8 +166,8 @@ public class PolarChartEngine(
             r = [provider.GetDefaultPolarAxis()];
         }
 
-        AngleAxes = a.Cast<IPolarAxis>().ToArray();
-        RadiusAxes = r.Cast<IPolarAxis>().ToArray();
+        AngleAxes = [.. a.Cast<IPolarAxis>()];
+        RadiusAxes = [.. r.Cast<IPolarAxis>()];
 
         if (AngleAxes.Length == 0 || RadiusAxes.Length == 0)
         {
@@ -182,8 +182,12 @@ public class PolarChartEngine(
         TooltipPosition = view.TooltipPosition;
         Tooltip = view.Tooltip;
 
-        ActualAnimationsSpeed = view.AnimationsSpeed;
-        ActualEasingFunction = view.EasingFunction;
+        ActualAnimationsSpeed = view.AnimationsSpeed == TimeSpan.MaxValue
+            ? theme.AnimationsSpeed
+            : view.AnimationsSpeed;
+        ActualEasingFunction = view.EasingFunction == EasingFunctions.Unset
+            ? theme.EasingFunction
+            : view.EasingFunction;
 
         FitToBounds = view.FitToBounds;
         TotalAnge = (float)view.TotalAngle;

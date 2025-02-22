@@ -130,6 +130,8 @@ public class PieChartEngine(
             _preserveFirstDraw = false;
         }
 
+        var theme = LiveCharts.DefaultSettings.GetTheme();
+
         var viewDrawMargin = view.DrawMargin;
         ControlSize = view.ControlSize;
 
@@ -141,13 +143,15 @@ public class PieChartEngine(
         TooltipPosition = view.TooltipPosition;
         Tooltip = view.Tooltip;
 
-        ActualAnimationsSpeed = view.AnimationsSpeed;
-        ActualEasingFunction = view.EasingFunction;
+        ActualAnimationsSpeed = view.AnimationsSpeed == TimeSpan.MaxValue
+            ? theme.AnimationsSpeed
+            : view.AnimationsSpeed;
+        ActualEasingFunction = view.EasingFunction == EasingFunctions.Unset
+            ? theme.EasingFunction
+            : view.EasingFunction;
 
         SeriesContext = new SeriesContext(VisibleSeries, this);
         var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
-
-        var theme = LiveCharts.DefaultSettings.GetTheme();
 
         ValueBounds = new Bounds();
         IndexBounds = new Bounds();
