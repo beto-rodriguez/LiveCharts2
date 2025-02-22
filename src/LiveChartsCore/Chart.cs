@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -584,6 +585,15 @@ public abstract class Chart
     /// <param name="seriesId">The series id.</param>
     /// <returns>A boolean indicating whether the series is drawn.</returns>
     public bool IsDrawn(int seriesId) => _drawnSeries.Contains(seriesId);
+
+    /// <summary>
+    /// Gets the active theme.
+    /// </summary>
+    /// <returns></returns>
+    public Theme GetTheme()
+    {
+        return LiveCharts.DefaultSettings.GetTheme();
+    }
 
     /// <summary>
     /// Collects and deletes from the UI the unused visuals.

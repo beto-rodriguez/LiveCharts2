@@ -395,7 +395,7 @@ public class CartesianChartEngine(
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
 
-        var theme = LiveCharts.DefaultSettings.GetTheme();
+        var theme = GetTheme();
 
         LegendPosition = _chartView.LegendPosition;
         Legend = _chartView.Legend;

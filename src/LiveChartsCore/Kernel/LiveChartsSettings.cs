@@ -102,7 +102,7 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default legend text size.
     /// </summary>
-    public double LegendTextSize { get; set; } = 15;
+    public double LegendTextSize { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the default tooltip position.
@@ -125,7 +125,7 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default tooltip text size.
     /// </summary>
-    public double TooltipTextSize { get; set; } = 16;
+    public double TooltipTextSize { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the default max with for labels inside tooltips and legends.

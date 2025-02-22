@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Themes;
@@ -56,6 +57,36 @@ public class Theme
     /// The default animations speed.
     /// </value>
     public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(800);
+
+    /// <summary>
+    /// Gets or sets the tooltip text size.
+    /// </summary>
+    public float TooltipTextSize { get; set; } = 16f;
+
+    /// <summary>
+    /// Gets or sets the default tooltip text paint.
+    /// </summary>
+    public Paint? TooltipTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default tooltip background paint.
+    /// </summary>
+    public Paint? TooltipBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend background paint.
+    /// </summary>
+    public Paint? LegendBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend text paint.
+    /// </summary>
+    public Paint? LegendTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend text size.
+    /// </summary>
+    public float LegendTextSize { get; set; } = 16;
 
     /// <summary>
     /// Gets or sets the axis builder.

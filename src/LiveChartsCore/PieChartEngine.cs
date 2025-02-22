@@ -130,7 +130,7 @@ public class PieChartEngine(
             _preserveFirstDraw = false;
         }
 
-        var theme = LiveCharts.DefaultSettings.GetTheme();
+        var theme = GetTheme();
 
         var viewDrawMargin = view.DrawMargin;
         ControlSize = view.ControlSize;
