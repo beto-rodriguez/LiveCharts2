@@ -159,6 +159,8 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
 
+    bool IChartView.IsDarkMode => false; // Is this possible in Blazor?
+
     /// <inheritdoc cref="IChartView.CoreChart" />
     public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 

@@ -387,6 +387,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
+    bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == ApplicationTheme.Dark;
+
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 

@@ -50,6 +50,11 @@ public interface IChartView
     bool DesignerMode { get; }
 
     /// <summary>
+    /// Gets whether the control is in dark mode.
+    /// </summary>
+    bool IsDarkMode { get; }
+
+    /// <summary>
     /// Sets the back color of the control.
     /// </summary>
     /// <value>

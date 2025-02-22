@@ -352,6 +352,8 @@ public partial class PieChart : ChartView, IPieChartView
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
 
+    bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == AppTheme.Dark;
+
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 

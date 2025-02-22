@@ -33,6 +33,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -334,6 +335,8 @@ public class PolarChart : UserControl, IPolarChartView
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Design.IsDesignMode;
+
+    bool IChartView.IsDarkMode => Application.Current?.RequestedThemeVariant == ThemeVariant.Dark;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");

@@ -154,6 +154,8 @@ public abstract class Chart : UserControl, IChartView
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
+    bool IChartView.IsDarkMode => false;
+
     /// <inheritdoc cref="IChartView.CoreChart" />
     public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 

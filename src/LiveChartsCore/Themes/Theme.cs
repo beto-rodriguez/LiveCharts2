@@ -38,6 +38,11 @@ namespace LiveChartsCore.Themes;
 public class Theme
 {
     /// <summary>
+    /// Gets a value indicating whether the UI is in dark mode.
+    /// </summary>
+    public bool IsDark { get; internal set; }
+
+    /// <summary>
     /// Gets or sets the theme colors.
     /// </summary>
     public LvcColor[] Colors { get; set; } = [];

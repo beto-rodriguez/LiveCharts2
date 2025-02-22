@@ -328,6 +328,8 @@ public abstract class Chart : UserControl, IChartView
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
 
+    bool IChartView.IsDarkMode => false;
+
     /// <inheritdoc cref="IChartView.CoreChart" />
     public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");
 
