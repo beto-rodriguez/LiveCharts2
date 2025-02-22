@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Themes;
@@ -57,11 +56,9 @@ public static class ThemesExtensions
         return settings
             .HasTheme((Theme theme) =>
             {
-                _ = LiveCharts.DefaultSettings
-                    .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
-                    .WithEasingFunction(EasingFunctions.ExponentialOut);
-
                 theme.Colors = ColorPalletes.MaterialDesign500;
+                theme.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
+                theme.EasingFunction = EasingFunctions.ExponentialOut;
 
                 _ = theme
                     .HasDefaultTooltip(() => new SKDefaultTooltip())
@@ -241,14 +238,12 @@ public static class ThemesExtensions
         return settings
             .HasTheme((Theme theme) =>
             {
-                _ = LiveCharts.DefaultSettings
-                    .WithAnimationsSpeed(TimeSpan.FromMilliseconds(800))
-                    .WithEasingFunction(EasingFunctions.ExponentialOut)
-                    .WithTooltipBackgroundPaint(new SolidColorPaint(new SKColor(45, 45, 45)))
-                    .WithTooltipTextPaint(new SolidColorPaint(new SKColor(245, 245, 245)))
-                    .WithLegendTextPaint(new SolidColorPaint(new SKColor(245, 245, 245)));
-
                 theme.Colors = ColorPalletes.MaterialDesign200;
+                theme.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
+                theme.EasingFunction = EasingFunctions.ExponentialOut;
+                theme.TooltipBackgroundPaint = new SolidColorPaint(new SKColor(45, 45, 45));
+                theme.TooltipTextPaint = new SolidColorPaint(new SKColor(245, 245, 245));
+                theme.LegendTextPaint = new SolidColorPaint(new SKColor(245, 245, 245));
 
                 _ = theme
                     .HasDefaultTooltip(() => new SKDefaultTooltip())
