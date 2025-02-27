@@ -42,14 +42,23 @@ public class Theme
     private bool _initialized = false;
     private bool _lastKnownDarkMode = false;
     private IChartView? _chartView;
-    internal bool _darkModeRequest = false;
+    internal LvcThemeKind _themeRequest = LvcThemeKind.Unknown;
 
     internal object ThemeId => IsDark ? _darkId : _lightId;
 
     /// <summary>
-    /// Gets a value indicating whether the UI is in dark mode.
+    /// Gets a value indicating whether the theme is dark.
+    /// When the <see cref="RequestedTheme"/> is Unknown, the theme is determined by the system settings.
     /// </summary>
-    public bool IsDark => _darkModeRequest || _chartView?.IsDarkMode == true;
+    public bool IsDark =>
+        RequestedTheme == LvcThemeKind.Unknown
+            ? _chartView?.IsDarkMode == true
+            : RequestedTheme == LvcThemeKind.Dark;
+
+    /// <summary>
+    /// Gets or sets the theme request.
+    /// </summary>
+    public LvcThemeKind RequestedTheme { get; set; } = LvcThemeKind.Unknown;
 
     /// <summary>
     /// Gets or sets the theme colors.
@@ -324,11 +333,6 @@ public class Theme
             Initialized();
         }
     }
-
-    /// <summary>
-    /// Requests the dark mode.
-    /// </summary>
-    public void RequestDarkMode() => _darkModeRequest = true;
 
     /// <summary>
     /// Applies the theme to an axis.

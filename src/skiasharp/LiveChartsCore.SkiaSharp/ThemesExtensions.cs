@@ -42,16 +42,16 @@ public static class ThemesExtensions
     /// Adds the default theme.
     /// </summary>
     /// <param name="settings">The settings.</param>
-    /// <param name="darkRequested">Indicates whether the dark mode was requested.</param>
+    /// <param name="themeKind">Indicates the theme kind.</param>
     /// <returns>The current LiveCharts settings.</returns>
     public static LiveChartsSettings AddDefaultTheme(
         this LiveChartsSettings settings,
-        bool darkRequested = false)
+        LvcThemeKind themeKind = LvcThemeKind.Unknown)
     {
         return settings
             .HasTheme(theme =>
             {
-                if (darkRequested) theme.RequestDarkMode();
+                theme.RequestedTheme = themeKind;
 
                 _ = theme
                     .OnInitialized(() =>
@@ -243,7 +243,7 @@ public static class ThemesExtensions
     /// <param name="settings">The settings.</param>
     /// <returns>The current LiveCharts settings.</returns>
     public static LiveChartsSettings AddLightTheme(this LiveChartsSettings settings) =>
-        settings.AddDefaultTheme();
+        settings.AddDefaultTheme(themeKind: LvcThemeKind.Light);
 
     /// <summary>
     /// Adds the dark theme.
@@ -251,5 +251,5 @@ public static class ThemesExtensions
     /// <param name="settings">The settings.</param>
     /// <returns>The current LiveCharts settings.</returns>
     public static LiveChartsSettings AddDarkTheme(this LiveChartsSettings settings) =>
-        settings.AddDefaultTheme(darkRequested: true);
+        settings.AddDefaultTheme(themeKind: LvcThemeKind.Dark);
 }
