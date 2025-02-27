@@ -52,6 +52,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private ThemeListener? _themeListener;
 
     #endregion
 
@@ -748,6 +749,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
 
         _core.Load();
         _core.Update();
+
+        _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
@@ -819,7 +822,12 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
 
     private void OnCoreMeasuring(IChartView chart) => Measuring?.Invoke(this);
 
-    private void OnUnloaded(object sender, RoutedEventArgs e) => _core?.Unload();
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _core?.Unload();
+        _themeListener?.Dispose();
+        _themeListener = null;
+    }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {

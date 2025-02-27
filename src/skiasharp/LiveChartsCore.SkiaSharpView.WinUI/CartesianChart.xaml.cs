@@ -54,6 +54,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private bool _matchAxesScreenDataRatio;
+    private ThemeListener? _themeListener;
 
     #endregion
 
@@ -63,7 +64,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     public CartesianChart()
     {
         LiveCharts.Configure(config => config.UseDefaults());
-
         InitializeComponent();
 
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -804,6 +804,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
 
         _core.Load();
         _core.Update();
+
+        _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
@@ -885,8 +887,12 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     private void OnCoreMeasuring(IChartView chart) =>
         Measuring?.Invoke(this);
 
-    private void OnUnloaded(object sender, RoutedEventArgs e) =>
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
         _core?.Unload();
+        _themeListener?.Dispose();
+        _themeListener = null;
+    }
 
     private void OnMatchAxesScreenDataRatioChanged()
     {
