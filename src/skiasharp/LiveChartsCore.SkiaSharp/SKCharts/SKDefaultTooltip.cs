@@ -43,6 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 {
     private bool _isInitialized;
+    private object? _themeId;
     private DrawnTask? _drawnTask;
     private const int Py = 12;
     private const int Px = 8;
@@ -65,10 +66,13 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
     public virtual void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        if (!_isInitialized)
+        var theme = chart.GetTheme();
+
+        if (!_isInitialized || _themeId != theme.ThemeId)
         {
             Initialize(chart);
             _isInitialized = true;
+            _themeId = theme.ThemeId;
         }
 
         if (_drawnTask is null || _drawnTask.IsEmpty)
