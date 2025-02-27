@@ -417,7 +417,7 @@ public class CartesianChartEngine(
         #endregion
 
         SeriesContext = new SeriesContext(VisibleSeries, this);
-        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
+        var themeId = theme.ThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in XAxes)

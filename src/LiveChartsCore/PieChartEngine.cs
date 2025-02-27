@@ -151,7 +151,7 @@ public class PieChartEngine(
             : view.EasingFunction;
 
         SeriesContext = new SeriesContext(VisibleSeries, this);
-        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
+        var themeId = theme.ThemeId;
 
         ValueBounds = new Bounds();
         IndexBounds = new Bounds();

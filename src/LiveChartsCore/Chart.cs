@@ -302,8 +302,8 @@ public abstract class Chart
     {
         IsLoaded = true;
         _isFirstDraw = true;
-        View.Tooltip ??= LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
-        View.Legend ??= LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+        View.Tooltip ??= GetTheme().DefaultTooltip();
+        View.Legend ??= GetTheme().DefaultLegend();
         Update();
     }
 
@@ -592,8 +592,17 @@ public abstract class Chart
     /// <returns></returns>
     public Theme GetTheme()
     {
-        return LiveCharts.DefaultSettings.GetTheme();
+        var theme = LiveCharts.DefaultSettings.GetTheme();
+        theme.Setup(View);
+        return theme;
     }
+
+    /// <summary>
+    /// Applies the current theme to the chart.
+    /// </summary>
+    public virtual void ApplyTheme() =>
+        // this is not optimal, we should only update the colors instead of re-measuring everything.
+        Measure();
 
     /// <summary>
     /// Collects and deletes from the UI the unused visuals.

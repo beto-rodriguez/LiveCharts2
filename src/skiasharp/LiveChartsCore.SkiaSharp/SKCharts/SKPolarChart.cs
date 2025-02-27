@@ -75,8 +75,8 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
         VisualElements = view.VisualElements;
     }
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
-    public bool DesignerMode => false;
+    bool IChartView.DesignerMode => false;
+    bool IChartView.IsDarkMode => false;
 
     /// <inheritdoc cref="IPolarChartView.Core"/>
     public PolarChartEngine Core { get; }

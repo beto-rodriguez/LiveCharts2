@@ -42,14 +42,6 @@ public class LiveChartsSettings
     private object _theme = new();
 
     /// <summary>
-    /// Gets the theme identifier.
-    /// </summary>
-    /// <value>
-    /// The theme identifier.
-    /// </value>
-    public object CurrentThemeId { get; set; } = new();
-
-    /// <summary>
     /// Gets or sets the default easing function.
     /// </summary>
     /// <value>
@@ -357,6 +349,9 @@ public class LiveChartsSettings
     {
         Theme t;
         _theme = t = new Theme();
+
+        LiveCharts.HasDefaultTheme = true;
+
         builder(t);
 
         return this;

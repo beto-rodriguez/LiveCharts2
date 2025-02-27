@@ -73,8 +73,8 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
         VisualElements = view.VisualElements;
     }
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
-    public bool DesignerMode => false;
+    bool IChartView.DesignerMode => false;
+    bool IChartView.IsDarkMode => false;
 
     /// <inheritdoc cref="IPieChartView.Core"/>
     public PieChartEngine Core { get; }

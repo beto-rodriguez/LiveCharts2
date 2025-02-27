@@ -74,8 +74,8 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
         VisualElements = view.VisualElements;
     }
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
-    public bool DesignerMode => false;
+    bool IChartView.DesignerMode => false;
+    bool IChartView.IsDarkMode => false;
 
     /// <inheritdoc cref="ICartesianChartView.Core"/>
     public CartesianChartEngine Core { get; }

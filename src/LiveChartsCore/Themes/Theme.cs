@@ -37,10 +37,19 @@ namespace LiveChartsCore.Themes;
 /// </summary>
 public class Theme
 {
+    private readonly object _lightId = new();
+    private readonly object _darkId = new();
+    private bool _initialized = false;
+    private bool _lastKnownDarkMode = false;
+    private IChartView? _chartView;
+    internal bool _darkModeRequest = false;
+
+    internal object ThemeId => IsDark ? _darkId : _lightId;
+
     /// <summary>
     /// Gets a value indicating whether the UI is in dark mode.
     /// </summary>
-    public bool IsDark { get; internal set; }
+    public bool IsDark => _darkModeRequest || _chartView?.IsDarkMode == true;
 
     /// <summary>
     /// Gets or sets the theme colors.
@@ -92,6 +101,11 @@ public class Theme
     /// Gets or sets the default legend text size.
     /// </summary>
     public float LegendTextSize { get; set; } = 16;
+
+    /// <summary>
+    /// Called when the theme changes.
+    /// </summary>
+    public Action Initialized { get; set; } = () => { };
 
     /// <summary>
     /// Gets or sets the axis builder.
@@ -299,6 +313,22 @@ public class Theme
     /// Gets or sets the default legend.
     /// </summary>
     public Func<IChartLegend> DefaultLegend { get; set; } = () => throw new NotImplementedException();
+
+    internal void Setup(IChartView chartView)
+    {
+        _chartView = chartView;
+        if (!_initialized || _lastKnownDarkMode != IsDark)
+        {
+            _lastKnownDarkMode = IsDark;
+            _initialized = true;
+            Initialized();
+        }
+    }
+
+    /// <summary>
+    /// Requests the dark mode.
+    /// </summary>
+    public void RequestDarkMode() => _darkModeRequest = true;
 
     /// <summary>
     /// Applies the theme to an axis.

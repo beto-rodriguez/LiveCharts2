@@ -77,7 +77,7 @@ public static class LiveCharts
     /// <summary>
     /// Gets a value indicating whether LiveCharts has a theme registered.
     /// </summary>
-    public static bool HasTheme { get; set; } = false;
+    public static bool HasDefaultTheme { get; set; } = false;
 
     /// <summary>
     /// Gets a value indicating whether LiveCharts has the default mappers registered.

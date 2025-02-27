@@ -333,4 +333,16 @@ public static class LiveChartsStylerExtensions
         styler.ChartElementElementBuilder.Add(typeof(TChartElement), predicate);
         return styler;
     }
+
+    /// <summary>
+    /// Defines the initialized action.
+    /// </summary>
+    /// <param name="styler"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public static Theme OnInitialized(this Theme styler, Action predicate)
+    {
+        styler.Initialized = predicate;
+        return styler;
+    }
 }
