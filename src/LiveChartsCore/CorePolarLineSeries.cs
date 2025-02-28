@@ -402,7 +402,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
                 pointsCleanup.Clean(data.TargetPoint);
 
-                if (DataLabelsPaint is not null)
+                if (ShowDataLabels && DataLabelsPaint is not null)
                 {
                     var label = (TLabel?)data.TargetPoint.Context.Label;
 
@@ -487,7 +487,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
             }
         }
 
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null)
         {
             polarChart.Canvas.AddDrawableTask(DataLabelsPaint);
             DataLabelsPaint.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));

@@ -105,6 +105,11 @@ public static class ThemesExtensions
                     .HasRuleForAnySeries(series =>
                     {
                         series.Name = LiveCharts.IgnoreSeriesName;
+
+                        if (series.ShowDataLabels)
+                            series.DataLabelsPaint = theme.IsDark
+                                ? new SolidColorPaint(new SKColor(245, 245, 245))
+                                : new SolidColorPaint(new SKColor(45, 45, 45));
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
@@ -115,6 +120,11 @@ public static class ThemesExtensions
                         lineSeries.GeometryFill = new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         lineSeries.Stroke = new SolidColorPaint(color, 4);
                         lineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
+
+                        if (lineSeries.ShowError)
+                            lineSeries.ErrorPaint = theme.IsDark
+                                ? new SolidColorPaint(new SKColor(245, 245, 245))
+                                : new SolidColorPaint(new SKColor(45, 45, 45));
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
                     {
@@ -144,6 +154,21 @@ public static class ThemesExtensions
                         barSeries.Fill = new SolidColorPaint(color);
                         barSeries.Rx = 3;
                         barSeries.Ry = 3;
+
+                        if (barSeries.ShowDataLabels)
+                            barSeries.DataLabelsPaint =
+                                barSeries.DataLabelsPosition == DataLabelsPosition.Middle
+                                    ? theme.IsDark
+                                        ? new SolidColorPaint(new SKColor(45, 45, 45))
+                                        : new SolidColorPaint(new SKColor(245, 245, 245))
+                                    : theme.IsDark
+                                        ? new SolidColorPaint(new SKColor(245, 245, 245))
+                                        : new SolidColorPaint(new SKColor(45, 45, 45));
+
+                        if (barSeries.ShowError)
+                            barSeries.ErrorPaint = theme.IsDark
+                                ? new SolidColorPaint(new SKColor(245, 245, 245))
+                                : new SolidColorPaint(new SKColor(45, 45, 45));
                     })
                     .HasRuleForStackedBarSeries(stackedBarSeries =>
                     {
@@ -189,6 +214,11 @@ public static class ThemesExtensions
 
                         scatterSeries.Stroke = null;
                         scatterSeries.Fill = new SolidColorPaint(color.WithAlpha(200));
+
+                        if (scatterSeries.ShowError)
+                            scatterSeries.ErrorPaint = theme.IsDark
+                                ? new SolidColorPaint(new SKColor(245, 245, 245))
+                                : new SolidColorPaint(new SKColor(45, 45, 45));
                     })
                     .HasRuleForPieSeries(pieSeries =>
                     {
@@ -196,6 +226,16 @@ public static class ThemesExtensions
 
                         pieSeries.Stroke = null;
                         pieSeries.Fill = new SolidColorPaint(color);
+
+                        if (pieSeries.ShowDataLabels)
+                            pieSeries.DataLabelsPaint =
+                                pieSeries.DataLabelsPosition == PolarLabelsPosition.Outer
+                                    ? theme.IsDark
+                                        ? new SolidColorPaint(new SKColor(245, 245, 245))
+                                        : new SolidColorPaint(new SKColor(45, 45, 45))
+                                    : theme.IsDark
+                                        ? new SolidColorPaint(new SKColor(45, 45, 45))
+                                        : new SolidColorPaint(new SKColor(245, 245, 245));
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
                     {

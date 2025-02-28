@@ -94,13 +94,13 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
             Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (ErrorPaint is not null)
+        if (ShowError && ErrorPaint is not null)
         {
             ErrorPaint.ZIndex = actualZIndex + 0.3;
             ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.4;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -188,7 +188,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 if (r is BaseRoundedRectangleGeometry rg)
                     rg.BorderRadius = new LvcPoint(rx, ry);
 
-                if (ErrorPaint is not null)
+                if (ShowError && ErrorPaint is not null)
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
@@ -254,7 +254,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
             visual.Width = helper.uw;
             visual.Height = b;
 
-            if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
+            if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null)
             {
                 var pe = coordinate.PointError;
                 var xe = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
@@ -293,7 +293,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null)
             {
                 var label = (TLabel?)point.Context.Label;
 

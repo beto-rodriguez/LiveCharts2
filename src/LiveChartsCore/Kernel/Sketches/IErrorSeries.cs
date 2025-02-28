@@ -30,6 +30,14 @@ namespace LiveChartsCore.Kernel.Sketches;
 public interface IErrorSeries
 {
     /// <summary>
+    /// Gets or sets a value indicating whether to show the error mark,
+    /// to set the color use the <see cref="ErrorPaint"/> property, the <see cref="ErrorPaint"/> property
+    /// could be defined by the theme when not explicitly set.
+    /// Default is <c>false</c>.
+    /// </summary>
+    bool ShowError { get; set; }
+
+    /// <summary>
     /// Gets or sets the error paint.
     /// </summary>
     /// <value>

@@ -48,6 +48,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         where TLabel : BaseLabelGeometry, new()
         where TErrorGeometry : BaseLineGeometry, new()
 {
+    private bool _showError;
     private Paint? _errorPaint;
     private int? _stackGroup;
     private double _minGeometrySize = 6d;
@@ -96,11 +97,27 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     /// </summary>
     public bool IsWeighted { get; private set; }
 
+    /// <inheritdoc cref="IErrorSeries.ShowError"/>
+    public bool ShowError
+    {
+        get => _showError;
+        set
+        {
+            SetProperty(ref _showError, value);
+            if (_errorPaint is not null)
+                _errorPaint.IsPaused = !value;
+        }
+    }
+
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+        set
+        {
+            SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+            _showError = value is not null;
+        }
     }
 
     /// <inheritdoc cref="IScatterSeries.StackGroup"/>
@@ -136,13 +153,13 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
             Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (ErrorPaint is not null)
+        if (ShowError && ErrorPaint is not null)
         {
             ErrorPaint.ZIndex = actualZIndex + 0.3;
             ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.4;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -218,7 +235,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     Height = 0
                 };
 
-                if (ErrorPaint is not null)
+                if (ShowError && ErrorPaint is not null)
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
@@ -261,7 +278,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
             sizedGeometry.Width = gs;
             sizedGeometry.Height = gs;
 
-            if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
+            if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null)
             {
                 var pe = coordinate.PointError;
 
@@ -286,7 +303,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null)
             {
                 if (point.Context.Label is not TLabel label)
                 {
@@ -385,6 +402,10 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
         return m;
     }
+
+    /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
+    protected internal override Paint?[] GetPaintTasks() =>
+        [Stroke, Fill, DataLabelsPaint, _errorPaint];
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
     protected override void OnPointerEnter(ChartPoint point)

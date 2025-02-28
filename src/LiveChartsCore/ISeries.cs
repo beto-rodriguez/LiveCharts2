@@ -139,6 +139,14 @@ public interface ISeries : IChartElement
     Func<float, float>? EasingFunction { get; set; }
 
     /// <summary>
+    /// Indicates whether the data labels are visible,
+    /// to set the color use the <see cref="DataLabelsPaint"/> property, the <see cref="DataLabelsPaint"/> property
+    /// could be defined by the theme when not explicitly set.
+    /// Default is <c>false</c>.
+    /// </summary>
+    bool ShowDataLabels { get; set; }
+
+    /// <summary>
     /// Gets or sets the data labels paint.
     /// </summary>
     /// <value>
