@@ -56,7 +56,7 @@ public partial class ViewModel : ObservableObject
         var rowSeries = new RowSeries<PilotInfo>
         {
             Values = SortData(),
-            DataLabelsPaint = new SolidColorPaint(new SKColor(245, 245, 245)),
+            ShowDataLabels = true,
             DataLabelsPosition = DataLabelsPosition.End,
             DataLabelsTranslate = new(-1, 0),
             DataLabelsFormatter = point => $"{point.Model!.Name} {point.Coordinate.PrimaryValue}",

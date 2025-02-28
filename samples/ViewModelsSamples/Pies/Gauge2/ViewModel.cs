@@ -15,7 +15,7 @@ public class ViewModel
             {
                 series.Fill = new SolidColorPaint(SKColors.YellowGreen);
                 series.DataLabelsSize = 50;
-                series.DataLabelsPaint = new SolidColorPaint(SKColors.Red);
+                series.ShowDataLabels = true;
                 series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
                 series.InnerRadius = 75;
             }),
