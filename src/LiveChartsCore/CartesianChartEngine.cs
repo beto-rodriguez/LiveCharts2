@@ -802,6 +802,8 @@ public class CartesianChartEngine(
             _drawnSeries.Add(series.SeriesId);
         }
 
+        var actualDrawMarginFrame = _chartView.DrawMarginFrame ?? theme.DrawMarginFrameGetter?.Invoke();
+
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
             // probably obsolete?
@@ -809,19 +811,19 @@ public class CartesianChartEngine(
             _previousDrawMarginFrame.RemoveFromUI(this);
             _previousDrawMarginFrame = null;
         }
-        if (_chartView.DrawMarginFrame is not null)
+        if (actualDrawMarginFrame is not null)
         {
-            var ce = (ChartElement)_chartView.DrawMarginFrame;
+            var ce = (ChartElement)actualDrawMarginFrame;
             if (ce._theme != themeId)
             {
                 ce._isInternalSet = true;
-                theme.ApplyStyleToDrawMargin(_chartView.DrawMarginFrame);
+                theme.ApplyStyleToDrawMarginFrame(actualDrawMarginFrame);
                 ce._theme = themeId;
                 ce._isInternalSet = false;
             }
 
-            if (_chartView.DrawMarginFrame.IsVisible) AddVisual(_chartView.DrawMarginFrame);
-            _previousDrawMarginFrame = _chartView.DrawMarginFrame;
+            if (actualDrawMarginFrame.IsVisible) AddVisual(actualDrawMarginFrame);
+            _previousDrawMarginFrame = actualDrawMarginFrame;
         }
 
         CollectVisuals();

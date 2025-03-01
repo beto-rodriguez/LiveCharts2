@@ -125,11 +125,16 @@ public class Theme
     public List<Action<IPlane>> AxisBuilder { get; set; } = [];
 
     /// <summary>
-    /// Gets or sets the draw margin frame builder.
+    /// Gets or sets the draw margin frame getter.
     /// </summary>
     /// <value>
     /// The draw margin frame builder.
     /// </value>
+    public Func<CoreDrawMarginFrame?>? DrawMarginFrameGetter { get; set; }
+
+    /// <summary>
+    /// Gets or sets the draw margin frame builder.
+    /// </summary>
     public List<Action<CoreDrawMarginFrame>> DrawMarginFrameBuilder { get; set; } = [];
 
     /// <summary>
@@ -477,12 +482,12 @@ public class Theme
     }
 
     /// <summary>
-    /// Applies the theme to  a draw margin.
+    /// Build a draw amrgin frame based on the theme.
     /// </summary>
-    /// <param name="drawMarginFrame"></param>
-    public void ApplyStyleToDrawMargin(CoreDrawMarginFrame drawMarginFrame)
+    public void ApplyStyleToDrawMarginFrame(CoreDrawMarginFrame drawMarginFrame)
     {
-        foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
+        foreach (var rule in DrawMarginFrameBuilder)
+            rule(drawMarginFrame);
     }
 
     /// <summary>

@@ -48,10 +48,12 @@ public static class LiveChartsStylerExtensions
     /// Defines a style builder for <see cref="CoreDrawMarginFrame"/> objects.
     /// </summary>
     /// <param name="styler">The styler.</param>
+    /// <param name="getter">The getter.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForDrawMargin(this Theme styler, Action<CoreDrawMarginFrame> predicate)
+    public static Theme HasRuleForDrawMarginFrame(this Theme styler, Func<CoreDrawMarginFrame?> getter, Action<CoreDrawMarginFrame> predicate)
     {
+        styler.DrawMarginFrameGetter = getter;
         styler.DrawMarginFrameBuilder.Add(predicate);
         return styler;
     }
