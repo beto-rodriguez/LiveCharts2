@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -49,6 +50,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private ThemeListener? _themeListener;
+    private Theme? _chartTheme;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
@@ -342,10 +344,12 @@ public sealed partial class PieChart : UserControl, IPieChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
     bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == ApplicationTheme.Dark;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");

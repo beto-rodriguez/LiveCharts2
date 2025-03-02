@@ -34,6 +34,7 @@ using LiveChartsCore.VisualElements;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -72,6 +73,7 @@ public abstract class Chart : Panel, IChartView
     private Paint? _tooltipTextPaint = (Paint?)LiveCharts.DefaultSettings.TooltipTextPaint;
     private Paint? _tooltipBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
     private double _tooltipTextSize = LiveCharts.DefaultSettings.TooltipTextSize;
+    private Theme? _chartTheme;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -140,10 +142,12 @@ public abstract class Chart : Panel, IChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
 
     bool IChartView.IsDarkMode => false;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");

@@ -35,6 +35,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -65,6 +66,7 @@ public abstract class Chart : UserControl, IChartView
     protected IChartTooltip? tooltip;
 
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private Theme? _chartTheme;
 
     #endregion
 
@@ -325,10 +327,12 @@ public abstract class Chart : UserControl, IChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
 
     bool IChartView.IsDarkMode => false;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");

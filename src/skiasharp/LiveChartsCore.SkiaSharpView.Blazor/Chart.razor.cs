@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -63,6 +64,8 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private IEnumerable<ChartElement> _visuals = [];
+
+    private Theme? _chartTheme;
 
     /// <summary>
     /// Called when the control is initialized.
@@ -156,10 +159,12 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
     /// <inheritdoc cref="IBlazorChart.TooltipClass"/>
     public string TooltipClass { get; set; } = "closed";
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
 
     bool IChartView.IsDarkMode => false; // Is this possible in Blazor?
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");

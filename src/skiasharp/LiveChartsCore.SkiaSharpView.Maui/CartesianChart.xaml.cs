@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
@@ -57,7 +58,8 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private IChartLegend? _legend;
     private IChartTooltip? _tooltip;
-    private bool _matchAxesScreenDataRatio; 
+    private bool _matchAxesScreenDataRatio;
+    private Theme? _chartTheme;
 
     #endregion
 
@@ -410,10 +412,12 @@ public partial class CartesianChart : ChartView, ICartesianChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
 
     bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == AppTheme.Dark;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");

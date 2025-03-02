@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
@@ -76,6 +77,9 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
 
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => false;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get; set; }
 
     /// <inheritdoc cref="ICartesianChartView.Core"/>
     public CartesianChartEngine Core { get; }

@@ -41,6 +41,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -353,10 +354,12 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Design.IsDesignMode;
 
     bool IChartView.IsDarkMode => Application.Current?.RequestedThemeVariant == ThemeVariant.Dark;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -822,6 +825,7 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     private float _previousScale = 1;
     private bool _matchAxesScreenDataRatio;
+    private Theme? _chartTheme;
 
     private void CartesianChart_Pinched(object? sender, PinchEventArgs e)
     {

@@ -76,6 +76,10 @@ public static class ThemesExtensions
                     })
                     .HasDefaultTooltip(() => new SKDefaultTooltip())
                     .HasDefaultLegend(() => new SKDefaultLegend())
+                    .HasRuleForDrawMarginFrame(() => null, frame =>
+                    {
+                        frame.Stroke = new SolidColorPaint(theme.IsDark ? new(220, 220, 220) : new(30, 30, 30), 3);
+                    })
                     .HasRuleForAxes(axis =>
                     {
                         axis.TextSize = 16;

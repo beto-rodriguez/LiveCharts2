@@ -41,6 +41,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -64,6 +65,7 @@ public class PieChart : UserControl, IPieChartView
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private MotionCanvas? _avaloniaCanvas;
+    private Theme? _chartTheme;
 
     #endregion
 
@@ -314,10 +316,12 @@ public class PieChart : UserControl, IPieChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Design.IsDesignMode;
 
     bool IChartView.IsDarkMode => Application.Current?.RequestedThemeVariant == ThemeVariant.Dark;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -409,7 +413,7 @@ public class PieChart : UserControl, IPieChartView
     /// <inheritdoc cref="IPieChartView.MaxValue" />
     public double MaxValue
     {
-        get => (double)GetValue(MaxValueProperty);
+        get => (double)GetValue(MaxValueProperty)!;
         set => SetValue(MaxValueProperty, value);
     }
 
