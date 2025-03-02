@@ -60,6 +60,13 @@ Use the `VariableSVGPathGeometry` as the `DrawnElement` to draw svg paths:
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/SvgVisual.cs" ~}}
 
+### Themed visuals
+
+In the next example, when the app theme is dark the fill is white, otherwise is black, dark and light variants are detected only
+on Avalonia, Maui, Uno and WinUI.
+
+{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/VisualElements/ThemedVisual.cs" ~}}
+
 ### Custom IDrawnElement
 
 The easiest way is to inherit from `DrawnGeometry`, this class implements `IDrawnElement` and also animates all of its properties;

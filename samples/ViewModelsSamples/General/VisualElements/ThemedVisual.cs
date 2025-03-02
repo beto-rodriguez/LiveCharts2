@@ -46,8 +46,8 @@ public class ThemedVisual : Visual
         {
             visual.DrawnElement.Fill =
                 theme.IsDark
-                    ? new SolidColorPaint(new SKColor(240, 240, 240))
-                    : new SolidColorPaint(new SKColor(40, 40, 40));
+                    ? new SolidColorPaint(SKColors.White)
+                    : new SolidColorPaint(SKColors.Black);
         });
 
         _isThemeRegistered = true;
