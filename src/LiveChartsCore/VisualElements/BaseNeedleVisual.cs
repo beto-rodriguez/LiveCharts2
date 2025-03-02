@@ -65,7 +65,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
     /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
-        ApplyTheme<BaseNeedleVisual>();
+        ApplyTheme<BaseNeedleVisual>(chart.GetTheme());
 
         if (chart is not PieChartEngine pieChart)
             throw new Exception("The needle visual can only be added to a pie chart");

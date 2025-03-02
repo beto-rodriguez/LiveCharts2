@@ -167,7 +167,7 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
     /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
-        ApplyTheme<BaseLabelVisual>();
+        ApplyTheme<BaseLabelVisual>(chart.GetTheme());
 
         InitializeLabel();
 

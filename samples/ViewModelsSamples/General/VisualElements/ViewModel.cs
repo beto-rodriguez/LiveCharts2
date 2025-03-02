@@ -17,6 +17,7 @@ public class ViewModel
             new ScaledRectangleVisual(),
             new PointerDownAwareVisual(),
             new SvgVisual(),
+            new ThemedVisual(),
             new CustomVisual(),
             new AbsoluteVisual(),
             new StackedVisual(),

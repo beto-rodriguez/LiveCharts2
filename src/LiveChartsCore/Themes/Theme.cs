@@ -44,7 +44,10 @@ public class Theme
     private IChartView? _chartView;
     internal LvcThemeKind _themeRequest = LvcThemeKind.Unknown;
 
-    internal object ThemeId => IsDark ? _darkId : _lightId;
+    /// <summary>
+    /// Gets the theme id.
+    /// </summary>
+    public object ThemeId => IsDark ? _darkId : _lightId;
 
     /// <summary>
     /// Gets a value indicating whether the theme is dark.
@@ -495,12 +498,12 @@ public class Theme
     /// </summary>
     /// <typeparam name="TChartElement">The typoe of the chart element.</typeparam>
     /// <param name="visualElement">The visual element.</param>
-    public void ApplyStyleTo<TChartElement>(TChartElement visualElement)
-        where TChartElement : VisualElement
+    public void ApplyStyleTo<TChartElement>(IChartElement visualElement)
+        where TChartElement : IChartElement
     {
         if (!ChartElementElementBuilder.TryGetValue(typeof(TChartElement), out var builder)) return;
 
-        ((Action<TChartElement>)builder)(visualElement);
+        ((Action<TChartElement>)builder)((TChartElement)visualElement);
     }
 
     /// <summary>
