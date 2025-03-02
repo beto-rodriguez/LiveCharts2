@@ -302,8 +302,9 @@ public abstract class Chart
     {
         IsLoaded = true;
         _isFirstDraw = true;
-        View.Tooltip ??= GetTheme().DefaultTooltip();
-        View.Legend ??= GetTheme().DefaultLegend();
+        var theme = GetTheme();
+        View.Tooltip ??= theme.GetDefaultTooltip();
+        View.Legend ??= theme.GetDefaultLegend();
         Update();
     }
 
@@ -592,7 +593,7 @@ public abstract class Chart
     /// <returns></returns>
     public Theme GetTheme()
     {
-        var theme = LiveCharts.DefaultSettings.GetTheme();
+        var theme = View.ChartTheme ?? LiveCharts.DefaultSettings.GetTheme();
         theme.Setup(View);
         return theme;
     }
