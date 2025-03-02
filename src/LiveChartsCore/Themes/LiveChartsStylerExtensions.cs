@@ -306,7 +306,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme HasDefaultTooltip(this Theme styler, Func<IChartTooltip> predicate)
     {
-        styler.DefaultTooltip = predicate;
+        styler.GetDefaultTooltip = predicate;
         return styler;
     }
 
@@ -318,7 +318,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme HasDefaultLegend(this Theme styler, Func<IChartLegend> predicate)
     {
-        styler.DefaultLegend = predicate;
+        styler.GetDefaultLegend = predicate;
         return styler;
     }
 

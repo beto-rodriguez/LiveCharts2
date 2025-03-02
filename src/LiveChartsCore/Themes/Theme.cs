@@ -321,12 +321,12 @@ public class Theme
     /// <summary>
     /// Gets or sets the default tooltip.
     /// </summary>
-    public Func<IChartTooltip> DefaultTooltip { get; set; } = () => throw new NotImplementedException();
+    public Func<IChartTooltip> GetDefaultTooltip { get; set; } = () => throw new NotImplementedException();
 
     /// <summary>
     /// Gets or sets the default legend.
     /// </summary>
-    public Func<IChartLegend> DefaultLegend { get; set; } = () => throw new NotImplementedException();
+    public Func<IChartLegend> GetDefaultLegend { get; set; } = () => throw new NotImplementedException();
 
     internal void Setup(IChartView chartView)
     {
