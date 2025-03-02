@@ -43,6 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 {
     private bool _isInitialized;
+    private object? _themeId;
     private DrawnTask? _drawnTask;
     private const int Py = 12;
     private const int Px = 8;
@@ -65,10 +66,13 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
     public virtual void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        if (!_isInitialized)
+        var theme = chart.GetTheme();
+
+        if (!_isInitialized || _themeId != theme.ThemeId)
         {
             Initialize(chart);
             _isInitialized = true;
+            _themeId = theme.ThemeId;
         }
 
         if (_drawnTask is null || _drawnTask.IsEmpty)
@@ -128,10 +132,14 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     protected virtual Layout<SkiaSharpDrawingContext> GetLayout(
         IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var textSize = (float)chart.View.TooltipTextSize;
+        if (textSize < 0) textSize = theme.TooltipTextSize;
 
         var fontPaint =
             chart.View.TooltipTextPaint ??
+            theme.TooltipTextPaint ??
             new SolidColorPaint(new SKColor(28, 49, 58));
 
         var stackLayout = new StackLayout
@@ -220,8 +228,11 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// </summary>
     protected virtual void Initialize(Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var backgroundPaint =
             chart.View.TooltipBackgroundPaint ??
+            theme.TooltipBackgroundPaint ??
             new SolidColorPaint(new SKColor(235, 235, 235, 230))
             {
                 ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))

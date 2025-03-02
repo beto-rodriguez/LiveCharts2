@@ -20,28 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Painting;
+// Ignore Spelling: Gauge
 
-namespace LiveChartsCore.Kernel.Sketches;
+namespace LiveChartsCore.Themes;
 
 /// <summary>
-/// Defines a seeries that can draw error bars.
+/// Defines a theme variant.
 /// </summary>
-public interface IErrorSeries
+public enum LvcThemeKind
 {
     /// <summary>
-    /// Gets or sets a value indicating whether to show the error mark,
-    /// to set the color use the <see cref="ErrorPaint"/> property, the <see cref="ErrorPaint"/> property
-    /// could be defined by the theme when not explicitly set.
-    /// Default is <c>false</c>.
+    /// The unknown option, the theme will be selected based on the system settings.
     /// </summary>
-    bool ShowError { get; set; }
+    Unknown,
 
     /// <summary>
-    /// Gets or sets the error paint.
+    /// Forces the light theme.
     /// </summary>
-    /// <value>
-    /// The shapes fill.
-    /// </value>
-    Paint? ErrorPaint { get; set; }
+    Light,
+
+    /// <summary>
+    /// Forces the dark theme.
+    /// </summary>
+    Dark
 }

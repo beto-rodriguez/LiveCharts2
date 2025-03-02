@@ -29,10 +29,7 @@ public class ViewModel
             series.OuterRadiusOffset = outer;
             outer += 50;
 
-            series.DataLabelsPaint = new SolidColorPaint(SKColors.White)
-            {
-                SKTypeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
-            };
+            series.ShowDataLabels = true;
 
             series.ToolTipLabelFormatter =
                 point =>

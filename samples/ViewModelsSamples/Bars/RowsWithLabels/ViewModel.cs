@@ -13,7 +13,7 @@ public class ViewModel
         {
             Values = [8, -3, 4],
             Stroke = null,
-            DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
+            ShowDataLabels = true,
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.End
         },
@@ -21,7 +21,7 @@ public class ViewModel
         {
             Values = [4, -6, 5],
             Stroke = null,
-            DataLabelsPaint = new SolidColorPaint(new SKColor(250, 250, 250)),
+            ShowDataLabels = true,
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.Middle
         },
@@ -29,7 +29,7 @@ public class ViewModel
         {
             Values = [6, -9, 3],
             Stroke = null,
-            DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
+            ShowDataLabels = true,
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.Start
         }

@@ -233,7 +233,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
                     Height = yj - yi
                 };
 
-                _fillSizedGeometry.Animate(cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed);
+                _fillSizedGeometry.Animate(cartesianChart.ActualEasingFunction, cartesianChart.ActualAnimationsSpeed);
             }
 
             _fillSizedGeometry.X = xi;
@@ -290,7 +290,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
                 };
 
                 _labelGeometry.Animate(
-                    cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed,
+                    cartesianChart.ActualEasingFunction, cartesianChart.ActualAnimationsSpeed,
                     nameof(_labelGeometry.X), nameof(_labelGeometry.Y));
 
                 _labelGeometry.VerticalAlign = Align.Start;

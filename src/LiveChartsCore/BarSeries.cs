@@ -59,6 +59,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
     private double _rx;
     private double _ry;
     private Paint? _errorPaint;
+    private bool _showError;
 
     /// <inheritdoc cref="IBarSeries.Padding"/>
     public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
@@ -75,11 +76,27 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
     /// <inheritdoc cref="IBarSeries.Ry"/>
     public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
 
+    /// <inheritdoc cref="IErrorSeries.ShowError"/>
+    public bool ShowError
+    {
+        get => _showError;
+        set
+        {
+            SetProperty(ref _showError, value);
+            if (_errorPaint is not null)
+                _errorPaint.IsPaused = !value;
+        }
+    }
+
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+        set
+        {
+            SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+            _showError = value is not null;
+        }
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>

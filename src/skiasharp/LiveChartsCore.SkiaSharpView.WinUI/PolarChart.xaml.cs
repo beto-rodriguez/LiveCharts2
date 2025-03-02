@@ -34,6 +34,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -52,6 +53,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private ThemeListener? _themeListener;
+    private Theme? _chartTheme;
 
     #endregion
 
@@ -376,8 +379,12 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+
+    bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == ApplicationTheme.Dark;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -746,6 +753,8 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
 
         _core.Load();
         _core.Update();
+
+        _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
@@ -817,7 +826,12 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
 
     private void OnCoreMeasuring(IChartView chart) => Measuring?.Invoke(this);
 
-    private void OnUnloaded(object sender, RoutedEventArgs e) => _core?.Unload();
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _core?.Unload();
+        _themeListener?.Dispose();
+        _themeListener = null;
+    }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {

@@ -105,6 +105,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     private Func<float, float>? _easingFunction;
     private TimeSpan? _animationsSpeed;
     private string? _geometrySvg;
+    private bool _showDataLabels;
     private Paint? _dataLabelsPaint;
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
@@ -265,11 +266,27 @@ public abstract class Series<TModel, TVisual, TLabel>
         protected set => SetProperty(ref _miniatureSketch, value);
     }
 
+    /// <inheritdoc cref="ISeries.ShowDataLabels"/>
+    public bool ShowDataLabels
+    {
+        get => _showDataLabels;
+        set
+        {
+            SetProperty(ref _showDataLabels, value);
+            if (_dataLabelsPaint is not null)
+                _dataLabelsPaint.IsPaused = !value;
+        }
+    }
+
     /// <inheritdoc cref="ISeries.DataLabelsPaint"/>
     public Paint? DataLabelsPaint
     {
         get => _dataLabelsPaint;
-        set => SetPaintProperty(ref _dataLabelsPaint, value);
+        set
+        {
+            SetPaintProperty(ref _dataLabelsPaint, value);
+            _showDataLabels = value is not null;
+        }
     }
 
     /// <inheritdoc cref="ISeries.DataLabelsSize"/>

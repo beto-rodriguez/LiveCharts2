@@ -233,12 +233,13 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     protected virtual void ApplyTheme<T>()
         where T : VisualElement
     {
+        var theme = LiveCharts.DefaultSettings.GetTheme();
+
         _isInternalSet = true;
-        if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
+        if (_theme != theme.ThemeId)
         {
-            var theme = LiveCharts.DefaultSettings.GetTheme();
             theme.ApplyStyleTo((T)this);
-            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
+            _theme = theme.ThemeId;
         }
         _isInternalSet = false;
     }

@@ -51,13 +51,13 @@ public class ViewModel
             new ColumnSeries<ErrorValue>
             {
                 Values = values0,
-                ErrorPaint = new SolidColorPaint(SKColors.Black),
+                ShowError = true,
                 Padding = 0
             },
             new ColumnSeries<ErrorPoint>
             {
                 Values = values1,
-                ErrorPaint = new SolidColorPaint(SKColors.Black),
+                ShowError = true,
                 Padding = 0
             }
         ];
@@ -67,7 +67,7 @@ public class ViewModel
             new LineSeries<ErrorValue, RectangleGeometry>
             {
                 Values = values0,
-                ErrorPaint = new SolidColorPaint(SKColors.Black),
+                ShowError = true,
                 GeometrySize = 4,
                 Fill = null
             }
@@ -94,7 +94,7 @@ public class ViewModel
             new ScatterSeries<ErrorDateTimePoint>
             {
                 Values = values2,
-                ErrorPaint = new SolidColorPaint(SKColors.Black),
+                ShowError = true,
                 GeometrySize = 10
             }
         ];

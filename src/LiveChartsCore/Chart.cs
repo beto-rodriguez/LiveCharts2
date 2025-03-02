@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -83,7 +84,7 @@ public abstract class Chart
         Kind = kind;
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
-        EasingFunction = EasingFunctions.QuadraticOut;
+        ActualEasingFunction = EasingFunctions.QuadraticOut;
         LiveCharts.Configure(defaultPlatformConfig);
 
         _updateThrottler = view.DesignerMode
@@ -121,14 +122,6 @@ public abstract class Chart
     /// Gets the bounds of the chart.
     /// </summary>
     public AnimatableContainer ActualBounds { get; } = new();
-
-    /// <summary>
-    /// Gets the measure work.
-    /// </summary>
-    /// <value>
-    /// The measure work.
-    /// </value>
-    public object MeasureWork { get; protected set; } = new();
 
     /// <summary>
     /// Gets the kind of the chart.
@@ -247,7 +240,7 @@ public abstract class Chart
     /// <value>
     /// The animations speed.
     /// </value>
-    public TimeSpan AnimationsSpeed { get; protected set; }
+    public TimeSpan ActualAnimationsSpeed { get; protected set; }
 
     /// <summary>
     /// Gets the easing function.
@@ -255,7 +248,7 @@ public abstract class Chart
     /// <value>
     /// The easing function.
     /// </value>
-    public Func<float, float>? EasingFunction { get; protected set; }
+    public Func<float, float>? ActualEasingFunction { get; protected set; }
 
     /// <summary>
     /// Gets the visual elements.
@@ -309,8 +302,9 @@ public abstract class Chart
     {
         IsLoaded = true;
         _isFirstDraw = true;
-        View.Tooltip ??= LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
-        View.Legend ??= LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+        var theme = GetTheme();
+        View.Tooltip ??= theme.GetDefaultTooltip();
+        View.Legend ??= theme.GetDefaultLegend();
         Update();
     }
 
@@ -521,7 +515,7 @@ public abstract class Chart
 
         if (_isFirstDraw)
         {
-            ActualBounds.Animate(EasingFunction, AnimationsSpeed);
+            ActualBounds.Animate(ActualEasingFunction, ActualAnimationsSpeed);
             _ = Canvas.Trackers.Add(ActualBounds);
         }
     }
@@ -592,6 +586,24 @@ public abstract class Chart
     /// <param name="seriesId">The series id.</param>
     /// <returns>A boolean indicating whether the series is drawn.</returns>
     public bool IsDrawn(int seriesId) => _drawnSeries.Contains(seriesId);
+
+    /// <summary>
+    /// Gets the active theme.
+    /// </summary>
+    /// <returns></returns>
+    public Theme GetTheme()
+    {
+        var theme = View.ChartTheme ?? LiveCharts.DefaultSettings.GetTheme();
+        theme.Setup(View);
+        return theme;
+    }
+
+    /// <summary>
+    /// Applies the current theme to the chart.
+    /// </summary>
+    public virtual void ApplyTheme() =>
+        // this is not optimal, we should only update the colors instead of re-measuring everything.
+        Measure();
 
     /// <summary>
     /// Collects and deletes from the UI the unused visuals.

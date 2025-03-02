@@ -5,6 +5,8 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace ViewModelsSamples.Bars.DelayedAnimation;
 
@@ -36,9 +38,10 @@ public class ViewModel
 
     private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
     {
-        var perPointDelay = 100; // in milliseconds
+        var baseAnimationsSpeed = 800f; // in milliseconds
+        var perPointDelay = 100f; // in milliseconds
         var delay = point.Context.Entity.MetaData!.EntityIndex * perPointDelay;
-        var speed = (float)point.Context.Chart.AnimationsSpeed.TotalMilliseconds + delay;
+        var speed = baseAnimationsSpeed + delay;
 
         // the animation takes a function, that represents the progress of the animation
         // the parameter is the progress of the animation, it goes from 0 to 1

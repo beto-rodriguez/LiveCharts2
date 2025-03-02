@@ -48,10 +48,12 @@ public static class LiveChartsStylerExtensions
     /// Defines a style builder for <see cref="CoreDrawMarginFrame"/> objects.
     /// </summary>
     /// <param name="styler">The styler.</param>
+    /// <param name="getter">The getter.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForDrawMargin(this Theme styler, Action<CoreDrawMarginFrame> predicate)
+    public static Theme HasRuleForDrawMarginFrame(this Theme styler, Func<CoreDrawMarginFrame?> getter, Action<CoreDrawMarginFrame> predicate)
     {
+        styler.DrawMarginFrameGetter = getter;
         styler.DrawMarginFrameBuilder.Add(predicate);
         return styler;
     }
@@ -304,7 +306,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme HasDefaultTooltip(this Theme styler, Func<IChartTooltip> predicate)
     {
-        styler.DefaultTooltip = predicate;
+        styler.GetDefaultTooltip = predicate;
         return styler;
     }
 
@@ -316,7 +318,7 @@ public static class LiveChartsStylerExtensions
     /// <returns></returns>
     public static Theme HasDefaultLegend(this Theme styler, Func<IChartLegend> predicate)
     {
-        styler.DefaultLegend = predicate;
+        styler.GetDefaultLegend = predicate;
         return styler;
     }
 
@@ -331,6 +333,18 @@ public static class LiveChartsStylerExtensions
         where TChartElement : ChartElement
     {
         styler.ChartElementElementBuilder.Add(typeof(TChartElement), predicate);
+        return styler;
+    }
+
+    /// <summary>
+    /// Defines the initialized action.
+    /// </summary>
+    /// <param name="styler"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public static Theme OnInitialized(this Theme styler, Action predicate)
+    {
+        styler.Initialized = predicate;
         return styler;
     }
 }

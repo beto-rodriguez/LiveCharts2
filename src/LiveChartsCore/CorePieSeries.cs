@@ -186,7 +186,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             Stroke.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             pieChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null)
         {
             DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
             // this does not require clipping...
@@ -402,7 +402,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && !IsFillSeries)
             {
                 var label = (TLabel?)point.Context.Label;
 
@@ -418,7 +418,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 if (label is null)
                 {
                     var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                    l.Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -569,11 +569,11 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
         if ((SeriesProperties & SeriesProperties.Gauge) == 0)
-            visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+            visual.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
         else
             visual.Animate(
-                EasingFunction ?? chart.EasingFunction,
-                AnimationsSpeed ?? chart.AnimationsSpeed,
+                EasingFunction ?? chart.CoreChart.ActualEasingFunction,
+                AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed,
                 nameof(visual.StartAngle),
                 nameof(visual.SweepAngle));
     }

@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using SkiaSharp;
 
@@ -75,8 +76,11 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
         VisualElements = view.VisualElements;
     }
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
-    public bool DesignerMode => false;
+    bool IChartView.DesignerMode => false;
+    bool IChartView.IsDarkMode => false;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get; set; }
 
     /// <inheritdoc cref="IPolarChartView.Core"/>
     public PolarChartEngine Core { get; }

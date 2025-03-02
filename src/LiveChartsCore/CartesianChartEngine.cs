@@ -367,8 +367,6 @@ public class CartesianChartEngine(
             _preserveFirstDraw = false;
         }
 
-        MeasureWork = new object();
-
         #region shallow copy the current data in the view
 
         var viewDrawMargin = _chartView.DrawMargin;
@@ -386,8 +384,8 @@ public class CartesianChartEngine(
             y = [provider.GetDefaultCartesianAxis()];
         }
 
-        XAxes = x.Cast<ICartesianAxis>().ToArray();
-        YAxes = y.Cast<ICartesianAxis>().ToArray();
+        XAxes = [.. x.Cast<ICartesianAxis>()];
+        YAxes = [.. y.Cast<ICartesianAxis>()];
 
         if (XAxes.Length == 0 || YAxes.Length == 0)
         {
@@ -397,7 +395,7 @@ public class CartesianChartEngine(
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
 
-        var theme = LiveCharts.DefaultSettings.GetTheme();
+        var theme = GetTheme();
 
         LegendPosition = _chartView.LegendPosition;
         Legend = _chartView.Legend;
@@ -406,16 +404,20 @@ public class CartesianChartEngine(
         FindingStrategy = _chartView.FindingStrategy;
         Tooltip = _chartView.Tooltip;
 
-        AnimationsSpeed = _chartView.AnimationsSpeed;
-        EasingFunction = _chartView.EasingFunction;
-
         Sections = _chartView.Sections?.Where(static x => x.IsVisible) ?? [];
         VisualElements = _chartView.VisualElements ?? [];
+
+        ActualAnimationsSpeed = _chartView.AnimationsSpeed == TimeSpan.MaxValue
+            ? theme.AnimationsSpeed
+            : _chartView.AnimationsSpeed;
+        ActualEasingFunction = _chartView.EasingFunction == EasingFunctions.Unset
+            ? theme.EasingFunction
+            : _chartView.EasingFunction;
 
         #endregion
 
         SeriesContext = new SeriesContext(VisibleSeries, this);
-        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
+        var themeId = theme.ThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
@@ -800,6 +802,8 @@ public class CartesianChartEngine(
             _drawnSeries.Add(series.SeriesId);
         }
 
+        var actualDrawMarginFrame = _chartView.DrawMarginFrame ?? theme.DrawMarginFrameGetter?.Invoke();
+
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
             // probably obsolete?
@@ -807,19 +811,19 @@ public class CartesianChartEngine(
             _previousDrawMarginFrame.RemoveFromUI(this);
             _previousDrawMarginFrame = null;
         }
-        if (_chartView.DrawMarginFrame is not null)
+        if (actualDrawMarginFrame is not null)
         {
-            var ce = (ChartElement)_chartView.DrawMarginFrame;
+            var ce = (ChartElement)actualDrawMarginFrame;
             if (ce._theme != themeId)
             {
                 ce._isInternalSet = true;
-                theme.ApplyStyleToDrawMargin(_chartView.DrawMarginFrame);
+                theme.ApplyStyleToDrawMarginFrame(actualDrawMarginFrame);
                 ce._theme = themeId;
                 ce._isInternalSet = false;
             }
 
-            if (_chartView.DrawMarginFrame.IsVisible) AddVisual(_chartView.DrawMarginFrame);
-            _previousDrawMarginFrame = _chartView.DrawMarginFrame;
+            if (actualDrawMarginFrame.IsVisible) AddVisual(actualDrawMarginFrame);
+            _previousDrawMarginFrame = actualDrawMarginFrame;
         }
 
         CollectVisuals();

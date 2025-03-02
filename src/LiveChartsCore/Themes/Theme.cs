@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Themes;
@@ -36,10 +37,84 @@ namespace LiveChartsCore.Themes;
 /// </summary>
 public class Theme
 {
+    private readonly object _lightId = new();
+    private readonly object _darkId = new();
+    private bool _initialized = false;
+    private bool _lastKnownDarkMode = false;
+    private IChartView? _chartView;
+    internal LvcThemeKind _themeRequest = LvcThemeKind.Unknown;
+
+    internal object ThemeId => IsDark ? _darkId : _lightId;
+
+    /// <summary>
+    /// Gets a value indicating whether the theme is dark.
+    /// When the <see cref="RequestedTheme"/> is Unknown, the theme is determined by the system settings.
+    /// </summary>
+    public bool IsDark =>
+        RequestedTheme == LvcThemeKind.Unknown
+            ? _chartView?.IsDarkMode == true
+            : RequestedTheme == LvcThemeKind.Dark;
+
+    /// <summary>
+    /// Gets or sets the theme request.
+    /// </summary>
+    public LvcThemeKind RequestedTheme { get; set; } = LvcThemeKind.Unknown;
+
     /// <summary>
     /// Gets or sets the theme colors.
     /// </summary>
     public LvcColor[] Colors { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the default easing function.
+    /// </summary>
+    /// <value>
+    /// The default easing function.
+    /// </value>
+    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.ExponentialOut;
+
+    /// <summary>
+    /// Gets or sets the default animations speed.
+    /// </summary>
+    /// <value>
+    /// The default animations speed.
+    /// </value>
+    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(800);
+
+    /// <summary>
+    /// Gets or sets the tooltip text size.
+    /// </summary>
+    public float TooltipTextSize { get; set; } = 16f;
+
+    /// <summary>
+    /// Gets or sets the default tooltip text paint.
+    /// </summary>
+    public Paint? TooltipTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default tooltip background paint.
+    /// </summary>
+    public Paint? TooltipBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend background paint.
+    /// </summary>
+    public Paint? LegendBackgroundPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend text paint.
+    /// </summary>
+    public Paint? LegendTextPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default legend text size.
+    /// </summary>
+    public float LegendTextSize { get; set; } = 16;
+
+    /// <summary>
+    /// Called when the theme changes.
+    /// </summary>
+    public Action Initialized { get; set; } = () => { };
 
     /// <summary>
     /// Gets or sets the axis builder.
@@ -50,11 +125,16 @@ public class Theme
     public List<Action<IPlane>> AxisBuilder { get; set; } = [];
 
     /// <summary>
-    /// Gets or sets the draw margin frame builder.
+    /// Gets or sets the draw margin frame getter.
     /// </summary>
     /// <value>
     /// The draw margin frame builder.
     /// </value>
+    public Func<CoreDrawMarginFrame?>? DrawMarginFrameGetter { get; set; }
+
+    /// <summary>
+    /// Gets or sets the draw margin frame builder.
+    /// </summary>
     public List<Action<CoreDrawMarginFrame>> DrawMarginFrameBuilder { get; set; } = [];
 
     /// <summary>
@@ -241,12 +321,23 @@ public class Theme
     /// <summary>
     /// Gets or sets the default tooltip.
     /// </summary>
-    public Func<IChartTooltip> DefaultTooltip { get; set; } = () => throw new NotImplementedException();
+    public Func<IChartTooltip> GetDefaultTooltip { get; set; } = () => throw new NotImplementedException();
 
     /// <summary>
     /// Gets or sets the default legend.
     /// </summary>
-    public Func<IChartLegend> DefaultLegend { get; set; } = () => throw new NotImplementedException();
+    public Func<IChartLegend> GetDefaultLegend { get; set; } = () => throw new NotImplementedException();
+
+    internal void Setup(IChartView chartView)
+    {
+        _chartView = chartView;
+        if (!_initialized || _lastKnownDarkMode != IsDark)
+        {
+            _lastKnownDarkMode = IsDark;
+            _initialized = true;
+            Initialized();
+        }
+    }
 
     /// <summary>
     /// Applies the theme to an axis.
@@ -391,12 +482,12 @@ public class Theme
     }
 
     /// <summary>
-    /// Applies the theme to  a draw margin.
+    /// Build a draw amrgin frame based on the theme.
     /// </summary>
-    /// <param name="drawMarginFrame"></param>
-    public void ApplyStyleToDrawMargin(CoreDrawMarginFrame drawMarginFrame)
+    public void ApplyStyleToDrawMarginFrame(CoreDrawMarginFrame drawMarginFrame)
     {
-        foreach (var rule in DrawMarginFrameBuilder) rule(drawMarginFrame);
+        foreach (var rule in DrawMarginFrameBuilder)
+            rule(drawMarginFrame);
     }
 
     /// <summary>

@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -48,6 +49,16 @@ public interface IChartView
     /// Gets whether the control is in designer mode.
     /// </summary>
     bool DesignerMode { get; }
+
+    /// <summary>
+    /// Gets whether the control is in dark mode.
+    /// </summary>
+    bool IsDarkMode { get; }
+
+    /// <summary>
+    /// Gets or sets the chart theme.
+    /// </summary>
+    Theme? ChartTheme { get; set; }
 
     /// <summary>
     /// Sets the back color of the control.

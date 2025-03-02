@@ -30,7 +30,7 @@ public class ViewModel
             Values = data,
             YToolTipLabelFormatter = point => $"{point.Model?.Stock} {point.Model?.Name}",
             DataLabelsFormatter = point => $"{point.Model?.Stock} {point.Model?.Name}",
-            DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
+            ShowDataLabels = true,
             DataLabelsPosition = DataLabelsPosition.End,
             Mapping = (fruit, index) => new(index, fruit.Stock)
         };

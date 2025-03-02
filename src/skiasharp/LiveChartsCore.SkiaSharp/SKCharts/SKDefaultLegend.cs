@@ -105,8 +105,15 @@ public class SKDefaultLegend : Container, IChartLegend
     /// <returns>The content layout.</returns>
     protected virtual Layout<SkiaSharpDrawingContext> GetLayout(Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var textSize = (float)chart.View.LegendTextSize;
-        var fontPaint = chart.View.LegendTextPaint ?? new SolidColorPaint(new SKColor(30, 30, 30, 255));
+        if (textSize < 0) textSize = theme.LegendTextSize;
+
+        var fontPaint =
+            chart.View.LegendTextPaint ??
+            theme.LegendTextPaint ??
+            new SolidColorPaint(new SKColor(30, 30, 30, 255));
 
         var stackLayout = new StackLayout
         {
@@ -159,6 +166,10 @@ public class SKDefaultLegend : Container, IChartLegend
     /// <summary>
     /// Called to initialize the tooltip.
     /// </summary>
-    protected virtual void Initialize(Chart chart) =>
-        Geometry.Fill = chart.View.LegendBackgroundPaint;
+    protected virtual void Initialize(Chart chart)
+    {
+        Geometry.Fill =
+            chart.View.LegendBackgroundPaint ??
+            chart.GetTheme().LegendBackgroundPaint;
+    }
 }

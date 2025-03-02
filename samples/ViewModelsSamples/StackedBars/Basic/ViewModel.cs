@@ -14,7 +14,7 @@ public class ViewModel
         {
             Values = [3, 5, -3, 2, 5, -4, -2],
             Stroke = null,
-            DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
+            ShowDataLabels = true,
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.Middle,
             YToolTipLabelFormatter =
@@ -24,7 +24,7 @@ public class ViewModel
         {
             Values = [4, 2, -3, 2, 3, 4, -2],
             Stroke = null,
-            DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
+            ShowDataLabels = true,
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.Middle,
             YToolTipLabelFormatter =
@@ -34,7 +34,7 @@ public class ViewModel
         {
             Values = [-2, 6, 6, 5, 4, 3, -2],
             Stroke = null,
-            DataLabelsPaint = new SolidColorPaint(new SKColor(45, 45, 45)),
+            ShowDataLabels = true,
             DataLabelsSize = 14,
             DataLabelsPosition = DataLabelsPosition.Middle,
             YToolTipLabelFormatter =

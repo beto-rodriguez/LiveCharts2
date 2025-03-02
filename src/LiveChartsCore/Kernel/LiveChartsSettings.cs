@@ -42,20 +42,12 @@ public class LiveChartsSettings
     private object _theme = new();
 
     /// <summary>
-    /// Gets the theme identifier.
-    /// </summary>
-    /// <value>
-    /// The theme identifier.
-    /// </value>
-    public object CurrentThemeId { get; set; } = new();
-
-    /// <summary>
     /// Gets or sets the default easing function.
     /// </summary>
     /// <value>
     /// The default easing function.
     /// </value>
-    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.ExponentialOut;
+    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Unset;
 
     /// <summary>
     /// Gets or sets the default animations speed.
@@ -63,7 +55,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default animations speed.
     /// </value>
-    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(800);
+    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.MaxValue;
 
     /// <summary>
     /// Gets or sets the default zoom speed.
@@ -102,7 +94,7 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default legend text size.
     /// </summary>
-    public double LegendTextSize { get; set; } = 15;
+    public double LegendTextSize { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the default tooltip position.
@@ -125,7 +117,7 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default tooltip text size.
     /// </summary>
-    public double TooltipTextSize { get; set; } = 16;
+    public double TooltipTextSize { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the default max with for labels inside tooltips and legends.
@@ -357,6 +349,9 @@ public class LiveChartsSettings
     {
         Theme t;
         _theme = t = new Theme();
+
+        LiveCharts.HasDefaultTheme = true;
+
         builder(t);
 
         return this;

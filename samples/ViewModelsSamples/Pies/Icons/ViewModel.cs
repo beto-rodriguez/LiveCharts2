@@ -28,7 +28,7 @@ public class ViewModel
             (dataItem, series) =>
             {
                 // define the data labels paint.
-                series.DataLabelsPaint = new SolidColorPaint(SKColors.WhiteSmoke);
+                series.ShowDataLabels = true;
 
                 // now, when the point is measured,
                 // we will set up the svg label based on the BrowserShare class.
