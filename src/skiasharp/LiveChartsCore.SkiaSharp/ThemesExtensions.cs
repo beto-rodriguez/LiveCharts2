@@ -26,6 +26,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
@@ -62,16 +63,24 @@ public static class ThemesExtensions
                         if (theme.IsDark)
                         {
                             theme.Colors = ColorPalletes.MaterialDesign200;
-                            theme.TooltipBackgroundPaint = new SolidColorPaint(new SKColor(45, 45, 45));
-                            theme.TooltipTextPaint = new SolidColorPaint(new SKColor(245, 245, 245));
-                            theme.LegendTextPaint = new SolidColorPaint(new SKColor(245, 245, 245));
+                            theme.TooltipBackgroundPaint =
+                                new SolidColorPaint(new(45, 45, 45, 230))
+                                {
+                                    ImageFilter = new DropShadow(4, 4, 12, 12, new(0, 0, 0, 255))
+                                };
+                            theme.TooltipTextPaint = new SolidColorPaint(new(245, 245, 245));
+                            theme.LegendTextPaint = new SolidColorPaint(new(245, 245, 245));
                         }
                         else
                         {
                             theme.Colors = ColorPalletes.MaterialDesign500;
-                            theme.TooltipBackgroundPaint = null;
-                            theme.TooltipTextPaint = null;
-                            theme.LegendTextPaint = null;
+                            theme.TooltipBackgroundPaint =
+                                new SolidColorPaint(new(235, 235, 235, 230))
+                                {
+                                    ImageFilter = new DropShadow(2, 2, 6, 6, new(0, 0, 0, 100))
+                                };
+                            theme.TooltipTextPaint = new SolidColorPaint(new(30, 30, 30));
+                            theme.LegendTextPaint = new SolidColorPaint(new(30, 30, 30));
                         }
                     })
                     .HasDefaultTooltip(() => new SKDefaultTooltip())
@@ -85,9 +94,9 @@ public static class ThemesExtensions
                         axis.TextSize = 16;
                         axis.ShowSeparatorLines = true;
                         axis.NamePaint = new SolidColorPaint(theme.IsDark ? new(235, 235, 235) : new(35, 35, 35));
-                        axis.LabelsPaint = new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new SKColor(70, 70, 70));
+                        axis.LabelsPaint = new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(70, 70, 70));
 
-                        var lineColor = theme.IsDark ? new SKColor(90, 90, 90) : new SKColor(235, 235, 235);
+                        SKColor lineColor = theme.IsDark ? new(90, 90, 90) : new(235, 235, 235);
 
                         if (axis is ICartesianAxis cartesian)
                         {
@@ -112,8 +121,8 @@ public static class ThemesExtensions
 
                         if (series.ShowDataLabels)
                             series.DataLabelsPaint = theme.IsDark
-                                ? new SolidColorPaint(new SKColor(245, 245, 245))
-                                : new SolidColorPaint(new SKColor(45, 45, 45));
+                                ? new SolidColorPaint(new(245, 245, 245))
+                                : new SolidColorPaint(new(45, 45, 45));
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
@@ -127,8 +136,8 @@ public static class ThemesExtensions
 
                         if (lineSeries.ShowError)
                             lineSeries.ErrorPaint = theme.IsDark
-                                ? new SolidColorPaint(new SKColor(245, 245, 245))
-                                : new SolidColorPaint(new SKColor(45, 45, 45));
+                                ? new SolidColorPaint(new(245, 245, 245))
+                                : new SolidColorPaint(new(45, 45, 45));
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
                     {
@@ -163,16 +172,16 @@ public static class ThemesExtensions
                             barSeries.DataLabelsPaint =
                                 barSeries.DataLabelsPosition == DataLabelsPosition.Middle
                                     ? theme.IsDark
-                                        ? new SolidColorPaint(new SKColor(45, 45, 45))
-                                        : new SolidColorPaint(new SKColor(245, 245, 245))
+                                        ? new SolidColorPaint(new(45, 45, 45))
+                                        : new SolidColorPaint(new(245, 245, 245))
                                     : theme.IsDark
-                                        ? new SolidColorPaint(new SKColor(245, 245, 245))
-                                        : new SolidColorPaint(new SKColor(45, 45, 45));
+                                        ? new SolidColorPaint(new(245, 245, 245))
+                                        : new SolidColorPaint(new(45, 45, 45));
 
                         if (barSeries.ShowError)
                             barSeries.ErrorPaint = theme.IsDark
-                                ? new SolidColorPaint(new SKColor(245, 245, 245))
-                                : new SolidColorPaint(new SKColor(45, 45, 45));
+                                ? new SolidColorPaint(new(245, 245, 245))
+                                : new SolidColorPaint(new(45, 45, 45));
                     })
                     .HasRuleForStackedBarSeries(stackedBarSeries =>
                     {
@@ -182,6 +191,13 @@ public static class ThemesExtensions
                         stackedBarSeries.Fill = new SolidColorPaint(color);
                         stackedBarSeries.Rx = 0;
                         stackedBarSeries.Ry = 0;
+                        stackedBarSeries.DataLabelsPosition = DataLabelsPosition.Middle;
+
+                        if (stackedBarSeries.ShowDataLabels)
+                            stackedBarSeries.DataLabelsPaint =
+                                theme.IsDark
+                                    ? new SolidColorPaint(new(45, 45, 45))
+                                    : new SolidColorPaint(new(245, 245, 245));
                     })
                     .HasRuleForStackedStepLineSeries(stackedStep =>
                     {
@@ -207,10 +223,10 @@ public static class ThemesExtensions
                     })
                     .HasRuleForFinancialSeries(financialSeries =>
                     {
-                        financialSeries.UpFill = new SolidColorPaint(new SKColor(139, 195, 74, 255));
-                        financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
-                        financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
-                        financialSeries.DownStroke = new SolidColorPaint(new SKColor(239, 83, 80, 255), 3);
+                        financialSeries.UpFill = new SolidColorPaint(new(139, 195, 74, 255));
+                        financialSeries.UpStroke = new SolidColorPaint(new(139, 195, 74, 255), 3);
+                        financialSeries.DownFill = new SolidColorPaint(new(239, 83, 80, 255));
+                        financialSeries.DownStroke = new SolidColorPaint(new(239, 83, 80, 255), 3);
                     })
                     .HasRuleForScatterSeries(scatterSeries =>
                     {
@@ -221,8 +237,8 @@ public static class ThemesExtensions
 
                         if (scatterSeries.ShowError)
                             scatterSeries.ErrorPaint = theme.IsDark
-                                ? new SolidColorPaint(new SKColor(245, 245, 245))
-                                : new SolidColorPaint(new SKColor(45, 45, 45));
+                                ? new SolidColorPaint(new(245, 245, 245))
+                                : new SolidColorPaint(new(45, 45, 45));
                     })
                     .HasRuleForPieSeries(pieSeries =>
                     {
@@ -235,11 +251,11 @@ public static class ThemesExtensions
                             pieSeries.DataLabelsPaint =
                                 pieSeries.DataLabelsPosition == PolarLabelsPosition.Outer
                                     ? theme.IsDark
-                                        ? new SolidColorPaint(new SKColor(245, 245, 245))
-                                        : new SolidColorPaint(new SKColor(45, 45, 45))
+                                        ? new SolidColorPaint(new(245, 245, 245))
+                                        : new SolidColorPaint(new(45, 45, 45))
                                     : theme.IsDark
-                                        ? new SolidColorPaint(new SKColor(45, 45, 45))
-                                        : new SolidColorPaint(new SKColor(245, 245, 245));
+                                        ? new SolidColorPaint(new(45, 45, 45))
+                                        : new SolidColorPaint(new(245, 245, 245));
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
                     {
