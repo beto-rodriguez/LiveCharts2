@@ -1,8 +1,5 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.StackedBars.Basic;
 
@@ -16,7 +13,6 @@ public class ViewModel
             Stroke = null,
             ShowDataLabels = true,
             DataLabelsSize = 14,
-            DataLabelsPosition = DataLabelsPosition.Middle,
             YToolTipLabelFormatter =
                 p => $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})"
         },
@@ -26,7 +22,6 @@ public class ViewModel
             Stroke = null,
             ShowDataLabels = true,
             DataLabelsSize = 14,
-            DataLabelsPosition = DataLabelsPosition.Middle,
             YToolTipLabelFormatter =
                 p => $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})"
         },
@@ -36,7 +31,6 @@ public class ViewModel
             Stroke = null,
             ShowDataLabels = true,
             DataLabelsSize = 14,
-            DataLabelsPosition = DataLabelsPosition.Middle,
             YToolTipLabelFormatter =
                 p => $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})"
         }

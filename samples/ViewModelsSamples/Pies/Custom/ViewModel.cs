@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System;
 using LiveChartsCore.SkiaSharpView.Extensions;
 

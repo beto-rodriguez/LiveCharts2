@@ -16,7 +16,7 @@ public class ViewModel
         // to prevent the series from reserving a space for the series geometry.
         new LineSeries<double>
         {
-            Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
+            Values = [2, 1, 3, 5, 3, 4, 6],
             GeometryStroke = null,
             GeometryFill = null,
             GeometrySize = 0,
@@ -26,7 +26,7 @@ public class ViewModel
 
     public DrawMarginFrame DrawMarginFrame => new()
     {
-        Fill = new SolidColorPaint(new SKColor(220, 220, 220)),
+        Fill = new SolidColorPaint(new SKColor(220, 220, 220, 50)),
         Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 2)
     };
 }
