@@ -20,15 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Gauge
-
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Themes;
 
@@ -117,7 +114,7 @@ public class Theme
     /// <summary>
     /// Called when the theme changes.
     /// </summary>
-    public Action Initialized { get; set; } = () => { };
+    public List<Action> Initialized { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the axis builder.
@@ -338,7 +335,8 @@ public class Theme
         {
             _lastKnownDarkMode = IsDark;
             _initialized = true;
-            Initialized();
+            foreach (var rule in Initialized)
+                rule();
         }
     }
 
