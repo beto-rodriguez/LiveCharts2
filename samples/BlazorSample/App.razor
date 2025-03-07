@@ -1,6 +1,4 @@
 ﻿@using LiveChartsCore;
-@using LiveChartsCore.SkiaSharpView;
-@using LiveChartsCore.SkiaSharpView.Blazor
 @using System.Collections.ObjectModel;
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
@@ -21,19 +19,11 @@
 
     protected override void OnInitialized()
     {
+        // this is the recommended place to configure LiveCharts // mark
         LiveCharts.Configure(config => // mark
-            config // you can override the theme
-                // .AddDarkTheme() // mark
-
-                // finally register your own mappers
-                // you can learn more about mappers at:
-                // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
-
-                // here we use the index as X, and the population as Y // mark
-                .HasMap<City>((city, index) => new(index, city.Population)) // mark
-            // .HasMap<Foo>( .... ) // mark
-            // .HasMap<Bar>( .... ) // mark
-            ); // mark
+        { // mark
+            // configure LiveCharts here... // mark
+        }); // mark
     }
 
     protected override void OnAfterRender(bool firstRender)
