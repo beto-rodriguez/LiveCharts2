@@ -51,6 +51,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     private MotionCanvas? _canvas;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private ThemeListener? _themeListener;
     private Theme? _chartTheme;
 
     /// <summary>
@@ -673,6 +674,8 @@ public sealed partial class PieChart : UserControl, IPieChartView
 
         _core.Load();
         _core.Update();
+
+        _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
     }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -727,7 +730,12 @@ public sealed partial class PieChart : UserControl, IPieChartView
 
     private void OnCoreMeasuring(IChartView chart) => Measuring?.Invoke(this);
 
-    private void OnUnloaded(object sender, RoutedEventArgs e) => _core?.Unload();
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _core?.Unload();
+        _themeListener?.Dispose();
+        _themeListener = null;
+    }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
