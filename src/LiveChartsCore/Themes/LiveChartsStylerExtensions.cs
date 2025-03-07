@@ -28,323 +28,323 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.Themes;
 
 /// <summary>
-/// Defines the LiveCharts styler extensions.
+/// Defines the LiveCharts theme extensions.
 /// </summary>
-public static class LiveChartsStylerExtensions
+public static class LiveChartsthemeExtensions
 {
     /// <summary>
     ///  Defines a style builder for <see cref="IChartView"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForAxes(this Theme styler, Action<IPlane> predicate)
+    public static Theme HasRuleForAxes(this Theme theme, Action<IPlane> predicate)
     {
-        styler.AxisBuilder.Add(predicate);
-        return styler;
+        theme.AxisBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     /// Defines a style builder for <see cref="CoreDrawMarginFrame"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="getter">The getter.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForDrawMarginFrame(this Theme styler, Func<CoreDrawMarginFrame?> getter, Action<CoreDrawMarginFrame> predicate)
+    public static Theme HasRuleForDrawMarginFrame(this Theme theme, Func<CoreDrawMarginFrame?> getter, Action<CoreDrawMarginFrame> predicate)
     {
-        styler.DrawMarginFrameGetter = getter;
-        styler.DrawMarginFrameBuilder.Add(predicate);
-        return styler;
+        theme.DrawMarginFrameGetter = getter;
+        theme.DrawMarginFrameBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="ISeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForAnySeries(this Theme styler, Action<ISeries> predicate)
+    public static Theme HasRuleForAnySeries(this Theme theme, Action<ISeries> predicate)
     {
-        styler.SeriesBuilder.Add(predicate);
-        return styler;
+        theme.SeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IPieSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForPieSeries(this Theme styler, Action<IPieSeries> predicate)
+    public static Theme HasRuleForPieSeries(this Theme theme, Action<IPieSeries> predicate)
     {
-        styler.PieSeriesBuilder.Add(predicate);
-        return styler;
+        theme.PieSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IPieSeries"/> objects when used as gauges.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForGaugeSeries(this Theme styler, Action<IPieSeries> predicate)
+    public static Theme HasRuleForGaugeSeries(this Theme theme, Action<IPieSeries> predicate)
     {
-        styler.GaugeSeriesBuilder.Add(predicate);
-        return styler;
+        theme.GaugeSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IPieSeries"/> objects when used as gauges fills.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForGaugeFillSeries(this Theme styler, Action<IPieSeries> predicate)
+    public static Theme HasRuleForGaugeFillSeries(this Theme theme, Action<IPieSeries> predicate)
     {
-        styler.GaugeFillSeriesBuilder.Add(predicate);
-        return styler;
+        theme.GaugeFillSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="ILineSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForLineSeries(this Theme styler, Action<ILineSeries> predicate)
+    public static Theme HasRuleForLineSeries(this Theme theme, Action<ILineSeries> predicate)
     {
-        styler.LineSeriesBuilder.Add(predicate);
-        return styler;
+        theme.LineSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IStepLineSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForStepLineSeries(this Theme styler, Action<IStepLineSeries> predicate)
+    public static Theme HasRuleForStepLineSeries(this Theme theme, Action<IStepLineSeries> predicate)
     {
-        styler.StepLineSeriesBuilder.Add(predicate);
-        return styler;
+        theme.StepLineSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for stacked <see cref="IStepLineSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForStackedStepLineSeries(this Theme styler, Action<IStepLineSeries> predicate)
+    public static Theme HasRuleForStackedStepLineSeries(this Theme theme, Action<IStepLineSeries> predicate)
     {
-        styler.StackedStepLineSeriesBuilder.Add(predicate);
-        return styler;
+        theme.StackedStepLineSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for stacked <see cref="IStepLineSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForBoxSeries(this Theme styler, Action<IBoxSeries> predicate)
+    public static Theme HasRuleForBoxSeries(this Theme theme, Action<IBoxSeries> predicate)
     {
-        styler.BoxSeriesBuilder.Add(predicate);
-        return styler;
+        theme.BoxSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for tacked <see cref="ILineSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForStackedLineSeries(this Theme styler, Action<ILineSeries> predicate)
+    public static Theme HasRuleForStackedLineSeries(this Theme theme, Action<ILineSeries> predicate)
     {
-        styler.StackedLineSeriesBuilder.Add(predicate);
-        return styler;
+        theme.StackedLineSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForBarSeries(this Theme styler, Action<IBarSeries> predicate)
+    public static Theme HasRuleForBarSeries(this Theme theme, Action<IBarSeries> predicate)
     {
-        styler.BarSeriesBuilder.Add(predicate);
-        return styler;
+        theme.BarSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for vertical <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForColumnSeries(this Theme styler, Action<IBarSeries> predicate)
+    public static Theme HasRuleForColumnSeries(this Theme theme, Action<IBarSeries> predicate)
     {
-        styler.ColumnSeriesBuilder.Add(predicate);
-        return styler;
+        theme.ColumnSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for horizontal <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForRowSeries(this Theme styler, Action<IBarSeries> predicate)
+    public static Theme HasRuleForRowSeries(this Theme theme, Action<IBarSeries> predicate)
     {
-        styler.ColumnSeriesBuilder.Add(predicate);
-        return styler;
+        theme.ColumnSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for stacked <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForStackedBarSeries(this Theme styler, Action<IStackedBarSeries> predicate)
+    public static Theme HasRuleForStackedBarSeries(this Theme theme, Action<IStackedBarSeries> predicate)
     {
-        styler.StackedBarSeriesBuilder.Add(predicate);
-        return styler;
+        theme.StackedBarSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for stacked vertical <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForStackedColumnSeries(this Theme styler, Action<IStackedBarSeries> predicate)
+    public static Theme HasRuleForStackedColumnSeries(this Theme theme, Action<IStackedBarSeries> predicate)
     {
-        styler.StackedColumnSeriesBuilder.Add(predicate);
-        return styler;
+        theme.StackedColumnSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for stacked horizontal <see cref="IBarSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForStackedRowSeries(this Theme styler, Action<IStackedBarSeries> predicate)
+    public static Theme HasRuleForStackedRowSeries(this Theme theme, Action<IStackedBarSeries> predicate)
     {
-        styler.StackedRowSeriesBuilder.Add(predicate);
-        return styler;
+        theme.StackedRowSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IScatterSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForScatterSeries(this Theme styler, Action<IScatterSeries> predicate)
+    public static Theme HasRuleForScatterSeries(this Theme theme, Action<IScatterSeries> predicate)
     {
-        styler.ScatterSeriesBuilder.Add(predicate);
-        return styler;
+        theme.ScatterSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IHeatSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForHeatSeries(this Theme styler, Action<IHeatSeries> predicate)
+    public static Theme HasRuleForHeatSeries(this Theme theme, Action<IHeatSeries> predicate)
     {
-        styler.HeatSeriesBuilder.Add(predicate);
-        return styler;
+        theme.HeatSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IFinancialSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForFinancialSeries(this Theme styler, Action<IFinancialSeries> predicate)
+    public static Theme HasRuleForFinancialSeries(this Theme theme, Action<IFinancialSeries> predicate)
     {
-        styler.FinancialSeriesBuilder.Add(predicate);
-        return styler;
+        theme.FinancialSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IPolarSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForPolaSeries(this Theme styler, Action<IPolarSeries> predicate)
+    public static Theme HasRuleForPolaSeries(this Theme theme, Action<IPolarSeries> predicate)
     {
-        styler.PolarSeriesBuilder.Add(predicate);
-        return styler;
+        theme.PolarSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     ///  Defines a style builder for <see cref="IPolarLineSeries"/> objects.
     /// </summary>
-    /// <param name="styler">The styler.</param>
+    /// <param name="theme">The theme.</param>
     /// <param name="predicate">The predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleForPolarLineSeries(this Theme styler, Action<IPolarLineSeries> predicate)
+    public static Theme HasRuleForPolarLineSeries(this Theme theme, Action<IPolarLineSeries> predicate)
     {
-        styler.PolarLineSeriesBuilder.Add(predicate);
-        return styler;
+        theme.PolarLineSeriesBuilder.Add(predicate);
+        return theme;
     }
 
     /// <summary>
     /// Defines the default tooltip.
     /// </summary>
-    /// <param name="styler"></param>
+    /// <param name="theme"></param>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public static Theme HasDefaultTooltip(this Theme styler, Func<IChartTooltip> predicate)
+    public static Theme HasDefaultTooltip(this Theme theme, Func<IChartTooltip> predicate)
     {
-        styler.GetDefaultTooltip = predicate;
-        return styler;
+        theme.GetDefaultTooltip = predicate;
+        return theme;
     }
 
     /// <summary>
     /// Defines the default legend.
     /// </summary>
-    /// <param name="styler"></param>
+    /// <param name="theme"></param>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public static Theme HasDefaultLegend(this Theme styler, Func<IChartLegend> predicate)
+    public static Theme HasDefaultLegend(this Theme theme, Func<IChartLegend> predicate)
     {
-        styler.GetDefaultLegend = predicate;
-        return styler;
+        theme.GetDefaultLegend = predicate;
+        return theme;
     }
 
     /// <summary>
     /// Defines a style builder for <see cref= "VisualElement" /> objects.
     /// </summary>
     /// <typeparam name="TChartElement">The type of the chart element.</typeparam>
-    /// <param name="styler">the styler.</param>
+    /// <param name="theme">the theme.</param>
     /// <param name="predicate">the predicate.</param>
     /// <returns></returns>
-    public static Theme HasRuleFor<TChartElement>(this Theme styler, Action<TChartElement> predicate)
+    public static Theme HasRuleFor<TChartElement>(this Theme theme, Action<TChartElement> predicate)
         where TChartElement : ChartElement
     {
-        styler.ChartElementElementBuilder.Add(typeof(TChartElement), predicate);
-        return styler;
+        theme.ChartElementElementBuilder.Add(typeof(TChartElement), predicate);
+        return theme;
     }
 
     /// <summary>
     /// Defines the initialized action.
     /// </summary>
-    /// <param name="styler"></param>
-    /// <param name="predicate"></param>
+    /// <param name="theme">the theme.</param>
+    /// <param name="predicate">the predicate.</param>
     /// <returns></returns>
-    public static Theme OnInitialized(this Theme styler, Action predicate)
+    public static Theme OnInitialized(this Theme theme, Action predicate)
     {
-        styler.Initialized = predicate;
-        return styler;
+        theme.Initialized.Add(predicate);
+        return theme;
     }
 }
