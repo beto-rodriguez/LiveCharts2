@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
-using LiveChartsCore; // mark
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView; // mark
 
 namespace WinUISample;
 
@@ -32,7 +33,7 @@ public partial class App : Application
         LiveCharts.Configure(config => // mark
             config // mark
                 // you can override the theme 
-                // .AddDarkTheme() // mark 
+                //.AddDarkTheme() // mark 
 
                 // In case you need a non-Latin based font, you must register a typeface for SkiaSharp
                 //.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')) // <- Chinese // mark

@@ -13,7 +13,6 @@ public partial class App : Application
 
     protected override void OnStart()
     {
-        UserAppTheme = AppTheme.Light;
         base.OnStart();
 
         LiveCharts.Configure(config => // mark
