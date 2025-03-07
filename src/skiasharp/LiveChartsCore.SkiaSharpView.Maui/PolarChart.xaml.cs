@@ -97,6 +97,9 @@ public partial class PolarChart : ChartView, IPolarChartView
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;
         _core.UpdateFinished += OnCoreUpdateFinished;
+
+        if (Application.Current is not null)
+            Application.Current.RequestedThemeChanged += (sender, args) => _core?.ApplyTheme();
     }
 
     #region bindable properties
