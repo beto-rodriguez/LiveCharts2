@@ -356,7 +356,7 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     bool IChartView.DesignerMode => Design.IsDesignMode;
 
-    bool IChartView.IsDarkMode => Application.Current?.RequestedThemeVariant == ThemeVariant.Dark;
+    bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
 
     /// <inheritdoc cref="IChartView.ChartTheme" />
     public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
@@ -714,12 +714,8 @@ public class CartesianChart : UserControl, ICartesianChartView
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
-        if (change.Property.Name == nameof(SyncContext))
-        {
-            CoreCanvas.Sync = change.NewValue ?? new object();
-        }
+        if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
         if (change.Property.Name == nameof(Series))
         {
@@ -750,6 +746,9 @@ public class CartesianChart : UserControl, ICartesianChartView
             _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
             _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
         }
+
+        if (change.Property.Name == nameof(ActualThemeVariant))
+            _core.ApplyTheme();
 
         _core.Update();
     }

@@ -337,7 +337,7 @@ public class PolarChart : UserControl, IPolarChartView
 
     bool IChartView.DesignerMode => Design.IsDesignMode;
 
-    bool IChartView.IsDarkMode => Application.Current?.RequestedThemeVariant == ThemeVariant.Dark;
+    bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
 
     /// <inheritdoc cref="IChartView.ChartTheme" />
     public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
@@ -697,6 +697,9 @@ public class PolarChart : UserControl, IPolarChartView
             _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
             _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
         }
+
+        if (change.Property.Name == nameof(ActualThemeVariant))
+            _core.ApplyTheme();
 
         _core.Update();
     }
