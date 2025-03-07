@@ -23,7 +23,7 @@ public static class ThemeLiveChartsExtensions
             {
                 // the OnInitialized method is called when the // mark
                 // theme is applied to a chart for the first time // mark
-                // here he can define colors, animations speed and easing function, etc. // mark
+                // here ee can define colors, animations speed, easing function, etc. // mark
                 theme.AnimationsSpeed = TimeSpan.FromSeconds(1);
                 theme.EasingFunction = EasingFunctions.BounceOut;
                 theme.Colors = [
@@ -44,6 +44,8 @@ public static class ThemeLiveChartsExtensions
                 if (axis is not ICartesianAxis cartesianAxis) return;
 
                 // Define the color based on the system and app theme // mark
+                // this only works on WinUI, Avalonia, Uno and Maui // mark
+                // because these frameworks provide a way to detect the system theme // mark
                 SKColor lineColor = theme.IsDark
                     ? new(90, 90, 90)
                     : new(235, 235, 235);
