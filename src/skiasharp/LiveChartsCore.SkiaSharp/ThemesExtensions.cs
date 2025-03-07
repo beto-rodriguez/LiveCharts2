@@ -43,20 +43,21 @@ public static class ThemesExtensions
     /// Adds the default theme.
     /// </summary>
     /// <param name="settings">The settings.</param>
-    /// <param name="themeKind">Indicates the theme kind.</param>
+    /// <param name="requestedTheme">Indicates the theme kind.</param>
+    /// <param name="themeSettings">The adittional theme settings.</param>
     /// <returns>The current LiveCharts settings.</returns>
     public static LiveChartsSettings AddDefaultTheme(
         this LiveChartsSettings settings,
-        LvcThemeKind themeKind = LvcThemeKind.Unknown)
+        Action<Theme>? themeSettings = null,
+        LvcThemeKind requestedTheme = LvcThemeKind.Unknown)
     {
         return settings
             .HasTheme(theme =>
             {
-                theme.RequestedTheme = themeKind;
-
                 _ = theme
                     .OnInitialized(() =>
                     {
+                        theme.RequestedTheme = requestedTheme;
                         theme.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
                         theme.EasingFunction = EasingFunctions.ExponentialOut;
 
@@ -85,10 +86,6 @@ public static class ThemesExtensions
                     })
                     .HasDefaultTooltip(() => new SKDefaultTooltip())
                     .HasDefaultLegend(() => new SKDefaultLegend())
-                    .HasRuleForDrawMarginFrame(() => null, frame =>
-                    {
-                        frame.Stroke = new SolidColorPaint(theme.IsDark ? new(220, 220, 220) : new(30, 30, 30), 3);
-                    })
                     .HasRuleForAxes(axis =>
                     {
                         axis.TextSize = 16;
@@ -130,7 +127,8 @@ public static class ThemesExtensions
 
                         lineSeries.GeometrySize = 12;
                         lineSeries.GeometryStroke = new SolidColorPaint(color, 4);
-                        lineSeries.GeometryFill = new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
+                        lineSeries.GeometryFill =
+                            new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         lineSeries.Stroke = new SolidColorPaint(color, 4);
                         lineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
 
@@ -145,7 +143,8 @@ public static class ThemesExtensions
 
                         steplineSeries.GeometrySize = 12;
                         steplineSeries.GeometryStroke = new SolidColorPaint(color, 4);
-                        steplineSeries.GeometryFill = new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
+                        steplineSeries.GeometryFill =
+                            new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         steplineSeries.Stroke = new SolidColorPaint(color, 4);
                         steplineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
                     })
@@ -214,7 +213,8 @@ public static class ThemesExtensions
                         var color = theme.GetSeriesColor(boxSeries).AsSKColor();
 
                         boxSeries.MaxBarWidth = 60;
-                        boxSeries.Stroke = new SolidColorPaint(theme.IsDark ? new(220, 220, 220) : new(30, 30, 30), 2);
+                        boxSeries.Stroke =
+                            new SolidColorPaint(theme.IsDark ? new(220, 220, 220) : new(30, 30, 30), 2);
                         boxSeries.Fill = new SolidColorPaint(color);
                     })
                     .HasRuleForHeatSeries(heatSeries =>
@@ -263,7 +263,8 @@ public static class ThemesExtensions
 
                         polarLine.GeometrySize = 12;
                         polarLine.GeometryStroke = new SolidColorPaint(color, 4);
-                        polarLine.GeometryFill = new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
+                        polarLine.GeometryFill =
+                            new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         polarLine.Stroke = new SolidColorPaint(color, 4);
                         polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
                     })
@@ -274,26 +275,35 @@ public static class ThemesExtensions
                         gaugeSeries.Stroke = null;
                         gaugeSeries.Fill = new SolidColorPaint(color);
                         gaugeSeries.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
-                        gaugeSeries.DataLabelsPaint = new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(70, 70, 70));
+                        gaugeSeries.DataLabelsPaint =
+                            new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(70, 70, 70));
                         gaugeSeries.CornerRadius = 8;
                     })
                     .HasRuleForGaugeFillSeries(gaugeFill =>
                     {
-                        gaugeFill.Fill = new SolidColorPaint(theme.IsDark ? new(255, 255, 255, 30) : new(30, 30, 30, 10));
+                        gaugeFill.Fill =
+                            new SolidColorPaint(theme.IsDark ? new(255, 255, 255, 30) : new(30, 30, 30, 10));
                     })
                     .HasRuleFor<BaseLabelVisual>(label =>
                     {
-                        label.Paint = new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
+                        label.Paint =
+                            new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
                     })
                     .HasRuleFor<BaseNeedleVisual>(needle =>
                     {
-                        needle.Fill = new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
+                        needle.Fill =
+                            new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
                     })
                     .HasRuleFor<BaseAngularTicksVisual>(ticks =>
                     {
-                        ticks.Stroke = new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
-                        ticks.LabelsPaint = new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
+                        ticks.Stroke =
+                            new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
+                        ticks.LabelsPaint =
+                            new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
                     });
+
+                if (themeSettings is not null)
+                    themeSettings(theme);
             });
     }
 
@@ -301,15 +311,21 @@ public static class ThemesExtensions
     /// Adds the light theme.
     /// </summary>
     /// <param name="settings">The settings.</param>
+    /// /// <param name="themeSettings">The adittional theme settings.</param>
     /// <returns>The current LiveCharts settings.</returns>
-    public static LiveChartsSettings AddLightTheme(this LiveChartsSettings settings) =>
-        settings.AddDefaultTheme(themeKind: LvcThemeKind.Light);
+    public static LiveChartsSettings AddLightTheme(
+        this LiveChartsSettings settings,
+        Action<Theme>? themeSettings = null) =>
+            settings.AddDefaultTheme(themeSettings, LvcThemeKind.Light);
 
     /// <summary>
     /// Adds the dark theme.
     /// </summary>
     /// <param name="settings">The settings.</param>
+    /// /// <param name="themeSettings">The adittional theme settings.</param>
     /// <returns>The current LiveCharts settings.</returns>
-    public static LiveChartsSettings AddDarkTheme(this LiveChartsSettings settings) =>
-        settings.AddDefaultTheme(themeKind: LvcThemeKind.Dark);
+    public static LiveChartsSettings AddDarkTheme(
+        this LiveChartsSettings settings,
+        Action<Theme>? themeSettings = null) =>
+            settings.AddDefaultTheme(themeSettings, LvcThemeKind.Dark);
 }
