@@ -9,12 +9,8 @@ using SkiaSharp;
 
 namespace ViewModelsSamples;
 
-public static class ThemeLiveChartsExtensions
+public static class LiveChartsThemeExtensions
 {
-    // in this first example we use the default theme and force the dark mode // mark
-    public static LiveChartsSettings ForceDarkTheme(this LiveChartsSettings settings) =>
-        settings.AddDefaultTheme(requestedTheme: LvcThemeKind.Dark);
-
     // now in the AddMyCustomTheme function, we use the default theme // mark
     // but we also override some properties, like the animations speed, easing function and colors // mark
     public static LiveChartsSettings AddMyCustomTheme(this LiveChartsSettings settings) =>
