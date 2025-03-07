@@ -129,6 +129,7 @@ public class StackedColumnSeriesTest
         {
             Values = new double[] { -10, -5, -1, 0, 1, 5, 10 },
             DataPadding = new Drawing.LvcPoint(0, 0),
+            DataLabelsPosition = DataLabelsPosition.End
         };
 
         var chart = new SKCartesianChart
