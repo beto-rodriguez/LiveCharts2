@@ -36,9 +36,11 @@ public class ViewModel
 
     private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
     {
-        var perPointDelay = 100; // in milliseconds
+        var baseAnimationsSpeed = 800f; // in milliseconds
+        var perPointDelay = 100f; // in milliseconds
         var delay = point.Context.Entity.MetaData!.EntityIndex * perPointDelay;
-        var speed = (float)point.Context.Chart.AnimationsSpeed.TotalMilliseconds + delay;
+        var speed = baseAnimationsSpeed + delay;
+        var baseEasingFunction = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
 
         // the animation takes a function, that represents the progress of the animation
         // the parameter is the progress of the animation, it goes from 0 to 1
@@ -52,7 +54,7 @@ public class ViewModel
 
                 return progress <= d
                     ? 0
-                    : EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f)((progress - d) / (1 - d));
+                    : baseEasingFunction((progress - d) / (1 - d));
             },
             TimeSpan.FromMilliseconds(speed)));
     }

@@ -13,7 +13,7 @@ public class ViewModel
         new PolarLineSeries<double>
         {
             Values = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-            DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
+            ShowDataLabels = true,
             GeometrySize = 15,
             DataLabelsSize = 8,
             DataLabelsPosition = PolarLabelsPosition.Middle,

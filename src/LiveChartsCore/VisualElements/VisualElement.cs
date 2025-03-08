@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Themes;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -230,15 +231,15 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     /// Applies the theme to the visual.
     /// </summary>
     /// <typeparam name="T">The type of the visual.</typeparam>
-    protected virtual void ApplyTheme<T>()
+    /// <param name="theme">The theme.</param>
+    protected virtual void ApplyTheme<T>(Theme theme)
         where T : VisualElement
     {
         _isInternalSet = true;
-        if (_theme != LiveCharts.DefaultSettings.CurrentThemeId)
+        if (_theme != theme.ThemeId)
         {
-            var theme = LiveCharts.DefaultSettings.GetTheme();
-            theme.ApplyStyleTo((T)this);
-            _theme = LiveCharts.DefaultSettings.CurrentThemeId;
+            theme.ApplyStyleTo<T>(this);
+            _theme = theme.ThemeId;
         }
         _isInternalSet = false;
     }

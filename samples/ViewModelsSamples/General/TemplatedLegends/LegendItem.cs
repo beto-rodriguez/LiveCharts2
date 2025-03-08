@@ -1,16 +1,15 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Layouts;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.General.TemplatedLegends;
 
 public class LegendItem : StackLayout
 {
-    public LegendItem(ISeries series)
+    public LegendItem(ISeries series, Paint? textPaint)
     {
         Orientation = ContainerOrientation.Horizontal;
         Padding = new Padding(12, 6);
@@ -28,7 +27,7 @@ public class LegendItem : StackLayout
             {
                 Text = series.Name ?? "?",
                 TextSize = 20,
-                Paint = new SolidColorPaint(new SKColor(30, 30, 30)),
+                Paint = textPaint,
                 Padding = new Padding(8, 2, 0, 2),
                 VerticalAlign = Align.Start,
                 HorizontalAlign = Align.Start

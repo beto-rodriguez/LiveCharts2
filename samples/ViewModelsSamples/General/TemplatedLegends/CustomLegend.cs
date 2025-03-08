@@ -12,6 +12,8 @@ public class CustomLegend : SKDefaultLegend
 {
     protected override Layout<SkiaSharpDrawingContext> GetLayout(Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var stackLayout = new StackLayout
         {
             Orientation = ContainerOrientation.Vertical,
@@ -21,7 +23,7 @@ public class CustomLegend : SKDefaultLegend
         };
 
         foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
-            stackLayout.Children.Add(new LegendItem(series));
+            stackLayout.Children.Add(new LegendItem(series, theme.TooltipTextPaint));
 
         return stackLayout;
     }

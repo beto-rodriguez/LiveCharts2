@@ -9,8 +9,7 @@ namespace ViewModelsSamples.Axes.Crosshairs;
 public class ViewModel
 {
     public ISeries[] Series { get; set; } = [
-        new LineSeries<double> { Values = [200, 558, 458, 249, 457, 339, 587] },
-        new LineSeries<double> { Values = [210, 400, 300, 350, 219, 323, 618] },
+        new LineSeries<double> { Values = [200, 558, 458, 249, 457, 339, 587] }
     ];
 
     public ICartesianAxis[] XAxes { get; set; } = [
@@ -29,7 +28,8 @@ public class ViewModel
             CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
             CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed),
             CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
-            CrosshairSnapEnabled = true // snapping is also supported
+            // when snapping is enabled, the crossair will adjust to the closest point.
+            CrosshairSnapEnabled = true
         }
     ];
 }

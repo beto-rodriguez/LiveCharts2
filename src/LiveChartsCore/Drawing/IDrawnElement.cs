@@ -33,7 +33,7 @@ public interface IDrawnElement
     /// Gets the parent shape, if any, the <see cref="X"/> and <see cref="Y"/>
     /// coordinates will be relative to the parent.
     /// </summary>
-    public IDrawnElement? Parent { get; set; }
+    IDrawnElement? Parent { get; set; }
 
     /// <summary>
     /// Gets or sets the x coordinate, if the parent is not null the x coordinate will be relative to the parent.

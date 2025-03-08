@@ -18,11 +18,13 @@ public class CustomTooltip : SKDefaultTooltip
     // the Initialize method is used to set up the tooltip animations, colors, etc.
     protected override void Initialize(Chart chart)
     {
+        var theme = chart.GetTheme();
+
         // the Wedge property, defines the size of the triangle that points to the target point.
         Wedge = 5;
 
-        Geometry.Fill = new SolidColorPaint(new SKColor(200, 200, 200), 3);
-        Geometry.Stroke = new SolidColorPaint(new SKColor(28, 49, 58), 3);
+        Geometry.Fill = theme.TooltipBackgroundPaint;
+        Geometry.Stroke = new SolidColorPaint(new SKColor(180, 180, 180, 100), 3);
         Geometry.Wedge = Wedge;
         Geometry.WedgeThickness = 2;
 
@@ -36,6 +38,8 @@ public class CustomTooltip : SKDefaultTooltip
     // it is called every time the tooltip changes.
     protected override Layout<SkiaSharpDrawingContext> GetLayout(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var layout = new StackLayout
         {
             Padding = new(10),
@@ -58,7 +62,7 @@ public class CustomTooltip : SKDefaultTooltip
             var label = new LabelGeometry
             {
                 Text = point.Coordinate.PrimaryValue.ToString("C2"),
-                Paint = new SolidColorPaint(new SKColor(30, 30, 30)),
+                Paint = theme.TooltipTextPaint,
                 TextSize = 15,
                 Padding = new Padding(8, 0),
                 VerticalAlign = Align.Start,
@@ -67,7 +71,7 @@ public class CustomTooltip : SKDefaultTooltip
 
             var customContent = new VariableSVGPathGeometry
             {
-                Fill = new SolidColorPaint(new SKColor(30, 30, 30)),
+                Fill = theme.TooltipTextPaint,
                 Width = 30,
                 Height = 30,
                 SVGPath = geometryPoint.Geometry

@@ -14,7 +14,7 @@ public class ViewModel
             IsHoverable = false, // disables the series from the tooltips // mark
             Values = [10, 10, 10, 10, 10, 10, 10],
             Stroke = null,
-            Fill = new SolidColorPaint(new SKColor(30, 30, 30, 30)),
+            Fill = new SolidColorPaint(new SKColor(180, 180, 180, 50)),
             IgnoresBarPosition = true
         },
         new ColumnSeries<double>

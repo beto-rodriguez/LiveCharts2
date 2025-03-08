@@ -6,7 +6,6 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.General.RealTime;
 
@@ -40,7 +39,7 @@ public class ViewModel
         {
             CustomSeparators = GetSeparators(),
             AnimationsSpeed = TimeSpan.FromMilliseconds(0),
-            SeparatorsPaint = new SolidColorPaint(SKColors.Black.WithAlpha(100))
+            SeparatorsPaint = new SolidColorPaint(new(180, 180, 180, 100))
         };
 
         XAxes = [_customAxis];

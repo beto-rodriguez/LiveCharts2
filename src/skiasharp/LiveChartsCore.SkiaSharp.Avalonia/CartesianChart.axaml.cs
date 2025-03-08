@@ -32,6 +32,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -40,6 +41,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -352,8 +354,12 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Design.IsDesignMode;
+
+    bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -708,12 +714,8 @@ public class CartesianChart : UserControl, ICartesianChartView
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
-        if (change.Property.Name == nameof(SyncContext))
-        {
-            CoreCanvas.Sync = change.NewValue ?? new object();
-        }
+        if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
         if (change.Property.Name == nameof(Series))
         {
@@ -744,6 +746,9 @@ public class CartesianChart : UserControl, ICartesianChartView
             _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
             _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
         }
+
+        if (change.Property.Name == nameof(ActualThemeVariant))
+            _core.ApplyTheme();
 
         _core.Update();
     }
@@ -819,6 +824,7 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     private float _previousScale = 1;
     private bool _matchAxesScreenDataRatio;
+    private Theme? _chartTheme;
 
     private void CartesianChart_Pinched(object? sender, PinchEventArgs e)
     {

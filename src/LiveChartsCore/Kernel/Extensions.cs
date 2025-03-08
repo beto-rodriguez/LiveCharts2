@@ -316,14 +316,14 @@ public static class Extensions
     /// </summary>
     /// <param name="animatable">The animatable object.</param>
     /// <param name="chart">
-    /// The chart, an animation will be built based on the <see cref="Chart.AnimationsSpeed"/>
-    /// and <see cref="Chart.EasingFunction"/>.
+    /// The chart, an animation will be built based on the <see cref="Chart.ActualAnimationsSpeed"/>
+    /// and <see cref="Chart.ActualEasingFunction"/>.
     /// </param>
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
     public static void Animate(this Animatable animatable, Chart chart, params string[]? properties) =>
-        Animate(animatable, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
+        Animate(animatable, new Animation(chart.ActualEasingFunction, chart.ActualAnimationsSpeed), properties);
 
     /// <summary>
     /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart

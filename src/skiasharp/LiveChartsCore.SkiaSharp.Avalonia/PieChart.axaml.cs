@@ -32,6 +32,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -40,6 +41,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -63,6 +65,7 @@ public class PieChart : UserControl, IPieChartView
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private MotionCanvas? _avaloniaCanvas;
+    private Theme? _chartTheme;
 
     #endregion
 
@@ -313,8 +316,12 @@ public class PieChart : UserControl, IPieChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => Design.IsDesignMode;
+
+    bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -406,7 +413,7 @@ public class PieChart : UserControl, IPieChartView
     /// <inheritdoc cref="IPieChartView.MaxValue" />
     public double MaxValue
     {
-        get => (double)GetValue(MaxValueProperty);
+        get => (double)GetValue(MaxValueProperty)!;
         set => SetValue(MaxValueProperty, value);
     }
 
@@ -631,6 +638,9 @@ public class PieChart : UserControl, IPieChartView
             _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
             return;
         }
+
+        if (change.Property.Name == nameof(ActualThemeVariant))
+            _core.ApplyTheme();
 
         _core.Update();
     }

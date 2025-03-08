@@ -33,6 +33,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -72,6 +73,7 @@ public abstract class Chart : UserControl, IChartView
     private Paint? _tooltipTextPaint = (Paint?)LiveCharts.DefaultSettings.TooltipTextPaint;
     private Paint? _tooltipBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint;
     private double _tooltipTextSize = LiveCharts.DefaultSettings.TooltipTextSize;
+    private Theme? _chartTheme;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -151,8 +153,12 @@ public abstract class Chart : UserControl, IChartView
 
     #region properties
 
-    /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+
+    bool IChartView.IsDarkMode => false;
+
+    /// <inheritdoc cref="IChartView.ChartTheme" />
+    public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public LiveChartsCore.Chart CoreChart => core ?? throw new Exception("Core not set yet.");

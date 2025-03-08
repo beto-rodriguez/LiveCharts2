@@ -1,5 +1,4 @@
-﻿using SkiaSharp;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Kernel.Sketches;
@@ -21,7 +20,7 @@ public class ViewModel
             CustomSeparators = [0, 10, 25, 50, 100],
             MinLimit = 0, // forces the axis to start at 0
             MaxLimit = 100, // forces the axis to end at 100
-            SeparatorsPaint = new SolidColorPaint(SKColors.Black.WithAlpha(100))
+            SeparatorsPaint = new SolidColorPaint(new(180, 180, 180, 100))
         }
     ];
 }

@@ -50,7 +50,7 @@ public static class LiveChartsSkiaSharp
     public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
     {
         if (!LiveCharts.HasBackend) _ = settings.AddSkiaSharp();
-        if (!LiveCharts.HasTheme) _ = settings.AddLightTheme();
+        if (!LiveCharts.HasDefaultTheme) _ = settings.AddDefaultTheme();
         if (!LiveCharts.HasDefaultMappers) _ = settings.AddDefaultMappers();
 
         return settings;

@@ -56,6 +56,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
     private bool _enableNullSplitting = true;
     private Paint? _geometryFill;
     private Paint? _geometryStroke;
+    private bool _showError;
     private Paint? _errorPaint;
 
     /// <summary>
@@ -104,11 +105,27 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
     }
 
+    /// <inheritdoc cref="IErrorSeries.ShowError"/>
+    public bool ShowError
+    {
+        get => _showError;
+        set
+        {
+            SetProperty(ref _showError, value);
+            if (_errorPaint is not null)
+                _errorPaint.IsPaused = !value;
+        }
+    }
+
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
         get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+        set
+        {
+            SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+            _showError = value is not null;
+        }
     }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
@@ -228,7 +245,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                         fillPath.Pivot = p;
                         if (isNew)
                         {
-                            fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                            fillPath.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
                         }
                     }
                     if (Stroke is not null)
@@ -240,7 +257,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                         strokePath.Pivot = p;
                         if (isNew)
                         {
-                            strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                            strokePath.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
                         }
                     }
 
@@ -301,7 +318,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                 if (visual is null)
                 {
                     var v = new SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>();
-                    if (ErrorPaint is not null)
+                    if (ShowError && ErrorPaint is not null)
                     {
                         v.YError = new TErrorGeometry();
                         v.XError = new TErrorGeometry();
@@ -380,7 +397,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
+                if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null)
                 {
                     var e = coordinate.PointError;
 
@@ -415,14 +432,14 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
                 pointsCleanup.Clean(data.TargetPoint);
 
-                if (DataLabelsPaint is not null)
+                if (ShowDataLabels && DataLabelsPaint is not null)
                 {
                     var label = (TLabel?)data.TargetPoint.Context.Label;
 
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                        l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                        l.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }
@@ -493,13 +510,13 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             }
         }
 
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null)
         {
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
-        if (ErrorPaint is not null)
+        if (ShowError && ErrorPaint is not null)
         {
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
             ErrorPaint.ZIndex = actualZIndex + 0.3;
@@ -826,8 +843,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual)
             throw new Exception("Unable to initialize the point instance.");
 
-        var easing = EasingFunction ?? chart.EasingFunction;
-        var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
+        var easing = EasingFunction ?? chart.CoreChart.ActualEasingFunction;
+        var speed = AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed;
 
         visual.Geometry.Animate(easing, speed);
         visual.Segment.Animate(easing, speed);

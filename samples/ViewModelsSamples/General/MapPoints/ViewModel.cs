@@ -24,7 +24,7 @@ public class ViewModel
         var series = new ColumnSeries<int>
         {
             Values = [2, 5, 4, 6, 8, 3, 2, 4, 6],
-            DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
+            ShowDataLabels = true,
             DataLabelsPosition = DataLabelsPosition.Top
         }
         .OnPointMeasured(point =>

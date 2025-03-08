@@ -24,7 +24,7 @@ public class ViewModel
     // Creates a gray background and border in the draw margin.
     public DrawMarginFrame DrawMarginFrame => new()
     {
-        Fill = new SolidColorPaint(new SKColor(220, 220, 220)),
-        Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 1)
+        Fill = new SolidColorPaint(new SKColor(220, 220, 220, 50)),
+        Stroke = new SolidColorPaint(new SKColor(180, 180, 180, 100), 1)
     };
 }

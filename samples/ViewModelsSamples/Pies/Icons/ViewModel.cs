@@ -3,7 +3,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Extensions;
-using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -27,8 +26,7 @@ public class ViewModel
         Series = data.AsPieSeries<BrowserShare, DoughnutGeometry, SvgLabel>(
             (dataItem, series) =>
             {
-                // define the data labels paint.
-                series.DataLabelsPaint = new SolidColorPaint(SKColors.WhiteSmoke);
+                series.ShowDataLabels = true;
 
                 // now, when the point is measured,
                 // we will set up the svg label based on the BrowserShare class.

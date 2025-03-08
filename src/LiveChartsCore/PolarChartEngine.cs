@@ -149,8 +149,6 @@ public class PolarChartEngine(
             _preserveFirstDraw = false;
         }
 
-        MeasureWork = new object();
-
         #region copy the current data in the view
 
         var viewDrawMargin = view.DrawMargin;
@@ -168,15 +166,15 @@ public class PolarChartEngine(
             r = [provider.GetDefaultPolarAxis()];
         }
 
-        AngleAxes = a.Cast<IPolarAxis>().ToArray();
-        RadiusAxes = r.Cast<IPolarAxis>().ToArray();
+        AngleAxes = [.. a.Cast<IPolarAxis>()];
+        RadiusAxes = [.. r.Cast<IPolarAxis>()];
 
         if (AngleAxes.Length == 0 || RadiusAxes.Length == 0)
         {
             throw new Exception($"{nameof(AngleAxes)} and {nameof(RadiusAxes)} must contain at least one element.");
         }
 
-        var theme = LiveCharts.DefaultSettings.GetTheme();
+        var theme = GetTheme();
 
         LegendPosition = view.LegendPosition;
         Legend = view.Legend;
@@ -184,8 +182,12 @@ public class PolarChartEngine(
         TooltipPosition = view.TooltipPosition;
         Tooltip = view.Tooltip;
 
-        AnimationsSpeed = view.AnimationsSpeed;
-        EasingFunction = view.EasingFunction;
+        ActualAnimationsSpeed = view.AnimationsSpeed == TimeSpan.MaxValue
+            ? theme.AnimationsSpeed
+            : view.AnimationsSpeed;
+        ActualEasingFunction = view.EasingFunction == EasingFunctions.Unset
+            ? theme.EasingFunction
+            : view.EasingFunction;
 
         FitToBounds = view.FitToBounds;
         TotalAnge = (float)view.TotalAngle;
@@ -197,7 +199,7 @@ public class PolarChartEngine(
         #endregion
 
         SeriesContext = new SeriesContext(VisibleSeries, this);
-        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
+        var themeId = theme.ThemeId;
 
         // restart axes bounds and meta data
         foreach (var axis in AngleAxes)

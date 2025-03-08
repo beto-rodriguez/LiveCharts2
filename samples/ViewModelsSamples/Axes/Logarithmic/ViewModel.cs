@@ -1,5 +1,4 @@
 ﻿using System;
-using SkiaSharp;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -43,12 +42,12 @@ public class ViewModel
         {
             SeparatorsPaint = new SolidColorPaint
             {
-                Color = SKColors.Black.WithAlpha(100),
+                Color = new(180, 180, 180, 100),
                 StrokeThickness = 1,
             },
             SubseparatorsPaint = new SolidColorPaint
             {
-                Color = SKColors.Black.WithAlpha(50),
+                Color = new(180, 180, 180, 100),
                 StrokeThickness = 0.5f
             },
             SubseparatorsCount = 9,

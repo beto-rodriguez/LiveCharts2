@@ -32,6 +32,8 @@ namespace LiveChartsCore;
 /// </summary>
 public static class EasingFunctions
 {
+    internal static Func<float, float> Unset { get; } = t => t;
+
     /// <summary>
     /// Gets the back in.
     /// </summary>

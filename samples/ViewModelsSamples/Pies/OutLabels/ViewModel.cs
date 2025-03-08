@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Pies.OutLabels;
@@ -17,7 +15,7 @@ public class ViewModel
              series.Name = _names[_index++ % _names.Length];
              series.DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Outer; // mark
              series.DataLabelsSize = 15;
-             series.DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30));
+             series.ShowDataLabels = true;
              series.DataLabelsFormatter =
                 point =>
                     $"This slide takes {point.Coordinate.PrimaryValue} " +
