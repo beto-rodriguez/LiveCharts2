@@ -38,7 +38,7 @@ public class Theme
     private readonly object _darkId = new();
     private bool _initialized = false;
     private bool _lastKnownDarkMode = false;
-    private IChartView? _chartView;
+    private bool _isUIDark;
     internal LvcThemeKind _themeRequest = LvcThemeKind.Unknown;
 
     /// <summary>
@@ -52,7 +52,7 @@ public class Theme
     /// </summary>
     public bool IsDark =>
         RequestedTheme == LvcThemeKind.Unknown
-            ? _chartView?.IsDarkMode == true
+            ? _isUIDark
             : RequestedTheme == LvcThemeKind.Dark;
 
     /// <summary>
@@ -328,9 +328,9 @@ public class Theme
     /// </summary>
     public Func<IChartLegend> GetDefaultLegend { get; set; } = () => throw new NotImplementedException();
 
-    internal void Setup(IChartView chartView)
+    internal void Setup(bool isUIDark)
     {
-        _chartView = chartView;
+        _isUIDark = isUIDark;
         if (!_initialized || _lastKnownDarkMode != IsDark)
         {
             _lastKnownDarkMode = IsDark;
