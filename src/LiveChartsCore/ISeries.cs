@@ -187,6 +187,16 @@ public interface ISeries : IChartElement
     double DataLabelsMaxWidth { get; set; }
 
     /// <summary>
+    /// Gets or sets the hover state style.
+    /// </summary>
+    Action<ChartPoint>? HoveredStyle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the clear hover state style.
+    /// </summary>
+    Action<ChartPoint>? ClearHoveredStyle { get; set; }
+
+    /// <summary>
     /// Gets the tool tip text for a give chart point.
     /// </summary>
     /// <param name="point">The chart point.</param>

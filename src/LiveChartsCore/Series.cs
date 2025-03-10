@@ -111,6 +111,8 @@ public abstract class Series<TModel, TVisual, TLabel>
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
     private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
+    private Action<ChartPoint>? _hoveredStyle;
+    private Action<ChartPoint>? _clearHoveredStyle;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel}"/> class.
@@ -300,6 +302,12 @@ public abstract class Series<TModel, TVisual, TLabel>
 
     /// <inheritdoc cref="ISeries.DataLabelsMaxWidth"/>
     public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
+
+    /// <inheritdoc cref="ISeries.HoveredStyle"/>
+    public Action<ChartPoint>? HoveredStyle { get => _hoveredStyle; set => SetProperty(ref _hoveredStyle, value); }
+
+    /// <inheritdoc cref="ISeries.ClearHoveredStyle"/>
+    public Action<ChartPoint>? ClearHoveredStyle { get => _clearHoveredStyle; set => SetProperty(ref _clearHoveredStyle, value); }
 
     /// <inheritdoc cref="ISeries.GetStackGroup"/>
     public virtual int GetStackGroup() => 0;
@@ -497,6 +505,8 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
+        HoveredStyle?.Invoke(point);
+
         if (ChartPointPointerHover is null || point.IsPointerOver) return;
         point.IsPointerOver = true;
         ChartPointPointerHover.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
@@ -508,6 +518,8 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
+        ClearHoveredStyle?.Invoke(point);
+
         if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
         point.IsPointerOver = false;
         ChartPointPointerHoverLost.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
