@@ -535,28 +535,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     protected internal override Paint?[] GetPaintTasks() =>
         [_fill, _stroke, DataLabelsPaint];
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.PushOut = (float)HoverPushout;
-        visual.Opacity = 0.8f;
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.PushOut = (float)Pushout;
-        visual.Opacity = 1;
-
-        base.OnPointerLeft(point);
-    }
-
     /// <summary>
     /// Sets the default point transitions.
     /// </summary>

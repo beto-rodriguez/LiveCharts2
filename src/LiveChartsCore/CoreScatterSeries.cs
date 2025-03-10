@@ -407,28 +407,6 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     protected internal override Paint?[] GetPaintTasks() =>
         [Stroke, Fill, DataLabelsPaint, _errorPaint];
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 0.8f;
-        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1.1f, 1.1f);
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 1;
-        if (!IsWeighted) visual.ScaleTransform = new LvcPoint(1f, 1f);
-
-        base.OnPointerLeft(point);
-    }
-
     /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {

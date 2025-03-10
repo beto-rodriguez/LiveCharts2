@@ -454,26 +454,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         label.RemoveOnCompleted = true;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 0.8f;
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 1;
-
-        base.OnPointerLeft(point);
-    }
-
     /// <summary>
     /// Called when [paint changed].
     /// </summary>

@@ -570,25 +570,6 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         return GetMiniaturePaint(paint, zIndex);
     }
 
-    /// <inheritdoc cref="GetMiniatureStroke(ChartPoint?, int)"/>
-    protected override Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? GeometryStroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
-
-        base.OnPointerEnter(point);
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
     protected override void OnPointerLeft(ChartPoint point)
     {

@@ -120,6 +120,18 @@ public static class ThemesExtensions
                             series.DataLabelsPaint = theme.IsDark
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
+
+                        series.HoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.Opacity = 0.8f;
+                        };
+
+                        series.ClearHoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.Opacity = 1;
+                        };
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
@@ -136,6 +148,18 @@ public static class ThemesExtensions
                             lineSeries.ErrorPaint = theme.IsDark
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
+
+                        lineSeries.HoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.ScaleTransform = new(1.35f, 1.35f);
+                        };
+
+                        lineSeries.ClearHoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.ScaleTransform = new(1, 1);
+                        };
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
                     {
@@ -147,6 +171,18 @@ public static class ThemesExtensions
                             new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         steplineSeries.Stroke = new SolidColorPaint(color, 4);
                         steplineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
+
+                        steplineSeries.HoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.ScaleTransform = new(1.35f, 1.35f);
+                        };
+
+                        steplineSeries.ClearHoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.ScaleTransform = new(1, 1);
+                        };
                     })
                     .HasRuleForStackedLineSeries(stackedLine =>
                     {
@@ -256,6 +292,22 @@ public static class ThemesExtensions
                                     : theme.IsDark
                                         ? new SolidColorPaint(new(45, 45, 45))
                                         : new SolidColorPaint(new(245, 245, 245));
+
+                        pieSeries.HoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is not BaseDoughnutGeometry doughnutGeometry) return;
+
+                            doughnutGeometry.PushOut = (float)pieSeries.HoverPushout;
+                            doughnutGeometry.Opacity = 0.8f;
+                        };
+
+                        pieSeries.ClearHoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is not BaseDoughnutGeometry doughnutGeometry) return;
+
+                            doughnutGeometry.PushOut = 0;
+                            doughnutGeometry.Opacity = 1;
+                        };
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
                     {
@@ -267,6 +319,18 @@ public static class ThemesExtensions
                             new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         polarLine.Stroke = new SolidColorPaint(color, 4);
                         polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
+
+                        polarLine.HoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.ScaleTransform = new(1.35f, 1.35f);
+                        };
+
+                        polarLine.ClearHoveredStyle = point =>
+                        {
+                            if (point.Context.Visual is null) return;
+                            point.Context.Visual.ScaleTransform = new(1, 1);
+                        };
                     })
                     .HasRuleForGaugeSeries(gaugeSeries =>
                     {
