@@ -28,7 +28,11 @@ namespace LiveChartsCore.Motion;
 /// The <see cref="MotionProperty{T}"/> object tracks where a property of a <see cref="Animatable"/> is in a time line.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class MotionProperty<T> : IMotionProperty
+/// <remarks>
+/// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
+/// </remarks>
+/// <param name="propertyName">Name of the property.</param>
+public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
 {
     private static readonly bool s_canBeNull = Kernel.Extensions.CanBeNull(typeof(T));
 
@@ -41,19 +45,10 @@ public abstract class MotionProperty<T> : IMotionProperty
     /// To value
     /// </summary>
     protected internal T? toValue = default;
-
     private long _startTime;
     private long _endTime;
     private bool _requiresToInitialize = true;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    protected MotionProperty(string propertyName)
-    {
-        PropertyName = propertyName;
-    }
+    private T? _savedValue = default;
 
     /// <summary>
     /// Gets the value where the transition began.
@@ -69,7 +64,7 @@ public abstract class MotionProperty<T> : IMotionProperty
     public Animation? Animation { get; set; }
 
     /// <inheritdoc cref="IMotionProperty.PropertyName"/>
-    public string PropertyName { get; }
+    public string PropertyName { get; } = propertyName;
 
     /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
     public bool IsCompleted { get; set; } = false;
@@ -187,4 +182,10 @@ public abstract class MotionProperty<T> : IMotionProperty
     /// <param name="progress">The progress.</param>
     /// <returns></returns>
     protected abstract T OnGetMovement(float progress);
+
+    /// <inheritdoc cref="IMotionProperty.Save"/>
+    public void Save() => _savedValue = toValue;
+
+    /// <inheritdoc cref="IMotionProperty.Restore"/>
+    public void Restore(Animatable animatable) => SetMovement(_savedValue, animatable);
 }
