@@ -114,23 +114,6 @@ public class ChartPoint
     /// <returns>The distance in pixels.</returns>
     public double DistanceTo(LvcPoint point, FindingStrategy strategy) =>
         Context.HoverArea?.DistanceTo(point, strategy) ?? double.NaN;
-
-    private void SetCoordinate(
-        double primary = double.NaN, double secondary = double.NaN, double tertiary = double.NaN,
-        double quaternary = double.NaN, double quinary = double.NaN)
-    {
-        // This is a method that allows previous versions of LiveCharts to map the entity to the chart coordinate
-        // you should not use the setters of PrimaryValue, SecondaryValue, etc. instead set the Coordinate property.
-        var current = Coordinate;
-
-        if (double.IsNaN(primary)) primary = current.PrimaryValue;
-        if (double.IsNaN(secondary)) secondary = current.SecondaryValue;
-        if (double.IsNaN(tertiary)) tertiary = current.TertiaryValue;
-        if (double.IsNaN(quaternary)) quaternary = current.QuaternaryValue;
-        if (double.IsNaN(quinary)) quinary = current.QuinaryValue;
-
-        Coordinate = new Coordinate(secondary, primary, tertiary, quaternary, quinary);
-    }
 }
 
 /// <summary>
