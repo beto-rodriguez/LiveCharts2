@@ -120,6 +120,9 @@ public static class ThemesExtensions
                             series.DataLabelsPaint = theme.IsDark
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
+
+                        series.VisualStates["Hover"] = (drawnElement, point) =>
+                            drawnElement.Opacity = 0.8f;
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
@@ -136,6 +139,9 @@ public static class ThemesExtensions
                             lineSeries.ErrorPaint = theme.IsDark
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
+
+                        lineSeries.VisualStates["Hover"] = (drawnElement, point) =>
+                            drawnElement.ScaleTransform = new(1.35f, 1.35f);
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
                     {
@@ -147,6 +153,9 @@ public static class ThemesExtensions
                             new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         steplineSeries.Stroke = new SolidColorPaint(color, 4);
                         steplineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
+
+                        steplineSeries.VisualStates["Hover"] = (drawnElement, point) =>
+                           drawnElement.ScaleTransform = new(1.35f, 1.35f);
                     })
                     .HasRuleForStackedLineSeries(stackedLine =>
                     {
@@ -256,6 +265,13 @@ public static class ThemesExtensions
                                     : theme.IsDark
                                         ? new SolidColorPaint(new(45, 45, 45))
                                         : new SolidColorPaint(new(245, 245, 245));
+
+                        pieSeries.VisualStates["Hover"] = (drawnElement, point) =>
+                        {
+                            if (drawnElement is not BaseDoughnutGeometry doughnutGeometry) return;
+                            doughnutGeometry.PushOut = (float)pieSeries.HoverPushout;
+                            doughnutGeometry.Opacity = 0.8f;
+                        };
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
                     {
@@ -267,6 +283,9 @@ public static class ThemesExtensions
                             new SolidColorPaint(theme.IsDark ? new(30, 30, 30) : new(250, 250, 250));
                         polarLine.Stroke = new SolidColorPaint(color, 4);
                         polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
+
+                        polarLine.VisualStates["Hover"] = (drawnElement, point) =>
+                            drawnElement.ScaleTransform = new(1.35f, 1.35f);
                     })
                     .HasRuleForGaugeSeries(gaugeSeries =>
                     {

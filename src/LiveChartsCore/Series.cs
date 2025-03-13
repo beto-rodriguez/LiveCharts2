@@ -301,6 +301,9 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <inheritdoc cref="ISeries.DataLabelsMaxWidth"/>
     public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
 
+    /// <inheritdoc cref="ISeries.VisualStates"/>
+    public Dictionary<string, Action<IDrawnElement, ChartPoint>> VisualStates { get; set; } = [];
+
     /// <inheritdoc cref="ISeries.GetStackGroup"/>
     public virtual int GetStackGroup() => 0;
 
@@ -497,6 +500,9 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
+        if (VisualStates.TryGetValue("Hover", out var hoverState))
+            point.SetState(hoverState);
+
         if (ChartPointPointerHover is null || point.IsPointerOver) return;
         point.IsPointerOver = true;
         ChartPointPointerHover.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));
@@ -508,6 +514,8 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
+        point.ClearCurrentState();
+
         if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
         point.IsPointerOver = false;
         ChartPointPointerHoverLost.Invoke(point.Context.Chart, ConvertToTypedChartPoint(point));

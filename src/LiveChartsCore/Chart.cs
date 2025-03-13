@@ -594,7 +594,7 @@ public abstract class Chart
     public Theme GetTheme()
     {
         var theme = View.ChartTheme ?? LiveCharts.DefaultSettings.GetTheme();
-        theme.Setup(View);
+        theme.Setup(View.IsDarkMode);
         return theme;
     }
 

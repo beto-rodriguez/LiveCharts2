@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -115,21 +116,29 @@ public class ChartPoint
     public double DistanceTo(LvcPoint point, FindingStrategy strategy) =>
         Context.HoverArea?.DistanceTo(point, strategy) ?? double.NaN;
 
-    private void SetCoordinate(
-        double primary = double.NaN, double secondary = double.NaN, double tertiary = double.NaN,
-        double quaternary = double.NaN, double quinary = double.NaN)
+    /// <summary>
+    /// Sets the state of the point.
+    /// </summary>
+    /// <param name="state">The state.</param>
+    public void SetState(Action<IDrawnElement, ChartPoint> state)
     {
-        // This is a method that allows previous versions of LiveCharts to map the entity to the chart coordinate
-        // you should not use the setters of PrimaryValue, SecondaryValue, etc. instead set the Coordinate property.
-        var current = Coordinate;
+        if (Context.Visual is not Animatable animatable) return;
 
-        if (double.IsNaN(primary)) primary = current.PrimaryValue;
-        if (double.IsNaN(secondary)) secondary = current.SecondaryValue;
-        if (double.IsNaN(tertiary)) tertiary = current.TertiaryValue;
-        if (double.IsNaN(quaternary)) quaternary = current.QuaternaryValue;
-        if (double.IsNaN(quinary)) quinary = current.QuinaryValue;
+        foreach (var property in animatable.MotionProperties.Values)
+            property.Save();
 
-        Coordinate = new Coordinate(secondary, primary, tertiary, quaternary, quinary);
+        if (Context.Visual is not null)
+            state.Invoke(Context.Visual, this);
+    }
+
+    /// <summary>
+    /// Clears the current state.
+    /// </summary>
+    public void ClearCurrentState()
+    {
+        if (Context.Visual is not Animatable animatable) return;
+        foreach (var property in animatable.MotionProperties.Values)
+            property.Restore(animatable);
     }
 }
 

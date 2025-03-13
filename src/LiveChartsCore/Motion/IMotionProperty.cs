@@ -58,4 +58,14 @@ public interface IMotionProperty
     /// </summary>
     /// <param name="source">The source.</param>
     void CopyFrom(IMotionProperty source);
+
+    /// <summary>
+    /// Saves the property target value.
+    /// </summary>
+    void Save();
+
+    /// <summary>
+    /// Restores the property target value.
+    /// </summary>
+    void Restore(Animatable animatable);
 }

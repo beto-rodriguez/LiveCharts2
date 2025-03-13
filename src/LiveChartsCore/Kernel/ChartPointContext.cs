@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -85,7 +86,7 @@ public class ChartPointContext
     /// <value>
     /// The visual.
     /// </value>
-    public object? Visual { get; internal set; }
+    public IDrawnElement? Visual { get; internal set; }
 
     /// <summary>
     /// Gets the additional visuals, some series might have more than one visual, here you can find the rest of them.
