@@ -187,14 +187,10 @@ public interface ISeries : IChartElement
     double DataLabelsMaxWidth { get; set; }
 
     /// <summary>
-    /// Gets or sets the hover state style.
+    /// Gets the visual states, states define the look of chart points when they are in a certain state, for example
+    /// the hover, active, or selected states.
     /// </summary>
-    Action<ChartPoint>? HoveredStyle { get; set; }
-
-    /// <summary>
-    /// Gets or sets the clear hover state style.
-    /// </summary>
-    Action<ChartPoint>? ClearHoveredStyle { get; set; }
+    Dictionary<string, Action<IDrawnElement, ChartPoint>> VisualStates { get; }
 
     /// <summary>
     /// Gets the tool tip text for a give chart point.
