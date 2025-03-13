@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -114,6 +115,31 @@ public class ChartPoint
     /// <returns>The distance in pixels.</returns>
     public double DistanceTo(LvcPoint point, FindingStrategy strategy) =>
         Context.HoverArea?.DistanceTo(point, strategy) ?? double.NaN;
+
+    /// <summary>
+    /// Sets the state of the point.
+    /// </summary>
+    /// <param name="state">The state.</param>
+    public void SetState(Action<IDrawnElement, ChartPoint> state)
+    {
+        if (Context.Visual is not Animatable animatable) return;
+
+        foreach (var property in animatable.MotionProperties.Values)
+            property.Save();
+
+        if (Context.Visual is not null)
+            state.Invoke(Context.Visual, this);
+    }
+
+    /// <summary>
+    /// Clears the current state.
+    /// </summary>
+    public void ClearCurrentState()
+    {
+        if (Context.Visual is not Animatable animatable) return;
+        foreach (var property in animatable.MotionProperties.Values)
+            property.Restore(animatable);
+    }
 }
 
 /// <summary>
