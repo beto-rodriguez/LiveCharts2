@@ -20,10 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Generators;
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
-[XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
+/// <summary>
+/// Just a view that does nothing, but helps to make the XAML work.
+/// </summary>
+public class EmptyContentView : View, IContentView
+{
+    /// <summary>
+    /// Gets the content.
+    /// </summary>
+    public object? Content => null;
+
+    /// <summary>
+    /// Gets the presented content.
+    /// </summary>
+    public IView? PresentedContent => null;
+
+    /// <summary>
+    /// Gets the padding.
+    /// </summary>
+    Thickness IPadding.Padding => new();
+
+    /// <summary>
+    /// Gets the size.
+    /// </summary>
+    /// <param name="bounds"></param>
+    /// <returns></returns>
+    public Size CrossPlatformArrange(Rect bounds) => new();
+
+    /// <summary>
+    /// Measures the specified width constraint.
+    /// </summary>
+    /// <param name="widthConstraint"></param>
+    /// <param name="heightConstraint"></param>
+    /// <returns></returns>
+    public Size CrossPlatformMeasure(double widthConstraint, double heightConstraint) => new();
+}

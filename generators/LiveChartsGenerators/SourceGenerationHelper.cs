@@ -259,7 +259,8 @@ public partial class {target.Name}
         if (TypeConverters.TryGetValue(propertyType, out var typeConverter))
             _ = sb.AppendLine(@$"    [System.ComponentModel.TypeConverter(typeof({typeConverter}))]");
 
-        _ = sb.Append($"    public {propertyType} {propertyName} {{ get => _baseType.{propertyName}; set => _baseType.{propertyName} = value; }}");
+        _ = sb.Append($"    public {propertyType} {propertyName} {{ get => ({propertyType})GetValue({propertyName}Property); set => SetValue({propertyName}Property, value); }}");
+        //_ = sb.Append($"    public {propertyType} {propertyName} {{ get => _baseType.{propertyName}; set => _baseType.{propertyName} = value; }}");
 
         return sb.ToString();
     }

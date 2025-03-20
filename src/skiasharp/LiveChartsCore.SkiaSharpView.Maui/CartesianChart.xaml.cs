@@ -163,8 +163,8 @@ public partial class CartesianChart : ChartView, ICartesianChartView
 
                 foreach (var item in newCollection)
                 {
-                    if (item is not Element xamlAxis) continue;
-                    chart.AddLogicalChild(xamlAxis);
+                    if (item is not View xamlAxis) continue;
+                    chart.canvas.Children.Add(xamlAxis);
                 }
 
                 if (chart._core is null) return;
@@ -188,8 +188,8 @@ public partial class CartesianChart : ChartView, ICartesianChartView
 
                 foreach (var item in newCollection)
                 {
-                    if (item is not Element xamlAxis) continue;
-                    chart.AddLogicalChild(xamlAxis);
+                    if (item is not View xamlAxis) continue;
+                    chart.canvas.Children.Add(xamlAxis);
                 }
 
                 if (chart._core is null) return;

@@ -11,13 +11,16 @@
         Series="{Binding Series}"
         LegendPosition="Right">
         <lvc:CartesianChart.Resources>
+            <Style TargetType="lvc:CartesianChart">
+                <Setter Property="Background" Value="Gray"/>
+            </Style>
             <Style TargetType="lvc:XamlAxis">
-                <Setter Property="Padding" Value="200"/>
+                <Setter Property="Padding"  Value="100"/>
             </Style>
         </lvc:CartesianChart.Resources>
         <lvc:CartesianChart.XAxes>
             <lvc:AxesCollection>
-                <lvc:XamlAxis Padding="100" Labels="{Binding Labels}"/>
+                <lvc:XamlAxis Labels="{Binding Labels}" MinLimit="{x:Null}" MaxLimit="{x:Null}"/>
             </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
     </lvc:CartesianChart>

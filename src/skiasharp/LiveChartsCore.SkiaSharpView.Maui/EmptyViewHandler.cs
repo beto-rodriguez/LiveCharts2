@@ -1,4 +1,4 @@
-﻿// The MIT License(MIT)
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -20,10 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Generators;
+using Microsoft.Maui.Handlers;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
-[XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
+/// <summary>
+/// An empty <see cref="ContentViewHandler"/> that does nothing.
+/// </summary>
+public class EmptyViewHandler : ContentViewHandler
+{ }

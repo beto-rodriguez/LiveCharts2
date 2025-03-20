@@ -26,6 +26,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
+using Microsoft.Maui.Layouts;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
@@ -34,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// <summary>
 /// Defines the motion cavnas class for Maui.
 /// </summary>
-public class MotionCanvas : ContentView
+public class MotionCanvas : AbsoluteLayout
 {
     private bool _isDrawingLoopRunning = false;
     private bool _isLoaded = true;
@@ -107,13 +108,21 @@ public class MotionCanvas : ContentView
         {
             _glView = new SKGLView();
             _glView.PaintSurface += OnGlViewPaintSurface;
-            Content = _glView;
+
+            AbsoluteLayout.SetLayoutBounds(_glView, new(0, 0, 1, 1));
+            AbsoluteLayout.SetLayoutFlags(_glView, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.PositionProportional);
+
+            Children.Add(_glView);
         }
         else
         {
             _canvasView = new SKCanvasView();
             _canvasView.PaintSurface += OnCanvasViewPaintSurface;
-            Content = _canvasView;
+
+            AbsoluteLayout.SetLayoutBounds(_canvasView, new(0, 0, 1, 1));
+            AbsoluteLayout.SetLayoutFlags(_canvasView, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.PositionProportional);
+
+            Children.Add(_canvasView);
         }
     }
 
