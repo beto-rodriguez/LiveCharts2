@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-namespace LiveChartsCore.SkiaSharpView;
+namespace LiveChartsCore.SkiaSharpView.Maui;
 
-/// <inheritdoc cref="ICartesianAxis" />
-public class Axis : CoreAxis<LabelGeometry, LineGeometry>
-{
-    public static Axis DefaultValues { get; } = new Axis
-    {
-        Padding = new LiveChartsCore.Drawing.Padding(),
-    };
-}
+/// <summary>
+/// A collection of axes.
+/// </summary>
+public class AxesCollection : List<ICartesianAxis>
+{ }

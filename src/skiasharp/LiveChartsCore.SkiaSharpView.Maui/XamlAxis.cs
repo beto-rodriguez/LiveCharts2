@@ -21,15 +21,20 @@
 // SOFTWARE.
 
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using Microsoft.Maui.Controls;
+using LiveChartsCore.Generators;
 
-namespace LiveChartsCore.SkiaSharpView;
+namespace LiveChartsCore.SkiaSharpView.Maui;
 
-/// <inheritdoc cref="ICartesianAxis" />
-public class Axis : CoreAxis<LabelGeometry, LineGeometry>
+[XamlClass(typeof(Axis))]
+public partial class XamlAxis : Element, ICartesianAxis
 {
-    public static Axis DefaultValues { get; } = new Axis
-    {
-        Padding = new LiveChartsCore.Drawing.Padding(),
-    };
+    private static BindableProperty.BindingPropertyChangedDelegate GetOnChangeHandler2<T>(
+        System.Action<LiveChartsCore.SkiaSharpView.Axis, T> setter) =>
+            (BindableObject o, object oldValue, object newValue) =>
+            {
+                if (o is not LiveChartsCore.SkiaSharpView.Maui.XamlAxis bindableTarget) return;
+                var value = (T)newValue;
+                setter(bindableTarget._baseType, (T)newValue);
+            };
 }

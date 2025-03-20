@@ -100,7 +100,7 @@ public static class ThemesExtensions
                             axis.SeparatorsPaint = cartesian.Orientation == AxisOrientation.X
                                 ? null
                                 : new SolidColorPaint(lineColor);
-                            cartesian.Padding = new Padding(12);
+                            cartesian.Padding = new Padding(20);
                         }
                         else if (axis is IPolarAxis polar)
                         {

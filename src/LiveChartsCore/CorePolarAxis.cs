@@ -84,6 +84,8 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
     #region properties
 
+    ChartElement IPlane.ChartElement => this;
+
     float IPolarAxis.Ro { get; set; }
 
     Bounds IPlane.DataBounds => _dataBounds ?? throw new Exception("bounds not found");

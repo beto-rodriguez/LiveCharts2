@@ -9,7 +9,16 @@
     </ContentPage.BindingContext>
     <lvc:CartesianChart
         Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
         LegendPosition="Right">
+        <lvc:CartesianChart.Resources>
+            <Style TargetType="lvc:XamlAxis">
+                <Setter Property="Padding" Value="200"/>
+            </Style>
+        </lvc:CartesianChart.Resources>
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis Padding="100" Labels="{Binding Labels}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
     </lvc:CartesianChart>
 </ContentPage>

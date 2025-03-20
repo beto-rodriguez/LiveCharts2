@@ -38,4 +38,6 @@ public class ViewModel
             MinStep = 1 // mark
         }
     ];
+
+    public string[] Labels { get; set; } = ["Category 1", "Category 2", "Category 3"];
 }

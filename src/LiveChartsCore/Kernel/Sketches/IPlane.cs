@@ -35,6 +35,12 @@ namespace LiveChartsCore.Kernel.Sketches;
 public interface IPlane : IChartElement
 {
     /// <summary>
+    /// Gets the chart element.
+    /// </summary>
+    /// <returns></returns>
+    ChartElement ChartElement { get; }
+
+    /// <summary>
     /// Gets or sets the axis name.
     /// </summary>
     string? Name { get; set; }

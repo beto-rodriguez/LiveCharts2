@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Profile 1": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\..\\src\\skiasharp\\LiveChartsCore.SkiaSharpView.Maui\\LiveChartsCore.SkiaSharpView.Maui.csproj"
+    }
+  }
+}

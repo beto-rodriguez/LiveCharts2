@@ -157,7 +157,16 @@ public partial class CartesianChart : ChartView, ICartesianChartView
                 var chart = (CartesianChart)o;
                 var observer = chart._xObserver;
                 observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
-                observer?.Initialize((IEnumerable<ICartesianAxis>)newValue);
+
+                var newCollection = (IEnumerable<ICartesianAxis>)newValue;
+                observer?.Initialize(newCollection);
+
+                foreach (var item in newCollection)
+                {
+                    if (item is not Element xamlAxis) continue;
+                    chart.AddLogicalChild(xamlAxis);
+                }
+
                 if (chart._core is null) return;
                 chart._core.Update();
             });
@@ -173,7 +182,16 @@ public partial class CartesianChart : ChartView, ICartesianChartView
                 var chart = (CartesianChart)o;
                 var observer = chart._yObserver;
                 observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
-                observer?.Initialize((IEnumerable<ICartesianAxis>)newValue);
+
+                var newCollection = (IEnumerable<ICartesianAxis>)newValue;
+                observer?.Initialize(newCollection);
+
+                foreach (var item in newCollection)
+                {
+                    if (item is not Element xamlAxis) continue;
+                    chart.AddLogicalChild(xamlAxis);
+                }
+
                 if (chart._core is null) return;
                 chart._core.Update();
             });
