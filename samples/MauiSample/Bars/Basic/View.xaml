@@ -8,19 +8,19 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
     <lvc:CartesianChart
-        Series="{Binding Series}"
-        LegendPosition="Right">
+        Series="{Binding Series}">
         <lvc:CartesianChart.Resources>
             <Style TargetType="lvc:CartesianChart">
-                <Setter Property="Background" Value="Gray"/>
+                <Setter Property="LegendPosition" Value="Right"/>
             </Style>
             <Style TargetType="lvc:XamlAxis">
-                <Setter Property="Padding"  Value="100"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="LabelsPaint" Value="#FF0000"/>
             </Style>
         </lvc:CartesianChart.Resources>
         <lvc:CartesianChart.XAxes>
             <lvc:AxesCollection>
-                <lvc:XamlAxis Labels="{Binding Labels}" MinLimit="{x:Null}" MaxLimit="{x:Null}"/>
+                <lvc:XamlAxis IsVisible="True" LabelsPaint="#0000ff" Labels="{Binding Labels}"/>
             </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
     </lvc:CartesianChart>

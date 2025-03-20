@@ -25,7 +25,7 @@ using System.ComponentModel;
 using System.Globalization;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.TypeConverters;
+namespace LiveChartsCore.SkiaSharpView.TypeConverters;
 
 /// <summary>
 /// Converts a string to a <see cref="Padding"/> object.
@@ -47,7 +47,7 @@ public class PaddingTypeConverter : TypeConverter
     /// <param name="context">The context.</param>
     /// <param name="culture">The culture.</param>
     /// <param name="value">The value.</param>
-    /// <returns></returns>
+    /// <returns>The converted value.</returns>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
         if (value is not string str) return base.ConvertFrom(context, culture, value);
@@ -74,4 +74,3 @@ public class PaddingTypeConverter : TypeConverter
         }
     }
 }
-
