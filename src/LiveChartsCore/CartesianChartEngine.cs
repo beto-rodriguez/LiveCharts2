@@ -88,7 +88,8 @@ public class CartesianChartEngine(
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        _chartView.Series?.Cast<ISeries>() ?? [];
+        _chartView.Series?.Select(x => x.ChartElement).Cast<ISeries>() ?? [];
+
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -384,8 +385,8 @@ public class CartesianChartEngine(
             y = [provider.GetDefaultCartesianAxis()];
         }
 
-        XAxes = [.. x.Cast<ICartesianAxis>()];
-        YAxes = [.. y.Cast<ICartesianAxis>()];
+        XAxes = [.. x.Select(x => x.ChartElement).Cast<ICartesianAxis>()];
+        YAxes = [.. y.Select(x => x.ChartElement).Cast<ICartesianAxis>()];
 
         if (XAxes.Length == 0 || YAxes.Length == 0)
         {
@@ -454,7 +455,7 @@ public class CartesianChartEngine(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement)series;
+            var ce = series.ChartElement;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -785,7 +786,7 @@ public class CartesianChartEngine(
             }
 
             if (axis.IsVisible) AddVisual(axis.ChartElement);
-            (axis.ChartElement).RemoveOldPaints(View); // <- this is probably obsolete.
+            axis.ChartElement.RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
@@ -798,7 +799,7 @@ public class CartesianChartEngine(
         foreach (var visual in VisualElements.Where(static x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement)series);
+            AddVisual(series.ChartElement);
             _drawnSeries.Add(series.SeriesId);
         }
 

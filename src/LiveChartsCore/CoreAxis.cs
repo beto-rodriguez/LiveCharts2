@@ -105,7 +105,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
     #region properties
 
-    ChartElement IPlane.ChartElement => this;
+    ChartElement IChartElementSource.ChartElement => this;
     float ICartesianAxis.Xo { get => _xo; set => _xo = value; }
     float ICartesianAxis.Yo { get => _yo; set => _yo = value; }
     LvcSize ICartesianAxis.Size { get => _size; set => _size = value; }

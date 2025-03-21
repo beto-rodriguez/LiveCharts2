@@ -84,7 +84,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
     #region properties
 
-    ChartElement IPlane.ChartElement => this;
+    ChartElement IChartElementSource.ChartElement => this;
 
     float IPolarAxis.Ro { get; set; }
 

@@ -35,7 +35,7 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines a chart series.
 /// </summary>
-public interface ISeries : IChartElement
+public interface ISeries : IChartElement, IChartElementSource
 {
     /// <summary>
     /// Gets or sets a series unique identifier, the library handles this id automatically.

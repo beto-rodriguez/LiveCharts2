@@ -136,65 +136,23 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty SeriesProperty =
         BindableProperty.Create(
             nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-            (BindableObject o, object oldValue, object newValue) =>
-            {
-                var chart = (CartesianChart)o;
-                var seriesObserver = chart._seriesObserver;
-                seriesObserver?.Dispose((IEnumerable<ISeries>)oldValue);
-                seriesObserver?.Initialize((IEnumerable<ISeries>)newValue);
-                if (chart._core is null) return;
-                chart._core.Update();
-            });
+            (BindableObject o, object oldValue, object newValue) => DeepObserve(o, oldValue, newValue, c => c._seriesObserver));
 
     /// <summary>
     /// The x axes property
     /// </summary>
     public static readonly BindableProperty XAxesProperty =
         BindableProperty.Create(
-            nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() },
-            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
-            {
-                var chart = (CartesianChart)o;
-                var observer = chart._xObserver;
-                observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
-
-                var newCollection = (IEnumerable<ICartesianAxis>)newValue;
-                observer?.Initialize(newCollection);
-
-                foreach (var item in newCollection)
-                {
-                    if (item is not View xamlAxis) continue;
-                    chart.canvas.Children.Add(xamlAxis);
-                }
-
-                if (chart._core is null) return;
-                chart._core.Update();
-            });
+            nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() }, BindingMode.Default, null,
+            (BindableObject o, object oldValue, object newValue) => DeepObserve(o, oldValue, newValue, c => c._xObserver));
 
     /// <summary>
     /// The y axes property.
     /// </summary>
     public static readonly BindableProperty YAxesProperty =
         BindableProperty.Create(
-            nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() },
-            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
-            {
-                var chart = (CartesianChart)o;
-                var observer = chart._yObserver;
-                observer?.Dispose((IEnumerable<ICartesianAxis>)oldValue);
-
-                var newCollection = (IEnumerable<ICartesianAxis>)newValue;
-                observer?.Initialize(newCollection);
-
-                foreach (var item in newCollection)
-                {
-                    if (item is not View xamlAxis) continue;
-                    chart.canvas.Children.Add(xamlAxis);
-                }
-
-                if (chart._core is null) return;
-                chart._core.Update();
-            });
+            nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() }, BindingMode.Default, null,
+            (BindableObject o, object oldValue, object newValue) => DeepObserve(o, oldValue, newValue, c => c._yObserver));
 
     /// <summary>
     /// The sections property.
@@ -855,6 +813,27 @@ public partial class CartesianChart : ChartView, ICartesianChartView
 
     internal override void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
+
+    private static void DeepObserve<T>(
+        BindableObject o, object oldValue, object newValue, Func<CartesianChart, CollectionDeepObserver<T>> observerGetter)
+    {
+        var chart = (CartesianChart)o;
+        var observer = observerGetter(chart);
+
+        observer?.Dispose((IEnumerable<T>)oldValue);
+
+        var newCollection = (IEnumerable<T>)newValue;
+        observer?.Initialize(newCollection);
+
+        foreach (var item in newCollection)
+        {
+            if (item is not View uiObject) continue;
+            chart.canvas.Children.Add(uiObject);
+        }
+
+        if (chart._core is null) return;
+        chart._core.Update();
+    }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         _core?.Update();

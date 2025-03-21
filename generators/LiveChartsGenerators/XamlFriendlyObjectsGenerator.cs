@@ -34,7 +34,9 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         {
             // generate the source code and add it to the output
             var result = SourceGenerationHelper.GenerateXamlObject(value);
-            context.AddSource($"{value.Name}.g.cs", SourceText.From(result, Encoding.UTF8));
+            context.AddSource(
+                $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                SourceText.From(result, Encoding.UTF8));
         }
     }
 
@@ -49,15 +51,22 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         var methods = new Dictionary<string, IMethodSymbol>();
         var explicitMethods = new Dictionary<string, IMethodSymbol>();
 
-        var args = symbol.GetAttributes()
+        var ctorArgs = symbol.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == XamlAttribute)?
             .ConstructorArguments.ToArray();
 
-        if (args is null || args[0].Value is not ITypeSymbol baseType)
+        if (ctorArgs is null || ctorArgs[0].Value is not ITypeSymbol baseType)
             return null;
 
+        string? fileHeader = null;
+        if (ctorArgs.Length > 1)
+            fileHeader = ctorArgs[1].Value?.ToString();
+
         var ns = symbol.ContainingNamespace.ToString();
-        var enumName = symbol.Name.ToString();
+
+        // use this method to get also the generic argument name.
+        var nameParts = symbol.ToDisplayString().Split('.');
+        var name = nameParts[nameParts.Length - 1];
 
         foreach (var member in GetLiveChartsMembers(baseType))
         {
@@ -98,8 +107,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         }
 
         return new XamlObject(
-            ns, enumName, symbol, baseType, bindableProperties, notBindableProperties, events,
-            [.. methods.Values], [.. explicitMethods.Values]);
+            ns, name, symbol, baseType, bindableProperties, notBindableProperties, events, [.. methods.Values], [.. explicitMethods.Values], fileHeader);
     }
 
     private static List<ISymbol> GetLiveChartsMembers(ITypeSymbol typeSymbol)
@@ -110,8 +118,8 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         {
             allMembers.AddRange(typeSymbol.GetMembers());
 
-            if (typeSymbol.BaseType is null) break;
-            typeSymbol = typeSymbol.BaseType;
+            if (typeSymbol.OriginalDefinition.BaseType is null) break;
+            typeSymbol = typeSymbol.OriginalDefinition.BaseType;
 
             if (!typeSymbol.ContainingNamespace.ToDisplayString().StartsWith("LiveChartsCore"))
                 break;

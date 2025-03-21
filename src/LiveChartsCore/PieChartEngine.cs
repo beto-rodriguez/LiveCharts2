@@ -161,7 +161,7 @@ public class PieChartEngine(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement)series;
+            var ce = series.ChartElement;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -234,7 +234,7 @@ public class PieChartEngine(
         foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement)series);
+            AddVisual(series.ChartElement);
             _drawnSeries.Add(series.SeriesId);
         }
 

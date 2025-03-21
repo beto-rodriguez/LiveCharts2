@@ -131,6 +131,8 @@ public abstract class Series<TModel, TVisual, TLabel>
         Values = values;
     }
 
+    ChartElement IChartElementSource.ChartElement => this;
+
     /// <inheritdoc cref="ISeries.SeriesProperties"/>
     public SeriesProperties SeriesProperties { get; internal set; }
 

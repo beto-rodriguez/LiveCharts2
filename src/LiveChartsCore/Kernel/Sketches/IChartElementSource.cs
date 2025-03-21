@@ -20,10 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Generators;
+namespace LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.Maui;
-
-[XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
+/// <summary>
+/// Defines a chart element source.
+/// </summary>
+public interface IChartElementSource
+{
+    /// <summary>
+    /// Gets the chart element.
+    /// </summary>
+    ChartElement ChartElement { get; }
+}

@@ -32,14 +32,8 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// <summary>
 /// Defines a plane for a dimension.
 /// </summary>
-public interface IPlane : IChartElement
+public interface IPlane : IChartElement, IChartElementSource
 {
-    /// <summary>
-    /// Gets the chart element.
-    /// </summary>
-    /// <returns></returns>
-    ChartElement ChartElement { get; }
-
     /// <summary>
     /// Gets or sets the axis name.
     /// </summary>

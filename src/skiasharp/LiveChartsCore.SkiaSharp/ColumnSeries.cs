@@ -64,6 +64,8 @@ public class ColumnSeries<TModel>
     public ColumnSeries(params TModel[] values)
         : base(values)
     { }
+
+    public static ColumnSeries<TModel> DefaultValues { get; } = new();
 }
 
 /// <summary>

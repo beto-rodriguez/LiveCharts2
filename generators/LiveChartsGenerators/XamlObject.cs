@@ -13,6 +13,7 @@ public readonly record struct XamlObject
     public readonly List<IEventSymbol> Events;
     public readonly List<IMethodSymbol> Methods;
     public readonly List<IMethodSymbol> ExplicitMethods;
+    public readonly string? FileHeader;
 
     public XamlObject(
         string nameSpace,
@@ -23,7 +24,8 @@ public readonly record struct XamlObject
         List<IPropertySymbol> notBindableProperites,
         List<IEventSymbol> events,
         List<IMethodSymbol> methods,
-        List<IMethodSymbol> explicitMethods)
+        List<IMethodSymbol> explicitMethods,
+        string? fileHeader)
     {
         NameSpace = nameSpace;
         Name = name;
@@ -34,5 +36,6 @@ public readonly record struct XamlObject
         Events = events;
         Methods = methods;
         ExplicitMethods = explicitMethods;
+        FileHeader = fileHeader;
     }
 }

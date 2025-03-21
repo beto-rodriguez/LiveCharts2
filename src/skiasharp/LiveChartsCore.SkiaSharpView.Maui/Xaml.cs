@@ -20,13 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 using System.Collections.Generic;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
-/// <summary>
-/// A collection of axes.
-/// </summary>
-public class AxesCollection : List<ICartesianAxis>
-{ }
+public class AxesCollection : List<ICartesianAxis> { }
+
+public class SeriesCollection : List<ISeries> { }
+
+[XamlClass(typeof(Axis))]
+public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
+
+[XamlClass(typeof(ColumnSeries<>), @"
+using TLabel = LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry;
+using TVisual = LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry;")]
+public partial class XamlColumnSeries<TModel> : EmptyContentView, IInternalSeries, ISeries, IBarSeries { }
