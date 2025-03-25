@@ -92,13 +92,13 @@ public abstract class Series<TModel, TVisual, TLabel>
     protected bool _geometrySvgChanged = false;
 
     private readonly CollectionDeepObserver<TModel> _observer;
-    private IReadOnlyCollection<TModel>? _values;
+    private IEnumerable? _values;
     private string? _name;
     private Func<TModel, int, Coordinate>? _mapping;
     private int _zIndex;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
-    private DataFactory<TModel>? _dataFactory;
+    private DataFactory? _dataFactory;
     private bool _isVisibleAtLegend = true;
     private double _miniatureShapeSize = 12;
     private Sketch _miniatureSketch = new(0, 0, null);
@@ -150,6 +150,12 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// </summary>
     public IReadOnlyCollection<TModel>? Values
     {
+        get => (IReadOnlyCollection<TModel>?)((ISeries)this).Values;
+        set => ((ISeries)this).Values = value;
+    }
+
+    IEnumerable? ISeries.Values
+    {
         get => _values;
         set
         {
@@ -158,12 +164,6 @@ public abstract class Series<TModel, TVisual, TLabel>
             _values = value;
             OnPropertyChanged();
         }
-    }
-
-    IEnumerable? ISeries.Values
-    {
-        get => Values;
-        set => Values = (IReadOnlyCollection<TModel>?)value;
     }
 
     /// <inheritdoc cref="ISeries.Pivot"/>
@@ -228,14 +228,14 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <summary>
     /// Gets the data factory.
     /// </summary>
-    public DataFactory<TModel> DataFactory
+    public DataFactory DataFactory
     {
         get
         {
             if (_dataFactory is null)
             {
                 var factory = LiveCharts.DefaultSettings.GetProvider();
-                _dataFactory = factory.GetDefaultDataFactory<TModel>();
+                _dataFactory = factory.GetDefaultDataFactory();
             }
 
             return _dataFactory;

@@ -33,12 +33,10 @@ namespace LiveChartsCore.Kernel.Providers;
 /// <summary>
 /// Defines the default data factory.
 /// </summary>
-/// <typeparam name="TModel"></typeparam>
-public class DataFactory<TModel>
+public class DataFactory
 {
-    private readonly bool _isTModelChartEntity = false;
     private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = [];
-    private ISeries<TModel>? _series;
+    private ISeries? _series;
 
     /// <summary>
     /// Gets or sets the previous known bounds.
@@ -46,13 +44,12 @@ public class DataFactory<TModel>
     protected DimensionalBounds PreviousKnownBounds { get; set; } = new DimensionalBounds(true);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DataFactory{TModel}"/> class.
+    /// Initializes a new instance of the <see cref="DataFactory"/> class.
     /// </summary>
     public DataFactory()
     {
         var bounds = new DimensionalBounds(true);
         PreviousKnownBounds = bounds;
-        _isTModelChartEntity = typeof(IChartEntity).IsAssignableFrom(typeof(TModel));
     }
 
     /// <summary>
@@ -61,7 +58,7 @@ public class DataFactory<TModel>
     /// <param name="series">The series.</param>
     /// <param name="chart">The chart.</param>
     /// <returns></returns>
-    public virtual IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, Chart chart)
+    public virtual IEnumerable<ChartPoint> Fetch(ISeries series, Chart chart)
     {
         if (series.Values is null) yield break;
         _series = series;
@@ -85,7 +82,7 @@ public class DataFactory<TModel>
     /// <returns></returns>
     public virtual void DisposePoint(ChartPoint point)
     {
-        if (_isTModelChartEntity) return;
+        if (point.Context.DataSource is IChartEntity) return;
 
         var canvas = point.Context.Chart.CoreChart.Canvas;
         _ = _chartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
@@ -100,8 +97,13 @@ public class DataFactory<TModel>
     /// <param name="chart"></param>
     public virtual void Dispose(Chart chart)
     {
+        if (_series?.Values is IEnumerable<IChartEntity>)
+        {
+            _series = null;
+            return;
+        }
+
         _series = null;
-        if (_isTModelChartEntity) return;
 
         var canvas = chart.Canvas;
         _ = _chartIndexEntityMap.Remove(canvas.Sync);
@@ -293,7 +295,6 @@ public class DataFactory<TModel>
         return new SeriesBounds(bounds, false);
     }
 
-
     /// <summary>
     /// Clears the visuals in the cache.
     /// </summary>
@@ -325,14 +326,14 @@ public class DataFactory<TModel>
         _chartIndexEntityMap.Clear();
     }
 
-    private IEnumerable<IChartEntity?> GetEntities(ISeries<TModel> series, Chart chart)
+    private IEnumerable<IChartEntity?> GetEntities(ISeries series, Chart chart)
     {
-        return _isTModelChartEntity
+        return series.Values is IEnumerable<IChartEntity>
             ? EnumerateChartEntities(series, chart)
             : EnumerateIndexedEntities(series, chart);
     }
 
-    private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries<TModel> series, Chart chart)
+    private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries series, Chart chart)
     {
         if (series.Values is null) yield break;
         var entities = (IEnumerable<IChartEntity>)series.Values;
@@ -368,12 +369,35 @@ public class DataFactory<TModel>
         }
     }
 
-    private IEnumerable<IChartEntity?> EnumerateIndexedEntities(ISeries<TModel> series, Chart chart)
+    private IEnumerable<IChartEntity?> EnumerateIndexedEntities(ISeries series, Chart chart)
     {
-        if (series.Values is null) yield break;
+        if (series.Values is IEnumerable<short>) return EnumerateIndexedEntities<short>(series, chart);
+        if (series.Values is IEnumerable<int>) return EnumerateIndexedEntities<int>(series, chart);
+        if (series.Values is IEnumerable<long>) return EnumerateIndexedEntities<long>(series, chart);
+        if (series.Values is IEnumerable<float>) return EnumerateIndexedEntities<float>(series, chart);
+        if (series.Values is IEnumerable<double>) return EnumerateIndexedEntities<double>(series, chart);
+        if (series.Values is IEnumerable<decimal>) return EnumerateIndexedEntities<decimal>(series, chart);
+        if (series.Values is IEnumerable<short?>) return EnumerateIndexedEntities<short?>(series, chart);
+        if (series.Values is IEnumerable<int?>) return EnumerateIndexedEntities<int?>(series, chart);
+        if (series.Values is IEnumerable<long?>) return EnumerateIndexedEntities<long?>(series, chart);
+        if (series.Values is IEnumerable<float?>) return EnumerateIndexedEntities<float?>(series, chart);
+        if (series.Values is IEnumerable<double?>) return EnumerateIndexedEntities<double?>(series, chart);
+        if (series.Values is IEnumerable<decimal?>) return EnumerateIndexedEntities<decimal?>(series, chart);
+
+        throw new NotImplementedException();
+    }
+
+    private IEnumerable<IChartEntity?> EnumerateIndexedEntities<TModel>(ISeries series, Chart chart)
+    {
+        if (series.Values is not IEnumerable<TModel> typedValues)
+            yield break;
 
         var canvas = chart.Canvas;
-        var mapper = series.Mapping ?? LiveCharts.DefaultSettings.GetMap<TModel>();
+
+        var mapper =
+            (series is ISeries<TModel> typedSeries ? typedSeries.Mapping : null)
+            ?? LiveCharts.DefaultSettings.GetMap<TModel>();
+
         var index = 0;
 
         _ = _chartIndexEntityMap.TryGetValue(canvas.Sync, out var d);
@@ -384,7 +408,7 @@ public class DataFactory<TModel>
         }
         var IndexEntityMap = d;
 
-        foreach (var item in series.Values.Cast<TModel>())
+        foreach (var item in typedValues)
         {
             if (item is null)
             {
