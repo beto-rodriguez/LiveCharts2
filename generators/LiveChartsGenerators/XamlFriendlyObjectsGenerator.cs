@@ -51,16 +51,34 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         var methods = new Dictionary<string, IMethodSymbol>();
         var explicitMethods = new Dictionary<string, IMethodSymbol>();
 
-        var ctorArgs = symbol.GetAttributes()
-            .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == XamlAttribute)?
-            .ConstructorArguments.ToArray();
+        var targetAttribute = symbol.GetAttributes()
+            .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == XamlAttribute);
+        if (targetAttribute is null) return null;
 
-        if (ctorArgs is null || ctorArgs[0].Value is not ITypeSymbol baseType)
+        if (targetAttribute.ConstructorArguments.FirstOrDefault().Value is not ITypeSymbol baseType)
             return null;
 
         string? fileHeader = null;
-        if (ctorArgs.Length > 1)
-            fileHeader = ctorArgs[1].Value?.ToString();
+        string? propertyChangeHandlers = null;
+        string? overridenTypes = null;
+
+        foreach (var arg in targetAttribute.NamedArguments)
+        {
+            switch (arg.Key)
+            {
+                case "FileHeader":
+                    fileHeader = arg.Value.Value as string;
+                    break;
+                case "PropertyChangeHandlers":
+                    propertyChangeHandlers = arg.Value.Value as string;
+                    break;
+                case "PropertyTypeOverride":
+                    overridenTypes = arg.Value.Value as string;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         var ns = symbol.ContainingNamespace.ToString();
 
@@ -107,7 +125,8 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         }
 
         return new XamlObject(
-            ns, name, symbol, baseType, bindableProperties, notBindableProperties, events, [.. methods.Values], [.. explicitMethods.Values], fileHeader);
+            ns, name, symbol, baseType, bindableProperties, notBindableProperties, events,
+            [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeHandlers, overridenTypes);
     }
 
     private static List<ISymbol> GetLiveChartsMembers(ITypeSymbol typeSymbol)

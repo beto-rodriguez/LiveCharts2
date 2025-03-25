@@ -36,14 +36,29 @@ namespace LiveChartsCore.Generators;
 [System.AttributeUsage(System.AttributeTargets.Class)]
 public class XamlClassAttribute : System.Attribute
 {
-    public XamlClassAttribute(System.Type basedOn, string fileHeader = null)
+    public XamlClassAttribute(System.Type basedOn)
     {
         BaseType = basedOn;
-        FileHeader = fileHeader;
     }
 
     public System.Type BaseType { get; }
-    public string FileHeader { get; }
+
+    /// <summary>
+    /// The header to add to the generated file.
+    /// </summary>
+    public string FileHeader { get; set; }
+
+    /// <summary>
+    /// A string with the property change handlers, separated by & e.g.
+    /// ""MyProperty{=}OnMyPropertyChanged{,}MyOtherProperty{=}OnMyOtherPropertyChanged"".
+    /// </summary>
+    public string PropertyChangeHandlers { get; set; }
+
+    /// <summary>
+    /// A string with the property type overrides, separated by & e.g.
+    /// ""MyProperty{=}double{,}MyOtherProperty{=}object"".
+    /// </summary>
+    public string PropertyTypeOverride { get; set; }
 }";
 
     public static string GenerateXamlObject(XamlObject target)
@@ -58,6 +73,7 @@ public class XamlClassAttribute : System.Attribute
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 {target.FileHeader}
 {GetNameSpaces()}
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 
 namespace {target.NameSpace};
 
@@ -92,8 +108,6 @@ public partial class {target.Name}
 
 {ConcatenateExplicitMethods(target)}
 #endregion
-
-{GetChangeBuilderHandler(target)}
 
 }}";
     }
@@ -244,10 +258,14 @@ public partial class {target.Name}
     {
         var propertyName = property.Name;
         var propertyType = property.Type.ToDisplayString();
+
+        if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
+            propertyType = overridenType;
+
         var sanitizedPropertyType = property.Type.IsReferenceType && propertyType.EndsWith("?")
             ? propertyType.Substring(0, propertyType.Length - 1)
             : propertyType;
-        var bindableType = target.Type.ToDisplayString();
+        var bindableType = target.Name;
 
         var sb = new StringBuilder();
 
@@ -260,7 +278,12 @@ public partial class {target.Name}
         defaultValue:       {target.BasedOn.OriginalDefinition.ToDisplayString()}.DefaultValues.{propertyName}{(hasPublicSetter ? "," : string.Empty)}");
 
         if (hasPublicSetter)
-            _ = sb.Append(@$"        propertyChanged:    GetOnChangeHandler<{propertyType}>((o, v) => o.{propertyName} = v)");
+        {
+            _ = target.PropertyChangedHandlers.TryGetValue(propertyName, out var handler)
+                ? sb.Append(@$"        propertyChanged:    {handler}")
+                : sb.Append(@$"        propertyChanged:    (BindableObject bo, object o, object n) => (({bindableType})bo)._baseType.{propertyName} = ({propertyType})n");
+
+        }
 
         _ = sb.Append(");");
 
@@ -281,23 +304,12 @@ public partial class {target.Name}
     private static string GetNameSpaces()
         => "using Microsoft.Maui.Controls;";
 
-    private static string GetChangeBuilderHandler(XamlObject target)
-    {
-        return @$"    private static BindableProperty.BindingPropertyChangedDelegate GetOnChangeHandler<T>(
-        System.Action<{target.BasedOn.OriginalDefinition.ToDisplayString()}, T> setter) =>
-            (BindableObject o, object oldValue, object newValue) =>
-            {{
-                if (o is not {target.Type.ToDisplayString()} bindableTarget) return;
-                setter(bindableTarget._baseType, (T)newValue);
-            }};";
-    }
-
-#pragma warning disable format
     private static Dictionary<string, string> TypeConverters { get; } = new()
     {
-        ["LiveChartsCore.Drawing.Padding"] =    "LiveChartsCore.SkiaSharpView.TypeConverters.PaddingTypeConverter",
-        ["LiveChartsCore.Painting.Paint"] =     "LiveChartsCore.SkiaSharpView.TypeConverters.HexToPaintTypeConverter",
-        ["LiveChartsCore.Painting.Paint?"] =     "LiveChartsCore.SkiaSharpView.TypeConverters.HexToPaintTypeConverter"
+        ["LiveChartsCore.Drawing.Padding"] = "PaddingTypeConverter",
+        ["LiveChartsCore.Painting.Paint"] = "HexToPaintTypeConverter",
+        ["LiveChartsCore.Painting.Paint?"] = "HexToPaintTypeConverter",
+        //["System.Collections.Generic.IReadOnlyCollection<TModel>?"] = "ValuesTypeConverter"
     };
 #pragma warning restore format
 }

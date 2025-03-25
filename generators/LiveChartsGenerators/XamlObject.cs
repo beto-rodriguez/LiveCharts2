@@ -14,6 +14,8 @@ public readonly record struct XamlObject
     public readonly List<IMethodSymbol> Methods;
     public readonly List<IMethodSymbol> ExplicitMethods;
     public readonly string? FileHeader;
+    public readonly Dictionary<string, string> PropertyChangedHandlers = [];
+    public readonly Dictionary<string, string> OverridenTypes = [];
 
     public XamlObject(
         string nameSpace,
@@ -25,7 +27,9 @@ public readonly record struct XamlObject
         List<IEventSymbol> events,
         List<IMethodSymbol> methods,
         List<IMethodSymbol> explicitMethods,
-        string? fileHeader)
+        string? fileHeader,
+        string? propertyChangedHandlers,
+        string? overridenTypes)
     {
         NameSpace = nameSpace;
         Name = name;
@@ -37,5 +41,26 @@ public readonly record struct XamlObject
         Methods = methods;
         ExplicitMethods = explicitMethods;
         FileHeader = fileHeader;
+
+        if (propertyChangedHandlers is not null)
+        {
+            var handlers = propertyChangedHandlers.Split(["{,}"], StringSplitOptions.None);
+
+            foreach (var handler in handlers)
+            {
+                var parts = handler.Split(["{=}"], StringSplitOptions.None);
+                PropertyChangedHandlers[parts[0]] = parts[1];
+            }
+        }
+
+        if (overridenTypes is not null)
+        {
+            var types = overridenTypes.Split(["{,}"], StringSplitOptions.None);
+            foreach (var t in types)
+            {
+                var parts = t.Split(["{=}"], StringSplitOptions.None);
+                OverridenTypes[parts[0]] = parts[1];
+            }
+        }
     }
 }
