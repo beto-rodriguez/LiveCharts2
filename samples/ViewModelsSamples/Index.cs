@@ -4,19 +4,19 @@ public static class Index
 {
     public static string[] Samples =
     [
-        //"Design/LinearGradients",
-        //"Design/RadialGradients",
+        "Design/LinearGradients",
+        "Design/RadialGradients",
 
-        //"Lines/Basic",
-        //"Lines/AutoUpdate",
-        //"Lines/Straight",
-        //"Lines/Properties",
-        //"Lines/Area",
-        //"Lines/Custom",
-        //"Lines/CustomPoints",
-        //"Lines/Padding",
-        //"Lines/XY",
-        //"Lines/Zoom",
+        "Lines/Basic",
+        "Lines/AutoUpdate",
+        "Lines/Straight",
+        "Lines/Properties",
+        "Lines/Area",
+        "Lines/Custom",
+        "Lines/CustomPoints",
+        "Lines/Padding",
+        "Lines/XY",
+        "Lines/Zoom",
 
         "Bars/Basic",
         "Bars/AutoUpdate",
