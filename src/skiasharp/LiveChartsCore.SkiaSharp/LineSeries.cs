@@ -154,4 +154,6 @@ public class LineSeries<TModel, TVisual, TLabel>
     public LineSeries(params TModel[] values)
         : base(values)
     { }
+
+    public static LineSeries<TModel, TVisual, TLabel> DefaultValues { get; } = new();
 }

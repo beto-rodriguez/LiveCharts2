@@ -1,41 +1,98 @@
-﻿// The MIT License(MIT)
-//
-// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+﻿// this file defines the xaml classes, most of the work is done automatically by the generator.
+// The generator just wraps LiveCharts object in a Xaml object, then when a
+// property changes in the Xaml object, it updates the LiveCharts object.
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+using System.Collections;
 using System.Collections.Generic;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
+/// <summary>
+/// A collection of axes.
+/// </summary>
 public class AxesCollection : List<ICartesianAxis> { }
 
+/// <summary>
+/// A collection of series.
+/// </summary>
 public class SeriesCollection : List<ISeries> { }
 
 [XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
+public partial class XamlAxis : EmptyContentView, ICartesianAxis, IPlane { }
 
-[XamlClass(typeof(ColumnSeries<>), @"
-using TLabel = LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry;
-using TVisual = LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry;")]
-public partial class XamlColumnSeries<TModel> : EmptyContentView, IInternalSeries, ISeries, IBarSeries { }
+// == About generated series ==
+
+// Note 1.
+// The generated series are of Type Series<object, TVisual, TLabel>, where TVisual and TLabels
+// are the default visual and label geometries for the series, but instead of using TModel, we use object,
+// this is to prevent specifying the type of the series in xaml, it should not have a considerable impact in performance.
+
+// Note 2.
+// The main problem with using object, is that mappers are not strongly typed, the Mapping property is of type
+// Func<object, int, Coordinate>, instead of Func<TModel, int, Coordinate>, the cast should be done in the mapper,
+// ideally as stated in docs, when performance is critical, you must implement IChartEntity to prevent mapping.
+
+// ============================
+
+#region column series
+
+/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlColumnSeries : XamlColumnSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlColumnSeries<TVisual> : XamlColumnSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlColumnSeries<TVisual, TLabel> : XamlColumnSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(ColumnSeries<,,>),
+    PropertyTypeOverride = "Values{=}object",
+    PropertyChangeHandlers = "Values{=}OnValuesChanged")]
+public partial class XamlColumnSeries<TModel, TVisual, TLabel> : EmptyContentView, IBarSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    private static void OnValuesChanged(BindableObject bindable, object oldValue, object newValue) =>
+        ((ISeries)((XamlColumnSeries<TModel, TVisual, TLabel>)bindable)._baseType).Values = (IEnumerable)newValue;
+}
+
+#endregion
+
+#region line series
+
+/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
+public class XamlLineSeries : XamlLineSeries<object, CircleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
+public class XamlLineSeries<TVisual> : XamlLineSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
+public class XamlLineSeries<TVisual, TLabel> : XamlLineSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(LineSeries<,,>),
+    PropertyTypeOverride = "Values{=}object",
+    PropertyChangeHandlers = "Values{=}OnValuesChanged")]
+public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView, ILineSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    private static void OnValuesChanged(BindableObject bindable, object oldValue, object newValue) =>
+        ((ISeries)((XamlLineSeries<TModel, TVisual, TLabel>)bindable)._baseType).Values = (IEnumerable)newValue;
+}
+
+#endregion
