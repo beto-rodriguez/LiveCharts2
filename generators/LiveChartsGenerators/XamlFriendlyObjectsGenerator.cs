@@ -90,11 +90,18 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         {
             if (member is IPropertySymbol property)
             {
+                if (property.DeclaredAccessibility == Accessibility.Protected)
+                    continue;
+
                 // ignore the DefaultValues property, it is for internal use only
                 if (property.Name == "DefaultValues")
                     continue;
 
-                if (IsBindable(property))
+                var notExplicit = property.ExplicitInterfaceImplementations.Length == 0;
+                var hasSetter = property.SetMethod is not null;
+                var isPublic = property.DeclaredAccessibility == Accessibility.Public;
+
+                if (notExplicit && hasSetter && isPublic)
                     bindableProperties.Add(property);
                 else
                     notBindableProperties.Add(property);
@@ -145,15 +152,5 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         }
 
         return allMembers;
-    }
-
-    private static bool IsBindable(IPropertySymbol property)
-    {
-        // a property will be bindable when:
-        return
-            // 1. it is not explicitly implemented
-            !property.Name.Contains('.') &&
-            // 2. it has a setter.
-            property.SetMethod is not null;
     }
 }
