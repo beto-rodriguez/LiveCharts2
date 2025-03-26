@@ -155,5 +155,8 @@ public class ColumnSeries<TModel, TVisual, TLabel>
         : base(values)
     { }
 
+    /// <summary>
+    /// The default values used for the Xaml generator.
+    /// </summary>
     public static ColumnSeries<TModel, TVisual, TLabel> DefaultValues { get; } = new();
 }

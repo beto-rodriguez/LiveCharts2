@@ -155,5 +155,8 @@ public class LineSeries<TModel, TVisual, TLabel>
         : base(values)
     { }
 
+    /// <summary>
+    /// The default values used for the Xaml generator.
+    /// </summary>
     public static LineSeries<TModel, TVisual, TLabel> DefaultValues { get; } = new();
 }

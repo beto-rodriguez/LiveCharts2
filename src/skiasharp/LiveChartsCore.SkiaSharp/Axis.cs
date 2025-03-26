@@ -28,6 +28,9 @@ namespace LiveChartsCore.SkiaSharpView;
 /// <inheritdoc cref="ICartesianAxis" />
 public class Axis : CoreAxis<LabelGeometry, LineGeometry>
 {
+    /// <summary>
+    /// The default values used for the Xaml generator.
+    /// </summary>
     public static Axis DefaultValues { get; } = new Axis
     {
         Padding = new LiveChartsCore.Drawing.Padding(),
