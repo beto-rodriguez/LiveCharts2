@@ -27,4 +27,9 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <inheritdoc cref="BaseLabelVisual{TLabelGeometry}"/>
 public class LabelVisual : BaseLabelVisual<LabelGeometry>
-{ }
+{
+    /// <summary>
+    /// The default values used for the Xaml generator.
+    /// </summary>
+    public static LabelVisual DefaultValues { get; } = new();
+}
