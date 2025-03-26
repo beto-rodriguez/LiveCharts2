@@ -33,7 +33,7 @@ namespace LiveChartsCore.Kernel.Providers;
 /// <summary>
 /// Defines the default data factory.
 /// </summary>
-public class DataFactory
+public class DataFactory<TModel>
 {
     private readonly Dictionary<object, Dictionary<int, MappedChartEntity>> _chartIndexEntityMap = [];
     private ISeries? _series;
@@ -44,7 +44,7 @@ public class DataFactory
     protected DimensionalBounds PreviousKnownBounds { get; set; } = new DimensionalBounds(true);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DataFactory"/> class.
+    /// Initializes a new instance of the <see cref="DataFactory{TModel}"/> class.
     /// </summary>
     public DataFactory()
     {
@@ -371,32 +371,38 @@ public class DataFactory
 
     private IEnumerable<IChartEntity?> EnumerateIndexedEntities(ISeries series, Chart chart)
     {
-        if (series.Values is IEnumerable<short>) return EnumerateIndexedEntities<short>(series, chart);
-        if (series.Values is IEnumerable<int>) return EnumerateIndexedEntities<int>(series, chart);
-        if (series.Values is IEnumerable<long>) return EnumerateIndexedEntities<long>(series, chart);
-        if (series.Values is IEnumerable<float>) return EnumerateIndexedEntities<float>(series, chart);
-        if (series.Values is IEnumerable<double>) return EnumerateIndexedEntities<double>(series, chart);
-        if (series.Values is IEnumerable<decimal>) return EnumerateIndexedEntities<decimal>(series, chart);
-        if (series.Values is IEnumerable<short?>) return EnumerateIndexedEntities<short?>(series, chart);
-        if (series.Values is IEnumerable<int?>) return EnumerateIndexedEntities<int?>(series, chart);
-        if (series.Values is IEnumerable<long?>) return EnumerateIndexedEntities<long?>(series, chart);
-        if (series.Values is IEnumerable<float?>) return EnumerateIndexedEntities<float?>(series, chart);
-        if (series.Values is IEnumerable<double?>) return EnumerateIndexedEntities<double?>(series, chart);
-        if (series.Values is IEnumerable<decimal?>) return EnumerateIndexedEntities<decimal?>(series, chart);
+        if (typeof(TModel) == typeof(object))
+        {
+            // exception for for object, this is normally used by xaml generated series... kind of a hack
+            if (series.Values is IEnumerable<short>) return EnumerateIndexedEntities<short>(series, chart);
+            if (series.Values is IEnumerable<int>) return EnumerateIndexedEntities<int>(series, chart);
+            if (series.Values is IEnumerable<long>) return EnumerateIndexedEntities<long>(series, chart);
+            if (series.Values is IEnumerable<float>) return EnumerateIndexedEntities<float>(series, chart);
+            if (series.Values is IEnumerable<double>) return EnumerateIndexedEntities<double>(series, chart);
+            if (series.Values is IEnumerable<decimal>) return EnumerateIndexedEntities<decimal>(series, chart);
+            if (series.Values is IEnumerable<short?>) return EnumerateIndexedEntities<short?>(series, chart);
+            if (series.Values is IEnumerable<int?>) return EnumerateIndexedEntities<int?>(series, chart);
+            if (series.Values is IEnumerable<long?>) return EnumerateIndexedEntities<long?>(series, chart);
+            if (series.Values is IEnumerable<float?>) return EnumerateIndexedEntities<float?>(series, chart);
+            if (series.Values is IEnumerable<double?>) return EnumerateIndexedEntities<double?>(series, chart);
+            if (series.Values is IEnumerable<decimal?>) return EnumerateIndexedEntities<decimal?>(series, chart);
 
-        throw new NotImplementedException();
+            return [];
+        }
+
+        return EnumerateIndexedEntities<TModel>(series, chart);
     }
 
-    private IEnumerable<IChartEntity?> EnumerateIndexedEntities<TModel>(ISeries series, Chart chart)
+    private IEnumerable<IChartEntity?> EnumerateIndexedEntities<TValues>(ISeries series, Chart chart)
     {
-        if (series.Values is not IEnumerable<TModel> typedValues)
+        if (series.Values is not IEnumerable<TValues> typedValues)
             yield break;
 
         var canvas = chart.Canvas;
 
         var mapper =
-            (series is ISeries<TModel> typedSeries ? typedSeries.Mapping : null)
-            ?? LiveCharts.DefaultSettings.GetMap<TModel>();
+            (series is ISeries<TValues> typedSeries ? typedSeries.Mapping : null)
+            ?? LiveCharts.DefaultSettings.GetMap<TValues>();
 
         var index = 0;
 

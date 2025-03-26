@@ -98,7 +98,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     private int _zIndex;
     private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
-    private DataFactory? _dataFactory;
+    private DataFactory<TModel>? _dataFactory;
     private bool _isVisibleAtLegend = true;
     private double _miniatureShapeSize = 12;
     private Sketch _miniatureSketch = new(0, 0, null);
@@ -228,14 +228,14 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <summary>
     /// Gets the data factory.
     /// </summary>
-    public DataFactory DataFactory
+    public DataFactory<TModel> DataFactory
     {
         get
         {
             if (_dataFactory is null)
             {
                 var factory = LiveCharts.DefaultSettings.GetProvider();
-                _dataFactory = factory.GetDefaultDataFactory();
+                _dataFactory = factory.GetDefaultDataFactory<TModel>();
             }
 
             return _dataFactory;
