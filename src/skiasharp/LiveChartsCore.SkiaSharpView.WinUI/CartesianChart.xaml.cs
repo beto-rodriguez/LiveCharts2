@@ -100,7 +100,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
-            nameof(Title), typeof(VisualElement), typeof(CartesianChart), new PropertyMetadata(null));
+            nameof(Title), typeof(IChartElement), typeof(CartesianChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property
@@ -454,9 +454,9 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public VisualElement? Title
+    public IChartElement? Title
     {
-        get => (VisualElement?)GetValue(TitleProperty);
+        get => (IChartElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

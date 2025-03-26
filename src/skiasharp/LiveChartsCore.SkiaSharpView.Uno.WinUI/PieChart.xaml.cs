@@ -1,5 +1,4 @@
-﻿
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -85,7 +84,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
-            nameof(Title), typeof(VisualElement), typeof(PieChart), new PropertyMetadata(null));
+            nameof(Title), typeof(IChartElement), typeof(PieChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property
@@ -375,9 +374,9 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public VisualElement? Title
+    public IChartElement? Title
     {
-        get => (VisualElement?)GetValue(TitleProperty);
+        get => (IChartElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

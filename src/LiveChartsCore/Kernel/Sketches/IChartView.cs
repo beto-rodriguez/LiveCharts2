@@ -175,7 +175,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the chart title.
     /// </summary>
-    VisualElement? Title { get; set; }
+    IChartElement? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the legend.

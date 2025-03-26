@@ -716,6 +716,62 @@ public abstract class Chart
         return true;
     }
 
+    /// <summary>
+    /// Measures the title.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    protected LvcSize MeasureTitle()
+    {
+        // Visual is the recommended type for the title,
+        // more flexibility compared with VisualElement.
+        if (View.Title is Visual v)
+        {
+            return v.GetHitBox().Size;
+        }
+
+        // VisualElement is an older type for the title, this is kept for compatibility.
+        if (View.Title is VisualElement ve)
+        {
+            ve.ClippingMode = ClipMode.None;
+            return ve.Measure(this);
+        }
+
+        throw new Exception("The title must be a Visual or a VisualElement.");
+    }
+
+    /// <summary>
+    /// Adds the title to the chart.
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    protected void AddTitleToChart()
+    {
+        // Visual is the recommended type for the title,
+        // more flexibility compared with VisualElement.
+        if (View.Title is Visual v && v.DrawnElement is not null)
+        {
+            var size = v.GetHitBox().Size;
+            v.DrawnElement.X = ControlSize.Width * 0.5f - size.Width * 0.5f;
+            v.DrawnElement.Y = 0;
+            v.DrawnElement.TranslateTransform = new(size.Width * 0.5f, size.Height * 0.5f);
+            AddVisual(v);
+            return;
+        }
+
+        // VisualElement is an older type for the title, this is kept for compatibility.
+        if (View.Title is VisualElement ve)
+        {
+            var titleSize = ve.Measure(this);
+            ve.AlignToTopLeftCorner();
+            ve.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            ve.Y = 0;
+            AddVisual(ve);
+            return;
+        }
+
+        throw new Exception("The title must be a Visual or a VisualElement.");
+    }
+
     private List<ChartPoint> CleanHoveredPoints(HashSet<ChartPoint> hovered)
     {
         var removed = new List<ChartPoint>();

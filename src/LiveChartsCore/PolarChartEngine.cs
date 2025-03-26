@@ -387,8 +387,7 @@ public class PolarChartEngine(
             float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
             if (View.Title is not null)
             {
-                View.Title.ClippingMode = ClipMode.None;
-                var titleSize = View.Title.Measure(this);
+                var titleSize = MeasureTitle();
                 m.Top = titleSize.Height;
                 ts = titleSize.Height;
                 _titleHeight = titleSize.Height;
@@ -458,15 +457,7 @@ public class PolarChartEngine(
 
         UpdateBounds();
 
-        var title = View.Title;
-        if (title is not null)
-        {
-            var titleSize = title.Measure(this);
-            title.AlignToTopLeftCorner();
-            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
-            title.Y = 0;
-            AddVisual(title);
-        }
+        if (View.Title is not null) AddTitleToChart();
 
         var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
         foreach (var axis in totalAxes)

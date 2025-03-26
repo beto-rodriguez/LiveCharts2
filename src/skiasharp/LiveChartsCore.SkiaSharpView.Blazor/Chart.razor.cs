@@ -180,7 +180,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Title"/>
     [Parameter]
-    public VisualElement? Title { get; set; }
+    public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     [Parameter]

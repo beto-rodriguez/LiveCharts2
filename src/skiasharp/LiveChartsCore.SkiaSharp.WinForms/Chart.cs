@@ -64,7 +64,7 @@ public abstract class Chart : UserControl, IChartView
     private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
-    private VisualElement? _title;
+    private IChartElement? _title;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private IEnumerable<ChartElement> _visuals = [];
     private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
@@ -188,7 +188,7 @@ public abstract class Chart : UserControl, IChartView
 
     /// <inheritdoc cref="IChartView.Title"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public VisualElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
+    public IChartElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

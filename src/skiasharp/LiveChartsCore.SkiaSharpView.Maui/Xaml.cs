@@ -6,8 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.VisualElements;
 using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -24,6 +27,9 @@ public class SeriesCollection : List<ISeries> { }
 
 [XamlClass(typeof(Axis))]
 public partial class XamlAxis : EmptyContentView, ICartesianAxis, IPlane { }
+
+[XamlClass(typeof(LabelVisual))]
+public partial class XamlLabelVisual : EmptyContentView, IChartElement, IInternalInteractable { }
 
 // == About generated series ==
 

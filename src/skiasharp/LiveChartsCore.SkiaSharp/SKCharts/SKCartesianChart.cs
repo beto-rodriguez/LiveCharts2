@@ -158,7 +158,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public VisualElement? Title { get; set; }
+    public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint"/>
     public Paint? LegendTextPaint { get; set; }

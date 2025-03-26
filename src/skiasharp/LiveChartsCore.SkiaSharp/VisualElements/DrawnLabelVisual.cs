@@ -20,18 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
-/// <inheritdoc cref="BaseLabelVisual{TLabelGeometry}"/>
-[Obsolete($"Use {nameof(DrawnLabelVisual)} instead.")]
-public class LabelVisual : BaseLabelVisual<LabelGeometry>
+/// <summary>
+/// Defines a label visual element.
+/// </summary>
+public class DrawnLabelVisual : Visual
 {
+    private readonly LabelGeometry _drawnElement = new();
+
     /// <summary>
-    /// The default values used for the Xaml generator.
+    /// Initializes a new instance of the <see cref="DrawnLabelVisual"/> class.
     /// </summary>
-    public static LabelVisual DefaultValues { get; } = new();
+    public DrawnLabelVisual()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DrawnLabelVisual"/> class.
+    /// </summary>
+    /// <param name="labelGeometry">The label.</param>
+    public DrawnLabelVisual(LabelGeometry labelGeometry)
+    {
+        _drawnElement = labelGeometry;
+    }
+
+    /// <inheritdoc cref="Visual.DrawnElement"/>
+    protected internal override IDrawnElement? DrawnElement => _drawnElement;
+
+    /// <inheritdoc cref="Visual.Measure(Chart)"/>
+    protected override void Measure(Chart chart)
+    {
+
+    }
 }

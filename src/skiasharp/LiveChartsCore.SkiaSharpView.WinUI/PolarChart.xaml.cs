@@ -128,7 +128,7 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
-            nameof(Title), typeof(VisualElement), typeof(PolarChart), new PropertyMetadata(null));
+            nameof(Title), typeof(IChartElement), typeof(PolarChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property.
@@ -456,9 +456,9 @@ public sealed partial class PolarChart : UserControl, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public VisualElement? Title
+    public IChartElement? Title
     {
-        get => (VisualElement?)GetValue(TitleProperty);
+        get => (IChartElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

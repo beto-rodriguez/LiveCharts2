@@ -138,8 +138,8 @@ public class CartesianChart : UserControl, ICartesianChartView
     /// <summary>
     /// The title property.
     /// </summary>
-    public static readonly AvaloniaProperty<VisualElement?> TitleProperty =
-       AvaloniaProperty.Register<CartesianChart, VisualElement?>(nameof(Title), null, inherits: true);
+    public static readonly AvaloniaProperty<IChartElement?> TitleProperty =
+       AvaloniaProperty.Register<CartesianChart, IChartElement?>(nameof(Title), null, inherits: true);
 
     /// <summary>
     /// The series property
@@ -401,9 +401,9 @@ public class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public VisualElement? Title
+    public IChartElement? Title
     {
-        get => (VisualElement?)GetValue(TitleProperty);
+        get => (IChartElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

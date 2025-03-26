@@ -1,6 +1,4 @@
-﻿
-
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -106,7 +104,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
-            nameof(Title), typeof(VisualElement), typeof(CartesianChart), new PropertyMetadata(null));
+            nameof(Title), typeof(IChartElement), typeof(CartesianChart), new PropertyMetadata(null));
 
     /// <summary>
     /// The series property.
@@ -460,9 +458,9 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         _core == null ? throw new Exception("core not found") : (CartesianChartEngine)_core;
 
     /// <inheritdoc cref="IChartView.Title" />
-    public VisualElement? Title
+    public IChartElement? Title
     {
-        get => (VisualElement?)GetValue(TitleProperty);
+        get => (IChartElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

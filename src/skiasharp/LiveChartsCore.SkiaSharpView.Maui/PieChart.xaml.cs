@@ -112,7 +112,7 @@ public partial class PieChart : ChartView, IPieChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement), typeof(PieChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(IChartElement), typeof(PieChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property
@@ -396,9 +396,9 @@ public partial class PieChart : ChartView, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public LiveChartsCore.VisualElements.VisualElement? Title
+    public IChartElement? Title
     {
-        get => (LiveChartsCore.VisualElements.VisualElement?)GetValue(TitleProperty);
+        get => (IChartElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

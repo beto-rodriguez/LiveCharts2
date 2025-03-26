@@ -151,7 +151,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(LiveChartsCore.VisualElements.VisualElement), typeof(PolarChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(IChartElement), typeof(PolarChart), null, BindingMode.Default, null);
 
     /// <summary>
     /// The series property.
@@ -465,9 +465,9 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.Title" />
-    public LiveChartsCore.VisualElements.VisualElement? Title
+    public IChartElement? Title
     {
-        get => (LiveChartsCore.VisualElements.VisualElement?)GetValue(TitleProperty);
+        get => (IChartElement?)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 

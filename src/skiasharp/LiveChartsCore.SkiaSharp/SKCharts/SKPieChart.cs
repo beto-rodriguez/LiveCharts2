@@ -144,7 +144,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public VisualElement? Title { get; set; }
+    public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IPieChartView.IsClockwise"/>
     public bool IsClockwise { get; set; } = true;

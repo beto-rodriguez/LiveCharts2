@@ -170,7 +170,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public double TooltipTextSize { get; set; } = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public VisualElement? Title { get; set; }
+    public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.Measuring" />
     public event ChartEventHandler? Measuring;
