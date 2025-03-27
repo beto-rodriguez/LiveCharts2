@@ -376,22 +376,20 @@ public class CartesianChartEngine(
         var x = _chartView.XAxes;
         var y = _chartView.YAxes;
 
-        if (x is null || y is null)
+        if (x is null || !x.Any())
         {
-            // in theory nulls are not valid, see ChartTest.cs for more context.
             var provider = LiveCharts.DefaultSettings.GetProvider();
-
             x = [provider.GetDefaultCartesianAxis()];
+        }
+
+        if (y is null || !y.Any())
+        {
+            var provider = LiveCharts.DefaultSettings.GetProvider();
             y = [provider.GetDefaultCartesianAxis()];
         }
 
         XAxes = [.. x.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
         YAxes = [.. y.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
-
-        if (XAxes.Length == 0 || YAxes.Length == 0)
-        {
-            throw new Exception($"{nameof(XAxes)} and {nameof(YAxes)} must contain at least one element.");
-        }
 
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
@@ -463,8 +461,10 @@ public class CartesianChartEngine(
                 ce._theme = themeId;
             }
 
-            var xAxis = XAxes[series.ScalesXAt];
-            var yAxis = YAxes[series.ScalesYAt];
+            // we ensure it is in the axes collection bounds, this is just to
+            // prevent crashes on hot-reload scenarios.
+            var xAxis = XAxes[series.ScalesXAt > XAxes.Length - 1 ? 0 : series.ScalesXAt];
+            var yAxis = YAxes[series.ScalesYAt > YAxes.Length - 1 ? 0 : series.ScalesYAt];
 
             var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
             if (seriesBounds.IsEmpty)

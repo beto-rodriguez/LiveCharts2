@@ -9,26 +9,33 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart
-        LegendPosition="Right">
+    <lvc:CartesianChart LegendPosition="Right">
         <lvc:CartesianChart.Series>
-            <lvc:SeriesCollection>
-                <lvc:XamlColumnSeries x:TypeArguments="x:Double"
-                    Name="John"
-                    Fill="#000000"
-                    Values="{Binding MaryValues}"/>
-                <lvc:XamlColumnSeries x:TypeArguments="x:Double"
-                    Name="Ana"
-                    Values="{Binding AnaValues}"/>
-            </lvc:SeriesCollection>
+            <!--<lvc:SeriesCollection>-->
+                <lvc:XamlColumnSeries Name="Mary" Values="{Binding MaryValues}" IgnoresBarPosition="True" MaxBarWidth="80"/>
+            <lvc:XamlColumnSeries Name="Ana" Values="{Binding AnaValues}" ScalesXAt="2" IgnoresBarPosition="True"/>
+            <!--</lvc:SeriesCollection>-->
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.XAxes>
-            <col:List x:TypeArguments="k:ICartesianAxis">
-                <lvc:XamlAxis IsVisible="True" LabelsPaint="#000000" Labels="{Binding Labels}"/>
-            </col:List>
-            <!--<lvc:AxesCollection>
-                <lvc:XamlAxis IsVisible="True" LabelsPaint="#0000ff" Labels="{Binding Labels}"/>
-            </lvc:AxesCollection>-->
+            <!--<lvc:AxesCollection>-->
+                <lvc:XamlAxis
+                    Labels="{Binding Labels}"
+                    LabelsRotation="0"
+                    SeparatorsPaint="#00ff00"
+                    SeparatorsAtCenter="True"
+                    TicksPaint="#232323"
+                    MinStep="1"
+                    ForceStepToMin="True"/>
+            <lvc:XamlAxis
+                    Labels="{Binding Labels}"
+                    LabelsRotation="0"
+                    SeparatorsPaint="#00ff00"
+                    SeparatorsAtCenter="True"
+                    TicksPaint="#232323"
+                    MinStep="1"
+                    ForceStepToMin="True"/>
+            <!-- We use force to min step to show all the labels always. -->
+            <!--</lvc:AxesCollection>-->
         </lvc:CartesianChart.XAxes>
     </lvc:CartesianChart>
 </ContentPage>

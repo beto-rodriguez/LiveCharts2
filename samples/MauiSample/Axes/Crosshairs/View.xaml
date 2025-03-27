@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.Crosshairs.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Crosshairs;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Axes.Crosshairs.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Crosshairs;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values}" />
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+        <lvc:CartesianChart.XAxes>
+            
+        </lvc:CartesianChart.XAxes>
+    </lvc:CartesianChart>
+
+	<!--<ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -20,5 +33,5 @@
                 YAxes="{Binding YAxes}">
             </lvc:CartesianChart>
         </Grid>
-    </ContentPage.Content>
+    </ContentPage.Content>-->
 </ContentPage>

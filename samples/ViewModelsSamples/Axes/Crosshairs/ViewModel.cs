@@ -8,9 +8,7 @@ namespace ViewModelsSamples.Axes.Crosshairs;
 
 public class ViewModel
 {
-    public ISeries[] Series { get; set; } = [
-        new LineSeries<double> { Values = [200, 558, 458, 249, 457, 339, 587] }
-    ];
+    public double[] Values { get; set; } = [200, 558, 458, 249, 457, 339, 587];
 
     public ICartesianAxis[] XAxes { get; set; } = [
         new Axis
