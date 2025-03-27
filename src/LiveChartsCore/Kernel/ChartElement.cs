@@ -41,6 +41,8 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     private bool _isVisible = true;
     private readonly List<Paint> _deletingTasks = [];
 
+    ChartElement IChartElement.ChartElementSource => this;
+
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>

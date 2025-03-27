@@ -725,13 +725,13 @@ public abstract class Chart
     {
         // Visual is the recommended type for the title,
         // more flexibility compared with VisualElement.
-        if (View.Title is Visual v)
+        if (View.Title?.ChartElementSource is Visual v)
         {
             return v.GetHitBox().Size;
         }
 
         // VisualElement is an older type for the title, this is kept for compatibility.
-        if (View.Title is VisualElement ve)
+        if (View.Title?.ChartElementSource is VisualElement ve)
         {
             ve.ClippingMode = ClipMode.None;
             return ve.Measure(this);
@@ -748,24 +748,24 @@ public abstract class Chart
     {
         // Visual is the recommended type for the title,
         // more flexibility compared with VisualElement.
-        if (View.Title is Visual v && v.DrawnElement is not null)
+        if (View.Title?.ChartElementSource is Visual v && v.DrawnElement is not null)
         {
             var size = v.GetHitBox().Size;
             v.DrawnElement.X = ControlSize.Width * 0.5f - size.Width * 0.5f;
             v.DrawnElement.Y = 0;
             v.DrawnElement.TranslateTransform = new(size.Width * 0.5f, size.Height * 0.5f);
-            AddVisual(v);
+            AddVisual(((IChartElement)v).ChartElementSource);
             return;
         }
 
         // VisualElement is an older type for the title, this is kept for compatibility.
-        if (View.Title is VisualElement ve)
+        if (View.Title?.ChartElementSource is VisualElement ve)
         {
             var titleSize = ve.Measure(this);
             ve.AlignToTopLeftCorner();
             ve.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
             ve.Y = 0;
-            AddVisual(ve);
+            AddVisual(((IChartElement)ve).ChartElementSource);
             return;
         }
 

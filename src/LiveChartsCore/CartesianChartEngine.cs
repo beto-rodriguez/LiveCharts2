@@ -88,7 +88,7 @@ public class CartesianChartEngine(
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        _chartView.Series?.Select(x => x.ChartElement).Cast<ISeries>() ?? [];
+        _chartView.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
 
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
@@ -385,8 +385,8 @@ public class CartesianChartEngine(
             y = [provider.GetDefaultCartesianAxis()];
         }
 
-        XAxes = [.. x.Select(x => x.ChartElement).Cast<ICartesianAxis>()];
-        YAxes = [.. y.Select(x => x.ChartElement).Cast<ICartesianAxis>()];
+        XAxes = [.. x.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
+        YAxes = [.. y.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
 
         if (XAxes.Length == 0 || YAxes.Length == 0)
         {
@@ -423,7 +423,7 @@ public class CartesianChartEngine(
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
-            var ce = axis.ChartElement;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.X);
             if (ce._theme != themeId)
@@ -436,7 +436,7 @@ public class CartesianChartEngine(
         }
         foreach (var axis in YAxes)
         {
-            var ce = axis.ChartElement;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.Y);
             if (ce._theme != themeId)
@@ -455,7 +455,7 @@ public class CartesianChartEngine(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = series.ChartElement;
+            var ce = series.ChartElementSource;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -484,7 +484,7 @@ public class CartesianChartEngine(
 
         foreach (var axis in XAxes)
         {
-            var ce = axis.ChartElement;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -506,7 +506,7 @@ public class CartesianChartEngine(
         }
         foreach (var axis in YAxes)
         {
-            var ce = axis.ChartElement;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -755,7 +755,7 @@ public class CartesianChartEngine(
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                var ce = axis.ChartElement;
+                var ce = axis.ChartElementSource;
                 ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
@@ -769,15 +769,15 @@ public class CartesianChartEngine(
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                var ce = axis.ChartElement;
+                var ce = axis.ChartElementSource;
                 ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
                 ce._isInternalSet = false;
             }
 
-            if (axis.IsVisible) AddVisual(axis.ChartElement);
-            axis.ChartElement.RemoveOldPaints(View); // <- this is probably obsolete.
+            if (axis.IsVisible) AddVisual(axis.ChartElementSource);
+            axis.ChartElementSource.RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
@@ -790,7 +790,7 @@ public class CartesianChartEngine(
         foreach (var visual in VisualElements.Where(static x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual(series.ChartElement);
+            AddVisual(series.ChartElementSource);
             _drawnSeries.Add(series.SeriesId);
         }
 
@@ -824,7 +824,7 @@ public class CartesianChartEngine(
         {
             if (!axis.IsVisible) continue;
 
-            var ce = axis.ChartElement;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
             ce._isInternalSet = false;
