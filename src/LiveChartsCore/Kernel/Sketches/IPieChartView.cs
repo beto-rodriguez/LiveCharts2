@@ -44,7 +44,7 @@ public interface IPieChartView : IChartView
     /// <value>
     /// The series.
     /// </value>
-    IEnumerable<ISeries> Series { get; set; }
+    ICollection<ISeries> Series { get; set; }
 
     /// <summary>
     /// Gets or sets the initial rotation in degrees, this angle specifies where the first pie slice will be drawn, then the remaining

@@ -52,7 +52,7 @@ public class PieChartEngine(
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        view.Series?.Cast<ISeries>() ?? [];
+        view.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -97,7 +97,7 @@ public class PieChartEngine(
     /// <returns></returns>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
-        return view.Series
+        return VisibleSeries
             .Where(series => (series is IPieSeries pieSeries) && !pieSeries.IsFillSeries)
             .Where(series => series.IsHoverable)
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, FindingStrategy.CompareAll, FindPointFor.HoverEvent));
@@ -156,6 +156,9 @@ public class PieChartEngine(
         ValueBounds = new Bounds();
         IndexBounds = new Bounds();
         PushoutBounds = new Bounds();
+
+        var aa = view.Series;
+        var aaa = VisibleSeries.Cast<IPieSeries>().ToArray();
 
         foreach (var series in VisibleSeries.Cast<IPieSeries>())
         {

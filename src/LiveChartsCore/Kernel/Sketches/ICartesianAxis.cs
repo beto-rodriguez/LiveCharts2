@@ -135,7 +135,7 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the shared axes collection, useful to share the zooming an panning between several charts.
     /// </summary>
-    public IEnumerable<ICartesianAxis>? SharedWith { get; set; }
+    IEnumerable<ICartesianAxis>? SharedWith { get; set; }
 
     /// <summary>
     /// Gets or sets the sub-separators paint.

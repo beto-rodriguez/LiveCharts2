@@ -87,10 +87,10 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
     /// <inheritdoc cref="IPieChartView.Series"/>
-    public IEnumerable<ISeries> Series { get; set; } = [];
+    public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
-    public IEnumerable<ChartElement> VisualElements { get; set; } = [];
+    public ICollection<ChartElement> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="IPieChartView.InitialRotation"/>
     public double InitialRotation { get; set; }

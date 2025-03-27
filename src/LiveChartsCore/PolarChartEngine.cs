@@ -68,7 +68,7 @@ public class PolarChartEngine(
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        view.Series?.Cast<ISeries>() ?? [];
+        view.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -157,22 +157,20 @@ public class PolarChartEngine(
         var a = view.AngleAxes;
         var r = view.RadiusAxes;
 
-        if (a is null || r is null)
+        if (a is null || !a.Any())
         {
-            // in theory nulls are not valid, see ChartTest.cs for more context.
             var provider = LiveCharts.DefaultSettings.GetProvider();
-
             a = [provider.GetDefaultPolarAxis()];
+        }
+
+        if (r is null || !r.Any())
+        {
+            var provider = LiveCharts.DefaultSettings.GetProvider();
             r = [provider.GetDefaultPolarAxis()];
         }
 
-        AngleAxes = [.. a.Cast<IPolarAxis>()];
-        RadiusAxes = [.. r.Cast<IPolarAxis>()];
-
-        if (AngleAxes.Length == 0 || RadiusAxes.Length == 0)
-        {
-            throw new Exception($"{nameof(AngleAxes)} and {nameof(RadiusAxes)} must contain at least one element.");
-        }
+        AngleAxes = [.. a.Select(x => x.ChartElementSource).Cast<IPolarAxis>()];
+        RadiusAxes = [.. r.Select(x => x.ChartElementSource).Cast<IPolarAxis>()];
 
         var theme = GetTheme();
 
@@ -241,8 +239,8 @@ public class PolarChartEngine(
                 ce._theme = themeId;
             }
 
-            var secondaryAxis = AngleAxes[series.ScalesAngleAt];
-            var primaryAxis = RadiusAxes[series.ScalesRadiusAt];
+            var secondaryAxis = GetAngleAxis(series);
+            var primaryAxis = GetRadiusAxis(series);
 
             var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
 
@@ -532,6 +530,24 @@ public class PolarChartEngine(
         Canvas.Invalidate();
         _isFirstDraw = false;
     }
+
+    /// <summary>
+    /// Gets the x axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public IPolarAxis GetAngleAxis(IPolarSeries series)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => AngleAxes[series.ScalesAngleAt > AngleAxes.Length - 1 ? 0 : series.ScalesAngleAt];
+
+    /// <summary>
+    /// Gets the y axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public IPolarAxis GetRadiusAxis(IPolarSeries series)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => RadiusAxes[series.ScalesRadiusAt > RadiusAxes.Length - 1 ? 0 : series.ScalesRadiusAt];
 
     /// <inheritdoc cref="Chart.Unload"/>
     public override void Unload()

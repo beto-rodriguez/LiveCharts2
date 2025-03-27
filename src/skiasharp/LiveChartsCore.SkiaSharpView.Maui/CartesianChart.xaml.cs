@@ -142,7 +142,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty YAxesProperty =
         BindableProperty.Create(
-            nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), null, BindingMode.Default, null,
+            nameof(YAxes), typeof(ICollection<ICartesianAxis>), typeof(CartesianChart), null, BindingMode.Default, null,
             PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._yObserver));
 
     /// <summary>
@@ -150,7 +150,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty SectionsProperty =
         BindableProperty.Create(
-            nameof(Sections), typeof(IEnumerable<CoreSection>), typeof(CartesianChart), null, BindingMode.Default, null,
+            nameof(Sections), typeof(ICollection<CoreSection>), typeof(CartesianChart), null, BindingMode.Default, null,
             PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._sectionsObserver));
 
     /// <summary>
@@ -158,7 +158,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(CartesianChart), null, BindingMode.Default, null,
+            nameof(VisualElements), typeof(ICollection<ChartElement>), typeof(CartesianChart), null, BindingMode.Default, null,
             PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
@@ -422,12 +422,6 @@ public partial class CartesianChart : ChartView, ICartesianChartView
         set => SetValue(SeriesProperty, value);
     }
 
-    IEnumerable<ISeries> ICartesianChartView.Series
-    {
-        get => Series;
-        set => Series = (ICollection<ISeries>)value;
-    }
-
     /// <inheritdoc cref="ICartesianChartView.XAxes" />
     public ICollection<ICartesianAxis> XAxes
     {
@@ -435,30 +429,24 @@ public partial class CartesianChart : ChartView, ICartesianChartView
         set => SetValue(XAxesProperty, value);
     }
 
-    IEnumerable<ICartesianAxis> ICartesianChartView.XAxes
-    {
-        get => XAxes;
-        set => XAxes = (ICollection<ICartesianAxis>)value;
-    }
-
     /// <inheritdoc cref="ICartesianChartView.YAxes" />
-    public IEnumerable<ICartesianAxis> YAxes
+    public ICollection<ICartesianAxis> YAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
+        get => (ICollection<ICartesianAxis>)GetValue(YAxesProperty);
         set => SetValue(YAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
-    public IEnumerable<CoreSection> Sections
+    public ICollection<CoreSection> Sections
     {
-        get => (IEnumerable<CoreSection>)GetValue(SectionsProperty);
+        get => (ICollection<CoreSection>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<ChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 

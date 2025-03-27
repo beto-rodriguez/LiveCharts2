@@ -119,15 +119,21 @@ public partial class PieChart : ChartView, IPieChartView
     /// </summary>
     public static readonly BindableProperty SeriesProperty =
           BindableProperty.Create(
-              nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-              PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
+              nameof(Series), typeof(ICollection<ISeries>), typeof(PieChart), null, BindingMode.Default, null,
+              //PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
+              (BindableObject bo, object o, object n) =>
+              {
+                  var a = n;
+                  var b = o;
+                  PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver)(bo, o, n);
+              });
 
     /// <summary>
     /// The visual elements property.
     /// </summary>
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(PieChart), new List<ChartElement>(), BindingMode.Default, null,
+            nameof(VisualElements), typeof(ICollection<ChartElement>), typeof(PieChart), null, BindingMode.Default, null,
             PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
@@ -386,16 +392,16 @@ public partial class PieChart : ChartView, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<ChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 

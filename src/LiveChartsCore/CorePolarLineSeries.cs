@@ -175,8 +175,8 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     public override void Invalidate(Chart chart)
     {
         var polarChart = (PolarChartEngine)chart;
-        var angleAxis = polarChart.AngleAxes[ScalesAngleAt];
-        var radiusAxis = polarChart.RadiusAxes[ScalesRadiusAt];
+        var angleAxis = polarChart.GetAngleAxis(this);
+        var radiusAxis = polarChart.GetRadiusAxis(this);
 
         var drawLocation = polarChart.DrawMarginLocation;
         var drawMarginSize = polarChart.DrawMarginSize;

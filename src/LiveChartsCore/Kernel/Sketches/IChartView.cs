@@ -196,7 +196,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the visual elements.
     /// </summary>
-    IEnumerable<ChartElement> VisualElements { get; set; }
+    ICollection<ChartElement> VisualElements { get; set; }
 
     /// <summary>
     /// Occurs when the pointer goes down over a chart point(s).

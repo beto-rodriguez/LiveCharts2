@@ -461,10 +461,8 @@ public class CartesianChartEngine(
                 ce._theme = themeId;
             }
 
-            // we ensure it is in the axes collection bounds, this is just to
-            // prevent crashes on hot-reload scenarios.
-            var xAxis = XAxes[series.ScalesXAt > XAxes.Length - 1 ? 0 : series.ScalesXAt];
-            var yAxis = YAxes[series.ScalesYAt > YAxes.Length - 1 ? 0 : series.ScalesYAt];
+            var xAxis = GetXAxis(series);
+            var yAxis = GetYAxis(series);
 
             var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
             if (seriesBounds.IsEmpty)
@@ -840,6 +838,36 @@ public class CartesianChartEngine(
         Canvas.Invalidate();
         _isFirstDraw = false;
     }
+
+    /// <summary>
+    /// Gets the x axis for the specified series.
+    /// </summary>
+    /// <param name="index">The index.</param>
+    public ICartesianAxis GetXAxis(int index)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => XAxes[index > XAxes.Length - 1 ? 0 : index];
+
+    /// <summary>
+    /// Gets the y axis for the specified series.
+    /// </summary>
+    /// <param name="index">The index.</param>
+    public ICartesianAxis GetYAxis(int index)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => YAxes[index > YAxes.Length - 1 ? 0 : index];
+
+    /// <summary>
+    /// Gets the x axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public ICartesianAxis GetXAxis(ICartesianSeries series) => GetXAxis(series.ScalesXAt);
+
+    /// <summary>
+    /// Gets the y axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public ICartesianAxis GetYAxis(ICartesianSeries series) => GetYAxis(series.ScalesYAt);
 
     /// <inheritdoc cref="Chart.Unload"/>
     public override void Unload()

@@ -79,16 +79,8 @@ public partial class PolarChart : ChartView, IPolarChartView
         _visualsObserver = new CollectionDeepObserver<ChartElement>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        SetValue(AngleAxesProperty,
-            new List<IPolarAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            });
-        SetValue(RadiusAxesProperty,
-            new List<IPolarAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            });
+        SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
+        SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetValue(SyncContextProperty, new object());
@@ -157,7 +149,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty SeriesProperty =
         BindableProperty.Create(
-            nameof(Series), typeof(IEnumerable<ISeries>), typeof(PolarChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
+            nameof(Series), typeof(ICollection<ISeries>), typeof(PolarChart), null, BindingMode.Default, null,
             PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
 
     /// <summary>
@@ -165,7 +157,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(PolarChart), new List<ChartElement>(), BindingMode.Default, null,
+            nameof(VisualElements), typeof(ICollection<ChartElement>), typeof(PolarChart), null, BindingMode.Default, null,
             PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
@@ -173,7 +165,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty AngleAxesProperty =
         BindableProperty.Create(
-            nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() }, BindingMode.Default, null,
+            nameof(AngleAxes), typeof(ICollection<IPolarAxis>), typeof(PolarChart), null, BindingMode.Default, null,
             PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._angleObserver));
 
     /// <summary>
@@ -181,7 +173,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty RadiusAxesProperty =
         BindableProperty.Create(
-            nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() }, BindingMode.Default, null,
+            nameof(RadiusAxes), typeof(ICollection<IPolarAxis>), typeof(PolarChart), null, BindingMode.Default, null,
             PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._radiusObserver));
 
     /// <summary>
@@ -439,30 +431,30 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IPolarChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView.AngleAxes" />
-    public IEnumerable<IPolarAxis> AngleAxes
+    public ICollection<IPolarAxis> AngleAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty);
+        get => (ICollection<IPolarAxis>)GetValue(AngleAxesProperty);
         set => SetValue(AngleAxesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView.RadiusAxes" />
-    public IEnumerable<IPolarAxis> RadiusAxes
+    public ICollection<IPolarAxis> RadiusAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty);
+        get => (ICollection<IPolarAxis>)GetValue(RadiusAxesProperty);
         set => SetValue(RadiusAxesProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<ChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<ChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 
