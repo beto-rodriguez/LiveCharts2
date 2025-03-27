@@ -30,7 +30,7 @@ using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
-internal class PropertyChangeHandlers<TChart>
+internal class PropertyHandlers<TChart>
     where TChart : ChartView
 {
     public static void OnChanged(BindableObject bo, object o, object n)

@@ -114,7 +114,7 @@ public partial class PolarChart : ChartView, IPolarChartView
             {
                 var chart = (PolarChart)bo;
                 chart.CoreCanvas.Sync = n;
-                PropertyChangeHandlers<PolarChart>.OnChanged(bo, o, n);
+                PropertyHandlers<PolarChart>.OnChanged(bo, o, n);
             });
 
     /// <summary>
@@ -122,35 +122,35 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty FitToBoundsProperty =
        BindableProperty.Create(nameof(FitToBounds), typeof(bool), typeof(PolarChart), false,
-           propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+           propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The total angle property.
     /// </summary>
     public static readonly BindableProperty TotalAngleProperty =
        BindableProperty.Create(nameof(TotalAngle), typeof(double), typeof(PolarChart), 360d,
-           propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+           propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The Inner radius property.
     /// </summary>
     public static readonly BindableProperty InnerRadiusProperty =
        BindableProperty.Create(nameof(InnerRadius), typeof(double), typeof(PolarChart), 0d,
-           propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+           propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The Initial rotation property.
     /// </summary>
     public static readonly BindableProperty InitialRotationProperty =
        BindableProperty.Create(nameof(InitialRotation), typeof(double), typeof(PolarChart), LiveCharts.DefaultSettings.PolarInitialRotation,
-           propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+           propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The title property.
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(IChartElement), typeof(PolarChart), null, BindingMode.Default, null, PropertyChangeHandlers<PolarChart>.OnUIElementChanged);
+            nameof(Title), typeof(IChartElement), typeof(PolarChart), null, BindingMode.Default, null, PropertyHandlers<PolarChart>.OnUIElementChanged);
 
     /// <summary>
     /// The series property.
@@ -158,7 +158,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty SeriesProperty =
         BindableProperty.Create(
             nameof(Series), typeof(IEnumerable<ISeries>), typeof(PolarChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-            PropertyChangeHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
+            PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
 
     /// <summary>
     /// The visual elements property.
@@ -166,7 +166,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
             nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(PolarChart), new List<ChartElement>(), BindingMode.Default, null,
-            PropertyChangeHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
+            PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
     /// The x axes property.
@@ -174,7 +174,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty AngleAxesProperty =
         BindableProperty.Create(
             nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() }, BindingMode.Default, null,
-            PropertyChangeHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._angleObserver));
+            PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._angleObserver));
 
     /// <summary>
     /// The y axes property.
@@ -182,7 +182,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty RadiusAxesProperty =
         BindableProperty.Create(
             nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() }, BindingMode.Default, null,
-            PropertyChangeHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._radiusObserver));
+            PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._radiusObserver));
 
     /// <summary>
     /// The animations speed property.
@@ -205,7 +205,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty LegendPositionProperty =
         BindableProperty.Create(
             nameof(LegendPosition), typeof(LegendPosition), typeof(PolarChart),
-            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The legend background property.
@@ -214,7 +214,7 @@ public partial class PolarChart : ChartView, IPolarChartView
         BindableProperty.Create(
             nameof(LegendBackgroundPaint), typeof(Paint), typeof(PolarChart),
             (Paint?)LiveCharts.DefaultSettings.LegendBackgroundPaint,
-            propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+            propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The legend text paint property.
@@ -223,7 +223,7 @@ public partial class PolarChart : ChartView, IPolarChartView
         BindableProperty.Create(
             nameof(LegendTextPaint), typeof(Paint), typeof(PolarChart),
             (Paint?)LiveCharts.DefaultSettings.LegendTextPaint,
-            propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+            propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The legend text size property.
@@ -231,7 +231,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
             nameof(LegendTextSize), typeof(double), typeof(PolarChart),
-            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The tool tip position property.
@@ -239,7 +239,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty TooltipPositionProperty =
        BindableProperty.Create(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(PolarChart),
-           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The too ltip finding strategy property.
@@ -256,7 +256,7 @@ public partial class PolarChart : ChartView, IPolarChartView
         BindableProperty.Create(
             nameof(TooltipBackgroundPaint), typeof(Paint), typeof(PolarChart),
             (Paint?)LiveCharts.DefaultSettings.TooltipBackgroundPaint,
-            propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+            propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The tooltip text paint property.
@@ -265,7 +265,7 @@ public partial class PolarChart : ChartView, IPolarChartView
         BindableProperty.Create(
             nameof(TooltipTextPaint), typeof(Paint), typeof(PolarChart),
             (Paint?)LiveCharts.DefaultSettings.TooltipTextPaint,
-            propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+            propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The tooltip text size property.
@@ -273,7 +273,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
             nameof(TooltipTextSize), typeof(double), typeof(PolarChart),
-            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: PropertyChangeHandlers<PolarChart>.OnChanged);
+            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: PropertyHandlers<PolarChart>.OnChanged);
 
     /// <summary>
     /// The update started command.

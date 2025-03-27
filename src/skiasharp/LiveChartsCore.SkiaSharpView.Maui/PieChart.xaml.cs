@@ -103,7 +103,7 @@ public partial class PieChart : ChartView, IPieChartView
             {
                 var chart = (PieChart)bo;
                 chart.CoreCanvas.Sync = n;
-                PropertyChangeHandlers<PieChart>.OnChanged(bo, o, n);
+                PropertyHandlers<PieChart>.OnChanged(bo, o, n);
             });
 
     /// <summary>
@@ -112,7 +112,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
             nameof(Title), typeof(IChartElement), typeof(PieChart), null, BindingMode.Default, null,
-            PropertyChangeHandlers<PieChart>.OnUIElementChanged);
+            PropertyHandlers<PieChart>.OnUIElementChanged);
 
     /// <summary>
     /// The series property
@@ -120,7 +120,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty SeriesProperty =
           BindableProperty.Create(
               nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-              PropertyChangeHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
+              PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
 
     /// <summary>
     /// The visual elements property.
@@ -128,49 +128,49 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
             nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(PieChart), new List<ChartElement>(), BindingMode.Default, null,
-            PropertyChangeHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
+            PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
     /// The initial rotation property
     /// </summary>
     public static readonly BindableProperty InitialRotationProperty =
         BindableProperty.Create(
-            nameof(InitialRotation), typeof(double), typeof(PieChart), 0d, BindingMode.Default, null, PropertyChangeHandlers<PieChart>.OnChanged);
+            nameof(InitialRotation), typeof(double), typeof(PieChart), 0d, BindingMode.Default, null, PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The IsClockwise angle property
     /// </summary>
     public static readonly BindableProperty IsClockwiseProperty =
         BindableProperty.Create(
-            nameof(IsClockwise), typeof(bool), typeof(PieChart), true, BindingMode.Default, null, PropertyChangeHandlers<PieChart>.OnChanged);
+            nameof(IsClockwise), typeof(bool), typeof(PieChart), true, BindingMode.Default, null, PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The maximum angle property
     /// </summary>
     public static readonly BindableProperty MaxAngleProperty =
         BindableProperty.Create(
-            nameof(MaxAngle), typeof(double), typeof(PieChart), 360d, BindingMode.Default, null, PropertyChangeHandlers<PieChart>.OnChanged);
+            nameof(MaxAngle), typeof(double), typeof(PieChart), 360d, BindingMode.Default, null, PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The total property
     /// </summary>
     public static readonly BindableProperty MaxValueProperty =
         BindableProperty.Create(
-            nameof(MaxValue), typeof(double), typeof(PieChart), double.NaN, BindingMode.Default, null, PropertyChangeHandlers<PieChart>.OnChanged);
+            nameof(MaxValue), typeof(double), typeof(PieChart), double.NaN, BindingMode.Default, null, PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The start property
     /// </summary>
     public static readonly BindableProperty MinValueProperty =
         BindableProperty.Create(
-            nameof(MinValue), typeof(double), typeof(PieChart), 0d, BindingMode.Default, null, PropertyChangeHandlers<PieChart>.OnChanged);
+            nameof(MinValue), typeof(double), typeof(PieChart), 0d, BindingMode.Default, null, PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The draw margin property
     /// </summary>
     public static readonly BindableProperty DrawMarginProperty =
         BindableProperty.Create(
-            nameof(DrawMargin), typeof(Margin), typeof(PieChart), null, BindingMode.Default, null, PropertyChangeHandlers<PieChart>.OnChanged);
+            nameof(DrawMargin), typeof(Margin), typeof(PieChart), null, BindingMode.Default, null, PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The animations speed property
@@ -192,7 +192,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty LegendPositionProperty =
         BindableProperty.Create(
             nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart),
-            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The legend background property.
@@ -200,7 +200,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(LegendBackgroundPaint), typeof(Paint), typeof(PieChart),
-            LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The legend text paint property.
@@ -208,7 +208,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
             nameof(LegendTextPaint), typeof(Paint), typeof(PieChart),
-            LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The legend text size property.
@@ -216,7 +216,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
             nameof(LegendTextSize), typeof(double), typeof(PieChart),
-            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The tool tip position property;
@@ -224,7 +224,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty TooltipPositionProperty =
        BindableProperty.Create(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart),
-           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The tooltip background property.
@@ -232,7 +232,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(TooltipBackgroundPaint), typeof(Paint), typeof(PieChart),
-            LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+            LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The tooltip text paint property.
@@ -240,7 +240,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
             nameof(TooltipTextPaint), typeof(Paint), typeof(PieChart),
-            LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+            LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The tooltip text size property.
@@ -248,7 +248,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
             nameof(TooltipTextSize), typeof(double), typeof(PieChart),
-            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: PropertyChangeHandlers<PieChart>.OnChanged);
+            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: PropertyHandlers<PieChart>.OnChanged);
 
     /// <summary>
     /// The update started command.

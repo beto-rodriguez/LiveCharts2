@@ -118,7 +118,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
             {
                 var chart = (CartesianChart)bo;
                 chart.CoreCanvas.Sync = n;
-                PropertyChangeHandlers<CartesianChart>.OnChanged(bo, o, n);
+                PropertyHandlers<CartesianChart>.OnChanged(bo, o, n);
             });
 
     /// <summary>
@@ -127,7 +127,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
             nameof(Title), typeof(IChartElement), typeof(CartesianChart), null, BindingMode.Default, null,
-            PropertyChangeHandlers<CartesianChart>.OnUIElementChanged);
+            PropertyHandlers<CartesianChart>.OnUIElementChanged);
 
     /// <summary>
     /// The series property.
@@ -135,7 +135,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty SeriesProperty =
         BindableProperty.Create(
             nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-            PropertyChangeHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
+            PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
 
     /// <summary>
     /// The x axes property
@@ -143,7 +143,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty XAxesProperty =
         BindableProperty.Create(
             nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() }, BindingMode.Default, null,
-            PropertyChangeHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._xObserver));
+            PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._xObserver));
 
     /// <summary>
     /// The y axes property.
@@ -151,7 +151,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty YAxesProperty =
         BindableProperty.Create(
             nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() }, BindingMode.Default, null,
-            PropertyChangeHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._yObserver));
+            PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._yObserver));
 
     /// <summary>
     /// The sections property.
@@ -159,7 +159,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty SectionsProperty =
         BindableProperty.Create(
             nameof(Sections), typeof(IEnumerable<CoreSection>), typeof(CartesianChart), new List<CoreSection>(), BindingMode.Default, null,
-            PropertyChangeHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._sectionsObserver));
+            PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._sectionsObserver));
 
     /// <summary>
     /// The visual elements property.
@@ -167,7 +167,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
             nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(CartesianChart), new List<ChartElement>(), BindingMode.Default, null,
-            PropertyChangeHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
+            PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
     /// The draw margin frame property.
@@ -175,7 +175,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty DrawMarginFrameProperty =
         BindableProperty.Create(
             nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame), typeof(CartesianChart), null,
-            BindingMode.Default, null, PropertyChangeHandlers<CartesianChart>.OnUIElementChanged);
+            BindingMode.Default, null, PropertyHandlers<CartesianChart>.OnUIElementChanged);
 
     /// <summary>
     /// The draw margin property.
@@ -183,7 +183,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty DrawMarginProperty =
         BindableProperty.Create(
             nameof(DrawMargin), typeof(Margin), typeof(CartesianChart), null, BindingMode.Default, null,
-            PropertyChangeHandlers<CartesianChart>.OnChanged);
+            PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The zoom mode property.
@@ -222,7 +222,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty LegendPositionProperty =
         BindableProperty.Create(
             nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendPosition, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The legend background property.
@@ -230,7 +230,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty LegendBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(LegendBackgroundPaint), typeof(Paint), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendBackgroundPaint, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The legend text paint property.
@@ -238,7 +238,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty LegendTextPaintProperty =
         BindableProperty.Create(
             nameof(LegendTextPaint), typeof(Paint), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendTextPaint, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The legend text size property.
@@ -246,7 +246,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty LegendTextSizeProperty =
         BindableProperty.Create(
             nameof(LegendTextSize), typeof(double), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+            LiveCharts.DefaultSettings.LegendTextSize, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The tool tip position property.
@@ -254,7 +254,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty TooltipPositionProperty =
        BindableProperty.Create(
            nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart),
-           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+           LiveCharts.DefaultSettings.TooltipPosition, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The tool tip finding strategy property.
@@ -270,7 +270,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty TooltipBackgroundPaintProperty =
         BindableProperty.Create(
             nameof(TooltipBackgroundPaint), typeof(Paint), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+            LiveCharts.DefaultSettings.TooltipBackgroundPaint, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The tooltip text paint property.
@@ -278,7 +278,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty TooltipTextPaintProperty =
         BindableProperty.Create(
             nameof(TooltipTextPaint), typeof(Paint), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+            LiveCharts.DefaultSettings.TooltipTextPaint, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The tooltip text size property.
@@ -286,7 +286,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty TooltipTextSizeProperty =
         BindableProperty.Create(
             nameof(TooltipTextSize), typeof(double), typeof(CartesianChart),
-            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: PropertyChangeHandlers<CartesianChart>.OnChanged);
+            LiveCharts.DefaultSettings.TooltipTextSize, propertyChanged: PropertyHandlers<CartesianChart>.OnChanged);
 
     /// <summary>
     /// The update started command.
