@@ -30,11 +30,18 @@ using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
-internal static class UI
+internal class PropertyChangeHandlers<TChart>
+    where TChart : ChartView
 {
-    public static void AddToCanvas(BindableObject bo, object o, object n)
+    public static void OnChanged(BindableObject bo, object o, object n)
     {
-        var chart = (CartesianChart)bo;
+        var chart = (TChart)bo;
+        chart.CoreChart.Update();
+    }
+
+    public static void OnUIElementChanged(BindableObject bo, object o, object n)
+    {
+        var chart = (TChart)bo;
 
         if (o is View oldView)
             _ = chart.CanvasView.Children.Remove(oldView);
@@ -45,9 +52,8 @@ internal static class UI
         chart.CoreChart?.Update();
     }
 
-    public static BindableProperty.BindingPropertyChangedDelegate DeepObserve<TChart, TCollection>(
+    public static BindableProperty.BindingPropertyChangedDelegate OnUIElementsCollectionChanged<TCollection>(
         Func<TChart, CollectionDeepObserver<TCollection>> observerGetter)
-            where TChart : ChartView
     {
         return (bo, o, n) =>
         {
