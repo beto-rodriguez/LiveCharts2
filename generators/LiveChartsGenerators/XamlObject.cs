@@ -8,7 +8,7 @@ public readonly record struct XamlObject
     public readonly string Name;
     public readonly INamedTypeSymbol Type;
     public readonly ITypeSymbol BasedOn;
-    public readonly List<IPropertySymbol> BindableProperties;
+    public readonly Dictionary<string, List<IPropertySymbol>> BindableProperties;
     public readonly List<IPropertySymbol> NotBindableProperties;
     public readonly List<IEventSymbol> Events;
     public readonly List<IMethodSymbol> Methods;
@@ -22,7 +22,7 @@ public readonly record struct XamlObject
         string name,
         INamedTypeSymbol type,
         ITypeSymbol basedOn,
-        List<IPropertySymbol> bindableProperties,
+        Dictionary<string, List<IPropertySymbol>> bindableProperties,
         List<IPropertySymbol> notBindableProperites,
         List<IEventSymbol> events,
         List<IMethodSymbol> methods,

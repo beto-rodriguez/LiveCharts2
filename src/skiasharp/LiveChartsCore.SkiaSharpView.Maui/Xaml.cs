@@ -2,6 +2,8 @@
 // The generator just wraps LiveCharts object in a Xaml object, then when a
 // property changes in the Xaml object, it updates the LiveCharts object.
 
+#pragma warning disable IDE1006 // Naming Styles
+
 using System.Collections;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
@@ -26,10 +28,17 @@ public class AxesCollection : List<ICartesianAxis> { }
 public class SeriesCollection : List<ISeries> { }
 
 [XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis, IPlane { }
+public partial class XamlAxis : EmptyContentView, ICartesianAxis, IPlane
+{ }
 
-[XamlClass(typeof(LabelVisual))]
-public partial class XamlLabelVisual : EmptyContentView, IChartElement, IInternalInteractable { }
+[XamlClass(typeof(DrawnLabelVisual),
+    Map = typeof(LabelGeometry),
+    MapPath = "DrawnLabel")]
+public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IInternalInteractable
+{
+    private static readonly LabelGeometry _defaultDrawnLabel = new();
+    private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
+}
 
 // == About generated series ==
 

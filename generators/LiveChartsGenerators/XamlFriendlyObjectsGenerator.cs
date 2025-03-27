@@ -45,8 +45,8 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         if (semanticModel.GetDeclaredSymbol(declarationSyntax) is not INamedTypeSymbol symbol)
             return null; // something went wrong
 
-        var bindableProperties = new List<IPropertySymbol>();
-        var notBindableProperties = new List<IPropertySymbol>();
+        var bindablePropertiesDic = new Dictionary<string, List<IPropertySymbol>>();
+        var notBindableProperties = new Dictionary<string, IPropertySymbol>();
         var events = new List<IEventSymbol>();
         var methods = new Dictionary<string, IMethodSymbol>();
         var explicitMethods = new Dictionary<string, IMethodSymbol>();
@@ -61,6 +61,8 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         string? fileHeader = null;
         string? propertyChangeHandlers = null;
         string? overridenTypes = null;
+        ITypeSymbol? alsoMap = null;
+        string? alsoMapPath = null;
 
         foreach (var arg in targetAttribute.NamedArguments)
         {
@@ -75,6 +77,12 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 case "PropertyTypeOverride":
                     overridenTypes = arg.Value.Value as string;
                     break;
+                case "Map":
+                    alsoMap = arg.Value.Value as ITypeSymbol;
+                    break;
+                case "MapPath":
+                    alsoMapPath = arg.Value.Value as string;
+                    break;
                 default:
                     break;
             }
@@ -86,53 +94,76 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         var nameParts = symbol.ToDisplayString().Split('.');
         var name = nameParts[nameParts.Length - 1];
 
-        foreach (var member in GetLiveChartsMembers(baseType))
+        var members = new Dictionary<string, List<ISymbol>>
         {
-            if (member is IPropertySymbol property)
+            [string.Empty] = GetLiveChartsMembers(baseType)
+        };
+
+        if (alsoMap is not null && alsoMapPath is not null)
+            members[alsoMapPath] = GetLiveChartsMembers(alsoMap);
+
+        foreach (var pair in members)
+        {
+            var bindableProperties = new List<IPropertySymbol>();
+            bindablePropertiesDic[pair.Key] = bindableProperties;
+
+            foreach (var member in pair.Value)
             {
-                if (property.DeclaredAccessibility == Accessibility.Protected)
-                    continue;
+                if (member is IPropertySymbol property)
+                {
+                    if (property.DeclaredAccessibility == Accessibility.Protected || property.IsStatic)
+                        continue;
 
-                // ignore the DefaultValues property, it is for internal use only
-                if (property.Name == "DefaultValues")
-                    continue;
+                    // ignore the DefaultValues property, it is for internal use only
+                    if (property.Name == "DefaultValues")
+                        continue;
 
-                var notExplicit = property.ExplicitInterfaceImplementations.Length == 0;
-                var hasSetter = property.SetMethod is not null;
-                var isPublic = property.DeclaredAccessibility == Accessibility.Public;
+                    var notExplicit = property.ExplicitInterfaceImplementations.Length == 0;
+                    var hasSetter = property.SetMethod is not null;
+                    var isPublic = property.DeclaredAccessibility == Accessibility.Public;
 
-                if (notExplicit && hasSetter && isPublic)
-                    bindableProperties.Add(property);
-                else
-                    notBindableProperties.Add(property);
-            }
+                    if (notExplicit && hasSetter && isPublic)
+                    {
+                        bindableProperties.Add(property);
+                    }
+                    else if (pair.Key == string.Empty)
+                    {
+                        // when key is empty, we are on the base type, we only map regular properties from the base type
+                        var propertyKey = property.Name;
+                        notBindableProperties[propertyKey] = property;
+                    }
+                }
 
-            if (member is IMethodSymbol method)
-            {
-                // the key is the method name, this is to avoid duplicated methods
-                var methodDisplayString = method.Name;
-                var methodParts = method.ToDisplayString().Split('(');
-                var methodKey = $"{method.Name}({methodParts[methodParts.Length - 1]}";
+                // ignore methods and events when not in the base type
+                if (pair.Key != string.Empty) continue;
 
-                if (method.MethodKind == MethodKind.Ordinary && method.DeclaredAccessibility == Accessibility.Public)
-                    methods[methodKey] = method;
+                if (member is IMethodSymbol method)
+                {
+                    // the key is the method name, this is to avoid duplicated methods
+                    var methodDisplayString = method.Name;
+                    var methodParts = method.ToDisplayString().Split('(');
+                    var methodKey = $"{method.Name}({methodParts[methodParts.Length - 1]}";
 
-                if (method.MethodKind == MethodKind.ExplicitInterfaceImplementation)
-                    explicitMethods[methodKey] = method;
-            }
+                    if (method.MethodKind == MethodKind.Ordinary && method.DeclaredAccessibility == Accessibility.Public)
+                        methods[methodKey] = method;
 
-            if (member is IEventSymbol @event)
-            {
-                // normally, the property changed event is already implemented in XAML objects
-                // for now we just ignore it...
-                //if (@event.Name == "PropertyChanged")
-                //    continue;
-                events.Add(@event);
+                    if (method.MethodKind == MethodKind.ExplicitInterfaceImplementation)
+                        explicitMethods[methodKey] = method;
+                }
+
+                if (member is IEventSymbol @event)
+                {
+                    // normally, the property changed event is already implemented in XAML objects
+                    // for now we just ignore it...
+                    //if (@event.Name == "PropertyChanged")
+                    //    continue;
+                    events.Add(@event);
+                }
             }
         }
 
         return new XamlObject(
-            ns, name, symbol, baseType, bindableProperties, notBindableProperties, events,
+            ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
             [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeHandlers, overridenTypes);
     }
 

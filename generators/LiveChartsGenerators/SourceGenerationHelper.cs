@@ -51,6 +51,16 @@ public class XamlClassAttribute(System.Type basedOn) : System.Attribute
     public System.Type BaseType { get; } = basedOn;
 
     /// <summary>
+    /// Also maps the specified type.
+    /// </summary>
+    public System.Type Map { get; set; }
+
+    /// <summary>
+    /// The path to the map.
+    /// </summary>
+    public string MapPath { get; set; }
+
+    /// <summary>
     /// The header to add to the generated file.
     /// </summary>
     public string? FileHeader { get; set; }
@@ -79,6 +89,8 @@ public class XamlClassAttribute(System.Type basedOn) : System.Attribute
 #nullable enable
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
+#pragma warning disable IDE0052 // Remove unread private members
+#pragma warning disable IDE1006 // Naming Styles
 {target.FileHeader}
 {GetNameSpaces()}
 using LiveChartsCore.SkiaSharpView.TypeConverters;
@@ -91,6 +103,11 @@ namespace {target.NameSpace};
 public partial class {target.Name}
 {{
     private readonly {baseType} _baseType = new();
+
+#region default values
+
+{GetDefaultValues(target)}
+#endregion
 
 #region properties
 
@@ -120,12 +137,24 @@ public partial class {target.Name}
 }}";
     }
 
+    private static string GetDefaultValues(XamlObject target)
+    {
+        var sb = new StringBuilder();
+
+        var fallBackInfo = GetFallbackInfo(target.BasedOn);
+
+        _ = sb.AppendLine($"    private static readonly {fallBackInfo.Item1} {fallBackInfo.Item2} = new();");
+
+        return sb.ToString();
+    }
+
     private static string ConcatenateBindableProperties(XamlObject target)
     {
         var sb = new StringBuilder();
 
-        foreach (var property in target.BindableProperties)
-            _ = sb.AppendLine(GetBindablePropertySyntax(target, property)).AppendLine();
+        foreach (var pair in target.BindableProperties)
+            foreach (var property in pair.Value)
+                _ = sb.AppendLine(GetBindablePropertySyntax(target, property, pair.Key)).AppendLine();
 
         return sb.ToString();
     }
@@ -262,8 +291,16 @@ public partial class {target.Name}
         return @$"    {method.ReturnType} {method.Name}({sb}) => (({path})_baseType).{actualName}({sb1});";
     }
 
-    private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property)
+    private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property, string path)
     {
+        var fallbackInfo = GetFallbackInfo(target.BasedOn);
+        var fallBackName = path.Length > 0
+            ? $"_default{path}"
+            : fallbackInfo.Item2;
+
+        if (path.Length == 0)
+            path = "_baseType";
+
         var propertyName = property.Name;
         var propertyType = property.Type.ToDisplayString();
         var originalPropertyType = propertyType;
@@ -280,17 +317,20 @@ public partial class {target.Name}
 
         var hasPublicSetter = property.SetMethod is not null && property.SetMethod.DeclaredAccessibility == Accessibility.Public;
 
-        _ = sb.AppendLine(@$"    public static readonly new BindableProperty {propertyName}Property = BindableProperty.Create(
+        _ = sb
+            .Append(@$"    public static readonly new BindableProperty {propertyName}Property = BindableProperty.Create(
         propertyName:       ""{propertyName}"",
         returnType:         typeof({sanitizedPropertyType}),
         declaringType:      typeof({bindableType}),
-        defaultValue:       {target.BasedOn.OriginalDefinition.ToDisplayString()}.DefaultValues.{propertyName}{(hasPublicSetter ? "," : string.Empty)}");
+        defaultValue:       {fallBackName}.{propertyName}");
 
         if (hasPublicSetter)
         {
+            _ = sb.Append(',').AppendLine();
+
             _ = target.PropertyChangedHandlers.TryGetValue(propertyName, out var handler)
                 ? sb.Append(@$"        propertyChanged:    {handler}")
-                : sb.Append(@$"        propertyChanged:    (BindableObject bo, object o, object n) => (({bindableType})bo)._baseType.{propertyName} = ({propertyType})n");
+                : sb.Append(@$"        propertyChanged:    (BindableObject bo, object o, object n) => (({bindableType})bo).{path}.{propertyName} = ({propertyType})n");
         }
 
         _ = sb.Append(");");
@@ -311,6 +351,14 @@ public partial class {target.Name}
 
     private static string GetNameSpaces()
         => "using Microsoft.Maui.Controls;";
+
+    private static (string, string) GetFallbackInfo(ITypeSymbol target)
+    {
+        var baseType = target.OriginalDefinition.ToDisplayString();
+        var baseTypeName = target.Name;
+
+        return (baseType, $"_default{baseTypeName}");
+    }
 
     private static Dictionary<string, string> TypeConverters { get; } = new()
     {
