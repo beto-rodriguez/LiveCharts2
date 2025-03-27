@@ -112,7 +112,7 @@ public partial class PieChart : ChartView, IPieChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(IChartElement), typeof(PieChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(IChartElement), typeof(PieChart), null, BindingMode.Default, null, UI.AddToCanvas);
 
     /// <summary>
     /// The series property
@@ -120,15 +120,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty SeriesProperty =
           BindableProperty.Create(
               nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-              (BindableObject o, object oldValue, object newValue) =>
-              {
-                  var chart = (PieChart)o;
-                  var seriesObserver = chart._seriesObserver;
-                  seriesObserver?.Dispose((IEnumerable<ISeries>)oldValue);
-                  seriesObserver?.Initialize((IEnumerable<ISeries>)newValue);
-                  if (chart._core is null) return;
-                  chart._core.Update();
-              });
+              UI.DeepObserve<PieChart, ISeries>(c => c._seriesObserver));
 
     /// <summary>
     /// The visual elements property.
@@ -362,7 +354,7 @@ public partial class PieChart : ChartView, IPieChartView
     public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public override Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {
@@ -383,10 +375,10 @@ public partial class PieChart : ChartView, IPieChartView
         set => SetValue(SyncContextProperty, value);
     }
 
-    LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
+    LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Width, Height = (float)CanvasView.Height };
 
     /// <inheritdoc cref="IChartView.CoreCanvas" />
-    public CoreMotionCanvas CoreCanvas => canvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     public Margin? DrawMargin
@@ -636,7 +628,7 @@ public partial class PieChart : ChartView, IPieChartView
     /// <returns></returns>
     protected void InitializeCore()
     {
-        _core = new PieChartEngine(this, config => config.UseDefaults(), canvas.CanvasCore);
+        _core = new PieChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
         _core.Update();
     }
 

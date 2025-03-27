@@ -1,5 +1,4 @@
-﻿
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -128,7 +127,8 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(IChartElement), typeof(CartesianChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(IChartElement), typeof(CartesianChart), null, BindingMode.Default, null,
+            UI.AddToCanvas);
 
     /// <summary>
     /// The series property.
@@ -136,7 +136,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty SeriesProperty =
         BindableProperty.Create(
             nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-            (BindableObject o, object oldValue, object newValue) => DeepObserve(o, oldValue, newValue, c => c._seriesObserver));
+            UI.DeepObserve<CartesianChart, ISeries>(c => c._seriesObserver));
 
     /// <summary>
     /// The x axes property
@@ -144,7 +144,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty XAxesProperty =
         BindableProperty.Create(
             nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() }, BindingMode.Default, null,
-            (BindableObject o, object oldValue, object newValue) => DeepObserve(o, oldValue, newValue, c => c._xObserver));
+            UI.DeepObserve<CartesianChart, ICartesianAxis>(c => c._xObserver));
 
     /// <summary>
     /// The y axes property.
@@ -152,7 +152,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public static readonly BindableProperty YAxesProperty =
         BindableProperty.Create(
             nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() }, BindingMode.Default, null,
-            (BindableObject o, object oldValue, object newValue) => DeepObserve(o, oldValue, newValue, c => c._yObserver));
+            UI.DeepObserve<CartesianChart, ICartesianAxis>(c => c._yObserver));
 
     /// <summary>
     /// The sections property.
@@ -399,7 +399,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public override Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {
@@ -413,10 +413,10 @@ public partial class CartesianChart : ChartView, ICartesianChartView
 
     CartesianChartEngine ICartesianChartView.Core => _core is null ? throw new Exception("core not found") : (CartesianChartEngine)_core;
 
-    LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
+    LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Width, Height = (float)CanvasView.Height };
 
     /// <inheritdoc cref="IChartView.CoreCanvas" />
-    public CoreMotionCanvas CoreCanvas => canvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
@@ -730,7 +730,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     protected void InitializeCore()
     {
         _core = new CartesianChartEngine(
-            this, config => config.UseDefaults(), canvas.CanvasCore);
+            this, config => config.UseDefaults(), CanvasView.CanvasCore);
 
         _core.Update();
     }
@@ -813,27 +813,6 @@ public partial class CartesianChart : ChartView, ICartesianChartView
 
     internal override void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         _core?.InvokePointerLeft();
-
-    private static void DeepObserve<T>(
-        BindableObject o, object oldValue, object newValue, Func<CartesianChart, CollectionDeepObserver<T>> observerGetter)
-    {
-        var chart = (CartesianChart)o;
-        var observer = observerGetter(chart);
-
-        observer?.Dispose((IEnumerable<T>)oldValue);
-
-        var newCollection = (IEnumerable<T>)newValue;
-        observer?.Initialize(newCollection);
-
-        foreach (var item in newCollection)
-        {
-            if (item is not View uiObject) continue;
-            chart.canvas.Children.Add(uiObject);
-        }
-
-        if (chart._core is null) return;
-        chart._core.Update();
-    }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
         _core?.Update();

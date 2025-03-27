@@ -151,7 +151,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(
-            nameof(Title), typeof(IChartElement), typeof(PolarChart), null, BindingMode.Default, null);
+            nameof(Title), typeof(IChartElement), typeof(PolarChart), null, BindingMode.Default, null, UI.AddToCanvas);
 
     /// <summary>
     /// The series property.
@@ -159,15 +159,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public static readonly BindableProperty SeriesProperty =
         BindableProperty.Create(
             nameof(Series), typeof(IEnumerable<ISeries>), typeof(PolarChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-            (BindableObject o, object oldValue, object newValue) =>
-            {
-                var chart = (PolarChart)o;
-                var seriesObserver = chart._seriesObserver;
-                seriesObserver?.Dispose((IEnumerable<ISeries>)oldValue);
-                seriesObserver?.Initialize((IEnumerable<ISeries>)newValue);
-                if (chart._core is null) return;
-                chart._core.Update();
-            });
+            UI.DeepObserve<PolarChart, ISeries>(c => c._seriesObserver));
 
     /// <summary>
     /// The visual elements property.
@@ -190,32 +182,16 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty AngleAxesProperty =
         BindableProperty.Create(
-            nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() },
-            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
-            {
-                var chart = (PolarChart)o;
-                var observer = chart._angleObserver;
-                observer?.Dispose((IEnumerable<IPolarAxis>)oldValue);
-                observer?.Initialize((IEnumerable<IPolarAxis>)newValue);
-                if (chart._core is null) return;
-                chart._core.Update();
-            });
+            nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() }, BindingMode.Default, null,
+            UI.DeepObserve<PolarChart, IPolarAxis>(c => c._angleObserver));
 
     /// <summary>
     /// The y axes property.
     /// </summary>
     public static readonly BindableProperty RadiusAxesProperty =
         BindableProperty.Create(
-            nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() },
-            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
-            {
-                var chart = (PolarChart)o;
-                var observer = chart._radiusObserver;
-                observer?.Dispose((IEnumerable<IPolarAxis>)oldValue);
-                observer?.Initialize((IEnumerable<IPolarAxis>)newValue);
-                if (chart._core is null) return;
-                chart._core.Update();
-            });
+            nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new List<IPolarAxis>() { new PolarAxis() }, BindingMode.Default, null,
+            UI.DeepObserve<PolarChart, IPolarAxis>(c => c._radiusObserver));
 
     /// <summary>
     /// The animations speed property.
@@ -403,7 +379,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     public Theme? ChartTheme { get => _chartTheme; set { _chartTheme = value; _core?.Update(); } }
 
     /// <inheritdoc cref="IChartView.CoreChart" />
-    public Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
+    public override Chart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
     LvcColor IChartView.BackColor
     {
@@ -417,10 +393,10 @@ public partial class PolarChart : ChartView, IPolarChartView
     PolarChartEngine IPolarChartView.Core
         => _core is null ? throw new Exception("core not found") : (PolarChartEngine)_core;
 
-    LvcSize IChartView.ControlSize => new() { Width = (float)canvas.Width, Height = (float)canvas.Height };
+    LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Width, Height = (float)CanvasView.Height };
 
     /// <inheritdoc cref="IChartView.CoreCanvas" />
-    public CoreMotionCanvas CoreCanvas => canvas.CanvasCore;
+    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
@@ -710,7 +686,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// <returns></returns>
     protected void InitializeCore()
     {
-        _core = new PolarChartEngine(this, config => config.UseDefaults(), canvas.CanvasCore);
+        _core = new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
         _core.Update();
     }
 

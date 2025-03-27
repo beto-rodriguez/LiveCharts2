@@ -28,8 +28,7 @@ public class AxesCollection : List<ICartesianAxis> { }
 public class SeriesCollection : List<ISeries> { }
 
 [XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis, IPlane
-{ }
+public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
 
 [XamlClass(typeof(DrawnLabelVisual),
     Map = typeof(LabelGeometry),

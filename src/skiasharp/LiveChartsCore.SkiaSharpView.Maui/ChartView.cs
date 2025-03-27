@@ -41,6 +41,24 @@ public abstract class ChartView : ContentView
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChartView"/> class.
+    /// </summary>
+    protected ChartView()
+    {
+        Content = new MotionCanvas();
+    }
+
+    /// <summary>
+    /// Gets the canvas view.
+    /// </summary>
+    public MotionCanvas CanvasView => (MotionCanvas)Content;
+
+    /// <summary>
+    /// Gets the core chart.
+    /// </summary>
+    public abstract Chart CoreChart { get; }
+
     internal virtual void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args) { }
     internal virtual void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args) { }
     internal virtual void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) { }
