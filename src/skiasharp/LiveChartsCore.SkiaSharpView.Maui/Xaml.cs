@@ -5,7 +5,6 @@
 #pragma warning disable IDE1006 // Naming Styles
 
 using System.Collections;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
@@ -16,16 +15,6 @@ using LiveChartsCore.VisualElements;
 using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
-
-/// <summary>
-/// A collection of axes.
-/// </summary>
-public class AxesCollection : List<ICartesianAxis> { }
-
-/// <summary>
-/// A collection of series.
-/// </summary>
-public class SeriesCollection : List<ISeries> { }
 
 [XamlClass(typeof(Axis))]
 public partial class XamlAxis : EmptyContentView, ICartesianAxis { }

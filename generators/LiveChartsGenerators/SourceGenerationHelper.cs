@@ -363,6 +363,8 @@ public partial class {target.Name}
     private static Dictionary<string, string> TypeConverters { get; } = new()
     {
         ["LiveChartsCore.Drawing.Padding"] = "PaddingTypeConverter",
+        ["LiveChartsCore.Drawing.LvcColor"] = "HexToLvcColorTypeConverter",
+        ["LiveChartsCore.Drawing.LvcColor?"] = "HexToLvcColorTypeConverter",
         ["LiveChartsCore.Painting.Paint"] = "HexToPaintTypeConverter",
         ["LiveChartsCore.Painting.Paint?"] = "HexToPaintTypeConverter",
         ["System.Collections.Generic.IReadOnlyCollection<TModel>?"] = "ValuesTypeConverter"
