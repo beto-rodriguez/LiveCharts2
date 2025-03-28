@@ -53,7 +53,7 @@ public class CartesianChartEngine(
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;
-    private CoreDrawMarginFrame? _previousDrawMarginFrame;
+    private ChartElement? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
     private HashSet<CartesianChartEngine>? _sharedEvents;
@@ -792,7 +792,8 @@ public class CartesianChartEngine(
             _drawnSeries.Add(series.SeriesId);
         }
 
-        var actualDrawMarginFrame = _chartView.DrawMarginFrame ?? theme.DrawMarginFrameGetter?.Invoke();
+        var actualDrawMarginFrame = _chartView.DrawMarginFrame?.ChartElementSource
+            ?? theme.DrawMarginFrameGetter?.Invoke();
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
@@ -803,17 +804,17 @@ public class CartesianChartEngine(
         }
         if (actualDrawMarginFrame is not null)
         {
-            var ce = (ChartElement)actualDrawMarginFrame;
+            var ce = actualDrawMarginFrame;
             if (ce._theme != themeId)
             {
                 ce._isInternalSet = true;
-                theme.ApplyStyleToDrawMarginFrame(actualDrawMarginFrame);
+                theme.ApplyStyleToDrawMarginFrame((CoreDrawMarginFrame)ce);
                 ce._theme = themeId;
                 ce._isInternalSet = false;
             }
 
             if (actualDrawMarginFrame.IsVisible) AddVisual(actualDrawMarginFrame);
-            _previousDrawMarginFrame = actualDrawMarginFrame;
+            _previousDrawMarginFrame = ce;
         }
 
         CollectVisuals();

@@ -103,7 +103,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame"/>
-    public CoreDrawMarginFrame? DrawMarginFrame { get; set; }
+    public IChartElement? DrawMarginFrame { get; set; }
 
     /// <inheritdoc cref="ICartesianChartView.ZoomMode"/>
     public ZoomAndPanMode ZoomMode { get; set; }

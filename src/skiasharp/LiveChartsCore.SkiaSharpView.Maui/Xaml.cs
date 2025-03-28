@@ -93,6 +93,9 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
     }
 }
 
+[XamlClass(typeof(DrawMarginFrame))]
+public partial class XamlDrawMarginFrame : EmptyContentView, IChartElement { }
+
 [XamlClass(typeof(DrawnLabelVisual),
     Map = typeof(LabelGeometry),
     MapPath = "DrawnLabel")]

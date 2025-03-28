@@ -166,7 +166,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty DrawMarginFrameProperty =
         BindableProperty.Create(
-            nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame), typeof(CartesianChart), null,
+            nameof(DrawMarginFrame), typeof(IChartElement), typeof(CartesianChart), null,
             BindingMode.Default, null, PropertyHandlers<CartesianChart>.OnUIElementChanged);
 
     /// <summary>
@@ -451,9 +451,9 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
-    public CoreDrawMarginFrame? DrawMarginFrame
+    public IChartElement? DrawMarginFrame
     {
-        get => (CoreDrawMarginFrame)GetValue(DrawMarginFrameProperty);
+        get => (IChartElement)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 
