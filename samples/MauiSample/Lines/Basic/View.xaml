@@ -11,16 +11,14 @@
     </ContentPage.BindingContext>
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:SeriesCollection>
-                <lvc:XamlLineSeries
-                    Values="{Binding Values1}"
-                    Fill="{x:Null}"
-                    GeometrySize="35"/>
-                <lvc:XamlLineSeries
-                    x:TypeArguments="lvcDraw:StarGeometry"
-                    Values="{Binding Values2}"
-                    GeometrySize="20"/>
-            </lvc:SeriesCollection>
+            <lvc:XamlLineSeries
+                Values="{Binding Values1}"
+                Fill="{x:Null}"
+                GeometrySize="35"/>
+            <lvc:XamlLineSeries
+                x:TypeArguments="lvcDraw:StarGeometry"
+                Values="{Binding Values2}"
+                GeometrySize="20"/>
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.Title>
             <lvc:XamlDrawnLabelVisual

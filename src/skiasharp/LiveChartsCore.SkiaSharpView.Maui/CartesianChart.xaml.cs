@@ -84,7 +84,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
-        SetValue(YAxesProperty, new List<ICartesianAxis>());
+        SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetValue(SyncContextProperty, new object());

@@ -63,6 +63,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         string? overridenTypes = null;
         ITypeSymbol? alsoMap = null;
         string? alsoMapPath = null;
+        var generateBaseTypeDeclaration = true;
 
         foreach (var arg in targetAttribute.NamedArguments)
         {
@@ -82,6 +83,9 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                     break;
                 case "MapPath":
                     alsoMapPath = arg.Value.Value as string;
+                    break;
+                case "GenerateBaseTypeDeclaration":
+                    generateBaseTypeDeclaration = ((bool?)arg.Value.Value) ?? true;
                     break;
                 default:
                     break;
@@ -163,7 +167,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         }
 
         return new XamlObject(
-            ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
+            generateBaseTypeDeclaration, ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
             [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeHandlers, overridenTypes);
     }
 

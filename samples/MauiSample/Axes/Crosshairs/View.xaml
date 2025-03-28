@@ -11,27 +11,27 @@
     </ContentPage.BindingContext>
 
     <lvc:CartesianChart>
-        <lvc:CartesianChart.Series>
-            <lvc:SeriesCollection>
-                <lvc:XamlLineSeries Values="{Binding Values}" />
-            </lvc:SeriesCollection>
-        </lvc:CartesianChart.Series>
-        <lvc:CartesianChart.XAxes>
-            
-        </lvc:CartesianChart.XAxes>
-    </lvc:CartesianChart>
 
-	<!--<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart
-                Series="{Binding Series}"
-                XAxes="{Binding XAxes}"
-                YAxes="{Binding YAxes}">
-            </lvc:CartesianChart>
-        </Grid>
-    </ContentPage.Content>-->
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries Values="{Binding Values}" />
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                CrosshairLabelsBackground="#FF8C00"
+                CrosshairLabelsPaint="#8B0000"
+                CrosshairPaint="#FF8C00"
+                Labeler="{Binding LabelFormatter}"/>
+        </lvc:CartesianChart.XAxes>
+        
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis
+                CrosshairLabelsBackground="#FF8C00"
+                CrosshairLabelsPaint="#8B0000"
+                CrosshairPaint="#FF8C00"
+                CrosshairSnapEnabled="True"
+                Labeler="{Binding LabelFormatter}"/>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </ContentPage>

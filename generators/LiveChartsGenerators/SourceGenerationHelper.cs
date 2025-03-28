@@ -76,6 +76,11 @@ public class XamlClassAttribute(System.Type basedOn) : System.Attribute
     /// MyProperty{=}double{,}MyOtherProperty{=}object.
     /// </summary>
     public string? PropertyTypeOverride { get; set; }
+
+    /// <summary>
+    /// Indicates whether the generator should generate the base type declaration, default is true.
+    /// </summary>
+    public bool GenerateBaseTypeDeclaration { get; set; } = true;
 }";
 
     public static string GenerateXamlObject(XamlObject target)
@@ -102,11 +107,11 @@ namespace {target.NameSpace};
 /// </summary>
 public partial class {target.Name}
 {{
-    private readonly {baseType} _baseType = new();
+    {(target.GenerateBaseTypeDeclaration ? $"private readonly {baseType} _baseType = new();" : string.Empty)}
 
 #region default values
 
-{GetDefaultValues(target)}
+{(target.GenerateBaseTypeDeclaration ? GetDefaultValues(target) : string.Empty)}
 #endregion
 
 #region properties

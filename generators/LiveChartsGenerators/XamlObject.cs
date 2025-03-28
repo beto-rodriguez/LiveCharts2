@@ -4,6 +4,7 @@ namespace LiveChartsGenerators;
 
 public readonly record struct XamlObject
 {
+    public readonly bool GenerateBaseTypeDeclaration;
     public readonly string NameSpace;
     public readonly string Name;
     public readonly INamedTypeSymbol Type;
@@ -18,6 +19,7 @@ public readonly record struct XamlObject
     public readonly Dictionary<string, string> OverridenTypes = [];
 
     public XamlObject(
+        bool generateBaseTypeDeclaration,
         string nameSpace,
         string name,
         INamedTypeSymbol type,
@@ -31,6 +33,7 @@ public readonly record struct XamlObject
         string? propertyChangedHandlers,
         string? overridenTypes)
     {
+        GenerateBaseTypeDeclaration = generateBaseTypeDeclaration;
         NameSpace = nameSpace;
         Name = name;
         Type = type;

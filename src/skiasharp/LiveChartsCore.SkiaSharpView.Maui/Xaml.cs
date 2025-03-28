@@ -2,8 +2,10 @@
 // The generator just wraps LiveCharts object in a Xaml object, then when a
 // property changes in the Xaml object, it updates the LiveCharts object.
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable IDE1006 // Naming Styles
 
+using System;
 using System.Collections;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
@@ -18,6 +20,45 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 [XamlClass(typeof(Axis))]
 public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
+
+[XamlClass(typeof(DateTimeAxis), GenerateBaseTypeDeclaration = false)]
+public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
+{
+    private readonly DateTimeAxis _baseType = new(TimeSpan.FromDays(1), date => date.ToString("d"));
+    private static readonly DateTimeAxis _defaultDateTimeAxis = new(TimeSpan.FromDays(1), date => date.ToString("d"));
+
+    public static readonly BindableProperty IntervalProperty = BindableProperty.Create(
+        nameof(Interval), typeof(TimeSpan), typeof(XamlDateTimeAxis), TimeSpan.FromDays(1),
+        propertyChanged: (BindableObject bo, object o, object n) =>
+        {
+            var axis = (XamlDateTimeAxis)bo;
+            var interval = (TimeSpan)n;
+
+            axis._baseType.UnitWidth = interval.Ticks;
+            axis._baseType.MinStep = interval.Ticks;
+        });
+
+    public static readonly BindableProperty DateFormatterProperty = BindableProperty.Create(
+        nameof(Interval), typeof(Func<DateTime, string>), typeof(XamlDateTimeAxis), null,
+        propertyChanged: (BindableObject bo, object o, object n) =>
+        {
+            var axis = (XamlDateTimeAxis)bo;
+            var formatter = (Func<DateTime, string>)n;
+            axis._baseType.Labeler = value => formatter(value.AsDate());
+        });
+
+    public TimeSpan Interval
+    {
+        get => (TimeSpan)GetValue(IntervalProperty);
+        set => SetValue(IntervalProperty, value);
+    }
+
+    public Func<DateTime, string> DateFormatter
+    {
+        get => (Func<DateTime, string>)GetValue(DateFormatterProperty);
+        set => SetValue(DateFormatterProperty, value);
+    }
+}
 
 [XamlClass(typeof(DrawnLabelVisual),
     Map = typeof(LabelGeometry),

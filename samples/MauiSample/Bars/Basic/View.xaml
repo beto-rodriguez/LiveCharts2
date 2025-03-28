@@ -11,31 +11,19 @@
     </ContentPage.BindingContext>
     <lvc:CartesianChart LegendPosition="Right">
         <lvc:CartesianChart.Series>
-            <!--<lvc:SeriesCollection>-->
-                <lvc:XamlColumnSeries Name="Mary" Values="{Binding MaryValues}" IgnoresBarPosition="True" MaxBarWidth="80"/>
-            <lvc:XamlColumnSeries Name="Ana" Values="{Binding AnaValues}" ScalesXAt="2" IgnoresBarPosition="True"/>
-            <!--</lvc:SeriesCollection>-->
+            <lvc:XamlColumnSeries Name="Mary" Values="{Binding MaryValues}"/>
+            <lvc:XamlColumnSeries Name="Ana" Values="{Binding AnaValues}"/>
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.XAxes>
-            <!--<lvc:AxesCollection>-->
-                <lvc:XamlAxis
-                    Labels="{Binding Labels}"
-                    LabelsRotation="0"
-                    SeparatorsPaint="#00ff00"
-                    SeparatorsAtCenter="True"
-                    TicksPaint="#232323"
-                    MinStep="1"
-                    ForceStepToMin="True"/>
             <lvc:XamlAxis
-                    Labels="{Binding Labels}"
-                    LabelsRotation="0"
-                    SeparatorsPaint="#00ff00"
-                    SeparatorsAtCenter="True"
-                    TicksPaint="#232323"
-                    MinStep="1"
-                    ForceStepToMin="True"/>
+                Labels="{Binding Labels}"
+                LabelsRotation="0"
+                SeparatorsPaint="#0000ff"
+                SeparatorsAtCenter="True"
+                TicksPaint="#232323"
+                MinStep="1"
+                ForceStepToMin="True"/>
             <!-- We use force to min step to show all the labels always. -->
-            <!--</lvc:AxesCollection>-->
         </lvc:CartesianChart.XAxes>
     </lvc:CartesianChart>
 </ContentPage>
