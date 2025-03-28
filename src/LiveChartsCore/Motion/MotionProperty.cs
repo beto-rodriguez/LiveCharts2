@@ -187,5 +187,7 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     public void Save() => _savedValue = toValue;
 
     /// <inheritdoc cref="IMotionProperty.Restore"/>
-    public void Restore(Animatable animatable) => SetMovement(_savedValue, animatable);
+    public void Restore(Animatable animatable) =>
+        // should we check if _savedValue is null?
+        SetMovement(_savedValue!, animatable);
 }

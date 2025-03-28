@@ -385,7 +385,9 @@ public class DataFactory<TModel>
             if (series.Values is IEnumerable<long?>) return EnumerateIndexedEntities<long?>(series, chart);
             if (series.Values is IEnumerable<float?>) return EnumerateIndexedEntities<float?>(series, chart);
             if (series.Values is IEnumerable<double?>) return EnumerateIndexedEntities<double?>(series, chart);
+#pragma warning disable IDE0046 // Convert to conditional expression
             if (series.Values is IEnumerable<decimal?>) return EnumerateIndexedEntities<decimal?>(series, chart);
+#pragma warning restore IDE0046 // Convert to conditional expression
 
             return [];
         }
@@ -433,8 +435,8 @@ public class DataFactory<TModel>
             }
 
             point.Context.DataSource = item;
-            point.Coordinate = mapper(item, index);
             entity.MetaData.EntityIndex = index++;
+            entity.Coordinate = mapper(item, index);
 
             yield return entity;
         }
