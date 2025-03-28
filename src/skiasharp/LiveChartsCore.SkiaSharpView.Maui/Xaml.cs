@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
@@ -57,6 +58,38 @@ public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
     {
         get => (Func<DateTime, string>)GetValue(DateFormatterProperty);
         set => SetValue(DateFormatterProperty, value);
+    }
+}
+
+[XamlClass(typeof(LogarithmicAxis), GenerateBaseTypeDeclaration = false)]
+public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
+{
+    private bool _hasCustomLabeler;
+    private readonly LogarithmicAxis _baseType = new(10);
+    private static readonly LogarithmicAxis _defaultLogarithmicAxis = new(10);
+
+    public static readonly BindableProperty LogBaseProperty = BindableProperty.Create(
+        nameof(LogBase), typeof(double), typeof(XamlLogarithmicAxis), 10d,
+        propertyChanged: (BindableObject bo, object o, object n) =>
+        {
+            var axis = (XamlLogarithmicAxis)bo;
+            var @base = (double)n;
+
+            axis._baseType.MinStep = 1;
+            if (!axis._hasCustomLabeler) axis._baseType.Labeler = value => Math.Pow(@base, value).ToString("N2");
+            axis._baseType._logBase = @base;
+        });
+
+    public double LogBase
+    {
+        get => (double)GetValue(LogBaseProperty);
+        set => SetValue(LogBaseProperty, value);
+    }
+
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+        if (propertyName == nameof(Labeler)) _hasCustomLabeler = true;
     }
 }
 
