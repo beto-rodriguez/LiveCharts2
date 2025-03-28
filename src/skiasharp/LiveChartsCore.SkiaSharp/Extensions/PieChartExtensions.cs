@@ -42,7 +42,7 @@ public static class PieChartExtensions
     /// <param name="builder">An optional builder.</param>
     /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
-    public static ISeries[] AsPieSeries<TModel>(
+    public static PieSeries<TModel>[] AsPieSeries<TModel>(
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None) =>
@@ -57,7 +57,7 @@ public static class PieChartExtensions
     /// <param name="builder">An optional builder.</param>
     /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
-    public static ISeries[] AsPieSeries<TModel, TVisual>(
+    public static PieSeries<TModel, TVisual>[] AsPieSeries<TModel, TVisual>(
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
@@ -74,7 +74,7 @@ public static class PieChartExtensions
     /// <param name="builder">An optional builder.</param>
     /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
-    public static ISeries[] AsPieSeries<TModel, TVisual, TLabel>(
+    public static PieSeries<TModel, TVisual, TLabel>[] AsPieSeries<TModel, TVisual, TLabel>(
         this IEnumerable<TModel> source,
         Action<TModel, PieSeries<TModel, TVisual, TLabel>>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)
@@ -91,7 +91,7 @@ public static class PieChartExtensions
     /// <param name="builder">An optional builder.</param>
     /// <param name="gaugeOptions">Defines whether the series are treated as gauge.</param>
     /// <returns></returns>
-    public static ISeries[] AsPieSeries<TModel, TSeries>(
+    public static TSeries[] AsPieSeries<TModel, TSeries>(
         this IEnumerable<TModel> source,
         Action<TModel, TSeries>? builder = null,
         GaugeOptions gaugeOptions = GaugeOptions.None)

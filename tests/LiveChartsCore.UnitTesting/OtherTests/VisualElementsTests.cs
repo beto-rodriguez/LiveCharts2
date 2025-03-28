@@ -7,6 +7,7 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.UnitTesting.OtherTests;
 
@@ -16,7 +17,7 @@ public class VisualElementsTests
     [TestMethod]
     public void Dispose()
     {
-        var suts = new List<VisualElement>
+        var suts = new List<ChartElement>
         {
             new StackPanel<RectangleGeometry>(),
             new RelativePanel<RectangleGeometry>(),
@@ -77,7 +78,7 @@ public class VisualElementsTests
             chart.CoreCanvas._paintTasks.Count > p);
 
         // clear the visuals and ensure that all the geometries and paints were removed
-        chart.VisualElements = new List<VisualElement>();
+        chart.VisualElements = new List<ChartElement>();
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() == g &&
