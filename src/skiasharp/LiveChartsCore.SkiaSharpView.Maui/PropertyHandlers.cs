@@ -27,6 +27,7 @@ using Microsoft.Maui.Controls;
 using LiveChartsCore.Kernel;
 using System.Collections;
 using System.Linq;
+using System.ComponentModel;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -44,12 +45,25 @@ internal class PropertyHandlers<TChart>
         var chart = (TChart)bo;
 
         if (o is View oldView)
+        {
+            oldView.PropertyChanged -= OnUIElementPropertyChanged;
             _ = chart.CanvasView.Children.Remove(oldView);
+        }
 
         if (n is View newView)
+        {
             chart.CanvasView.Children.Add(newView);
+            newView.PropertyChanged += OnUIElementPropertyChanged;
+        }
 
         chart.CoreChart?.Update();
+    }
+
+    private static void OnUIElementPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        var view = (View?)sender;
+        var chart = (TChart?)view?.Parent?.Parent;
+        chart?.CoreChart?.Update();
     }
 
     public static BindableProperty.BindingPropertyChangedDelegate OnUIElementsCollectionChanged<TCollection>(
