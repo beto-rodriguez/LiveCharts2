@@ -77,13 +77,17 @@ public class SolidColorPaintExtension : IMarkupExtension<SolidColorPaint>
 
         var paint = new SolidColorPaint(color, StrokeWidth);
 
-        if (FontFamily is not null) paint.FontFamily = FontFamily;
-
         if (FontWeight != SKFontStyleWeight.Normal || FontWidth != SKFontStyleWidth.Normal || FontSlant != SKFontStyleSlant.Upright)
             paint.SKFontStyle = new SKFontStyle(FontWeight, FontWidth, FontSlant);
 
-        if (TypefaceMatchesChar is not null && TypefaceMatchesChar.Length > 0)
+        if (FontFamily is not null)
+        {
+            paint.SKTypeface = SKTypeface.FromFamilyName(FontFamily);
+        }
+        else if (TypefaceMatchesChar is not null && TypefaceMatchesChar.Length > 0)
+        {
             paint.SKTypeface = SKFontManager.Default.MatchCharacter(TypefaceMatchesChar[0]);
+        }
 
         return paint;
     }

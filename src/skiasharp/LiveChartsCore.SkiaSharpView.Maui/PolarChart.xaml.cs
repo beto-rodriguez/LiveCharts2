@@ -33,6 +33,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using Microsoft.Maui.ApplicationModel;
@@ -480,6 +481,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
@@ -487,6 +489,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
@@ -511,6 +514,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
@@ -518,6 +522,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);

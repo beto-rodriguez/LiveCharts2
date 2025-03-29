@@ -39,6 +39,7 @@ using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Graphics;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using Paint = LiveChartsCore.Painting.Paint;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -493,6 +494,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
@@ -500,6 +502,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
@@ -539,6 +542,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
@@ -546,6 +550,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
